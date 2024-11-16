@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+---
+
+<section class="bg-white py-16">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+        Next Meetup Session
+      </h2>
+      <p class="mt-4 text-xl text-gray-600 font-body">
+        Join us for our weekly mathematics study session
+      </p>
+    </div>
+
+    <div class="bg-blue-50 rounded-lg shadow-lg overflow-hidden">
+      <div class="px-6 py-8 sm:p-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <div class="space-y-4">
+              <div class="flex items-center">
+                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span class="ml-3 text-xl font-semibold text-gray-900">Saturday, 2:00 PM</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span class="ml-3 text-xl font-semibold text-gray-900">Local Library - Study Room B</span>
+              </div>
+              <div class="flex items-center">
+                <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                </svg>
+                <span class="ml-3 text-xl font-semibold text-gray-900">Topic: Introduction to Group Theory</span>
+              </div>
+            </div>
+
+            <div class="mt-8 space-y-4 text-gray-600">
+              <p class="font-body">This week we'll explore the fundamental concepts of group theory, including:</p>
+              <ul class="list-disc list-inside space-y-2 ml-4 font-body">
+                <li>Basic group axioms and properties</li>
+                <li>Subgroups and cyclic groups</li>
+                <li>Group homomorphisms</li>
+              </ul>
+            </div>
+
+            <div class="mt-8">
+              <a
+                href="#join-group"
+                class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300 ease-in-out"
+              >
+                Reserve Your Spot
+              </a>
+            </div>
+          </div>
+
+          <div class="hidden md:block">
+            <Image
+              src="/math-study-session.jpg"
+              alt="Math study session"
+              width={500}
+              height={375}
+              format="avif"
+              class="rounded-lg shadow-md"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

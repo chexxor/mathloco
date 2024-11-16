@@ -1,0 +1,19 @@
+---
+import HeroSection from '../components/HeroSection.astro';
+import Layout from '../layouts/Layout.astro';
+import UpcomingMeetups from '../components/UpcomingMeetups.astro';
+import WhyJoinUs from '../components/WhyJoinUs.astro';
+import PastEvents from '../components/PastEvents.astro';
+import JoinCommunity from '../components/JoinCommunity.astro';
+import Footer from '../components/Footer.astro';
+import { sections } from '../config.json';
+---
+
+<Layout title='Math Enthusiasts Meetup'>
+  <HeroSection />
+  <WhyJoinUs />
+  {sections.showUpcomingEvents && <UpcomingMeetups />}
+  {sections.showPastEvents && <PastEvents />}
+  <JoinCommunity />
+  <Footer />
+</Layout>

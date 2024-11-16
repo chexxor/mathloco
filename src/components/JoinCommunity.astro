@@ -1,0 +1,80 @@
+---
+import { Image } from 'astro:assets';
+import config from '../config.json';
+---
+
+<section class="bg-white py-16">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 class="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+        Join Our Community
+      </h2>
+      <p class="mt-4 text-xl text-gray-600 font-body">
+        Connect with fellow math enthusiasts and join our weekly discussions
+      </p>
+    </div>
+
+    <div class="mt-12 bg-blue-50 rounded-lg shadow-lg overflow-hidden">
+      <div class="px-6 py-8 sm:p-10 sm:pb-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+            <h3 class="text-2xl font-semibold text-gray-900 mb-4">
+              Why Join Our Meetup Group?
+            </h3>
+            <ul class="space-y-4 text-gray-600">
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 text-blue-600">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span class="ml-3">Weekly in-person study sessions</span>
+              </li>
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 text-blue-600">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span class="ml-3">Collaborative problem-solving</span>
+              </li>
+              <li class="flex items-start">
+                <span class="flex-shrink-0 h-6 w-6 text-blue-600">
+                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </span>
+                <span class="ml-3">Network with math enthusiasts</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="text-center md:text-left">
+            <Image
+              src={'/Meetup_Logo.png'}
+              alt="Meetup.com Logo"
+              width={200}
+              height={80}
+              class="mx-auto md:mx-0 mb-6"
+              format="avif"
+            />
+            <p class="text-gray-600 mb-6">
+              Join our active community of {Math.floor(Math.random() * 100 + 150)}+ members on Meetup.com
+            </p>
+            <a
+              href={config.URLs.meetupGroup}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300 ease-in-out"
+            >
+              Join on Meetup.com
+              <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
