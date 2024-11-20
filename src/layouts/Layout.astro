@@ -5,8 +5,8 @@ export interface Props {
 
 const { title } = Astro.props;
 import "@fontsource/pt-serif";
-
 import { seo } from "../config.json";
+import Navigation from '../components/Navigation.astro';
 ---
 
 <!doctype html>
@@ -40,6 +40,7 @@ import { seo } from "../config.json";
 
   </head>
   <body>
+    <Navigation />
     <slot />
     <style lang="scss" is:global>
       $math-theme-color: #3b82f6;
