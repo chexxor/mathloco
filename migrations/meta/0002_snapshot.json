@@ -1,0 +1,67 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "82637d1a-677a-46d3-b09b-39757fb8d69b",
+  "prevId": "f90fd69a-1fa8-4d83-bc7a-223bb4e32a4d",
+  "tables": {
+    "user": {
+      "name": "user",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "username": {
+          "name": "username",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_dt": {
+          "name": "created_dt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "modified_dt": {
+          "name": "modified_dt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "deleted_dt": {
+          "name": "deleted_dt",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {
+      "\"user\".\"created\"": "\"user\".\"created_dt\"",
+      "\"user\".\"modified\"": "\"user\".\"modified_dt\"",
+      "\"user\".\"deleted\"": "\"user\".\"deleted_dt\""
+    }
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

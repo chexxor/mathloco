@@ -1,0 +1,16 @@
+# wrangler.toml
+node_compat = true
+
+[[d1_databases]]
+binding = "DB"
+database_name = "d1-mathloco-prod-db"
+database_id = "4e997466-3b31-4a4d-8187-a1e24f6ab7a3"
+preview_database_id = "DB"
+
+[env.preview]
+name = "preview"
+
+[[env.preview.d1_databases]]
+binding = "DB"
+database_name = "d1-mathloco-preview-db"
+database_id = "b58d56c1-6aa6-4108-a1c3-91b5e9dbbcb7"

@@ -4,10 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "start": "astro dev",
+    "start:app": "astro dev",
+    "start:functions": "wrangler pages dev dist",
     "build": "astro build",
     "preview": "astro dev --host",
-    "astro": "astro"
+    "astro": "astro",
+    "db:generate": "drizzle-kit generate",
+    "db:pull": "drizzle-kit pull",
+    "db:migrate:local": "wrangler d1 migrations apply d1-mathloco-prod-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply d1-mathloco-prod-db --remote",
+    "db:migrate:preview": "wrangler d1 migrations apply --env preview d1-mathloco-preview-db --remote",
+    "db:studio:local": "node scripts/find-db.js && drizzle-kit studio",
+    "db:studio:preview": "source .drizzle.env && DB_ID='b58d56c1-6aa6-4108-a1c3-91b5e9dbbcb7' drizzle-kit studio",
+    "db:studio:prod": "source .drizzle.env && DB_ID='4e997466-3b31-4a4d-8187-a1e24f6ab7a3' drizzle-kit studio"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^11.2.0",
@@ -15,12 +24,17 @@
     "@astrojs/sitemap": "^3.2.1",
     "@astrojs/tailwind": "^5.1.2",
     "@fontsource/pt-serif": "^5.0.21",
+    "@paralleldrive/cuid2": "^2.2.2",
     "astro": "^4.16.10",
+    "drizzle-orm": "^0.36.4",
     "sharp": "^0.33.4",
     "tailwindcss": "^3.4.4"
   },
   "devDependencies": {
-    "@astrojs/vercel": "^7.8.2",
+    "@types/node": "^22.9.3",
+    "better-sqlite3": "^11.5.0",
+    "cross-env": "^7.0.3",
+    "drizzle-kit": "^0.28.1",
     "sass": "^1.77.4",
     "svelte": "^5.1.13"
   }

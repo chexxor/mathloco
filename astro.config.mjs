@@ -7,7 +7,7 @@ import cloudflare from '@astrojs/cloudflare';
 // https://astro.build/config
 export default defineConfig({
   integrations: [tailwind(), sitemap(), partytown()],
-  output: 'server',
+  output: 'hybrid',
   adapter: cloudflare({
     platformProxy: {
       enabled: true,
