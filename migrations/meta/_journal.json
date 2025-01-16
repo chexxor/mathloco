@@ -22,6 +22,41 @@
       "when": 1732419884188,
       "tag": "0002_melted_kylun",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1732425185655,
+      "tag": "0003_magical_mongu",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1732425813848,
+      "tag": "0004_wet_hercules",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1732591397100,
+      "tag": "0005_rich_black_bolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1732591914109,
+      "tag": "0006_flimsy_rick_jones",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1732591974063,
+      "tag": "0007_red_zodiak",
+      "breakpoints": true
     }
   ]
 }

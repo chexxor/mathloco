@@ -1,6 +1,6 @@
 {
   "sections": {
-    "showUpcomingEvents": false,
+    "showUpcomingEvents": true,
     "showPastEvents": false
   },
   "seo": {

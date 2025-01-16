@@ -51,7 +51,7 @@ const getCredentials = () => {
 
 // Wrangler looks for the migrations in the migrations folder.
 export default {
-    schema: './src/schema.ts',
+    schema: './src/schema',
     out: './migrations',
     dialect: "sqlite",
     ...getCredentials()

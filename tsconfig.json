@@ -1,7 +1,8 @@
 {
   "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
-    // Replace `astro/client` with `@astrojs/image/client`
-    "types": ["@astrojs/image/client"]
-  }
+    "types": ["vite/client"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*", "public/*", "dist/*", "scripts/*"],
 }

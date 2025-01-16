@@ -1,0 +1,1 @@
+ALTER TABLE `meetup_event` RENAME COLUMN "name" TO "title";
