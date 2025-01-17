@@ -12,10 +12,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# environment variables
-.env
-.env.production
-
 # macOS-specific files
 .DS_Store
 
@@ -27,3 +23,17 @@ pnpm-debug.log*
 
 # Astro
 .astro/
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Local database files
+*.sqlite
+*.sqlite3
+*.db
+
+# API keys and secrets
+*.pem
+*.key
