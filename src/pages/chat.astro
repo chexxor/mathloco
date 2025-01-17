@@ -1,0 +1,192 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { REST } from '@discordjs/rest';
+import { Routes } from 'discord-api-types/v10';
+import Anthropic from '@anthropic-ai/sdk';
+
+// Load environment variables
+const DISCORD_TOKEN = import.meta.env.DISCORD_TOKEN;
+const GUILD_ID = import.meta.env.DISCORD_GUILD_ID;
+const CLAUDE_API_KEY = import.meta.env.CLAUDE_API_KEY;
+
+// Initialize Claude client
+const anthropic = new Anthropic({
+  apiKey: CLAUDE_API_KEY, // defaults to process.env["ANTHROPIC_API_KEY"]
+});
+
+// Initialize Discord REST client
+const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
+
+// Define interfaces for type safety
+interface DiscordChannel {
+  id: string;
+  name: string;
+  type: number;
+}
+
+interface DiscordMessage {
+  author: {
+    username: string;
+  };
+  content: [{
+    text: string
+  }];
+  timestamp: string;
+}
+
+interface ChannelSummary {
+  channelId: string;
+  messages: DiscordMessage[];
+  summary: string;
+  timeRange?: string;
+}
+
+interface AnthropicMessage {
+  content: Array<{
+    type: string;
+    text: string;
+  }>;
+}
+
+let channels: DiscordChannel[] = [];
+try {
+  // Fetch channels from the Discord server
+  const response = await rest.get(
+    Routes.guildChannels(GUILD_ID)
+  ) as DiscordChannel[];
+  channels = response.filter(channel => channel.type === 0);
+} catch (error) {
+  console.error('Error fetching Discord channels:', error);
+}
+
+// Fetch and summarize messages for each channel
+const messages: ChannelSummary[] = [];
+for (const channel of channels) {
+  try {
+    // console.log('Get channelMessages from Discord.');
+    const channelMessages = (await rest.get(
+      Routes.channelMessages(channel.id),
+      { query: new URLSearchParams({ limit: '10' }) }
+    )) as DiscordMessage[];
+
+    // Skip if we couldn't get messages
+    if (!channelMessages) continue;
+
+    // console.log('channelMessages: ', channelMessages);
+
+    // Prepare messages for summarization
+    const messageContent = channelMessages
+      .map(msg => `${msg.author.username}: ${msg.content}`)
+      .join('\n');
+    // console.log('messageContent: ', messageContent);
+
+    const messageTimestampOldest = channelMessages[channelMessages.length - 1]?.timestamp;
+    const messageTimestampNewest = channelMessages[0]?.timestamp;
+
+    // Format the time range if both timestamps exist
+    const timeRange = messageTimestampOldest && messageTimestampNewest
+      ? `${new Date(messageTimestampOldest).toLocaleDateString()} - ${new Date(messageTimestampNewest).toLocaleDateString()}`
+      : undefined;
+
+    // Get summary from Claude
+    // console.log('Get summary from Claude.');
+    const summary = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1024,
+      messages: [{
+        role: 'user',
+        content: `List the main topics discussed in these Discord messages. Format the response in HTML with a simple list structure using <h4> for the heading and <ul>/<li> for the topics. Do not include any analysis of conversation style, group dynamics, or context. Do not include any usernames or personal details:\n\n${messageContent}`
+      }],
+    }) as AnthropicMessage;
+    // console.log('chat summary: ', summary);
+
+    // console.log('Summary text:', summary.content[0].text);
+    messages.push({
+      channelId: channel.id,
+      messages: channelMessages,
+      summary: summary.content[0].text,
+      timeRange
+    });
+  } catch (error) {
+    console.error(`Error processing channel ${channel.id}:`, error);
+    // Continue with next channel instead of breaking the loop
+    continue;
+  }
+}
+---
+
+<Layout title="Discord Chat - Minneapolis Math Book Club">
+  <main class="mx-auto max-w-4xl px-4 py-8">
+    <div class="text-base uppercase tracking-wide mb-4">
+      <span class="text-blue-600">Community Chat</span>
+    </div>
+
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-12">
+      Discord Chat Summary
+    </h1>
+
+    <div class="space-y-6">
+      <h2 class="text-2xl font-bold text-gray-800">Available Channels</h2>
+
+      {channels.length > 0 ? (
+        <div class="space-y-6">
+          {channels.map((channel) => (
+            <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
+              <div class="px-4 py-3 bg-gray-100 border-b border-gray-200">
+                <span class="font-medium text-gray-800">#{channel.name}</span>
+              </div>
+
+              {messages.find(msg => msg.channelId === channel.id)?.summary && (
+                <div class="p-6">
+                  {messages.find(msg => msg.channelId === channel.id)?.timeRange && (
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                      Channel Summary: {messages.find(msg => msg.channelId === channel.id)?.timeRange}
+                    </h3>
+                  )}
+                  <div class="prose prose-blue max-w-none" set:html={messages.find(msg => msg.channelId === channel.id)!.summary}>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="bg-blue-50 rounded-lg p-8 text-center">
+          <p class="text-gray-600">No channels available. Please check back later.</p>
+        </div>
+      )}
+
+      {messages.length === 0 && channels.length > 0 && (
+        <div class="bg-blue-50 rounded-lg p-8 text-center">
+          <p class="text-gray-600">No messages to display yet. Join our Discord community to start chatting!</p>
+          <a
+            href="#join-discord"
+            class="mt-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300 ease-in-out"
+          >
+            Join Our Discord
+          </a>
+        </div>
+      )}
+    </div>
+
+    <div class="mt-16 bg-blue-50 rounded-xl p-8">
+      <div class="text-center">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Join Our Community</h2>
+        <p class="text-lg text-gray-600 mb-6 max-w-2xl mx-auto">
+          Connect with fellow math enthusiasts, participate in discussions, and be part of our growing community. Our Discord server is a friendly space for mathematical exploration and learning.
+        </p>
+        <a
+          href="https://discord.com/invite/wx5S7YJSkU"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300 ease-in-out"
+        >
+          Join Discord Server
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </main>
+</Layout>
