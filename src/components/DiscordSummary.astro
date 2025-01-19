@@ -1,8 +1,9 @@
 ---
-import type { DiscordChannel } from '../types/discord';
-import { getDiscordSummary } from '../lib/discord';
+import type { DiscordChannel, ChannelSummary } from '../types/discord';
 
-const data = await getDiscordSummary();
+const url = new URL('/api/discord-summary', Astro.url);
+const response = await fetch(url);
+const data = await response.json();
 ---
 
 <div class="space-y-6">
@@ -10,7 +11,7 @@ const data = await getDiscordSummary();
     <div>
       <div class="space-y-6">
         {data.channels.map((channel: DiscordChannel) => {
-          const channelData = data.messages.find(msg => msg.channelId === channel.id);
+          const channelData = data.messages.find((msg: ChannelSummary) => msg.channelId === channel.id);
           return (
             <div class="bg-gray-50 rounded-lg overflow-hidden border border-gray-200">
               <div class="px-4 py-3 bg-gray-100 border-b border-gray-200">
