@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import DiscordSummary from '../components/DiscordSummary.astro';
+import DiscordSummary from '../components/DiscordSummary.svelte';
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
@@ -13,7 +13,7 @@ import DiscordSummary from '../components/DiscordSummary.astro';
       Discord Chat Summary
     </h1>
 
-    <DiscordSummary server:defer />
+    <DiscordSummary client:load />
 
     <div class="mt-16 bg-blue-50 rounded-xl p-8">
       <div class="text-center">
