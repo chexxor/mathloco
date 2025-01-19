@@ -1,6 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.astro';
+import { getDiscordSummary } from '../lib/discord';
+
+const data = await getDiscordSummary();
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
@@ -13,7 +16,7 @@ import DiscordSummary from '../components/DiscordSummary.astro';
       Discord Chat Summary
     </h1>
 
-    <DiscordSummary />
+    <DiscordSummary data={data} />
 
     <div class="mt-16 bg-blue-50 rounded-xl p-8">
       <div class="text-center">

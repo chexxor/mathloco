@@ -2,11 +2,16 @@
 import type { DiscordChannel, ChannelSummary } from '../types/discord';
 import { getDiscordSummary } from '../lib/discord';
 
-const data = await getDiscordSummary();
+if (import.meta.env.SSR) {
+  const data = await getDiscordSummary();
+  Astro.props.data = data;
+}
+
+const { data } = Astro.props;
 ---
 
 <div class="space-y-6">
-  {data.channels.length > 0 ? (
+  {data?.channels?.length > 0 ? (
     <div>
       <div class="space-y-6">
         {data.channels.map((channel: DiscordChannel) => {
