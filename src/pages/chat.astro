@@ -1,35 +1,19 @@
 ---
-import type { APIRoute } from 'astro';
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.astro';
 import { getDiscordSummary } from '../lib/discord';
+import type { CachedData } from '../types/discord';
 
 export const prerender = false;
 
-// Server-side data loading function
-export const GET: APIRoute = async () => {
+let discordData: CachedData = { channels: [], messages: [], lastUpdated: new Date() };
+if (Astro.request.method === 'GET') {
   try {
-    const data = await getDiscordSummary();
-    return new Response(JSON.stringify({ body: data }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    discordData = await getDiscordSummary();
   } catch (error) {
     console.error('Error fetching Discord data:', error);
-    return new Response(JSON.stringify({
-      body: { channels: [], messages: [] }
-    }), {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
   }
-};
-
-const data = Astro.props.body || { channels: [], messages: [] };
+}
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
@@ -42,7 +26,7 @@ const data = Astro.props.body || { channels: [], messages: [] };
       Discord Chat Summary
     </h1>
 
-    <DiscordSummary data={data} />
+    <DiscordSummary data={discordData} />
 
     <div class="mt-16 bg-blue-50 rounded-xl p-8">
       <div class="text-center">
