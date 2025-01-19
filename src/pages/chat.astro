@@ -1,19 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.astro';
-import { getDiscordSummary } from '../lib/discord';
-import type { CachedData } from '../types/discord';
-
-export const prerender = false;
-
-let discordData: CachedData = { channels: [], messages: [], lastUpdated: new Date() };
-if (Astro.request.method === 'GET') {
-  try {
-    discordData = await getDiscordSummary();
-  } catch (error) {
-    console.error('Error fetching Discord data:', error);
-  }
-}
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
@@ -26,7 +13,7 @@ if (Astro.request.method === 'GET') {
       Discord Chat Summary
     </h1>
 
-    <DiscordSummary data={discordData} />
+    <DiscordSummary server:defer />
 
     <div class="mt-16 bg-blue-50 rounded-xl p-8">
       <div class="text-center">

@@ -2,12 +2,7 @@
 import type { DiscordChannel, ChannelSummary } from '../types/discord';
 import { getDiscordSummary } from '../lib/discord';
 
-if (import.meta.env.SSR) {
-  const data = await getDiscordSummary();
-  Astro.props.data = data;
-}
-
-const { data } = Astro.props;
+const data = await getDiscordSummary();
 ---
 
 <div class="space-y-6">
