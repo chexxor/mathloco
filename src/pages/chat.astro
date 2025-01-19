@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.astro';
-import { getDiscordSummary } from '../lib/discord';
 
-const data = await getDiscordSummary();
+const response = await fetch(new URL('/api/discord', Astro.url));
+const data = await response.json();
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
