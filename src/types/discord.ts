@@ -17,7 +17,7 @@ export interface DiscordMessage {
 export interface ChannelSummary {
   channelId: string;
   messages: DiscordMessage[];
-  summary: string;
+  summary?: string;
   timeRange?: string;
 }
 
