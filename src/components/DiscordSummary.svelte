@@ -13,7 +13,6 @@
   async function fetchData() {
     try {
       const response = await fetch('/api/discord-summary');
-      console.log(response);
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
@@ -59,13 +58,11 @@
               <div class="p-6">
                 {#if channelData.timeRange}
                   <h3 class="text-lg font-semibold text-gray-800 mb-4">
-                    <!-- Channel Summary: {channelData.timeRange} -->
-                     <p>timerange</p>
+                    Channel Summary: {channelData.timeRange}
                   </h3>
                 {/if}
                 <div class="prose prose-blue max-w-none">
-                  <!-- {@html channelData.summary} -->
-                  <p>summary</p>
+                  {@html channelData.summary}
                 </div>
               </div>
             {/if}
