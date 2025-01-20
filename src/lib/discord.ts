@@ -14,19 +14,18 @@ interface RuntimeEnv {
 }
 
 function initializeClients(env: RuntimeEnv) {
-  const { CLAUDE_API_KEY } = env;
-  const DISCORD_TOKEN = import.meta.env.DISCORD_TOKEN;
+  const { DISCORD_TOKEN, CLAUDE_API_KEY } = env;
 
   if (!DISCORD_TOKEN) {
-    // throw new Error('Discord token is not configured. Please set the DISCORD_TOKEN environment variable.');
+    throw new Error('Discord token is not configured. Please set the DISCORD_TOKEN environment variable.');
   }
 
-  const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
+  const discordAPI = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
   const anthropic = new Anthropic({
     apiKey: CLAUDE_API_KEY,
   });
 
-  return { rest, anthropic };
+  return { discordAPI, anthropic };
 }
 
 export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
@@ -36,14 +35,14 @@ export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
   }
 
   const { DISCORD_GUILD_ID } = env;
-  const { rest, anthropic } = initializeClients(env);
+  const { discordAPI, anthropic } = initializeClients(env);
 
   let channels: DiscordChannel[] = [];
   const messages: ChannelSummary[] = [];
 
   try {
     // Fetch channels from the Discord server
-    const response = await rest.get(
+    const response = await discordAPI.get(
       Routes.guildChannels(DISCORD_GUILD_ID)
     ) as DiscordChannel[];
     channels = response.filter(channel => channel.type === 0);
@@ -51,7 +50,7 @@ export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
     // Fetch and summarize messages for each channel
     for (const channel of channels) {
       try {
-        const channelMessages = (await rest.get(
+        const channelMessages = (await discordAPI.get(
           Routes.channelMessages(channel.id),
           { query: new URLSearchParams({ limit: '10' }) }
         )) as DiscordMessage[];
