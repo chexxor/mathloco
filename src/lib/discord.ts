@@ -14,7 +14,6 @@ interface RuntimeEnv {
 }
 
 function initializeClients(env: RuntimeEnv) {
-  console.log('Initializing clients...');
   const { DISCORD_TOKEN, CLAUDE_API_KEY } = env;
 
   if (!DISCORD_TOKEN) {
@@ -30,11 +29,9 @@ function initializeClients(env: RuntimeEnv) {
 }
 
 export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
-  console.log('getDiscordSummary');
   // Return cached data if it's still fresh
   if (cachedData && (new Date().getTime() - cachedData.lastUpdated.getTime()) < CACHE_DURATION) {
-    // return cachedData;
-    console.log('skipping cachedData');
+    return cachedData;
   }
 
   const { DISCORD_GUILD_ID } = env;
@@ -57,7 +54,6 @@ export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
           Routes.channelMessages(channel.id),
           { query: new URLSearchParams({ limit: '10' }) }
         )) as DiscordMessage[];
-        // console.log(channelMessages);
 
         if (!channelMessages || channelMessages.length === 0) continue;
 
@@ -108,7 +104,7 @@ async function generateSummary(anthropic: Anthropic, content: string): Promise<s
       max_tokens: 1024,
       messages: [{
         role: 'user',
-        content: `Please provide a brief, engaging summary of this Discord chat conversation. Focus on the main topics and key points discussed. Format the summary in HTML with appropriate paragraph tags. Here's the conversation:\n\n${content}`
+        content: `List the main topics discussed in these Discord messages. Format the response in HTML with a simple list structure using <h4> for the heading and <ul>/<li> for the topics. Do not include any analysis of conversation style, group dynamics, or context. Do not include any usernames or personal details:\n\n${content}`
       }],
     });
 

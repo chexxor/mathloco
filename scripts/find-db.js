@@ -8,7 +8,6 @@ try {
     const sqliteFile = files.find(file => file.endsWith('.sqlite'));
     if (sqliteFile) {
         process.env.LOCAL_DB_PATH = path.join(dbDir, sqliteFile);
-        console.log(`Found DB at: ${process.env.LOCAL_DB_PATH}`);
     } else {
         console.error('No SQLite database file found');
         process.exit(1);
