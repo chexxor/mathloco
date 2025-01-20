@@ -3,7 +3,8 @@ import { getDiscordSummary } from '../../lib/discord';
 
 export const GET: APIRoute = async ({ request, locals }) => {
   try {
-    const data = await getDiscordSummary();
+    console.log(locals.runtime.env);
+    const data = await getDiscordSummary(locals.runtime.env);
     console.log(data);
     return new Response(JSON.stringify(data), {
       status: 200,

@@ -1,6 +1,12 @@
 # wrangler.toml
 node_compat = true
 
+#[vars]
+# Environment variables will be set in the Cloudflare dashboard
+# DISCORD_TOKEN = ""
+# DISCORD_GUILD_ID = ""
+# CLAUDE_API_KEY = ""
+
 [observability]
 enabled = true
 head_sampling_rate = 1 # optional. default = 1.

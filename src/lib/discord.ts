@@ -7,9 +7,15 @@ import type { CachedData, DiscordChannel, ChannelSummary, DiscordMessage } from 
 let cachedData: CachedData | null = null;
 const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
 
-function initializeClients() {
-  const DISCORD_TOKEN = import.meta.env.DISCORD_TOKEN;
-  const CLAUDE_API_KEY = import.meta.env.CLAUDE_API_KEY;
+interface RuntimeEnv {
+  DISCORD_TOKEN: string;
+  DISCORD_GUILD_ID: string;
+  CLAUDE_API_KEY: string;
+}
+
+function initializeClients(env: RuntimeEnv) {
+  console.log('Initializing clients...');
+  const { DISCORD_TOKEN, CLAUDE_API_KEY } = env;
 
   if (!DISCORD_TOKEN) {
     throw new Error('Discord token is not configured. Please set the DISCORD_TOKEN environment variable.');
@@ -23,7 +29,7 @@ function initializeClients() {
   return { rest, anthropic };
 }
 
-export async function getDiscordSummary(): Promise<CachedData> {
+export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
   console.log('getDiscordSummary');
   // Return cached data if it's still fresh
   if (cachedData && (new Date().getTime() - cachedData.lastUpdated.getTime()) < CACHE_DURATION) {
@@ -31,8 +37,8 @@ export async function getDiscordSummary(): Promise<CachedData> {
     console.log('skipping cachedData');
   }
 
-  const GUILD_ID = import.meta.env.DISCORD_GUILD_ID;
-  const { rest, anthropic } = initializeClients();
+  const { DISCORD_GUILD_ID } = env;
+  const { rest, anthropic } = initializeClients(env);
 
   let channels: DiscordChannel[] = [];
   const messages: ChannelSummary[] = [];
@@ -40,7 +46,7 @@ export async function getDiscordSummary(): Promise<CachedData> {
   try {
     // Fetch channels from the Discord server
     const response = await rest.get(
-      Routes.guildChannels(GUILD_ID)
+      Routes.guildChannels(DISCORD_GUILD_ID)
     ) as DiscordChannel[];
     channels = response.filter(channel => channel.type === 0);
 
@@ -51,7 +57,7 @@ export async function getDiscordSummary(): Promise<CachedData> {
           Routes.channelMessages(channel.id),
           { query: new URLSearchParams({ limit: '10' }) }
         )) as DiscordMessage[];
-        console.log(channelMessages);
+        // console.log(channelMessages);
 
         if (!channelMessages || channelMessages.length === 0) continue;
 
