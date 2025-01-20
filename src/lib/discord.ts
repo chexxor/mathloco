@@ -66,18 +66,18 @@ export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
           .join('\n');
 
         // Get time range
-        // const latestMessage = channelMessages[0];
-        // const oldestMessage = channelMessages[channelMessages.length - 1];
-        // const timeRange = `${new Date(oldestMessage.timestamp).toLocaleDateString()} - ${new Date(latestMessage.timestamp).toLocaleDateString()}`;
+        const latestMessage = channelMessages[0];
+        const oldestMessage = channelMessages[channelMessages.length - 1];
+        const timeRange = `${new Date(oldestMessage.timestamp).toLocaleDateString()} - ${new Date(latestMessage.timestamp).toLocaleDateString()}`;
 
         // Generate summary using Claude
         // const summary = await generateSummary(anthropic, messageContent);
 
         messages.push({
           channelId: channel.id,
-          messages: channelMessages
+          messages: channelMessages,
           // summary,
-          // timeRange
+          timeRange
         });
       } catch (error) {
         console.error(`Error processing channel ${channel.id}:`, error);
