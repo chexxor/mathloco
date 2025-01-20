@@ -11,6 +11,10 @@ function initializeClients() {
   const DISCORD_TOKEN = import.meta.env.DISCORD_TOKEN;
   const CLAUDE_API_KEY = import.meta.env.CLAUDE_API_KEY;
 
+  if (!DISCORD_TOKEN) {
+    throw new Error('Discord token is not configured. Please set the DISCORD_TOKEN environment variable.');
+  }
+
   const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
   const anthropic = new Anthropic({
     apiKey: CLAUDE_API_KEY,
@@ -20,9 +24,11 @@ function initializeClients() {
 }
 
 export async function getDiscordSummary(): Promise<CachedData> {
+  console.log('getDiscordSummary');
   // Return cached data if it's still fresh
   if (cachedData && (new Date().getTime() - cachedData.lastUpdated.getTime()) < CACHE_DURATION) {
-    return cachedData;
+    // return cachedData;
+    console.log('skipping cachedData');
   }
 
   const GUILD_ID = import.meta.env.DISCORD_GUILD_ID;
@@ -45,6 +51,7 @@ export async function getDiscordSummary(): Promise<CachedData> {
           Routes.channelMessages(channel.id),
           { query: new URLSearchParams({ limit: '10' }) }
         )) as DiscordMessage[];
+        console.log(channelMessages);
 
         if (!channelMessages || channelMessages.length === 0) continue;
 
