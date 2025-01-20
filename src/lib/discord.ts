@@ -71,12 +71,12 @@ export async function getDiscordSummary(env: RuntimeEnv): Promise<CachedData> {
         const timeRange = `${new Date(oldestMessage.timestamp).toLocaleDateString()} - ${new Date(latestMessage.timestamp).toLocaleDateString()}`;
 
         // Generate summary using Claude
-        // const summary = await generateSummary(anthropic, messageContent);
+        const summary = await generateSummary(anthropic, messageContent);
 
         messages.push({
           channelId: channel.id,
           messages: channelMessages,
-          // summary,
+          summary,
           timeRange
         });
       } catch (error) {
