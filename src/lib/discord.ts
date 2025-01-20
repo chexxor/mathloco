@@ -18,7 +18,7 @@ function initializeClients(env: RuntimeEnv) {
   const DISCORD_TOKEN = import.meta.env.DISCORD_TOKEN;
 
   if (!DISCORD_TOKEN) {
-    throw new Error('Discord token is not configured. Please set the DISCORD_TOKEN environment variable.');
+    // throw new Error('Discord token is not configured. Please set the DISCORD_TOKEN environment variable.');
   }
 
   const rest = new REST({ version: '10' }).setToken(DISCORD_TOKEN);
