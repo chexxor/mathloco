@@ -13,11 +13,6 @@
   "theme": {
     "color": "#f59e0b"
   },
-  "contact": {
-    "name": "Contact Us",
-    "email": "contactus@mathbookclubsite.com",
-    "location": "Minneapolis, MN"
-  },
   "URLs": {
     "meetupGroup": "https://www.meetup.com/minneapolis-mathematics-book-club"
   }
