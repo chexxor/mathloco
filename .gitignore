@@ -19,8 +19,8 @@ pnpm-debug.log*
 .wrangler/
 
 # Database ORM
-# Note: no trailing slash. `db:studio:preview|prod` source this FILE, and it holds
-# CLOUDFLARE_D1_API_TOKEN; `.drizzle.env/` would only match a directory and leave the
+# Note: no trailing slash. The drizzle configs load this FILE (scripts/drizzle-config.ts) and it
+# holds CLOUDFLARE_D1_API_TOKEN; `.drizzle.env/` would only match a directory and leave the
 # token committable.
 .drizzle.env
 

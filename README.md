@@ -28,11 +28,12 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
    Discord is withholding message text (the Message Content Intent trap), and which guild ids the
    token can actually see. `DISCORD_GUILD_ID` must be the **server** id — pasting the bot's own
    Application ID is the single most common failure and shows up as `10004 "Unknown Guild"`.
-4. **Local database** — `npm run db:migrate:local`. This creates the local D1 SQLite file under
-   `.wrangler/state/v3/d1/`; `drizzle.config.ts` finds it there itself. Worth knowing before you
-   spend time on this step: the D1 layer is currently **dormant** — the binding, schema and three
-   migrations exist, but nothing in `src/` queries `env.DB` — so it is only needed for work that
-   will start using it.
+4. **Local database** — only needed for work that touches data. `npm run db:migrate:local` applies
+   `migrations/` to the local D1 SQLite file under `.wrangler/state/v3/d1/`; `npm run db:check`
+   verifies those migrations agree with `src/schema.ts`; `npm run db:studio:local` browses the
+   rows. Two things worth knowing first: nothing in `src/` queries `env.DB` yet, so the tables
+   exist but stay empty until a feature uses them; and remote targets need `.drizzle.env` (copy
+   `.drizzle.env.example`) — see [Database](#-database-sqlite-locally-d1-in-production).
 5. **Run** — `npm run dev` → http://localhost:4321. Stop it with `npx astro dev stop` (Astro 7
    runs the dev server as a background process).
 6. **The chat page** — `/chat` renders a loading state on the server and then fetches
@@ -60,11 +61,17 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run check:discord`      | Discord/credential pre-flight: guild access, message content, key shape |
 | `npm run check:cache`        | Summary-cache rules against a fake KV namespace (`-- --live` for live cases) |
 | `npm run astro -- <cmd>`     | Run Astro CLI commands                                        |
-| `npm run db:generate`        | Generate Drizzle migrations                                   |
-| `npm run db:migrate:local`   | Apply migrations to the local D1 copy                         |
-| `npm run db:migrate:preview` | Apply migrations to the preview database                      |
-| `npm run db:migrate:prod`    | Apply migrations to production                                |
-| `npm run db:studio:local`    | Drizzle Studio against the local D1 copy                      |
+| `npm run db:generate`         | Generate Drizzle migrations from `src/schema.ts`             |
+| `npm run db:check`            | Verify `migrations/` agree with `src/schema.ts` (CI runs it)  |
+| `npm run db:migrate:local`    | Apply migrations to the local D1 SQLite copy                 |
+| `npm run db:migrate:preview`  | Apply migrations to the preview database (needs Cloudflare auth) |
+| `npm run db:migrate:prod`     | Apply migrations to production (needs Cloudflare auth)       |
+| `npm run db:studio:local`     | Drizzle Studio against the local D1 SQLite copy              |
+| `npm run db:studio:preview`   | Drizzle Studio against the preview database (needs `.drizzle.env`) |
+| `npm run db:studio:prod`      | Drizzle Studio against production (needs `.drizzle.env`)     |
+| `npm run db:pull:local`       | Introspect the local copy back into `src/schema.ts` — **overwrites** it |
+| `npm run db:pull:preview`     | Same, against preview — **overwrites** `src/schema.ts` and `migrations/` |
+| `npm run db:pull:prod`        | Same, against production — **overwrites** `src/schema.ts` and `migrations/` |
 | `npm run audit:all`          | `npm audit` for prod + dev dependencies                       |
 | `npm run audit:prod`         | `npm audit --omit=dev` (what actually ships)                  |
 | `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
@@ -103,6 +110,49 @@ Secrets and variables are read through `import { env } from 'cloudflare:workers'
   Without it the Discord summaries are cached per isolate only, so each cold start re-fetches
   Discord and re-pays Claude.
 
+## 🗄️ Database: SQLite locally, D1 in production
+
+One schema (`src/schema.ts`), three targets, and the target is always explicit — because the
+previous setup guessed and got it wrong:
+
+| Command | What it opens |
+| :-- | :-- |
+| `db:generate`, `db:check`, `db:studio:local`, `db:pull:local` | the local SQLite file under `.wrangler/state/v3/d1/` (`drizzle.config.ts`) |
+| `db:studio:preview`, `db:pull:preview` | `d1-mathloco-preview-db` over the D1 API (`drizzle.config.preview.ts`) |
+| `db:studio:prod`, `db:pull:prod` | `d1-mathloco-prod-db` over the D1 API (`drizzle.config.prod.ts`) |
+| `db:migrate:local` / `:preview` / `:prod` | wrangler, not drizzle-kit — it applies `migrations/` to that target |
+
+Remote targets read `.drizzle.env` (copy `.drizzle.env.example`; gitignored). Only
+`CLOUDFLARE_D1_API_TOKEN` is a secret — the database ids are already committed in
+`wrangler.toml`. If a required value is missing the config throws instead of falling back, which
+is the point: the old `drizzle.config.ts` chose local-vs-remote from `NODE_ENV === 'production'`,
+and `db:studio:prod` never set `NODE_ENV`, so it took the local branch — whose idea of "find the
+local database" was "scan all of `.wrangler` for the first `*.sqlite`". Measured on Linux
+(`find .wrangler -name '*.sqlite'`): eight candidates across cache, d1, kv, r2, images and
+observability stores, and the scan picked
+`.wrangler/state/v3/cache/miniflare-CacheObject/metadata.sqlite` — miniflare's HTTP cache
+metadata, not D1. So every studio command was browsing the wrong database, silently. Lookup is
+now scoped to `.wrangler/state/v3/d1`, miniflare's per-resource `metadata.sqlite` files are
+excluded, and more than one real candidate is an error that lists them (`LOCAL_D1_FILE` in
+`.drizzle.env` picks one) rather than a guess by a command that can write.
+
+Normal loop: edit `src/schema.ts` → `npm run db:generate` → **read the generated SQL** in
+`migrations/` (renaming a column and adding a new one are different migrations, and drizzle-kit
+picks) → `npm run db:migrate:local` → `npm run db:check` (also in CI) → `db:migrate:preview` →
+`db:migrate:prod`. `db:pull:*` goes the other way and **overwrites** `src/schema.ts` and
+`migrations/`, so only run it on a clean tree.
+
+Two caveats for the local copy: it is gitignored, so a fresh clone (or a `rm -rf .wrangler`)
+starts empty and needs `npm run db:migrate:local` before anything can query it — I checked the
+local state today and all three migrations are recorded there (`d1_migrations`: 0000, 0001,
+0002; `user` has `id,username,created_dt,modified_dt,deleted_dt`, 0 rows), but I did not find any
+code that applies migrations automatically at dev-server start, so don't count on it. And local
+SQLite is not byte-for-byte D1: verify a migration against preview before production.
+
+Nothing in `src/` queries `env.DB` yet. `npm run cf:types` types the binding for you
+(`worker-configuration.d.ts` declares `DB: D1Database` on `Env`), and `drizzle-orm/d1` is already
+a dependency if you want the query builder; `env.DB.prepare(...).run()` needs no ORM at all.
+
 ## 🔎 Dependency security
 
 - `npm run audit:prod` / `npm run audit:all` — the production tree is what matters for deploy.
@@ -121,9 +171,11 @@ Secrets and variables are read through `import { env } from 'cloudflare:workers'
 ## 🎨 Customization
 
 Tailwind 4 has no JS config file. Theme tokens live in [`src/styles/global.css`](./src/styles/global.css)
-under `@theme` — `book-yellow`, `book-gray`, `book-theme` colours and the `font-sans` /
-`font-body` families. `$math-theme-color` in [`Layout.astro`](./src/layouts/Layout.astro)
-is the selection/underline accent.
+under `@theme` — currently `--color-book-gray` (Footer + social icons) and `--color-book-theme`
+(the `::selection` and `.underline` accents in [`Layout.astro`](./src/layouts/Layout.astro)).
+That token is the only source of truth for the accent colour: `src/config.json` also carries a
+`theme.color` hex, but nothing reads it. `npm run check:classes` fails if markup uses a utility
+whose token has been dropped, which is what makes it safe to add or remove a token here.
 
 ## 🤖 Agent skills
 

@@ -32,6 +32,10 @@ jobs:
       # Every class written in src/ must resolve to CSS. Two typos (`focus:shadow-outline-blue`,
       # `md:max-w-1xl`) shipped for years because no other tool in the loop could see them.
       - run: npm run check:classes
+      # src/schema.ts and migrations/ must agree. Runs against drizzle.config.check.ts, which
+      # carries no credentials and opens no database, so it needs neither .wrangler state nor a
+      # Cloudflare token.
+      - run: npm run db:check
       - run: npm run build
       - run: npm run check:sanitize
       # Summary-cache rules against a fake KV namespace: no credentials and no Claude
