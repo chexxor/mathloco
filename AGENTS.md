@@ -17,12 +17,21 @@ three actors straight is the whole job:
 ## Clock in (run this at the start of every session)
 
 1. Read **`.notes/NEXT.md`** - the current priority, its queue id, and the exact next command.
-2. `git status --short -- .` - know what is already uncommitted before you touch anything.
-3. If this session is an **operating situation a runbook covers** - broker down/stalled, store
-   corruption, a degenerate seat, leaked worktrees, a merge/conflict, or you need external research -
-   read the matching `.notes/runbooks/<symptom>.md` **before improvising**. The index (symptom → runbook)
-   is `.notes/runbooks/README.md`; read `.notes/runbooks/research-request.md` before commissioning research.
-4. Resume from `NEXT.md`. Do not re-derive the priority from the 1300-line roadmap.
+2. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
+   `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
+   once so you know whether the branch is green *before* you start changing it: `check`,
+   `check:classes`, `db:check`, `build`, `check:sanitize`, `check:cache`, `audit:gate`. Run them as
+   separate commands, not one `&&` chain - a chain stops at the first failure and you lose the rest
+   of the picture. `npm run check:discord` needs real credentials and is deliberately not in CI.
+3. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
+   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, or
+   you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
+   improvising**. The index (symptom -> runbook) is `.notes/runbooks/README.md`; read
+   `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
+   which is gitignored - they are host-local, so a fresh clone will not have them.
+4. Resume from `NEXT.md`. Do not re-derive the priority from the roadmap - the roadmap is not in
+   this repo (`AGENTS.md` and `README.md` are the only tracked .md files), so `NEXT.md` is the only
+   queue view a session gets.
 
 ## Work protocol
 
@@ -51,7 +60,9 @@ Then execute on that resulting promp.
 - **Ground every claim** in a retrieved passage or a command you actually ran; never assert from memory.
 - **Do not push or publish.** The operator holds that grant; the delegate may commit its own item's
   work (the commit boundary is scoped per item - stage explicit paths only, never `git add -A`).
-  Push requires the operator's explicit grant.
+  Push requires the operator's explicit grant, and **only the operator runs `git push`** - a granted
+  push is not delegated, it is done by the operator. This repo has a live production site behind
+  `main`; merging and deploying stay with the operator for the same reason.
 - **Native host OS only** - never `wsl`, `docker`, or `docker-compose`. Linux and Windows are both operating
   platforms for this rig (D131); run natively wherever it lives, and **name the OS in every measurement you
   report**: tool names, path fixtures and process-death semantics differ.
