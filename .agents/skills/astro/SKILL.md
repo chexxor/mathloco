@@ -75,12 +75,21 @@ import cloudflare from '@astrojs/cloudflare';
 import svelte from '@astrojs/svelte';
 
 export default defineConfig({
+  site: 'https://www.minneapolismathbookclub.com',
   integrations: [sitemap(), svelte()],
   output: 'server',
-  adapter: cloudflare({ platformProxy: { enabled: true } }),
+  adapter: cloudflare({
+    platformProxy: { enabled: true },
+    imageService: 'compile',
+  }),
   vite: { plugins: [tailwindcss()] },
 });
 ```
+
+`imageService: 'compile'` is load-bearing, not cosmetic: the adapter's **default** routes `astro:assets`
+through the Cloudflare **Images** binding at request time (the build log says so: "Enabling image
+processing with Cloudflare Images … with the `IMAGES` Images binding") and copies the **unprocessed**
+source into `dist/`. `compile` pre-renders variants at build time with sharp.
 
 Do **not** re-add `@astrojs/tailwind`: it is deprecated, peer-limits Astro to `^3|^4|^5`,
 and only supports Tailwind 3. Tailwind 4 is wired through `@tailwindcss/vite`, and theme
@@ -160,14 +169,32 @@ Return generic error messages to clients; log details server-side only.
 Islands hydrate on the client; keep secrets and env access out of `.svelte` files.
 Anything rendered from model/third-party content through `{@html}` must be sanitized first.
 
+### Images and rendering (measured here — three switches, all required)
+
+1. Import the file; **a string `src` is treated as remote** and silently skips optimization:
+   `import heroImage from '../assets/math-group-image.jpg'`, then `<Image src={heroImage} … />`.
+2. `imageService: 'compile'` on the adapter (above), or the build ships the raw source.
+3. Under `output: 'server'`, a **server-rendered route emits no variants** — it needs
+   `export const prerender = true`. `src/pages/index.astro` has it; `/chat` and the API routes do not.
+
+Verify after any image change: `find dist/client/_astro -name '*<name>*'` for variant files and byte
+sizes, and look for `generating optimized images … (before: 1715kB, after: 20kB)` in the build log. If
+the page still points at the original filename, the pipeline never ran. Known gap: compile emitted a
+single 900 px AVIF here — **no `srcset` ladder** yet.
+
 ### Deploying with an Adapter
 
+This site deploys through **Cloudflare Pages with Git integration** (project `mathloco`, automatic
+preview deploys per branch) — **not** by hand-running `wrangler pages deploy`, and the delegate never
+pushes (see `.notes/runbooks/deploy-and-secrets.md`). The local steps still apply:
 1. Add the adapter: `npx astro add cloudflare --yes` (already present here)
 2. Run `npx astro check` to catch type and configuration errors before building.
 3. Run `npm run build` to produce the deployment artifact (`dist/`).
 4. Verify `dist/` exists and is non-empty before proceeding.
-5. Deploy per the adapter's docs (`wrangler pages deploy dist`), and run D1 migrations
-   with `npm run db:migrate:prod` / `db:migrate:preview` when `migrations/` changed.
+5. Run D1 migrations for the target environment when `migrations/` changed — `npm run db:migrate:preview`
+   / `db:migrate:prod` (targets are explicit per environment; see
+   `.notes/runbooks/db-target-and-migrations.md`). `npm run db:check` in CI proves schema and
+   migrations agree without any credentials.
 
 ---
 

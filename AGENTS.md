@@ -17,21 +17,35 @@ three actors straight is the whole job:
 ## Clock in (run this at the start of every session)
 
 1. Read **`.notes/NEXT.md`** - the current priority, its queue id, and the exact next command.
-2. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
+2. **Load the project skills before writing framework or UI code.** They live in `.agents/skills/` and
+   each is repo-specific, so its text beats what you remember - and appearing in the available-skills
+   list is **not** loading it; open the file. Which to open:
+   - `.astro`, `astro.config.*`, SSR/adapter/bindings/D1 work → `astro/SKILL.md`
+   - any `.svelte` / `.svelte.js|ts` work → `svelte-core-bestpractices/SKILL.md` **and**
+     `svelte-code-writer/SKILL.md` (its CLI docs lookup is mandatory for Svelte edits)
+   - anything visual - colour, spacing, type, icons, motion, empty states → `design-system/SKILL.md`
+     (it sequences design-extract -> grill -> ratify -> apply -> enforce); `beautify`,
+     `apply-transitions`, `choose-icons`, `empty-states` are the smaller follow-ons
+   - before merging anything → `code-review-and-quality/SKILL.md`
+   Skills are tracked, so if one goes stale against the code, **fix it in the same commit** that makes
+   it stale (e.g. a config change invalidates the config block quoted in `astro/SKILL.md`).
+3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
    once so you know whether the branch is green *before* you start changing it: `check`,
    `check:classes`, `db:check`, `build`, `check:sanitize`, `check:cache`, `audit:gate`. Run them as
    separate commands, not one `&&` chain - a chain stops at the first failure and you lose the rest
    of the picture. `npm run check:discord` needs real credentials and is deliberately not in CI.
-3. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
+4. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
    Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
    improvising**. The index (symptom -> runbook) is `.notes/runbooks/README.md`; read
    `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
    which is gitignored - they are host-local, so a fresh clone will not have them.
-4. Resume from `NEXT.md`. Do not re-derive the priority from the roadmap - the roadmap is not in
+5. Resume from `NEXT.md`. Do not re-derive the priority from the roadmap - the roadmap is not in
    this repo (`AGENTS.md` and `README.md` are the only tracked .md files), so `NEXT.md` is the only
-   queue view a session gets.
+   queue view a session gets. Durable plans that are not queue items live beside it: `roadmap-events.md`
+   (surfacing and syncing the meetup schedule) and `asset-sources.md` (which image sources are
+   legitimately usable, and what their terms are).
 
 ## Work protocol
 
