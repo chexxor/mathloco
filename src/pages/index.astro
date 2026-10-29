@@ -7,6 +7,12 @@ import PastEvents from '../components/PastEvents.astro';
 import JoinCommunity from '../components/JoinCommunity.astro';
 import Footer from '../components/Footer.astro';
 import { sections } from '../config.json';
+
+// Nothing on this page is per-request: every section comes from src/config.json, and the live
+// Discord data is fetched by /chat's island. Prerendering makes the landing page a static asset
+// (no worker CPU, no cold start) and lets the image service emit the hero's resized variants at
+// build time instead of on first request.
+export const prerender = true;
 ---
 
 <Layout title='Math Enthusiasts Meetup'>

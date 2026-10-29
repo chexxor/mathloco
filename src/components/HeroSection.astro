@@ -1,5 +1,9 @@
 ---
 import { Image } from 'astro:assets';
+// Imported, not referenced by URL string: `src={'/math-group-image.jpg'}` gave astro:assets nothing
+// it could process, so the 6000x4000 / 1,756,478-byte original went to the browser for a ~400 px
+// slot. A local import is what turns on the pipeline (resize + AVIF + srcset).
+import heroImage from '../assets/math-group-image.jpg';
 import config from '../config.json';
 ---
 
@@ -71,9 +75,10 @@ import config from '../config.json';
     >
       <div class='rounded-lg overflow-hidden shadow-lg'>
         <Image
-          src={'/math-group-image.jpg'}
-          width={400}
-          height={300}
+          src={heroImage}
+          width={900}
+          height={600}
+          sizes="(min-width: 1024px) 33vw, 100vw"
           alt={'Math Study Group Session'}
           format={'avif'}
           loading={'eager'}
