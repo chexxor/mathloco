@@ -53,6 +53,7 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run preview`            | Preview the build locally with the `--host` flag              |
 | `npm run check`              | `astro check` — types, config and template diagnostics        |
 | `npm run check:sanitize`     | Adversarial checks for the Discord summary render path        |
+| `npm run check:classes`      | Every class name written in `src/` must resolve to real CSS (Tailwind or hand-written) |
 | `npm run check:discord`      | Discord/credential pre-flight: guild access, message content, key shape |
 | `npm run check:cache`        | Summary-cache rules against a fake KV namespace (`-- --live` for live cases) |
 | `npm run astro -- <cmd>`     | Run Astro CLI commands                                        |
@@ -68,8 +69,8 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run cf:secrets:list`    | List the secrets configured for the deployed Worker           |
 | `npm run cf:kv:create`       | Create the optional `SUMMARY_CACHE` KV namespace              |
 
-`.github/workflows/ci.yml` runs `check`, `build`, `check:sanitize` and `audit:gate` on every
-pull request and on pushes to `main`.
+`.github/workflows/ci.yml` runs `check`, `check:classes`, `build`, `check:sanitize` and
+`audit:gate` on every pull request and on pushes to `main`.
 
 ## 🔐 Environment
 

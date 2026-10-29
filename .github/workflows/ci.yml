@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   verify:
-    name: check, build, sanitize, audit
+    name: check, build, sanitize, classes, audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
@@ -29,6 +29,9 @@ jobs:
       # dependency bump stays gated here exactly as it does locally.
       - run: npm ci
       - run: npm run check
+      # Every class written in src/ must resolve to CSS. Two typos (`focus:shadow-outline-blue`,
+      # `md:max-w-1xl`) shipped for years because no other tool in the loop could see them.
+      - run: npm run check:classes
       - run: npm run build
       - run: npm run check:sanitize
       # Summary-cache rules against a fake KV namespace: no credentials and no Claude

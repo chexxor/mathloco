@@ -14,6 +14,7 @@
     "astro": "astro",
     "check": "astro check",
     "check:sanitize": "tsx scripts/check-sanitize.ts",
+    "check:classes": "tsx scripts/check-classes.ts",
     "check:discord": "tsx scripts/check-discord-access.ts",
     "db:generate": "drizzle-kit generate",
     "db:pull": "drizzle-kit pull",
@@ -57,6 +58,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.4",
     "@cloudflare/workers-types": "^5.20261029.1",
+    "@tailwindcss/node": "^4.3.3",
     "@types/node": "^26.6.6",
     "better-sqlite3": "^13.0.3",
     "drizzle-kit": "^0.31.11",
