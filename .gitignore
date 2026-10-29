@@ -19,10 +19,16 @@ pnpm-debug.log*
 .wrangler/
 
 # Database ORM
-.drizzle.env/
+# Note: no trailing slash. `db:studio:preview|prod` source this FILE, and it holds
+# CLOUDFLARE_D1_API_TOKEN; `.drizzle.env/` would only match a directory and leave the
+# token committable.
+.drizzle.env
 
 # Astro
 .astro/
+
+# Skill installs regenerate this mirror of .agents/skills for other agent CLIs.
+.hermes/
 
 # Environment variables
 .env
@@ -38,3 +44,10 @@ pnpm-debug.log*
 # API keys and secrets
 *.pem
 *.key
+
+# Dev Notes
+.notes/
+
+# Machine-local pi agent state: a local-model endpoint (and its key) can land
+# here, so it is host-specific like durig.config.json and never committed.
+.pi/

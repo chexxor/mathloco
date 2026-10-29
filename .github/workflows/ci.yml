@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    name: check, build, sanitize, audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          # Matches the runtime the Workers deploy uses (Node 24) and the version
+          # `npm run dev`/`build` were verified against.
+          node-version: '24'
+          cache: npm
+      # allowScripts in package.json is the install-script allowlist; anything new in a
+      # dependency bump stays gated here exactly as it does locally.
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - run: npm run check:sanitize
+      # Prod-only audit with an explicit allowlist (scripts/audit-gate.ts), so a new real
+      # advisory fails the build instead of being lost in a wall of known noise.
+      - run: npm run audit:gate
