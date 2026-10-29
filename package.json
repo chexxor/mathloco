@@ -28,7 +28,7 @@
     "audit:all": "npm audit",
     "audit:gate": "tsx scripts/audit-gate.ts",
     "cf:types": "wrangler types",
-    "cf:secrets:list": "wrangler secret list",
+    "cf:secrets:list": "wrangler pages secret list",
     "cf:kv:create": "wrangler kv namespace create SUMMARY_CACHE",
     "check:cache": "tsx scripts/check-summary-cache.ts"
   },

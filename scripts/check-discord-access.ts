@@ -1,9 +1,9 @@
 // Discord access pre-flight check.
 //
-// Reads the same values the Worker uses (from .dev.vars) and reports exactly what the app
-// would see, without printing any secret and without printing message content.
+// Reads the same values the Worker uses (from .dev.vars and wrangler.toml's [vars]) and reports
+// exactly what the app would see, without printing any secret and without printing message content.
 //
-//   npm run check:discord              # uses DISCORD_GUILD_ID from .dev.vars
+//   npm run check:discord              # DISCORD_GUILD_ID: environment, then .dev.vars, then [vars]
 //   npm run check:discord -- <guildId>
 //
 // Exit code 0 = the app can fetch and summarise; non-zero = at least one failure mode below.
@@ -35,9 +35,39 @@ function readDevVars(): Record<string, string> {
 
 const fail: string[] = [];
 
+/**
+ * Plain-text vars from wrangler.toml's `[vars]` table - the values the deployed Pages runtime
+ * gets, and the ones local dev gets too. Deliberately minimal TOML: the `[vars]` table only, so
+ * `[env.preview.vars]` is not mistaken for it, with inline `#` comments stripped. A TOML parser is
+ * not worth a dependency for one id.
+ */
+function readWranglerVars(): Record<string, string> {
+  const path = 'wrangler.toml';
+  if (!existsSync(path)) return {};
+
+  const out: Record<string, string> = {};
+  let inVars = false;
+  for (const line of readFileSync(path, 'utf8').split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (trimmed.startsWith('[')) {
+      inVars = trimmed === '[vars]';
+      continue;
+    }
+    if (!inVars || trimmed.startsWith('#') || !trimmed.includes('=')) continue;
+    const eq = trimmed.indexOf('=');
+    const key = trimmed.slice(0, eq).trim();
+    const value = trimmed.slice(eq + 1).split('#')[0].trim().replace(/^["']|["']$/g, '');
+    if (key) out[key] = value;
+  }
+  return out;
+}
+
 async function main(): Promise<void> {
   const fileVars = readDevVars();
-  const value = (name: Var) => process.env[name] || fileVars[name] || '';
+  const wranglerVars = readWranglerVars();
+  const value = (name: Var) => process.env[name] || fileVars[name] || wranglerVars[name] || '';
+  const sourceOf = (name: Var) =>
+    process.env[name] ? 'environment' : fileVars[name] ? '.dev.vars' : wranglerVars[name] ? 'wrangler.toml [vars]' : 'nowhere';
 
   const token = value('DISCORD_TOKEN');
   const guildArg = process.argv.find((arg, index) => index >= 2 && !arg.startsWith('-'));
@@ -48,11 +78,13 @@ async function main(): Promise<void> {
     process.exit(1);
   }
   if (!guildId) {
-    console.error('DISCORD_GUILD_ID is not set (.dev.vars or the environment).');
+    console.error(
+      'DISCORD_GUILD_ID is not set (environment, .dev.vars, or wrangler.toml [vars]).',
+    );
     process.exit(1);
   }
 
-  console.log(`token: ${token.length} chars, guild under test: ${guildId}`);
+  console.log(`token: ${token.length} chars, guild under test: ${guildId} (from ${sourceOf('DISCORD_GUILD_ID')})`);
 
   const rest = new REST({ version: '10' }).setToken(token);
 

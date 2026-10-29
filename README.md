@@ -69,7 +69,7 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run audit:prod`         | `npm audit --omit=dev` (what actually ships)                  |
 | `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
 | `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
-| `npm run cf:secrets:list`    | List the secrets configured for the deployed Worker           |
+| `npm run cf:secrets:list`    | List the secrets configured for the deployed Pages project    |
 | `npm run cf:kv:create`       | Create the optional `SUMMARY_CACHE` KV namespace              |
 
 `.github/workflows/ci.yml` runs `check`, `check:classes`, `build`, `check:sanitize` and
@@ -83,14 +83,18 @@ Secrets and variables are read through `import { env } from 'cloudflare:workers'
 | Name | Where to get it | Notes |
 | :-- | :-- | :-- |
 | `DISCORD_TOKEN` | Discord Developer Portal → your application → **Bot → Reset Token** | The bot must be a member of the server, with **View Channels** + **Read Message History**, and **Message Content Intent** must be enabled in the portal or `content` comes back empty. |
-| `DISCORD_GUILD_ID` | Discord desktop app: Settings → Advanced → Developer Mode, then right-click the server → *Copy Server ID* | Plain numeric ID; also used as the cache key. |
+| `DISCORD_GUILD_ID` | Discord desktop app: Settings → Advanced → Developer Mode, then right-click the server → *Copy Server ID* | **Not a secret** — it is committed in `wrangler.toml` under `[vars]` (and `[env.preview.vars]`) so it can be reviewed and diffed; `.dev.vars` overrides it locally. Plain numeric ID; also used as the cache key. Pasting the bot's *application* ID here is the single most common failure — `npm run check:discord` prints the guild ids your token can actually see. |
 | `CLAUDE_API_KEY` | console.anthropic.com → Settings → API Keys | |
 | `CLAUDE_MODEL` | optional | Defaults to `claude-haiku-5-5` (`src/lib/claude.ts`). |
 
 - **Local:** put them in `.dev.vars` (gitignored). Wrangler-style per-environment files
-  (`.dev.vars.preview`) also work.
-- **Deployed:** `npx wrangler secret put DISCORD_TOKEN` (and `--env preview` for the preview
-  environment), or the Cloudflare dashboard.
+  (`.dev.vars.preview`) also work. `wrangler.toml` `[vars]` reach the local dev runtime too —
+  verified: with `DISCORD_GUILD_ID` commented out in `.dev.vars`, `/api/discord-summary` still
+  returned `200` in 2.47 s against the guild from `wrangler.toml`.
+- **Deployed (Cloudflare Pages):** secrets are set per Pages project, so the name is required:
+  `npx wrangler pages secret put DISCORD_TOKEN --project-name <pages-project>` and the same for
+  `CLAUDE_API_KEY`. Note `wrangler secret put` without `pages` targets a **Worker**, not Pages —
+  different resource, and it will not do anything to this site.
 - **Bindings** (D1, and the optional KV) live in `wrangler.toml`. Run `npm run cf:types` after
   changing it, so `worker-configuration.d.ts` is regenerated — bindings are typed there, while
   secrets/vars stay declared in `src/env.d.ts`.

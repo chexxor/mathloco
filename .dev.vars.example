@@ -5,6 +5,9 @@ DISCORD_TOKEN=
 # The Discord SERVER id — NOT the bot's own Application ID.
 # Discord desktop: Settings -> Advanced -> Developer Mode on, then right-click the
 # server name -> Copy Server ID.
+# This one is optional here: wrangler.toml [vars] already carries it (it is a public
+# snowflake, not a credential, so it is committed and reviewable). Uncomment this line
+# only to point a local run at a different server - .dev.vars wins over [vars].
 # If this is the bot's application id, Discord answers 10004 "Unknown Guild" and the
 # page shows its "could not load" state. `npm run check:discord` prints every guild
 # id this token can actually see.

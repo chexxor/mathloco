@@ -5,11 +5,18 @@
 compatibility_date = "2026-10-29"
 compatibility_flags = ["nodejs_compat"]
 
-#[vars]
-# Environment variables will be set in the Cloudflare dashboard
-# DISCORD_TOKEN = ""
-# DISCORD_GUILD_ID = ""
-# CLAUDE_API_KEY = ""
+# The Discord guild (server) id is a public snowflake, not a credential, so it lives here where it
+# can be diffed and reviewed rather than in a dashboard field. That misplacement is what kept the
+# summary page broken: the value set by hand was the bot's own application id
+# (1325992054530113577), which Discord answers with 10004 "Unknown Guild", and nothing outside the
+# dashboard could see it. `npm run check:discord` prints the guild ids a token can actually see.
+[vars]
+DISCORD_GUILD_ID = "1170385683379126343" # Math Book Club - the SERVER id
+
+# What really is secret stays secret, per environment:
+#   npx wrangler pages secret put DISCORD_TOKEN  --project-name <pages-project>
+#   npx wrangler pages secret put CLAUDE_API_KEY --project-name <pages-project>
+# CLAUDE_MODEL is optional; it only overrides the default model id in src/lib/claude.ts.
 
 [observability]
 enabled = true
@@ -33,6 +40,9 @@ preview_database_id = "DB"
 
 [env.preview]
 name = "preview"
+
+[env.preview.vars]
+DISCORD_GUILD_ID = "1170385683379126343"
 
 [[env.preview.d1_databases]]
 binding = "DB"
