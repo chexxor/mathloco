@@ -29,7 +29,10 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
    token can actually see. `DISCORD_GUILD_ID` must be the **server** id — pasting the bot's own
    Application ID is the single most common failure and shows up as `10004 "Unknown Guild"`.
 4. **Local database** — `npm run db:migrate:local`. This creates the local D1 SQLite file under
-   `.wrangler/state/v3/d1/`; `drizzle.config.ts` and `scripts/find-db.js` look it up there.
+   `.wrangler/state/v3/d1/`; `drizzle.config.ts` finds it there itself. Worth knowing before you
+   spend time on this step: the D1 layer is currently **dormant** — the binding, schema and three
+   migrations exist, but nothing in `src/` queries `env.DB` — so it is only needed for work that
+   will start using it.
 5. **Run** — `npm run dev` → http://localhost:4321. Stop it with `npx astro dev stop` (Astro 7
    runs the dev server as a background process).
 6. **The chat page** — `/chat` renders a loading state on the server and then fetches
