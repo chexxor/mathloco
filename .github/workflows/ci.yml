@@ -31,6 +31,10 @@ jobs:
       - run: npm run check
       - run: npm run build
       - run: npm run check:sanitize
+      # Summary-cache rules against a fake KV namespace: no credentials and no Claude
+      # calls. It does make one outbound Discord call with a deliberately invalid token
+      # (the total-failure case), so it needs network but no secrets.
+      - run: npm run check:cache
       # Prod-only audit with an explicit allowlist (scripts/audit-gate.ts), so a new real
       # advisory fails the build instead of being lost in a wall of known noise.
       - run: npm run audit:gate

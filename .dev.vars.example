@@ -1,5 +1,18 @@
+# Discord bot token: Developer Portal -> your application -> Bot -> Reset Token.
+# (An App/OAuth "Client Secret" will NOT work — the app calls the API as the bot.)
 DISCORD_TOKEN=
+
+# The Discord SERVER id — NOT the bot's own Application ID.
+# Discord desktop: Settings -> Advanced -> Developer Mode on, then right-click the
+# server name -> Copy Server ID.
+# If this is the bot's application id, Discord answers 10004 "Unknown Guild" and the
+# page shows its "could not load" state. `npm run check:discord` prints every guild
+# id this token can actually see.
 DISCORD_GUILD_ID=
+
+# Anthropic API key: console.anthropic.com -> Settings -> API Keys.
 CLAUDE_API_KEY=
-# Optional: overrides the default Claude model id (see src/lib/claude.ts)
+
+# Optional: overrides the default Claude model id (see src/lib/claude.ts).
+# Empty means "use the default".
 CLAUDE_MODEL=

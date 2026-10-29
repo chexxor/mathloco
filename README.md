@@ -20,18 +20,28 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
    run yet (`npm install-scripts ls`); the approved set is recorded in `allowScripts` in
    `package.json`, so a normal `npm ci` needs no interaction. Note that `better-sqlite3` v13
    ships prebuilt binaries, so no C++ toolchain is required.
-2. **Secrets** — `cp .dev.vars.example .dev.vars` and fill in the three values (see
-   [Environment](#-environment) below). `.dev.vars` is gitignored. The dev server reloads when
-   you change it.
-3. **Local database** — `npm run db:migrate:local`. This creates the local D1 SQLite file under
+2. **Secrets** — `cp .dev.vars.example .dev.vars` and fill in the three values (each line in
+   that example file says where the value comes from). `.dev.vars` is gitignored, and the dev
+   server reloads when you change it.
+3. **Pre-flight** — `npm run check:discord`. It uses the same credentials the app uses and tells
+   you, before you open a browser, whether the bot is a member of the configured guild, whether
+   Discord is withholding message text (the Message Content Intent trap), and which guild ids the
+   token can actually see. `DISCORD_GUILD_ID` must be the **server** id — pasting the bot's own
+   Application ID is the single most common failure and shows up as `10004 "Unknown Guild"`.
+4. **Local database** — `npm run db:migrate:local`. This creates the local D1 SQLite file under
    `.wrangler/state/v3/d1/`; `drizzle.config.ts` and `scripts/find-db.js` look it up there.
-4. **Run** — `npm run dev` → http://localhost:4321. Stop it with `npx astro dev stop` (Astro 7
+5. **Run** — `npm run dev` → http://localhost:4321. Stop it with `npx astro dev stop` (Astro 7
    runs the dev server as a background process).
-5. **The chat page** — `/chat` calls `/api/discord-summary`. Without valid `DISCORD_TOKEN` /
-   `DISCORD_GUILD_ID` / `CLAUDE_API_KEY` it renders its "could not load" state and the API returns
-   `{"error":"Failed to fetch Discord summary"}` with status `502`; the real cause and stack trace
-   go to the dev-server log, read it with `npx astro dev logs` (Astro 7 runs the dev server as a
-   background process, so its output is not in your terminal).
+6. **The chat page** — `/chat` renders a loading state on the server and then fetches
+   `/api/discord-summary` in the browser. A cold fetch (Discord + Claude) takes a few seconds; the
+   next one in the same isolate is ~40 ms. If credentials are missing or Discord/Claude fail, the
+   API returns `{"error":"Failed to fetch Discord summary"}` with status `502` and the page shows
+   its "could not load" state — the real cause and stack trace go to `npx astro dev logs`, never
+   to the response.
+7. **Cache behaviour** — `npm run check:cache` runs the summary-cache rules (shared-cache hit,
+   stale-on-error within the 7-day grace, nothing cached on total failure) against a fake KV
+   namespace. The default run needs no credentials and makes no Claude calls; `-- --live` adds two
+   cases that use the real ones.
 
 | Command                      | Action                                                        |
 | :--------------------------- | :------------------------------------------------------------ |
@@ -43,6 +53,8 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run preview`            | Preview the build locally with the `--host` flag              |
 | `npm run check`              | `astro check` — types, config and template diagnostics        |
 | `npm run check:sanitize`     | Adversarial checks for the Discord summary render path        |
+| `npm run check:discord`      | Discord/credential pre-flight: guild access, message content, key shape |
+| `npm run check:cache`        | Summary-cache rules against a fake KV namespace (`-- --live` for live cases) |
 | `npm run astro -- <cmd>`     | Run Astro CLI commands                                        |
 | `npm run db:generate`        | Generate Drizzle migrations                                   |
 | `npm run db:migrate:local`   | Apply migrations to the local D1 copy                         |
@@ -114,8 +126,8 @@ Two kinds, and the distinction matters when updating them:
 
 - **Lock-managed** (`skills-lock.json`, reinstallable with `npx skills add <owner>/<repo>` and
   restorable with `npx skills experimental_install`): the ten design skills from
-  `MaxPrehoda/motif`, plus `svelte-code-writer` and `svelte-core-bestpractices` from
-  `sveltejs/ai-tools`.
+  `MaxPrehoda/motif`, `svelte-code-writer` and `svelte-core-bestpractices` from
+  `sveltejs/ai-tools`, and `code-review-and-quality` from `addyosmani/agent-skills`.
 - **Local only** (adapted for this repo, deliberately not in the lock, so an upstream update
   cannot silently overwrite the adaptation): `astro` and `frontend-design`. Diff them against
   their sources by hand if you want to pull upstream changes.
