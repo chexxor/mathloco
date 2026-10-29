@@ -49,14 +49,14 @@ const result = spawnSync('npm', ['audit', '--json', ...(includeDev ? [] : ['--om
   maxBuffer: 32 * 1024 * 1024,
 });
 
-let vulns: Record<string, Vuln>;
+let vulns: Record<string, Vuln> = {};
 try {
-  ({ vulnerabilities: vulns } = JSON.parse(result.stdout) as { vulnerabilities?: Record<string, Vuln> });
+  const parsed = JSON.parse(result.stdout) as { vulnerabilities?: Record<string, Vuln> };
+  vulns = parsed.vulnerabilities ?? {};
 } catch {
   console.error('Could not parse `npm audit --json` output:\n', result.stdout || result.stderr);
   process.exit(2);
 }
-vulns ??= {};
 
 const ownAdvisories = (v: Vuln) => v.via.filter((x): x is Advisory => typeof x !== 'string');
 const inheritedFrom = (v: Vuln) => v.via.filter((x): x is string => typeof x === 'string');
