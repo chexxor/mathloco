@@ -34,7 +34,7 @@ const overlay = Buffer.from(
 </svg>`,
 );
 
-const info = await sharp(source)
+await sharp(source)
   // attention: pick the region most likely to contain the subject (a room of people) rather than
   // the geometric centre, which on a wide group photo crops heads out.
   .resize(W, H, { fit: 'cover', position: sharp.gravity.attention })
