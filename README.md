@@ -11,14 +11,32 @@
 
 ## 🧞 Commands
 
-Run from the project root. `npm` is the package manager this branch was verified with
-(`bun install` / `pnpm install` also work; `bun.lockb` is currently stale — regenerate it
-with `bun install` if you use Bun).
+Run from the project root. **npm is the only supported package manager here** — `package-lock.json`
+is the single lockfile (`bun.lockb` was removed because it had drifted from the npm resolution).
+
+## 🚀 Running it locally, end to end
+
+1. **Install** — `npm install`. On a fresh machine npm will report install scripts it has not
+   run yet (`npm install-scripts ls`); the approved set is recorded in `allowScripts` in
+   `package.json`, so a normal `npm ci` needs no interaction. Note that `better-sqlite3` v13
+   ships prebuilt binaries, so no C++ toolchain is required.
+2. **Secrets** — `cp .dev.vars.example .dev.vars` and fill in the three values (see
+   [Environment](#-environment) below). `.dev.vars` is gitignored. The dev server reloads when
+   you change it.
+3. **Local database** — `npm run db:migrate:local`. This creates the local D1 SQLite file under
+   `.wrangler/state/v3/d1/`; `drizzle.config.ts` and `scripts/find-db.js` look it up there.
+4. **Run** — `npm run dev` → http://localhost:4321. Stop it with `npx astro dev stop` (Astro 7
+   runs the dev server as a background process).
+5. **The chat page** — `/chat` calls `/api/discord-summary`. Without valid `DISCORD_TOKEN` /
+   `DISCORD_GUILD_ID` / `CLAUDE_API_KEY` it renders its "could not load" state and the API returns
+   `{"error":"Failed to fetch Discord summary"}` with status `502`; the real cause and stack trace
+   go to the dev-server log, read it with `npx astro dev logs` (Astro 7 runs the dev server as a
+   background process, so its output is not in your terminal).
 
 | Command                      | Action                                                        |
 | :--------------------------- | :------------------------------------------------------------ |
 | `npm install`                | Installs dependencies                                         |
-| `npm run dev`                | Starts the dev server at `localhost:3000` (`astro dev stop` to stop it) |
+| `npm run dev`                | Starts the dev server at `localhost:4321` (`npx astro dev stop` to stop it) |
 | `npm run start:app`          | Alternative way to start the dev server                       |
 | `npm run start:functions`    | Starts the Wrangler Pages dev server against `dist`           |
 | `npm run build`              | Builds the production site to `./dist/`                       |
@@ -33,14 +51,37 @@ with `bun install` if you use Bun).
 | `npm run db:studio:local`    | Drizzle Studio against the local D1 copy                      |
 | `npm run audit:all`          | `npm audit` for prod + dev dependencies                       |
 | `npm run audit:prod`         | `npm audit --omit=dev` (what actually ships)                  |
+| `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
+| `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
+| `npm run cf:secrets:list`    | List the secrets configured for the deployed Worker           |
+| `npm run cf:kv:create`       | Create the optional `SUMMARY_CACHE` KV namespace              |
+
+`.github/workflows/ci.yml` runs `check`, `build`, `check:sanitize` and `audit:gate` on every
+pull request and on pushes to `main`.
 
 ## 🔐 Environment
 
-Copy `.dev.vars.example` to `.dev.vars` for local development; production secrets live in
-the Cloudflare dashboard. Bindings (D1, KV, Images) are configured in `wrangler.toml` and
-typed by `worker-configuration.d.ts` — regenerate that file with `npx wrangler types` after
-changing `wrangler.toml`. Variables and secrets are declared in `src/env.d.ts`
-(`Cloudflare.Env`) and read with `import { env } from 'cloudflare:workers'`.
+Secrets and variables are read through `import { env } from 'cloudflare:workers'`, typed in
+`src/env.d.ts` (`Cloudflare.Env`), and supplied per environment:
+
+| Name | Where to get it | Notes |
+| :-- | :-- | :-- |
+| `DISCORD_TOKEN` | Discord Developer Portal → your application → **Bot → Reset Token** | The bot must be a member of the server, with **View Channels** + **Read Message History**, and **Message Content Intent** must be enabled in the portal or `content` comes back empty. |
+| `DISCORD_GUILD_ID` | Discord desktop app: Settings → Advanced → Developer Mode, then right-click the server → *Copy Server ID* | Plain numeric ID; also used as the cache key. |
+| `CLAUDE_API_KEY` | console.anthropic.com → Settings → API Keys | |
+| `CLAUDE_MODEL` | optional | Defaults to `claude-haiku-5-5` (`src/lib/claude.ts`). |
+
+- **Local:** put them in `.dev.vars` (gitignored). Wrangler-style per-environment files
+  (`.dev.vars.preview`) also work.
+- **Deployed:** `npx wrangler secret put DISCORD_TOKEN` (and `--env preview` for the preview
+  environment), or the Cloudflare dashboard.
+- **Bindings** (D1, and the optional KV) live in `wrangler.toml`. Run `npm run cf:types` after
+  changing it, so `worker-configuration.d.ts` is regenerated — bindings are typed there, while
+  secrets/vars stay declared in `src/env.d.ts`.
+- **Optional KV cache:** `npm run cf:kv:create`, paste the printed `id`/`preview_id` into the
+  commented `[[kv_namespaces]]` block in `wrangler.toml`, uncomment it, then `npm run cf:types`.
+  Without it the Discord summaries are cached per isolate only, so each cold start re-fetches
+  Discord and re-pays Claude.
 
 ## 🔎 Dependency security
 
@@ -50,7 +91,12 @@ changing `wrangler.toml`. Variables and secrets are declared in `src/env.d.ts`
   (pinned low by the unmaintained `@esbuild-kit/*` chain inside `drizzle-kit`). Remove an
   override only when the upstream package ships a fixed release.
 - `npm install` reports packages with install scripts (`npm install-scripts ls`). Review and
-  `npm install-scripts approve` them deliberately rather than blanket-approving.
+  `npm install-scripts approve` them deliberately rather than blanket-approving. Approvals are
+  pinned to an exact version in `allowScripts`, so a dependency bump re-opens the gate.
+- `npm run audit:gate` is the CI gate: it fails on anything not explicitly allowlisted in
+  `scripts/audit-gate.ts`, where each tolerated advisory carries the reason and the condition
+  for removing it (today: the three `deepmerge` lows reached through `@astrojs/svelte`, which
+  have no upstream fix — `npm audit fix --force` would downgrade `@astrojs/svelte` to 0.1.2).
 
 ## 🎨 Customization
 
@@ -63,6 +109,16 @@ is the selection/underline accent.
 
 `.agents/skills/` holds project skills (Astro, Svelte, and frontend-design guidance) that
 any Agent-Skills-compatible assistant — including Pi — loads on demand.
+
+Two kinds, and the distinction matters when updating them:
+
+- **Lock-managed** (`skills-lock.json`, reinstallable with `npx skills add <owner>/<repo>` and
+  restorable with `npx skills experimental_install`): the ten design skills from
+  `MaxPrehoda/motif`, plus `svelte-code-writer` and `svelte-core-bestpractices` from
+  `sveltejs/ai-tools`.
+- **Local only** (adapted for this repo, deliberately not in the lock, so an upstream update
+  cannot silently overwrite the adaptation): `astro` and `frontend-design`. Diff them against
+  their sources by hand if you want to pull upstream changes.
 
 ## 🔍 SEO
 
