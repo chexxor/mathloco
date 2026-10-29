@@ -21,12 +21,15 @@ jobs:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-node@v7.1.0
         with:
-          # Matches the runtime the Workers deploy uses (Node 24) and the version
-          # `npm run dev`/`build` were verified against.
-          node-version: '24'
+          # Single Node version across local (`.nvmrc`), CI here, and Cloudflare Pages, whose
+          # v22 build image defaults to 22.23.4. Workers is not Node - it is V8/workerd - so the
+          # binding constraint is the build toolchain: Astro 7.4.4 refuses anything below 22.23.4,
+          # and Pages' older v20 image defaults to 18.17.1, which failed the 2026-10-29 build.
+          node-version: '22.23.4'
           cache: npm
-      # allowScripts in package.json is the install-script allowlist; anything new in a
-      # dependency bump stays gated here exactly as it does locally.
+      # `allowScripts` in package.json is npm 11's install-script allowlist; it gates local
+      # installs. Pages/CI run npm 10.9.9, which has no such gate, so the guard there is that
+      # `npm ci` installs exactly what the lockfile pins and nothing else.
       - run: npm ci
       - run: npm run check
       # Every class written in src/ must resolve to CSS. Two typos (`focus:shadow-outline-blue`,

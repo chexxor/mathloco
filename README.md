@@ -16,10 +16,25 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 
 ## 🚀 Running it locally, end to end
 
-1. **Install** — `npm install`. On a fresh machine npm will report install scripts it has not
+0. **Runtime** — Node **22.23.4**; `nvm use` reads `.nvmrc`. The number is not a preference:
+   Astro 7.4.4 refuses to build below `>=22.23.4`. Cloudflare's
+   [build-image table](https://developers.cloudflare.com/pages/configuration/build-image/#override-default-versions)
+   gives the defaults per image: **v3 → Node 22.23.4 + npm 10.9.9**, **v2 → Node 18.17.1 +
+   npm 9.6.7**, v1 → 12.18.0. This Pages project is on **v2** — the failing 2026-10-29 branch build
+   logged `nodejs@18.17.1, npm@9.6.7` and then `Node.js v18.17.1 is not supported by Astro!`.
+   The repo-side fix is the `.nvmrc`: that table accepts `.nvmrc`/`.node-version` (or a
+   `NODE_VERSION` build env var) as an "any version" override on every image. Two reasons to keep
+   the pin rather than trust the default: **v2 is auto-moved to v3 on 2027-02-23**, and Cloudflare
+   "will update preinstalled software before reaching end-of-life … these updates apply only if you
+   have not overridden the default version" — their own best practice is to pin. Note the same page
+   lists, as a v3 limitation, that detecting Node and package managers from `package.json`
+   `"engines"` is **not** supported: `engines.node` below is a local guard, not the Pages lever.
+1. **Install** — `npm install`. On a fresh machine **npm 11** reports install scripts it has not
    run yet (`npm install-scripts ls`); the approved set is recorded in `allowScripts` in
    `package.json`, so a normal `npm ci` needs no interaction. Note that `better-sqlite3` v13
-   ships prebuilt binaries, so no C++ toolchain is required.
+   ships prebuilt binaries, so no C++ toolchain is required. Caveat worth knowing: the install
+   scripts gate is an **npm 11** feature — Pages (npm 10.9.9) and anything else on npm 10 have no
+   `install-scripts` command at all, so there the guard is the pinned lockfile plus `npm ci`.
 2. **Secrets** — `cp .dev.vars.example .dev.vars` and fill in the three values (each line in
    that example file says where the value comes from). `.dev.vars` is gitignored, and the dev
    server reloads when you change it.
