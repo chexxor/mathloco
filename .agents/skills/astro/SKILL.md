@@ -122,16 +122,32 @@ const { title, body } = Astro.props;
 
 ### API Route Reading Cloudflare Bindings
 
-`env` comes from `locals.runtime.env` (typed via `App.Locals` in `src/env.d.ts`), not
-`import.meta.env`. Never read `process.env` in edge code.
+`env` comes from `import { env } from 'cloudflare:workers'`, not `import.meta.env` and not
+`locals`. Never read `process.env` in edge code.
+
+The adapter removes `Astro.locals.runtime` entirely (verified in
+`node_modules/@astrojs/cloudflare/dist`: "`Astro.locals.runtime.env` has been removed in Astro
+v6. Use `import { env } from "cloudflare:workers"` instead."). The other removals it reports:
+
+| Removed | Use instead |
+| :-- | :-- |
+| `locals.runtime.env` | `import { env } from 'cloudflare:workers'` |
+| `locals.runtime.cf` | `Astro.request.cf` |
+| `locals.runtime.ctx` | `Astro.locals.cfContext` |
+| `locals.runtime.caches` | the global `caches` object |
+
+Bindings are typed in `worker-configuration.d.ts` (regenerate with `npm run cf:types` after
+editing `wrangler.toml`); secrets and plain vars are declared on `Cloudflare.Env` in
+`src/env.d.ts`.
 
 ```ts
 // src/pages/api/example.ts
 import type { APIRoute } from 'astro';
+import { env } from 'cloudflare:workers';
 
-export const GET: APIRoute = async ({ locals }) => {
-  const db = locals.runtime.env.DB; // D1 binding
-  return new Response(JSON.stringify({ ok: true }), {
+export const GET: APIRoute = async () => {
+  const { results } = await env.DB.prepare('select id from posts').all();
+  return new Response(JSON.stringify(results), {
     headers: { 'Content-Type': 'application/json' },
   });
 };

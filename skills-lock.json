@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "skills": {
+    "apply-transitions": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/apply-transitions/SKILL.md",
+      "computedHash": "2d36a46e0a6f38f680a93f3d9e503b4975de096ba8fbb7d36255b446b6968caa"
+    },
+    "beautify": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/beautify/SKILL.md",
+      "computedHash": "24b939a3773d3c19a94ce53e653b603cb473bd890768cce570a68e06a55237d3"
+    },
+    "choose-icons": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/choose-icons/SKILL.md",
+      "computedHash": "8a64e60292e2fac96a3e14b7c8b774dbda88a63cb57a3158d7a8862f92eff730"
+    },
+    "design-apply": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/design-apply/SKILL.md",
+      "computedHash": "a2fd25aecc553fdd0b286053a96aa882e5f8d5289267479039fbd27600f9676a"
+    },
+    "design-enforce": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/design-enforce/SKILL.md",
+      "computedHash": "a6050b848e57efa33a52522046ec2692a64339359080976d59f39fc4a922516e"
+    },
+    "design-extract": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/design-extract/SKILL.md",
+      "computedHash": "91163ef7b068c63bf2c050875fdc01af43966205aee3983fd5dc729d1106904b"
+    },
+    "design-grill": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/design-grill/SKILL.md",
+      "computedHash": "55fc6fc6dd9568d1c5c03eb26533839adbfade320ed7e4d0f2169eb1669517e2"
+    },
+    "design-ratify": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/design-ratify/SKILL.md",
+      "computedHash": "3cd661d8f22239ae4ca352f424a34124371bc3aed4831b7b4d83775322f9c734"
+    },
+    "design-system": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/design-system/SKILL.md",
+      "computedHash": "8a4bb2c6b8a3033d950c77b45b3490ba2f6fb4d4f2cef45a3be84e0157c1b128"
+    },
+    "empty-states": {
+      "source": "MaxPrehoda/motif",
+      "sourceType": "github",
+      "skillPath": "skills/empty-states/SKILL.md",
+      "computedHash": "52b6a3166e91c1e1b01835face3a92d5b9b937c5ea82ccbfad3193e58aa388b0"
+    },
+    "svelte-code-writer": {
+      "source": "sveltejs/ai-tools",
+      "sourceType": "github",
+      "skillPath": "plugins/claude/svelte/skills/svelte-code-writer/SKILL.md",
+      "computedHash": "abe888cce357ab0fa0104ff2266edaf9c3a8382320b303f920cd777762a6bc85"
+    },
+    "svelte-core-bestpractices": {
+      "source": "sveltejs/ai-tools",
+      "sourceType": "github",
+      "skillPath": "plugins/claude/svelte/skills/svelte-core-bestpractices/SKILL.md",
+      "computedHash": "3cd6c1f1a92b8bf52af8120e5cb3a93b5512f83b905fd902b895adafb7225456"
+    }
+  }
+}
