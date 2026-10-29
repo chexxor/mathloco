@@ -44,10 +44,13 @@ import Navigation from '../components/Navigation.astro';
     <Navigation />
     <slot />
     <style lang="scss" is:global>
-      $math-theme-color: #3b82f6;
-
+      /* The theme colour is the token from src/styles/global.css (@theme --color-book-theme).
+         src/config.json declares the same hex under `theme.color`, but nothing reads it, so this
+         token is the source of truth. These rules used to hardcode a different blue (#3b82f6),
+         so the only places a theme colour actually rendered disagreed with the colour the rest of
+         the site declares. */
       ::selection {
-        background: $math-theme-color;
+        background: var(--color-book-theme);
         color: white;
       }
 
@@ -89,7 +92,7 @@ import Navigation from '../components/Navigation.astro';
       .underline {
         background: linear-gradient(
           to top,
-          $math-theme-color 35%,
+          var(--color-book-theme) 35%,
           transparent 35%
         );
         text-decoration: none;

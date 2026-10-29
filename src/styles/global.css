@@ -2,7 +2,10 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-book-yellow: #fce62e;
+  /* Only tokens the site actually uses: --color-book-gray (Footer + the four social icons) and
+     --color-book-theme (::selection, via Layout.astro). A palette entry nobody references is a
+     class that looks available in markup and does nothing interesting - add it back with the
+     usage, not before it. */
   --color-book-gray: #1a1a1c;
   --color-book-theme: #f59e0b;
 
