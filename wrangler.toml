@@ -1,5 +1,9 @@
 # wrangler.toml
-node_compat = true
+# Wrangler v4 removed the top-level `node_compat` key. Node APIs (used by
+# @anthropic-ai/sdk and @discordjs/rest) now come from the `nodejs_compat`
+# compatibility flag, which requires a compatibility_date.
+compatibility_date = "2026-10-29"
+compatibility_flags = ["nodejs_compat"]
 
 #[vars]
 # Environment variables will be set in the Cloudflare dashboard

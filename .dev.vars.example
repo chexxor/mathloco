@@ -1,3 +1,5 @@
 DISCORD_TOKEN=
 DISCORD_GUILD_ID=
 CLAUDE_API_KEY=
+# Optional: overrides the default Claude model id (see src/lib/claude.ts)
+CLAUDE_MODEL=
