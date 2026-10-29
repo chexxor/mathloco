@@ -1,6 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.svelte';
+
+// Nothing here is per-request: the island fetches /api/discord-summary in the browser, and the rest
+// of the page is static markup. Prerendering turns /chat into a static asset (no Worker CPU, no cold
+// start, edge-cacheable) - verified: `dist/client/chat/index.html` appears in the build output.
+export const prerender = true;
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
@@ -13,7 +18,11 @@ import DiscordSummary from '../components/DiscordSummary.svelte';
       Discord Chat Summary
     </h1>
 
-    <DiscordSummary client:load />
+    <!-- `visible`, not `load`: the summary block is below the fold on phones, and this island
+         drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the
+         server-rendered heading and the "Join Discord Server" CTA interactive immediately and skips
+         the API fetch entirely for visitors who never scroll to it. -->
+    <DiscordSummary client:visible />
 
     <div class="mt-16 bg-blue-50 rounded-xl p-8">
       <div class="text-center">
