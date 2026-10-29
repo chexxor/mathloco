@@ -33,7 +33,8 @@
     "cf:types": "wrangler types",
     "cf:secrets:list": "wrangler pages secret list",
     "cf:kv:create": "wrangler kv namespace create SUMMARY_CACHE",
-    "check:cache": "tsx scripts/check-summary-cache.ts"
+    "check:cache": "tsx scripts/check-summary-cache.ts",
+    "assets:social": "node scripts/make-social-share.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",
