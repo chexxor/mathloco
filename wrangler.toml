@@ -21,6 +21,16 @@ database_name = "d1-mathloco-prod-db"
 database_id = "4e997466-3b31-4a4d-8187-a1e24f6ab7a3"
 preview_database_id = "DB"
 
+# Cross-isolate cache for the Discord summaries (src/lib/discord.ts). The code works
+# without it - it falls back to a per-isolate cache and re-pays Discord + Claude on every
+# cold start - so this stays commented until the namespaces exist. To enable:
+#   npm run cf:kv:create        # prints an `id`; repeat for a preview namespace if wanted
+# then paste the ids below and uncomment both blocks, and run `npm run cf:types`.
+# [[kv_namespaces]]
+# binding = "SUMMARY_CACHE"
+# id = "<namespace id from `npm run cf:kv:create`>"
+# preview_id = "<preview namespace id>"
+
 [env.preview]
 name = "preview"
 

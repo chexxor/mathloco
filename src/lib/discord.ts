@@ -15,15 +15,43 @@ import {
   SUMMARY_SYSTEM_PROMPT,
 } from './claude';
 
-// Cache management
+// Cache management. Two layers, because a Workers isolate only keeps module state for
+// its own lifetime: an in-memory layer per isolate, plus an optional KV binding shared
+// across isolates. Without the KV binding every cold isolate re-fetches Discord and
+// re-pays Claude, so a burst of cold starts multiplies cost and latency.
 let cachedData: CachedData | null = null;
-const CACHE_DURATION = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
+const MEMORY_CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24 hours, per isolate
+const KV_CACHE_TTL_SECONDS = 60 * 60 * 24; // 24 hours, shared
+// If Discord or Claude is failing, a summary up to this old is still better than a 502.
+const STALE_GRACE_MS = 1000 * 60 * 60 * 24 * 7;
+const CACHE_KEY_PREFIX = 'discord-summary:v1';
+
+/** JSON-safe form of CachedData (`lastUpdated` is a Date in memory, an ISO string in KV). */
+type CachedDataWire = Omit<CachedData, 'lastUpdated'> & { lastUpdated: string };
+
+const toWire = (data: CachedData): CachedDataWire => ({
+  ...data,
+  lastUpdated: data.lastUpdated.toISOString(),
+});
+
+const fromWire = (data: CachedDataWire): CachedData => ({
+  ...data,
+  lastUpdated: new Date(data.lastUpdated),
+});
+
+const ageOf = (data: CachedData) => new Date().getTime() - data.lastUpdated.getTime();
 
 // The Cloudflare `Env` type (bindings generated into worker-configuration.d.ts by
 // `wrangler types`, secrets/vars declared in src/env.d.ts) is passed in explicitly so
 // this module stays testable.
 export type DiscordEnv = Pick<Cloudflare.Env, 'DISCORD_TOKEN' | 'DISCORD_GUILD_ID' | 'CLAUDE_API_KEY'> & {
   CLAUDE_MODEL?: string;
+  /**
+   * Optional KV binding (`[[kv_namespaces]]`, binding name `SUMMARY_CACHE`). When it is
+   * absent the cache degrades to one entry per isolate, which is functionally correct
+   * but pays for a fresh Discord + Claude round trip on every cold isolate.
+   */
+  SUMMARY_CACHE?: KVNamespace;
 };
 
 function initializeClients(env: DiscordEnv) {
@@ -51,13 +79,54 @@ function initializeClients(env: DiscordEnv) {
   return { discordAPI, anthropic };
 }
 
+async function readSharedCache(env: DiscordEnv, key: string): Promise<CachedData | null> {
+  if (!env.SUMMARY_CACHE) return null;
+
+  try {
+    const stored = await env.SUMMARY_CACHE.get<CachedDataWire>(key, 'json');
+    if (!stored) return null;
+    cachedData = fromWire(stored);
+    return cachedData;
+  } catch (error) {
+    // A KV hiccup must not take the page down; fall through to a live fetch.
+    console.error('Failed to read summary cache from KV:', error);
+    return null;
+  }
+}
+
+async function writeSharedCache(env: DiscordEnv, key: string, data: CachedData): Promise<void> {
+  if (!env.SUMMARY_CACHE) return;
+
+  try {
+    await env.SUMMARY_CACHE.put(key, JSON.stringify(toWire(data)), {
+      expirationTtl: KV_CACHE_TTL_SECONDS,
+    });
+  } catch (error) {
+    console.error('Failed to write summary cache to KV:', error);
+  }
+}
+
 export async function getDiscordSummary(env: DiscordEnv): Promise<CachedData> {
   // Return cached data if it's still fresh
-  if (cachedData && new Date().getTime() - cachedData.lastUpdated.getTime() < CACHE_DURATION) {
+  if (cachedData && ageOf(cachedData) < MEMORY_CACHE_TTL_MS) {
     return cachedData;
   }
 
   const { DISCORD_GUILD_ID } = env;
+  const cacheKey = `${CACHE_KEY_PREFIX}:${DISCORD_GUILD_ID}`;
+
+  if (!env.SUMMARY_CACHE && !env.DISCORD_GUILD_ID) {
+    throw new Error('DISCORD_GUILD_ID is not configured. Please set the DISCORD_GUILD_ID environment variable.');
+  }
+
+  if (!env.SUMMARY_CACHE) {
+    console.warn('SUMMARY_CACHE KV binding is not configured; summaries are cached per isolate only.');
+  } else {
+    const shared = await readSharedCache(env, cacheKey);
+    if (shared && ageOf(shared) < KV_CACHE_TTL_SECONDS * 1000) {
+      return shared;
+    }
+  }
   const { discordAPI, anthropic } = initializeClients(env);
 
   let channels: DiscordChannel[] = [];
@@ -107,15 +176,34 @@ export async function getDiscordSummary(env: DiscordEnv): Promise<CachedData> {
     // Update cache. Raw message text is deliberately not cached or served: the page
     // only renders the summaries, and a public endpoint should not hand out chat logs
     // and usernames.
-    cachedData = {
+    const fresh: CachedData = {
       channels,
       messages: summaries,
       lastUpdated: new Date(),
     };
 
-    return cachedData;
+    // Do not park an empty result in the cache for a day: every channel failing is a
+    // reason to retry on the next request rather than to keep serving nothing.
+    if (summaries.length > 0) {
+      cachedData = fresh;
+      await writeSharedCache(env, cacheKey, fresh);
+    } else {
+      console.warn('Discord fetch produced no summaries; not caching.');
+    }
+
+    return fresh;
   } catch (error) {
     console.error('Error fetching Discord data:', error);
+
+    // Upstream is failing (rate limit, Discord/Claude outage). Serve the most recent
+    // summary we have if it is within the grace window instead of a hard 502.
+    if (cachedData && ageOf(cachedData) < STALE_GRACE_MS) {
+      console.warn('Serving stale Discord summary cache', {
+        ageHours: Math.round(ageOf(cachedData) / 3_600_000),
+      });
+      return cachedData;
+    }
+
     throw error;
   }
 }
