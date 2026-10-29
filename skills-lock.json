@@ -19,6 +19,12 @@
       "skillPath": "skills/choose-icons/SKILL.md",
       "computedHash": "8a64e60292e2fac96a3e14b7c8b774dbda88a63cb57a3158d7a8862f92eff730"
     },
+    "code-review-and-quality": {
+      "source": "addyosmani/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/code-review-and-quality/SKILL.md",
+      "computedHash": "0667c7af98996c0bec4fb0eb444680bdbf1da1d6a3cfdf5dbe8cbd350d9d2752"
+    },
     "design-apply": {
       "source": "MaxPrehoda/motif",
       "sourceType": "github",
