@@ -34,9 +34,18 @@
       if (!response.ok) {
         throw new Error(`Request failed with status ${response.status}`);
       }
+      // A static-only deploy answers *any* unmatched path with the home page: status 200,
+      // `text/html`. So `response.ok` is not evidence that we reached the API - the content type is.
+      const contentType = response.headers.get('content-type') ?? 'none';
+      if (!contentType.includes('application/json')) {
+        throw new Error(`/api/discord-summary returned ${contentType} instead of JSON - the API route is not deployed on this host`);
+      }
       data = await response.json();
       error = null;
-    } catch {
+    } catch (cause) {
+      // The bare `catch {}` here used to discard the reason, which is why a broken preview showed a
+      // sentence and nothing else. The visitor gets the plain message; the console gets the cause.
+      console.error('[discord-summary] load failed:', cause);
       error = 'Failed to load Discord summary';
     } finally {
       loading = false;
