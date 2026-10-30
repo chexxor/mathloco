@@ -8,7 +8,7 @@ import svelte from '@astrojs/svelte';
 export default defineConfig({
   // Keep in sync with `seo.canonical` in src/config.json; required for @astrojs/sitemap
   // and for canonical/OG URLs.
-  site: 'https://www.minneapolismathbookclub.com',
+  site: 'https://minneapolismathbookclub.com',
   integrations: [sitemap(), svelte()],
   output: 'server',
   // Nothing in this app reads Astro sessions, but @astrojs/cloudflare v14 enables a KV-backed session

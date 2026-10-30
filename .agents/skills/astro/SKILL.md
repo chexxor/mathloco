@@ -75,7 +75,7 @@ import cloudflare from '@astrojs/cloudflare';
 import svelte from '@astrojs/svelte';
 
 export default defineConfig({
-  site: 'https://www.minneapolismathbookclub.com',
+  site: 'https://minneapolismathbookclub.com',
   integrations: [sitemap(), svelte()],
   output: 'server',
   adapter: cloudflare({

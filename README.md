@@ -112,6 +112,27 @@ branch protection requiring the `verify` check before merge. `check:discord` and
 from every automated run: they need credentials and `check:ai` spends a paid model call, so they are
 pre-deploy rituals you run by hand.
 
+## 🌐 Host names and the canonical URL
+
+The site is served at the **apex**: `https://minneapolismathbookclub.com`. The canonical host appears in
+exactly two files, and they must match:
+
+| File | Key | What it drives |
+| :-- | :-- | :-- |
+| `src/config.json` | `seo.canonical` | `<link rel="canonical">`, `og:url`, and the prefix for `og:image` (`src/layouts/Layout.astro`) |
+| `astro.config.mjs` | `site` | the absolute `<loc>` URLs in `sitemap-0.xml` (`@astrojs/sitemap`) |
+
+`public/robots.txt` also names the sitemap absolutely, so it is a third place the host is written.
+
+**Do not set these to `www` unless `www` actually resolves.** A canonical pointing at a host with no DNS
+record tells every crawler that the working pages are duplicates of pages that do not exist — it is worse
+than no canonical at all. If you want `www` as the canonical host, do it in the Cloudflare zone, not here:
+add a `www` record (proxied, pointing at the same Worker/Pages service) and one **Single Redirect** rule
+`https://www.minneapolismathbookclub.com/*` → `https://minneapolismathbookclub.com/$1`, **301**. Single
+Redirects are available on every plan (10 rules on Free). Prefer this over a `_redirects` file: Pages
+docs state that `_redirects` entries *"are not applied to requests served by Pages Functions"*, so a
+host-level redirect in `_redirects` is not guaranteed to cover the API routes.
+
 ## 🔐 Environment
 
 Secrets and variables are read through `import { env } from 'cloudflare:workers'`, typed in
