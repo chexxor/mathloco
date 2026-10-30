@@ -207,6 +207,36 @@ check(
 check(typeof config.main === 'string' && config.main.endsWith('entry.mjs'), `worker entrypoint = ${String(config.main)}`,
   'the adapter emits entry.mjs; if this changed, the artifact shape changed with it');
 
+// 5. The manifest actually got injected into the entry. This is here because of a measured
+//    near-miss: one build exited 0 and passed all 16 checks above, and `wrangler deploy` then
+//    refused it —
+//      Uncaught TypeError: Invalid URL string.
+//        at .../astro/dist/core/app/manifest.js in deserializeManifest   [code: 10021]
+//    because `dist/server/entry.mjs` still contained the literal token that Astro's
+//    `manifestBuildPostHook` is supposed to substitute:
+//      var _manifest = deserializeManifest("@@ASTRO_MANIFEST_REPLACE@@");
+//    `new URL(undefined)` is what throws. The token survives when the post-build hook does not
+//    run over the written chunks (an interrupted build was the trigger here; `astro build` then
+//    reported Complete! and a subsequent build fixed it). 6,559 B of the entry is the manifest
+//    payload, so the byte difference is the tell as much as the token is.
+const MANIFEST_TOKEN = '@@ASTRO_MANIFEST_REPLACE@@';
+const ENTRY = resolve(SERVER_DIR, String(config.main ?? 'entry.mjs'));
+let entry = '';
+try {
+  entry = readFileSync(ENTRY, 'utf8');
+} catch {
+  /* the missing-file case is reported by the next check */
+}
+check(entry !== '' && !entry.includes(MANIFEST_TOKEN),
+  entry === '' ? `entry readable at ${ENTRY}` : 'manifest token substituted in entry.mjs',
+  entry === ''
+    ? 'the entrypoint wrangler would upload is not on disk — the build did not finish. Run: rm -rf dist && npm run build.'
+    : `entry.mjs still contains ${MANIFEST_TOKEN}, so the Worker will throw "Invalid URL string" during ` +
+      'deserializeManifest at upload (code 10021) or at first request. Run: rm -rf dist && npm run build. ' +
+      'If it reappears, look for a build that was killed part-way (PITFALLS: an interrupted tool call kills the child).');
+check(/"rootDir":"file:\/\//.test(entry), 'manifest payload present (rootDir file: URL)',
+  'the entry must carry the serialized manifest object, not just a call site — a bare ' +
+  'deserializeManifest("…") means the build wrote an entry it never finished processing.');
 console.log(`check:deploy - ${ARTIFACT}`);
 for (const p of passed) console.log(`  ok   ${p}`);
 if (failures.length) {

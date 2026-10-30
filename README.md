@@ -108,7 +108,9 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run deploy`             | `npm run verify && wrangler deploy` — the gates run before a **production** Worker deploy, so a red gate cannot deploy |
 | `npm run preview:deploy`     | `npm run verify && wrangler preview` — a branch Preview URL for review; name defaults to the current git branch |
 | `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build` · `check:deploy`. This is the hook's **build command**, so a red gate cannot upload | 
-| `npm run check:deploy`       | Read `dist/server/wrangler.json` and assert it is still deployable on the apex: the route, the assets root, the D1 ids, the Preview vars, both KV namespaces, and the cold-start byte budget. Needs a build, so it runs **after** `build` in `verify` |
+| `npm run check:deploy`       | Read `dist/server/wrangler.json` (and `entry.mjs`) and assert it is still deployable on the apex: the route, the assets root, the D1 ids, the Preview vars, both KV namespaces, the cold-start byte budget, and that Astro's manifest actually got injected. 19 checks; needs a build, so it runs **after** `build` in `verify` |
+| `npm run probe:cpu`          | Deploy the built artifact as a throwaway Worker (`mmbc-cpu-probe`, no routes, preview KV/D1 only) so `wrangler tail` can report **per-request CPU** before anything of yours is promoted. Delete it after: `npx wrangler delete mmbc-cpu-probe --force` |
+| `npm run falsify:manifest`   | Deliberately break `dist/server/entry.mjs` to prove the manifest assertions in `check:deploy` go red. Operates on `dist/` only; restore with `npm run build` |
 | `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
 | `npm run cf:secrets:list`    | List secrets on the **production** Worker                  |
 | `npm run cf:secrets:list:preview`      | List secrets on the Preview for the current branch |
@@ -161,9 +163,25 @@ Visitor gets error 1102. Waiting on `fetch` does not count; *evaluating the modu
 with plain `fetch` (618,134 B total, largest module 346,636 B) and `check:deploy` refuses to deploy past
 a byte budget, because a dependency list does not tell you what landed in which route chunk.
 
-The shared cache is the other half. Both layers live in `src/lib/discord.ts`; measured on workerd in
-sequence: cold isolate with nothing cached **cpu=13ms / 2.09 s**, same isolate again **0.008 s**, and
-after a restart with a warm KV **0.037 s**. Namespaces:
+The same route, measured on the real runtime after the change (throwaway probe Worker, `npm run probe:cpu`,
+`wrangler tail --format json`, whose top-level `cpuTime`/`wallTime` are the only place this rig has ever
+seen the number):
+
+| request | cpu | wall |
+| --- | --- | --- |
+| cold isolate, KV miss (live Discord + Claude) | **8 ms** | 1983 ms |
+| ten KV-warm requests | 0–1 ms each, one at **5 ms** | ~1 ms, that one 10 ms |
+| `GET /`, `/chat/`, `/favicon.svg` | **not logged at all** | — |
+
+Read it honestly: 13 ms → 8 ms is *under* the ceiling with **2 ms to spare**, not comfortably under it, and
+the one 5 ms sample is what a fresh isolate costs even when the answer is in KV — so a burst after traffic
+goes quiet is the shape that could still clip. The third row is the free-tier lever worth more: static
+asset requests never invoke the Worker, which is why `/` and `/chat` are prerendered. A Preview **cannot**
+be tailed (`wrangler tail <preview-name>` → "This Worker does not exist" [code: 10007]; a Preview's
+requests do not appear in the production Worker's tail either), which is why the probe exists.
+
+The cache itself, measured on workerd in sequence: cold isolate with nothing cached **2.09 s**, same
+isolate again **0.008 s**, and after a restart with a warm KV **0.037 s**. Namespaces:
 
 | binding | namespace | id | used by |
 | --- | --- | --- | --- |
@@ -203,6 +221,25 @@ summary while `/` kept answering 200 the whole time.
 the `routes` block does not leave the domain alone — it **detaches the apex**. That is what
 `npm run check:deploy` exists to make impossible; it reads the artifact wrangler will actually
 upload, not the TOML it came from (the adapter has already been seen to drop keys it does not know).
+
+The same gate also checks something that only showed up as a deploy refusal. One build reported
+`Complete!`, exited 0, and passed every check — and then `wrangler deploy` rejected it:
+
+```text
+Uncaught TypeError: Invalid URL string.
+  at .../astro/dist/core/app/manifest.js:35 in deserializeManifest
+  at entry.mjs:170                                           [code: 10021]
+```
+
+`dist/server/entry.mjs` still held `deserializeManifest("@@ASTRO_MANIFEST_REPLACE@@")` — Astro's
+post-build hook had never substituted the manifest, so the Worker threw `new URL(undefined)` at
+startup. It is also ~6.5 KB smaller than a good entry. `check:deploy` now asserts the token is gone and
+that a `"rootDir":"file://` payload is present, and `npm run falsify:manifest` re-breaks `entry.mjs` to
+prove both go red (2 failures, then `npm run build` to restore). Seven later builds were clean, so the
+original trigger is not pinned down, but a build cut short was seen leaving `dist/server/entry.mjs`
+**absent** while `chunks/` and `wrangler.json` were already there — so the two broken shapes are "entry
+missing" and "entry present, token unsubstituted", and the gate names each with its own remedy
+(`rm -rf dist && npm run build`). If a build command ever gets interrupted, rebuild before believing `dist/`.
 
 The remaining teardown, in this order (each step is reversible up to the last):
 

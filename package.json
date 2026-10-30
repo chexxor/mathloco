@@ -42,7 +42,9 @@
     "cf:secrets:list:preview-base": "wrangler preview base-config secret list",
     "cf:kv:create": "wrangler kv namespace create SUMMARY_CACHE",
     "check:cache": "tsx scripts/check-summary-cache.ts",
-    "assets:social": "node scripts/make-social-share.mjs"
+    "assets:social": "node scripts/make-social-share.mjs",
+    "probe:cpu": "node scripts/probe-config.mjs && wrangler deploy --config dist/server/wrangler.probe.json",
+    "falsify:manifest": "node scripts/falsify-manifest-token.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.3",

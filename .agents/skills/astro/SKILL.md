@@ -217,6 +217,26 @@ promoting. Connecting the repo needs the Cloudflare GitHub App or a token with W
   back to an SDK.
 - `npm run check:deploy` enforces a byte budget (total ≤ 900,000 B, largest module ≤ 400,000 B) read from
   `dist/server/**`. If it goes red, `astro build`'s chunk list names the import that pulled it in.
+- **How to get a real CPU number without shipping:** `npm run probe:cpu` deploys the artifact as a
+  throwaway Worker (`mmbc-cpu-probe`, routes stripped, KV/D1 repointed at the *preview* namespaces) and
+  `npx wrangler tail mmbc-cpu-probe --format json` reports top-level `cpuTime`/`wallTime`. Delete it after:
+  `npx wrangler delete mmbc-cpu-probe --force` (name is positional; `-y` is not a flag there).
+  Measured with this repo's artifact: cold isolate + KV miss **8 ms** (was 13 ms with the SDKs), ten
+  KV-warm requests 0–1 ms with one fresh isolate at **5 ms**. So the ceiling is met with ~2 ms of margin —
+  treat any new dependency in a route chunk as a CPU change, not just a size change.
+  A **Preview cannot be tailed**: `wrangler tail <preview-name>` → "This Worker does not exist"
+  [code: 10007], and a Preview's requests never appear in the production Worker's tail.
+- **Static assets do not invoke the Worker here** — `GET /`, `/chat/` and `/favicon.svg` produced no tail
+  entries at all, and those requests are the free-and-unlimited kind. Prerendering is therefore a budget
+  lever, not only a latency one; conversely anything that pushes traffic through Worker code (a Cache
+  Rule with `run_worker_first`, Workers Caching of assets) is what puts a free plan at risk of 1102.
+- `check:deploy` also asserts Astro's manifest was actually injected into `entry.mjs`. A build here once
+  exited 0 and passed every other check while `dist/server/entry.mjs` still contained
+  `deserializeManifest("@@ASTRO_MANIFEST_REPLACE@@")`; `wrangler deploy` then refused it with
+  `Uncaught TypeError: Invalid URL string … [code: 10021]`. Prove the gate works with
+  `npm run falsify:manifest` (2 failures), restore with `npm run build`. A build cut short was also seen
+  leaving `entry.mjs` **absent** while `chunks/` and `wrangler.json` existed — the gate names both shapes, so
+  after any interrupted build command, rebuild before believing `dist/`.
 - The summary cache is **KV-bound** (`SUMMARY_CACHE`, and `SUMMARY_CACHE_PREVIEW` for Previews). Without
   it every cold isolate re-paid Discord + Claude (2.09 s) and the 7-day stale-grace path was dead code;
   with it a cold isolate reads KV in 0.037 s. Previews must keep their own namespace — shared id means
