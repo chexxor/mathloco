@@ -280,27 +280,31 @@ A killed build can also leave `entry.mjs` absent while `chunks/` exist. Either w
 stands between it and production: after any interrupted build command, `rm -rf dist && npm run build` before
 believing `dist/`.
 
-The teardown, and what is left of it (measured 2026-10-30 21:5xZ, after the cutover commits landed):
+The teardown, and what is left of it (measured 2026-10-30, 22:0x–22:1x UTC, after the trigger commit
+deployed):
 
-1. ✅ Pages production auto-deploy switched off (Settings → Build → *Production branch control*). Confirm
-   on the next push to `main` that Pages gains no new deployment; until that is proven, a push still burns
-   one of the 500 free Pages build-minutes and creates a "production" deployment that 404s.
+1. ✅ Pages production auto-deploy switched off (Settings → Build → *Production branch control*) — **proven,
+   not assumed**: pushing `357a265` created a Pages deployment record carrying `is_skipped: true` and
+   `skip_reason: "production_deployments_disabled"`. Pages built nothing and published nothing.
 2. ✅ The apex hostname is detached from Pages: `GET /accounts/<id>/pages/projects/mathloco/domains` returns
    `"result": []`.
-3. ⚠️ **Remaining:** a leftover Pages-era DNS record on the apex still points at `mathloco.pages.dev`. It is
-   not load-bearing for a Custom Domain (Cloudflare creates its own record for that), but it *is* what a
-   **route** would fall back to, so it keeps a path to a stale Pages deployment alive. To retire it: delete
-   the record, then probe the apex immediately (`/` and `/api/discord-summary`). If resolution breaks,
-   recover in one step by adding a proxied `AAAA` record for `@` pointing at `100::` (the reserved IPv6
-   discard prefix — the documented dummy in both the routes and custom-domains pages, and then the route
-   serves the Worker again). This rig cannot read or edit DNS records: `dns_records` is not in the OAuth
-   token's scopes, and `GET /zones/<id>/dns_records` and `GET /zones/<id>/custom_hostnames` both answer
-   `10000 Authentication error`, so this step is dashboard work.
-4. Then delete Pages, which is only safe once nothing about the apex depends on it. `470df4f4…` is the last
-   good Pages deployment if a rollback is ever wanted; `bd05bf61…` (auto-built, 404s at its own URL) is not.
-5. Finally, retire the route entry from `wrangler.toml` — a Custom Domain covers every path — and change
+3. ✅ The leftover Pages-era DNS record is deleted — **and it was not the record its target suggested.** It
+   was the record `www` resolved *through*, so deleting it sent `www` to `NXDOMAIN` while the apex carried on
+   untouched, because the apex's records are the ones Cloudflare created for the Custom Domain. Fixing
+   `www` is two Free-plan steps, written out under *Which host is canonical* below. The lesson for the next
+   teardown: read a record's **name** before deleting it, not just its target.
+4. ⚠️ **Remaining: delete Pages.** Nothing about the apex depends on it now, and two things argue for
+   finishing rather than leaving it "harmless": the project still stores `CLAUDE_API_KEY` as a
+   **`plain_text`** env var, and the deployments API returns those values in the clear to any token with
+   Pages read access (that is how it surfaced while checking the skip reason) — so **rotate that key** and
+   delete the project; and its GitHub connection keeps creating skipped deployment records on every push.
+   Rollback is not Pages anyway: `npx wrangler deployments list` shows Worker version ids and
+   `npx wrangler rollback [version-id]` restores one (both in the pinned 4.155.0).
+5. Retire the route entry from `wrangler.toml` — a Custom Domain covers every path — and change
    `check:deploy`'s expected trigger count from 2 to 1 **in the same commit**, so the gate matches the
-   declared contract rather than lagging it.
+   declared contract rather than lagging it. Keep both until that can be probed right after a deploy: this
+   token cannot list routes (`10404` on the zone routes path) or custom hostnames (`10000`), so the trigger
+   set is only observable through behaviour.
 
 Branch review without touching production: `npm run preview:deploy` (`wrangler preview`) returns a
 Preview URL named after the current git branch; with `preview_urls = true` each deployment also keeps a
@@ -323,18 +327,31 @@ exactly two files, and they must match:
 
 **Do not set these to `www` unless `www` actually resolves.** A canonical pointing at a host with no DNS
 record tells every crawler that the working pages are duplicates of pages that do not exist — it is worse
-than no canonical at all. `www` does now resolve and does redirect to the apex (measured 2026-10-30:
-`https://www.minneapolismathbookclub.com/` → `301` → `https://minneapolismathbookclub.com/` → `200`), so
-the apex is a safe canonical. Proxied records hide the record type from a public DNS lookup — `www`
-answers `A`/`AAAA` for a Cloudflare proxied record whatever you created — so verify a redirect by
-fetching it, not by querying it.
+than no canonical at all. The apex is the safe canonical. **`www` does not resolve right now**: measured
+2026-10-30 at 22:1x UTC, `dig www.minneapolismathbookclub.com @1.1.1.1` → `NXDOMAIN` and `curl` → `Could not
+resolve host`, because the record `www` was resolving through got deleted during the Pages teardown (see the
+teardown order above). Nothing in the build points at `www` — grepping `dist/client` for it returns 0 files —
+so `www` is insurance for hand-typed addresses and old shares, not a dependency.
 
-If you ever want `www` to be the canonical instead, do it in the Cloudflare zone, not here:
-add a `www` record (proxied, pointing at the same Worker/Pages service) and one **Single Redirect** rule
-`https://www.minneapolismathbookclub.com/*` → `https://minneapolismathbookclub.com/$1`, **301**. Single
-Redirects are available on every plan (10 rules on Free). Prefer this over a `_redirects` file: Pages
-docs state that `_redirects` entries *"are not applied to requests served by Pages Functions"*, so a
-host-level redirect in `_redirects` is not guaranteed to cover the API routes.
+To give `www` back, do it in the Cloudflare zone, not here. Two steps, both available on Free:
+
+1. **DNS → add a record**: type `A`, Name `www`, IPv4 `192.0.2.1`, **Proxied**. That address is a documented
+   dummy — Cloudflare answers the redirect at the edge, so nothing reaches an origin. It is the recipe in
+   `pages/how-to/www-redirect`.
+2. **Rules → Redirect Rules (Single Redirects)**: one rule, expression `http.host eq
+   "www.minneapolismathbookclub.com"`, dynamic target `concat("https://minneapolismathbookclub.com",
+   http.request.uri.path)`, status **301**, preserve query string. Quotas are per plan
+   (`rules/url-forwarding/#availability`): **Single Redirects 10 rules per zone on Free**; Bulk Redirects are
+   also on Free (15 rules / 5 lists / 10,000 URLs) if a list reads better to you.
+
+Prefer the zone rule over a `_redirects` file — Pages docs state that `_redirects` entries *"are not applied
+to requests served by Pages Functions"*, so a host-level redirect there is not guaranteed to cover
+`/api/*` — and an edge redirect never reaches the Worker, so it costs no CPU and none of the 100,000
+requests/day.
+
+Verify by **fetching**, not by querying: a proxied record answers `A`/`AAAA` for Cloudflare no matter what
+you created, so the record type tells you nothing. `curl -I https://www.minneapolismathbookclub.com/` should
+show `301` with a `location` on the apex.
 
 ## 🔐 Environment
 
