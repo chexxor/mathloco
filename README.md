@@ -43,6 +43,13 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
    Discord is withholding message text (the Message Content Intent trap), and which guild ids the
    token can actually see. `DISCORD_GUILD_ID` must be the **server** id — pasting the bot's own
    Application ID is the single most common failure and shows up as `10004 "Unknown Guild"`.
+   `npm run check:ai` is the matching pre-flight for the model side: it resolves the model id the
+   way the app does (argument → environment → `.dev.vars` → `wrangler.toml [vars]`), makes one tiny
+   call, and prints the resolved id plus token usage. A retired or mistyped id exits non-zero with
+   the 404 and the deprecations link — that is exactly how production ended up printing
+   "Unable to generate summary at this time." for weeks. It is deliberately not in CI: it needs a
+   real key and spends a request. Run it before a production deploy and after any Anthropic
+   deprecation notice.
 4. **Local database** — only needed for work that touches data. `npm run db:migrate:local` applies
    `migrations/` to the local D1 SQLite file under `.wrangler/state/v3/d1/`; `npm run db:check`
    verifies those migrations agree with `src/schema.ts`; `npm run db:studio:local` browses the
@@ -67,13 +74,15 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm install`                | Installs dependencies                                         |
 | `npm run dev`                | Starts the dev server at `localhost:4321` (`npx astro dev stop` to stop it) |
 | `npm run start:app`          | Alternative way to start the dev server                       |
-| `npm run start:functions`    | Starts the Wrangler Pages dev server against `dist`           |
+| `npm run serve:dist`         | Build, then serve `dist` on workerd via `wrangler dev --config dist/server/wrangler.json` — the same runtime the deploy uses |
 | `npm run build`              | Builds the production site to `./dist/`                       |
-| `npm run preview`            | Preview the build locally with the `--host` flag              |
+| `npm run preview`            | Preview the dev server on your LAN with the `--host` flag     |
+| `npm run preview:workerd`    | Build, then `astro preview` — serves the built artifact on workerd, applies `_headers`, loads `dist/server/.dev.vars` |
 | `npm run check`              | `astro check` — types, config and template diagnostics        |
 | `npm run check:sanitize`     | Adversarial checks for the Discord summary render path        |
 | `npm run check:classes`      | Every class name written in `src/` must resolve to real CSS (Tailwind or hand-written) |
 | `npm run check:discord`      | Discord/credential pre-flight: guild access, message content, key shape |
+| `npm run check:ai`           | Model pre-flight: does the configured model id resolve? Prints token usage (needs a key, not in CI) |
 | `npm run check:cache`        | Summary-cache rules against a fake KV namespace (`-- --live` for live cases) |
 | `npm run astro -- <cmd>`     | Run Astro CLI commands                                        |
 | `npm run db:generate`         | Generate Drizzle migrations from `src/schema.ts`             |
