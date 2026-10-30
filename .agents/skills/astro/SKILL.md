@@ -201,11 +201,26 @@ told you to do it. Two things about deploying that are specific to this repo:
 ### The deploy pipeline, and the CPU budget that shapes this repo's code
 
 The intended pipeline is a **Cloudflare repo hook** (Workers Builds), not GitHub Actions: its build
-command is `npm run verify`, so a red gate cannot upload. Grounded facts: the build image preinstalls
-**Node.js 22.23.4** and reads `.nvmrc`/`.node-version`; free plan allows 3,000 build minutes/month, 1
-concurrent build, 20-minute timeout; `npx wrangler versions upload` as the deploy command builds without
-promoting. Connecting the repo needs the Cloudflare GitHub App or a token with Workers Builds scope — a
-`wrangler login` token gets `code 10000` on `/accounts/<id>/builds/*`.
+command is `npm run verify`, so a red gate cannot upload. Fields live at **Workers & Pages → the Worker →
+Settings → Build**: **Git account / Git repository / Git branch** (branch defaults to the repo default),
+then **Build command** / **Deploy command** / **Preview command** / **Root directory**, with preview builds
+behind an **Enable Preview Builds** checkbox under **Branch control**. Leave Deploy command at its default
+`npx wrangler deploy` and Preview command at its default `npx wrangler preview` — the latter is what reads
+this file's `[previews]` block. Grounded facts: the build image **installs dependencies for you**
+(`SKIP_DEPENDENCY_INSTALL=1` opts out), so the build command is `npm run verify`, not
+`npm ci && npm run verify`; it preinstalls **Node.js 22.23.4** and reads `.nvmrc`/`.node-version`; it uses
+the Wrangler version in `package.json`; free plan allows 3,000 build minutes/month, 1 concurrent build,
+20-minute timeout, and `verify` measured **51 s cold / 32 s warm** in a clean clone; `npx wrangler versions
+upload` as the deploy command builds without promoting. A Worker connected to Builds before Worker Previews
+existed shows a **one-way** "Set up Worker Previews" banner. Connecting the repo needs the Cloudflare GitHub
+App or a token with Workers Builds scope — a `wrangler login` token gets `code 10000` on
+`/accounts/<id>/builds/*`.
+
+`verify` is deliberately **credential-free**, which is what lets the hook run it with no build secrets: it
+was validated by cloning this branch somewhere with no `.dev.vars`, no `.drizzle.env`, no `.wrangler/` and no
+`dist/` — `npm ci` then `npm run verify` exited 0. `check:cache` falls back to fake credentials when
+`.dev.vars` is absent, and `db:check` opens no database. `check:discord` and `check:ai` stay out of `verify`
+because they need secrets (and `check:ai` spends a model call).
 
 **Workers bill CPU per request: 10 ms on the free plan, error 1102 past it.** Waiting on `fetch` is free;
 *evaluating the module* is not. That single constraint decides how code in `src/` is written here:
@@ -234,9 +249,12 @@ promoting. Connecting the repo needs the Cloudflare GitHub App or a token with W
   exited 0 and passed every other check while `dist/server/entry.mjs` still contained
   `deserializeManifest("@@ASTRO_MANIFEST_REPLACE@@")`; `wrangler deploy` then refused it with
   `Uncaught TypeError: Invalid URL string … [code: 10021]`. Prove the gate works with
-  `npm run falsify:manifest` (2 failures), restore with `npm run build`. A build cut short was also seen
-  leaving `entry.mjs` **absent** while `chunks/` and `wrangler.json` existed — the gate names both shapes, so
-  after any interrupted build command, rebuild before believing `dist/`.
+  `npm run falsify:manifest` (2 failures), restore with `npm run build`. **Mechanism confirmed by
+  reproduction:** a build that died between the Vite chunk pass (it had printed `✓ built in 23.35s`) and
+  Astro's manifest hook left exactly that artifact — `entry.mjs` 251,077 B with the token still in it, and an
+  unfinished module graph of 29 chunks / 1,384,823 B that the byte-budget check also flagged. A killed build
+  can also leave `entry.mjs` **absent** while `chunks/` and `wrangler.json` exist. So an interrupted build is
+  a routine way to reach a broken `dist/`; after one, `rm -rf dist && npm run build` before believing it.
 - The summary cache is **KV-bound** (`SUMMARY_CACHE`, and `SUMMARY_CACHE_PREVIEW` for Previews). Without
   it every cold isolate re-paid Discord + Claude (2.09 s) and the 7-day stale-grace path was dead code;
   with it a cold isolate reads KV in 0.037 s. Previews must keep their own namespace — shared id means

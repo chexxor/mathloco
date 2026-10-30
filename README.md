@@ -133,9 +133,27 @@ non-zero stops the deploy:
 The facts that make this worth wanting, rather than remembered: the Workers Builds image **preinstalls
 Node.js 22.23.4** and reads `.nvmrc` / `.node-version` (or `NODE_VERSION`), so the pin this repo needs is
 already its default; the free plan allows **3,000 build minutes/month, 1 concurrent build, a 20-minute
-timeout** and `verify` takes about two; and a build that must not ship can use
-`npx wrangler versions upload` as its deploy command, which produces a version and a Version URL without
-promoting it — the thing we wished Pages could do.
+timeout** and `verify` measured **51 s cold** (32 s with a warm Vite cache), so a build is roughly a
+one-and-a-half-minute affair; the image **installs dependencies for you** (`SKIP_DEPENDENCY_INSTALL=1` opts
+out), so the build command is `npm run verify` rather than `npm ci && npm run verify`; and a build that must
+not ship can use `npx wrangler versions upload` as its deploy command, which produces a version and a
+Version URL without promoting it — the thing we wished Pages could do.
+
+Where the fields live: **Workers & Pages → `minneapolis-math-book-club` → Settings → Build**. The repo and
+branch are **Git account / Git repository / Git branch** (branch defaults to the repo's default branch);
+**Build command / Deploy command / Preview command / Root directory** are the build settings; preview builds
+are the **Enable Preview Builds** checkbox under **Branch control**, and a non-production push then runs the
+build command followed by the Preview command. Workers that were connected to Builds before Worker Previews
+get a one-way **Set up Worker Previews** banner instead — the preview settings in `wrangler.toml`'s
+`[previews]` block are what that expects.
+
+That build command was validated by cloning this branch to a fresh directory with none of the host-local
+files a hook will not have — no `.dev.vars`, no `.drizzle.env`, no `.wrangler/`, no `dist/` — and running
+`npm ci` (exit 0) then `npm run verify` (exit **0**, 51 s cold): `astro check` 0 errors / 0 warnings / 0
+hints, `db:check` fine, 21 sanitize checks, `check:cache` "all checks passed", audit gate passed, build
+complete, 19 deploy checks. It works there because `check:cache` falls back to fake credentials when
+`.dev.vars` is absent, `db:check` opens no database, and `check:discord` / `check:ai` — the two that need
+secrets, one of which spends a model call — are deliberately outside `verify`.
 
 Two consequences to plan around:
 
@@ -235,11 +253,14 @@ Uncaught TypeError: Invalid URL string.
 post-build hook had never substituted the manifest, so the Worker threw `new URL(undefined)` at
 startup. It is also ~6.5 KB smaller than a good entry. `check:deploy` now asserts the token is gone and
 that a `"rootDir":"file://` payload is present, and `npm run falsify:manifest` re-breaks `entry.mjs` to
-prove both go red (2 failures, then `npm run build` to restore). Seven later builds were clean, so the
-original trigger is not pinned down, but a build cut short was seen leaving `dist/server/entry.mjs`
-**absent** while `chunks/` and `wrangler.json` were already there — so the two broken shapes are "entry
-missing" and "entry present, token unsubstituted", and the gate names each with its own remedy
-(`rm -rf dist && npm run build`). If a build command ever gets interrupted, rebuild before believing `dist/`.
+prove both go red (2 failures, then `npm run build` to restore). **The mechanism is confirmed, not
+suspected:** a build in a fresh clone died part-way — after the Vite chunk pass had already printed
+`✓ built in 23.35s`, before the manifest hook (its wrapper was reaped mid-build: no exit line in the log, no
+surviving process) — and left exactly that artifact: `entry.mjs` 251,077 B with one `@@ASTRO_MANIFEST_REPLACE@@`
+occurrence, plus an unfinished module set of 29 chunks / 1,384,823 B that the byte-budget check also flagged.
+A killed build can also leave `entry.mjs` absent while `chunks/` exist. Either way `check:deploy` is what
+stands between it and production: after any interrupted build command, `rm -rf dist && npm run build` before
+believing `dist/`.
 
 The remaining teardown, in this order (each step is reversible up to the last):
 
