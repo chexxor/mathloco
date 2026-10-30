@@ -27,6 +27,7 @@ const EXPECTED = {
   workerName: 'minneapolis-math-book-club',
   apex: 'minneapolismathbookclub.com',
   routePattern: 'minneapolismathbookclub.com/*',
+  customDomainPattern: 'minneapolismathbookclub.com',
   prodDb: 'd1-mathloco-prod-db',
   previewDb: 'd1-mathloco-preview-db',
   guildId: '1170385683379126343', // the SERVER id; the bot's app id yields 10004 "Unknown Guild"
@@ -68,7 +69,7 @@ if (!existsSync(ARTIFACT)) {
 }
 
 const config = JSON.parse(readFileSync(ARTIFACT, 'utf8')) as Config;
-const routes = (config.routes ?? []) as { pattern?: string; zone_name?: string }[];
+const routes = (config.routes ?? []) as { pattern?: string; zone_name?: string; custom_domain?: boolean }[];
 const kv = (config.kv_namespaces ?? []) as { binding?: string; id?: string }[];
 const d1 = (config.d1_databases ?? []) as {
   binding?: string;
@@ -85,13 +86,28 @@ const previews = (config.previews ?? {}) as {
 const vars = (config.vars ?? {}) as Record<string, unknown>;
 const flags = (config.compatibility_flags ?? []) as string[];
 
-// 1. The route. Losing this is a production outage, so it is checked first and named loudly.
+// 1. The triggers. Losing either is a production outage, so they are checked first, loudly. A Custom
+//    Domain makes Cloudflare create and own the DNS record and covers every path; a route needs a
+//    proxied record to exist for the hostname. Both are declared while the Pages-era record is retired
+//    (wrangler.toml; runbook: deploy-pipeline-workers-builds).
+check(
+  routes.some((r) => r.pattern === EXPECTED.customDomainPattern && r.custom_domain === true),
+  `custom domain ${EXPECTED.customDomainPattern} present`,
+  `wrangler replaces triggers on deploy, so a config without this entry DETACHES the Custom Domain and
+     leaves the apex depending on whatever DNS record happens to exist. Add back
+     { pattern = "${EXPECTED.customDomainPattern}", custom_domain = true } to wrangler.toml.`,
+);
 check(
   routes.some((r) => r.pattern === EXPECTED.routePattern),
   `route ${EXPECTED.routePattern} present`,
-  `wrangler replaces triggers on deploy, so a config without this route DETACHES the apex. Add back
-       routes = [{ pattern = "${EXPECTED.routePattern}", zone_name = "${EXPECTED.apex}" }]
-     to wrangler.toml, or do not deploy this config.`,
+  `A route needs a proxied DNS record for the hostname to resolve at all. Retire this entry only once the
+     apex has been re-probed with the leftover Pages record gone (runbook: deploy-pipeline-workers-builds).`,
+);
+check(
+  routes.length === 2,
+  `exactly 2 triggers declared, found ${routes.length}`,
+  `wrangler deploy replaces the Worker's whole trigger set with this list, so anything added by hand in
+     the dashboard is detached on the next build. Declared: the Custom Domain and the route.`,
 );
 
 // 2. Dead-end deploy shapes we already tried and refuted.

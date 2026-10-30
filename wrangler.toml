@@ -34,7 +34,21 @@ preview_urls = true
 #
 # ⚠ Wrangler REPLACES a Worker's triggers on every deploy. Deploy from a config that lacks this
 #   block and the apex detaches itself - the live site goes down on a command that looks routine.
+# Two triggers for the apex, deliberately, during the DNS cleanup (D54).
+#
+# `wrangler deploy` REPLACES a Worker's triggers with whatever this file declares, so anything the
+# dashboard or a `--domain` flag added that is not written here gets detached on the next build. The
+# Custom Domain was added that way on 2026-10-30, so it is declared here now.
+#
+# The first entry is a Custom Domain: Cloudflare creates and owns the DNS record for it, and it points
+# every path of the hostname at the Worker (developers.cloudflare.com/workers/configuration/routing/
+# custom-domains: "After you have added the domain or subdomain, Cloudflare will create a new DNS record
+# for you"; "Unlike Routes, Custom Domains point all paths of a domain or subdomain to your Worker").
+# The second is the original route, which needs a *proxied DNS record to exist* for the hostname and is
+# still load-bearing while the leftover Pages-era CNAME is being retired. Delete this route entry only
+# after the apex has been re-probed with that CNAME gone (runbook: deploy-pipeline-workers-builds).
 routes = [
+  { pattern = "minneapolismathbookclub.com", custom_domain = true },
   { pattern = "minneapolismathbookclub.com/*", zone_name = "minneapolismathbookclub.com" },
 ]
 

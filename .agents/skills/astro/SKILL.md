@@ -191,12 +191,21 @@ This site's deploy target is **Cloudflare Workers** (`npm run deploy` = gates + 
 **pushes git**; a production `wrangler deploy` is also the operator's, unless they have explicitly
 told you to do it. Two things about deploying that are specific to this repo:
 
-- **The apex is attached by a `routes` entry in `wrangler.toml`, and wrangler *replaces* triggers on
-  every deploy.** Deploy from a config that lost that block and the domain detaches — a routine-looking
-  command takes the live site down. `npm run check:deploy` (last step of `verify`) asserts the built
-  `dist/server/wrangler.json` still carries the route, the assets root, the D1 ids and the Preview vars.
-- A **custom domain** is refused while the hostname has a pre-existing record (`code: 100117`), which
-  is why this site uses a route. Changing that is a DNS change, not a config change.
+- **The apex has two declared triggers, and wrangler *replaces* the trigger set on every deploy.**
+  `wrangler.toml` must list both: `{ pattern = "minneapolismathbookclub.com", custom_domain = true }` and
+  `{ pattern = "minneapolismathbookclub.com/*", zone_name = "minneapolismathbookclub.com" }`. Anything added
+  in the dashboard or with `--domain` that is not in this file gets detached by the next build — a
+  routine-looking command takes the live site down. `npm run check:deploy` (last step of `verify`) asserts the
+  built `dist/server/wrangler.json` carries both, that exactly two triggers are declared, plus the assets
+  root, D1 ids, KV namespaces, Preview vars, byte budget and manifest integrity — 21 checks.
+- **Custom Domain vs route, and why the order mattered.** A Custom Domain is refused while the hostname has a
+  pre-existing record (`code: 100117`), so the route went first (no outage) and the Custom Domain went after
+  the Pages hostname was detached. Cloudflare then creates its own record pointing at the Worker, and a Custom
+  Domain covers every path — unlike a route, which needs a proxied record to exist. `custom_domain: true`
+  survives the adapter into `dist/server/wrangler.json` (measured), and wrangler type-checks it: a bad value
+  makes `npx wrangler deploy --dry-run` exit 1 with `Expected "routes" to be an array of … { pattern,
+  custom_domain, zone_id | zone_name, … }`. Retire the route entry only after the apex has been re-probed with
+  the leftover Pages-era record deleted, and change `check:deploy`'s expected trigger count in the same commit.
 
 ### The deploy pipeline, and the CPU budget that shapes this repo's code
 
