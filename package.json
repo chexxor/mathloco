@@ -45,19 +45,15 @@
     "assets:social": "node scripts/make-social-share.mjs"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^1.3.0",
     "@astrojs/cloudflare": "^14.4.3",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/svelte": "^9.1.2",
-    "@discordjs/rest": "^2.6.3",
     "@fontsource/pt-serif": "^5.3.0",
     "@paralleldrive/cuid2": "^3.3.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.4.4",
-    "discord-api-types": "^0.38.57",
     "drizzle-orm": "^0.45.4",
-    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "wrangler": "^4.155.0"
   },
@@ -68,13 +64,17 @@
     }
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
     "@astrojs/check": "^0.9.4",
     "@cloudflare/workers-types": "^5.20261029.1",
+    "@discordjs/rest": "^2.6.3",
     "@tailwindcss/node": "^4.3.3",
     "@types/node": "^26.6.6",
     "better-sqlite3": "^13.0.3",
+    "discord-api-types": "^0.38.57",
     "drizzle-kit": "^0.31.11",
     "sass": "^1.107.0",
+    "sharp": "^0.35.5",
     "svelte": "^5.57.3",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3"
