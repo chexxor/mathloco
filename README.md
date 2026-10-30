@@ -107,7 +107,8 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
 | `npm run deploy`             | `npm run verify && wrangler deploy` — the gates run before a **production** Worker deploy, so a red gate cannot deploy |
 | `npm run preview:deploy`     | `npm run verify && wrangler preview` — a branch Preview URL for review; name defaults to the current git branch |
-| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build`. CI runs this; the deploy build command should be `npm ci && npm run verify && wrangler deploy` so every path is identical |
+| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build` · `check:deploy`. CI runs this; the deploy build command should be `npm ci && npm run verify && wrangler deploy` so every path is identical |
+| `npm run check:deploy`       | Read `dist/server/wrangler.json` and assert it is still deployable on the apex: the route, the assets root, the D1 ids, the Preview vars, no id-less KV binding. Needs a build, so it runs **after** `build` in `verify` |
 | `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
 | `npm run cf:secrets:list`    | List secrets on the **production** Worker                  |
 | `npm run cf:secrets:list:preview`      | List secrets on the Preview for the current branch |
@@ -125,7 +126,7 @@ already put the gates in front of a deploy from this machine. `check:discord` an
 from every automated run: they need credentials and `check:ai` spends a paid model call, so they are
 pre-deploy rituals you run by hand.
 
-## 🚚 Deploy target: Workers, and the two-phase cutover
+## 🚚 Deploy target: Workers — the cutover, and why the apex is a *route*
 
 The build produces a Workers artifact: `dist/client` (static assets) and `dist/server/entry.mjs` (one
 SSR Worker, `"no_bundle": true`), and `dist/server/wrangler.json` wires them together with
@@ -135,18 +136,45 @@ and `Success: Assets published!` with no Worker upload, `/api/discord-summary` a
 same commit under workerd answered `200 application/json` with a real summary. Astro removed Pages
 support from this adapter at v13. So the API routes only exist where a Worker runs.
 
-Order matters, because the apex domain is still served by the Pages project:
+Since 2026-10-30 the apex is served by the Worker, and the mechanism is a **route**, not a custom
+domain — that was forced, and the reason is in `wrangler.toml`:
 
-1. `npm run deploy` — creates/updates the Worker, reachable at
-   `minneapolis-math-book-club.<account-subdomain>.workers.dev` (`workers_dev = true`). The domain is
-   untouched, so this is not yet a public change.
-2. Set the Worker's own secrets (see Environment above). Pages secrets do **not** carry over.
-3. Verify on `workers.dev`: `/`, `/chat/`, `/api/discord-summary`, `/definitely-not-a-page` → 404.
-   Budget note: requests to static assets are free and unlimited; requests that hit the Worker count
-   against the 100,000/day free allowance, and free overage fails closed with errors rather than a bill.
-4. Only then attach the domain to the Worker (Workers → Custom domains) and remove the Pages
-   project's custom-domain relationship, so exactly one service owns the hostname.
-5. Keep the Pages deployment until the Worker is verified on the apex, then delete it.
+```
+Hostname 'minneapolismathbookclub.com' already has externally managed DNS records
+(A, CNAME, etc). Delete them first or try a different hostname. [code: 100117]
+```
+
+A Custom Domain has Cloudflare create the record, and the docs say it *"cannot be created on a
+hostname with an existing CNAME DNS record"*; a route sits *"in front of your existing proxied
+hostnames"*. So the route attached while the record stayed put and **the site never stopped
+serving** — measured before/after in one minute, `/api/discord-summary` went 404 → 200 with a real
+summary while `/` kept answering 200 the whole time.
+
+⚠️ **Wrangler replaces a Worker's triggers on every deploy.** `wrangler deploy` from a config without
+the `routes` block does not leave the domain alone — it **detaches the apex**. That is what
+`npm run check:deploy` exists to make impossible; it reads the artifact wrangler will actually
+upload, not the TOML it came from (the adapter has already been seen to drop keys it does not know).
+
+The remaining teardown, in this order (each step is reversible up to the last):
+
+1. The Pages project `mathloco` still exists and still lists `minneapolismathbookclub.com` as a
+   custom hostname, even though the route now shadows it. **Do not delete the Pages project until the
+   apex has a DNS record that Pages does not own** — a route requires a proxied record to exist, and
+   deleting Pages may take the record with it, which would make the apex `ERR_NAME_NOT_RESOLVED`.
+   Two clean end states: (a) keep the route and make the apex record a normal proxied record, or
+   (b) delete the apex record and then ask for a custom domain, which recreates the record pointed at
+   the Worker. Both need DNS edit rights, which the `wrangler login` OAuth token does **not** carry
+   (`dns_records` scope) — dashboard, or a scoped API token.
+2. Turn off Pages production auto-deploy (Settings → Build → *Production branch control*), or the old
+   project keeps rebuilding on every push to `main` and burns the 500-build/month free allowance.
+3. Delete Pages last, once the Worker has served the apex for a while and you want no rollback.
+
+Branch review without touching production: `npm run preview:deploy` (`wrangler preview`) returns a
+Preview URL named after the current git branch; with `preview_urls = true` each deployment also keeps a
+unique `<version>-<name>.<subdomain>.workers.dev` URL. Previews do **not** inherit production settings —
+that is why `[previews.vars]` and `[[previews.d1_databases]]` exist in `wrangler.toml`, and why preview
+secrets are set with `wrangler preview base-config secret put`. Verified working 2026-10-30: a Preview
+served `/api/discord-summary` → 200 with a real summary off the base-config secrets alone.
 
 Branch review without touching production: `npm run preview:deploy` (`wrangler preview`) returns a
 Preview URL named after the current git branch; with `preview_urls = true` each deployment also keeps a
@@ -168,7 +196,13 @@ exactly two files, and they must match:
 
 **Do not set these to `www` unless `www` actually resolves.** A canonical pointing at a host with no DNS
 record tells every crawler that the working pages are duplicates of pages that do not exist — it is worse
-than no canonical at all. If you want `www` as the canonical host, do it in the Cloudflare zone, not here:
+than no canonical at all. `www` does now resolve and does redirect to the apex (measured 2026-10-30:
+`https://www.minneapolismathbookclub.com/` → `301` → `https://minneapolismathbookclub.com/` → `200`), so
+the apex is a safe canonical. Proxied records hide the record type from a public DNS lookup — `www`
+answers `A`/`AAAA` for a Cloudflare proxied record whatever you created — so verify a redirect by
+fetching it, not by querying it.
+
+If you ever want `www` to be the canonical instead, do it in the Cloudflare zone, not here:
 add a `www` record (proxied, pointing at the same Worker/Pages service) and one **Single Redirect** rule
 `https://www.minneapolismathbookclub.com/*` → `https://minneapolismathbookclub.com/$1`, **301**. Single
 Redirects are available on every plan (10 rules on Free). Prefer this over a `_redirects` file: Pages

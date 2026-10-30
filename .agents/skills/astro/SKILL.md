@@ -188,7 +188,17 @@ This site's deploy target is **Cloudflare Workers** (`npm run deploy` = gates + 
 `npm run preview:deploy` for a branch Preview URL). It is *not* deployed by hand-running
 `wrangler pages deploy`, and Pages cannot run this artifact's server side — see
 "Deploy target" in `README.md` and `.notes/runbooks/pages-to-workers-migration.md`. The delegate never
-pushes and never deploys production; the operator holds that grant. The local steps still apply:
+**pushes git**; a production `wrangler deploy` is also the operator's, unless they have explicitly
+told you to do it. Two things about deploying that are specific to this repo:
+
+- **The apex is attached by a `routes` entry in `wrangler.toml`, and wrangler *replaces* triggers on
+  every deploy.** Deploy from a config that lost that block and the domain detaches — a routine-looking
+  command takes the live site down. `npm run check:deploy` (last step of `verify`) asserts the built
+  `dist/server/wrangler.json` still carries the route, the assets root, the D1 ids and the Preview vars.
+- A **custom domain** is refused while the hostname has a pre-existing record (`code: 100117`), which
+  is why this site uses a route. Changing that is a DNS change, not a config change.
+
+The local steps still apply:
 1. Add the adapter: `npx astro add cloudflare --yes` (already present here)
 2. Run `npx astro check` to catch type and configuration errors before building.
 3. Run `npm run build` to produce the deployment artifact (`dist/`).
