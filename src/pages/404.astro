@@ -1,0 +1,53 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { URLs } from '../config.json';
+
+// Cloudflare Pages serves the root page for any path that is not a static asset **unless a
+// top-level `404.html` exists** ("If your project does not include a top-level `404.html` file,
+// Pages assumes that you are deploying a single-page application", pages/configuration/serving-pages).
+// Measured on the branch preview before this file existed: `/api/discord-summary` and
+// `/definitely-not-a-page` both returned **200 + the home page**. This route makes Astro emit
+// `dist/client/404.html`, which turns that soft-404 behaviour off.
+export const prerender = true;
+---
+
+<Layout title="Page not found - Minneapolis Math Book Club" noindex>
+  <main class="mx-auto max-w-4xl px-4 py-24 text-center">
+    <p class="text-base uppercase tracking-wide mb-4">
+      <span class="text-blue-600">404</span>
+    </p>
+
+    <h1 class="text-4xl font-extrabold text-gray-900 mb-6">We could not find that page</h1>
+
+    <p class="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+      The link may be old, or the address may have a typo. Everything we have is one of these two
+      places.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a
+        href="/"
+        class="inline-flex items-center justify-center px-8 py-4 border border-transparent text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition duration-300 ease-in-out"
+      >
+        Back to the home page
+      </a>
+      <a
+        href="/chat"
+        class="inline-flex items-center justify-center px-8 py-4 border border-gray-300 text-lg font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-300 ease-in-out"
+      >
+        Recent Discord summaries
+      </a>
+    </div>
+
+    <p class="text-sm text-gray-500 mt-16">
+      Looking for a specific meetup?
+      <a
+        href={URLs.meetupGroup}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline text-gray-700"
+      >Our Meetup group</a
+      > lists every session.
+    </p>
+  </main>
+</Layout>
