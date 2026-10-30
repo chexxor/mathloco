@@ -107,24 +107,73 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
 | `npm run deploy`             | `npm run verify && wrangler deploy` — the gates run before a **production** Worker deploy, so a red gate cannot deploy |
 | `npm run preview:deploy`     | `npm run verify && wrangler preview` — a branch Preview URL for review; name defaults to the current git branch |
-| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build` · `check:deploy`. CI runs this; the deploy build command should be `npm ci && npm run verify && wrangler deploy` so every path is identical |
-| `npm run check:deploy`       | Read `dist/server/wrangler.json` and assert it is still deployable on the apex: the route, the assets root, the D1 ids, the Preview vars, no id-less KV binding. Needs a build, so it runs **after** `build` in `verify` |
+| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build` · `check:deploy`. This is the hook's **build command**, so a red gate cannot upload | 
+| `npm run check:deploy`       | Read `dist/server/wrangler.json` and assert it is still deployable on the apex: the route, the assets root, the D1 ids, the Preview vars, both KV namespaces, and the cold-start byte budget. Needs a build, so it runs **after** `build` in `verify` |
 | `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
 | `npm run cf:secrets:list`    | List secrets on the **production** Worker                  |
 | `npm run cf:secrets:list:preview`      | List secrets on the Preview for the current branch |
 | `npm run cf:secrets:list:preview-base` | List secrets on the Previews **base config** (copied into each new Preview at creation) |
-| `npm run cf:kv:create`       | Create the optional `SUMMARY_CACHE` KV namespace              |
+| `npm run cf:kv:create`       | Create a KV namespace named `SUMMARY_CACHE`. Both needed namespaces already exist — see "Summary cache" below — so this is only for rebuilding after an account change |
 
-`.github/workflows/ci.yml` runs **`npm run verify`** on every pull request and on pushes to `main`.
-It is the only place these gates run automatically, and it gates nothing by itself — a red Actions run
-does not stop the deploy service, which runs its own build command and ignores Actions. To make a
-red gate stop a deployment, either set the deploy build command to `npm ci && npm run verify &&
-wrangler deploy` (for a Worker connected to Workers Builds, that is its build command; for the Pages
-project still serving the apex today, it is the dashboard "Build command" field) or enable branch
-protection requiring the `verify` check before merge. `npm run deploy` and `npm run preview:deploy`
-already put the gates in front of a deploy from this machine. `check:discord` and `check:ai` are excluded
-from every automated run: they need credentials and `check:ai` spends a paid model call, so they are
-pre-deploy rituals you run by hand.
+## 🔄 Deploy pipeline: a Cloudflare repo hook, not GitHub Actions
+
+Deploys come from a git hook into Workers, so nothing in GitHub Actions has to do anything. That works
+because a hook runs a **build command** before a **deploy command**, and a build command that exits
+non-zero stops the deploy:
+
+| hook setting | value | why |
+| --- | --- | --- |
+| Git branch | `main` | production-branch builds promote a version; other branches build Previews |
+| Build command | `npm run verify` | every gate, `check:deploy` included, runs before anything uploads |
+| Deploy command | `npx wrangler deploy` (default) | the hook uses the Wrangler version pinned in `package.json` |
+| Preview command | `npx wrangler preview` (default) | matches the `[previews]` block: preview D1, preview KV namespace, preview vars |
+
+The facts that make this worth wanting, rather than remembered: the Workers Builds image **preinstalls
+Node.js 22.23.4** and reads `.nvmrc` / `.node-version` (or `NODE_VERSION`), so the pin this repo needs is
+already its default; the free plan allows **3,000 build minutes/month, 1 concurrent build, a 20-minute
+timeout** and `verify` takes about two; and a build that must not ship can use
+`npx wrangler versions upload` as its deploy command, which produces a version and a Version URL without
+promoting it — the thing we wished Pages could do.
+
+Two consequences to plan around:
+
+* `.github/workflows/ci.yml` is redundant once the hook is green, and is still here because it is
+  currently the only record of these gates running off this machine (two runs, both `success`).
+* A hook catches **build-time** failures. It cannot notice a model id Anthropic retires next month with
+  no push. Putting `check:ai` in the build command with a build secret catches it at the next deploy,
+  and the KV cache plus the 7-day stale grace now buys roughly a week of slack instead of an instant
+  outage. A real watchdog needs a scheduler: the Astro-generated entry has **no `scheduled` handler**
+  (`grep scheduled dist/server/*.mjs` finds none), so a Workers Cron Trigger would invoke a handler that
+  does not exist.
+
+Connecting the repo needs the Cloudflare GitHub App. With a `wrangler login` OAuth token, `GET
+/accounts/<id>/builds/workers/<worker>/triggers` answers `{"code":10000,"message":"Authentication
+error"}` — the Builds API wants a token with Workers Builds permissions — so either connect it in the
+dashboard (Workers → `minneapolis-math-book-club` → Settings → **Builds & Deployments**) or create that
+token. Build secrets are separate from runtime secrets and are never readable at runtime.
+
+### Summary cache (KV), and why the bundle size is a CPU budget
+
+Workers bill **CPU time**, and on the free plan an HTTP request gets **10 ms** of it — past that the
+Visitor gets error 1102. Waiting on `fetch` does not count; *evaluating the module* does. A cold
+`/api/discord-summary` measured `cpu=13ms wall=1973ms`, over the ceiling, because one route chunk was
+**1,439,951 B** of Discord and Anthropic SDKs inside a 2,208,627 B bundle. So `src/` talks to both APIs
+with plain `fetch` (618,134 B total, largest module 346,636 B) and `check:deploy` refuses to deploy past
+a byte budget, because a dependency list does not tell you what landed in which route chunk.
+
+The shared cache is the other half. Both layers live in `src/lib/discord.ts`; measured on workerd in
+sequence: cold isolate with nothing cached **cpu=13ms / 2.09 s**, same isolate again **0.008 s**, and
+after a restart with a warm KV **0.037 s**. Namespaces:
+
+| binding | namespace | id | used by |
+| --- | --- | --- | --- |
+| `SUMMARY_CACHE` | `SUMMARY_CACHE` | `ee21a66177e94bafb9ed3829d5af537d` | production |
+| `SUMMARY_CACHE` | `SUMMARY_CACHE_PREVIEW` | `8173e43e9bfb496d9cbe21d8e4e38318` | Previews |
+
+Verified rather than assumed: after a Preview served the summary route, the preview namespace held
+`discord-summary:v1:1170385683379126343` and the production namespace was still `[]`. Free plan allows
+1,000 namespaces per account and 100,000 reads / 1,000 writes per day, so this costs nothing at our
+volume. The binding also revives the 7-day stale-serving path, which only runs when KV is bound.
 
 ## 🚚 Deploy target: Workers — the cutover, and why the apex is a *route*
 

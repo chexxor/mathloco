@@ -198,6 +198,33 @@ told you to do it. Two things about deploying that are specific to this repo:
 - A **custom domain** is refused while the hostname has a pre-existing record (`code: 100117`), which
   is why this site uses a route. Changing that is a DNS change, not a config change.
 
+### The deploy pipeline, and the CPU budget that shapes this repo's code
+
+The intended pipeline is a **Cloudflare repo hook** (Workers Builds), not GitHub Actions: its build
+command is `npm run verify`, so a red gate cannot upload. Grounded facts: the build image preinstalls
+**Node.js 22.23.4** and reads `.nvmrc`/`.node-version`; free plan allows 3,000 build minutes/month, 1
+concurrent build, 20-minute timeout; `npx wrangler versions upload` as the deploy command builds without
+promoting. Connecting the repo needs the Cloudflare GitHub App or a token with Workers Builds scope — a
+`wrangler login` token gets `code 10000` on `/accounts/<id>/builds/*`.
+
+**Workers bill CPU per request: 10 ms on the free plan, error 1102 past it.** Waiting on `fetch` is free;
+*evaluating the module* is not. That single constraint decides how code in `src/` is written here:
+
+- **`src/` does not import service SDKs.** `@discordjs/rest` + `discord-api-types` + `@anthropic-ai/sdk`
+  bundled into one route chunk of 1,439,951 B (of a 2,208,627 B server bundle) and a cold
+  `/api/discord-summary` measured `cpu=13ms`. Both APIs are called with `fetch` in
+  `src/lib/discord.ts`; the SDKs are dev tooling for `scripts/check-*.ts` only. Do not "modernise" this
+  back to an SDK.
+- `npm run check:deploy` enforces a byte budget (total ≤ 900,000 B, largest module ≤ 400,000 B) read from
+  `dist/server/**`. If it goes red, `astro build`'s chunk list names the import that pulled it in.
+- The summary cache is **KV-bound** (`SUMMARY_CACHE`, and `SUMMARY_CACHE_PREVIEW` for Previews). Without
+  it every cold isolate re-paid Discord + Claude (2.09 s) and the 7-day stale-grace path was dead code;
+  with it a cold isolate reads KV in 0.037 s. Previews must keep their own namespace — shared id means
+  shared rows, so a bad branch could poison live summaries.
+- **There is no cron.** The Astro-generated entry exports no `scheduled` handler (checked by grepping
+  `dist/server/*.mjs`), so a `triggers.crons` entry would invoke a handler that does not exist. Anything
+  scheduled has to be a separate Worker, or run outside Cloudflare.
+
 The local steps still apply:
 1. Add the adapter: `npx astro add cloudflare --yes` (already present here)
 2. Run `npx astro check` to catch type and configuration errors before building.
