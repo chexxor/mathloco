@@ -29,6 +29,20 @@ three actors straight is the whole job:
    - before merging anything → `code-review-and-quality/SKILL.md`
    Skills are tracked, so if one goes stale against the code, **fix it in the same commit** that makes
    it stale (e.g. a config change invalidates the config block quoted in `astro/SKILL.md`).
+   - **A second skill home exists, and it is host-local:** the vendored Cloudflare set from the
+     `pi-cloudflare` pi package, at `.pi/npm/node_modules/pi-cloudflare/skills/` (`.pi/` is gitignored, so a
+     fresh machine must reinstall the package to have them). 18 skills. They are **vendor** guidance, so this
+     repo's code, `astro/SKILL.md` and `.notes/runbooks/` outrank them on anything repo-specific. Open the one
+     for the Cloudflare surface you are touching:
+     - product choice / "what should we use here" -> `cloudflare/SKILL.md`; the depth lives in its
+       `references/<product>/{README,api,configuration,gotchas,patterns}.md`, e.g. `workers-ai`, `d1`, `kv`,
+       `static-assets`, `pages`, `cron-triggers`, `images`, `observability`, `waf`
+     - writing or reviewing Worker code / wrangler config -> `workers-best-practices/SKILL.md`, `wrangler/SKILL.md`
+     - driving Cloudflare from bash (deploy, D1/KV, DNS, WAF, machine-readable output) -> `cloudflare-cf-cli/SKILL.md`
+     - Durable Objects, Agents SDK, Turnstile, Email routing, Sandbox, Next-on-Workers -> the matching skill dir
+     - free-plan gating and what costs money -> `cloudflare-hardening/SKILL.md`, whose
+       `references/paid-features.md` lists what is gated on the Free plan. Read it before proposing any new
+       binding: the operator's ceiling is **$1/month**, so the plan is permanently free (`.notes/DECISIONS.md` D32).
 3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
    once so you know whether the branch is green *before* you start changing it: `check`,
@@ -72,6 +86,9 @@ Then execute on that resulting promp.
 ## Non-negotiables
 
 - **Ground every claim** in a retrieved passage or a command you actually ran; never assert from memory.
+  For Cloudflare and Astro docs, fetch the **markdown twin** of any page - `<url>/index.md` - instead of the
+  HTML page: ~40x smaller, and table cells stay parseable (a stripped-HTML table cell nearly produced a wrong
+  free-plan limit here). Product doc indexes: `https://developers.cloudflare.com/<product>/llms.txt`.
 - **Do not push or publish.** The operator holds that grant; the delegate may commit its own item's
   work (the commit boundary is scoped per item - stage explicit paths only, never `git add -A`).
   Push requires the operator's explicit grant, and **only the operator runs `git push`** - a granted
