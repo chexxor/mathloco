@@ -31,20 +31,15 @@ jobs:
       # installs. Pages/CI run npm 10.9.9, which has no such gate, so the guard there is that
       # `npm ci` installs exactly what the lockfile pins and nothing else.
       - run: npm ci
-      - run: npm run check
-      # Every class written in src/ must resolve to CSS. Two typos (`focus:shadow-outline-blue`,
-      # `md:max-w-1xl`) shipped for years because no other tool in the loop could see them.
-      - run: npm run check:classes
-      # src/schema.ts and migrations/ must agree. Runs against drizzle.config.check.ts, which
-      # carries no credentials and opens no database, so it needs neither .wrangler state nor a
-      # Cloudflare token.
-      - run: npm run db:check
-      - run: npm run build
-      - run: npm run check:sanitize
-      # Summary-cache rules against a fake KV namespace: no credentials and no Claude
-      # calls. It does make one outbound Discord call with a deliberately invalid token
-      # (the total-failure case), so it needs network but no secrets.
-      - run: npm run check:cache
-      # Prod-only audit with an explicit allowlist (scripts/audit-gate.ts), so a new real
-      # advisory fails the build instead of being lost in a wall of known noise.
-      - run: npm run audit:gate
+      # One aggregate script (`npm run verify`) so CI, the Pages build command and a local run
+      # execute the identical gate set - no drift between the three:
+      #   check (astro check) · check:classes (every class in src/ resolves to CSS - two typos
+      #   shipped for years because nothing else could see them) · db:check (schema and
+      #   migrations agree, via drizzle.config.check.ts: no credentials, no database opened) ·
+      #   check:sanitize (summary rendering stays text-only) · check:cache (summary-cache rules
+      #   against a fake KV namespace; one outbound Discord call with a deliberately invalid
+      #   token, needs network but no secrets) · audit:gate (prod-only audit with an explicit
+      #   allowlist, so a new real advisory fails instead of drowning in known noise) · build.
+      # Deliberately excluded: check:discord and check:ai - both need credentials and check:ai
+      # spends a paid model call, so they belong in a pre-deploy ritual, not in every build.
+      - run: npm run verify

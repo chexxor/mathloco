@@ -10,6 +10,7 @@
     "start:app": "astro dev",
     "serve:dist": "astro build && wrangler dev --config dist/server/wrangler.json",
     "build": "astro build",
+    "verify": "npm run check && npm run check:classes && npm run db:check && npm run check:sanitize && npm run check:cache && npm run audit:gate && npm run build",
     "preview": "astro dev --host",
     "preview:workerd": "astro build && astro preview",
     "astro": "astro",

@@ -99,12 +99,18 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run audit:all`          | `npm audit` for prod + dev dependencies                       |
 | `npm run audit:prod`         | `npm audit --omit=dev` (what actually ships)                  |
 | `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
+| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build`. CI runs this; the Pages build command should be `npm ci && npm run verify` so all three paths are identical |
 | `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
 | `npm run cf:secrets:list`    | List the secrets configured for the deployed Pages project    |
 | `npm run cf:kv:create`       | Create the optional `SUMMARY_CACHE` KV namespace              |
 
-`.github/workflows/ci.yml` runs `check`, `check:classes`, `build`, `check:sanitize` and
-`audit:gate` on every pull request and on pushes to `main`.
+`.github/workflows/ci.yml` runs **`npm run verify`** on every pull request and on pushes to `main`.
+It is the only place these gates run automatically, and it gates nothing by itself — a red Actions run
+does not stop Cloudflare Pages, which runs the dashboard build command and ignores Actions. To make a
+red gate stop a deployment, either set the Pages build command to `npm ci && npm run verify` or enable
+branch protection requiring the `verify` check before merge. `check:discord` and `check:ai` are excluded
+from every automated run: they need credentials and `check:ai` spends a paid model call, so they are
+pre-deploy rituals you run by hand.
 
 ## 🔐 Environment
 
