@@ -22,6 +22,20 @@ name = "minneapolis-math-book-club"
 workers_dev = true
 preview_urls = true
 
+# The apex. A **route**, not a custom domain, and that is a measured choice: asking for a custom
+# domain failed with `Hostname 'minneapolismathbookclub.com' already has externally managed DNS
+# records (A, CNAME, etc). Delete them first or try a different hostname. [code: 100117]`, and the
+# docs for both paths agree - a Custom Domain has Cloudflare create the record and "cannot [be
+# created] on a hostname with an existing CNAME DNS record", while a route "add[s] Workers
+# functionality to your existing proxied hostnames". So the route attached with the record left in
+# place: the apex kept serving throughout, and the change is one command to undo.
+#
+# ⚠ Wrangler REPLACES a Worker's triggers on every deploy. Deploy from a config that lacks this
+#   block and the apex detaches itself - the live site goes down on a command that looks routine.
+routes = [
+  { pattern = "minneapolismathbookclub.com/*", zone_name = "minneapolismathbookclub.com" },
+]
+
 # The Discord guild (server) id is a public snowflake, not a credential, so it lives here where it
 # can be diffed and reviewed rather than in a dashboard field. That misplacement is what kept the
 # summary page broken: the value set by hand was the bot's own application id
