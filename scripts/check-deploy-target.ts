@@ -17,7 +17,7 @@
  * The expectations below are deliberately duplicated from `wrangler.toml`. That is the point: a
  * rename that only touches one side goes red here instead of red on the apex.
  */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const ARTIFACT = resolve(process.cwd(), 'dist/server/wrangler.json');
@@ -30,9 +30,25 @@ const EXPECTED = {
   prodDb: 'd1-mathloco-prod-db',
   previewDb: 'd1-mathloco-preview-db',
   guildId: '1170385683379126343', // the SERVER id; the bot's app id yields 10004 "Unknown Guild"
+  cacheBinding: 'SUMMARY_CACHE',
+  cacheNamespace: 'ee21a66177e94bafb9ed3829d5af537d',
+  cacheNamespacePreview: '8173e43e9bfb496d9cbe21d8e4e38318',
 } as const;
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// Workers KV namespace ids are 32 hex characters, not UUIDs.
+const KV_ID = /^[0-9a-f]{32}$/;
+
+// Cold-start budget, in bytes of JavaScript an isolate must evaluate before it can answer.
+// Workers bill module evaluation as CPU time, and the free plan allows 10 ms per HTTP request,
+// returning error 1102 past it. This bundle was 2.2 MB, of which ONE route chunk was 1,439,951 B
+// (@discordjs/rest + @anthropic-ai/sdk + discord-api-types), and a cold summary call measured
+// cpu=13ms wall=1973ms in `wrangler tail` - over the ceiling. These ceilings exist so the cost
+// cannot creep back in through a dependency someone adds later.
+const BUDGET = {
+  totalBytes: 900_000,
+  largestChunkBytes: 400_000,
+} as const;
 
 type Config = Record<string, unknown>;
 
@@ -64,6 +80,7 @@ const assets = (config.assets ?? {}) as { directory?: string; binding?: string }
 const previews = (config.previews ?? {}) as {
   vars?: Record<string, unknown>;
   d1_databases?: { database_name?: string; database_id?: string }[];
+  kv_namespaces?: { binding?: string; id?: string }[];
 };
 const vars = (config.vars ?? {}) as Record<string, unknown>;
 const flags = (config.compatibility_flags ?? []) as string[];
@@ -93,12 +110,36 @@ check(
 
 check(config.workers_dev === true, 'workers_dev = true (the domain-free review URL)', 'set workers_dev = true in wrangler.toml');
 
+// 3. KV: the shared summary cache must be bound to the namespace we created, and nothing else
+//    may be bound. @astrojs/cloudflare 14 used to inject an id-less SESSION namespace, which
+//    deploys successfully and then does nothing at all.
+const cacheBinding = kv.find((k) => k.binding === EXPECTED.cacheBinding);
 check(
-  kv.length === 0,
-  `kv_namespaces empty (got ${kv.map((k) => `${k.binding}${k.id ? `#${k.id}` : ' NO ID'}`).join(', ') || 'nothing'})`,
-  '@astrojs/cloudflare 14 injects an id-less SESSION KV binding unless the adapter config sets ' +
-    "session: false. Nothing here uses sessions. If you have deliberately added SUMMARY_CACHE, add " +
-    'it to this gate with its namespace id.',
+  !!cacheBinding && KV_ID.test(String(cacheBinding.id ?? '')) && cacheBinding.id === EXPECTED.cacheNamespace,
+  `KV ${EXPECTED.cacheBinding} -> ${cacheBinding ? String(cacheBinding.id) : 'NOT BOUND'}`,
+  'the shared cache is what stops every cold isolate re-paying Discord + Claude, and the 7-day ' +
+    'stale-serving grace path reads KV - without this binding that safety net is dead code. ' +
+    'Create one with `npx wrangler kv namespace create SUMMARY_CACHE` and bind it in wrangler.toml.',
+);
+check(
+  kv.length === 1,
+  `only the summary cache is bound (${kv.map((k) => `${k.binding}${k.id ? `#${k.id}` : ' NO ID'}`).join(', ') || 'nothing'})`,
+  "an id-less binding deploys fine and silently does nothing (that is how the adapter's default " +
+    'SESSION KV behaved). Remove it, or add its namespace id to this gate deliberately.',
+);
+const previewsKv = (previews.kv_namespaces ?? []) as { binding?: string; id?: string }[];
+const previewCache = previewsKv.find((k) => k.binding === EXPECTED.cacheBinding);
+check(
+  !!previewCache && previewCache.id === EXPECTED.cacheNamespacePreview,
+  `previews bind ${EXPECTED.cacheBinding} -> ${previewCache ? String(previewCache.id) : 'NOT BOUND'}`,
+  'Previews inherit nothing from production settings. Without its own namespace a branch writes ' +
+    'into the cache real visitors read, so a branch naming a retired model id would poison live ' +
+    'summaries. Add [[previews.kv_namespaces]].',
+);
+check(
+  !!previewCache && !!cacheBinding && previewCache.id !== cacheBinding.id,
+  'the Preview cache namespace differs from the production one',
+  'namespaces that share an id share rows - the same reason Previews get their own D1.',
 );
 
 const prodBinding = d1.find((d) => d.binding === 'DB');
@@ -134,7 +175,34 @@ check(
 );
 
 check(flags.includes('nodejs_compat'), `nodejs_compat in compatibility_flags (${flags.join(', ') || 'none'})`,
-  '@anthropic-ai/sdk and @discordjs/rest need Node APIs; wrangler v4 removed the old node_compat key');
+  "Astro's generated server bundle expects Node built-ins; wrangler v4 removed the old node_compat key");
+
+// 4. Cold-start budget, measured from the artifact rather than from package.json - the dependency
+//    list does not tell you what actually got bundled into which route.
+const SERVER_DIR = resolve(process.cwd(), 'dist/server');
+const chunks: { file: string; bytes: number }[] = [];
+(function walk(dir: string, depth = 0) {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = resolve(dir, entry.name);
+    if (entry.isDirectory()) walk(full, depth + 1);
+    else if (entry.name.endsWith('.mjs')) chunks.push({ file: full, bytes: statSync(full).size });
+  }
+})(SERVER_DIR);
+const totalBytes = chunks.reduce((sum, c) => sum + c.bytes, 0);
+const largest = chunks.reduce((a, b) => (b.bytes > a.bytes ? b : a), { file: '', bytes: 0 });
+check(
+  totalBytes <= BUDGET.totalBytes,
+  `server bundle ${totalBytes.toLocaleString('en-US')} B across ${chunks.length} modules`,
+  `budget is ${BUDGET.totalBytes.toLocaleString('en-US')} B. Module evaluation is CPU time and the free plan gives 10 ms per ` +
+    'request. `astro build` prints chunk sizes; if one exploded, an SDK found its way into a route chunk - ' +
+    'src/ talks to Discord and Anthropic with plain fetch on purpose.',
+);
+check(
+  largest.bytes <= BUDGET.largestChunkBytes,
+  `largest module ${largest.bytes.toLocaleString('en-US')} B (${largest.file.split('/').pop()})`,
+  `budget is ${BUDGET.largestChunkBytes.toLocaleString('en-US')} B. One oversized chunk is a cold-start CPU bill on the ` +
+    'first request to that route, which is how the summary endpoint reached 13 ms.',
+);
 
 check(typeof config.main === 'string' && config.main.endsWith('entry.mjs'), `worker entrypoint = ${String(config.main)}`,
   'the adapter emits entry.mjs; if this changed, the artifact shape changed with it');

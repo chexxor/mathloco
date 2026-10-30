@@ -8,9 +8,11 @@
 #     `/api/discord-summary` answered 404, while the same commit on workerd answered 200 JSON.
 # The Pages project still answers the apex today. See README "Deploy target and the two-phase cutover".
 #
-# Wrangler v4 removed the top-level `node_compat` key. Node APIs (used by @anthropic-ai/sdk and
-# @discordjs/rest) now come from the `nodejs_compat` compatibility flag, which requires a
-# compatibility_date.
+# Wrangler v4 removed the top-level `node_compat` key. Node APIs now come from the `nodejs_compat`
+# compatibility flag, which requires a compatibility_date. The runtime no longer imports the Anthropic
+# and Discord SDKs (see the header comment in src/lib/discord.ts - they cost 1.4 MB of bundle and the
+# CPU time to evaluate it), but the flag stays: Astro's generated server bundle still expects Node
+# built-ins, and `npm run check:deploy` fails if it goes missing.
 compatibility_date = "2026-10-29"
 compatibility_flags = ["nodejs_compat"]
 
@@ -77,15 +79,24 @@ database_id = "4e997466-3b31-4a4d-8187-a1e24f6ab7a3"
 # is what the db:* scripts assume. Nothing here reaches real data: only `--remote` does, and that is
 # spelled out per script. The preview database is reached via `--env preview` (`[env.preview]` below).
 
-# Cross-isolate cache for the Discord summaries (src/lib/discord.ts). The code works
-# without it - it falls back to a per-isolate cache and re-pays Discord + Claude on every
-# cold start - so this stays commented until the namespaces exist. To enable:
-#   npm run cf:kv:create        # prints an `id`; repeat for a preview namespace if wanted
-# then paste the ids below and uncomment both blocks, and run `npm run cf:types`.
-# [[kv_namespaces]]
-# binding = "SUMMARY_CACHE"
-# id = "<namespace id from `npm run cf:kv:create`>"
-# preview_id = "<preview namespace id>"
+# Cross-isolate cache for the Discord summaries (src/lib/discord.ts). Created with
+#   npx wrangler kv namespace create SUMMARY_CACHE            (and ..._PREVIEW for branches)
+# Free plan allows 100,000 reads and 1,000 writes per day per account and 1,000 namespaces, so
+# this is free at our volume: one read per cold isolate per day and a write whenever the summary
+# refreshes. Two things depend on it:
+#   * the per-isolate fallback re-pays Discord + Claude on every cold start, which is what put a
+#     single request at cpu=13ms against the free plan's 10 ms per-request ceiling;
+#   * the 7-day stale-serving grace path (upstream failing, page still shows yesterday's summary)
+#     reads from KV, so without a binding that safety net is dead code.
+# Previews get their own namespace, not prod's: a branch with a broken model id would otherwise
+# write into the cache real visitors read - the same isolation reason the preview D1 exists.
+[[kv_namespaces]]
+binding = "SUMMARY_CACHE"
+id = "ee21a66177e94bafb9ed3829d5af537d"
+
+[[previews.kv_namespaces]]
+binding = "SUMMARY_CACHE"
+id = "8173e43e9bfb496d9cbe21d8e4e38318"
 
 # --- Previews (branch deployments): `npx wrangler preview` -------------------------------------
 # Docs: workers/previews/get-started + /configuration. Previews do NOT inherit production settings;
