@@ -45,10 +45,13 @@ three actors straight is the whole job:
        binding: the operator's ceiling is **$1/month**, so the plan is permanently free (`.notes/DECISIONS.md` D32).
 3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
-   once so you know whether the branch is green *before* you start changing it: `check`,
-   `check:classes`, `db:check`, `build`, `check:sanitize`, `check:cache`, `audit:gate`. Run them as
-   separate commands, not one `&&` chain - a chain stops at the first failure and you lose the rest
-   of the picture. `npm run check:discord` needs real credentials and is deliberately not in CI.
+   once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
+   (check, check:classes, db:check, check:sanitize, check:cache, audit:gate, build, check:deploy). It is
+   one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
+   `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
+   a chain hides which step broke, run the steps separately. `npm run check:discord` and
+   `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
+   not in `verify`.
 4. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
    Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
