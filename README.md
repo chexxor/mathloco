@@ -1,8 +1,8 @@
-# Minneapolis Math Book Club - Astro + Tailwind + Cloudflare Pages
+# Minneapolis Math Book Club - Astro + Tailwind + Cloudflare Workers
 
 ## 🎯 Features
 
-- ✅ [Astro 7](https://astro.build/) with the [Cloudflare Pages adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) (server output, D1 bindings, workerd dev server);
+- ✅ [Astro 7](https://astro.build/) with the [Cloudflare adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) (Workers target: static assets + one SSR Worker, D1 bindings, workerd dev server);
 - ✅ [Tailwind 4](https://tailwindcss.com/) — CSS-first config, wired in through `@tailwindcss/vite`;
 - ✅ [Svelte 5](https://svelte.dev/) islands (`src/components/*.svelte`);
 - ✅ [Astro/Sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) (requires `site` in `astro.config.mjs`);
@@ -28,7 +28,13 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
    "will update preinstalled software before reaching end-of-life … these updates apply only if you
    have not overridden the default version" — their own best practice is to pin. Note the same page
    lists, as a v3 limitation, that detecting Node and package managers from `package.json`
-   `"engines"` is **not** supported: `engines.node` below is a local guard, not the Pages lever.
+   `"engines"` is **not** supported: `engines.node` below is a local guard, not the build-service lever.
+   The same pin applies wherever the build runs — GitHub Actions (`ci.yml` pins `22.23.4`) and, once the
+   deploy target is a Worker, Workers Builds. Wrangler's own [build-configuration
+   page](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/) documents the build
+   command, outputs and cached directories but **does not state the container's Node version**, so if
+   Workers Builds is enabled, add `nvm use` (or an explicit `NODE_VERSION`) to the build command rather
+   than assuming its default.
 1. **Install** — `npm install`. On a fresh machine **npm 11** reports install scripts it has not
    run yet (`npm install-scripts ls`); the approved set is recorded in `allowScripts` in
    `package.json`, so a normal `npm ci` needs no interaction. Note that `better-sqlite3` v13
@@ -99,18 +105,54 @@ is the single lockfile (`bun.lockb` was removed because it had drifted from the 
 | `npm run audit:all`          | `npm audit` for prod + dev dependencies                       |
 | `npm run audit:prod`         | `npm audit --omit=dev` (what actually ships)                  |
 | `npm run audit:gate`         | Audit that fails only on advisories outside the documented allowlist (what CI runs) |
-| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build`. CI runs this; the Pages build command should be `npm ci && npm run verify` so all three paths are identical |
+| `npm run deploy`             | `npm run verify && wrangler deploy` — the gates run before a **production** Worker deploy, so a red gate cannot deploy |
+| `npm run preview:deploy`     | `npm run verify && wrangler preview` — a branch Preview URL for review; name defaults to the current git branch |
+| `npm run verify`             | **The whole gate set in one command**: `check` · `check:classes` · `db:check` · `check:sanitize` · `check:cache` · `audit:gate` · `build`. CI runs this; the deploy build command should be `npm ci && npm run verify && wrangler deploy` so every path is identical |
 | `npm run cf:types`           | Regenerate `worker-configuration.d.ts` from `wrangler.toml` (`wrangler types`) |
-| `npm run cf:secrets:list`    | List the secrets configured for the deployed Pages project    |
+| `npm run cf:secrets:list`    | List secrets on the **production** Worker                  |
+| `npm run cf:secrets:list:preview`      | List secrets on the Preview for the current branch |
+| `npm run cf:secrets:list:preview-base` | List secrets on the Previews **base config** (copied into each new Preview at creation) |
 | `npm run cf:kv:create`       | Create the optional `SUMMARY_CACHE` KV namespace              |
 
 `.github/workflows/ci.yml` runs **`npm run verify`** on every pull request and on pushes to `main`.
 It is the only place these gates run automatically, and it gates nothing by itself — a red Actions run
-does not stop Cloudflare Pages, which runs the dashboard build command and ignores Actions. To make a
-red gate stop a deployment, either set the Pages build command to `npm ci && npm run verify` or enable
-branch protection requiring the `verify` check before merge. `check:discord` and `check:ai` are excluded
+does not stop the deploy service, which runs its own build command and ignores Actions. To make a
+red gate stop a deployment, either set the deploy build command to `npm ci && npm run verify &&
+wrangler deploy` (for a Worker connected to Workers Builds, that is its build command; for the Pages
+project still serving the apex today, it is the dashboard "Build command" field) or enable branch
+protection requiring the `verify` check before merge. `npm run deploy` and `npm run preview:deploy`
+already put the gates in front of a deploy from this machine. `check:discord` and `check:ai` are excluded
 from every automated run: they need credentials and `check:ai` spends a paid model call, so they are
 pre-deploy rituals you run by hand.
+
+## 🚚 Deploy target: Workers, and the two-phase cutover
+
+The build produces a Workers artifact: `dist/client` (static assets) and `dist/server/entry.mjs` (one
+SSR Worker, `"no_bundle": true`), and `dist/server/wrangler.json` wires them together with
+`assets.directory = "../client"`. `npm run deploy` ships that. **Pages cannot run this artifact's
+server side**: on the Pages branch preview it logged `No functions dir at /functions found. Skipping.`
+and `Success: Assets published!` with no Worker upload, `/api/discord-summary` answered 404, and the
+same commit under workerd answered `200 application/json` with a real summary. Astro removed Pages
+support from this adapter at v13. So the API routes only exist where a Worker runs.
+
+Order matters, because the apex domain is still served by the Pages project:
+
+1. `npm run deploy` — creates/updates the Worker, reachable at
+   `minneapolis-math-book-club.<account-subdomain>.workers.dev` (`workers_dev = true`). The domain is
+   untouched, so this is not yet a public change.
+2. Set the Worker's own secrets (see Environment above). Pages secrets do **not** carry over.
+3. Verify on `workers.dev`: `/`, `/chat/`, `/api/discord-summary`, `/definitely-not-a-page` → 404.
+   Budget note: requests to static assets are free and unlimited; requests that hit the Worker count
+   against the 100,000/day free allowance, and free overage fails closed with errors rather than a bill.
+4. Only then attach the domain to the Worker (Workers → Custom domains) and remove the Pages
+   project's custom-domain relationship, so exactly one service owns the hostname.
+5. Keep the Pages deployment until the Worker is verified on the apex, then delete it.
+
+Branch review without touching production: `npm run preview:deploy` (`wrangler preview`) returns a
+Preview URL named after the current git branch; with `preview_urls = true` each deployment also keeps a
+unique `<version>-<name>.<subdomain>.workers.dev` URL. Previews do **not** inherit production settings —
+that is why `[previews.vars]` and `[[previews.d1_databases]]` exist in `wrangler.toml`, and why preview
+secrets are set with `wrangler preview base-config secret put`.
 
 ## 🌐 Host names and the canonical URL
 
@@ -149,13 +191,27 @@ Secrets and variables are read through `import { env } from 'cloudflare:workers'
   (`.dev.vars.preview`) also work. `wrangler.toml` `[vars]` reach the local dev runtime too —
   verified: with `DISCORD_GUILD_ID` commented out in `.dev.vars`, `/api/discord-summary` still
   returned `200` in 2.47 s against the guild from `wrangler.toml`.
-- **Deployed (Cloudflare Pages):** secrets are set per Pages project, so the name is required:
-  `npx wrangler pages secret put DISCORD_TOKEN --project-name <pages-project>` and the same for
-  `CLAUDE_API_KEY`. Note `wrangler secret put` without `pages` targets a **Worker**, not Pages —
-  different resource, and it will not do anything to this site.
+- **Deployed (Worker, production):** `npx wrangler secret put DISCORD_TOKEN` then choose
+  *Production*; same for `CLAUDE_API_KEY`. List them with `npm run cf:secrets:list`.
+- **Branch Previews:** secrets are *not* inherited from production, and they cannot live in a config
+  file. Set them once on the Previews base config so every new Preview gets them —
+  `npx wrangler preview base-config secret put DISCORD_TOKEN` — or override on one Preview with
+  `npx wrangler preview secret put DISCORD_TOKEN --name <branch>`. `npm run cf:secrets:list:preview`
+  and `:preview-base` show what is actually set. A Preview with missing secrets boots and serves 500s
+  rather than refusing to deploy, so check the list before debugging the code.
+- **Old Pages project (still serving the apex today):** its secrets were set with
+  `npx wrangler pages secret put … --project-name <project>`. Those do **not** carry over to a Worker —
+  a Worker's secrets are a different resource. Re-set them with the Worker commands above; do not
+  assume the dashboard value followed the migration.
+- `DISCORD_GUILD_ID` is in **three** places in `wrangler.toml` on purpose — `[vars]` (production),
+  `[previews.vars]` (branch Previews) and `[env.preview.vars]` (the named `--env preview` config).
+  Wrangler does not inherit `vars` into Previews or named environments; its own schema says each must
+  specify it. If you change the guild id, change all three or grep for it.
 - **Bindings** (D1, and the optional KV) live in `wrangler.toml`. Run `npm run cf:types` after
   changing it, so `worker-configuration.d.ts` is regenerated — bindings are typed there, while
-  secrets/vars stay declared in `src/env.d.ts`.
+  secrets/vars stay declared in `src/env.d.ts`. **Bindings also do not inherit into Previews:**
+  `[[previews.d1_databases]]` must name the *preview* database, because two Previews bound to the same
+  `database_id` share rows.
 - **Optional KV cache:** `npm run cf:kv:create`, paste the printed `id`/`preview_id` into the
   commented `[[kv_namespaces]]` block in `wrangler.toml`, uncomment it, then `npm run cf:types`.
   Without it the Discord summaries are cached per isolate only, so each cold start re-fetches

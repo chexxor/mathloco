@@ -1,6 +1,6 @@
 ---
 name: astro
-description: Skill for building with the Astro web framework in this repo (Astro 7 + @astrojs/cloudflare Pages adapter + Svelte 5 islands + Tailwind 4 via @tailwindcss/vite + Drizzle/D1). Helps create Astro components and pages, configure SSR adapters, set up content collections, deploy static or server-rendered sites, and manage project structure and CLI commands. Use when the user needs to work with Astro, mentions .astro files, asks about SSG/islands architecture, content collections, API routes, D1/Cloudflare runtime env, or deploying this Astro project.
+description: Skill for building with the Astro web framework in this repo (Astro 7 + @astrojs/cloudflare Workers adapter + Svelte 5 islands + Tailwind 4 via @tailwindcss/vite + Drizzle/D1). Helps create Astro components and pages, configure SSR adapters, set up content collections, deploy static or server-rendered sites, and manage project structure and CLI commands. Use when the user needs to work with Astro, mentions .astro files, asks about SSG/islands architecture, content collections, API routes, D1/Cloudflare runtime env, or deploying this Astro project.
 license: MIT
 metadata:
   authors: "Astro Team (upstream), adapted for mathloco"
@@ -184,9 +184,11 @@ single 900 px AVIF here — **no `srcset` ladder** yet.
 
 ### Deploying with an Adapter
 
-This site deploys through **Cloudflare Pages with Git integration** (project `mathloco`, automatic
-preview deploys per branch) — **not** by hand-running `wrangler pages deploy`, and the delegate never
-pushes (see `.notes/runbooks/deploy-and-secrets.md`). The local steps still apply:
+This site's deploy target is **Cloudflare Workers** (`npm run deploy` = gates + `wrangler deploy`;
+`npm run preview:deploy` for a branch Preview URL). It is *not* deployed by hand-running
+`wrangler pages deploy`, and Pages cannot run this artifact's server side — see
+"Deploy target" in `README.md` and `.notes/runbooks/pages-to-workers-migration.md`. The delegate never
+pushes and never deploys production; the operator holds that grant. The local steps still apply:
 1. Add the adapter: `npx astro add cloudflare --yes` (already present here)
 2. Run `npx astro check` to catch type and configuration errors before building.
 3. Run `npm run build` to produce the deployment artifact (`dist/`).

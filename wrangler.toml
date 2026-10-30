@@ -1,32 +1,67 @@
-# wrangler.toml
-# Wrangler v4 removed the top-level `node_compat` key. Node APIs (used by
-# @anthropic-ai/sdk and @discordjs/rest) now come from the `nodejs_compat`
-# compatibility flag, which requires a compatibility_date.
+# wrangler.toml - Cloudflare Workers (static assets + one SSR Worker)
+#
+# Deploy target is Workers, not Pages. Two reasons, both measured rather than remembered:
+#   * `@astrojs/cloudflare` 14 builds a Workers artifact (`dist/server/entry.mjs` + `assets.directory`),
+#     and Astro's Cloudflare upgrade notes remove Pages support at v13/Astro 6.
+#   * Pages cannot run this artifact's server side. On the Pages branch preview it published assets
+#     only ("No functions dir at /functions found. Skipping." / "Success: Assets published!") and
+#     `/api/discord-summary` answered 404, while the same commit on workerd answered 200 JSON.
+# The Pages project still answers the apex today. See README "Deploy target and the two-phase cutover".
+#
+# Wrangler v4 removed the top-level `node_compat` key. Node APIs (used by @anthropic-ai/sdk and
+# @discordjs/rest) now come from the `nodejs_compat` compatibility flag, which requires a
+# compatibility_date.
 compatibility_date = "2026-10-29"
 compatibility_flags = ["nodejs_compat"]
+
+# Also the hostname the Worker is reachable on: <name>.<account-subdomain>.workers.dev
+name = "minneapolis-math-book-club"
+
+# workers_dev  -> <name>.<subdomain>.workers.dev           the review URL that needs no domain work
+# preview_urls -> <version>-<name>.<subdomain>.workers.dev  immutable per-deployment URLs
+workers_dev = true
+preview_urls = true
 
 # The Discord guild (server) id is a public snowflake, not a credential, so it lives here where it
 # can be diffed and reviewed rather than in a dashboard field. That misplacement is what kept the
 # summary page broken: the value set by hand was the bot's own application id
 # (1325992054530113577), which Discord answers with 10004 "Unknown Guild", and nothing outside the
 # dashboard could see it. `npm run check:discord` prints the guild ids a token can actually see.
+#
+# `vars` is NOT inherited by Previews or by named environments - wrangler's own schema says each
+# must specify it - so the same value appears three times below on purpose.
 [vars]
 DISCORD_GUILD_ID = "1170385683379126343" # Math Book Club - the SERVER id
 
 # What really is secret stays secret, per environment:
-#   npx wrangler pages secret put DISCORD_TOKEN  --project-name <pages-project>
-#   npx wrangler pages secret put CLAUDE_API_KEY --project-name <pages-project>
+#   production Worker:  npx wrangler secret put DISCORD_TOKEN   (then choose "Production")
+#                       npx wrangler secret put CLAUDE_API_KEY
+#   every new Preview:  npx wrangler preview base-config secret put DISCORD_TOKEN
+#   one Preview only:   npx wrangler preview secret put DISCORD_TOKEN --name <branch>
+#   list them:          npm run cf:secrets:list / :preview / :preview-base
+# `wrangler pages secret put` is the Pages form and does nothing for this Worker.
 # CLAUDE_MODEL is optional; it only overrides the default model id in src/lib/claude.ts.
 
 [observability]
 enabled = true
-head_sampling_rate = 1 # optional. default = 1.
+head_sampling_rate = 1
 
+# Kept deliberately, even though nothing in src/ reads `env.DB` yet: the operator's ruling is SQLite
+# locally / D1 in production, and the events roadmap (.notes/roadmap-events.md) makes D1 the source
+# of truth for meetups. A migration prompt that trims "unused" bindings would delete the substrate
+# of that plan. `npm run db:check` gates schema against migrations in CI.
 [[d1_databases]]
 binding = "DB"
 database_name = "d1-mathloco-prod-db"
 database_id = "4e997466-3b31-4a4d-8187-a1e24f6ab7a3"
-preview_database_id = "DB"
+# It used to say `preview_database_id = "DB"` - a binding name in a UUID slot, the same failure family
+# as the guild-id bug - and it is deliberately gone rather than filled in. Wrangler keys its local
+# miniflare database by this UUID: pointing it at the preview database made `wrangler dev` and
+# `npm run db:migrate:local` open `.wrangler/state/v3/d1/.../8d31813...sqlite` while everything
+# previously migrated lives in `e735254...sqlite`, so migrations silently land in a different file
+# than the one `wrangler dev` reads and `db:studio:local` opens. One local database (the default env's)
+# is what the db:* scripts assume. Nothing here reaches real data: only `--remote` does, and that is
+# spelled out per script. The preview database is reached via `--env preview` (`[env.preview]` below).
 
 # Cross-isolate cache for the Discord summaries (src/lib/discord.ts). The code works
 # without it - it falls back to a per-isolate cache and re-pays Discord + Claude on every
@@ -38,6 +73,23 @@ preview_database_id = "DB"
 # id = "<namespace id from `npm run cf:kv:create`>"
 # preview_id = "<preview namespace id>"
 
+# --- Previews (branch deployments): `npx wrangler preview` -------------------------------------
+# Docs: workers/previews/get-started + /configuration. Previews do NOT inherit production settings;
+# the block is required, and `vars` plus every binding have to appear in it. Two Previews that share
+# a `database_id` share rows, so Previews bind to the preview database, never the prod one.
+# `assets`, `compatibility_date` and `compatibility_flags` stay top level by design.
+[previews.vars]
+DISCORD_GUILD_ID = "1170385683379126343"
+
+[[previews.d1_databases]]
+binding = "DB"
+database_name = "d1-mathloco-preview-db"
+database_id = "b58d56c1-6aa6-4108-a1c3-91b5e9dbbcb7"
+
+# --- A separate Wrangler *environment*, not a Worker Preview -----------------------------------
+# `[env.preview]` is a named config for `wrangler --env preview` (used by npm run db:migrate:preview
+# and .dev.vars.preview). Worker Previews above are a different mechanism - a real deployed branch
+# copy. Do not conflate them; workers/previews/compare-workflows spells the difference out.
 [env.preview]
 name = "preview"
 
