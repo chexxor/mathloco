@@ -5,8 +5,8 @@ add a MAP row to the script instead. `target: (delete)` means the write goes awa
 A write that already names a @theme token is listed as "keep (ratified …)" — the token names are
 parsed from src/styles/global.css (24 colours, 10 type steps, 2 radii, 8 elevations), so a token rename shows up here as a write that stopped being covered.
 
-Class tokens scanned: 176 distinct / 634 writes, of which 123 are in a DORMANT file (see the last section).
-Live writes mapped: 352 across 94 distinct tokens.
+Class tokens scanned: 170 distinct / 629 writes, of which 123 are in a DORMANT file (see the last section).
+Live writes mapped: 345 across 86 distinct tokens.
 Unmapped writes in a replaced bucket: none
 
 ## colour
@@ -48,19 +48,11 @@ Unmapped writes in a replaced bucket: none
 | `text-body` | 8 | `keep (ratified step)` | names a @theme type step |
 | `font-extrabold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `font-medium` | 3 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `text-4xl` | 4 | `text-display-1` | 36 → 33.2px |
-| `text-3xl` | 1 | `text-heading` | 30 → 27.7px |
+| `text-heading` | 4 | `keep (ratified step)` | names a @theme type step |
+| `text-display-1` | 3 | `keep (ratified step)` | names a @theme type step |
 | `text-subhead` | 2 | `keep (ratified step)` | names a @theme type step |
 | `font-bold` | 2 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `sm:text-4xl` | 1 | `text-display-1` | 36 → 33.2px |
-| `text-heading` | 2 | `keep (ratified step)` | names a @theme type step |
-| `leading-10` | 1 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |
-| `sm:leading-none` | 1 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |
-| `sm:text-6xl` | 1 | `text-display-3 (display-4 only with a narrow cap)` | 60 → 47.8/57.3px; one display step per screen, and 57.3px needs a cap below 375 ("Mathematical" 367.6px vs 343px) |
-| `lg:text-5xl` | 1 | `text-display-2` | 48 → 39.8px. The hero ramp INVERTS today (text-4xl sm:text-6xl lg:text-5xl xl:text-6xl): smaller at lg than at sm |
-| `xl:text-6xl` | 1 | `text-display-3 (display-4 only with a narrow cap)` | 60 → 47.8/57.3px; one display step per screen, and 57.3px needs a cap below 375 ("Mathematical" 367.6px vs 343px) |
-| `sm:text-5xl` | 1 | `text-display-2` | 48 → 39.8px. The hero ramp INVERTS today (text-4xl sm:text-6xl lg:text-5xl xl:text-6xl): smaller at lg than at sm |
-| `sm:leading-10` | 1 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |
+| `sm:text-display-2` | 1 | `keep (ratified step)` | names a @theme type step |
 
 ## shape
 
@@ -152,13 +144,13 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | `space-y-4` | 2 | src/components/UpcomingMeetups.astro |
 | `text-blue-600` | 3 | src/components/UpcomingMeetups.astro |
 | `bg-blue-50` | 1 | src/components/UpcomingMeetups.astro |
-| `text-3xl` | 1 | src/components/UpcomingMeetups.astro |
 | `hidden` | 1 | src/components/UpcomingMeetups.astro |
 | `sm:p-10` | 1 | src/components/UpcomingMeetups.astro |
-| `sm:text-4xl` | 1 | src/components/UpcomingMeetups.astro |
 | `rounded-lg` | 2 | src/components/UpcomingMeetups.astro |
 | `mt-8` | 2 | src/components/UpcomingMeetups.astro |
 | `bg-white` | 1 | src/components/UpcomingMeetups.astro |
+| `text-3xl` | 1 | src/components/UpcomingMeetups.astro |
+| `sm:text-4xl` | 1 | src/components/UpcomingMeetups.astro |
 | `shadow-lg` | 1 | src/components/UpcomingMeetups.astro |
 | `list-disc` | 1 | src/components/UpcomingMeetups.astro |
 | `list-inside` | 1 | src/components/UpcomingMeetups.astro |

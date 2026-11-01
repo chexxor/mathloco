@@ -74,16 +74,28 @@ do not write `p-[13px]`.
 | `text-lede` | 19.2px | 28px | intro paragraph, card title |
 | `text-subhead` | 23px | 28px *(derived)* | section heading |
 | `text-heading` | 27.7px | 36px *(derived)* | page heading |
-| `text-display-1…4` | 33.2 / 39.8 / 47.8 / 57.3px | 36 / 44 / 52 / 60px | **the WHEN**: dates, numerals, the next-meeting line |
+| `text-display-1…4` | 33.2 / 39.8 / 47.8 / 57.3px | 36 / 44 / 52 / 60px | **the locator** — one element per screen: the when/where line once real schedule work exists, the page `h1` until then |
 
 Leading is carried by the size token — never write a bare `leading-*` next to a size. Serif body copy
 reads at `leading-prose` (1.6). Display leading floor is 1.05; the four display line boxes land on the
 4px grid and each clears its measured ink box.
 
-**Never** use one display step per screen **plus** the dark band in the same screen at full volume —
-one display step per screen, mirroring the one-band rule. **Never** put the display step on a
-punchline: it is reserved for when/where. **Never** use `text-display-4` (57.3px) below a 375 viewport
-without a cap: "Mathematical" measures 367.6px against 343px of content width. Faces: PT Serif
+**One display step per screen: the screen's primary locator.** That is the one element answering "which
+page is this, and when and where". Section `h2`s are `text-heading`, never a display step; a display
+step never goes on a punchline, and never on two elements in one screen. Where the locator lives is
+not permanent: **when a real dated line exists, the display step moves to it and the title steps down
+to `text-heading`** (operator ruling 2026-11-01, D112 — the rule used to read "reserved for when/where",
+which on a landing page whose event sections are switched off would have left the display step
+reserved for content that does not exist, and flattened the title to 27.7px beside two 27.7px section
+headings). Applied today: landing `h1` = `text-display-1` base / `text-display-2` at ≥sm, `h2`s and the
+footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`.
+
+**Never** use `text-display-4` (57.3px) below a 375 viewport without a cap. Two measured fits, because
+the face matters and the older number was taken in the wrong one: in **PT Serif** "Mathematical"
+measures 367.6px against 343px of content width, and in the chrome face the strings that actually sit
+at display size leave 4.8px of margin at display-4 (longest word 338.2px) against 2 lines and 98px at
+display-2 — `.design/fonts/display-fit-chrome.json`, Public Sans Variable at weight 800, since 800 is
+measurably wider than 700 (458.0 vs 452.4 for the club name at display-1). Faces: PT Serif
 (`font-body`) for content — **400 and 700 both load** — and Public Sans variable for chrome, installed
 from `src/styles/fonts.css`. **Never** set `font-weight: 500/600` on serif text: PT Serif has no
 variable build, so it renders regular or bold and the weight you wrote is the weight you do not get.

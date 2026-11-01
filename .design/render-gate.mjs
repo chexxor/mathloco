@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // render-gate.mjs — do the ratified tokens survive contact with a real browser?
 //
-//   node .design/render-gate.mjs            # '/' and '/404' at 1240 and 390
+//   node .design/render-gate.mjs            # '/', '/404' and '/chat' at 1240 and 390
 //   node .design/render-gate.mjs /chat      # one page
 //
 // Run `npm run build` first: this measures dist/client, not src.
@@ -29,7 +29,7 @@ import { resolve } from 'node:path';
 
 const widths = (process.env.RENDER_WIDTHS || "1240,390").split(",").map(Number);
 const pages = process.argv.slice(2).filter((a) => a.startsWith('/'));
-const routes = pages.length ? pages : ['/', '/404'];
+const routes = pages.length ? pages : ['/', '/404', '/chat'];
 const dist = resolve('dist/client');
 if (!existsSync(dist)) { console.error('dist/client missing — run npm run build first'); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
