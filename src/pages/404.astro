@@ -14,12 +14,12 @@ export const prerender = true;
 <Layout title="Page not found - Minneapolis Math Book Club" noindex>
   <main class="mx-auto max-w-4xl px-4 py-24 text-center">
     <p class="text-label uppercase tracking-wide mb-4">
-      <span class="text-blue-600">404</span>
+      <span class="text-ink-3">404</span>
     </p>
 
-    <h1 class="text-4xl font-extrabold text-gray-900 mb-6">We could not find that page</h1>
+    <h1 class="text-4xl font-extrabold text-ink mb-6">We could not find that page</h1>
 
-    <p class="text-lede leading-prose text-gray-600 mb-12 max-w-2xl mx-auto">
+    <p class="text-lede leading-prose text-ink-2 mb-12 max-w-2xl mx-auto">
       The link may be old, or the address may have a typo. Everything we have is one of these two
       places.
     </p>
@@ -27,25 +27,25 @@ export const prerender = true;
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
       <a
         href="/"
-        class="inline-flex items-center justify-center px-8 py-4 text-lg font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
       >
         Back to the home page
       </a>
       <a
         href="/chat"
-        class="inline-flex items-center justify-center px-8 py-4 border border-gray-300 text-lg font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition"
+        class="inline-flex items-center justify-center px-8 py-3 text-label font-medium rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint transition"
       >
         Recent Discord summaries
       </a>
     </div>
 
-    <p class="text-label text-gray-500 mt-16">
+    <p class="text-label text-ink-3 mt-16">
       Looking for a specific meetup?
       <a
         href={URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
-        class="underline text-gray-700"
+        class="underline text-ink-2 hover:text-gold"
       >Our Meetup group</a
       > lists every session.
     </p>

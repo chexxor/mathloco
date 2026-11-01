@@ -57,6 +57,9 @@ pnpm-debug.log*
 #  - scratch files.
 .design/fonts/*.woff2
 .design/grill/.probe-shot-*.png
+# what the render gate measured on this machine, rewritten on every run — the gate's PASS/FAIL line is
+# the report; these are the raw numbers behind it
+.design/render/
 .design/tmp-*
 
 # Machine-local pi agent state: a local-model endpoint (and its key) can land

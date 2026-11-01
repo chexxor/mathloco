@@ -38,7 +38,7 @@ import Navigation from '../components/Navigation.astro';
     <title>{title}</title>
 
   </head>
-  <body>
+  <body class="bg-paper text-ink">
     <Navigation />
     <slot />
     <style lang="scss" is:global>
@@ -48,8 +48,11 @@ import Navigation from '../components/Navigation.astro';
          so the only places a theme colour actually rendered disagreed with the colour the rest of
          the site declares. */
       ::selection {
-        background: var(--color-book-theme);
-        color: white;
+        /* paper on ink = 12.02, asserted in .design/grill/contrast/gen-ratify-cfg.mjs. The retired
+           amber pair measured 2.06, under the 4.5 bar; the amber is delta-OKLab 0.019 from Amazon
+           orange #FF9900 (D82/D88), which is why the token goes, not just this rule. */
+        background: var(--color-ink);
+        color: var(--color-paper);
       }
 
       .love {
@@ -66,35 +69,11 @@ import Navigation from '../components/Navigation.astro';
         }
       }
 
-      @keyframes initAnimation {
-        0% {
-          transform: rotateY(0deg);
-        }
-        100% {
-          transform: rotateY(-30deg);
-        }
-      }
-
-      .ribbon {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 150px;
-        height: 30px;
-        margin-right: -40px;
-        margin-top: 20px;
-        padding-top: 5px;
-        transform: rotate(45deg); /* Standard syntax */
-      }
-
-      .underline {
-        background: linear-gradient(
-          to top,
-          var(--color-book-theme) 35%,
-          transparent 35%
-        );
-        text-decoration: none;
-      }
+      /* The 404 page's link writes the `underline` utility. A GLOBAL class of the same name used
+         to sit here: an amber highlighter bar with text-decoration: none, later in the cascade than
+         the utility, so every "underline" on the site was painted amber and NOT underlined. It is the
+         reason the class gate could not see the last amber write on the site — the appearance came
+         from a <style> block, not a class. Utility wins now. */
     </style>
   </body>
 </html>

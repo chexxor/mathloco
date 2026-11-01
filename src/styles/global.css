@@ -133,16 +133,19 @@
   --default-transition-timing-function: linear;
 
   /* ---- RETIRED IN design-apply (kept only because markup still writes the class):
-     `--color-book-gray` = Footer + the four never-imported social icons, `--color-book-theme`
-     = ::selection in Layout.astro. D82/D88: both are 2024 template leftovers and that amber is
-     delta-OKLab 0.019 from Amazon orange #FF9900. `--font-sans` names a phantom family, "Inter
+     `--color-book-gray` = the four never-imported social icons only (the Footer band now writes
+     `bg-ink`); it stays so those dormant files still resolve for check:classes, and choose-icons
+     deletes them wholesale. `--color-book-theme` is GONE as of apply batch 3: its last two
+     references were `::selection` and a global `.underline` class in Layout.astro that painted an
+     amber highlighter instead of an underline (D82/D88: that amber is delta-OKLab 0.019 from Amazon
+     orange #FF9900, and the selection pair measured 2.06 — under the 4.5 bar).
+     `--font-sans` names a phantom family, "Inter
      var", that no file in this repo provides — measured consequence: every chrome label on the
      ratified specimen rendered in this rig's system-ui. design-apply installs the ratified faces
      (@fontsource/pt-serif 400+700 latin, @fontsource/public-sans variable latin) and replaces the
      value; until then this line is what the site actually renders, so it stays. `--font-body` is
      live (PT Serif) and stays under the same name. ---- */
   --color-book-gray: #1a1a1c;
-  --color-book-theme: #f59e0b;
 
   --font-sans: "Inter var", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";

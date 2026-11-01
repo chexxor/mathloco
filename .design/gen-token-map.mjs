@@ -44,7 +44,7 @@ const MAP = [
   // ---------- colour: Tailwind palette -> named roles ----------
   { bucket: 'colour', re: /^text-gray-(900|800)$/, target: 'text-ink', note: '12.02 on paper; the shipped pair is gray-900 on white at 17.4 — legal but unnamed' },
   { bucket: 'colour', re: /^text-gray-(700|600)$/, target: 'text-ink-2', note: '7.02' },
-  { bucket: 'colour', re: /^text-gray-500$/, target: 'text-ink-3', note: '5.21 — this is the meta/dated-line role' },
+  { bucket: 'colour', re: /^text-gray-500$/, target: 'text-ink-3', note: '5.21 — this is the meta/dated-line role. Instance beats row: the hero\'s three 19.2px lede paragraphs take ink-2 (7.02), because prose is not meta (apply batch 3)' },
   { bucket: 'colour', re: /^hover:text-gray-500$/, target: 'hover:text-ink-2', note: '' },
   { bucket: 'colour', re: /^text-gray-50$/, target: 'text-band-text', note: 'it only appears on bg-book-gray, which becomes bg-ink: 10.19' },
   { bucket: 'colour', re: /^text-pink-400$/, target: 'text-gold-on-ink', note: 'the footer ∑. TRAP: plain `gold` on the ink footer measures 2.50 = FAIL; only gold-on-ink (5.80) crosses there' },

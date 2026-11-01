@@ -19,6 +19,7 @@
     "check": "astro check",
     "check:sanitize": "tsx scripts/check-sanitize.ts",
     "check:classes": "tsx scripts/check-classes.ts",
+    "check:render": "astro build && node .design/render-gate.mjs",
     "check:discord": "tsx scripts/check-discord-access.ts",
     "check:ai": "tsx scripts/check-ai-model.ts",
     "check:deploy": "tsx scripts/check-deploy-target.ts",

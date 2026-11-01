@@ -7,17 +7,17 @@ const navItems = [
 ];
 ---
 
-<header class="bg-white">
+<header class="bg-paper">
   <nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
     <div class="flex flex-col sm:flex-row sm:items-center gap-4">
       <div class="flex-shrink-0">
-        <a href="/" class="text-2xl font-bold text-blue-600">Minneapolis Math Book Club</a>
+        <a href="/" class="text-subhead font-bold text-ink">Minneapolis Math Book Club</a>
       </div>
       <div class="flex flex-wrap gap-4 sm:ml-6">
         {navItems.map(item => (
           <a
             href={item.href}
-            class="text-gray-900 hover:text-blue-600 font-medium"
+            class="text-label py-1 text-ink hover:text-gold font-medium"
             aria-label={`Navigate to ${item.label}`}
           >
             {item.label}

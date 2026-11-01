@@ -42,8 +42,13 @@ const ALLOWED_COLLISIONS = new Set([
   '--default-transition-timing-function', // linear for colour, ease-out written where things move
   '--font-sans',                        // chrome face; still the phantom value until apply installs it
   '--font-body',                        // PT Serif, live today
-  '--color-book-gray', '--color-book-theme', // retired in design-apply; markup still writes them
+  '--color-book-gray',                  // retired, but the four never-imported icons/*.astro still
+                                        // write it, so check:classes needs it until choose-icons lands
 ]);
+// A retired token must STAY retired. book-theme's last two references were ::selection and a global
+// `.underline` class in Layout.astro that painted an amber highlighter instead of underlining; both
+// went in apply batch 3, so its return to @theme would be a regression, not a typo.
+const RETIRED_GONE = ['--color-book-theme'];
 const collisions = declared.filter((d) => twDefaults.has(d) && !ALLOWED_COLLISIONS.has(d));
 console.log('\n== token block: declared keys, collisions with Tailwind defaults ==');
 console.log(`  ${declared.length} keys declared; ${new Set(declared).size} distinct`);
@@ -51,6 +56,9 @@ if (collisions.length) fail(`token block overrides Tailwind built-ins (would inv
 else ok(`no accidental built-in overrides (${[...ALLOWED_COLLISIONS].length} deliberate collisions allowed)`);
 const missing = [...ALLOWED_COLLISIONS].filter((k) => !declared.includes(k));
 if (missing.length) fail(`expected tokens absent from @theme: ${missing.join(', ')}`);
+const resurrected = RETIRED_GONE.filter((k) => declared.includes(k));
+if (resurrected.length) fail(`retired token is back in @theme: ${resurrected.join(', ')}`);
+else ok(`${RETIRED_GONE.length} retired token(s) confirmed absent from @theme`);
 
 // ---------------- 2. every utility DESIGN.md promises must resolve ----------------------------
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });
