@@ -84,10 +84,9 @@ reads at `leading-prose` (1.6). Display leading floor is 1.05; the four display 
 one display step per screen, mirroring the one-band rule. **Never** put the display step on a
 punchline: it is reserved for when/where. **Never** use `text-display-4` (57.3px) below a 375 viewport
 without a cap: "Mathematical" measures 367.6px against 343px of content width. Faces: PT Serif
-(`font-body`) for content — **only weight 400 is actually loaded today**, see "Not wired yet" — and
-Public Sans variable for chrome, which is not installed yet. **Never** set `font-weight: 500/600` on
-serif text: PT Serif has no variable build, so it renders regular or bold and the weight you wrote is
-the weight you do not get.
+(`font-body`) for content — **400 and 700 both load** — and Public Sans variable for chrome, installed
+from `src/styles/fonts.css`. **Never** set `font-weight: 500/600` on serif text: PT Serif has no
+variable build, so it renders regular or bold and the weight you wrote is the weight you do not get.
 
 ## Radius
 
@@ -209,10 +208,10 @@ two steps are written as the numbers above. **Never** use `duration-300` or a 40
 guard animation with `prefers-reduced-motion: reduce` — the shipped artifact contains 0 occurrences of
 that string.
 
-Weights: PT Serif delivers **400 only** today (see “Not wired yet”), so in serif text the only legal
-weights are `400` and `700`, and the `700` is synthesised until `@fontsource/pt-serif/700.css` is
-imported. `500`/`600`/`800` are legal **only** in chrome (the sans stack), and only once a variable face
-is installed — 30 weight writes in `src/` currently render as whatever the browser can synthesize.
+Weights: PT Serif ships two faces and both are imported (latin 400 + latin 700), so in serif text the
+only legal weights are `400` and `700`. `500`/`600`/`800` are legal **only** in chrome (the sans stack),
+where one variable file renders five distinct weights — measured 46 text runs on the landing page now
+resolve through Public Sans Variable at 500/600/800 instead of a synthesised system-ui.
 
 ## Enforcement
 
@@ -220,6 +219,8 @@ is installed — 30 weight writes in `src/` currently render as whatever the bro
 node .design/gen-token-map.mjs  # regenerate the apply worklist from src/; exit 1 = a class write has no mapping
 node .design/ratify-check.mjs   # token block → Tailwind resolver + renderer contrast (exit 0 = all bars hold)
 npm run check:classes           # every written class resolves to CSS — catches a token used as a class that does not exist
+npm run check:render            # build, then measure dist/client in Firefox: control heights, measured contrast,
+                                # one dark band, keyline layer bar, one display step, faces actually loaded
 npm run verify                  # the full CI gate set
 ```
 
@@ -234,16 +235,20 @@ word in event prose.
 
 ## Not wired yet (lands in `design-apply`, phase 4)
 
-- Markup still writes the old palette (`gray-*`, `blue-*`, `red-*`, `shadow-*`) and the retired
-  `--color-book-*` tokens; the token block keeps those entries only until the class writes go away,
-  because deleting a token before its class write does is what `check:classes` exists to catch.
-- Faces: `PT Serif` **400** is installed and imported (`Layout.astro:9` → `@fontsource/pt-serif/index.css`,
-  which declares exactly 4 faces, all `font-weight: 400`). **`700` ships in the package but is never
-  imported**, so every `font-bold` / `font-semibold` / `font-extrabold` on serif text is currently a
-  browser-synthesised bold. `--font-sans` names `"Inter var"`, which no dependency provides, so chrome
-  falls back to `system-ui` (measured: x-height 0.48, cap 0.69 — `.design/fonts/metrics.json`). Public
-  Sans is **not installed**: its variable latin file is 26,832 B for the whole weight axis
-  (`.design/fonts/bytes.json`), which is the cheap way to get chrome weights below 700.
+- Markup still writes the old palette in the state surfaces only: `DiscordSummary.svelte` (`bg-red-50`,
+  `text-red-600`, `bg-blue-50`, `text-gray-600`, `border-blue-600`, `prose-blue`) and `Checkmark.astro`
+  (`text-green-500`). Those stay open because the fix is a notice/empty-state grammar, not a colour swap,
+  and the token block keeps `--color-book-*` entries until the class writes go away — deleting a token
+  before its class write does is what `check:classes` exists to catch.
+- **Faces are wired** (apply batch 4a): `Layout.astro` imports `@fontsource/pt-serif/latin-400.css` and
+  `latin-700.css`, and `src/styles/fonts.css` declares the one Public Sans variable latin face
+  (26,832 B, `wght 100 900`) against the vendor file, because the package's only entry point declares
+  three subsets — 53,020 B of woff2 — for a decision that ratified one latin file. Measured in the
+  render gate: all three faces report `loaded`, chrome runs resolve through Public Sans Variable, and
+  the artifact ships 3 woff2 instead of the 10 the old `@fontsource/pt-serif` index pulled in (it was
+  shipping cyrillic for English copy).
+  The one thing this cannot yet do: `check:render` proves the faces load on a **built page**, so a moved
+  vendor path fails the gate instead of silently rendering in the fallback stack.
 - `shadow-e1` / `shadow-e2` are defined-but-unused until the first floating surface exists. No modal or
   dropdown is in `src/` today.
 - The four island defects found in round 7 (no reduced-motion guard, no height reservation, no

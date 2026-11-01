@@ -139,15 +139,15 @@
      references were `::selection` and a global `.underline` class in Layout.astro that painted an
      amber highlighter instead of an underline (D82/D88: that amber is delta-OKLab 0.019 from Amazon
      orange #FF9900, and the selection pair measured 2.06 — under the 4.5 bar).
-     `--font-sans` names a phantom family, "Inter
-     var", that no file in this repo provides — measured consequence: every chrome label on the
-     ratified specimen rendered in this rig's system-ui. design-apply installs the ratified faces
-     (@fontsource/pt-serif 400+700 latin, @fontsource/public-sans variable latin) and replaces the
-     value; until then this line is what the site actually renders, so it stays. `--font-body` is
-     live (PT Serif) and stays under the same name. ---- */
+     `--font-sans` no longer names a phantom. It used to be "Inter var", a family no file in this repo
+     provided — measured consequence: every chrome label on the ratified specimen rendered in this
+     rig's system-ui (x-height 0.48). design-apply wired the ratified faces: PT Serif latin 400+700
+     (static pair, imported in Layout.astro) and Public Sans Variable latin wght 100-900 (one 26,832 B
+     file, @font-face in src/styles/fonts.css because the vendor package has no latin-only entry point).
+     `--font-body` is live (PT Serif) and stays under the same name. ---- */
   --color-book-gray: #1a1a1c;
 
-  --font-sans: "Inter var", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+  --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-body: "PT Serif", ui-serif, Georgia, serif;
 }

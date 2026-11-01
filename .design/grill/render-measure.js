@@ -16,6 +16,7 @@
 //   - fonts[] lists webfonts the page references and whether they were loaded; a serif line box
 //     measured while PT Serif is still loading is a fallback metric, so this ships in the output.
 (() => {
+  const T0 = Date.now();
   const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], shadows: [], text: [], fonts: [] };
   const send = (payload) => {
     out.done = true;
@@ -169,11 +170,11 @@
     };
   }).filter(Boolean);
 
-  const fonts = [];
-  document.fonts.forEach((f) => fonts.push(`${f.family} ${f.weight} ${f.style} ${f.status}`));
+  // Snapshot the faces INSIDE report(). Taken at script-eval time it is always the pre-load state —
+  // every face "unloaded" — and the gate then fails runs whose fonts loaded fine.
 
-  send({
-    url: location.href,
+  const report = () => send({
+    url: location.href, elapsedMs: Date.now() - T0,
     doc: {
       bg: getComputedStyle(document.body).backgroundColor,
       fg: getComputedStyle(document.body).color,
@@ -181,6 +182,20 @@
     },
     overflowX: document.documentElement.scrollWidth > innerWidth + 1
       ? document.documentElement.scrollWidth - innerWidth : 0,
-    controls, bands, keylines, shadows, text, fonts,
+    controls, bands, keylines, shadows, text,
+    fonts: (() => { const a = []; document.fonts.forEach((f) => a.push(`${f.family} ${f.weight} ${f.style} ${f.status}`)); return a; })(),
   });
+
+  // Measure AFTER the faces settle. A serif line box measured while PT Serif is still swapping in is
+  // a fallback metric, and every height the gate reports would be a lie about the fallback stack.
+  // document.fonts.ready alone is NOT enough: measured on this rig it resolves before the faces are
+  // even requested (status still "loading"), so each ratified face is asked for by name first.
+  // Bounded at 8s so a page that never finishes still posts instead of hanging the run; the gate then
+  // fails the run with "never loaded" rather than reporting fallback heights as if they were real.
+  const wantFaces = ['400 16px "PT Serif"', '700 16px "PT Serif"', '600 16px "Public Sans Variable"'];
+  const settle = () => document.fonts && document.fonts.load
+    ? Promise.all(wantFaces.map((f) => document.fonts.load(f).then(() => {}, () => {})))
+        .then(() => document.fonts.ready).then(() => {}, () => {})
+    : Promise.resolve();
+  Promise.race([settle(), new Promise((r) => setTimeout(r, 8000))]).then(report);
 })();

@@ -51,6 +51,7 @@
     "@astrojs/cloudflare": "^14.4.3",
     "@astrojs/sitemap": "^3.7.4",
     "@astrojs/svelte": "^9.1.2",
+    "@fontsource-variable/public-sans": "^5.3.0",
     "@fontsource/pt-serif": "^5.3.0",
     "@paralleldrive/cuid2": "^3.3.0",
     "@tailwindcss/typography": "^0.5.20",

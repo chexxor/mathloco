@@ -17,7 +17,7 @@
 //     decisions: nudge a token and the measured ratio moves with it and the row fails.
 //
 // Run: node .design/ratify-check.mjs      (needs firefox; ~20 s)
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync, statSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import { __unstable__loadDesignSystem } from '@tailwindcss/node';
@@ -59,6 +59,36 @@ if (missing.length) fail(`expected tokens absent from @theme: ${missing.join(', 
 const resurrected = RETIRED_GONE.filter((k) => declared.includes(k));
 if (resurrected.length) fail(`retired token is back in @theme: ${resurrected.join(', ')}`);
 else ok(`${RETIRED_GONE.length} retired token(s) confirmed absent from @theme`);
+
+// ---------------- 1b. the faces the token block names must exist ----------------
+// "The class exists" is not "the font is there". A phantom family in --font-sans renders in the
+// fallback stack and every type measurement downstream is a lie about a face nobody installed, which
+// is exactly the state ratify found ("Inter var", x-height 0.48). So the phantom is asserted absent,
+// and the one vendor woff2 the ratified latin face points at must exist at the size the decision paid
+// for — a moved path in an @fontsource upgrade fails here instead of shipping system-ui chrome.
+const PHANTOM_FAMILIES = ['Inter var'];
+const sansDecl = /--font-sans:\s*([^;]+);/.exec(css);
+const phantom = !sansDecl ? ['--font-sans is not declared at all']
+  : PHANTOM_FAMILIES.filter((f) => sansDecl[1].includes(f));
+console.log('\n== faces ==');
+if (phantom.length) fail(`--font-sans names a family no file provides: ${phantom.join(', ')}`);
+else ok('no phantom family in the token block');
+const fontsCss = readFileSync(resolve(ROOT, 'src/styles/fonts.css'), 'utf8');
+const faceUrl = /src: url\('([^']+)'\)/.exec(fontsCss);
+const RATIFIED_FACE_BYTES = 26832;   // .design/decisions.json typeFamily.bytes
+if (!faceUrl) fail('src/styles/fonts.css declares no @font-face src — the chrome face is not wired');
+else {
+  const facePath = resolve(resolve(ROOT, 'src/styles'), faceUrl[1]);
+  const bytes = existsSync(facePath) ? statSync(facePath).size : -1;
+  if (bytes === -1) fail(`the chrome face points at a file that is not there: ${faceUrl[1]}`);
+  else if (bytes !== RATIFIED_FACE_BYTES) fail(`chrome face is ${bytes} B at ${faceUrl[1]}, ratified at ${RATIFIED_FACE_BYTES} B — a different file got imported`);
+  else ok(`chrome face present, ${bytes} B, latin wght 100-900 as ratified`);
+}
+for (const serif of ['latin-400.css', 'latin-700.css']) {
+  if (!readFileSync(resolve(ROOT, 'src/layouts/Layout.astro'), 'utf8').includes(`pt-serif/${serif}`))
+    fail(`Layout.astro no longer imports @fontsource/pt-serif/${serif} — serif would render one weight`);
+}
+ok('serif pair (latin 400 + latin 700) imported in Layout.astro');
 
 // ---------------- 2. every utility DESIGN.md promises must resolve ----------------------------
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });

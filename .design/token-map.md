@@ -42,17 +42,17 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `font-semibold` | 14 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
+| `font-semibold` | 14 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `text-lede` | 15 | `keep (ratified step)` | names a @theme type step |
 | `leading-prose` | 15 | `keep (ratified leading)` | the serif prose rule (1.6) is a token, not a duplicate of the size step — this write stays |
 | `text-label` | 14 | `keep (ratified step)` | names a @theme type step |
 | `text-body` | 8 | `keep (ratified step)` | names a @theme type step |
-| `font-extrabold` | 5 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
-| `font-medium` | 3 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
+| `font-extrabold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
+| `font-medium` | 3 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `text-4xl` | 4 | `text-display-1` | 36 → 33.2px |
 | `text-3xl` | 1 | `text-heading` | 30 → 27.7px |
 | `text-subhead` | 2 | `keep (ratified step)` | names a @theme type step |
-| `font-bold` | 2 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
+| `font-bold` | 2 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `sm:text-4xl` | 1 | `text-display-1` | 36 → 33.2px |
 | `text-heading` | 2 | `keep (ratified step)` | names a @theme type step |
 | `leading-10` | 1 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |

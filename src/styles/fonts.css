@@ -1,0 +1,26 @@
+/* The chrome face, wired. Ratified in .design/decisions.json (typeFamily): "Public Sans variable
+   (latin, wght 100-900, one file) for chrome", 26,832 B.
+
+   Why this @font-face is written here instead of `import "@fontsource-variable/public-sans"`:
+   that package's only entry point (index.css, and wght.css, same faces) declares three subsets —
+   latin 26,832 B + latin-ext 18,472 B + vietnamese 7,716 B, measured from the installed 5.3.0 — so
+   the artifact would carry 53,020 B of woff2 for a decision that ratified one latin file. There is
+   no latin-only entry point in 5.3.0 to import. The face body and unicode-range below are copied
+   verbatim from that package's index.css latin block; only the url is ours.
+
+   The risk of naming a vendor file path is that an upgrade moves it. Two things make that loud
+   rather than silent: `npm run build` fails if the url cannot be resolved, and `npm run
+   check:render` fails if a ratified family is not `loaded` in the page — a face that 404s renders
+   in the fallback stack and every height in the gate would be a fallback metric.
+
+   PT Serif is imported from its own package in Layout.astro (latin-400.css, latin-700.css): the
+   static pair, 33,116 B + 29,588 B, because the registry has no variable build for it (decisions
+   .typeFamilyConstraintMeasured) — which is why serif weights are 400 or 700 and nothing between. */
+@font-face {
+  font-family: 'Public Sans Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('../../node_modules/@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}

@@ -35,7 +35,13 @@ if (!existsSync(assetDir)) { console.error(`no _astro directory under ${dist} â€
 let cssCopies = 0;
 for (const f of readdirSync(assetDir)) {
   if (!f.endsWith('.css') || f.endsWith('.rel.css')) continue;
-  const css = readFileSync(join(assetDir, f), 'utf8').replace(/url\((['"]?)\/(?!\/)/g, 'url($1./');
+  // The copy lives INSIDE _astro, so a hashed-asset url drops the _astro segment (./x.woff2) and a
+  // public-dir url goes up one (../x.png). Getting this wrong is silent and expensive: the woff2 404s,
+  // the face sits at "loading" forever, and every height the gate reports is a fallback metric â€” which
+  // is exactly why the gate now fails on a ratified face that never loads.
+  const css = readFileSync(join(assetDir, f), 'utf8')
+    .replace(/url\((['"]?)\/_astro\//g, 'url($1./')
+    .replace(/url\((['"]?)\/(?!\/)/g, 'url($1../');
   writeFileSync(join(assetDir, f.replace(/\.css$/, '.rel.css')), css);
   cssCopies++;
 }

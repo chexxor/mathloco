@@ -98,6 +98,13 @@ for (const route of routes) {
 
     // 6. fonts
     const unloaded = (j.fonts || []).filter((f) => !/\bloaded\b/.test(f));
+    // a ratified face that never loads is not a warning: it means every height below was measured in
+    // the fallback stack (the url in src/styles/fonts.css moved, or the import went away)
+    for (const fam of ["PT Serif", "Public Sans Variable"]) {
+      const face = (j.fonts || []).find((f) => f.startsWith(fam));
+      if (!face) fails.push(`${at}: no ${fam} face referenced by the page at all — the face import is gone`);
+      else if (!/\bloaded\b/.test(face)) fails.push(`${at}: ${fam} never loaded (${face}) — heights below are fallback metrics`);
+    }
     if (unloaded.length) warns.push(`${at}: ${unloaded.length} webface(s) not loaded at measure time: ${unloaded.slice(0, 3).join('; ')}${unloaded.length > 3 ? ' …' : ''} — serif metrics may be fallback`);
     const phantom = (j.text || []).filter((t) => /Inter var/.test(t.ff));
     if (phantom.length) warns.push(`${at}: ${phantom.length} text run(s) resolve through the phantom family "Inter var" — the faces batch has not landed`);
