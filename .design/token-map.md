@@ -5,8 +5,8 @@ add a MAP row to the script instead. `target: (delete)` means the write goes awa
 A write that already names a @theme token is listed as "keep (ratified …)" — the token names are
 parsed from src/styles/global.css (24 colours, 10 type steps, 2 radii, 8 elevations), so a token rename shows up here as a write that stopped being covered.
 
-Class tokens scanned: 165 distinct / 700 writes, of which 123 are in a DORMANT file (see the last section).
-Live writes mapped: 404 across 80 distinct tokens.
+Class tokens scanned: 170 distinct / 707 writes, of which 123 are in a DORMANT file (see the last section).
+Live writes mapped: 407 across 84 distinct tokens.
 Unmapped writes in a replaced bucket: none
 
 ## colour
@@ -28,6 +28,7 @@ Unmapped writes in a replaced bucket: none
 | `bg-panel` | 4 | `keep (ratified role)` | names a @theme colour role |
 | `hover:text-gold` | 3 | `keep (ratified role)` | names a @theme colour role |
 | `text-gold-on-ink` | 1 | `keep (ratified role)` | names a @theme colour role |
+| `text-gold` | 1 | `keep (ratified role)` | names a @theme colour role |
 
 ## type
 
@@ -35,19 +36,21 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `text-label` | 20 | `keep (ratified step)` | names a @theme type step |
+| `text-label` | 19 | `keep (ratified step)` | names a @theme type step |
 | `leading-prose` | 18 | `keep (ratified leading)` | the serif prose rule (1.6) is a token, not a duplicate of the size step — this write stays |
+| `text-body` | 16 | `keep (ratified step)` | names a @theme type step |
 | `text-lede` | 16 | `keep (ratified step)` | names a @theme type step |
 | `font-semibold` | 13 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `text-body` | 15 | `keep (ratified step)` | names a @theme type step |
 | `font-medium` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `font-extrabold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `font-bold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
+| `font-bold` | 4 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `text-heading` | 4 | `keep (ratified step)` | names a @theme type step |
 | `leading-6` | 3 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |
 | `text-display-1` | 3 | `keep (ratified step)` | names a @theme type step |
-| `text-subhead` | 2 | `keep (ratified step)` | names a @theme type step |
 | `sm:text-display-2` | 1 | `keep (ratified step)` | names a @theme type step |
+| `text-subhead` | 1 | `keep (ratified step)` | names a @theme type step |
+| `text-micro` | 1 | `keep (ratified step)` | names a @theme type step |
+| `nav-narrow:text-label` | 1 | `keep (ratified step)` | names a @theme type step |
 
 ## shape
 
@@ -68,7 +71,7 @@ Unmapped writes in a replaced bucket: none
 
 ## space
 
-(42 writes already on the ratified scale — kept as written, not listed)
+(43 writes already on the ratified scale — kept as written, not listed)
 
 | written class | uses | becomes | why |
 |---|---|---|---|

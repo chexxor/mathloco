@@ -16,21 +16,35 @@
 //   - the contrast the oracle promised is the contrast that painted, on the page a visitor gets
 //   - one dark band per screen (a footer + a dark CTA is two bands, which is what the old book-theme
 //     ribbon produced)
-//   - no keyline darker than --color-rule (1.27 against paper); D105's 1.35 layer bar with a hair of
-//     float tolerance, because Firefox composites oklch and the last digit moves
+//   - no keyline drawn as a border/outline (the ratified keyline is a 1px INSET ring, measured 2.99
+//     against paper in this harness; a border costs 2px, which is how a 40px control arrives at 42)
+//   - notices and states: every role=status/alert block has no fill, a 1px inset ring at the ratified
+//     rule contrast, text at or above the 4.5 bar, and a height that clears D98's 48px one-line figure
+//   - the nav: one row at every width, flex-wrap: nowrap, one type tier per viewport, and the row must
+//     FIT the container's content box (D100's needed-vs-available probe, run on the built artifact).
+//     The tier boundary is read from --breakpoint-nav-narrow so this gate cannot drift from the CSS.
 //   - one display step per screen
-//   - no horizontal overflow at either width, and tap targets that clear 44px at 390
+//   - no horizontal overflow at any measured width, and tap targets that clear 44px at 390
+//
+// Default widths are 1240, 390 and 320 — the tightest viewport D100's adopted tier claims. 300 is not
+// in the default set: measured, the narrow tier needs 273px and a 300 viewport's container offers 256
+// (D100's 268 figure is scrollbar-free). Closing that gap needs the mark tier decision, which is the
+// operator's; see D113. Run RENDER_WIDTHS=1240,390,360,320,300 to see it.
 //
 // Each run also reports whether the webfonts had loaded. A serif line box measured while PT Serif is
 // still loading is a fallback metric, so this shows up as a warning rather than a pass.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-const widths = (process.env.RENDER_WIDTHS || "1240,390").split(",").map(Number);
+const widths = (process.env.RENDER_WIDTHS || "1240,390,320").split(",").map(Number);
 const pages = process.argv.slice(2).filter((a) => a.startsWith('/'));
 const routes = pages.length ? pages : ['/', '/404', '/chat'];
 const dist = resolve('dist/client');
+// the tier boundary is read out of the token block, not remembered: a moved --breakpoint-nav-narrow
+// moves this gate with it instead of quietly disagreeing with the CSS
+const NAV_NARROW = Number((readFileSync('src/styles/global.css', 'utf8').match(/--breakpoint-nav-narrow:\s*(\d+)px/) ?? [])[1]);
+if (!NAV_NARROW) { console.error('no --breakpoint-nav-narrow in src/styles/global.css — the nav probe needs it'); process.exit(1); }
 if (!existsSync(dist)) { console.error('dist/client missing — run npm run build first'); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
 
@@ -106,6 +120,30 @@ for (const route of routes) {
       if (n.h < 48) fails.push(`${at}: ${n.role} block is ${n.h}px tall — D98 puts a one-line notice at 48px`);
     }
 
+    // 4c. nav (D100): one row at every width, `flex-wrap: nowrap`, one type tier per viewport, and
+    //     the row must fit. The shipped nav was flex-col + flex-wrap and clipped links; a class grep
+    //     cannot see that, row centres can.
+    if (j.nav) {
+      const wraps = j.nav.containers.map((c) => c.wrap).filter((x) => x !== 'nowrap');
+      if (wraps.length) fails.push(`${at}: nav flex-wrap is ${wraps.join('/')} — D100 wants nowrap, so a label set that stops fitting fails this probe instead of re-wrapping`);
+      const centres = j.nav.links.map((l) => l.cy);
+      if (Math.max(...centres) - Math.min(...centres) > 1) fails.push(`${at}: nav links are not on one row (centres ${centres.join(', ')}) — D100 shape B is a single row`);
+      const links = j.nav.links.slice(1);              // links[0] is the mark
+      const tiers = new Set(links.map((l) => l.fs));
+      if (tiers.size > 1) fails.push(`${at}: nav links mix ${tiers.size} type tiers (${[...tiers].join(', ')}) — one tier per viewport`);
+      const want = w < NAV_NARROW ? '11.1px' : '13.3px';   // text-micro / text-label (DESIGN.md's type table)
+      for (const l of links) if (l.fs !== want) fails.push(`${at}: nav link ${JSON.stringify(l.t)} renders ${l.fs} at ${w}px, want ${want}`);
+      const right = Math.max(...j.nav.links.map((l) => l.right));
+      if (right > j.vw) fails.push(`${at}: nav row reaches ${right}px on a ${j.vw}px viewport — the label set no longer fits (D100's probe)`);
+      if (j.nav.row && j.nav.row.needed > j.nav.row.available + 0.5) {
+        fails.push(`${at}: nav needs ${j.nav.row.needed}px, the container offers ${j.nav.row.available}px — D100's probe fails at this width (nowrap means it shows, it does not hide)`);
+      }
+      const small = j.nav.links.filter((l) => l.h < 32);
+      if (small.length) fails.push(`${at}: ${small.length} nav target(s) under 32px tall (${small.map((l) => l.h).join(', ')}) — the accepted shape pads to 32 (D100 rejected the 13px summary target)`);
+    } else {
+      fails.push(`${at}: no <nav> in the page at all — the D100 width probe cannot run`);
+    }
+
     // 5. one display step per screen
     const display = j.text.filter((t) => parseFloat(t.fs) >= 30);
     const steps = new Set(display.map((t) => t.fs));
@@ -125,7 +163,8 @@ for (const route of routes) {
     const phantom = (j.text || []).filter((t) => /Inter var/.test(t.ff));
     if (phantom.length) warns.push(`${at}: ${phantom.length} text run(s) resolve through the phantom family "Inter var" — the faces batch has not landed`);
 
-    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    if (j.nav) console.log(`   nav   ${j.nav.links.map((l) => `${l.fs}/${l.h}px`).join(' ')}  wrap ${j.nav.containers.map((c) => c.wrap).join('/')} gap ${j.nav.containers.map((c) => c.gap).join('/')} needed ${j.nav.row?.needed} of ${j.nav.row?.available}`);
     for (const c of j.controls) {
       console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
     }

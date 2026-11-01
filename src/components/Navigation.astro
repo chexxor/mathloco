@@ -1,6 +1,11 @@
 ---
 const navItems = [
-  { href: '/', label: 'Home' },
+  // D100's shape B was MEASURED on this label set — three links plus the mark (see the probe output
+  // in .design/grill/navfit/). Adding "Home" back makes the row need 313px in the narrow tier and
+  // 376px in the wide tier, which overflows a 320 viewport's 288 by 25 and a 390's 342 by 34; the
+  // nav is nowrap on purpose, so that shows up as a failed probe, not a re-wrap. The mark is the
+  // home path (href "/", aria-label names the club), which is why a fourth link is redundant as well
+  // as expensive.
   { href: '/schedule', label: 'Schedule' },
   { href: '/chat', label: 'Chat' },
   { href: '/members', label: 'Members' }
@@ -9,15 +14,28 @@ const navItems = [
 
 <header class="bg-paper">
   <nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-      <div class="flex-shrink-0">
-        <a href="/" class="text-subhead font-bold text-ink">Minneapolis Math Book Club</a>
-      </div>
-      <div class="flex flex-wrap gap-4 sm:ml-6">
+    <!-- D100 shape B, measured in .design/grill/nav-fit.html: one row at every width, the mark
+         shortened to "MPLS Math Club" so the row needs 310px and a 375 viewport's content box is
+         343. Below the `nav-narrow` breakpoint (360px) the links take the already-ratified 11.1px
+         chrome step and the gap goes to 8px: needs 262px, fits a 320's 288 and a 300's 268.
+
+         `flex-nowrap` is the load-bearing part. The shipped nav was `flex-col` + `flex-wrap`, which
+         is why the page clipped and links disappeared (A needed 397px, more than every content box
+         this site ships). With nowrap, a future label set that stops fitting shows up as a failed
+         width probe in `npm run check:render` instead of a silent re-wrap. -->
+    <div class="flex flex-nowrap items-center gap-2 nav-narrow:gap-4">
+      <a
+        href="/"
+        class="flex-shrink-0 whitespace-nowrap py-2 font-body text-body text-ink"
+        aria-label="Minneapolis Math Book Club, home"
+      >
+        MPLS <em class="not-italic text-gold">Math</em> Club
+      </a>
+      <div class="flex flex-nowrap items-center gap-2 nav-narrow:gap-4">
         {navItems.map(item => (
           <a
             href={item.href}
-            class="text-label py-1 text-ink hover:text-gold font-medium"
+            class="whitespace-nowrap py-2 text-micro nav-narrow:text-label text-ink font-medium hover:text-gold"
             aria-label={`Navigate to ${item.label}`}
           >
             {item.label}

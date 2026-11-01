@@ -20,6 +20,16 @@
      design-enforce then flags any 20px write. ---- */
   --spacing: 0.25rem;
 
+  /* ---- One breakpoint, and it is a layout role not a size preference (D100). The nav's narrow tier
+     is where the wide tier stops fitting. D100 ratified the tier at "below ~360px" from an arithmetic
+     that took a 320 viewport's content box as 288 — that figure is scrollbar-FREE. Measured in the
+     built artifact (.design/render/, Firefox 158, headless), a 360 viewport's container offers 316, not
+     328, because the scrollbar costs ~12; the wide tier needs 322. So 360 was 6px short. 370 is the
+     smallest value that keeps the wide tier wherever the measurement says it fits (375 offers 331 and
+     the row needs 322) and puts the narrow tier where it does not (360 -> needs 273, has 316).
+     Type steps and gaps are unchanged from D100: links 11.1px / 8px gaps below, 13.3px / 16px above. ---- */
+  --breakpoint-nav-narrow: 370px;
+
   /* ---- colour ROLES, named for what they are for (D89). Contrast pairs are renderer-measured. ---- */
   --color-paper: oklch(98.5% 0.006 85); /* ground for the page; #fcfaf6 */
   --color-panel: oklch(97% 0.008 85);   /* 1.04 vs paper = a tint, NOT a layer (layer bar is 1.35) */

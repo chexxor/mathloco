@@ -143,6 +143,9 @@ const promised = [
   'rounded-control', 'rounded-card',
   'duration-150', 'duration-250', 'ease-out', 'ease-linear',
   'p-3', 'p-6', 'mt-6', 'gap-2', 'font-body',
+  // the nav tier is a token (--breakpoint-nav-narrow), so its variant must resolve — otherwise the
+  // narrow tier silently disappears and the wide tier overflows a phone
+  'nav-narrow:text-label', 'nav-narrow:gap-4', 'text-micro',
 ];
 console.log('\n== utilities the token block must produce ==');
 const unresolved = promised.filter((c) => !ds.candidatesToCss([c])[0]);

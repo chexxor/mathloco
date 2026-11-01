@@ -17,7 +17,7 @@
 //     measured while PT Serif is still loading is a fallback metric, so this ships in the output.
 (() => {
   const T0 = Date.now();
-  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], notices: [], shadows: [], text: [], fonts: [] };
+  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], notices: [], nav: null, shadows: [], text: [], fonts: [] };
   const send = (payload) => {
     out.done = true;
     Object.assign(out, payload);
@@ -170,6 +170,38 @@
     };
   }).filter(Boolean);
 
+  // nav (D100): one row at every width, `flex-wrap: nowrap`, and exactly one type tier per viewport.
+  // The shipped nav was flex-col + flex-wrap, which clipped links; that defect is only visible if the
+  // measurement looks at row tops rather than at whether the classes exist.
+  const navEl = document.querySelector('nav');
+  const nav = navEl ? {
+    containers: [navEl, ...navEl.querySelectorAll('div')]
+      .filter((d) => getComputedStyle(d).display === 'flex')
+      .map((d) => ({ wrap: getComputedStyle(d).flexWrap, gap: getComputedStyle(d).columnGap })),
+    links: [...navEl.querySelectorAll('a')].map((a) => {
+      const r = a.getBoundingClientRect(), s = getComputedStyle(a);
+      return {
+        t: (a.getAttribute('aria-label') ?? a.textContent).trim().replace(/\s+/g, ' ').slice(0, 30),
+        w: +r.width.toFixed(1), h: +r.height.toFixed(1), cy: Math.round(r.top + r.height / 2),
+        right: +r.right.toFixed(1), fs: s.fontSize, ff: s.fontFamily.split(',')[0].replace(/["']/g, ''),
+      };
+    }),
+    row: (() => {
+      // D100's arithmetic: `needed` = the row's width if nothing may wrap, `available` = the container's
+      // content box. Summing each anchor's OWN scrollWidth (text extent, immune to flex shrink) plus
+      // the row's column-gap is what makes this true when the row is already overflowing — row.scrollWidth
+      // itself clamps to clientWidth, so it reads equal to available on every fitting width and lies
+      // about the margin.
+      const row = [navEl, ...navEl.querySelectorAll('div')]
+        .find((d) => getComputedStyle(d).display === 'flex');
+      if (!row) return null;
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const leaves = [...navEl.querySelectorAll('a')];
+      const needed = leaves.reduce((a, l) => a + l.scrollWidth, 0) + gap * Math.max(0, leaves.length - 1);
+      return { needed: +needed.toFixed(1), available: row.clientWidth, gap };
+    })(),
+  } : null;
+
   // shadows: measured, because ratify said the shadow question could only be answered by measurement
   const shadows = all.map((el) => {
     const cs = getComputedStyle(el);
@@ -213,6 +245,7 @@
     controls, bands, keylines, shadows, text,
     fonts: (() => { const a = []; document.fonts.forEach((f) => a.push(`${f.family} ${f.weight} ${f.style} ${f.status}`)); return a; })(),
     notices,
+    nav,
   });
 
   // Measure AFTER the faces settle. A serif line box measured while PT Serif is still swapping in is

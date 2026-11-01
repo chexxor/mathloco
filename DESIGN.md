@@ -208,9 +208,27 @@ freshness.
 - **Photo-free by construction**: no surface may require a photograph, because none of the club's
   existing images contains a person (D86/D94). The hero motif may be derived from the operator's own
   sphere diagram only.
-- The nav is **one row, `flex-wrap: nowrap`**, with a narrow tier below 360px (links at `text-micro`,
-  gaps 8px → 262px needed, fits a 320 viewport's 288px and a 300's 268px). A label set that stops
-  fitting is a probe failure, not a silent wrap.
+- The nav is **one row at every width, `flex-wrap: nowrap`**, with exactly one type tier per viewport:
+  links at `text-label` with 16px gaps at or above `--breakpoint-nav-narrow` (370px), `text-micro` with
+  8px gaps below it. Shape and tiers are D100's; the arithmetic below is re-measured on the built
+  artifact, where `npm run check:render` prints `needed of available` for every width it runs:
+  the wide tier **needs 321**, the narrow tier **273**; available is 346 at 390, 331 at 375, 316 at 360,
+  **276 at 320 (fits by 3)**, 266 at 310 and 256 at 300 (both fail). The 320 case is the tightest only on
+  a page tall enough to scroll: /404 and /chat measure 288 at 320 because there is no scrollbar to pay for.
+- The label set is the mark plus **Schedule / Chat / Members** — three links, which is the set D100's
+  probe was measured on. Adding a fourth (`Home`) makes the narrow tier need 313 and the wide tier 376,
+  and it is redundant: the mark links home and its `aria-label` carries the full club name. The mark is
+  `MPLS Math Club`, 16px serif with "Math" in `gold` (4.82 on paper); links are 32px tall targets
+  (16px line box + 8/8 padding) — D100 rejected a 13px target, so do not shave the padding.
+- **Why the tier sits at 370 and not "~360":** D100's 288/268 content boxes are scrollbar-free. In a
+  browser the scrollbar costs ~12px, so a 360 viewport offers 316 and the wide tier's 321 does not fit —
+  measured 6px short. 370 is the smallest value that keeps the wide tier where it fits (375 offers 331)
+  and moves it where it does not (360). Nothing about the tiers changed: same two type steps, same gaps.
+- **Below 320 the grammar does not fit as ratified** and no markup change here hides that: the nav needs
+  273 where a 300 container offers 256, and the hero's primary control wraps to 64px there. D100's own
+  probe measured a row that would close the nav half ("mark also down to 13.3" = 254, fits 256 by 2), but
+  D100 keeps the mark at 16px serif at every width, so the floor is an operator call — see D113. A label
+  set that stops fitting is a probe failure, never a silent re-wrap; at 320 the margin is 3px.
 
 ## Copy
 
