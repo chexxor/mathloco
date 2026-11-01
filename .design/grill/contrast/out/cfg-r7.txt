@@ -1,0 +1,98 @@
+token (as written)                              rendered
+paper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)
+panel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)
+tint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)
+ink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)
+ink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)
+ink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)
+rule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)
+goldInk = oklch(55% 0.12 62)               #a25f12 rgba(162,95,18,1)
+goldDark = oklch(76% 0.06 84)              #c3ae86 rgba(195,174,134,1)
+bandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)
+band = oklch(32% 0.045 152)                #203927 rgba(32,57,39,1)
+p1 = oklch(50% 0.11 205)                   #007481 rgba(0,116,129,1)
+p3 = oklch(50% 0.14 35)                    #a33e25 rgba(163,62,37,1)
+p2 = oklch(47% 0.15 315)                   #793a93 rgba(121,58,147,1)
+p4 = oklch(50% 0.10 105)                   #6c6610 rgba(108,102,16,1)
+white = #ffffff                            #ffffff rgba(255,255,255,1)
+red50 = oklch(97.1% .013 17.38)            #fef2f2 rgba(254,242,242,1)
+red600 = oklch(57.7% .245 27.325)          #e7000b rgba(231,0,11,1)
+blue50 = oklch(97% .014 254.604)           #eff6ff rgba(239,246,255,1)
+blue100 = oklch(93.2% .032 255.585)        #dbeafe rgba(219,234,254,1)
+blue600 = oklch(54.6% .245 262.881)        #155dfc rgba(21,93,252,1)
+gray50 = oklch(98.5% .002 247.839)         #f9fafb rgba(249,250,251,1)
+gray100 = oklch(96.7% .003 264.542)        #f3f4f6 rgba(243,244,246,1)
+gray200 = oklch(92.8% .006 264.531)        #e5e7eb rgba(229,231,235,1)
+gray500 = oklch(55.1% .027 264.364)        #6a7282 rgba(106,114,130,1)
+gray600 = oklch(44.6% .03 256.802)         #4a5565 rgba(74,85,101,1)
+gray800 = oklch(27.8% .033 256.848)        #1e2939 rgba(30,41,57,1)
+sigRedNaive = oklch(52% 0.15 25)           #af3c3a rgba(175,60,58,1)
+sigRedLegal = oklch(52% 0.15 355)          #a73b6d rgba(167,59,109,1)
+sigRedTint = oklch(95% 0.03 355)           #ffe7ef rgba(255,231,239,1)
+sigAmberNaive = oklch(52% 0.14 70)         #9a5600 rgba(154,86,0,1)
+sigBlueLegal = oklch(52% 0.10 255)         #3f6aa1 rgba(63,106,161,1)
+webErrDefault = #DC2626                    #dc2626 rgba(220,38,38,1)
+
+pair                                       kind     fg          bg          ratio  bar  verdict
+SHIPPED Discord error: red-600 on red-50   text     #e7000b      #fef2f2     4.36   4.5   FAIL
+SHIPPED error text on white (no box)       text     #e7000b      #ffffff     4.77   4.5   PASS
+SHIPPED empty channels: gray-600 on blue-50 text     #4a5565      #eff6ff     6.94   4.5   PASS
+SHIPPED freshness line: gray-500 on white  text     #6a7282      #ffffff     4.84   4.5   PASS
+SHIPPED hero CTA "View Schedule": blue-600 on blue-100 text     #155dfc      #dbeafe     4.3    4.5   FAIL
+SHIPPED hero CTA text on white (no fill)   text     #155dfc      #ffffff     5.25   4.5   PASS
+SHIPPED channel header: gray-800 on gray-100 text     #1e2939      #f3f4f6     13.33  4.5   PASS
+SHIPPED channel body: gray-700-ish on gray-50 -> gray-600 text     #4a5565      #f9fafb     7.23   4.5   PASS
+SHIPPED spinner arc: blue-600 on white     keyline  #155dfc      #ffffff     5.25   3     PASS
+SHIPPED card edge: gray-200 on gray-50     keyline  #e5e7eb      #f9fafb     1.18   3     FAIL
+SHIPPED header edge: gray-200 on gray-100  keyline  #e5e7eb      #f3f4f6     1.13   3     FAIL
+SHIPPED card edge on white: gray-200       keyline  #e5e7eb      #ffffff     1.24   3     FAIL
+SHIPPED error box: red-50 vs white         layer    #fef2f2      #ffffff     1.09   1.35  FLAT (decoration)
+SHIPPED empty box: blue-50 vs white        layer    #eff6ff      #ffffff     1.09   1.35  FLAT (decoration)
+SHIPPED summary card: gray-50 vs white     layer    #f9fafb      #ffffff     1.05   1.35  FLAT (decoration)
+SHIPPED card header: gray-100 vs gray-50   layer    #f3f4f6      #f9fafb     1.05   1.35  FLAT (decoration)
+web error default #DC2626 on white as text text     #dc2626      #ffffff     4.83   4.5   PASS
+notice word (ink) on paper                 text     #203927      #fcfaf6     12.02  4.5   PASS
+notice body (ink-2) on paper               text     #475b4c      #fcfaf6     7.02   4.5   PASS
+notice meta (ink-3) on paper               text     #5d6e61      #fcfaf6     5.21   4.5   PASS
+notice keyline: rule on paper              keyline  #849688      #fcfaf6     3.01   3     PASS
+notice keyline: rule on panel (red line)   keyline  #849688      #f8f5ef     2.88   3     FAIL
+caution word: gold-ink on paper            text     #a25f12      #fcfaf6     4.82   4.5   PASS
+caution hairline: gold-ink on paper        keyline  #a25f12      #fcfaf6     4.82   3     PASS
+GOLD on a tint fill (red line)             text     #a25f12      #e0f5e5     4.39   4.5   FAIL
+notice body ink on a tint fill             text     #203927      #e0f5e5     10.96  4.5   PASS
+notice body ink-2 on a tint fill           text     #475b4c      #e0f5e5     6.4    4.5   PASS
+tint notice fill vs paper                  layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT (decoration)
+panel notice fill vs paper                 layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT (decoration)
+rule on tint                               keyline  #849688      #e0f5e5     2.74   3     FAIL
+naive failure red (hue 25) as text         text     #af3c3a      #fcfaf6     5.71   4.5   PASS
+legal warm signal (hue 355) as text        text     #a73b6d      #fcfaf6     5.77   4.5   PASS
+legal warm signal (hue 355) as keyline     keyline  #a73b6d      #fcfaf6     5.77   3     PASS
+legal warm signal on its own tint          text     #a73b6d      #ffe7ef     5.14   4.5   PASS
+legal warm signal tint vs paper            layer    #ffe7ef      #fcfaf6     1.12   1.35  FLAT (decoration)
+naive warning amber (hue 70, out of gamut) text     #9a5600      #fcfaf6     5.44   4.5   PASS
+legal cool signal (hue 255) as text        text     #3f6aa1      #fcfaf6     5.32   4.5   PASS
+path coral as text on paper (what a red would be confused with) text     #a33e25      #fcfaf6     6.15   4.5   PASS
+path plum as text on paper (what hue 355 sits nearest) text     #793a93      #fcfaf6     7.09   4.5   PASS
+SHIPPED shadow-lg / shadow-md contact (alpha .102) shadow   #203927      #e3e1dd     1.25   1.35  FLAT (decoration)  [label on the composite: 9.59]
+black at .13 (the solve)                   shadow   #203927      #dbdad6     1.35   1.35  LAYERED  [label on the composite: 8.93]
+ink-tinted .165 (the solve)                shadow   #203927      #d8dad4     1.35   1.35  LAYERED  [label on the composite: 8.89]
+ink-tinted .22 (elevation)                 shadow   #203927      #ccd0c8     1.51   1.35  LAYERED  [label on the composite: 7.98]
+ink-tinted .30 (heavy, floating)           shadow   #203927      #bac0b8     1.78   1.35  LAYERED  [label on the composite: 6.76]
+shipped hover card: shadow-lg under a white card on blue-50 shadow   #1e2939      #d7dde6     1.25   1.35  FLAT (decoration)  [label on the composite: 10.77]
+cancelled title: ink-2                     text     #475b4c      #fcfaf6     7.02   4.5   PASS
+cancelled title: ink-3                     text     #5d6e61      #fcfaf6     5.21   4.5   PASS
+cancelled word on panel fill               text     #475b4c      #f8f5ef     6.73   4.5   PASS
+time-not-set word: ink-3 on paper          text     #5d6e61      #fcfaf6     5.21   4.5   PASS
+time-not-set word: gold-ink on paper       text     #a25f12      #fcfaf6     4.82   4.5   PASS
+band: stale notice band-text on band       text     #e4e9e5      #203927     10.19  4.5   PASS
+band: rule hairline on band (round 6)      keyline  #849688      #203927     4      3     PASS
+
+solve (L of oklch(L C H) nearest `near` that still clears the bar)
+legal warm signal hue 355, text on paper (bar 4.5) oklch(52% 0.15 355)        renders #a73b6d    ratio 5.77
+legal warm signal hue 355, keyline on paper (bar 3) oklch(62% 0.15 355)        renders #c95a8b    ratio 3.79
+legal warm signal hue 355 on its tint (bar 4.5) oklch(52% 0.15 355)        renders #a73b6d    ratio 5.14
+naive failure red hue 25, text on paper (bar 4.5) oklch(52% 0.15 25)         renders #af3c3a    ratio 5.71
+legal cool signal hue 255, text on paper (bar 4.5) oklch(52% 0.1 255)         renders #3f6aa1    ratio 5.32
+ink-3 muted, text on paper (bar 4.5)       oklch(52% 0.028 152)       renders #5d6e61    ratio 5.21
+rule as a notice keyline on paper (bar 3)  oklch(65.5% 0.03 152)      renders #849688    ratio 3.01
+rule darkened for a panel fill (bar 3)     oklch(64% 0.03 152)        renders #7f9283    ratio 3.04

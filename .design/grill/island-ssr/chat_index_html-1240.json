@@ -1,0 +1,15 @@
+{
+ "report": "--- SHIPPED /chat loading state, as server-rendered (measured in the browser) ---\nrole=status wrapper      box 864x128  padding 48px 0px  (min-height not set: 0px)\nspinner (.animate-spin)    box 32x32  border 0px/0px/2px/0px  animation \"spin\" 1s infinite\nsr-only text               box 1x1  \"Loading Discord summaries…\"\nisland host                astro-island box 0x0  (the whole region the fetch replaces)\npage content below the fold at this width: body scrollHeight 734\nerror branch in static HTML:   absent - only reachable after the fetch fails\nempty branch in static HTML:   absent - only reachable after the fetch resolves\nprefers-reduced-motion anywhere in the artifact css: false\ncontent column width 896 at viewport 1240",
+ "lines": [
+  "--- SHIPPED /chat loading state, as server-rendered (measured in the browser) ---",
+  "role=status wrapper      box 864x128  padding 48px 0px  (min-height not set: 0px)",
+  "spinner (.animate-spin)    box 32x32  border 0px/0px/2px/0px  animation \"spin\" 1s infinite",
+  "sr-only text               box 1x1  \"Loading Discord summaries…\"",
+  "island host                astro-island box 0x0  (the whole region the fetch replaces)",
+  "page content below the fold at this width: body scrollHeight 734",
+  "error branch in static HTML:   absent - only reachable after the fetch fails",
+  "empty branch in static HTML:   absent - only reachable after the fetch resolves",
+  "prefers-reduced-motion anywhere in the artifact css: false",
+  "content column width 896 at viewport 1240"
+ ]
+}

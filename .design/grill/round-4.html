@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 4 - the light theme, in A and in B</title>
+<style>
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 400; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 700; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2") format("woff2"); }
+
+  /* Values from .design/light-roles.mjs - every one of these has a measured ratio in the table below. */
+  :root {
+    --body: "PT Serif", Georgia, serif;
+    --ui: system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+
+    --paper: oklch(98.5% 0.006 85);
+    --panel: oklch(97% 0.008 85);
+    --gold-ink: oklch(55% 0.12 62);        /* 4.81 on paper: links, dates, hairlines, small marks */
+    --gold-on-dark: oklch(76% 0.06 84);    /* 5.78 on A, 6.80 on B: the date on the one dark band */
+
+    /* type: 1.200 from 16px  |  spacing: 4px grid  |  radius: 6px */
+    --s-1: 13.3px; --s0: 16px; --s1: 19.2px; --s2: 23.0px; --s3: 27.7px; --s4: 33.2px; --s5: 39.8px;
+  }
+  .t-A {
+    --ink: oklch(32% 0.045 152);        /* 11.92 */
+    --ink-2: oklch(45% 0.035 152);      /* 7.00  */
+    --ink-3: oklch(52% 0.028 152);      /* 5.20  */
+    --rule: oklch(65.5% 0.03 152);      /* 3.00  */
+    --tint: oklch(95% 0.03 152);
+    --band-text: oklch(93% 0.008 152);  /* 10.15 on the band */
+    --p1: oklch(50% 0.11 205); --p1t: oklch(95% 0.03 205);
+    --p2: oklch(47% 0.15 315); --p2t: oklch(95% 0.03 315);
+    --p3: oklch(50% 0.14 35);  --p3t: oklch(95% 0.03 35);
+    --p4: oklch(50% 0.10 105); --p4t: oklch(95% 0.03 105);
+  }
+  .t-B {
+    --ink: oklch(28% 0.015 60);         /* 14.01 */
+    --ink-2: oklch(44% 0.012 60);       /* 7.46  */
+    --ink-3: oklch(52% 0.01 60);        /* 5.29  */
+    --rule: oklch(66% 0.03 60);         /* 3.00  */
+    --tint: oklch(95% 0.02 60);
+    --band-text: oklch(93% 0.008 85);   /* 11.90 on the band */
+    --p1: oklch(50% 0.11 190); --p1t: oklch(95% 0.03 190);
+    --p2: oklch(47% 0.15 305); --p2t: oklch(95% 0.03 305);
+    --p3: oklch(50% 0.15 25);  --p3t: oklch(95% 0.03 25);
+    --p4: oklch(48% 0.11 150); --p4t: oklch(95% 0.03 150);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: oklch(90% 0.004 85); color: var(--ink); font-family: var(--ui); }
+  main { max-width: 1180px; margin: 0 auto; padding: 36px 20px 80px; }
+  h1 { font-family: var(--body); font-weight: 700; font-size: 26px; margin: 0 0 6px; color: #1c1c1e; }
+  .lead { font-family: var(--body); font-size: 16.5px; line-height: 1.55; color: oklch(42% 0.01 85); max-width: 78ch; margin: 0 0 20px; }
+  h2.up { font-family: var(--ui); font-weight: 500; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(45% 0.01 85); margin: 34px 0 12px; }
+  .wrap-x { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; background: #fff; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid oklch(90% 0.01 85); }
+  th { font-family: var(--ui); font-weight: 500; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: oklch(45% 0.01 85); }
+  td.n { font-variant-numeric: tabular-nums; }
+  @media (max-width: 860px) { table { min-width: 700px; } }
+
+  /* ---------- the page specimen ---------- */
+  .page { border-radius: 8px; overflow: hidden; margin-bottom: 12px; background: var(--paper); color: var(--ink); box-shadow: 0 1px 0 var(--rule); }
+  .page nav { display: flex; align-items: center; gap: 16px; padding: 14px 22px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  @media (max-width: 700px) {
+    /* measured: the row overflowed .page by 98px at 375 and .page clips, so two links were simply gone.
+       Same defect the live site has today (Navigation.astro never wraps). */
+    .page nav { gap: 8px 14px; padding: 12px 16px; }
+    .page nav .mark { flex: 1 1 100%; }
+    .page nav .sp { display: none; }
+    .page nav a { font-size: 15px; padding: 6px 0; }
+  }
+  .mark { font-family: var(--body); font-weight: 700; font-size: var(--s1); letter-spacing: -0.01em; }
+  .mark em { font-style: normal; color: var(--gold-ink); }
+  .page nav a { font-size: 14px; color: var(--ink-2); text-decoration: none; padding: 4px 0; }
+  .page nav a[aria-current] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--gold-ink); }
+  .page nav .sp { flex: 1; }
+
+  .hero { display: grid; grid-template-columns: 1fr 260px; gap: 24px; padding: 26px 22px 30px; align-items: start; }
+  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; } .motif { order: -1; } }
+  .kick { font-family: var(--mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); }
+  .nextdate { font-family: var(--mono); font-size: var(--s3); color: var(--gold-ink); font-variant-numeric: tabular-nums; margin: 6px 0 2px; }
+  .hero h3 { font-family: var(--body); font-weight: 700; font-size: var(--s5); line-height: 1.08; letter-spacing: -0.015em; margin: 10px 0 8px; max-width: 22ch; }
+  .lede { font-family: var(--body); font-size: var(--s1); line-height: 1.45; color: var(--ink-2); max-width: 46ch; margin: 0 0 16px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; padding: 6px 10px; border-radius: 6px; text-decoration: none; border: 1px solid; }
+  .c1 { color: var(--p1); border-color: var(--p1); background: var(--p1t); }
+  .c2 { color: var(--p2); border-color: var(--p2); background: var(--p2t); }
+  .c3 { color: var(--p3); border-color: var(--p3); background: var(--p3t); }
+  .c4 { color: var(--p4); border-color: var(--p4); background: var(--p4t); }
+  .motif { border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px 6px; background: var(--panel); }
+  .motif figcaption { font-size: 11.5px; color: var(--ink-3); margin-top: 4px; font-family: var(--mono); }
+
+  .sched { border-top: 1px solid var(--rule); }
+  .row { display: grid; grid-template-columns: 92px 1fr auto; gap: 16px; padding: 16px 22px; border-bottom: 1px solid var(--rule); align-items: baseline; }
+  @media (max-width: 700px) { .row { grid-template-columns: 1fr; gap: 6px; } }
+  .row .d { font-family: var(--mono); font-size: 15px; color: var(--gold-ink); font-variant-numeric: tabular-nums; }
+  .row .d small { display: block; color: var(--ink-3); font-size: 12px; }
+  .row .t { font-family: var(--body); font-weight: 700; font-size: var(--s2); line-height: 1.2; }
+  .row .m { font-size: 13.5px; color: var(--ink-3); margin-top: 4px; }
+  .row .tags { display: inline-flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .tag { font-size: 11.5px; padding: 3px 7px; border-radius: 4px; border: 1px solid var(--rule); color: var(--ink-2); background: var(--tint); }
+  .row .a { font-size: 13px; color: var(--gold-ink); text-decoration: none; border-bottom: 1px solid var(--gold-ink); white-space: nowrap; }
+
+  .quote { margin: 0; padding: 20px 22px; background: var(--panel); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .quote p { font-family: var(--body); font-size: var(--s2); line-height: 1.35; margin: 0 0 8px; max-width: 44ch; }
+  .quote cite { font-style: normal; font-size: 13px; color: var(--ink-3); }
+  .quote .q { color: var(--gold-ink); font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+
+  .band { background: var(--ink); color: var(--band-text); padding: 20px 22px; display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .band { grid-template-columns: 1fr; } }
+  .band .num { font-family: var(--mono); font-size: var(--s4); color: var(--gold-on-dark); font-variant-numeric: tabular-nums; }
+  .band .lbl { font-family: var(--mono); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--gold-on-dark); }
+  .band p { font-family: var(--body); font-size: 15px; line-height: 1.5; margin: 6px 0 0; max-width: 40ch; }
+  .band a { color: var(--band-text); font-size: 13.5px; }
+  .band .focusable { outline: 2px solid var(--gold-on-dark); outline-offset: 3px; }
+
+  /* ---------- meta ---------- */
+  .note { font-family: var(--body); font-size: 15px; line-height: 1.6; color: oklch(38% 0.01 85); max-width: 80ch; }
+  .note strong { color: #1c1c1e; }
+  .sw { display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(0,0,0,.16); vertical-align: -2px; margin-right: 6px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Round 4. The light theme, in A (chalkboard) and in B (sumi).</h1>
+  <p class="lead">Round 3b showed the two darks as big bands, which is really a dark theme wearing a light page. Here the
+  dark is what it mostly is in a light theme: <strong>ink</strong>. Nothing else changes between the two specimens - same
+  paper, same gold, same 4px grid, same 1.200 type scale, same 6px radius, same layout. Read them top to bottom and say
+  which ink you want; the gold is settled at <strong>G1</strong>.</p>
+
+  <div class="wrap-x">
+  <table>
+    <tr><th>role</th><th>A chalkboard</th><th>ratio</th><th>B sumi</th><th>ratio</th><th>bar</th></tr>
+    <tr><td>ink - headings, body</td><td><span class="sw" style="background:oklch(32% 0.045 152)"></span>32 / .045 / 152</td><td class="n">11.92</td><td><span class="sw" style="background:oklch(28% 0.015 60)"></span>28 / .015 / 60</td><td class="n">14.01</td><td class="n">4.5</td></tr>
+    <tr><td>ink secondary - lede, card copy</td><td><span class="sw" style="background:oklch(45% 0.035 152)"></span>45 / .035 / 152</td><td class="n">7.00</td><td><span class="sw" style="background:oklch(44% 0.012 60)"></span>44 / .012 / 60</td><td class="n">7.46</td><td class="n">4.5</td></tr>
+    <tr><td>ink muted - dates, venues, captions</td><td><span class="sw" style="background:oklch(52% 0.028 152)"></span>52 / .028 / 152</td><td class="n">5.20</td><td><span class="sw" style="background:oklch(52% 0.01 60)"></span>52 / .010 / 60</td><td class="n">5.29</td><td class="n">4.5</td></tr>
+    <tr><td>rule - card and row edges</td><td><span class="sw" style="background:oklch(65.5% 0.03 152)"></span>65.5 / .03 / 152</td><td class="n">3.00</td><td><span class="sw" style="background:oklch(66% 0.03 60)"></span>66 / .03 / 60</td><td class="n">3.00</td><td class="n">3.0</td></tr>
+    <tr><td>gold-ink - links, dates, hairlines</td><td colspan="2"><span class="sw" style="background:oklch(55% 0.12 62)"></span>55 / .12 / 62</td><td colspan="2" class="n">4.81</td><td class="n">4.5</td></tr>
+    <tr><td>band text - the one dark band</td><td><span class="sw" style="background:oklch(93% 0.008 152)"></span>93 / .008 / 152</td><td class="n">10.15</td><td><span class="sw" style="background:oklch(93% 0.008 85)"></span>93 / .008 / 85</td><td class="n">11.90</td><td class="n">4.5</td></tr>
+    <tr><td>band numerals - G1's on-dark gold</td><td colspan="2"><span class="sw" style="background:oklch(76% 0.06 84)"></span>76 / .06 / 84</td><td class="n">A 5.78 B 6.80</td><td class="n">4.5</td><td></td></tr>
+    <tr><td>path 1 (calendar)</td><td><span class="sw" style="background:oklch(50% 0.11 205)"></span>50 / .11 / 205</td><td class="n">5.47</td><td><span class="sw" style="background:oklch(50% 0.11 190)"></span>50 / .11 / 190</td><td class="n">5.43</td><td class="n">4.5</td></tr>
+    <tr><td>path 2 (Meetup)</td><td><span class="sw" style="background:oklch(47% 0.15 315)"></span>47 / .15 / 315</td><td class="n">7.07</td><td><span class="sw" style="background:oklch(47% 0.15 305)"></span>47 / .15 / 305</td><td class="n">7.03</td><td class="n">4.5</td></tr>
+    <tr><td>path 3 (Discord)</td><td><span class="sw" style="background:oklch(50% 0.14 35)"></span>50 / .14 / 35</td><td class="n">6.14</td><td><span class="sw" style="background:oklch(50% 0.15 25)"></span>50 / .15 / 25</td><td class="n">6.21</td><td class="n">4.5</td></tr>
+    <tr><td>path 4 (interests)</td><td><span class="sw" style="background:oklch(50% 0.10 105)"></span>50 / .10 / 105</td><td class="n">5.68</td><td><span class="sw" style="background:oklch(48% 0.11 150)"></span>48 / .11 / 150</td><td class="n">5.95</td><td class="n">4.5</td></tr>
+  </table>
+  </div>
+  <p class="note"><strong>Two failures found and fixed while building this.</strong> The obvious rule colour at L 78-80 measures
+  <strong>1.9 and 1.79</strong> against paper - a card edge that thin is decoration, not a boundary, so both themes now use a
+  rule solved to exactly <strong>3.0</strong> (A: L 65.5, B: L 66; `.design/light-roles.mjs` solves for the most subtle
+  lightness that still clears a bar). Second: <strong>gold text on a tinted chip measures 4.39 and 4.33</strong> - just under
+  AA - so gold never sits on a tint in this system: tints carry ink, gold carries paper. If a gold-on-tint is ever needed the
+  value is L <strong>54</strong>, not 55.</p>
+
+  <!-- ======================= A ======================= -->
+  <h2 class="up">A - chalkboard green-black ink</h2>
+  <section class="page t-A" aria-label="Theme A specimen">
+    <nav>
+      <span class="mark">Minneapolis <em>Math</em> Book Club</span>
+      <span class="sp"></span>
+      <a href="#" aria-current="page">Schedule</a><a href="#">Events</a><a href="#">Interests</a><a href="#">About</a>
+    </nav>
+    <div class="hero">
+      <div>
+        <div class="kick">Next meeting</div>
+        <div class="nextdate">Sat 7 Nov, [time]</div>
+        <h3>A proof, four ways. Bring the one you like.</h3>
+        <p class="lede">We read one paper and take it apart until someone finds a second route to the result. Coffee first, then the board.</p>
+        <div class="chips">
+          <a class="chip-link c1" href="#">Add to calendar</a>
+          <a class="chip-link c2" href="#">Meetup</a>
+          <a class="chip-link c3" href="#">Discord</a>
+          <a class="chip-link c4" href="#">Knot theory &rarr;</a>
+        </div>
+      </div>
+      <figure class="motif">
+        <svg viewBox="0 0 240 150" width="100%" role="img" aria-label="Several curved paths arriving at one point, drawn like the club's sphere diagram">
+          <circle cx="120" cy="78" r="58" fill="none" stroke="currentColor" stroke-opacity=".22"/>
+          <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M120 20 L 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="oklch(55% 0.12 62)" stroke-width="1.6"/>
+          <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="oklch(55% 0.12 62)" stroke-width="1.6"/>
+          <circle cx="120" cy="128" r="4.5" fill="oklch(55% 0.12 62)"/>
+          <text x="120" y="146" text-anchor="middle" font-size="9" font-family="ui-monospace, monospace" fill="currentColor" opacity=".7">meet here</text>
+        </svg>
+        <figcaption>derived from the club's own diagram (D86)</figcaption>
+      </figure>
+    </div>
+    <div class="sched">
+      <div class="row">
+        <div class="d">12 Nov<small>[time]</small></div>
+        <div>
+          <div class="t">Parallel learning for mathematical minds</div>
+          <div class="m">Ambrosia Coffee &middot; Northeast Minneapolis</div>
+          <div class="tags"><span class="tag">geometry</span><span class="tag">papers</span></div>
+        </div>
+        <a class="a" href="#">add to calendar</a>
+      </div>
+      <div class="row">
+        <div class="d">21 Nov<small>time not set</small></div>
+        <div>
+          <div class="t">UMN lecture - the second quantum revolution</div>
+          <div class="m">University of Minnesota &middot; [how to find the group]</div>
+          <div class="tags"><span class="tag">physics</span><span class="tag">outings</span></div>
+        </div>
+        <a class="a" href="#">add to calendar</a>
+      </div>
+    </div>
+    <blockquote class="quote">
+      <span class="q">why people keep coming</span>
+      <p>&ldquo;[verbatim answer to question 3 - what do you keep coming back for?]&rdquo;</p>
+      <cite>[first name], with permission - one of the three fixed questions (D85). No invented quotes: this repo shipped fabricated copy until a72310d.</cite>
+    </blockquote>
+    <div class="band">
+      <div>
+        <div class="lbl">since [YEAR]</div>
+        <div class="num">every [CADENCE]</div>
+        <p>Held by the club rather than by the platform: [N] members, meeting since [YEAR], [CADENCE], in [VENUES]. The two numbers in brackets on the right are measured; the ones here are yours.</p>
+      </div>
+      <div>
+        <div class="lbl">Ways in</div>
+        <p class="focusable"><a href="#">add to calendar</a> &middot; <a href="#">Meetup</a> &middot; <a href="#">Discord</a> &middot; <a href="#">email me about meetings</a></p>
+        <p style="font-size:12.5px;opacity:.75">the outline is the focus ring: gold-on-dark at 5.78, above the 3.0 needed for a focus indicator</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= B ======================= -->
+  <h2 class="up">B - warm sumi / iron-gall ink</h2>
+  <section class="page t-B" aria-label="Theme B specimen">
+    <nav>
+      <span class="mark">Minneapolis <em>Math</em> Book Club</span>
+      <span class="sp"></span>
+      <a href="#" aria-current="page">Schedule</a><a href="#">Events</a><a href="#">Interests</a><a href="#">About</a>
+    </nav>
+    <div class="hero">
+      <div>
+        <div class="kick">Next meeting</div>
+        <div class="nextdate">Sat 7 Nov, [time]</div>
+        <h3>A proof, four ways. Bring the one you like.</h3>
+        <p class="lede">We read one paper and take it apart until someone finds a second route to the result. Coffee first, then the board.</p>
+        <div class="chips">
+          <a class="chip-link c1" href="#">Add to calendar</a>
+          <a class="chip-link c2" href="#">Meetup</a>
+          <a class="chip-link c3" href="#">Discord</a>
+          <a class="chip-link c4" href="#">Knot theory &rarr;</a>
+        </div>
+      </div>
+      <figure class="motif">
+        <svg viewBox="0 0 240 150" width="100%" role="img" aria-label="Several curved paths arriving at one point, drawn like the club's sphere diagram">
+          <circle cx="120" cy="78" r="58" fill="none" stroke="currentColor" stroke-opacity=".22"/>
+          <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M120 20 L 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
+          <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="oklch(55% 0.12 62)" stroke-width="1.6"/>
+          <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="oklch(55% 0.12 62)" stroke-width="1.6"/>
+          <circle cx="120" cy="128" r="4.5" fill="oklch(55% 0.12 62)"/>
+          <text x="120" y="146" text-anchor="middle" font-size="9" font-family="ui-monospace, monospace" fill="currentColor" opacity=".7">meet here</text>
+        </svg>
+        <figcaption>derived from the club's own diagram (D86)</figcaption>
+      </figure>
+    </div>
+    <div class="sched">
+      <div class="row">
+        <div class="d">12 Nov<small>[time]</small></div>
+        <div>
+          <div class="t">Parallel learning for mathematical minds</div>
+          <div class="m">Ambrosia Coffee &middot; Northeast Minneapolis</div>
+          <div class="tags"><span class="tag">geometry</span><span class="tag">papers</span></div>
+        </div>
+        <a class="a" href="#">add to calendar</a>
+      </div>
+      <div class="row">
+        <div class="d">21 Nov<small>time not set</small></div>
+        <div>
+          <div class="t">UMN lecture - the second quantum revolution</div>
+          <div class="m">University of Minnesota &middot; [how to find the group]</div>
+          <div class="tags"><span class="tag">physics</span><span class="tag">outings</span></div>
+        </div>
+        <a class="a" href="#">add to calendar</a>
+      </div>
+    </div>
+    <blockquote class="quote">
+      <span class="q">why people keep coming</span>
+      <p>&ldquo;[verbatim answer to question 3 - what do you keep coming back for?]&rdquo;</p>
+      <cite>[first name], with permission - one of the three fixed questions (D85). No invented quotes: this repo shipped fabricated copy until a72310d.</cite>
+    </blockquote>
+    <div class="band">
+      <div>
+        <div class="lbl">since [YEAR]</div>
+        <div class="num">every [CADENCE]</div>
+        <p>Held by the club rather than by the platform: [N] members, meeting since [YEAR], [CADENCE], in [VENUES]. The two numbers in brackets on the right are measured; the ones here are yours.</p>
+      </div>
+      <div>
+        <div class="lbl">Ways in</div>
+        <p class="focusable"><a href="#">add to calendar</a> &middot; <a href="#">Meetup</a> &middot; <a href="#">Discord</a> &middot; <a href="#">email me about meetings</a></p>
+        <p style="font-size:12.5px;opacity:.75">the outline is the focus ring: gold-on-dark at 6.80, above the 3.0 needed for a focus indicator</p>
+      </div>
+    </div>
+  </section>
+
+  <h2 class="up">what this decides, and what is still open</h2>
+  <p class="note"><strong>Settled now:</strong> G1 - gold as ink, hairline and on-dark numerals, never a bright fill
+  (oklch 55/.12/62 on paper at 4.81; 76/.06/84 on the band at 5.78-6.80); a rule solved to 3.0; paper
+  oklch(98.5% 0.006 85); one dark band per screen, used for the durability line rather than for decoration.</p>
+  <p class="note"><strong>The one question:</strong> A or B as ink. A carries a green undertone you can see in the large
+  type and in the rules; B is warmer and about two steps quieter, and its contrast is higher (14.01 against A's 11.92).
+  A came out of the club's own chalkboards; B came out of their near-black diagram ground. They are not far apart in
+  price or in accessibility - <strong>this is a taste call, so look at the body copy and the nav, not the swatches.</strong>
+  The path hues differ between them because of the 40-degree rule: A gets cyan/plum/coral/olive, B keeps
+  teal/plum/rose/grass.</p>
+  <p class="note"><strong>A real defect the specimen surfaced.</strong> The dates in the page payload are real (7, 12,
+  21, 26 November) but <strong>two of the four carry no usable time</strong> - one is <code>2026-11-12T00:00:00.000Z</code>,
+  which is a date with no clock attached, not midnight. So "no time set yet" is a state <code>/schedule</code> has to render
+  on purpose rather than let default to 12:00 am. Row 2 shows it. That belongs in the round-5 pattern set.</p>
+  <p class="note"><strong>Also worth noting:</strong> the specimen's durability line says <strong>Every fact in those specimens is bracketed on purpose.</strong> The member count and rating on the
+  right of the table (279 members, 4.9 of 5 from 57 ratings) are measured off the group page; the year, the cadence, the
+  venue names and the member quote are <strong>yours to supply, and I will not infer them</strong> - D83 exists because this
+  repo shipped a fabricated "every week" for two years. The band cannot ship until you give the real rhythm and the real
+  first year.</p>
+</main>
+</body>
+</html>

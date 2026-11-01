@@ -1,0 +1,75 @@
+token (as written)                              rendered
+paper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)
+panel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)
+tint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)
+ink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)
+ink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)
+ink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)
+rule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)
+gold = oklch(55% 0.12 62)                  #a25f12 rgba(162,95,18,1)
+goldOnInk = oklch(76% 0.06 84)             #c3ae86 rgba(195,174,134,1)
+bandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)
+band = oklch(32% 0.045 152)                #203927 rgba(32,57,39,1)
+e1stop = rgba(32, 57, 39, 0.165)           #203927 rgba(32,57,39,0.165)
+e2stop = rgba(32, 57, 39, 0.22)            #203927 rgba(32,57,39,0.22)
+p_calendar = oklch(50% 0.11 205)           #007481 rgba(0,116,129,1)
+p_calendar_tint = oklch(95% 0.03 205)      #d8f5f8 rgba(216,245,248,1)
+p_calendar_onink = oklch(70% 0.11 205)     #2cb2bf rgba(44,178,191,1)
+p_meetup = oklch(47% 0.15 315)             #793a93 rgba(121,58,147,1)
+p_meetup_tint = oklch(95% 0.03 315)        #f6e9fd rgba(246,233,253,1)
+p_meetup_onink = oklch(72% 0.15 315)       #c885e5 rgba(200,133,229,1)
+p_discord = oklch(50% 0.14 35)             #a33e25 rgba(163,62,37,1)
+p_discord_tint = oklch(95% 0.03 35)        #ffe8e1 rgba(255,232,225,1)
+p_discord_onink = oklch(71% 0.14 35)       #eb7e63 rgba(235,126,99,1)
+p_mobilizon = oklch(50% 0.10 105)          #6c6610 rgba(108,102,16,1)
+p_mobilizon_tint = oklch(95% 0.03 105)     #f1f0d9 rgba(241,240,217,1)
+p_mobilizon_onink = oklch(69% 0.10 105)    #a49f51 rgba(164,159,81,1)
+white = #ffffff                            #ffffff rgba(255,255,255,1)
+red50 = oklch(97.1% .013 17.38)            #fef2f2 rgba(254,242,242,1)
+red600 = oklch(57.7% .245 27.325)          #e7000b rgba(231,0,11,1)
+blue100 = oklch(93.2% .032 255.585)        #dbeafe rgba(219,234,254,1)
+blue600 = oklch(54.6% .245 262.881)        #155dfc rgba(21,93,252,1)
+shippedShadowStop = #0000001a              #000000 rgba(0,0,0,0.1)
+
+pair                                       kind     fg          bg          ratio  bar  verdict
+ink on paper                               text     #203927      #fcfaf6     12.02  4.5   PASS
+ink-2 on paper (secondary text, chip label, cancelled title) text     #475b4c      #fcfaf6     7.02   4.5   PASS
+ink-3 on paper (meta, dated line, "time not set") text     #5d6e61      #fcfaf6     5.21   4.5   PASS
+gold as text (quiet action, notice word)   text     #a25f12      #fcfaf6     4.82   4.5   PASS
+gold on a panel fill (notice on panel)     text     #a25f12      #f8f5ef     4.61   4.5   PASS
+ink on tint (secondary hover fill) — tints carry INK text     #203927      #e0f5e5     10.96  4.5   PASS
+ink-2 on tint                              text     #475b4c      #e0f5e5     6.4    4.5   PASS
+band-text on the band                      text     #e4e9e5      #203927     10.19  4.5   PASS
+gold-on-ink on the band                    text     #c3ae86      #203927     5.8    4.5   PASS
+path-calendar on paper                     text     #007481      #fcfaf6     5.28   4.5   PASS
+path-meetup on paper                       text     #793a93      #fcfaf6     7.09   4.5   PASS
+path-discord on paper                      text     #a33e25      #fcfaf6     6.15   4.5   PASS
+path-mobilizon on paper                    text     #6c6610      #fcfaf6     5.68   4.5   PASS
+path-calendar-on-ink on the band           text     #2cb2bf      #203927     4.91   4.5   PASS
+path-meetup-on-ink on the band             text     #c885e5      #203927     4.74   4.5   PASS
+path-discord-on-ink on the band            text     #eb7e63      #203927     4.59   4.5   PASS
+path-mobilizon-on-ink on the band          text     #a49f51      #203927     4.57   4.5   PASS
+path keyline on paper (chip edge)          keyline  #007481      #fcfaf6     5.28   3     PASS
+path keyline on the band                   keyline  #eb7e63      #203927     4.59   3     PASS
+chip track vs paper — FLAT on purpose, the hue keyline + word carry it layer    #f6e9fd      #fcfaf6     1.12   1.35  FLAT (decoration)
+chip label ink-2 on a chip track           text     #475b4c      #f6e9fd     6.27   4.5   PASS
+rule on paper                              keyline  #849688      #fcfaf6     3.01   3     PASS
+rule on the band                           keyline  #849688      #203927     4      3     PASS
+notice: rule keyline on paper              keyline  #849688      #fcfaf6     3.01   3     PASS
+caution notice: gold keyline on paper      keyline  #a25f12      #fcfaf6     4.82   3     PASS
+caution notice on the band: gold-on-ink keyline keyline  #c3ae86      #203927     5.8    3     PASS
+panel vs paper                             layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT (decoration)
+tint vs paper                              layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT (decoration)
+elevation level 1 contact edge             shadow   #203927      #d8dad4     1.35   1.35  LAYERED  [label on the composite: 8.89]
+elevation level 2 first stop               shadow   #203927      #ccd0c8     1.51   1.35  LAYERED  [label on the composite: 7.98]
+BANNED gold on a tint                      text     #a25f12      #e0f5e5     4.39   4.5   FAIL
+BANNED rule as a keyline on a panel        keyline  #849688      #f8f5ef     2.88   3     FAIL
+BANNED paper path hue used on the band     keyline  #007481      #203927     2.28   3     FAIL
+BANNED gold as text on the band            text     #a25f12      #203927     2.5    4.5   FAIL
+RETIRED shipped Discord error: red-600 on red-50 text     #e7000b      #fef2f2     4.36   4.5   FAIL
+RETIRED shipped hero CTA: blue-600 on blue-100 text     #155dfc      #dbeafe     4.3    4.5   FAIL
+RETIRED shipped shadow-lg stop             shadow   #203927      #e3e1dd     1.25   1.35  FLAT (decoration)  [label on the composite: 9.59]
+RETIRED shipped error fill red-50 vs white layer    #fef2f2      #ffffff     1.09   1.35  FLAT (decoration)
+RETIRED shipped amber as text (book-theme #f59e0b) text     #f59e0b      #fcfaf6     2.06   4.5   FAIL
+
+solve (L of oklch(L C H) nearest `near` that still clears the bar)

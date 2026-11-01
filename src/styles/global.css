@@ -1,11 +1,134 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* Design tokens — ratified 2026-11-01 by `design-ratify` (phase 3 of the design-system pipeline).
+   Machine record: .design/decisions.json (34 keys) + .design/state.json. Measured numbers:
+   .design/grill/contrast/out/*.txt — every ratio below was read back out of the Firefox renderer,
+   not computed from the oklch by hand (.design/grill/contrast-oracle.mjs). Rules and "never" lines:
+   DESIGN.md at the repo root. Expensive-to-reverse reasoning: .design/records/.
+
+   This branch changes TOKENS ONLY. No markup moved, so the shipped pages still render exactly as
+   before except that the 18 transition writes which inherit a default now inherit `linear` for
+   colour instead of Tailwind's ease-in-out (D-round5: linear for colour, ease-out for movement).
+   The old palette entries below are marked RETIRED-IN-APPLY and stay until the markup stops using
+   them — deleting a token before its class write goes away is what `check:classes` exists to catch. */
+
 @theme {
-  /* Only tokens the site actually uses: --color-book-gray (Footer + the four social icons) and
-     --color-book-theme (::selection, via Layout.astro). A palette entry nobody references is a
-     class that looks available in markup and does nothing interesting - add it back with the
-     usage, not before it. */
+  /* ---- 4px grid (round 2; D95). Already Tailwind's default; stated so the gate can assert it.
+     Allowed steps: 1,2,3,4,6,8,12,16 (= 4,8,12,16,24,32,48,64px — scale S3, fits 65 of 66 writes).
+     The 20px orphan (`mt-5` 1 write + `sm:mt-5` 4 writes) maps to 24 in design-apply, and
+     design-enforce then flags any 20px write. ---- */
+  --spacing: 0.25rem;
+
+  /* ---- colour ROLES, named for what they are for (D89). Contrast pairs are renderer-measured. ---- */
+  --color-paper: oklch(98.5% 0.006 85); /* ground for the page; #fcfaf6 */
+  --color-panel: oklch(97% 0.008 85);   /* 1.04 vs paper = a tint, NOT a layer (layer bar is 1.35) */
+  --color-tint: oklch(95% 0.03 152);    /* hover fill; carries ink (10.96), never gold (4.39 = FAIL) */
+  --color-ink: oklch(32% 0.045 152);    /* 12.02 on paper; also the ONE dark band per screen (D89) */
+  --color-ink-2: oklch(45% 0.035 152);  /* 7.02 — secondary text, chip label, cancelled title */
+  --color-ink-3: oklch(52% 0.028 152);  /* 5.21 — meta, the dated freshness line, "time not set" */
+  --color-rule: oklch(65.5% 0.03 152);  /* solved to the 3.0 bar, not by eye: 3.01 on paper, 4.00 on
+                                           the ink band — one boundary role, two grounds, no rule-dark
+                                           (D99). On a panel fill it is 2.88, so a keylined control
+                                           never sits on a panel. */
+  --color-gold: oklch(55% 0.12 62);     /* 4.82 as text and as keyline; min distance 0.135 to every
+                                           commerce brand colour (D88). Never a bright fill. */
+  --color-gold-on-ink: oklch(76% 0.06 84); /* 5.80 on the ink band */
+  --color-band-text: oklch(93% 0.008 152); /* 10.19 on the ink band; also the primary button label */
+
+  /* ---- Join-path hues: one hue per real path, reserved, never reassigned (round 2). Every value
+     is >= 4.5 as text on paper AND >= 47 degrees from the ink hue (152), which is why olive sits
+     at 105 rather than the original 150. ---- */
+  --color-path-calendar: oklch(50% 0.11 205);  /* 5.47 — our own /events.ics */
+  --color-path-meetup: oklch(47% 0.15 315);    /* 7.07 */
+  --color-path-discord: oklch(50% 0.14 35);    /* 6.14 */
+  --color-path-mobilizon: oklch(50% 0.10 105); /* 5.68 */
+  /* chip tracks: 1.10 vs paper = flat on purpose. The hue keyline + the word carry the chip; a
+     track is never the only cue (tints alone measure 1.02). */
+  --color-path-calendar-tint: oklch(95% 0.03 205);
+  --color-path-meetup-tint: oklch(95% 0.03 315);
+  --color-path-discord-tint: oklch(95% 0.03 35);
+  --color-path-mobilizon-tint: oklch(95% 0.03 105);
+  /* the same four hues on the ink band: the paper set measures ~1.97 there, so the band needs its
+     own lightness, solved to clear 4.5 with margin (D99). */
+  --color-path-calendar-on-ink: oklch(70% 0.11 205); /* 4.91 */
+  --color-path-meetup-on-ink: oklch(72% 0.15 315);   /* 4.74 */
+  --color-path-discord-on-ink: oklch(71% 0.14 35);   /* 4.59 */
+  --color-path-mobilizon-on-ink: oklch(69% 0.10 105); /* 4.57 */
+
+  /* ---- Keylines are inset shadows, never borders: a border adds 2px and silently breaks the
+     control-height arithmetic (D98). `rule` is the only boundary on paper and on the band; `gold`
+     is the caution variant of a notice (D102) — the system has NO signal hue. ---- */
+  --inset-shadow-rule: inset 0 0 0 1px var(--color-rule);
+  --inset-shadow-gold: inset 0 0 0 1px var(--color-gold);
+  --inset-shadow-path-calendar: inset 0 0 0 1px var(--color-path-calendar);
+  --inset-shadow-path-meetup: inset 0 0 0 1px var(--color-path-meetup);
+  --inset-shadow-path-discord: inset 0 0 0 1px var(--color-path-discord);
+  --inset-shadow-path-mobilizon: inset 0 0 0 1px var(--color-path-mobilizon);
+
+  /* ---- Elevation: hairline = part of the page, shadow = above the page (D105). Stops are
+     ink-tinted and solved so the contact edge clears the 1.35 layer bar (.165 ink / .13 black);
+     a black stop wide enough to read at a wide blur paints a 2.10 grey band. Cards never get a
+     shadow. Nothing floats in src/ yet (no modal, no dropdown), so these two ship defined-but-
+     unused until the first menu — the values are solved maths and re-deriving them is the work. ---- */
+  --shadow-e1: 0 1px 2px 0 rgba(32, 57, 39, 0.165);
+  --shadow-e2: 0 2px 5px -1px rgba(32, 57, 39, 0.22), 0 12px 28px -6px rgba(32, 57, 39, 0.3);
+
+  /* ---- Type ramp: 1.200, nine steps (T3, D95), plus the 11.1px chrome step below the ladder
+     (nav narrow tier D100, status chip and notice labels). Leading is carried by the size token
+     (58 of 71 existing writes already do). The display line boxes land on the 4px grid —
+     36 / 44 / 52 / 60 — and each clears its own measured ink box. The two DERIVED leadings
+     (subhead, heading) follow "next 4px multiple >= size x 1.2"; the rest are ratified numbers.
+     Do NOT use these to override Tailwind's built-in text-sm/text-2xl ramp: apply maps each write
+     across explicitly, and design-enforce forbids the built-ins. ---- */
+  --text-micro: 11.1px;
+  --text-micro--line-height: 16px;
+  --text-label: 13.3px;
+  --text-label--line-height: 16px;
+  --text-body: 16px;
+  --text-body--line-height: 24px;
+  --text-lede: 19.2px;
+  --text-lede--line-height: 28px;
+  --text-subhead: 23px;            /* leading derived, not measured */
+  --text-subhead--line-height: 28px;
+  --text-heading: 27.7px;          /* leading derived, not measured */
+  --text-heading--line-height: 36px;
+  --text-display-1: 33.2px;
+  --text-display-1--line-height: 36px;
+  --text-display-2: 39.8px;
+  --text-display-2--line-height: 44px;
+  --text-display-3: 47.8px;
+  --text-display-3--line-height: 52px;
+  --text-display-4: 57.3px;
+  --text-display-4--line-height: 60px;
+  --leading-prose: 1.6;            /* serif body copy; a rule, not a size step */
+
+  /* ---- Radius: 6px base (round 2 — fits 3/3 candidate radii; 8px risks the candy reading the
+     operator ruled out). One base, two roles, so a future change is one line. No pill role: chips
+     are carried by hue keyline + word (D-round2), and a second radius role with no measured need
+     is a third thing to enforce. ---- */
+  --radius-control: 6px;
+  --radius-card: var(--radius-control);
+
+  /* ---- Motion (round 5, D1): 150ms for colour and shadow, 250ms for anything that moves, no
+     400ms tier (there is no modal or dropdown to animate). Tailwind v4 has no --duration-*
+     namespace — `duration-color` resolves to nothing (measured) — so the two steps are written as
+     `duration-150` / `duration-250` and the DEFAULT is what this block can set: 150ms + linear,
+     because every transition in src/ animates a colour or a box-shadow. Movement writes
+     `ease-out duration-250` explicitly. `prefers-reduced-motion: reduce` is mandatory and lands
+     with the markup in design-apply (0 occurrences in src/ today). ---- */
+  --default-transition-duration: 150ms;
+  --default-transition-timing-function: linear;
+
+  /* ---- RETIRED IN design-apply (kept only because markup still writes the class):
+     `--color-book-gray` = Footer + the four never-imported social icons, `--color-book-theme`
+     = ::selection in Layout.astro. D82/D88: both are 2024 template leftovers and that amber is
+     delta-OKLab 0.019 from Amazon orange #FF9900. `--font-sans` names a phantom family, "Inter
+     var", that no file in this repo provides — measured consequence: every chrome label on the
+     ratified specimen rendered in this rig's system-ui. design-apply installs the ratified faces
+     (@fontsource/pt-serif 400+700 latin, @fontsource/public-sans variable latin) and replaces the
+     value; until then this line is what the site actually renders, so it stays. `--font-body` is
+     live (PT Serif) and stays under the same name. ---- */
   --color-book-gray: #1a1a1c;
   --color-book-theme: #f59e0b;
 

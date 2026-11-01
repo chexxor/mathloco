@@ -1,0 +1,63 @@
+=== A. signal-hue scan: for each hue, the lightest L nearest 52 that clears 4.5 on paper ===
+hue  C     L    rendered  text  keyline  out-of-gamut  nearest brand (delta)  min hue gap to a role/hue in use
+245  0.10    52  #2f6e9e  5.23   (text 4.5 met)   in-gamut      0.069 Amazon link blue #0066C3       40deg (cyan)  <<< LEGAL
+245  0.06    52  #4b6d8a  5.24   (text 4.5 met)   in-gamut      0.099 UCLA blue #00558C              40deg (cyan)  <<< LEGAL
+250  0.10    52  #386ca0  5.25   (text 4.5 met)   in-gamut      0.066 Amazon link blue #0066C3       45deg (cyan)  <<< LEGAL
+250  0.06    52  #4e6c8b  5.25   (text 4.5 met)   in-gamut      0.099 UCLA blue #00558C              45deg (cyan)  <<< LEGAL
+255  0.10    52  #3f6aa1  5.28   (text 4.5 met)   in-gamut      0.066 Amazon link blue #0066C3       50deg (cyan)  <<< LEGAL
+255  0.06    52  #516b8b  5.27   (text 4.5 met)   in-gamut      0.100 UCLA blue #00558C              50deg (cyan)  <<< LEGAL
+260  0.10    52  #4669a2  5.31   (text 4.5 met)   in-gamut      0.067 Amazon link blue #0066C3       55deg (cyan)  <<< LEGAL
+260  0.06    52  #556a8c  5.28   (text 4.5 met)   in-gamut      0.101 UCLA blue #00558C              55deg (cyan)  <<< LEGAL
+265  0.10    52  #4c67a3  5.33   (text 4.5 met)   in-gamut      0.070 Amazon link blue #0066C3       50deg (plum)  <<< LEGAL
+265  0.06    52  #58698c  5.30   (text 4.5 met)   in-gamut      0.103 UCLA blue #00558C              50deg (plum)  <<< LEGAL
+270  0.10    52  #5365a3  5.36   (text 4.5 met)   in-gamut      0.075 Amazon link blue #0066C3       45deg (plum)  <<< LEGAL
+270  0.06    52  #5b678c  5.31   (text 4.5 met)   in-gamut      0.105 UCLA blue #00558C              45deg (plum)  <<< LEGAL
+275  0.15    52  #525dbd  5.49   (text 4.5 met)   in-gamut      0.059 Amazon link blue #0066C3       40deg (plum)  <<< LEGAL
+275  0.10    52  #5863a2  5.39   (text 4.5 met)   in-gamut      0.080 Amazon link blue #0066C3       40deg (plum)  <<< LEGAL
+275  0.06    52  #5f668c  5.33   (text 4.5 met)   in-gamut      0.107 UCLA blue #00558C              40deg (plum)  <<< LEGAL
+355  0.15    52  #a73b6d  5.74   (text 4.5 met)   in-gamut      0.120 UMN maroon #98021E             40deg (plum)  <<< LEGAL
+355  0.10    52  #954f6c  5.58   (text 4.5 met)   in-gamut      0.131 UMN maroon #98021E             40deg (plum)  <<< LEGAL
+355  0.06    52  #855a6b  5.45   (text 4.5 met)   in-gamut      0.152 UMN maroon #98021E             40deg (plum)  <<< LEGAL
+
+--- the hues a naive designer would reach for, measured against the same bars ---
+failure red hue 25 C .15         L   52 C0.150 H 25  #af3c3a  text-on-paper 5.69  min hue gap  10deg (coral)  nearest brand 0.070 Target red #CC0000
+failure red hue 5 C .15          L   52 C0.150 H  5  #ab3a5d  text-on-paper 5.73  min hue gap  30deg (coral)  nearest brand 0.102 Target red #CC0000
+failure red hue 355 C .15        L   52 C0.150 H355  #a73b6d  text-on-paper 5.74  min hue gap  40deg (plum)  nearest brand 0.120 UMN maroon #98021E
+warning amber hue 70 C .14       L   52 C0.140 H 70  #9a5600  text-on-paper 5.41  OUT-OF-GAMUT  min hue gap   8deg (gold)  nearest brand 0.145 Target red #CC0000
+signal plum hue 300 C .13        L   48 C0.130 H300  #6a499b  text-on-paper 6.63  min hue gap  15deg (plum)  nearest brand 0.113 IKEA blue #0051A5
+signal teal hue 195 C .11        L   48 C0.110 H195  #007071  text-on-paper 5.68  OUT-OF-GAMUT  min hue gap  10deg (cyan)  nearest brand 0.107 UCLA blue #00558C
+shipped Tailwind red-600         L 57.7 C0.245 H 27  #e7000b  text-on-paper 4.56  OUT-OF-GAMUT  min hue gap   8deg (coral)  nearest brand 0.030 Error-red web default #DC2626
+gold-ink (already in the system) L   55 C0.120 H 62  #a25f12  text-on-paper 4.81  min hue gap   0deg (gold)  nearest brand 0.135 Target red #CC0000
+ink (already in the system)      L   32 C0.045 H152  #203927  text-on-paper 11.92  min hue gap   0deg (ink)  nearest brand 0.063 Amazon navy #232F3E
+rule (already in the system)     L 65.5 C0.030 H152  #849688  text-on-paper 3.00  min hue gap   0deg (ink)  nearest brand 0.173 Amazon deep orange #E47911
+
+=== B. shadow arithmetic (layer bar 1.35 vs the ground it sits on) ===
+black shadow on paper: alpha needed at the contact edge to read as a LAYER (1.35) = 0.13
+ink #203927 shadow on paper: alpha needed at the contact edge to read as a LAYER (1.35) = 0.165
+SHIPPED shadow-lg stop 1 (Tailwind v4, 0 10px 15px -3px #0000001a) alpha 0.102  composite #e1dfdd  layer vs paper 1.26  verdict FLAT (decoration)
+SHIPPED shadow-md stop 1 (0 4px 6px -1px #0000001a)          alpha 0.102  composite #e1dfdd  layer vs paper 1.26  verdict FLAT (decoration)
+SHIPPED hover:shadow-lg, same alpha                          alpha 0.102  composite #e1dfdd  layer vs paper 1.26  verdict FLAT (decoration)
+  alpha 0.10  black -> #e1dfdd layer 1.25   ink-tinted -> #e4e5e1 layer 1.19  ink-text-on-it 9.84
+  alpha 0.16  black -> #d2d0cf layer 1.45   ink-tinted -> #d7dad5 layer 1.34  ink-text-on-it 8.79
+  alpha 0.22  black -> #c3c1c0 layer 1.69   ink-tinted -> #cacec9 layer 1.5  ink-text-on-it 7.82
+  alpha 0.30  black -> #afaeac layer 2.1   ink-tinted -> #b9bfb8 layer 1.77  ink-text-on-it 6.63
+  alpha 0.38  black -> #9b9a99 layer 2.66   ink-tinted -> #a7b0a7 layer 2.11  ink-text-on-it 5.57
+  (a shadow that DOES clear 1.35 at its contact edge is a ~30% black band - that is a hard edge, not an elevation.)
+
+=== C. notice container heights from the same arithmetic as D98 ===
+s-1 13.3   line box 16  ->  heights 24, 32, 40, 48, 64, 80, 112, 144
+s0 16      line box 24  ->  heights 32, 40, 48, 56, 72, 88, 120, 152
+s1 19.2    line box 28  ->  heights 36, 44, 52, 60, 76, 92, 124, 156
+  a two-line notice body (2 x 24) = 48 + 2 pads: 56, 64, 72, 80, 96, 112, 144, 176
+
+=== D. gap arithmetic on the four real harvested dates (D90) ===
+  gap 1: 4 days
+  gap 2: 10 days
+  gap 3: 4 days
+  largest gap in this sample: 10 days; spread of the whole visible month: 18 days
+  a "nothing scheduled within 7 days" claim would have to appear on 1 of 3 real gaps in this one real month
+  a "nothing scheduled within 10 days" claim would have to appear on 0 of 3 real gaps in this one real month
+  a "nothing scheduled within 14 days" claim would have to appear on 0 of 3 real gaps in this one real month
+  a "nothing scheduled within 21 days" claim would have to appear on 0 of 3 real gaps in this one real month
+  a "nothing scheduled within 30 days" claim would have to appear on 0 of 3 real gaps in this one real month
+  (the feed is upcoming-only, so "the newest event date is in the past" IS computable at build time; "how long since the last pull" is NOT computable in a prerendered page at all.)

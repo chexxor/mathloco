@@ -1,0 +1,226 @@
+<!doctype html>
+<!-- design-grill round 1: product character. Single file, opens directly in a browser.
+     Fonts are the project's own files (node_modules/@fontsource/pt-serif) so what you look at is
+     what the site can actually ship. Colours are the project's own resolved palette.
+     Sample schedule copy is labelled as a sample: the repo forbids fabricated dates in shipped copy. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Round 1: product character — mathloco</title>
+<style>
+  @font-face{font-family:"PT Serif";font-style:normal;font-weight:400;font-display:swap;
+    src:url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2") format("woff2")}
+  @font-face{font-family:"PT Serif";font-style:normal;font-weight:700;font-display:swap;
+    src:url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2") format("woff2")}
+
+  :root{
+    /* every value below is read out of the codebase, not invented for this page */
+    --white:#fff;
+    --blue-50:oklch(97% 0.014 254.604);
+    --blue-100:oklch(93.2% 0.032 255.585);
+    --blue-600:oklch(54.6% 0.245 262.881);
+    --gray-50:oklch(98.5% 0.002 247.839);
+    --gray-200:oklch(92.8% 0.006 264.531);
+    --gray-500:oklch(55.1% 0.046 257.417);
+    --gray-600:oklch(44.6% 0.043 257.042);
+    --gray-900:oklch(21% 0.034 264.665);
+    --book-gray:#1a1a1c;      /* @theme --color-book-gray */
+    --book-theme:#f59e0b;     /* @theme --color-book-theme (amber) */
+    --serif:"PT Serif", ui-serif, Georgia, serif;   /* --font-body */
+    --sans:ui-sans-serif, system-ui, sans-serif;    /* --font-sans minus the phantom "Inter var" */
+    --bg:#fafafa; --fg:#0a0a0a; --muted:#71717a; --line:#e4e4e7; --card:#fff;
+    --pick:var(--blue-600); --pick-bg:var(--blue-50);
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme=light]){
+    --bg:#09090b; --fg:#fafafa; --muted:#a1a1aa; --line:#27272a; --card:#131316; --pick:#60a5fa; --pick-bg:#172554;}}
+  :root[data-theme=dark]{--bg:#09090b;--fg:#fafafa;--muted:#a1a1aa;--line:#27272a;--card:#131316;--pick:#60a5fa;--pick-bg:#172554;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);padding:40px 16px 96px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1160px;margin:0 auto}
+  .eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+  h1{font-size:clamp(24px,4vw,34px);margin:0 0 6px;letter-spacing:-.02em;font-family:var(--serif)}
+  .sub{color:var(--muted);margin:0 0 28px;max-width:70ch}
+  .measured{border:1px solid var(--line);border-left:3px solid var(--book-theme);background:var(--card);
+    border-radius:10px;padding:16px 18px;margin:0 0 28px;font-size:13.5px;color:var(--fg)}
+  .measured b{font-weight:700}
+  .measured ul{margin:10px 0 0;padding-left:18px}
+  .measured li{margin:4px 0}
+  .swatches{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .sw{display:flex;align-items:center;gap:7px;font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:4px 10px 4px 6px}
+  .sw i{width:16px;height:16px;border-radius:4px;display:block;border:1px solid rgba(0,0,0,.12)}
+  .grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
+  .opt{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px;position:relative;overflow:hidden}
+  .opt[data-pick]{border-color:var(--pick);box-shadow:0 0 0 3px var(--pick-bg)}
+  .tag{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:14px}
+  .opt[data-pick] .tag{color:var(--pick)}
+  .why{margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  .opt[data-pick] .why{color:var(--pick)}
+  .why code{font-family:ui-monospace,monospace;font-size:12px}
+  .spec{border:1px solid var(--line);border-radius:10px;padding:18px;background:var(--white);color:var(--gray-900)}
+  .spec .kicker{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--blue-600);font-weight:600}
+  .spec h2{margin:.35em 0 .3em;letter-spacing:-.02em}
+  .spec p{margin:0 0 .7em;color:var(--gray-600)}
+  .row{border-top:1px solid var(--gray-200);padding-top:10px;margin-top:12px}
+  .row .d{font-weight:700;color:var(--gray-900)}
+  .row .v{color:var(--gray-600)}
+  .row .s{font-size:11px;color:var(--gray-500);margin-top:4px}
+  .cta{display:inline-block;margin-top:14px;border-radius:6px;padding:9px 16px;font-weight:600;font-size:14px;text-decoration:none}
+  .cta.solid{background:var(--blue-600);color:#fff}
+  .cta.soft{background:var(--blue-100);color:var(--blue-600)}
+  .cta.amber{background:var(--book-theme);color:var(--book-gray)}
+  .h-e-d{font-size:34px}.h-e-b{font-size:29px}.h-e-c{font-size:32px}.h-e-a{font-size:23px}
+  .b-e-d{font-size:16px}.b-e-b{font-size:17px}.b-e-c{font-size:17.5px}.b-e-a{font-size:14px}
+  @media (max-width:420px){.h-e-d{font-size:28px}.h-e-b{font-size:25px}.h-e-c{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Round 1 of 5 — this is the only decision the code cannot answer</p>
+  <h1>What kind of product is this?</h1>
+  <p class="sub">Character sets the defaults for everything downstream: spacing density, type ratio,
+    corner radius and motion speed — and therefore how the <b>new surfaces the architecture creates</b>
+    (<code>/schedule</code>, an event page, the “Next: …” line in the hero) will feel. Pick one; nothing
+    else in this round is ready until it is answered.</p>
+
+  <div class="measured">
+    <b>What the code does today</b> (measured, so you can check every number against
+    <code>.design/drift.json</code>):
+    <ul>
+      <li>685 class writes, 186 distinct, in 17 markup files. Spacing: 10 distinct values; a
+        <b>4px grid fits 9 of 9</b>, an 8px grid only 6 of 9.</li>
+      <li>Type: 7 sizes. <b>1.200× fits 7 of 7</b> (moves 4.3px total), <b>1.250× fits 7 of 7</b>
+        (5.9px), 1.125× fits 6 of 7 (11.1px), 1.333× fits 5 of 7.</li>
+      <li>Body text is already <b>PT Serif</b> (<code>font-body</code> 15 uses) — and only weight
+        <b>400</b> ships, while the markup asks for <b>4 weights across 30 uses</b>, so every
+        semibold/extrabold in serif is synthesised.</li>
+      <li>Radius <code>rounded-lg</code> on 13 of 23 surfaces; <code>shadow-lg</code> 17 uses;
+        <code>duration-300</code> 18 of 36 motion uses.</li>
+      <li>Accent is split: <b>blue is painted on 5 different surfaces; amber is painted on exactly one
+        place on the whole site — text selection</b> (<code>::selection</code>), plus the share card.
+        Measured contrast: white on that amber = <b>2.15</b> (fails); <code>text-blue-600</code> on
+        <code>bg-blue-100</code> = <b>4.31</b> (fails AA); the green checkmark icons = <b>2.26</b>
+        (below the 3.0 non-text floor).</li>
+      <li>A second, foreign design system is already in the build: <code>prose prose-blue</code> from
+        @tailwindcss/typography, in one place (<code>DiscordSummary.svelte:106</code>).</li>
+    </ul>
+    <div class="swatches">
+      <span class="sw"><i style="background:var(--blue-600)"></i>blue-600 · 19 uses</span>
+      <span class="sw"><i style="background:var(--gray-900)"></i>gray-900 · 18</span>
+      <span class="sw"><i style="background:var(--gray-600)"></i>gray-600 · 16</span>
+      <span class="sw"><i style="background:var(--book-gray)"></i>book-gray · 5</span>
+      <span class="sw"><i style="background:var(--book-theme)"></i>amber token · 1 surface (selection)</span>
+      <span class="sw"><i style="background:var(--blue-100)"></i>blue-100 · 4</span>
+    </div>
+  </div>
+
+  <div class="grid">
+    <!-- ============ A ============ -->
+    <div class="opt">
+      <span class="tag">A · dense and productive</span>
+      <div class="spec" style="font-family:var(--sans)">
+        <p class="kicker">Monthly meetups</p>
+        <h2 class="h-e-a">Minneapolis Math Book Club</h2>
+        <p class="b-e-a">Join our passionate community of math enthusiasts as we explore fascinating
+          mathematical texts, discuss complex concepts, and share our love for mathematical literature.</p>
+        <div class="row" style="display:flex;gap:10px;align-items:baseline">
+          <span class="d" style="font-size:13px">Thu 7:00pm</span>
+          <span class="v" style="font-size:13px">Seaton Coffee Company, 3848 Main St SE</span>
+        </div>
+        <p class="s">sample row — not a real date</p>
+        <a class="cta solid" href="#" style="padding:6px 12px;font-size:13px">Join our group</a>
+      </div>
+      <div class="why">Grid 4px · ratio <b>1.125</b> · radius 6px · 150ms. <b>Fits 6 of 7 current
+        type sizes</b>, moves 11.1px. What it buys: more events above the fold. What it costs: the
+        serif and the hero photograph stop doing any work — this character wants a table, and a club
+        of twelve people is not a dashboard.</div>
+    </div>
+
+    <!-- ============ B ============ -->
+    <div class="opt" data-pick>
+      <span class="tag">B · calm and editorial &nbsp;← recommended</span>
+      <div class="spec" style="font-family:var(--serif)">
+        <p class="kicker" style="font-family:var(--sans)">Monthly meetups</p>
+        <h2 class="h-e-b">Minneapolis Math Book Club</h2>
+        <p class="b-e-b">Join our passionate community of math enthusiasts as we explore fascinating
+          mathematical texts, discuss complex concepts, and share our love for mathematical literature.</p>
+        <div class="row">
+          <span class="d">Thu 7:00pm · Seaton Coffee Company</span>
+          <div class="v">3848 Main St SE, Minneapolis</div>
+        </div>
+        <p class="s" style="font-family:var(--sans)">sample row — not a real date</p>
+        <a class="cta solid" href="#">Join our group</a>
+      </div>
+      <div class="why">Grid 4px · ratio <b>1.250</b> · radius 8px · 300ms in / 200ms out.
+        <b>Fits 7 of 7 current type sizes</b> (5.9px moved) and keeps the two values you already use
+        most: <code>rounded-lg</code> (13 of 23 surfaces) and <code>duration-300</code> (18 of 36).
+        It is the only option that matches what is already true: serif body text in 15 places, the
+        typography plugin already installed, long paragraphs, a large photograph, generous
+        <code>mt-32 / mb-20</code>. An event list reads as an <i>agenda</i> in this character, which
+        is what a schedule for humans should look like.</div>
+    </div>
+
+    <!-- ============ C ============ -->
+    <div class="opt">
+      <span class="tag">C · playful and consumer</span>
+      <div class="spec" style="font-family:var(--sans)">
+        <p class="kicker" style="color:var(--book-theme);font-family:var(--sans)">Monthly meetups</p>
+        <h2 class="h-e-c" style="letter-spacing:-.03em">Minneapolis Math Book Club</h2>
+        <p class="b-e-c">Join our passionate community of math enthusiasts as we explore fascinating
+          mathematical texts, discuss complex concepts, and share our love for mathematical literature.</p>
+        <div class="row">
+          <span class="d">Thu 7:00pm · Seaton Coffee Company</span>
+          <div class="v">3848 Main St SE, Minneapolis</div>
+        </div>
+        <p class="s" style="font-family:var(--sans)">sample row — not a real date</p>
+        <a class="cta amber" href="#" style="border-radius:999px">Join our group</a>
+      </div>
+      <div class="why">Grid 4px · ratio <b>1.333</b> · radius 16–999px · 400ms with overshoot.
+        <b>Fits 5 of 7 type sizes</b> (11.5px moved — the biggest rewrite). It is the only character
+        that makes the amber token mean something, which is a real argument: amber is today painted
+        in exactly one place. Note the measured cost: <b>white on amber = 2.15</b>, so an amber CTA
+        needs dark ink on it (measured 8.09 — fine) rather than white.</div>
+    </div>
+
+    <!-- ============ D ============ -->
+    <div class="opt">
+      <span class="tag">D · premium and restrained</span>
+      <div class="spec" style="font-family:var(--serif)">
+        <p class="kicker" style="color:var(--gray-500);font-family:var(--sans);letter-spacing:.14em">Monthly meetups</p>
+        <h2 class="h-e-d" style="font-weight:400">Minneapolis Math Book Club</h2>
+        <p class="b-e-d">Join our passionate community of math enthusiasts as we explore fascinating
+          mathematical texts, discuss complex concepts, and share our love for mathematical literature.</p>
+        <div class="row">
+          <span class="d">Thu 7:00pm · Seaton Coffee Company</span>
+          <div class="v">3848 Main St SE, Minneapolis</div>
+        </div>
+        <p class="s" style="font-family:var(--sans)">sample row — not a real date</p>
+        <a class="cta" href="#" style="border:1px solid var(--gray-900);color:var(--gray-900);border-radius:2px">Join our group</a>
+      </div>
+      <div class="why">Grid 4px · ratio <b>1.200</b> · radius 4–6px · 200ms, no shadow hierarchy.
+        <b>Fits 7 of 7 type sizes</b> and moves the least of any option (4.3px) — the cheapest
+        migration. It also deletes the accent question by making colour almost absent. What it costs:
+        <code>shadow-lg</code> (17 uses) and the blue you already ship in 19 places both have to go,
+        and a math club that wants strangers to walk in is not trying to look expensive.</div>
+    </div>
+  </div>
+
+  <div class="measured" style="margin-top:28px;border-left-color:var(--blue-600)">
+    <b>What your answer changes next</b>
+    <ul>
+      <li>B or C keeps the serif and buys weight 700 for real (the file exists; latin 400+700 =
+        62,704 B, <b>45 KB smaller than the 107,680 B shipping today</b>, because 49% of today is
+        cyrillic subsets nothing here serves). A or D invites dropping it.</li>
+      <li>Radius: <b>base 6px fits 3 of 3</b> measured candidates, base 8px fits 2 of 3 — so B and C
+        are a small change, D is the one that moves radius.</li>
+      <li>Colour roles come in round 3 and depend on this: if you pick B or D, amber either becomes a
+        deliberate single accent or goes away; if you pick C, amber becomes the primary and every
+        amber surface has to clear 4.5:1 with dark ink.</li>
+      <li>The 4 unused brand-icon components are dead by import (measured), so whatever character you
+        pick, <code>choose-icons</code> has to supply: calendar, clock, pin, link, Discord, Meetup,
+        Mastodon — and it will be the only icon set in the repo.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

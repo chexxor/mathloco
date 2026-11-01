@@ -1,0 +1,101 @@
+token (as written)                              rendered
+paper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)
+panel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)
+tint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)
+paperDeep = oklch(94.7% 0.008 85)          #f0ede8 rgba(240,237,232,1)
+ink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)
+ink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)
+ink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)
+rule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)
+goldInk = oklch(55% 0.12 62)               #a25f12 rgba(162,95,18,1)
+goldDark = oklch(76% 0.06 84)              #c3ae86 rgba(195,174,134,1)
+bandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)
+bandPanel = oklch(28.5% 0.012 152)         #262c27 rgba(38,44,39,1)
+p1 = oklch(50% 0.11 205)                   #007481 rgba(0,116,129,1)
+p2 = oklch(47% 0.15 315)                   #793a93 rgba(121,58,147,1)
+p3 = oklch(50% 0.14 35)                    #a33e25 rgba(163,62,37,1)
+p4 = oklch(50% 0.10 105)                   #6c6610 rgba(108,102,16,1)
+p1t = oklch(95% 0.03 205)                  #d8f5f8 rgba(216,245,248,1)
+p2t = oklch(95% 0.03 315)                  #f6e9fd rgba(246,233,253,1)
+p3t = oklch(95% 0.03 35)                   #ffe8e1 rgba(255,232,225,1)
+p4t = oklch(95% 0.03 105)                  #f1f0d9 rgba(241,240,217,1)
+bp1 = oklch(70% 0.11 205)                  #2cb2bf rgba(44,178,191,1)
+bp2 = oklch(72% 0.15 315)                  #c885e5 rgba(200,133,229,1)
+bp3 = oklch(71% 0.14 35)                   #eb7e63 rgba(235,126,99,1)
+bp4 = oklch(69% 0.10 105)                  #a49f51 rgba(164,159,81,1)
+recessCyan = oklch(22% 0.05 205)           #002126 rgba(0,33,38,1)
+hoverInk = oklch(40% 0.055 152)            #305039 rgba(48,80,57,1)
+chipTrack = oklch(89.5% 0.008 152)         #d9deda rgba(217,222,218,1)
+greyBorder = rgba(128,128,128,0.35)        #808080 rgba(128,128,128,0.35)
+
+pair                                       kind     fg          bg          ratio  bar  verdict
+ink body text on paper                     text     #203927      #fcfaf6     12.02  4.5   PASS
+ink-2 secondary on paper                   text     #475b4c      #fcfaf6     7.02   4.5   PASS
+ink-3 muted on paper                       text     #5d6e61      #fcfaf6     5.21   4.5   PASS
+rule hairline on paper                     keyline  #849688      #fcfaf6     3.01   3     PASS
+gold-ink as text on paper                  text     #a25f12      #fcfaf6     4.82   4.5   PASS
+gold-ink as keyline on paper               keyline  #a25f12      #fcfaf6     4.82   3     PASS
+gold-ink on panel (hover target)           text     #a25f12      #f8f5ef     4.61   4.5   PASS
+GOLD ON TINT (the banned pair)             text     #a25f12      #e0f5e5     4.39   4.5   FAIL
+ink on tint (what a tint fill carries)     text     #203927      #e0f5e5     10.96  4.5   PASS
+ink-2 on tint chip                         text     #475b4c      #e0f5e5     6.4    4.5   PASS
+gold-ink on panel deepened to a layer      text     #a25f12      #f0ede8     4.3    4.5   FAIL
+rule on that deepened panel                keyline  #849688      #f0ede8     2.68   3     FAIL
+rule on panel                              keyline  #849688      #f8f5ef     2.88   3     FAIL
+primary: band-text on ink                  text     #e4e9e5      #203927     10.19  4.5   PASS
+primary hover: band-text on ink(40%)       text     #e4e9e5      #305039     7.33   4.5   PASS
+secondary: ink on paper                    text     #203927      #fcfaf6     12.02  4.5   PASS
+secondary keyline: rule on paper           keyline  #849688      #fcfaf6     3.01   3     PASS
+secondary hover: ink on tint               text     #203927      #e0f5e5     10.96  4.5   PASS
+quiet: gold-ink on paper                   text     #a25f12      #fcfaf6     4.82   4.5   PASS
+quiet keyline: gold-ink on paper           keyline  #a25f12      #fcfaf6     4.82   3     PASS
+chip label: ink-2 on chip track            text     #475b4c      #d9deda     5.37   4.5   PASS
+path cyan on paper                         text     #007481      #fcfaf6     5.28   4.5   PASS
+path plum on paper                         text     #793a93      #fcfaf6     7.09   4.5   PASS
+path coral on paper                        text     #a33e25      #fcfaf6     6.15   4.5   PASS
+path olive on paper                        text     #6c6610      #fcfaf6     5.68   4.5   PASS
+path cyan label on its chip                text     #007481      #d8f5f8     4.81   4.5   PASS
+path plum label on its chip                text     #793a93      #f6e9fd     6.34   4.5   PASS
+path coral label on its chip               text     #a33e25      #ffe8e1     5.46   4.5   PASS
+path olive label on its chip               text     #6c6610      #f1f0d9     5.13   4.5   PASS
+band text on band                          text     #e4e9e5      #203927     10.19  4.5   PASS
+gold numerals on band                      text     #c3ae86      #203927     5.8    4.5   PASS
+SAME rule token as a band hairline         keyline  #849688      #203927     4      3     PASS
+band text on band panel (recess)           text     #e4e9e5      #262c27     11.61  4.5   PASS
+rule on band panel                         keyline  #849688      #262c27     4.55   3     PASS
+band path cyan on band                     text     #2cb2bf      #203927     4.91   4.5   PASS
+band path plum on band                     text     #c885e5      #203927     4.74   4.5   PASS
+band path coral on band                    text     #eb7e63      #203927     4.59   4.5   PASS
+band path olive on band                    text     #a49f51      #203927     4.57   4.5   PASS
+band path cyan on cyan recess              text     #2cb2bf      #002126     6.61   4.5   PASS
+ink-3 muted on band (expect FAIL)          text     #5d6e61      #203927     2.31   4.5   FAIL
+rule as text on band (expect FAIL at 4.5)  text     #849688      #203927     4      4.5   FAIL
+gold label on a tint fill (a gold secondary hover) text     #a25f12      #e0f5e5     4.39   4.5   FAIL
+FIX: band secondary ink on tint            text     #203927      #e0f5e5     10.96  4.5   PASS
+grey border rgba(128,128,128,.35) over paper over     #475b4c      #d1cfcd     4.72   3     PASS
+gold-ink label over that grey edge         over     #a25f12      #d1cfcd     3.24   4.5   FAIL
+panel vs paper                             layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT
+band panel vs band                         layer    #262c27      #203927     1.14   1.35  FLAT
+cyan recess vs band                        layer    #002126      #203927     1.35   1.35  LAYERED
+paper card on band                         layer    #fcfaf6      #203927     12.02  1.35  LAYERED
+tint chip on paper                         layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT
+chip track vs paper                        layer    #d9deda      #fcfaf6     1.31   1.35  FLAT
+primary hover vs primary                   layer    #305039      #203927     1.39   1.35  LAYERED
+path chip vs paper                         layer    #d8f5f8      #fcfaf6     1.1    1.35  FLAT
+deepened panel vs paper (the trap)         layer    #f0ede8      #fcfaf6     1.12   1.35  FLAT
+
+solve (L of oklch(L C H) nearest `near` that still clears the bar)
+band path cyan (bar 4.5)                   oklch(68% 0.11 205)        renders #21abb8    ratio 4.52
+band path plum (bar 4.5)                   oklch(71% 0.15 315)        renders #c482e1    ratio 4.55
+band path coral (bar 4.5)                  oklch(71% 0.14 35)         renders #eb7e63    ratio 4.59
+band path olive (bar 4.5)                  oklch(69% 0.1 105)         renders #a49f51    ratio 4.57
+rule on paper (bar 3)                      oklch(65.5% 0.03 152)      renders #849688    ratio 3.01
+rule on band (same token) (bar 3)          oklch(65.5% 0.03 152)      renders #849688    ratio 4
+gold-ink on paper (bar 4.5)                oklch(55% 0.12 62)         renders #a25f12    ratio 4.82
+gold-ink on panel (bar 4.5)                oklch(55% 0.12 62)         renders #a25f12    ratio 4.61
+gold-ink on tint (bar 4.5)                 oklch(54% 0.12 62)         renders #9f5c0c    ratio 4.58
+gold-ink on deepened panel (bar 4.5)       oklch(53.5% 0.12 62)       renders #9d5a09    ratio 4.61
+rule on deepened panel (bar 3)             oklch(62.5% 0.03 152)      renders #7b8d7f    ratio 3.02
+band recess fill (darker) (bar 1.35)       oklch(28.5% 0.012 152)     renders #262c27    ratio 1.14
+ink on paper (keep 11.9?) (bar 11.5)       oklch(32% 0.045 152)       renders #203927    ratio 12.02
+primary hover ink (bar 4.5)                oklch(40% 0.055 152)       renders #305039    ratio 7.33

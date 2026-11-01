@@ -1,0 +1,566 @@
+{
+ "out": "token (as written)                              rendered\npaper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)\npanel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)\ntint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)\npaperDeep = oklch(94.7% 0.008 85)          #f0ede8 rgba(240,237,232,1)\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)\nink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)\nrule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)\ngoldInk = oklch(55% 0.12 62)               #a25f12 rgba(162,95,18,1)\ngoldDark = oklch(76% 0.06 84)              #c3ae86 rgba(195,174,134,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\nbandPanel = oklch(28.5% 0.012 152)         #262c27 rgba(38,44,39,1)\np1 = oklch(50% 0.11 205)                   #007481 rgba(0,116,129,1)\np2 = oklch(47% 0.15 315)                   #793a93 rgba(121,58,147,1)\np3 = oklch(50% 0.14 35)                    #a33e25 rgba(163,62,37,1)\np4 = oklch(50% 0.10 105)                   #6c6610 rgba(108,102,16,1)\np1t = oklch(95% 0.03 205)                  #d8f5f8 rgba(216,245,248,1)\np2t = oklch(95% 0.03 315)                  #f6e9fd rgba(246,233,253,1)\np3t = oklch(95% 0.03 35)                   #ffe8e1 rgba(255,232,225,1)\np4t = oklch(95% 0.03 105)                  #f1f0d9 rgba(241,240,217,1)\nbp1 = oklch(70% 0.11 205)                  #2cb2bf rgba(44,178,191,1)\nbp2 = oklch(72% 0.15 315)                  #c885e5 rgba(200,133,229,1)\nbp3 = oklch(71% 0.14 35)                   #eb7e63 rgba(235,126,99,1)\nbp4 = oklch(69% 0.10 105)                  #a49f51 rgba(164,159,81,1)\nrecessCyan = oklch(22% 0.05 205)           #002126 rgba(0,33,38,1)\nhoverInk = oklch(40% 0.055 152)            #305039 rgba(48,80,57,1)\nchipTrack = oklch(89.5% 0.008 152)         #d9deda rgba(217,222,218,1)\ngreyBorder = rgba(128,128,128,0.35)        #808080 rgba(128,128,128,0.35)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nink body text on paper                     text     #203927      #fcfaf6     12.02  4.5   PASS\nink-2 secondary on paper                   text     #475b4c      #fcfaf6     7.02   4.5   PASS\nink-3 muted on paper                       text     #5d6e61      #fcfaf6     5.21   4.5   PASS\nrule hairline on paper                     keyline  #849688      #fcfaf6     3.01   3     PASS\ngold-ink as text on paper                  text     #a25f12      #fcfaf6     4.82   4.5   PASS\ngold-ink as keyline on paper               keyline  #a25f12      #fcfaf6     4.82   3     PASS\ngold-ink on panel (hover target)           text     #a25f12      #f8f5ef     4.61   4.5   PASS\nGOLD ON TINT (the banned pair)             text     #a25f12      #e0f5e5     4.39   4.5   FAIL\nink on tint (what a tint fill carries)     text     #203927      #e0f5e5     10.96  4.5   PASS\nink-2 on tint chip                         text     #475b4c      #e0f5e5     6.4    4.5   PASS\ngold-ink on panel deepened to a layer      text     #a25f12      #f0ede8     4.3    4.5   FAIL\nrule on that deepened panel                keyline  #849688      #f0ede8     2.68   3     FAIL\nrule on panel                              keyline  #849688      #f8f5ef     2.88   3     FAIL\nprimary: band-text on ink                  text     #e4e9e5      #203927     10.19  4.5   PASS\nprimary hover: band-text on ink(40%)       text     #e4e9e5      #305039     7.33   4.5   PASS\nsecondary: ink on paper                    text     #203927      #fcfaf6     12.02  4.5   PASS\nsecondary keyline: rule on paper           keyline  #849688      #fcfaf6     3.01   3     PASS\nsecondary hover: ink on tint               text     #203927      #e0f5e5     10.96  4.5   PASS\nquiet: gold-ink on paper                   text     #a25f12      #fcfaf6     4.82   4.5   PASS\nquiet keyline: gold-ink on paper           keyline  #a25f12      #fcfaf6     4.82   3     PASS\nchip label: ink-2 on chip track            text     #475b4c      #d9deda     5.37   4.5   PASS\npath cyan on paper                         text     #007481      #fcfaf6     5.28   4.5   PASS\npath plum on paper                         text     #793a93      #fcfaf6     7.09   4.5   PASS\npath coral on paper                        text     #a33e25      #fcfaf6     6.15   4.5   PASS\npath olive on paper                        text     #6c6610      #fcfaf6     5.68   4.5   PASS\npath cyan label on its chip                text     #007481      #d8f5f8     4.81   4.5   PASS\npath plum label on its chip                text     #793a93      #f6e9fd     6.34   4.5   PASS\npath coral label on its chip               text     #a33e25      #ffe8e1     5.46   4.5   PASS\npath olive label on its chip               text     #6c6610      #f1f0d9     5.13   4.5   PASS\nband text on band                          text     #e4e9e5      #203927     10.19  4.5   PASS\ngold numerals on band                      text     #c3ae86      #203927     5.8    4.5   PASS\nSAME rule token as a band hairline         keyline  #849688      #203927     4      3     PASS\nband text on band panel (recess)           text     #e4e9e5      #262c27     11.61  4.5   PASS\nrule on band panel                         keyline  #849688      #262c27     4.55   3     PASS\nband path cyan on band                     text     #2cb2bf      #203927     4.91   4.5   PASS\nband path plum on band                     text     #c885e5      #203927     4.74   4.5   PASS\nband path coral on band                    text     #eb7e63      #203927     4.59   4.5   PASS\nband path olive on band                    text     #a49f51      #203927     4.57   4.5   PASS\nband path cyan on cyan recess              text     #2cb2bf      #002126     6.61   4.5   PASS\nink-3 muted on band (expect FAIL)          text     #5d6e61      #203927     2.31   4.5   FAIL\nrule as text on band (expect FAIL at 4.5)  text     #849688      #203927     4      4.5   FAIL\ngold label on a tint fill (a gold secondary hover) text     #a25f12      #e0f5e5     4.39   4.5   FAIL\nFIX: band secondary ink on tint            text     #203927      #e0f5e5     10.96  4.5   PASS\ngrey border rgba(128,128,128,.35) over paper over     #475b4c      #d1cfcd     4.72   3     PASS\ngold-ink label over that grey edge         over     #a25f12      #d1cfcd     3.24   4.5   FAIL\npanel vs paper                             layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT\nband panel vs band                         layer    #262c27      #203927     1.14   1.35  FLAT\ncyan recess vs band                        layer    #002126      #203927     1.35   1.35  LAYERED\npaper card on band                         layer    #fcfaf6      #203927     12.02  1.35  LAYERED\ntint chip on paper                         layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT\nchip track vs paper                        layer    #d9deda      #fcfaf6     1.31   1.35  FLAT\nprimary hover vs primary                   layer    #305039      #203927     1.39   1.35  LAYERED\npath chip vs paper                         layer    #d8f5f8      #fcfaf6     1.1    1.35  FLAT\ndeepened panel vs paper (the trap)         layer    #f0ede8      #fcfaf6     1.12   1.35  FLAT\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)\nband path cyan (bar 4.5)                   oklch(68% 0.11 205)        renders #21abb8    ratio 4.52\nband path plum (bar 4.5)                   oklch(71% 0.15 315)        renders #c482e1    ratio 4.55\nband path coral (bar 4.5)                  oklch(71% 0.14 35)         renders #eb7e63    ratio 4.59\nband path olive (bar 4.5)                  oklch(69% 0.1 105)         renders #a49f51    ratio 4.57\nrule on paper (bar 3)                      oklch(65.5% 0.03 152)      renders #849688    ratio 3.01\nrule on band (same token) (bar 3)          oklch(65.5% 0.03 152)      renders #849688    ratio 4\ngold-ink on paper (bar 4.5)                oklch(55% 0.12 62)         renders #a25f12    ratio 4.82\ngold-ink on panel (bar 4.5)                oklch(55% 0.12 62)         renders #a25f12    ratio 4.61\ngold-ink on tint (bar 4.5)                 oklch(54% 0.12 62)         renders #9f5c0c    ratio 4.58\ngold-ink on deepened panel (bar 4.5)       oklch(53.5% 0.12 62)       renders #9d5a09    ratio 4.61\nrule on deepened panel (bar 3)             oklch(62.5% 0.03 152)      renders #7b8d7f    ratio 3.02\nband recess fill (darker) (bar 1.35)       oklch(28.5% 0.012 152)     renders #262c27    ratio 1.14\nink on paper (keep 11.9?) (bar 11.5)       oklch(32% 0.045 152)       renders #203927    ratio 12.02\nprimary hover ink (bar 4.5)                oklch(40% 0.055 152)       renders #305039    ratio 7.33",
+ "report": "token (as written)                              rendered\npaper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)\npanel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)\ntint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)\npaperDeep = oklch(94.7% 0.008 85)          #f0ede8 rgba(240,237,232,1)\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)\nink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)\nrule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)\ngoldInk = oklch(55% 0.12 62)               #a25f12 rgba(162,95,18,1)\ngoldDark = oklch(76% 0.06 84)              #c3ae86 rgba(195,174,134,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\nbandPanel = oklch(28.5% 0.012 152)         #262c27 rgba(38,44,39,1)\np1 = oklch(50% 0.11 205)                   #007481 rgba(0,116,129,1)\np2 = oklch(47% 0.15 315)                   #793a93 rgba(121,58,147,1)\np3 = oklch(50% 0.14 35)                    #a33e25 rgba(163,62,37,1)\np4 = oklch(50% 0.10 105)                   #6c6610 rgba(108,102,16,1)\np1t = oklch(95% 0.03 205)                  #d8f5f8 rgba(216,245,248,1)\np2t = oklch(95% 0.03 315)                  #f6e9fd rgba(246,233,253,1)\np3t = oklch(95% 0.03 35)                   #ffe8e1 rgba(255,232,225,1)\np4t = oklch(95% 0.03 105)                  #f1f0d9 rgba(241,240,217,1)\nbp1 = oklch(70% 0.11 205)                  #2cb2bf rgba(44,178,191,1)\nbp2 = oklch(72% 0.15 315)                  #c885e5 rgba(200,133,229,1)\nbp3 = oklch(71% 0.14 35)                   #eb7e63 rgba(235,126,99,1)\nbp4 = oklch(69% 0.10 105)                  #a49f51 rgba(164,159,81,1)\nrecessCyan = oklch(22% 0.05 205)           #002126 rgba(0,33,38,1)\nhoverInk = oklch(40% 0.055 152)            #305039 rgba(48,80,57,1)\nchipTrack = oklch(89.5% 0.008 152)         #d9deda rgba(217,222,218,1)\ngreyBorder = rgba(128,128,128,0.35)        #808080 rgba(128,128,128,0.35)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nink body text on paper                     text     #203927      #fcfaf6     12.02  4.5   PASS\nink-2 secondary on paper                   text     #475b4c      #fcfaf6     7.02   4.5   PASS\nink-3 muted on paper                       text     #5d6e61      #fcfaf6     5.21   4.5   PASS\nrule hairline on paper                     keyline  #849688      #fcfaf6     3.01   3     PASS\ngold-ink as text on paper                  text     #a25f12      #fcfaf6     4.82   4.5   PASS\ngold-ink as keyline on paper               keyline  #a25f12      #fcfaf6     4.82   3     PASS\ngold-ink on panel (hover target)           text     #a25f12      #f8f5ef     4.61   4.5   PASS\nGOLD ON TINT (the banned pair)             text     #a25f12      #e0f5e5     4.39   4.5   FAIL\nink on tint (what a tint fill carries)     text     #203927      #e0f5e5     10.96  4.5   PASS\nink-2 on tint chip                         text     #475b4c      #e0f5e5     6.4    4.5   PASS\ngold-ink on panel deepened to a layer      text     #a25f12      #f0ede8     4.3    4.5   FAIL\nrule on that deepened panel                keyline  #849688      #f0ede8     2.68   3     FAIL\nrule on panel                              keyline  #849688      #f8f5ef     2.88   3     FAIL\nprimary: band-text on ink                  text     #e4e9e5      #203927     10.19  4.5   PASS\nprimary hover: band-text on ink(40%)       text     #e4e9e5      #305039     7.33   4.5   PASS\nsecondary: ink on paper                    text     #203927      #fcfaf6     12.02  4.5   PASS\nsecondary keyline: rule on paper           keyline  #849688      #fcfaf6     3.01   3     PASS\nsecondary hover: ink on tint               text     #203927      #e0f5e5     10.96  4.5   PASS\nquiet: gold-ink on paper                   text     #a25f12      #fcfaf6     4.82   4.5   PASS\nquiet keyline: gold-ink on paper           keyline  #a25f12      #fcfaf6     4.82   3     PASS\nchip label: ink-2 on chip track            text     #475b4c      #d9deda     5.37   4.5   PASS\npath cyan on paper                         text     #007481      #fcfaf6     5.28   4.5   PASS\npath plum on paper                         text     #793a93      #fcfaf6     7.09   4.5   PASS\npath coral on paper                        text     #a33e25      #fcfaf6     6.15   4.5   PASS\npath olive on paper                        text     #6c6610      #fcfaf6     5.68   4.5   PASS\npath cyan label on its chip                text     #007481      #d8f5f8     4.81   4.5   PASS\npath plum label on its chip                text     #793a93      #f6e9fd     6.34   4.5   PASS\npath coral label on its chip               text     #a33e25      #ffe8e1     5.46   4.5   PASS\npath olive label on its chip               text     #6c6610      #f1f0d9     5.13   4.5   PASS\nband text on band                          text     #e4e9e5      #203927     10.19  4.5   PASS\ngold numerals on band                      text     #c3ae86      #203927     5.8    4.5   PASS\nSAME rule token as a band hairline         keyline  #849688      #203927     4      3     PASS\nband text on band panel (recess)           text     #e4e9e5      #262c27     11.61  4.5   PASS\nrule on band panel                         keyline  #849688      #262c27     4.55   3     PASS\nband path cyan on band                     text     #2cb2bf      #203927     4.91   4.5   PASS\nband path plum on band                     text     #c885e5      #203927     4.74   4.5   PASS\nband path coral on band                    text     #eb7e63      #203927     4.59   4.5   PASS\nband path olive on band                    text     #a49f51      #203927     4.57   4.5   PASS\nband path cyan on cyan recess              text     #2cb2bf      #002126     6.61   4.5   PASS\nink-3 muted on band (expect FAIL)          text     #5d6e61      #203927     2.31   4.5   FAIL\nrule as text on band (expect FAIL at 4.5)  text     #849688      #203927     4      4.5   FAIL\ngold label on a tint fill (a gold secondary hover) text     #a25f12      #e0f5e5     4.39   4.5   FAIL\nFIX: band secondary ink on tint            text     #203927      #e0f5e5     10.96  4.5   PASS\ngrey border rgba(128,128,128,.35) over paper over     #475b4c      #d1cfcd     4.72   3     PASS\ngold-ink label over that grey edge         over     #a25f12      #d1cfcd     3.24   4.5   FAIL\npanel vs paper                             layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT\nband panel vs band                         layer    #262c27      #203927     1.14   1.35  FLAT\ncyan recess vs band                        layer    #002126      #203927     1.35   1.35  LAYERED\npaper card on band                         layer    #fcfaf6      #203927     12.02  1.35  LAYERED\ntint chip on paper                         layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT\nchip track vs paper                        layer    #d9deda      #fcfaf6     1.31   1.35  FLAT\nprimary hover vs primary                   layer    #305039      #203927     1.39   1.35  LAYERED\npath chip vs paper                         layer    #d8f5f8      #fcfaf6     1.1    1.35  FLAT\ndeepened panel vs paper (the trap)         layer    #f0ede8      #fcfaf6     1.12   1.35  FLAT\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)\nband path cyan (bar 4.5)                   oklch(68% 0.11 205)        renders #21abb8    ratio 4.52\nband path plum (bar 4.5)                   oklch(71% 0.15 315)        renders #c482e1    ratio 4.55\nband path coral (bar 4.5)                  oklch(71% 0.14 35)         renders #eb7e63    ratio 4.59\nband path olive (bar 4.5)                  oklch(69% 0.1 105)         renders #a49f51    ratio 4.57\nrule on paper (bar 3)                      oklch(65.5% 0.03 152)      renders #849688    ratio 3.01\nrule on band (same token) (bar 3)          oklch(65.5% 0.03 152)      renders #849688    ratio 4\ngold-ink on paper (bar 4.5)                oklch(55% 0.12 62)         renders #a25f12    ratio 4.82\ngold-ink on panel (bar 4.5)                oklch(55% 0.12 62)         renders #a25f12    ratio 4.61\ngold-ink on tint (bar 4.5)                 oklch(54% 0.12 62)         renders #9f5c0c    ratio 4.58\ngold-ink on deepened panel (bar 4.5)       oklch(53.5% 0.12 62)       renders #9d5a09    ratio 4.61\nrule on deepened panel (bar 3)             oklch(62.5% 0.03 152)      renders #7b8d7f    ratio 3.02\nband recess fill (darker) (bar 1.35)       oklch(28.5% 0.012 152)     renders #262c27    ratio 1.14\nink on paper (keep 11.9?) (bar 11.5)       oklch(32% 0.045 152)       renders #203927    ratio 12.02\nprimary hover ink (bar 4.5)                oklch(40% 0.055 152)       renders #305039    ratio 7.33",
+ "facesLoaded": [],
+ "fontSet": 0,
+ "pairs": [
+  {
+   "name": "ink body text on paper",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#fcfaf6",
+   "ratio": 12.02,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "ink-2 secondary on paper",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#fcfaf6",
+   "ratio": 7.02,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "ink-3 muted on paper",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#fcfaf6",
+   "ratio": 5.21,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "rule hairline on paper",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#fcfaf6",
+   "ratio": 3.01,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "gold-ink as text on paper",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "gold-ink as keyline on paper",
+   "kind": "keyline",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "gold-ink on panel (hover target)",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#f8f5ef",
+   "ratio": 4.61,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "GOLD ON TINT (the banned pair)",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#e0f5e5",
+   "ratio": 4.39,
+   "bar": 4.5,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "ink on tint (what a tint fill carries)",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#e0f5e5",
+   "ratio": 10.96,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "ink-2 on tint chip",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#e0f5e5",
+   "ratio": 6.4,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "gold-ink on panel deepened to a layer",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#f0ede8",
+   "ratio": 4.3,
+   "bar": 4.5,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "rule on that deepened panel",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#f0ede8",
+   "ratio": 2.68,
+   "bar": 3,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "rule on panel",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#f8f5ef",
+   "ratio": 2.88,
+   "bar": 3,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "primary: band-text on ink",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#203927",
+   "ratio": 10.19,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "primary hover: band-text on ink(40%)",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#305039",
+   "ratio": 7.33,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "secondary: ink on paper",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#fcfaf6",
+   "ratio": 12.02,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "secondary keyline: rule on paper",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#fcfaf6",
+   "ratio": 3.01,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "secondary hover: ink on tint",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#e0f5e5",
+   "ratio": 10.96,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "quiet: gold-ink on paper",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "quiet keyline: gold-ink on paper",
+   "kind": "keyline",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "chip label: ink-2 on chip track",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#d9deda",
+   "ratio": 5.37,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path cyan on paper",
+   "kind": "text",
+   "fg": "#007481",
+   "bg": "#fcfaf6",
+   "ratio": 5.28,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path plum on paper",
+   "kind": "text",
+   "fg": "#793a93",
+   "bg": "#fcfaf6",
+   "ratio": 7.09,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path coral on paper",
+   "kind": "text",
+   "fg": "#a33e25",
+   "bg": "#fcfaf6",
+   "ratio": 6.15,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path olive on paper",
+   "kind": "text",
+   "fg": "#6c6610",
+   "bg": "#fcfaf6",
+   "ratio": 5.68,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path cyan label on its chip",
+   "kind": "text",
+   "fg": "#007481",
+   "bg": "#d8f5f8",
+   "ratio": 4.81,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path plum label on its chip",
+   "kind": "text",
+   "fg": "#793a93",
+   "bg": "#f6e9fd",
+   "ratio": 6.34,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path coral label on its chip",
+   "kind": "text",
+   "fg": "#a33e25",
+   "bg": "#ffe8e1",
+   "ratio": 5.46,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "path olive label on its chip",
+   "kind": "text",
+   "fg": "#6c6610",
+   "bg": "#f1f0d9",
+   "ratio": 5.13,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band text on band",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#203927",
+   "ratio": 10.19,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "gold numerals on band",
+   "kind": "text",
+   "fg": "#c3ae86",
+   "bg": "#203927",
+   "ratio": 5.8,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "SAME rule token as a band hairline",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#203927",
+   "ratio": 4,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band text on band panel (recess)",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#262c27",
+   "ratio": 11.61,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "rule on band panel",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#262c27",
+   "ratio": 4.55,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band path cyan on band",
+   "kind": "text",
+   "fg": "#2cb2bf",
+   "bg": "#203927",
+   "ratio": 4.91,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band path plum on band",
+   "kind": "text",
+   "fg": "#c885e5",
+   "bg": "#203927",
+   "ratio": 4.74,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band path coral on band",
+   "kind": "text",
+   "fg": "#eb7e63",
+   "bg": "#203927",
+   "ratio": 4.59,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band path olive on band",
+   "kind": "text",
+   "fg": "#a49f51",
+   "bg": "#203927",
+   "ratio": 4.57,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "band path cyan on cyan recess",
+   "kind": "text",
+   "fg": "#2cb2bf",
+   "bg": "#002126",
+   "ratio": 6.61,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "ink-3 muted on band (expect FAIL)",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#203927",
+   "ratio": 2.31,
+   "bar": 4.5,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "rule as text on band (expect FAIL at 4.5)",
+   "kind": "text",
+   "fg": "#849688",
+   "bg": "#203927",
+   "ratio": 4,
+   "bar": 4.5,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "gold label on a tint fill (a gold secondary hover)",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#e0f5e5",
+   "ratio": 4.39,
+   "bar": 4.5,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "FIX: band secondary ink on tint",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#e0f5e5",
+   "ratio": 10.96,
+   "bar": 4.5,
+   "verdict": "PASS"
+  },
+  {
+   "name": "grey border rgba(128,128,128,.35) over paper",
+   "kind": "over",
+   "fg": "#475b4c",
+   "bg": "#d1cfcd",
+   "ratio": 4.72,
+   "bar": 3,
+   "verdict": "PASS"
+  },
+  {
+   "name": "gold-ink label over that grey edge",
+   "kind": "over",
+   "fg": "#a25f12",
+   "bg": "#d1cfcd",
+   "ratio": 3.24,
+   "bar": 4.5,
+   "verdict": "FAIL"
+  },
+  {
+   "name": "panel vs paper",
+   "kind": "layer",
+   "fg": "#f8f5ef",
+   "bg": "#fcfaf6",
+   "ratio": 1.04,
+   "bar": 1.35,
+   "verdict": "FLAT"
+  },
+  {
+   "name": "band panel vs band",
+   "kind": "layer",
+   "fg": "#262c27",
+   "bg": "#203927",
+   "ratio": 1.14,
+   "bar": 1.35,
+   "verdict": "FLAT"
+  },
+  {
+   "name": "cyan recess vs band",
+   "kind": "layer",
+   "fg": "#002126",
+   "bg": "#203927",
+   "ratio": 1.35,
+   "bar": 1.35,
+   "verdict": "LAYERED"
+  },
+  {
+   "name": "paper card on band",
+   "kind": "layer",
+   "fg": "#fcfaf6",
+   "bg": "#203927",
+   "ratio": 12.02,
+   "bar": 1.35,
+   "verdict": "LAYERED"
+  },
+  {
+   "name": "tint chip on paper",
+   "kind": "layer",
+   "fg": "#e0f5e5",
+   "bg": "#fcfaf6",
+   "ratio": 1.1,
+   "bar": 1.35,
+   "verdict": "FLAT"
+  },
+  {
+   "name": "chip track vs paper",
+   "kind": "layer",
+   "fg": "#d9deda",
+   "bg": "#fcfaf6",
+   "ratio": 1.31,
+   "bar": 1.35,
+   "verdict": "FLAT"
+  },
+  {
+   "name": "primary hover vs primary",
+   "kind": "layer",
+   "fg": "#305039",
+   "bg": "#203927",
+   "ratio": 1.39,
+   "bar": 1.35,
+   "verdict": "LAYERED"
+  },
+  {
+   "name": "path chip vs paper",
+   "kind": "layer",
+   "fg": "#d8f5f8",
+   "bg": "#fcfaf6",
+   "ratio": 1.1,
+   "bar": 1.35,
+   "verdict": "FLAT"
+  },
+  {
+   "name": "deepened panel vs paper (the trap)",
+   "kind": "layer",
+   "fg": "#f0ede8",
+   "bg": "#fcfaf6",
+   "ratio": 1.12,
+   "bar": 1.35,
+   "verdict": "FLAT"
+  }
+ ],
+ "solves": [
+  {
+   "label": "band path cyan",
+   "at": "oklch(68% 0.11 205)",
+   "ratio": 4.52
+  },
+  {
+   "label": "band path plum",
+   "at": "oklch(71% 0.15 315)",
+   "ratio": 4.55
+  },
+  {
+   "label": "band path coral",
+   "at": "oklch(71% 0.14 35)",
+   "ratio": 4.59
+  },
+  {
+   "label": "band path olive",
+   "at": "oklch(69% 0.1 105)",
+   "ratio": 4.57
+  },
+  {
+   "label": "rule on paper",
+   "at": "oklch(65.5% 0.03 152)",
+   "ratio": 3.01
+  },
+  {
+   "label": "rule on band (same token)",
+   "at": "oklch(65.5% 0.03 152)",
+   "ratio": 4
+  },
+  {
+   "label": "gold-ink on paper",
+   "at": "oklch(55% 0.12 62)",
+   "ratio": 4.82
+  },
+  {
+   "label": "gold-ink on panel",
+   "at": "oklch(55% 0.12 62)",
+   "ratio": 4.61
+  },
+  {
+   "label": "gold-ink on tint",
+   "at": "oklch(54% 0.12 62)",
+   "ratio": 4.58
+  },
+  {
+   "label": "gold-ink on deepened panel",
+   "at": "oklch(53.5% 0.12 62)",
+   "ratio": 4.61
+  },
+  {
+   "label": "rule on deepened panel",
+   "at": "oklch(62.5% 0.03 152)",
+   "ratio": 3.02
+  },
+  {
+   "label": "band recess fill (darker)",
+   "at": "oklch(28.5% 0.012 152)",
+   "ratio": 1.14
+  },
+  {
+   "label": "ink on paper (keep 11.9?)",
+   "at": "oklch(32% 0.045 152)",
+   "ratio": 12.02
+  },
+  {
+   "label": "primary hover ink",
+   "at": "oklch(40% 0.055 152)",
+   "ratio": 7.33
+  }
+ ]
+}

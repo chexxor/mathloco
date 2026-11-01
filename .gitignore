@@ -48,6 +48,17 @@ pnpm-debug.log*
 # Dev Notes
 .notes/
 
+# Design pass (phase 3): the evidence base IS tracked (specimens, probes, machine records, the
+# contrast outputs DESIGN.md cites) — see .design/records/0009-design-evidence-is-tracked.md.
+# Three things are not:
+#  - candidate font binaries: re-fetchable from @fontsource, and the ratified faces arrive as npm
+#    packages in design-apply, so a woff2 here is a scratch copy, not evidence;
+#  - harness scratch: screenshots the probe harness writes on every run;
+#  - scratch files.
+.design/fonts/*.woff2
+.design/grill/.probe-shot-*.png
+.design/tmp-*
+
 # Machine-local pi agent state: a local-model endpoint (and its key) can land
 # here, so it is host-specific like durig.config.json and never committed.
 .pi/

@@ -1,0 +1,531 @@
+{
+ "page": "blank",
+ "width": 600,
+ "tokens": {
+  "paper": "oklch(98.5% 0.006 85)",
+  "panel": "oklch(97% 0.008 85)",
+  "tint": "oklch(95% 0.03 152)",
+  "paperDeep": "oklch(94.7% 0.008 85)",
+  "ink": "oklch(32% 0.045 152)",
+  "ink2": "oklch(45% 0.035 152)",
+  "ink3": "oklch(52% 0.028 152)",
+  "rule": "oklch(65.5% 0.03 152)",
+  "goldInk": "oklch(55% 0.12 62)",
+  "goldDark": "oklch(76% 0.06 84)",
+  "bandText": "oklch(93% 0.008 152)",
+  "bandPanel": "oklch(28.5% 0.012 152)",
+  "p1": "oklch(50% 0.11 205)",
+  "p2": "oklch(47% 0.15 315)",
+  "p3": "oklch(50% 0.14 35)",
+  "p4": "oklch(50% 0.10 105)",
+  "p1t": "oklch(95% 0.03 205)",
+  "p2t": "oklch(95% 0.03 315)",
+  "p3t": "oklch(95% 0.03 35)",
+  "p4t": "oklch(95% 0.03 105)",
+  "bp1": "oklch(70% 0.11 205)",
+  "bp2": "oklch(72% 0.15 315)",
+  "bp3": "oklch(71% 0.14 35)",
+  "bp4": "oklch(69% 0.10 105)",
+  "recessCyan": "oklch(22% 0.05 205)",
+  "hoverInk": "oklch(40% 0.055 152)",
+  "chipTrack": "oklch(89.5% 0.008 152)",
+  "greyBorder": "rgba(128,128,128,0.35)"
+ },
+ "pairs": [
+  {
+   "kind": "text",
+   "name": "ink body text on paper",
+   "fg": "@ink",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "ink-2 secondary on paper",
+   "fg": "@ink2",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "ink-3 muted on paper",
+   "fg": "@ink3",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "rule hairline on paper",
+   "fg": "@rule",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "gold-ink as text on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "gold-ink as keyline on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "gold-ink on panel (hover target)",
+   "fg": "@goldInk",
+   "bg": "@panel",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "GOLD ON TINT (the banned pair)",
+   "fg": "@goldInk",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "ink on tint (what a tint fill carries)",
+   "fg": "@ink",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "ink-2 on tint chip",
+   "fg": "@ink2",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "gold-ink on panel deepened to a layer",
+   "fg": "@goldInk",
+   "bg": "@paperDeep",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "rule on that deepened panel",
+   "fg": "@rule",
+   "bg": "@paperDeep",
+   "bar": 3
+  },
+  {
+   "kind": "keyline",
+   "name": "rule on panel",
+   "fg": "@rule",
+   "bg": "@panel",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "primary: band-text on ink",
+   "fg": "@bandText",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "primary hover: band-text on ink(40%)",
+   "fg": "@bandText",
+   "bg": "@hoverInk",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "secondary: ink on paper",
+   "fg": "@ink",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "secondary keyline: rule on paper",
+   "fg": "@rule",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "secondary hover: ink on tint",
+   "fg": "@ink",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "quiet: gold-ink on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "quiet keyline: gold-ink on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "chip label: ink-2 on chip track",
+   "fg": "@ink2",
+   "bg": "@chipTrack",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path cyan on paper",
+   "fg": "@p1",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path plum on paper",
+   "fg": "@p2",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path coral on paper",
+   "fg": "@p3",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path olive on paper",
+   "fg": "@p4",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path cyan label on its chip",
+   "fg": "@p1",
+   "bg": "@p1t",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path plum label on its chip",
+   "fg": "@p2",
+   "bg": "@p2t",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path coral label on its chip",
+   "fg": "@p3",
+   "bg": "@p3t",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path olive label on its chip",
+   "fg": "@p4",
+   "bg": "@p4t",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "band text on band",
+   "fg": "@bandText",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "gold numerals on band",
+   "fg": "@goldDark",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "SAME rule token as a band hairline",
+   "fg": "@rule",
+   "bg": "@ink",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "band text on band panel (recess)",
+   "fg": "@bandText",
+   "bg": "@bandPanel",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "rule on band panel",
+   "fg": "@rule",
+   "bg": "@bandPanel",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "band path cyan on band",
+   "fg": "@bp1",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "band path plum on band",
+   "fg": "@bp2",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "band path coral on band",
+   "fg": "@bp3",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "band path olive on band",
+   "fg": "@bp4",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "band path cyan on cyan recess",
+   "fg": "@bp1",
+   "bg": "@recessCyan",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "ink-3 muted on band (expect FAIL)",
+   "fg": "@ink3",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "rule as text on band (expect FAIL at 4.5)",
+   "fg": "@rule",
+   "bg": "@ink",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "gold label on a tint fill (a gold secondary hover)",
+   "fg": "@goldInk",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "FIX: band secondary ink on tint",
+   "fg": "@ink",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "over",
+   "name": "grey border rgba(128,128,128,.35) over paper",
+   "top": "@greyBorder",
+   "onto": "@paper",
+   "label": "@ink2",
+   "bar": 3
+  },
+  {
+   "kind": "over",
+   "name": "gold-ink label over that grey edge",
+   "top": "@greyBorder",
+   "onto": "@paper",
+   "label": "@goldInk",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "panel vs paper",
+   "fill": "@panel",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "band panel vs band",
+   "fill": "@bandPanel",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "cyan recess vs band",
+   "fill": "@recessCyan",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "paper card on band",
+   "fill": "@paper",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "tint chip on paper",
+   "fill": "@tint",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "chip track vs paper",
+   "fill": "@chipTrack",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "primary hover vs primary",
+   "fill": "@hoverInk",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "path chip vs paper",
+   "fill": "@p1t",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "deepened panel vs paper (the trap)",
+   "fill": "@paperDeep",
+   "ground": "@paper",
+   "bar": 1.35
+  }
+ ],
+ "solves": [
+  {
+   "label": "band path cyan",
+   "C": 0.11,
+   "H": 205,
+   "against": "@ink",
+   "target": 4.5,
+   "near": 68
+  },
+  {
+   "label": "band path plum",
+   "C": 0.15,
+   "H": 315,
+   "against": "@ink",
+   "target": 4.5,
+   "near": 71
+  },
+  {
+   "label": "band path coral",
+   "C": 0.14,
+   "H": 35,
+   "against": "@ink",
+   "target": 4.5,
+   "near": 71
+  },
+  {
+   "label": "band path olive",
+   "C": 0.1,
+   "H": 105,
+   "against": "@ink",
+   "target": 4.5,
+   "near": 69
+  },
+  {
+   "label": "rule on paper",
+   "C": 0.03,
+   "H": 152,
+   "against": "@paper",
+   "target": 3,
+   "near": 65.5
+  },
+  {
+   "label": "rule on band (same token)",
+   "C": 0.03,
+   "H": 152,
+   "against": "@ink",
+   "target": 3,
+   "near": 65.5
+  },
+  {
+   "label": "gold-ink on paper",
+   "C": 0.12,
+   "H": 62,
+   "against": "@paper",
+   "target": 4.5,
+   "near": 55
+  },
+  {
+   "label": "gold-ink on panel",
+   "C": 0.12,
+   "H": 62,
+   "against": "@panel",
+   "target": 4.5,
+   "near": 55
+  },
+  {
+   "label": "gold-ink on tint",
+   "C": 0.12,
+   "H": 62,
+   "against": "@tint",
+   "target": 4.5,
+   "near": 55
+  },
+  {
+   "label": "gold-ink on deepened panel",
+   "C": 0.12,
+   "H": 62,
+   "against": "@paperDeep",
+   "target": 4.5,
+   "near": 55
+  },
+  {
+   "label": "rule on deepened panel",
+   "C": 0.03,
+   "H": 152,
+   "against": "@paperDeep",
+   "target": 3,
+   "near": 65.5
+  },
+  {
+   "label": "band recess fill (darker)",
+   "C": 0.012,
+   "H": 152,
+   "against": "@ink",
+   "target": 1.35,
+   "near": 28.5,
+   "darker": true
+  },
+  {
+   "label": "ink on paper (keep 11.9?)",
+   "C": 0.045,
+   "H": 152,
+   "against": "@paper",
+   "target": 11.5,
+   "near": 32
+  },
+  {
+   "label": "primary hover ink",
+   "C": 0.055,
+   "H": 152,
+   "against": "@bandText",
+   "target": 4.5,
+   "near": 40
+  }
+ ]
+}

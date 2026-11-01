@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 6 - components: control heights, variants, density, and the cards that live in the one dark band</title>
+<style>
+  /* Faces: the ratified set from round 5, served from the woff2 files a self-hosted build would ship
+     (measured over the loopback harness, so this is the real face, not a system stand-in). */
+  @font-face { font-family:"PT Serif"; font-weight:400; font-display:block; src:url("../fonts/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PT Serif"; font-weight:700; font-display:block; src:url("../fonts/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PSVar"; font-weight:100 900; font-display:block; src:url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2"); }
+
+  :root {
+    /* ---- light roles, ratified round 4, every number re-measured in the renderer (contrast/round-6.txt) ---- */
+    --paper: oklch(98.5% 0.006 85);   /* #fcfaf6 */
+    --panel: oklch(97% 0.008 85);     /* #f8f5ef - 1.04 vs paper: a tint, not a layer */
+    --tint: oklch(95% 0.03 152);      /* #e0f5e5 */
+    --ink: oklch(32% 0.045 152);      /* #203927 - 12.02 on paper; also the band ground */
+    --ink-2: oklch(45% 0.035 152);    /* #475b4c - 7.02 */
+    --ink-3: oklch(52% 0.028 152);    /* #5d6e61 - 5.21 */
+    --rule: oklch(65.5% 0.03 152);    /* #849688 - 3.01 on paper AND 4.00 on the band: one rule, two grounds */
+    --gold-ink: oklch(55% 0.12 62);   /* #a25f12 - 4.82 on paper, 4.61 on panel, 4.39 on a tint (banned) */
+    --gold-dark: oklch(76% 0.06 84);  /* #c3ae86 - 5.80 on the band */
+    --band-text: oklch(93% 0.008 152);/* #e4e9e5 - 10.19 on the band */
+    --p1: oklch(50% 0.11 205); --p1t: oklch(95% 0.03 205);
+    --p2: oklch(47% 0.15 315); --p2t: oklch(95% 0.03 315);
+    --p3: oklch(50% 0.14 35);  --p3t: oklch(95% 0.03 35);
+    --p4: oklch(50% 0.10 105); --p4t: oklch(95% 0.03 105);
+
+    /* ---- NEW: the band's own values, solved in the renderer (.design/grill/contrast-oracle.mjs) ----
+       The paper path colours do not cross the dark ground (#007481 on #203927 measures 1.97), so the
+       same four hues need lighter lightness on ink. Solved to clear 4.5 with margin, not to the wire. */
+    --bp1: oklch(70% 0.11 205);  /* #2cb2bf  4.91 on the band */
+    --bp2: oklch(72% 0.15 315);  /* #c885e5  4.74 */
+    --bp3: oklch(71% 0.14 35);   /* #eb7e63  4.59 */
+    --bp4: oklch(69% 0.1 105);   /* #a49f51  4.57 */
+    --br1: oklch(22% 0.05 205);  /* #002126  1.35 vs the band: a recess, carries the hue at 5.97 */
+    --br2: oklch(22% 0.05 315);
+    --br3: oklch(22% 0.05 35);
+    --br4: oklch(22% 0.05 105);
+
+    /* ---- type (round 5: 1.200 ramp / T3, PT Serif content + Public Sans chrome) ---- */
+    --s-1: 13.3px; --s0: 16px; --s1: 19.2px; --s2: 23px; --s3: 27.7px; --s4: 33.2px; --s5: 39.8px; --s6: 47.8px; --s7: 57.3px;
+    /* ---- spacing (round 5: S3) ---- */
+    --sp1: 4px; --sp2: 8px; --sp3: 12px; --sp4: 16px; --sp5: 24px; --sp6: 32px; --sp7: 48px; --sp8: 64px;
+    --r: 6px;                       /* radius base (round 2) - and measured: that is already what ships */
+    --serif: "PT Serif", ui-serif, Georgia, serif;
+    --ui: "PSVar", ui-sans-serif, system-ui, sans-serif;
+    --d-col: 150ms linear;          /* colour and shadow */
+    --d-mov: 250ms ease-out;        /* anything that moves */
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: oklch(95% 0.004 85); color: var(--ink-2); font-family: var(--ui); font-size: 15px; line-height: 1.55; }
+  main { max-width: 1180px; margin: 0 auto; padding: 36px 20px 96px; }
+  h1 { font-family: var(--serif); font-weight: 700; font-size: 26px; color: var(--ink); margin: 0 0 8px; }
+  .lead { font-family: var(--serif); font-size: 16.5px; line-height: 1.6; color: var(--ink-2); max-width: 78ch; margin: 0 0 22px; }
+  h2.up { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin: 44px 0 8px; }
+  .note { font-family: var(--serif); font-size: 15.5px; line-height: 1.6; color: var(--ink); max-width: 86ch; margin: 12px 0; }
+  .wrap-x { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-family: ui-monospace, monospace; font-size: 12.5px; background: #fff; color: var(--ink); }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid oklch(85% 0.01 152); white-space: nowrap; }
+  th { font-family: var(--ui); font-weight: 600; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-2); }
+  .good { color: #0a6b3d; } .bad { color: #b00020; }
+  .verdict { font-family: var(--ui); font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 6px 0 0; max-width: 96ch; }
+  .verdict b, .note b, td b { color: var(--ink); }
+  .lbl { font-family: var(--ui); font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+  .frame { width: min(375px, 100%); container-type: inline-size; background: var(--paper); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; margin-top: 12px; }
+  .duo { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .trio { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .trio { grid-template-columns: 1fr 1fr 1fr; } }
+
+  /* ================= CONTROLS ================================================================
+     Two rules make the heights arithmetic instead of decoration:
+     (1) height = line box + 2 x padding, line box snapped to the 4px grid, padding drawn from S3
+         (4,8,12,16,24,32,48,64) - so a height is a sum of ratified numbers, and the reachable set is
+         enumerable (below);
+     (2) keylines are INSET SHADOWS, not borders. A 1px border adds 2px to every box, which is how a
+         "40px" button silently becomes 42, and why one shipped button family currently measures
+         50 at 375, 58 at 1240 and 62 on the 404 page. With inset shadows the arithmetic is exact and
+         swapping a variant never moves the layout.                                                       */
+  .btn { font-family: var(--ui); font-weight: 500; display: inline-flex; align-items: center; gap: var(--sp2);
+         border: 0; border-radius: var(--r); text-decoration: none; transition: background-color var(--d-col), box-shadow var(--d-col), color var(--d-col); }
+  .btn:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--gold-ink); outline-offset: 3px; }
+  .h32 { height: 32px;  font-size: var(--s-1); line-height: 16px; padding: var(--sp2) var(--sp3); }   /* 16 + 2x8  = 32 */
+  .h40 { height: 40px;  font-size: var(--s0);  line-height: 24px; padding: var(--sp2) var(--sp4); }   /* 24 + 2x8  = 40 */
+  .h44 { height: 44px;  font-size: var(--s0);  line-height: 20px; padding: var(--sp3) var(--sp4); }   /* 20 + 2x12 = 44 */
+  .h48 { height: 48px;  font-size: var(--s0);  line-height: 24px; padding: var(--sp3) var(--sp5); }   /* 24 + 2x12 = 48 */
+  .h56 { height: 56px;  font-size: var(--s1);  line-height: 24px; padding: var(--sp4) var(--sp5); }   /* 24 + 2x16 = 56 */
+
+  .b-primary   { background: var(--ink); color: var(--band-text); }                        /* 10.19 */
+  .b-primary:hover  { background: oklch(40% 0.055 152); }                                  /* 7.33  */
+  .b-secondary { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }  /* 12.02 / keyline 3.01 */
+  .b-secondary:hover { background: var(--tint); }                                          /* ink on tint 10.96 */
+  .b-quiet     { background: transparent; color: var(--gold-ink); box-shadow: inset 0 -1px 0 var(--gold-ink); }  /* 4.82 both */
+  .b-quiet:hover { background: var(--panel); }                                             /* 4.61, still above 4.5 */
+
+  .chip, .chipband, .tag { display: inline-flex; align-items: center; gap: var(--sp1); font-family: var(--ui);
+    font-size: var(--s-1); line-height: 16px; padding: var(--sp1) var(--sp2); height: 24px; border-radius: var(--r);
+    text-decoration: none; transition: background-color var(--d-col); }
+  .chip { box-shadow: inset 0 0 0 1px currentColor; }
+  .chip.c1 { color: var(--p1); background: var(--p1t); }   /* 4.81 */
+  .chip.c2 { color: var(--p2); background: var(--p2t); }   /* 6.34 */
+  .chip.c3 { color: var(--p3); background: var(--p3t); }   /* 5.46 */
+  .chip.c4 { color: var(--p4); background: var(--p4t); }   /* 5.13 */
+  .tag { color: var(--ink-2); background: var(--tint); }
+  .big { height: 32px; padding: var(--sp2) var(--sp3); }
+
+  /* ================= SPECIMEN PAGES ========================================================= */
+  .page { background: var(--paper); color: var(--ink); }
+  .page nav { display: flex; align-items: baseline; gap: var(--sp1) var(--sp4); padding: var(--sp3) var(--sp4); border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  .mark { font-family: var(--serif); font-weight: 700; font-size: var(--s1); letter-spacing: -0.01em; }
+  .mark em { font-style: normal; color: var(--gold-ink); }
+  /* inline links get vertical padding, or their target is just the line box - which is the shipped bug */
+  .page nav :is(a, summary).nl { font-size: var(--s-1); line-height: 24px; padding: var(--sp2) 0; color: var(--ink-2); text-decoration: none; }
+  .page nav :is(a, summary).nl[aria-current] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--gold-ink); }
+  .page nav :is(a, summary).nl:hover { color: var(--ink); }
+  .page nav details { position: relative; }
+  .page nav details > div { display: flex; flex-direction: column; gap: var(--sp1); padding-top: var(--sp2); }
+  .kick { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); }
+  .hero { padding: var(--sp5) var(--sp4); }
+  .hero h4 { font-family: var(--serif); font-weight: 700; font-size: var(--s3); line-height: 44px; letter-spacing: -0.015em; margin: var(--sp1) 0 var(--sp2); max-width: 22ch; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--sp3); align-items: center; }
+
+  /* schedule rows: the row shape D70 defined (title, date, venue, series, status) and the real case
+     where the club's own feed carries no clock for two of four November dates */
+  .rows { border-top: 1px solid var(--rule); }
+  .row { display: grid; grid-template-columns: 1fr; gap: var(--sp1); padding: var(--sp3) var(--sp4); border-bottom: 1px solid var(--rule); }
+  .row .d { font-family: var(--ui); font-weight: 600; font-size: var(--s0); line-height: 20px; color: var(--gold-ink); font-variant-numeric: tabular-nums; }
+  .row .d small { display: block; font-family: var(--ui); font-weight: 500; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); margin-top: var(--sp1); }
+  .row .t { font-family: var(--serif); font-weight: 700; font-size: var(--s1); line-height: 24px; }
+  .row .m { font-family: var(--ui); font-size: var(--s-1); color: var(--ink-3); }
+  .row .s { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .row.compact { gap: var(--sp1); padding: var(--sp2) var(--sp4); }
+  .row.comfy   { gap: var(--sp2); padding: var(--sp3) var(--sp4); }
+  .row.airy    { gap: var(--sp3); padding: var(--sp4) var(--sp4); }
+  .row > .btn  { justify-self: start; }   /* otherwise the grid stretches the CTA to the column and the target stops being a control */
+  @container (min-width: 700px) { .row.wide { grid-template-columns: 104px 1fr auto; gap: var(--sp4); align-items: baseline; } }
+
+  /* the dark band: one per screen, and cards sit IN it */
+  .band { background: var(--ink); color: var(--band-text); padding: var(--sp5) var(--sp4); }
+  .band h5 { font-family: var(--serif); font-weight: 700; font-size: var(--s2); line-height: 32px; margin: 0 0 var(--sp1); color: var(--band-text); }
+  .band .kick { color: var(--gold-dark); }
+  .bcard { border-radius: var(--r); padding: var(--sp3) var(--sp4); box-shadow: inset 0 0 0 1px var(--rule); transition: box-shadow var(--d-col); }
+  .bcard:hover { box-shadow: inset 0 0 0 1px var(--gold-dark); }
+  .bcard + .bcard { margin-top: var(--sp3); }
+  .bcard .vt { font-family: var(--serif); font-weight: 700; font-size: var(--s1); line-height: 24px; color: var(--band-text); }
+  .bcard .vm { font-family: var(--ui); font-size: var(--s-1); color: oklch(78% 0.02 152); margin-top: var(--sp1); }
+  .bcard blockquote { margin: 0; font-family: var(--serif); font-size: var(--s0); line-height: 1.6; color: var(--band-text); }
+  .bcard cite { display: block; font-family: var(--ui); font-style: normal; font-size: var(--s-1); color: var(--gold-dark); margin-top: var(--sp2); font-variant-numeric: tabular-nums; }
+  .bcard.recess { background: var(--br2); box-shadow: none; }
+  .bcard.paper-card { background: var(--paper); }
+  .bcard.paper-card :is(.vt, blockquote) { color: var(--ink); }
+  .bcard.paper-card .vm { color: var(--ink-3); }
+  .bcard.paper-card cite { color: var(--gold-ink); }
+  .chipband.b1 { color: var(--bp1); }
+  .chipband.b2 { color: var(--bp2); }
+  .chipband.b1f { color: var(--bp1); background: var(--br1); }
+  .trust { font-family: var(--serif); font-size: var(--s-1); line-height: 1.6; color: var(--ink-3); max-width: 48ch; margin: 0; }
+  .trust b { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+  /* share card: laid out at its real 1200x630 and zoomed, so the ratio and the line breaks are the
+     real ones (zoom changes the layout box; transform: scale would leave a 1200px box clipped by the
+     wrapper, which the layout probe then rightly reports as hidden overflow) */
+  /* zoom scales the layout box, so the card really is 1200x630 and measures 336x176. The min-width:0
+     is load-bearing: without it the grid item's min-content is the *unzoomed* 1200px, which pushes the
+     document sideways (measured: scrollWidth 368 at a 375 viewport). */
+  .duo > div { min-width: 0; }
+  .sharewrap { width: 100%; max-width: 272px; min-width: 0; margin-top: 12px; }
+  .share { zoom: 0.22; width: 1200px; height: 630px; background: var(--paper); color: var(--ink); padding: 56px 64px; font-family: var(--serif); }
+  .share .sk { font-family: var(--ui); font-weight: 600; font-size: 22px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-ink); }
+  .share .sd { font-weight: 700; font-size: 132px; line-height: 136px; letter-spacing: -0.02em; margin: 16px 0 8px; font-variant-numeric: tabular-nums; }
+  .share .st { font-size: 46px; line-height: 1.35; max-width: 22ch; }
+  .share .sm { font-family: var(--ui); font-size: 28px; color: var(--ink-3); margin-top: 24px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Round 6. Components.</h1>
+  <p class="lead"><strong>ANSWERED 2026-10-31 (operator): Q1 A, Q2 A, Q3 B, Q4 A, Q5 A.</strong> Control heights
+  <strong>32 / 40 / 48</strong> from the arithmetic (<code>line box + 2 x pad</code> on the 4px grid, pads from S3);
+  <strong>primary / secondary / quiet</strong> as the only buttons, chips a separate component, and a tint fill never
+  carries gold; nav shape <strong>B</strong> (one row, shortened mark) <em>plus the narrow tier the measurement demanded</em>;
+  schedule rows <strong>comfy</strong> (12px padding, 8px gaps, so 14 -&gt; 12 and 6 -&gt; 8); cards in the dark band
+  <strong>flat with the same <code>rule</code> hairline</strong> - one boundary role for both grounds (3.01 on paper, 4.00 on ink).</p>
+  <p class="lead">Character, grid, type, colour roles, spacing steps and durations are settled. This round decides
+  <strong>control heights, which variants exist, how dense the row is</strong>, and the cards that live inside the one
+  dark band that round 4's "the dark is ink, one band per screen" rule created. The before-column is measured in Firefox
+  off the built artifact (<code>dist/client</code>); the after-numbers are measured off this specimen; every colour ratio
+  is measured through the renderer (<code>.design/grill/contrast/out/cfg-r6.txt</code>), not off a class name or a hand-rolled
+  converter.</p>
+
+  <h2 class="up">what ships today, measured in the browser rather than read out of the markup</h2>
+  <div class="wrap-x">
+  <table>
+    <tr><th>control</th><th>measured box</th><th>24px AA floor</th><th>44px AAA</th><th>what that means</th></tr>
+    <tr><td>nav links (Home / Schedule / Chat / Members)</td><td>46-73 x <b>24</b> px</td><td>on the floor</td><td class="bad">no</td><td>zero padding: the target is the line box. Two of those four links 404 today (<code>/schedule</code>, <code>/members</code>).</td></tr>
+    <tr><td>hero CTAs, one component</td><td>h = <b>50</b> (320, 375) / <b>58</b> (900, 1240)</td><td>yes</td><td>yes</td><td>one button, three heights: <code>py-3</code>, then <code>md:py-4 md:px-10</code>, then <code>text-lg</code>. The height is whatever the utilities add up to.</td></tr>
+    <tr><td>same CTA, label wraps at 320</td><td>"Join on Meetup.com" <b>228x74</b></td><td>yes</td><td>yes</td><td>no height rule, so a two-line label quietly invents a fifth size. A fixed height ladder needs a stated wrap policy with it.</td></tr>
+    <tr><td>404 CTAs</td><td>h = <b>62</b></td><td>yes</td><td>yes</td><td>a fourth shape in the same family, from <code>py-4 px-8 text-lg</code>.</td></tr>
+    <tr><td>404 "Our Meetup group"</td><td>123 x <b>19</b> px (375, 900, 1240)</td><td class="bad">FAILS</td><td class="bad">no</td><td>14px text on a 20px line, no padding: under the WCAG 2.2 AA target floor. At 320 it wraps to 222x39, so the failure is width-dependent - which is how it survived review.</td></tr>
+    <tr><td>button radius</td><td><b>6</b>px</td><td>already the base</td><td>-</td><td>round 2's 6px is what ships (Tailwind v4 <code>rounded-md</code> = 6px). Nothing to change.</td></tr>
+    <tr><td>per page, out of 8-9 interactive elements</td><td><b>5-6</b> miss 44px</td><td>1-2 miss 24px</td><td class="bad">-</td><td>the nav is the whole problem: four links, each exactly one line box tall.</td></tr>
+    <tr><td>"View Schedule" CTA</td><td>blue-600 text on blue-100 = <b>4.30</b></td><td colspan="2" class="bad">fails 4.5</td><td>measured off the painted pair; the class-level calculation said 4.24, so both oracles agree. This disappears when the palette goes.</td></tr>
+  </table>
+  </div>
+  <p class="note"><strong>The bars, grounded:</strong> WCAG 2.2 <em>SC 2.5.8 Target Size (Minimum)</em>, Level AA, is a
+  <strong>24 by 24 CSS pixel</strong> target; <em>SC 2.5.5 Target Size (Enhanced)</em>, AAA, is <strong>44 by 44</strong>
+  (W3C "Understanding" pages, retrieved 2026-10-31). AA is a floor this site must not miss. 44 is worth choosing
+  deliberately for the join path, because the operator's own authoring rule ("write the next meetup up in the club
+  Discord 2-3 days before, then update after") says the club is run from a phone.</p>
+
+  <!-- ==================================================== Q1 heights -->
+  <h2 class="up">Q1 - three heights, one family, each one a sum of S3</h2>
+  <p class="note">The design tree says take control heights from the spacing sizes rather than creating a second set.
+  Made arithmetic: <strong>height = line box + 2 x padding</strong>, line box snapped to the 4px grid, padding from S3
+  (4,8,12,16,24,32,48,64). That leaves these reachable heights and no others -
+  <span style="font-family:ui-monospace,monospace">13.3px text: 24, 28, 32, 36, 40, 44, 48, 52, 56, 64 &nbsp;·&nbsp; 16px text: 28, 32, 36, 40, 44, 48, 52, 56</span>.
+  Every button below is built that way, and the specimen re-measures its own controls: <strong>35 controls, painted box
+  equal to line box + 2 x padding on all 35</strong> (the harness prints the count), because there is no border in the
+  system to absorb 2px.</p>
+
+  <div class="trio">
+    <div class="frame page" style="padding:16px" data-opt="A">
+      <p class="lbl">A - 32 / 40 / 48 <span class="good">(recommended)</span></p>
+      <div class="cta-row" style="flex-direction:column;align-items:flex-start">
+        <a class="btn b-primary h48" href="#">Add to calendar</a>
+        <a class="btn b-secondary h40" href="#">View the schedule</a>
+        <a class="chip c1" href="#">Sat 7 Nov</a>
+      </div>
+      <p class="verdict">Measured 169x48, 170x40, 75x24. <b>All three sums of S3</b>: 24+2x12, 24+2x8, 16+2x4. 48 clears the 44 AAA bar for the join path; 40 clears the AA floor by 16px; the 24px chip sits on the floor and is a label with a search target, not a primary control.</p>
+    </div>
+    <div class="frame page" style="padding:16px" data-opt="B">
+      <p class="lbl">B - 32 / 40 / 56</p>
+      <div class="cta-row" style="flex-direction:column;align-items:flex-start">
+        <a class="btn b-primary h56" href="#">Add to calendar</a>
+        <a class="btn b-secondary h40" href="#">View the schedule</a>
+        <a class="chip c1" href="#">Sat 7 Nov</a>
+      </div>
+      <p class="verdict">Measured 193x56 (24 + 2x16, type a step up at 19.2). Confident at 1240. At 375 a 56 plus a 40 stacks 96px of a 667px viewport before any content, and the hero already carries the WHEN - so the extra height buys weight the page already has from type.</p>
+    </div>
+    <div class="frame page" style="padding:16px" data-opt="C">
+      <p class="lbl">C - 24 / 36 / 44</p>
+      <div class="cta-row" style="flex-direction:column;align-items:flex-start">
+        <a class="btn b-primary h44" href="#">Add to calendar</a>
+        <a class="btn b-secondary h40" href="#" style="height:36px;line-height:20px">View the schedule</a>
+        <a class="chip c1 big" href="#">Sat 7 Nov</a>
+      </div>
+      <p class="verdict">Measured 153x44, 170x36, 95x32. Tightest set that still hits 44 on the primary; 36 = 20 + 2x8. Reads like a tool rather than a club, and the round-1 character ruling was playful-as-plurality with energy from contrast, which this set flattens.</p>
+    </div>
+  </div>
+  <p class="note"><strong>Also in Q1, and not optional:</strong> shipped nav links measure <strong>24px</strong> tall with no
+  padding and one 404 link measures <strong>19px</strong> - under the AA floor. In the specimens above every nav link is
+  <strong>40px</strong> tall from <code>8px</code> of vertical padding on the line box, measured. That half of Q1 is a defect
+  fix, not a style choice; only the height ladder is a decision.</p>
+
+  <!-- ==================================================== Q2 variants -->
+  <h2 class="up">Q2 - which variants exist, and what gold is allowed to do</h2>
+  <div class="duo">
+    <div class="frame page" data-opt="A" style="padding:20px">
+      <p class="lbl">A - three variants, chips separate <span class="good">(recommended)</span></p>
+      <div class="cta-row" style="flex-wrap:wrap">
+        <a class="btn b-primary h48" href="#">Join on Meetup</a>
+        <a class="btn b-secondary h40" href="#">View the schedule</a>
+        <a class="btn b-quiet h40" href="#">Add to calendar</a>
+      </div>
+      <p class="verdict"><b>primary</b>: ink fill, band text on it (10.19; hover 7.33). <b>secondary</b>: paper fill, keyline at the rule (3.01), ink text (12.02); hover to the tint (10.96). <b>quiet</b>: gold text 4.82 with a gold hairline, no fill, hover to panel (4.61, still over 4.5). Chips are their own component, not a button variant.</p>
+    </div>
+    <div class="frame page" data-opt="B" style="padding:20px">
+      <p class="lbl">B - two variants, gold only as a mark</p>
+      <div class="cta-row" style="flex-wrap:wrap">
+        <a class="btn b-primary h48" href="#">Join on Meetup</a>
+        <a class="btn b-secondary h40" href="#">View the schedule</a>
+        <a class="btn b-secondary h40" href="#" style="color:var(--gold-ink)">Add to calendar</a>
+      </div>
+      <p class="verdict"><b>ANSWERED: A</b> - so this option stays unbuilt. Measured, it was cheaper than it looked: the gold text clears at rest (4.82) but the secondary’s hover fill is the tint, and gold on tint is <b>4.39</b>, so the option would have needed a second hover token. One fewer component, and the gold text still clears 4.5 inside a secondary shell. Cost: the permanent <code>/events.ics</code> affordance then looks like a page link, and the one thing the architecture promised is that the calendar URL is the operator's forever - it has to read as an affordance on any surface, at 4.82, without competing with the primary.</p>
+    </div>
+  </div>
+  <p class="note"><strong>A measured trap inside Q2:</strong> deepening a panel until it reads as a layer costs two roles at
+  once. A panel at <code>oklch(94.7% 0.008 85)</code> is 1.12 vs paper - a visible layer without a border - but gold-ink on it
+  measures <strong>4.30</strong> (under 4.5) and the paper rule on it measures <strong>2.68</strong> (under 3.0). That is
+  round 4's "gold never sits on a tint" arriving as a component rule: <em>on paper, cards stay flat with a hairline
+  rule; if you want a raised surface, it has to drop gold and darken the rule with it.</em> Solving for both:
+  gold stays legal below about <code>oklch(94% ...)</code> only if you also take the rule to <code>oklch(62.6% 0.03 152)</code>.</p>
+
+  <!-- ==================================================== Q3 nav -->
+  <h2 class="up">Q3 - the nav at 375: a component decision, not a type decision</h2>
+  <p class="note">Round 5 measured that a 375 viewport leaves <strong>343px</strong> of content width and every candidate
+  face wants <strong>503-567px</strong> for mark + four links on one line, so no face choice saves it. The label set has
+  also changed since: <code>/members</code> is out by ruling, <code>/schedule</code> becomes a real page, and the mark is
+  already the link home. Measured inside the 375 frames below, <em>with the three woff2 faces actually loaded</em> (the harness prints
+  "faces loaded: 3 of 3" - an earlier pass measured in the Georgia fallback and was off by 12px on the mark):
+  mark 262, Schedule 58, Interests 55, Chat 29, three 16px gaps = <strong>452px needed against 335 available</strong>.
+  Three viable shapes; the specimen does not fake a fourth that does not fit.</p>
+  <div class="trio">
+    <div class="frame page" data-opt="A">
+      <nav><span class="mark">Minneapolis <em>Math</em> Book Club</span><span style="flex:1 1 100%"></span><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></nav>
+      <div class="hero" style="padding:16px"><div class="kick">Next meeting</div><p class="verdict" style="margin-top:6px"><b>A - mark on its own row, links below.</b> Every link a measured 40px target; nothing hidden; costs about 56px of vertical space at 375.</p></div>
+    </div>
+    <div class="frame page" data-opt="B">
+      <nav style="flex-wrap:nowrap;gap:var(--sp1) var(--sp3)"><span class="mark" style="font-size:var(--s0)">MPLS <em>Math</em> Club</span><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></nav>
+      <div class="hero" style="padding:16px"><div class="kick">Next meeting</div><p class="verdict" style="margin-top:6px"><b>B - one row, shortened mark.</b> <b>ANSWERED: B.</b> Measured again in a real viewport (<code>.design/grill/nav-fit.html</code>, faces loaded): needs <b>310px</b> - fits 375 (343 available, +33) but <b>not 320</b> (288 available, -22). So B ships with one narrow tier: below ~360 the links take the ratified 11.1px chrome step and the gap goes to 8px, which measures <b>262px</b> and fits 320 (+26) and 300 (+6). One row at every width we test, for one breakpoint.</p></div>
+    </div>
+    <div class="frame page" data-opt="C">
+      <nav style="justify-content:space-between;flex-wrap:nowrap"><span class="mark">Minneapolis <em>Math</em> Book Club</span><details><summary class="nl">Menu</summary><div><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></div></details></nav>
+      <div class="hero" style="padding:16px"><div class="kick">Next meeting</div><p class="verdict" style="margin-top:6px"><b>C - a disclosure.</b> Measured mark 274 + Menu 41 = 331 vs 335: fits. <code>&lt;details&gt;</code> works with JS off, so it survives the no-JS rule, and the disclosure's links are also 40px targets. Cost: one tap from every surface, and the site's four pages stay invisible until asked.</p></div>
+    </div>
+  </div>
+
+  <!-- ==================================================== Q4 density -->
+  <h2 class="up">Q4 - how dense a schedule row is</h2>
+  <p class="note">Two spacing writes in the current code are off the ratified scale: <code>gap-3.5</code> = 14px and
+  <code>gap-1.5</code> = 6px. Those are the two numbers this question settles, because a <code>/schedule</code> row is the
+  page's main object. All three options use S3 only - the question is <em>which</em> S3 pair. Heights below are measured in
+  the frame each option renders in.</p>
+  <div class="duo">
+    <div class="frame page" data-opt="A">
+      <div class="rows">
+        <div class="row comfy">
+          <div class="d">7 Nov<small>Sat · [time]</small></div>
+          <div>
+            <div class="s">Bimonthly social</div>
+            <div class="t">MPLS Math Club - Bimonthly Social</div>
+            <div class="m">Ambrosia Coffee · Northeast Minneapolis</div>
+          </div>
+          <a class="btn b-quiet h32" href="#">add to calendar</a>
+        </div>
+        <div class="row comfy">
+          <div class="d">12 Nov<small>time not set</small></div>
+          <div>
+            <div class="s">Study session</div>
+            <div class="t">Parallel learning for mathematical minds</div>
+            <div class="m">[venue]</div>
+          </div>
+          <a class="btn b-quiet h32" href="#">add to calendar</a>
+        </div>
+      </div>
+      <p class="verdict"><b>A - comfy: 12px padding, 8px gaps</b> <span class="good">(recommended)</span> - where 14 and 6 both round: <b>14 -&gt; 12</b>, <b>6 -&gt; 8</b>. Measured rows 179px and 203px in the 375 frame (stacked), 95px once the row goes wide.</p>
+    </div>
+    <div class="frame page" data-opt="B">
+      <div class="rows">
+        <div class="row compact">
+          <div class="d">7 Nov<small>Sat · [time]</small></div>
+          <div>
+            <div class="s">Bimonthly social</div>
+            <div class="t">MPLS Math Club - Bimonthly Social</div>
+            <div class="m">Ambrosia Coffee · Northeast Minneapolis</div>
+          </div>
+          <a class="btn b-quiet h32" href="#">add to calendar</a>
+        </div>
+        <div class="row compact">
+          <div class="d">12 Nov<small>time not set</small></div>
+          <div>
+            <div class="s">Study session</div>
+            <div class="t">Parallel learning for mathematical minds</div>
+            <div class="m">[venue]</div>
+          </div>
+          <a class="btn b-quiet h32" href="#">add to calendar</a>
+        </div>
+      </div>
+      <p class="verdict"><b>B - compact: 8px padding, 4px gaps.</b> Measured rows 163px and 187px in the same 375 frame - exactly 16px per row back, which over a ~24-events-a-year archive is one more event above the fold. Cost is the air that makes two rows read as two events.</p>
+    </div>
+  </div>
+  <div class="frame page" data-opt="C" style="max-width:760px;width:100%">
+    <div class="rows">
+      <div class="row comfy wide">
+        <div class="d">7 Nov<small>Sat · [time]</small></div>
+        <div>
+          <div class="s">Bimonthly social</div>
+          <div class="t">MPLS Math Club - Bimonthly Social</div>
+          <div class="m">Ambrosia Coffee · Northeast Minneapolis · every other Saturday</div>
+        </div>
+        <a class="btn b-quiet h32" href="#">add to calendar</a>
+      </div>
+      <div class="row airy wide">
+        <div class="d">12 Nov<small>time not set</small></div>
+        <div>
+          <div class="s">Study session</div>
+          <div class="t">Parallel learning for mathematical minds</div>
+          <div class="m">[venue] · time set in the club Discord a few days ahead</div>
+        </div>
+        <a class="btn b-quiet h32" href="#">add to calendar</a>
+      </div>
+    </div>
+    <p class="verdict"><b>C - airy at 700+: 16px padding, 12px gaps</b> (measured rows 95px comfy and 103px airy in this 760 frame; A and B above are the same component in a 375 container, so the numbers are comparable, not two designs). The date gets its own 104px lane and the display step goes to the date - which is round 5's "one display step per screen, and it is the WHEN" rule applied to the archive. This is the pair worth choosing against A/B.</p>
+  </div>
+
+  <!-- ==================================================== Q5 dark band -->
+  <h2 class="up">Q5 - the cards that live inside the one dark band</h2>
+  <p class="note">Round 4's rule: the dark is ink, and there is at most one band per screen. The content list says what
+  goes in it - venue stories, member quotes, the future interview series (D83). So the band needs cards, and the band
+  needs its own colour arithmetic. Measured: the paper path colours <strong>do not cross</strong> it (cyan
+  <code>#007481</code> on ink <code>#203927</code> is <strong>1.97</strong>), so the same four hues get solved lighter -
+  <span style="font-family:ui-monospace,monospace">cyan 70% · plum 72% · coral 71% · olive 69%</span>, which measure
+  <strong>4.91 / 4.74 / 4.59 / 4.57</strong> and are legal as text <em>and</em> as keylines on ink. Two things that were
+  assumed and are now corrected: the paper <strong>rule</strong> does cross (3.01 on paper, <strong>4.00</strong> on the
+  band) so <b>one rule role serves both grounds</b>, and the round-4 gold token already works on the band at
+  <strong>5.80</strong> - no second gold.</p>
+  <div class="trio">
+    <div class="frame" data-opt="A" style="border-color:var(--ink)">
+      <div class="band">
+        <div class="kick">Where we meet</div>
+        <h5>Ambrosia Coffee</h5>
+        <div class="bcard">
+          <div class="vt">[venue blurb, written by a member]</div>
+          <div class="vm">[address] · Northeast Minneapolis · <span style="color:var(--gold-dark)">[N]</span> meetings</div>
+        </div>
+        <div class="bcard">
+          <blockquote>"[verbatim answer, with consent] <em>- why they keep coming back.</em>"</blockquote>
+          <cite>[first name] · joined [year]</cite>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><a class="chipband b2" href="#">Meetup</a><a class="chipband b1" href="#">Add to calendar</a></div>
+      </div>
+      <p class="verdict" style="padding:0 16px 16px"><b>A - flat cards, one rule role (recommended).</b> Hairline is the paper rule token: 3.01 on paper, 4.00 on ink. Hover moves it to the gold (5.80) over 150ms. Zero new colour tokens for the band's boundaries, and the band still reads as one ink field rather than a grid of objects.</p>
+    </div>
+    <div class="frame" data-opt="B" style="border-color:var(--ink)">
+      <div class="band">
+        <div class="kick">Where we meet</div>
+        <h5>Ambrosia Coffee</h5>
+        <div class="bcard recess">
+          <div class="vt">[venue blurb, written by a member]</div>
+          <div class="vm">[address] · Northeast Minneapolis · <span style="color:var(--gold-dark)">[N]</span> meetings</div>
+        </div>
+        <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><a class="chipband b1f" href="#">Add to calendar</a><a class="chipband b2" href="#">Meetup</a></div>
+      </div>
+      <p class="verdict" style="padding:0 16px 16px"><b>B - recessed fills.</b> Solved to sit 1.35 <em>darker</em> than the band (<code>oklch(22% 0.05 H)</code>), which carries the lightened hue at 5.97 and the band text at 13.46. Costs one new token per path hue and turns the band into a set of objects.</p>
+    </div>
+    <div class="frame" data-opt="C" style="border-color:var(--ink)">
+      <div class="band">
+        <div class="kick">Where we meet</div>
+        <h5>Ambrosia Coffee</h5>
+        <div class="bcard paper-card">
+          <div class="vt">[venue blurb, written by a member]</div>
+          <div class="vm">[address] · Northeast Minneapolis</div>
+        </div>
+      </div>
+      <p class="verdict" style="padding:0 16px 16px"><b>C - paper cards on ink.</b> Maximum legibility (12.02 ink on paper) but it is a page inside a page: two light rectangles break the one-band rule from the inside. Reach for it only if a band card ever has to carry long body copy.</p>
+    </div>
+  </div>
+
+  <h2 class="up">confirmed by rulings already made - look, and object if wrong</h2>
+  <div class="duo">
+    <div>
+      <p class="lbl">the trust line (D87) - a number, not a star badge</p>
+      <div class="frame page" style="padding:20px">
+        <p class="trust">Rated <b>4.9 out of 5</b> by <b>57</b> members across our events (Meetup, October 2026).</p>
+        <p class="verdict">One component beside the join path, dated and scoped, so it is one deletable element. It is not a superlative: no ranking exists to compare against. What it replaces is the reason D87 exists - <code>JoinCommunity.astro</code> renders <b>"Join our active community of 210+ members"</b> out of <code>Math.floor(Math.random() * 100 + 150)</code>: a fabricated number, live in production, different at every build.</p>
+      </div>
+    </div>
+    <div>
+      <p class="lbl">share card, laid out at 1200 x 630 and zoomed to 0.22</p>
+      <div class="sharewrap frame" style="padding:0">
+        <div class="share">
+          <div class="sk">Minneapolis Math Book Club</div>
+          <div class="sd">Sat 7 Nov</div>
+          <div class="st">[event title] · [venue], Minneapolis</div>
+          <div class="sm">minneapolismathbookclub.com/schedule</div>
+        </div>
+      </div>
+      <p class="verdict">Laid out at the real pixel size (measured box 264x139 at zoom 0.22, ratio 1.90 = 1200x630), so the line breaks are the ones a link preview will show. The biggest thing on it is the <b>date</b>: the display step is for the WHEN, and a share card's whole job is answering when. No photograph - the club has none (D94), and the stock crowd hero implied members who are not in the picture.</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

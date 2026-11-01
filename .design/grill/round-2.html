@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 2 - what should the system be built on?</title>
+<style>
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 400; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 700; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  :root { --serif: "PT Serif", Georgia, serif; --sans: system-ui, -apple-system, "Segoe UI", sans-serif; --line: oklch(90% 0.01 250); }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: oklch(24% 0.02 265); font-family: var(--serif); }
+  header { padding: 22px 24px 14px; border-bottom: 1px solid var(--line); }
+  h1 { font-size: 21px; line-height: 1.2; margin: 0 0 8px; font-weight: 700; }
+  .meta { font-family: var(--sans); font-size: 12px; line-height: 1.5; color: oklch(45% 0.02 265); max-width: 78ch; }
+  .q { padding: 22px 24px; border-bottom: 1px solid var(--line); }
+  .q > h2 { font-size: 17px; margin: 0 0 6px; font-weight: 700; }
+  .why { font-family: var(--sans); font-size: 12px; line-height: 1.5; color: oklch(45% 0.02 265); margin: 0 0 14px; max-width: 78ch; }
+  .opts { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(330px, 1fr)); }
+  .opt { border: 1px solid var(--line); border-radius: 8px; padding: 14px; }
+  .opt.rec { border-color: #f59e0b; box-shadow: 0 0 0 3px oklch(95% 0.09 75); }
+  .name { font-family: var(--sans); font-size: 13px; font-weight: 650; margin: 0 0 6px; }
+  .name span { font-weight: 400; color: oklch(45% 0.02 265); }
+  .data { font-family: var(--sans); font-size: 11.5px; line-height: 1.5; color: oklch(40% 0.02 265); margin: 10px 0 0; }
+  .data code { font-family: ui-monospace, SFMono-Regular, monospace; }
+  .bad { color: oklch(45% 0.16 25); }
+  .good { color: oklch(42% 0.12 150); }
+  .settled { background: oklch(97.5% 0.012 250); }
+  .settled h2 { margin-top: 0; }
+  .settled ul { font-family: var(--sans); font-size: 12.5px; line-height: 1.55; margin: 8px 0 0; padding-left: 18px; }
+  /* specimen: one schedule row, painted in each palette's roles */
+  .spec { border-radius: 6px; overflow: hidden; margin-bottom: 4px; }
+  .spec .pad { padding: 11px 12px; }
+  .spec .kick { font-family: var(--sans); font-size: 10.5px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+  .spec .ttl { font-size: 16px; font-weight: 700; line-height: 1.25; margin: 3px 0 2px; }
+  .spec .body { font-size: 13px; line-height: 1.5; margin: 0; }
+  .spec .band { padding: 8px 12px; font-family: var(--sans); font-size: 11px; font-weight: 600; }
+  .spec .paths { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+  .spec .chip { font-family: var(--sans); font-size: 10.5px; font-weight: 600; padding: 3px 7px; border-radius: 4px; border: 1px solid transparent; }
+  .ratio { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 10.5px; margin: 8px 0 0; line-height: 1.5; }
+  /* specimen paint per option, driven by variables so the roles are explicit */
+  .A { --paper: oklch(98.5% 0.006 85); --ink: oklch(24% 0.02 265); --soft: oklch(45% 0.02 265); --goldInk: oklch(55% 0.13 62); --goldFloor: #f59e0b; }
+  .B { --paper: oklch(98.5% 0.006 85); --ink: oklch(24% 0.02 265); --soft: oklch(45% 0.02 265); --goldInk: oklch(55% 0.13 62); --goldFloor: #f59e0b; --lapis: oklch(48% 0.16 255); }
+  .C { --paper: oklch(98% 0.004 240); --ink: oklch(26% 0.02 250); --soft: oklch(48% 0.02 250); --brass: oklch(58% 0.11 80); --slate: oklch(45% 0.05 250); }
+  .D { --paper: oklch(98.5% 0.006 85); --ink: oklch(24% 0.02 265); --goldInk: oklch(55% 0.13 62); --goldFloor: #f59e0b; --verm: oklch(52% 0.17 25); }
+  .E { --paper: oklch(98.5% 0.006 85); --ink: oklch(24% 0.02 265); --goldInk: oklch(55% 0.13 62); --teal: oklch(50% 0.11 190); --plum: oklch(47% 0.15 305); --rose: oklch(50% 0.15 25); --grass: oklch(48% 0.11 150); }
+  .s-paper { background: var(--paper); color: var(--ink); }
+  .s-soft { color: var(--soft); }
+  .s-goldink { color: var(--goldInk); }
+  .s-band { background: var(--goldFloor); color: var(--ink); }
+  .s-bandink { background: oklch(23% 0.02 265); color: var(--goldInk); }
+  .s-lapis { color: var(--lapis); }
+  .c-lapis { background: oklch(95% 0.03 250); color: var(--lapis); border-color: oklch(85% 0.06 250); }
+  .c-teal { background: oklch(95% 0.03 190); color: var(--teal); border-color: oklch(84% 0.06 190); }
+  .c-plum { background: oklch(95% 0.035 305); color: var(--plum); border-color: oklch(85% 0.06 305); }
+  .c-rose { background: oklch(95% 0.035 25); color: var(--rose); border-color: oklch(85% 0.06 25); }
+  .c-grass { background: oklch(95% 0.03 150); color: var(--grass); border-color: oklch(85% 0.05 150); }
+  .c-plain { background: transparent; color: var(--soft); border-color: oklch(88% 0.01 250); }
+  /* structural choices rendered side by side */
+  .grid-demo { display: grid; gap: 3px; font-family: var(--sans); font-size: 10.5px; margin: 4px 0 0; }
+  .grid-demo i { display: block; background: oklch(93% 0.02 250); border-radius: 2px; height: 12px; }
+  .type-demo { margin-top: 4px; }
+  .type-demo b { font-size: 36px; font-weight: 700; display: block; line-height: 1.1; }
+  .type-demo em { font-size: 20px; font-style: normal; display: block; line-height: 1.3; }
+  .type-demo span { font-size: 16px; display: block; line-height: 1.55; }
+  .swatch { display: inline-block; width: 46px; height: 22px; border-radius: 4px; vertical-align: middle; margin-right: 4px; border: 1px solid oklch(88% 0.01 250); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Round 2 of 5 - the decisions that constrain every later choice</h1>
+  <p class="meta">Answered in round 1: <b>playful, on purpose, art-as-plurality</b>. Character is already in the
+  decisions file, so it does not reappear here. Everything below says <b>measured</b> when a number came from
+  <code>.design/drift.json</code> or <code>.design/palette-math.mjs</code>, and <b>yours</b> when taste is what is
+  missing. All colours are written as OKLCH, because the framework already speaks it (measured: the palette the
+  build resolves is oklch; Tailwind 4 with <code>@theme</code>, no config file, no shadcn).</p>
+</header>
+
+<div class="q">
+  <h2>Settled by measurement this round - no choice needed</h2>
+  <div class="settled">
+    <ul>
+      <li><b>Today's palette has no rationale, and the record proves it.</b> Init commit <code>74c90f6</code> (2024-11-16,
+        authored "Alex Berg", package name <code>landing-page-book-astro-svelte-tailwind</code>, LICENSE "Copyright (c) 2020-2030 Alex Berg")
+        already carried <code>theme.color: #f59e0b</code> next to a placeholder domain (<code>mathbookclubsite.com</code>) and
+        boilerplate SEO copy for a generic literary book club. blue-600 / blue-100 / gray-* are Tailwind 3 defaults the
+        template's components used. The <code>@theme</code> tokens entered at <code>8ce9607</code>, the Tailwind 4 migration - carried, not chosen.
+        So: amber survives as a leftover token; blue survives because the components were written with defaults.</li>
+      <li><b>One gold cannot do both jobs.</b> Measured: your <code>#f59e0b</code> with dark ink on it = <b>8.09</b> PASS, but that
+        same gold used as text on white = <b>2.15</b> FAIL. A deepened gold <code>oklch(55% 0.13 62)</code> as text = <b>4.83</b> PASS,
+        but ink on that deeper gold = <b>3.27</b> (large/bold only). The system therefore needs <b>two golds</b>: a bright gold
+        <i>floor</i> that ink sits on, and a deep gold allowed to be <i>text</i>. This is not a compromise; it is what makes gold usable.</li>
+      <li><b>A bright gold band against paper is invisible as a boundary.</b> Measured <code>#f59e0b</code> vs paper = <b>2.06</b> against
+        the 3.0 non-text floor. A gold band needs an ink keyline, or has to sit on ink (gold on ink = <b>3.27</b> PASS).</li>
+      <li><b>Colour alone cannot mean "different path".</b> Measured: two pale path tints side by side = <b>1.02</b>. If paths are
+        to be told apart by colour, they need a keyline or a word, not just a tint.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Q1. Which colour family carries the site? (colour roles)</h2>
+  <p class="why">The specimen is one real surface from the end-state architecture: a <code>/schedule</code> row - kicker, title,
+  venue line, a "next meeting" band, and the join paths. Your amber is the anchor in every option; the options differ in
+  what it is paired with and what it is allowed to do. Ratios printed under each specimen are from
+  <code>palette-math.mjs</code>.</p>
+  <div class="opts">
+    <div class="opt A">
+      <p class="name">A. Two golds on paper <span>- precision, one hue</span></p>
+      <div class="spec s-paper">
+        <div class="pad">
+          <div class="kick s-goldink">Next meeting</div>
+          <p class="ttl">Ellenberg, <i>The Music of the Primes</i>, ch. 4</p>
+          <p class="body s-soft">Northfield, 7:00pm. Two proofs of the same lemma, side by side.</p>
+          <div class="paths">
+            <span class="chip c-plain">Add to calendar</span>
+            <span class="chip c-plain">Meetup</span>
+            <span class="chip c-plain">Discord</span>
+          </div>
+        </div>
+        <div class="band s-band">Thu Nov 12 · 7:00pm · Northfield</div>
+      </div>
+      <p class="ratio"><span class="good">ink 15.76 · soft 7.13 · gold as text 4.83 · ink on gold floor 8.09</span></p>
+      <p class="data">Cheapest to hold: one hue, so almost nothing can be painted decoratively. Gold becomes the mark of
+      precision - numerals, the next-meeting band, keylines. <span class="bad">Cost: the site's existing blue disappears
+      (measured: 19 direct blue uses across 8 files), so every painted surface changes.</span></p>
+    </div>
+
+    <div class="opt rec B">
+      <p class="name">B. Gold + lapis <span>- illumination (recommended)</span></p>
+      <div class="spec s-paper">
+        <div class="pad">
+          <div class="kick s-goldink">Next meeting</div>
+          <p class="ttl">Ellenberg, <i>The Music of the Primes</i>, ch. 4</p>
+          <p class="body s-soft">Northfield, 7:00pm. Two proofs of the same lemma, side by side.</p>
+          <div class="paths">
+            <span class="chip c-lapis">Add to calendar</span>
+            <span class="chip c-lapis">Meetup</span>
+            <span class="chip c-lapis">Discord</span>
+          </div>
+        </div>
+        <div class="band s-band">Thu Nov 12 · 7:00pm · Northfield</div>
+      </div>
+      <p class="ratio"><span class="good">gold as text 4.83 · ink on gold floor 8.09 · lapis as text 6.36 · paper on lapis 6.36</span></p>
+      <p class="data">Gold leaf and lapis is the historical pairing - illuminated manuscript, where gold marks the important
+      thing and blue carries the structure. Two semantic axes, and both are already in this site: gold is the declared token,
+      blue is what the components actually paint, so <b>this option keeps the most shipped colour and fixes its contrast</b>
+      (measured: today's blue-600 on blue-100 = 4.31 FAIL; a darker lapis = 6.36 PASS). Lapis = structure: links, labels,
+      chips, section rules. Gold = the event itself: numerals, the next-meeting band, the one thing you should not miss.</p>
+    </div>
+
+    <div class="opt C">
+      <p class="name">C. Brass &amp; slate <span>- the instrument</span></p>
+      <div class="spec s-paper">
+        <div class="pad">
+          <div class="kick" style="color:var(--brass)">Next meeting</div>
+          <p class="ttl">Ellenberg, <i>The Music of the Primes</i>, ch. 4</p>
+          <p class="body s-soft">Northfield, 7:00pm. Two proofs of the same lemma, side by side.</p>
+          <div class="paths"><span class="chip c-plain">Add to calendar</span><span class="chip c-plain">Meetup</span></div>
+        </div>
+        <div class="band" style="background:var(--brass);color:var(--ink)">Thu Nov 12 · 7:00pm · Northfield</div>
+      </div>
+      <p class="ratio"><span class="good">ink 14.65 · soft 6.16 · slate as text 7.0</span> <span class="bad">· brass as text 4.10 FAIL · ink on brass 3.57 FAIL · brass on tint 3.75 FAIL</span></p>
+      <p class="data">Cooler, more precise, more like a surveying instrument than a manuscript. <span class="bad">Measured: at
+      <code>oklch(58% 0.11 80)</code> brass fails three of its six roles</span> - it has to darken to about
+      <code>oklch(52% 0.10 80)</code> before it can carry text, and then it stops reading as gold. Chosen only if you want
+      the site to feel technical rather than noble.</p>
+    </div>
+
+    <div class="opt D">
+      <p class="name">D. Gold + vermilion <span>- marginalia</span></p>
+      <div class="spec s-paper">
+        <div class="pad">
+          <div class="kick s-goldink">Next meeting</div>
+          <p class="ttl">Ellenberg, <i>The Music of the Primes</i>, ch. 4</p>
+          <p class="body s-soft">Northfield, 7:00pm. Two proofs of the same lemma, side by side.</p>
+          <div class="paths"><span class="chip c-plain">Add to calendar</span><span class="chip c-plain">Meetup</span></div>
+        </div>
+        <div class="band s-band">Thu Nov 12 · 7:00pm · Northfield</div>
+        <div class="band" style="background:var(--verm);color:#fff">Cancelled - next date Thursday</div>
+      </div>
+      <p class="ratio"><span class="good">gold as text 4.83 · ink on gold 7.67 · vermilion as text 5.76 · vermilion on its tint 5.14</span> <span class="bad">· ink on vermilion floor 2.74 FAIL</span></p>
+      <p class="data">The red pen, the cinnabar seal in the margin: a second accent for <i>annotation and status</i> - cancelled,
+      changed, "this one is different". Playful in a scholarly way. <span class="bad">Cost: vermilion works as ink, not as a
+      floor (2.74), so status pills must be pale with dark red text, never solid red.</span></p>
+    </div>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Q2. Do the join paths get their own hues? (the plurality idea, made structural)</h2>
+  <p class="why">Your definition of art - several ways to reach one goal - has a direct visual translation, and it is already
+  true of the architecture: the same event is reachable as a calendar file, a Meetup listing, a Discord channel and a
+  Mobilizon page. Option E paints each path a hue, so "four ways in" is visible without a sentence.</p>
+  <div class="opts">
+    <div class="opt E">
+      <p class="name">E. Yes - one hue per path, reserved <span>(recommended)</span></p>
+      <div class="spec s-paper">
+        <div class="pad">
+          <div class="kick s-goldink">Four ways to the same Thursday</div>
+          <p class="ttl">Ellenberg, ch. 4</p>
+          <div class="paths">
+            <span class="chip c-teal">Calendar file</span>
+            <span class="chip c-plum">Meetup</span>
+            <span class="chip c-rose">Discord</span>
+            <span class="chip c-grass">Mobilizon</span>
+          </div>
+        </div>
+      </div>
+      <p class="ratio"><span class="good">teal 5.43 · plum 7.03 · rose 6.21 · grass 5.95 (all as text on paper); on their own tints 4.95 / 6.29 / 5.54 / 5.42</span></p>
+      <p class="data">All four clear AA as text and as text-on-tint (measured). The rule that makes it readable: <b>a hue may
+      only appear where a path actually exists</b> - never for decoration, never on a surface that has no meaning. Paired with
+      the measured rule that tints alone are indistinguishable (1.02), each chip carries its name in words.</p>
+      <p class="data">This decision now covers more than the four join paths: the operator's <b>special-interests list</b>
+      (knot theory, analysis, physics - each interest is a way into the club, and each one maps to a Discord channel and to
+      tags on the events) uses the same picture, and the same vocabulary also drives the past-topics index. One tag list,
+      three surfaces, one hue rule.</p>
+      <p class="data"><b>Say no instead if:</b> you would rather the four paths be one quiet list. Then the palette stays at
+      two hues and plurality is carried by the layout and the wording instead.</p>
+    </div>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Q3. Spacing grid - 4px or 8px?</h2>
+  <p class="why">Measured: a 4px grid fits <b>9 of 9</b> spacing values already in use; an 8px grid fits <b>6 of 9</b> - it would
+  move 4, 12 and 20px. 8px is the more disciplined choice and the more common one; 4px keeps the current density (the tight
+  <code>py-1.5</code>, <code>gap-2</code>, <code>pl-4</code> of the nav and chips) without changing it.</p>
+  <div class="opts">
+    <div class="opt"><p class="name">4px base <span>(recommended)</span></p>
+      <div class="grid-demo">
+        <i style="width:4px"></i><i style="width:8px"></i><i style="width:12px"></i><i style="width:16px"></i>
+        <i style="width:24px"></i><i style="width:32px"></i><i style="width:48px"></i><i style="width:64px"></i>
+      </div>
+      <p class="data">Half-steps stay legal, so nav and chips keep their current rhythm; the visible sizes above are Fibonacci-ish,
+      which is where your golden-precision instinct has a legitimate home (see Q4's note).</p></div>
+    <div class="opt"><p class="name">8px base</p>
+      <div class="grid-demo">
+        <i style="width:8px"></i><i style="width:16px"></i><i style="width:24px"></i><i style="width:32px"></i>
+        <i style="width:48px"></i><i style="width:64px"></i>
+      </div>
+      <p class="data">Fewer decisions, harder to drift. <span class="bad">Measured cost: 3 of 9 current values move</span>, which
+      mostly loosens the nav and the small chips.</p></div>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Q4. Type scale ratio</h2>
+  <p class="why">Measured against the seven sizes actually in use (14, 16, 18, 20, 24, 30, 36px): <b>1.125 fits 7/7 and moves
+  3.3px total</b>; <b>1.200 fits 7/7, moves 4.3px</b>; <b>1.250 fits 7/7, moves 5.9px</b>; 1.333 fits 5/7.</p>
+  <div class="opts">
+    <div class="opt"><p class="name">1.200 major third <span>(recommended)</span></p>
+      <div class="type-demo"><b>36</b><em>24</em><span>18 body</span></div>
+      <p class="data">A real ratio, fits all seven sizes, and leaves visible headroom for the surfaces that do not exist yet:
+      display numerals on <code>/schedule</code>, a share card at 22px labels, and the <b>member-voice quote</b> surface the
+      operator asked for (why people came, what held them, why they return), which wants a large pull-quote step that today's
+      ramp cannot reach.</p></div>
+    <div class="opt"><p class="name">1.125 minor second</p>
+      <div class="type-demo" style="font-size:95%"><b>36</b><em>26</em><span>18 body</span></div>
+      <p class="data">Least disruption (3.3px), but small steps read as timid - and a playful character wants contrast, not
+      uniformity.</p></div>
+    <div class="opt"><p class="name">1.250 perfect fourth</p>
+      <div class="type-demo"><b>36</b><em>23</em><span>16 body</span></div>
+      <p class="data">Bolder jumps, more expressive; slightly more re-tuning (5.9px).</p></div>
+  </div>
+  <p class="data"><b>On the golden ratio specifically - the honest number.</b> Measured: <code>1.618</code> fits only <b>3 of 7</b>
+  sizes and moves <b>17px</b>; even <code>1.5</code> fits 4/7 and moves 18px. A single-step ratio of 1.618 is the right idea for
+  <i>proportions</i>, not for a seven-step reading ramp. If phi is to be in the system, put it where it pays: the layout split
+  (today <code>lg:col-span-8</code>/<code>4</code> = exactly 2:1; a <code>grid-cols-13</code> 8/5 split = <b>1.6</b>), the hero
+  block, and the Fibonacci spacing series in Q3 (4, 8, 12, 16, 24, 32, 48, 64). That keeps the geometry real instead of
+  decorative - which is the difference between "golden" as a claim and "golden" as a measurement.</p>
+</div>
+
+<div class="q">
+  <h2>Q5. Radius base</h2>
+  <p class="why">Measured: <code>rounded-lg</code> is <b>13 of 23</b> radius uses. A 6px base fits <b>3 of 3</b> candidate
+  values; 8px fits 2 of 3; 12px fits 1 of 3.</p>
+  <div class="opts">
+    <div class="opt"><p class="name">6px base <span>(recommended)</span></p>
+      <span class="swatch" style="border-radius:2px;background:oklch(93% 0.02 250)"></span>
+      <span class="swatch" style="border-radius:4px;background:oklch(93% 0.02 250)"></span>
+      <span class="swatch" style="border-radius:6px;background:oklch(93% 0.02 250)"></span>
+      <span class="swatch" style="border-radius:12px;background:oklch(93% 0.02 250)"></span>
+      <p class="data">2 / 4 / 6 / 12: precise and quiet, matches a gold-keyline aesthetic. Nothing currently in use needs to move.</p></div>
+    <div class="opt"><p class="name">8px base (playful reading)</p>
+      <span class="swatch" style="border-radius:3px;background:oklch(93% 0.02 250)"></span>
+      <span class="swatch" style="border-radius:6px;background:oklch(93% 0.02 250)"></span>
+      <span class="swatch" style="border-radius:8px;background:oklch(93% 0.02 250)"></span>
+      <span class="swatch" style="border-radius:16px;background:oklch(93% 0.02 250)"></span>
+      <p class="data">Softer, friendlier, more consumer. <span class="bad">Measured: it is the option that risks the
+      candy-store reading you ruled out</span> - the fix if chosen is to keep the largest radii off text surfaces.</p></div>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Q6. Default easing</h2>
+  <p class="why">Measured: <b>18 of 36</b> transition declarations name no duration (Tailwind's 150ms default),
+  <b>18 name 300ms</b>, and <b>zero</b> name an easing (so <code>ease</code> is doing the work). Cloudflare's own docs recommend
+  "ease-out, or linear for color" for motion that feels responsive.</p>
+  <div class="opts">
+    <div class="opt"><p class="name">ease-out for movement, linear for colour <span>(recommended)</span></p>
+      <p class="data">Objects arrive and stop; colour does not overshoot. Keeps the 300ms already in use for hero and section
+      transitions, and gives the 18 nameless transitions an actual default instead of 150ms-by-accident.</p></div>
+    <div class="opt"><p class="name">keep ease-in-out</p>
+      <p class="data">What 12 of the transitions effectively already do. Slower to settle; fine, but it makes the site feel
+      a beat behind the pointer.</p></div>
+  </div>
+</div>
+</body>
+</html>

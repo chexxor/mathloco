@@ -1,0 +1,2570 @@
+{
+  "stack": {
+    "framework": "astro 7 + @astrojs/cloudflare, Svelte 5 islands",
+    "tailwind": 4,
+    "tailwindMajorDetail": "@theme in src/styles/global.css; no tailwind.config.*; no components.json (no shadcn/ui)",
+    "componentExtensions": [
+      ".svelte",
+      ".astro"
+    ],
+    "files": {
+      "markup": 17,
+      "css": 1
+    },
+    "oracle": "scripts/check-classes.ts oracle: __unstable__loadDesignSystem(global.css) + candidatesToCss, resolved through resolveThemeValue"
+  },
+  "tokens": {
+    "written": 685,
+    "distinct": 186,
+    "presetBundles": [
+      {
+        "token": "prose",
+        "uses": 1,
+        "where": "src/components/DiscordSummary.svelte:106"
+      },
+      {
+        "token": "prose-blue",
+        "uses": 1,
+        "where": "src/components/DiscordSummary.svelte:106"
+      }
+    ],
+    "note": "`prose` is excluded from every axis: @tailwindcss/typography brings its own type ramp, spacing multipliers and colour vars. It is in play in exactly one place — `src/components/DiscordSummary.svelte:106`, `class=\"prose prose-blue max-w-none\"` — and `prose-blue` is a blue accent choice.",
+    "unresolvedByOracle": [
+      "love"
+    ],
+    "dynamicClassBlindSpots": []
+  },
+  "axes": {
+    "spacing": {
+      "total": 67,
+      "distinct": 10,
+      "workingSet": [
+        16,
+        12,
+        48,
+        32,
+        8
+      ],
+      "longTail": [
+        4,
+        20,
+        "calc(var(--spacing) * -1)"
+      ],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": 16,
+          "count": 20,
+          "tokens": [
+            "mb-4",
+            "mt-4",
+            "gap-4",
+            "ml-4"
+          ],
+          "files": 9
+        },
+        {
+          "value": 12,
+          "count": 17,
+          "tokens": [
+            "mt-3",
+            "ml-3"
+          ],
+          "files": 4
+        },
+        {
+          "value": 48,
+          "count": 8,
+          "tokens": [
+            "mt-12",
+            "mb-12"
+          ],
+          "files": 6
+        },
+        {
+          "value": 32,
+          "count": 6,
+          "tokens": [
+            "mb-8",
+            "gap-8",
+            "mt-8"
+          ],
+          "files": 4
+        },
+        {
+          "value": 8,
+          "count": 6,
+          "tokens": [
+            "ml-2",
+            "mr-2"
+          ],
+          "files": 6
+        },
+        {
+          "value": 24,
+          "count": 4,
+          "tokens": [
+            "mb-6"
+          ],
+          "files": 3
+        },
+        {
+          "value": 64,
+          "count": 3,
+          "tokens": [
+            "mt-16"
+          ],
+          "files": 3
+        },
+        {
+          "value": 4,
+          "count": 1,
+          "tokens": [
+            "mt-1"
+          ],
+          "files": 1
+        },
+        {
+          "value": 20,
+          "count": 1,
+          "tokens": [
+            "mt-5"
+          ],
+          "files": 1
+        },
+        {
+          "value": "calc(var(--spacing) * -1)",
+          "count": 1,
+          "tokens": [
+            "-mr-1"
+          ],
+          "files": 1
+        }
+      ]
+    },
+    "typeSize": {
+      "total": 43,
+      "distinct": 7,
+      "workingSet": [
+        20,
+        16,
+        18,
+        30,
+        36
+      ],
+      "longTail": [
+        24
+      ],
+      "nearDuplicates": [
+        [
+          20,
+          18,
+          10
+        ],
+        [
+          16,
+          18,
+          11.1
+        ],
+        [
+          16,
+          14,
+          12.5
+        ]
+      ],
+      "values": [
+        {
+          "value": 20,
+          "count": 13,
+          "tokens": [
+            "text-xl"
+          ],
+          "files": 4
+        },
+        {
+          "value": 16,
+          "count": 11,
+          "tokens": [
+            "text-base"
+          ],
+          "files": 6
+        },
+        {
+          "value": 18,
+          "count": 6,
+          "tokens": [
+            "text-lg"
+          ],
+          "files": 3
+        },
+        {
+          "value": 30,
+          "count": 4,
+          "tokens": [
+            "text-3xl"
+          ],
+          "files": 4
+        },
+        {
+          "value": 36,
+          "count": 4,
+          "tokens": [
+            "text-4xl"
+          ],
+          "files": 4
+        },
+        {
+          "value": 14,
+          "count": 3,
+          "tokens": [
+            "text-sm"
+          ],
+          "files": 3
+        },
+        {
+          "value": 24,
+          "count": 2,
+          "tokens": [
+            "text-2xl"
+          ],
+          "files": 2
+        }
+      ]
+    },
+    "leading": {
+      "total": 71,
+      "distinct": 13,
+      "workingSet": [
+        "var(--tw-leading, var(--text-xl--line-height))",
+        "var(--tw-leading, var(--text-lg--line-height))",
+        "var(--tw-leading, var(--text-base--line-height))",
+        "var(--tw-leading, var(--text-4xl--line-height))",
+        1,
+        "var(--tw-leading, var(--text-3xl--line-height))"
+      ],
+      "longTail": [
+        40,
+        "var(--tw-leading, var(--text-2xl--line-height))",
+        16,
+        36,
+        28
+      ],
+      "nearDuplicates": [
+        [
+          24,
+          28,
+          14.3
+        ],
+        [
+          40,
+          36,
+          10
+        ]
+      ],
+      "values": [
+        {
+          "value": "var(--tw-leading, var(--text-xl--line-height))",
+          "count": 19,
+          "tokens": [
+            "text-xl",
+            "sm:text-xl",
+            "xl:text-xl"
+          ],
+          "files": 5
+        },
+        {
+          "value": "var(--tw-leading, var(--text-lg--line-height))",
+          "count": 12,
+          "tokens": [
+            "text-lg",
+            "lg:text-lg",
+            "md:text-lg"
+          ],
+          "files": 5
+        },
+        {
+          "value": "var(--tw-leading, var(--text-base--line-height))",
+          "count": 12,
+          "tokens": [
+            "text-base",
+            "sm:text-base"
+          ],
+          "files": 6
+        },
+        {
+          "value": "var(--tw-leading, var(--text-4xl--line-height))",
+          "count": 6,
+          "tokens": [
+            "text-4xl",
+            "sm:text-4xl"
+          ],
+          "files": 6
+        },
+        {
+          "value": 1,
+          "count": 5,
+          "tokens": [
+            "sm:leading-none",
+            "sm:text-6xl",
+            "lg:text-5xl",
+            "xl:text-6xl",
+            "sm:text-5xl"
+          ],
+          "files": 2
+        },
+        {
+          "value": "var(--tw-leading, var(--text-3xl--line-height))",
+          "count": 4,
+          "tokens": [
+            "text-3xl"
+          ],
+          "files": 4
+        },
+        {
+          "value": "var(--tw-leading, var(--text-sm--line-height))",
+          "count": 3,
+          "tokens": [
+            "text-sm"
+          ],
+          "files": 3
+        },
+        {
+          "value": 24,
+          "count": 3,
+          "tokens": [
+            "leading-6"
+          ],
+          "files": 2
+        },
+        {
+          "value": 40,
+          "count": 2,
+          "tokens": [
+            "leading-10",
+            "sm:leading-10"
+          ],
+          "files": 2
+        },
+        {
+          "value": "var(--tw-leading, var(--text-2xl--line-height))",
+          "count": 2,
+          "tokens": [
+            "text-2xl"
+          ],
+          "files": 2
+        },
+        {
+          "value": 16,
+          "count": 1,
+          "tokens": [
+            "leading-4"
+          ],
+          "files": 1
+        },
+        {
+          "value": 36,
+          "count": 1,
+          "tokens": [
+            "leading-9"
+          ],
+          "files": 1
+        },
+        {
+          "value": 28,
+          "count": 1,
+          "tokens": [
+            "leading-7"
+          ],
+          "files": 1
+        }
+      ]
+    },
+    "tracking": {
+      "total": 4,
+      "distinct": 2,
+      "workingSet": [
+        0.4,
+        -0.4
+      ],
+      "longTail": [
+        -0.4
+      ],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": 0.4,
+          "count": 3,
+          "tokens": [
+            "tracking-wide"
+          ],
+          "files": 3
+        },
+        {
+          "value": -0.4,
+          "count": 1,
+          "tokens": [
+            "tracking-tight"
+          ],
+          "files": 1
+        }
+      ]
+    },
+    "weight": {
+      "total": 30,
+      "distinct": 4,
+      "workingSet": [
+        600,
+        500,
+        800
+      ],
+      "longTail": [
+        700
+      ],
+      "nearDuplicates": [
+        [
+          600,
+          700,
+          14.3
+        ],
+        [
+          800,
+          700,
+          12.5
+        ]
+      ],
+      "values": [
+        {
+          "value": 600,
+          "count": 14,
+          "tokens": [
+            "font-semibold"
+          ],
+          "files": 5
+        },
+        {
+          "value": 500,
+          "count": 8,
+          "tokens": [
+            "font-medium"
+          ],
+          "files": 7
+        },
+        {
+          "value": 800,
+          "count": 6,
+          "tokens": [
+            "font-extrabold"
+          ],
+          "files": 6
+        },
+        {
+          "value": 700,
+          "count": 2,
+          "tokens": [
+            "font-bold"
+          ],
+          "files": 2
+        }
+      ]
+    },
+    "radius": {
+      "total": 23,
+      "distinct": 4,
+      "workingSet": [
+        8,
+        6
+      ],
+      "longTail": [
+        "calc(infinity * 1px)",
+        12
+      ],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": 8,
+          "count": 13,
+          "tokens": [
+            "rounded-lg"
+          ],
+          "files": 5
+        },
+        {
+          "value": 6,
+          "count": 8,
+          "tokens": [
+            "rounded-md"
+          ],
+          "files": 6
+        },
+        {
+          "value": "calc(infinity * 1px)",
+          "count": 1,
+          "tokens": [
+            "rounded-full"
+          ],
+          "files": 1
+        },
+        {
+          "value": 12,
+          "count": 1,
+          "tokens": [
+            "rounded-xl"
+          ],
+          "files": 1
+        }
+      ]
+    },
+    "border": {
+      "total": 10,
+      "distinct": 2,
+      "workingSet": [
+        1
+      ],
+      "longTail": [
+        0
+      ],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": 1,
+          "count": 9,
+          "tokens": [
+            "border"
+          ],
+          "files": 7
+        },
+        {
+          "value": 0,
+          "count": 1,
+          "tokens": [
+            "sr-only"
+          ],
+          "files": 1
+        }
+      ]
+    },
+    "color": {
+      "total": 106,
+      "distinct": 19,
+      "workingSet": [
+        "var(--color-blue-600)",
+        "var(--color-gray-900)",
+        "var(--color-gray-600)",
+        "var(--color-white)",
+        "transparent",
+        "var(--color-gray-500)",
+        "var(--color-book-gray)"
+      ],
+      "longTail": [
+        "var(--color-gray-200)",
+        "var(--color-gray-800)",
+        "var(--color-gray-700)",
+        "var(--color-red-50)",
+        "var(--color-red-600)",
+        "var(--color-gray-100)",
+        "var(--color-pink-400)",
+        "var(--color-blue-100)",
+        "var(--color-green-500)",
+        "var(--color-gray-300)"
+      ],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": "var(--color-blue-600)",
+          "count": 19,
+          "tokens": [
+            "border-blue-600",
+            "text-blue-600",
+            "bg-blue-600"
+          ],
+          "files": 8
+        },
+        {
+          "value": "var(--color-gray-900)",
+          "count": 18,
+          "tokens": [
+            "text-gray-900"
+          ],
+          "files": 7
+        },
+        {
+          "value": "var(--color-gray-600)",
+          "count": 16,
+          "tokens": [
+            "text-gray-600"
+          ],
+          "files": 7
+        },
+        {
+          "value": "var(--color-white)",
+          "count": 16,
+          "tokens": [
+            "text-white",
+            "bg-white"
+          ],
+          "files": 7
+        },
+        {
+          "value": "transparent",
+          "count": 7,
+          "tokens": [
+            "border-transparent"
+          ],
+          "files": 6
+        },
+        {
+          "value": "var(--color-gray-500)",
+          "count": 5,
+          "tokens": [
+            "text-gray-500"
+          ],
+          "files": 3
+        },
+        {
+          "value": "var(--color-book-gray)",
+          "count": 5,
+          "tokens": [
+            "bg-book-gray",
+            "text-book-gray"
+          ],
+          "files": 5
+        },
+        {
+          "value": "var(--color-blue-50)",
+          "count": 4,
+          "tokens": [
+            "bg-blue-50"
+          ],
+          "files": 4
+        },
+        {
+          "value": "var(--color-gray-50)",
+          "count": 3,
+          "tokens": [
+            "bg-gray-50",
+            "text-gray-50"
+          ],
+          "files": 3
+        },
+        {
+          "value": "var(--color-gray-200)",
+          "count": 2,
+          "tokens": [
+            "border-gray-200"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-gray-800)",
+          "count": 2,
+          "tokens": [
+            "text-gray-800"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-gray-700)",
+          "count": 2,
+          "tokens": [
+            "text-gray-700"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-red-50)",
+          "count": 1,
+          "tokens": [
+            "bg-red-50"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-red-600)",
+          "count": 1,
+          "tokens": [
+            "text-red-600"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-gray-100)",
+          "count": 1,
+          "tokens": [
+            "bg-gray-100"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-pink-400)",
+          "count": 1,
+          "tokens": [
+            "text-pink-400"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-blue-100)",
+          "count": 1,
+          "tokens": [
+            "bg-blue-100"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-green-500)",
+          "count": 1,
+          "tokens": [
+            "text-green-500"
+          ],
+          "files": 1
+        },
+        {
+          "value": "var(--color-gray-300)",
+          "count": 1,
+          "tokens": [
+            "border-gray-300"
+          ],
+          "files": 1
+        }
+      ]
+    },
+    "shadow": {
+      "total": 17,
+      "distinct": 1,
+      "workingSet": [
+        ""
+      ],
+      "longTail": [],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": "",
+          "count": 17,
+          "tokens": [
+            "shadow-lg",
+            "shadow-sm",
+            "shadow-md",
+            "hover:shadow-lg"
+          ],
+          "files": 5
+        }
+      ]
+    },
+    "duration": {
+      "total": 36,
+      "distinct": 2,
+      "workingSet": [
+        "var(--tw-duration, var(--default-transition-duration))",
+        "300ms"
+      ],
+      "longTail": [],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": "var(--tw-duration, var(--default-transition-duration))",
+          "count": 18,
+          "tokens": [
+            "transition"
+          ],
+          "files": 10
+        },
+        {
+          "value": "300ms",
+          "count": 18,
+          "tokens": [
+            "duration-300"
+          ],
+          "files": 10
+        }
+      ]
+    },
+    "easing": {
+      "total": 30,
+      "distinct": 2,
+      "workingSet": [
+        "var(--tw-ease, var(--default-transition-timing-function))",
+        "var(--ease-in-out)"
+      ],
+      "longTail": [],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": "var(--tw-ease, var(--default-transition-timing-function))",
+          "count": 18,
+          "tokens": [
+            "transition"
+          ],
+          "files": 10
+        },
+        {
+          "value": "var(--ease-in-out)",
+          "count": 12,
+          "tokens": [
+            "ease-in-out"
+          ],
+          "files": 10
+        }
+      ]
+    },
+    "width": {
+      "total": 28,
+      "distinct": 9,
+      "workingSet": [
+        24,
+        20,
+        1280,
+        "100%",
+        896
+      ],
+      "longTail": [
+        896,
+        672,
+        32,
+        1,
+        "none"
+      ],
+      "nearDuplicates": [],
+      "values": [
+        {
+          "value": 24,
+          "count": 7,
+          "tokens": [
+            "w-6"
+          ],
+          "files": 3
+        },
+        {
+          "value": 20,
+          "count": 6,
+          "tokens": [
+            "w-5"
+          ],
+          "files": 6
+        },
+        {
+          "value": 1280,
+          "count": 5,
+          "tokens": [
+            "max-w-screen-xl"
+          ],
+          "files": 5
+        },
+        {
+          "value": "100%",
+          "count": 3,
+          "tokens": [
+            "w-full"
+          ],
+          "files": 1
+        },
+        {
+          "value": 896,
+          "count": 2,
+          "tokens": [
+            "max-w-4xl"
+          ],
+          "files": 2
+        },
+        {
+          "value": 672,
+          "count": 2,
+          "tokens": [
+            "max-w-2xl"
+          ],
+          "files": 2
+        },
+        {
+          "value": 32,
+          "count": 1,
+          "tokens": [
+            "w-8"
+          ],
+          "files": 1
+        },
+        {
+          "value": 1,
+          "count": 1,
+          "tokens": [
+            "sr-only"
+          ],
+          "files": 1
+        },
+        {
+          "value": "none",
+          "count": 1,
+          "tokens": [
+            "max-w-none"
+          ],
+          "files": 1
+        }
+      ]
+    }
+  },
+  "scaleFit": {
+    "spacing": {
+      "grid4": {
+        "of": 9,
+        "fit": 9,
+        "off": []
+      },
+      "grid8": {
+        "of": 9,
+        "fit": 6,
+        "off": [
+          4,
+          12,
+          20
+        ]
+      }
+    },
+    "type": {
+      "ratio-1.125": {
+        "of": 7,
+        "fit": 6,
+        "off": [
+          36
+        ],
+        "ratio": 1.125,
+        "base": 14,
+        "totalPxMoved": 11.1,
+        "maxPxMoved": 7.6
+      },
+      "ratio-1.2": {
+        "of": 7,
+        "fit": 7,
+        "off": [],
+        "ratio": 1.2,
+        "base": 12,
+        "totalPxMoved": 4.3,
+        "maxPxMoved": 1.3
+      },
+      "ratio-1.25": {
+        "of": 7,
+        "fit": 7,
+        "off": [],
+        "ratio": 1.25,
+        "base": 12,
+        "totalPxMoved": 5.9,
+        "maxPxMoved": 1.3
+      },
+      "ratio-1.333": {
+        "of": 7,
+        "fit": 5,
+        "off": [
+          18,
+          24
+        ],
+        "ratio": 1.333,
+        "base": 12,
+        "totalPxMoved": 11.5,
+        "maxPxMoved": 2.7
+      }
+    },
+    "radius": {
+      "base-8": {
+        "of": 3,
+        "fit": 2,
+        "off": [
+          12
+        ]
+      },
+      "base-6": {
+        "of": 3,
+        "fit": 3,
+        "off": []
+      },
+      "base-12": {
+        "of": 3,
+        "fit": 1,
+        "off": [
+          6,
+          8
+        ]
+      }
+    }
+  },
+  "shippedColourPairs": [
+    {
+      "pair": "oklch(54.6% 0.245 262.881) on oklch(93.2% 0.032 255.585)",
+      "count": 1,
+      "ratio": 4.31,
+      "aaNormalText": "fail",
+      "aaLargeText": "pass",
+      "tokens": [
+        "text-blue-600 + bg-blue-100"
+      ],
+      "files": [
+        "src/components/HeroSection.astro"
+      ]
+    },
+    {
+      "pair": "#fff on oklch(54.6% 0.245 262.881)",
+      "count": 6,
+      "ratio": 5.26,
+      "aaNormalText": "pass",
+      "aaLargeText": "pass",
+      "tokens": [
+        "text-white + bg-blue-600"
+      ],
+      "files": [
+        "src/components/HeroSection.astro",
+        "src/components/JoinCommunity.astro",
+        "src/components/UpcomingMeetups.astro",
+        "src/components/WhyJoinUs.astro",
+        "src/pages/404.astro",
+        "src/pages/chat.astro"
+      ]
+    },
+    {
+      "pair": "oklch(37.3% 0.034 259.733) on #fff",
+      "count": 1,
+      "ratio": 10.31,
+      "aaNormalText": "pass",
+      "aaLargeText": "pass",
+      "tokens": [
+        "text-gray-700 + bg-white"
+      ],
+      "files": [
+        "src/pages/404.astro"
+      ]
+    },
+    {
+      "pair": "oklch(98.5% 0.002 247.839) on #1a1a1c",
+      "count": 1,
+      "ratio": 16.64,
+      "aaNormalText": "pass",
+      "aaLargeText": "pass",
+      "tokens": [
+        "text-gray-50 + bg-book-gray"
+      ],
+      "files": [
+        "src/components/Footer.astro"
+      ]
+    }
+  ],
+  "surfaces": {
+    "white": "#fff",
+    "bookGray": "#1a1a1c"
+  },
+  "colourAgainstItsOwnSurface": [
+    {
+      "colour": "#fff",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 1,
+      "token": "text-white",
+      "file": "src/components/HeroSection.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "#fff",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 1,
+      "token": "text-white",
+      "file": "src/components/JoinCommunity.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "#fff",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 1,
+      "token": "text-white",
+      "file": "src/components/UpcomingMeetups.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "#fff",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 1,
+      "token": "text-white",
+      "file": "src/components/WhyJoinUs.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "#fff",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 1,
+      "token": "text-white",
+      "file": "src/pages/404.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "#fff",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 1,
+      "token": "text-white",
+      "file": "src/pages/chat.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(72.3% 0.219 149.579)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 2.26,
+      "token": "text-green-500",
+      "file": "src/components/icons/Checkmark.astro",
+      "kind": "icon/fill",
+      "required": 3,
+      "verdict": "fail",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(55.1% 0.027 264.364)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 4.84,
+      "token": "text-gray-500",
+      "file": "src/components/DiscordSummary.svelte",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(55.1% 0.027 264.364)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 4.84,
+      "token": "text-gray-500",
+      "file": "src/components/HeroSection.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(55.1% 0.027 264.364)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 4.84,
+      "token": "text-gray-500",
+      "file": "src/pages/404.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(57.7% 0.245 27.325)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 4.92,
+      "token": "text-red-600",
+      "file": "src/components/DiscordSummary.svelte",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 5.26,
+      "token": "text-blue-600",
+      "file": "src/components/HeroSection.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 5.26,
+      "token": "text-blue-600",
+      "file": "src/components/JoinCommunity.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 5.26,
+      "token": "text-blue-600",
+      "file": "src/components/Navigation.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 5.26,
+      "token": "text-blue-600",
+      "file": "src/components/UpcomingMeetups.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 5.26,
+      "token": "text-blue-600",
+      "file": "src/pages/404.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 5.26,
+      "token": "text-blue-600",
+      "file": "src/pages/chat.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(71.8% 0.202 349.761)",
+      "surface": "bookGray",
+      "surfaceValue": "#1a1a1c",
+      "ratio": 6.3,
+      "token": "text-pink-400",
+      "file": "src/components/Footer.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/components/DiscordSummary.svelte",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/components/HeroSection.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/components/JoinCommunity.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/components/UpcomingMeetups.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/components/WhyJoinUs.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/pages/404.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 7.56,
+      "token": "text-gray-600",
+      "file": "src/pages/chat.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(37.3% 0.034 259.733)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 10.31,
+      "token": "text-gray-700",
+      "file": "src/pages/404.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(27.8% 0.033 256.848)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 14.69,
+      "token": "text-gray-800",
+      "file": "src/components/DiscordSummary.svelte",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(98.5% 0.002 247.839)",
+      "surface": "bookGray",
+      "surfaceValue": "#1a1a1c",
+      "ratio": 16.64,
+      "token": "text-gray-50",
+      "file": "src/components/Footer.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "#1a1a1c",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.38,
+      "token": "text-book-gray",
+      "file": "src/components/icons/Instagram.astro",
+      "kind": "icon/fill",
+      "required": 3,
+      "verdict": "pass",
+      "deadFile": true
+    },
+    {
+      "colour": "#1a1a1c",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.38,
+      "token": "text-book-gray",
+      "file": "src/components/icons/Linkedin.astro",
+      "kind": "icon/fill",
+      "required": 3,
+      "verdict": "pass",
+      "deadFile": true
+    },
+    {
+      "colour": "#1a1a1c",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.38,
+      "token": "text-book-gray",
+      "file": "src/components/icons/Medium.astro",
+      "kind": "icon/fill",
+      "required": 3,
+      "verdict": "pass",
+      "deadFile": true
+    },
+    {
+      "colour": "#1a1a1c",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.38,
+      "token": "text-book-gray",
+      "file": "src/components/icons/Twitter.astro",
+      "kind": "icon/fill",
+      "required": 3,
+      "verdict": "pass",
+      "deadFile": true
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/components/HeroSection.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/components/JoinCommunity.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/components/Navigation.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/components/UpcomingMeetups.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/components/WhyJoinUs.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/pages/404.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    },
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "surface": "white",
+      "surfaceValue": "#fff",
+      "ratio": 17.75,
+      "token": "text-gray-900",
+      "file": "src/pages/chat.astro",
+      "kind": "text",
+      "required": 4.5,
+      "verdict": "pass",
+      "deadFile": false
+    }
+  ],
+  "deadComponents": [
+    "src/components/icons/Instagram.astro",
+    "src/components/icons/Linkedin.astro",
+    "src/components/icons/Medium.astro",
+    "src/components/icons/Twitter.astro"
+  ],
+  "colourVsSurfaces": [
+    {
+      "colour": "oklch(21% 0.034 264.665)",
+      "onWhite": 17.75,
+      "whiteOnIt": 17.75,
+      "onBookGray": 1.02,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "#1a1a1c",
+      "onWhite": 17.38,
+      "whiteOnIt": 17.38,
+      "onBookGray": 1,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(27.8% 0.033 256.848)",
+      "onWhite": 14.69,
+      "whiteOnIt": 14.69,
+      "onBookGray": 1.18,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(37.3% 0.034 259.733)",
+      "onWhite": 10.31,
+      "whiteOnIt": 10.31,
+      "onBookGray": 1.69,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(44.6% 0.03 256.802)",
+      "onWhite": 7.56,
+      "whiteOnIt": 7.56,
+      "onBookGray": 2.3,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(54.6% 0.245 262.881)",
+      "onWhite": 5.26,
+      "whiteOnIt": 5.26,
+      "onBookGray": 3.31,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(57.7% 0.245 27.325)",
+      "onWhite": 4.92,
+      "whiteOnIt": 4.92,
+      "onBookGray": 3.53,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(55.1% 0.027 264.364)",
+      "onWhite": 4.84,
+      "whiteOnIt": 4.84,
+      "onBookGray": 3.59,
+      "aaNormalOnWhite": "pass"
+    },
+    {
+      "colour": "oklch(71.8% 0.202 349.761)",
+      "onWhite": 2.76,
+      "whiteOnIt": 2.76,
+      "onBookGray": 6.3,
+      "aaNormalOnWhite": "fail"
+    },
+    {
+      "colour": "oklch(72.3% 0.219 149.579)",
+      "onWhite": 2.26,
+      "whiteOnIt": 2.26,
+      "onBookGray": 7.7,
+      "aaNormalOnWhite": "fail"
+    },
+    {
+      "colour": "oklch(98.5% 0.002 247.839)",
+      "onWhite": 1.04,
+      "whiteOnIt": 1.04,
+      "onBookGray": 16.64,
+      "aaNormalOnWhite": "fail"
+    },
+    {
+      "colour": "#fff",
+      "onWhite": 1,
+      "whiteOnIt": 1,
+      "onBookGray": 17.38,
+      "aaNormalOnWhite": "fail"
+    }
+  ],
+  "oneOffUtilities": [
+    {
+      "token": "duration-300",
+      "step": 300,
+      "kind": "duration",
+      "count": 18,
+      "where": "src/components/HeroSection.astro:53"
+    },
+    {
+      "token": "mb-4",
+      "step": 4,
+      "kind": "spacing",
+      "count": 13,
+      "where": "src/components/DiscordSummary.svelte:101"
+    },
+    {
+      "token": "ml-3",
+      "step": 3,
+      "kind": "spacing",
+      "count": 12,
+      "where": "src/components/JoinCommunity.astro:31"
+    },
+    {
+      "token": "p-6",
+      "step": 6,
+      "kind": "unknown",
+      "count": 7,
+      "where": "src/components/DiscordSummary.svelte:99"
+    },
+    {
+      "token": "h-6",
+      "step": 6,
+      "kind": "height",
+      "count": 7,
+      "where": "src/components/JoinCommunity.astro:26"
+    },
+    {
+      "token": "w-6",
+      "step": 6,
+      "kind": "width",
+      "count": 7,
+      "where": "src/components/JoinCommunity.astro:26"
+    },
+    {
+      "token": "w-5",
+      "step": 5,
+      "kind": "width",
+      "count": 6,
+      "where": "src/components/JoinCommunity.astro:71"
+    },
+    {
+      "token": "h-5",
+      "step": 5,
+      "kind": "height",
+      "count": 6,
+      "where": "src/components/JoinCommunity.astro:71"
+    },
+    {
+      "token": "mt-3",
+      "step": 3,
+      "kind": "spacing",
+      "count": 5,
+      "where": "src/components/HeroSection.astro:27"
+    },
+    {
+      "token": "mt-12",
+      "step": 12,
+      "kind": "spacing",
+      "count": 4,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "mb-12",
+      "step": 12,
+      "kind": "spacing",
+      "count": 4,
+      "where": "src/components/HeroSection.astro:14"
+    },
+    {
+      "token": "sm:mt-5",
+      "step": 5,
+      "kind": "unknown",
+      "count": 4,
+      "where": "src/components/HeroSection.astro:27"
+    },
+    {
+      "token": "mb-6",
+      "step": 6,
+      "kind": "spacing",
+      "count": 4,
+      "where": "src/components/JoinCommunity.astro:58"
+    },
+    {
+      "token": "mr-2",
+      "step": 2,
+      "kind": "spacing",
+      "count": 4,
+      "where": "src/components/icons/Instagram.astro:2"
+    },
+    {
+      "token": "p-8",
+      "step": 8,
+      "kind": "unknown",
+      "count": 3,
+      "where": "src/components/DiscordSummary.svelte:70"
+    },
+    {
+      "token": "leading-6",
+      "step": 6,
+      "kind": "leading",
+      "count": 3,
+      "where": "src/components/HeroSection.astro:53"
+    },
+    {
+      "token": "mt-4",
+      "step": 4,
+      "kind": "spacing",
+      "count": 3,
+      "where": "src/components/JoinCommunity.astro:12"
+    },
+    {
+      "token": "gap-8",
+      "step": 8,
+      "kind": "spacing",
+      "count": 3,
+      "where": "src/components/JoinCommunity.astro:19"
+    },
+    {
+      "token": "space-y-4",
+      "step": 4,
+      "kind": "unknown",
+      "count": 3,
+      "where": "src/components/JoinCommunity.astro:24"
+    },
+    {
+      "token": "gap-4",
+      "step": 4,
+      "kind": "spacing",
+      "count": 3,
+      "where": "src/components/Navigation.astro:12"
+    },
+    {
+      "token": "mt-16",
+      "step": 16,
+      "kind": "spacing",
+      "count": 3,
+      "where": "src/components/WhyJoinUs.astro:17"
+    },
+    {
+      "token": "space-y-6",
+      "step": 6,
+      "kind": "unknown",
+      "count": 2,
+      "where": "src/components/DiscordSummary.svelte:61"
+    },
+    {
+      "token": "sm:p-10",
+      "step": 10,
+      "kind": "unknown",
+      "count": 2,
+      "where": "src/components/JoinCommunity.astro:18"
+    },
+    {
+      "token": "ml-2",
+      "step": 2,
+      "kind": "spacing",
+      "count": 2,
+      "where": "src/components/JoinCommunity.astro:71"
+    },
+    {
+      "token": "mt-8",
+      "step": 8,
+      "kind": "spacing",
+      "count": 2,
+      "where": "src/components/UpcomingMeetups.astro:42"
+    },
+    {
+      "token": "h-8",
+      "step": 8,
+      "kind": "height",
+      "count": 1,
+      "where": "src/components/DiscordSummary.svelte:64"
+    },
+    {
+      "token": "w-8",
+      "step": 8,
+      "kind": "width",
+      "count": 1,
+      "where": "src/components/DiscordSummary.svelte:64"
+    },
+    {
+      "token": "leading-4",
+      "step": 4,
+      "kind": "leading",
+      "count": 1,
+      "where": "src/components/Footer.astro:5"
+    },
+    {
+      "token": "mb-8",
+      "step": 8,
+      "kind": "spacing",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "sm:mt-12",
+      "step": 12,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "sm:mb-12",
+      "step": 12,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "md:mt-32",
+      "step": 32,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "md:mb-20",
+      "step": 20,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "xl:mt-23",
+      "step": 23,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "xl:mb-24",
+      "step": 24,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:11"
+    },
+    {
+      "token": "lg:gap-8",
+      "step": 8,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:13"
+    },
+    {
+      "token": "mt-1",
+      "step": 1,
+      "kind": "spacing",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:20"
+    },
+    {
+      "token": "leading-10",
+      "step": 10,
+      "kind": "leading",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:20"
+    },
+    {
+      "token": "mt-5",
+      "step": 5,
+      "kind": "spacing",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:47"
+    },
+    {
+      "token": "sm:mt-8",
+      "step": 8,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:47"
+    },
+    {
+      "token": "sm:mt-0",
+      "step": 0,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:57"
+    },
+    {
+      "token": "sm:ml-3",
+      "step": 3,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:57"
+    },
+    {
+      "token": "lg:mt-0",
+      "step": 0,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:74"
+    },
+    {
+      "token": "lg:mx-0",
+      "step": 0,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/HeroSection.astro:74"
+    },
+    {
+      "token": "md:mx-0",
+      "step": 0,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/JoinCommunity.astro:58"
+    },
+    {
+      "token": "sm:ml-6",
+      "step": 6,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/Navigation.astro:16"
+    },
+    {
+      "token": "space-y-2",
+      "step": 2,
+      "kind": "unknown",
+      "count": 1,
+      "where": "src/components/UpcomingMeetups.astro:44"
+    },
+    {
+      "token": "ml-4",
+      "step": 4,
+      "kind": "spacing",
+      "count": 1,
+      "where": "src/components/UpcomingMeetups.astro:44"
+    },
+    {
+      "token": "leading-9",
+      "step": 9,
+      "kind": "leading",
+      "count": 1,
+      "where": "src/components/WhyJoinUs.astro:9"
+    },
+    {
+      "token": "sm:leading-10",
+      "step": 10,
+      "kind": "leading",
+      "count": 1,
+      "where": "src/components/WhyJoinUs.astro:9"
+    },
+    {
+      "token": "leading-7",
+      "step": 7,
+      "kind": "leading",
+      "count": 1,
+      "where": "src/components/WhyJoinUs.astro:12"
+    }
+  ],
+  "responsiveTypeRamps": [
+    {
+      "file": "src/components/HeroSection.astro",
+      "tokens": [
+        "text-4xl",
+        "sm:text-6xl",
+        "lg:text-5xl",
+        "xl:text-6xl"
+      ],
+      "steps": [
+        {
+          "variant": "base",
+          "px": 36
+        },
+        {
+          "variant": "sm",
+          "px": 60
+        },
+        {
+          "variant": "lg",
+          "px": 48
+        },
+        {
+          "variant": "xl",
+          "px": 60
+        }
+      ]
+    },
+    {
+      "file": "src/components/HeroSection.astro",
+      "tokens": [
+        "text-base",
+        "sm:text-xl",
+        "lg:text-lg",
+        "xl:text-xl"
+      ],
+      "steps": [
+        {
+          "variant": "base",
+          "px": 16
+        },
+        {
+          "variant": "sm",
+          "px": 20
+        },
+        {
+          "variant": "lg",
+          "px": 18
+        },
+        {
+          "variant": "xl",
+          "px": 20
+        }
+      ]
+    },
+    {
+      "file": "src/components/HeroSection.astro",
+      "tokens": [
+        "text-base",
+        "sm:text-xl",
+        "lg:text-lg",
+        "xl:text-xl"
+      ],
+      "steps": [
+        {
+          "variant": "base",
+          "px": 16
+        },
+        {
+          "variant": "sm",
+          "px": 20
+        },
+        {
+          "variant": "lg",
+          "px": 18
+        },
+        {
+          "variant": "xl",
+          "px": 20
+        }
+      ]
+    },
+    {
+      "file": "src/components/HeroSection.astro",
+      "tokens": [
+        "text-base",
+        "sm:text-xl",
+        "lg:text-lg",
+        "xl:text-xl"
+      ],
+      "steps": [
+        {
+          "variant": "base",
+          "px": 16
+        },
+        {
+          "variant": "sm",
+          "px": 20
+        },
+        {
+          "variant": "lg",
+          "px": 18
+        },
+        {
+          "variant": "xl",
+          "px": 20
+        }
+      ]
+    }
+  ],
+  "handWrittenCss": [
+    {
+      "file": "src/styles/global.css",
+      "prop": "theme-var",
+      "value": "--color-book-gray: #1a1a1c"
+    },
+    {
+      "file": "src/styles/global.css",
+      "prop": "theme-var",
+      "value": "--color-book-theme: #f59e0b"
+    },
+    {
+      "file": "src/styles/global.css",
+      "prop": "theme-var",
+      "value": "--font-sans: \"Inter var\", ui-sans-serif, system-ui, sans-serif, \"Apple Color Emoji\",\n    \"Segoe UI Emoji\", \"Segoe UI Symbol\", \"Noto Color Emoji\""
+    },
+    {
+      "file": "src/styles/global.css",
+      "prop": "theme-var",
+      "value": "--font-body: \"PT Serif\", ui-serif, Georgia, serif"
+    },
+    {
+      "file": "src/layouts/Layout.astro",
+      "prop": "color",
+      "value": "white"
+    },
+    {
+      "file": "src/layouts/Layout.astro",
+      "prop": "width",
+      "value": "150px"
+    },
+    {
+      "file": "src/layouts/Layout.astro",
+      "prop": "height",
+      "value": "30px"
+    },
+    {
+      "file": "src/layouts/Layout.astro",
+      "prop": "margin-right",
+      "value": "-40px"
+    },
+    {
+      "file": "src/layouts/Layout.astro",
+      "prop": "margin-top",
+      "value": "20px"
+    },
+    {
+      "file": "src/layouts/Layout.astro",
+      "prop": "padding-top",
+      "value": "5px"
+    }
+  ],
+  "color": {
+    "hexCodes": [
+      [
+        "#1a1a1c",
+        1
+      ],
+      [
+        "#f59e0b",
+        1
+      ],
+      [
+        "#3b82f6",
+        1
+      ]
+    ],
+    "paletteTokensUsed": 25,
+    "distinctPaletteTokens": [
+      "bg-blue-100",
+      "bg-blue-50",
+      "bg-blue-600",
+      "bg-gray-100",
+      "bg-gray-50",
+      "bg-red-50",
+      "border-blue-600",
+      "border-gray-200",
+      "border-gray-300",
+      "focus-visible:outline-blue-600",
+      "hover:bg-blue-200",
+      "hover:bg-blue-700",
+      "hover:bg-gray-50",
+      "hover:text-blue-600",
+      "hover:text-gray-500",
+      "text-blue-600",
+      "text-gray-50",
+      "text-gray-500",
+      "text-gray-600",
+      "text-gray-700",
+      "text-gray-800",
+      "text-gray-900",
+      "text-green-500",
+      "text-pink-400",
+      "text-red-600"
+    ],
+    "roleTokensUsed": 2
+  },
+  "hotspots": [
+    {
+      "file": "src/components/HeroSection.astro",
+      "issues": 182
+    },
+    {
+      "file": "src/components/WhyJoinUs.astro",
+      "issues": 154
+    },
+    {
+      "file": "src/components/JoinCommunity.astro",
+      "issues": 108
+    },
+    {
+      "file": "src/components/UpcomingMeetups.astro",
+      "issues": 93
+    },
+    {
+      "file": "src/pages/404.astro",
+      "issues": 61
+    },
+    {
+      "file": "src/components/DiscordSummary.svelte",
+      "issues": 57
+    }
+  ],
+  "renderedPairs": [
+    {
+      "kind": "non-text",
+      "foreground": "oklch(72.3% 0.219 149.579)",
+      "background": "#fff",
+      "contrast": 2.26,
+      "required": 3,
+      "verdict": "fail",
+      "uses": 6,
+      "fgTokens": [
+        "text-green-500"
+      ],
+      "bgTokens": [
+        "bg-white"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <svg> text-green-500 + bg-white",
+        "dist/client/index.html <svg> text-green-500 + bg-white",
+        "dist/client/index.html <svg> text-green-500 + bg-white"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(54.6% 0.245 262.881)",
+      "background": "oklch(93.2% 0.032 255.585)",
+      "contrast": 4.31,
+      "required": 4.5,
+      "verdict": "fail",
+      "uses": 1,
+      "fgTokens": [
+        "text-blue-600"
+      ],
+      "bgTokens": [
+        "bg-blue-100"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <a> text-blue-600 + bg-blue-100"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(54.6% 0.245 262.881)",
+      "background": "oklch(97% 0.014 254.604)",
+      "contrast": 4.82,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 3,
+      "fgTokens": [
+        "text-blue-600"
+      ],
+      "bgTokens": [
+        "bg-blue-50"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <span> text-blue-600 + bg-blue-50",
+        "dist/client/index.html <span> text-blue-600 + bg-blue-50",
+        "dist/client/index.html <span> text-blue-600 + bg-blue-50"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(55.1% 0.027 264.364)",
+      "background": "#fff",
+      "contrast": 4.84,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 4,
+      "fgTokens": [
+        "text-gray-500"
+      ],
+      "bgTokens": [
+        "bg-white"
+      ],
+      "files": [
+        "404.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/404.html <p> text-gray-500 + bg-white",
+        "dist/client/index.html <p> text-gray-500 + bg-white",
+        "dist/client/index.html <p> text-gray-500 + bg-white"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(54.6% 0.245 262.881)",
+      "background": "#fff",
+      "contrast": 5.26,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 7,
+      "fgTokens": [
+        "text-blue-600"
+      ],
+      "bgTokens": [
+        "bg-white"
+      ],
+      "files": [
+        "404.html",
+        "chat/index.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/404.html <a> text-blue-600 + bg-white",
+        "dist/client/404.html <span> text-blue-600 + bg-white",
+        "dist/client/chat/index.html <a> text-blue-600 + bg-white"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "#fff",
+      "background": "oklch(54.6% 0.245 262.881)",
+      "contrast": 5.26,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 5,
+      "fgTokens": [
+        "text-white"
+      ],
+      "bgTokens": [
+        "bg-blue-600"
+      ],
+      "files": [
+        "404.html",
+        "chat/index.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/404.html <a> text-white + bg-blue-600",
+        "dist/client/chat/index.html <a> text-white + bg-blue-600",
+        "dist/client/index.html <a> text-white + bg-blue-600"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(44.6% 0.03 256.802)",
+      "background": "oklch(93.2% 0.032 255.585)",
+      "contrast": 6.2,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 1,
+      "fgTokens": [
+        "text-gray-600"
+      ],
+      "bgTokens": [
+        "bg-blue-100"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <p> text-gray-600 + bg-blue-100"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(71.8% 0.202 349.761)",
+      "background": "#1a1a1c",
+      "contrast": 6.3,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 1,
+      "fgTokens": [
+        "text-pink-400"
+      ],
+      "bgTokens": [
+        "bg-book-gray"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <span> text-pink-400 + bg-book-gray"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(44.6% 0.03 256.802)",
+      "background": "oklch(97% 0.014 254.604)",
+      "contrast": 6.94,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 3,
+      "fgTokens": [
+        "text-gray-600"
+      ],
+      "bgTokens": [
+        "bg-blue-50"
+      ],
+      "files": [
+        "chat/index.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/chat/index.html <p> text-gray-600 + bg-blue-50",
+        "dist/client/index.html <ul> text-gray-600 + bg-blue-50",
+        "dist/client/index.html <p> text-gray-600 + bg-blue-50"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(44.6% 0.03 256.802)",
+      "background": "oklch(98.5% 0.002 247.839)",
+      "contrast": 7.24,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 1,
+      "fgTokens": [
+        "text-gray-600"
+      ],
+      "bgTokens": [
+        "bg-gray-50"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <p> text-gray-600 + bg-gray-50"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(44.6% 0.03 256.802)",
+      "background": "#fff",
+      "contrast": 7.56,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 8,
+      "fgTokens": [
+        "text-gray-600"
+      ],
+      "bgTokens": [
+        "bg-white"
+      ],
+      "files": [
+        "404.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/404.html <p> text-gray-600 + bg-white",
+        "dist/client/index.html <p> text-gray-600 + bg-white",
+        "dist/client/index.html <p> text-gray-600 + bg-white"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(37.3% 0.034 259.733)",
+      "background": "#fff",
+      "contrast": 10.31,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 2,
+      "fgTokens": [
+        "text-gray-700"
+      ],
+      "bgTokens": [
+        "bg-white"
+      ],
+      "files": [
+        "404.html"
+      ],
+      "examples": [
+        "dist/client/404.html <a> text-gray-700 + bg-white",
+        "dist/client/404.html <a> text-gray-700 + bg-white"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(21% 0.034 264.665)",
+      "background": "oklch(97% 0.014 254.604)",
+      "contrast": 16.28,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 2,
+      "fgTokens": [
+        "text-gray-900"
+      ],
+      "bgTokens": [
+        "bg-blue-50"
+      ],
+      "files": [
+        "chat/index.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/chat/index.html <h2> text-gray-900 + bg-blue-50",
+        "dist/client/index.html <h3> text-gray-900 + bg-blue-50"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(98.5% 0.002 247.839)",
+      "background": "#1a1a1c",
+      "contrast": 16.64,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 1,
+      "fgTokens": [
+        "text-gray-50"
+      ],
+      "bgTokens": [
+        "bg-book-gray"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <div> text-gray-50 + bg-book-gray"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(21% 0.034 264.665)",
+      "background": "oklch(98.5% 0.002 247.839)",
+      "contrast": 17,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 1,
+      "fgTokens": [
+        "text-gray-900"
+      ],
+      "bgTokens": [
+        "bg-gray-50"
+      ],
+      "files": [
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/index.html <h2> text-gray-900 + bg-gray-50"
+      ]
+    },
+    {
+      "kind": "text",
+      "foreground": "oklch(21% 0.034 264.665)",
+      "background": "#fff",
+      "contrast": 17.75,
+      "required": 4.5,
+      "verdict": "pass",
+      "uses": 22,
+      "fgTokens": [
+        "text-gray-900"
+      ],
+      "bgTokens": [
+        "bg-white"
+      ],
+      "files": [
+        "404.html",
+        "chat/index.html",
+        "index.html"
+      ],
+      "examples": [
+        "dist/client/404.html <a> text-gray-900 + bg-white",
+        "dist/client/404.html <a> text-gray-900 + bg-white",
+        "dist/client/404.html <a> text-gray-900 + bg-white"
+      ]
+    }
+  ],
+  "renderedPairsNote": "Background resolved through the built DOM ancestor chain in dist/client/**/*.html; the page surface is white because no body background is declared. The Layout.astro `::selection` rule (amber token under white text) is not in this table because it is not a DOM pair: white on var(--color-book-theme) = 2.15."
+}

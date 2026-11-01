@@ -1,0 +1,9 @@
+{
+ "report": "viewport innerWidth=320  fonts: PT Serif LOADED, PSVar LOADED\nvariant              available  needed  delta  wraps  navH   links (w x h)                      verdict\nB-chosen                 288     310    -22  no      54  59x29 55x29 29x29                    OVERFLOWS (clipped)\nB-fullname               288     397   -109  no      54  59x29 55x29 29x29                    OVERFLOWS (clipped)\nB-tight                  288     298    -10  no      54  59x29 55x29 29x29                    OVERFLOWS (clipped)\nA-stacked                288     397   -109  no      80  59x29 55x29 29x29                    OVERFLOWS (clipped)\nC-disclosure             288     267     21  yes      43  45x13 45x29 45x29 45x29              fits  target 13px < 24 AA\nB-smalllinks             288     274     14  no      52  49x27 46x27 25x27                    fits\nB-narrow8                288     262     26  no      52  49x27 46x27 25x27                    fits\nB-marksml                288     254     34  no      52  49x27 46x27 25x27                    fits\nCONTROL (must defect)      288     648   -360  no      54  112x29 112x29 112x29 129x29          DEFECTS (control works)\nrows measured: 8; control defects: true; probe trustworthy",
+ "rows": 8,
+ "controlCaught": true,
+ "faces": [
+  "PT Serif LOADED",
+  "PSVar LOADED"
+ ]
+}

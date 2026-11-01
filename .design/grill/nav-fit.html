@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>nav fit - measured, not asserted</title>
+<style>
+  /* same three faces, same token values as round-6.html - this file exists only to answer
+     "does the shape the operator chose actually fit the viewports we ship?" */
+  @font-face { font-family:"PT Serif"; font-weight:400; font-display:block; src:url("../fonts/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PT Serif"; font-weight:700; font-display:block; src:url("../fonts/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PSVar"; font-weight:100 900; font-display:block; src:url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2"); }
+  :root {
+    --paper: oklch(98.5% 0.006 85); --ink: oklch(32% 0.045 152); --ink-2: oklch(45% 0.035 152);
+    --gold-ink: oklch(55% 0.12 62); --rule: oklch(65.5% 0.03 152);
+    --sp1: 4px; --sp2: 8px; --sp3: 12px; --sp4: 16px; --sp5: 24px;
+    --s-1: 11.1px; --s0: 16px;              /* T3 ramp: chrome label 13.3, mark 16 */
+    --chrome: 13.3px;
+  }
+  * { box-sizing: border-box }
+  body { margin: 0; background: var(--paper); color: var(--ink); font: 400 16px/1.5 "PT Serif", serif }
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 var(--sp4) }   /* the site's real container */
+  h2 { font: 600 11.1px "PSVar", sans-serif; letter-spacing: .08em; text-transform: uppercase; margin: 24px 0 4px }
+  .why { font: 400 13.3px/1.45 "PSVar", sans-serif; color: var(--ink-2); margin: 0 0 8px }
+  nav { display: flex; align-items: center; gap: var(--sp2) var(--sp4); padding: var(--sp3) 0;
+        border-bottom: 1px solid var(--rule); font: 500 var(--chrome)/1 "PSVar", sans-serif }
+  .mark { font: 400 var(--s0)/1.1 "PT Serif", serif; color: var(--ink); text-decoration: none; white-space: nowrap }
+  .mark em { font-style: normal; color: var(--gold-ink) }
+  a.nl { color: var(--ink-2); text-decoration: none; padding: var(--sp2) 0; white-space: nowrap }
+  a.nl[aria-current="page"] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--gold-ink) }
+  details summary { list-style: none }
+  details summary::after { content: " \25BE" }
+  details > div { display: flex; flex-direction: column; padding: var(--sp2) 0 }
+</style>
+</head>
+<body>
+<div class="page">
+  <h2>1 - B as chosen: one row, shortened mark, 16px gaps</h2>
+  <p class="why">mark "MPLS <em>Math</em> Club" at 16px serif; Schedule / Interests / Chat at 13.3px chrome.</p>
+  <nav data-variant="B-chosen"><span class="mark">MPLS <em>Math</em> Club</span><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></nav>
+
+  <h2>2 - B with the name spelled out (the thing B is buying back)</h2>
+  <p class="why">same shape, mark "Minneapolis <em>Math</em> Book Club" - measures the cost of the name.</p>
+  <nav data-variant="B-fullname"><span class="mark">Minneapolis <em>Math</em> Book Club</span><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></nav>
+
+  <h2>3 - B, one tier tighter: 12px gaps, mark 16px</h2>
+  <nav data-variant="B-tight" style="gap: var(--sp2) var(--sp3)"><span class="mark">MPLS <em>Math</em> Club</span><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></nav>
+
+  <h2>4 - A: mark on its own row, links below (the fallback if B cannot fit)</h2>
+  <nav data-variant="A-stacked" style="flex-wrap:wrap"><span class="mark" style="flex:1 1 100%">Minneapolis <em>Math</em> Book Club</span><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></nav>
+
+  <h2>5 - C: full mark + a disclosure</h2>
+  <nav data-variant="C-disclosure" style="justify-content:space-between"><span class="mark">Minneapolis <em>Math</em> Book Club</span><details><summary class="nl">Menu</summary><div><a class="nl" href="#" aria-current="page">Schedule</a><a class="nl" href="#">Interests</a><a class="nl" href="#">Chat</a></div></details></nav>
+
+  <h2>6 - B but links at 11.1px chrome (only if a tier below 340 is wanted)</h2>
+  <nav data-variant="B-smalllinks" style="gap: var(--sp2) var(--sp3)"><span class="mark">MPLS <em>Math</em> Club</span><a class="nl" href="#" aria-current="page" style="font-size:var(--s-1)">Schedule</a><a class="nl" href="#" style="font-size:var(--s-1)">Interests</a><a class="nl" href="#" style="font-size:var(--s-1)">Chat</a></nav>
+
+  <h2>7 - narrow tier candidate: links 11.1px, 8px gaps (S3 sp2)</h2>
+  <nav data-variant="B-narrow8" style="gap: var(--sp1) var(--sp2)"><span class="mark">MPLS <em>Math</em> Club</span><a class="nl" href="#" aria-current="page" style="font-size:var(--s-1)">Schedule</a><a class="nl" href="#" style="font-size:var(--s-1)">Interests</a><a class="nl" href="#" style="font-size:var(--s-1)">Chat</a></nav>
+
+  <h2>8 - narrow tier candidate: mark down to 13.3px serif, links 11.1px, 12px gaps</h2>
+  <nav data-variant="B-marksml" style="gap: var(--sp2) var(--sp3)"><span class="mark" style="font-size:13.3px">MPLS <em>Math</em> Club</span><a class="nl" href="#" aria-current="page" style="font-size:var(--s-1)">Schedule</a><a class="nl" href="#" style="font-size:var(--s-1)">Interests</a><a class="nl" href="#" style="font-size:var(--s-1)">Chat</a></nav>
+</div>
+</body>
+</html>

@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 7. Patterns - states, notices, freshness and elevation, in the ratified palette.</title>
+<style>
+  /* Faces: the ratified set from round 5, served from the woff2 files a self-hosted build would ship
+     (measured over the loopback harness, so this is the real face, not a system stand-in). */
+  @font-face { font-family:"PT Serif"; font-weight:400; font-display:block; src:url("../fonts/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PT Serif"; font-weight:700; font-display:block; src:url("../fonts/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PSVar"; font-weight:100 900; font-display:block; src:url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2"); }
+
+  :root {
+    /* ---- light roles, ratified round 4, every number re-measured in the renderer (contrast/round-6.txt) ---- */
+    --paper: oklch(98.5% 0.006 85);   /* #fcfaf6 */
+    --panel: oklch(97% 0.008 85);     /* #f8f5ef - 1.04 vs paper: a tint, not a layer */
+    --tint: oklch(95% 0.03 152);      /* #e0f5e5 */
+    --ink: oklch(32% 0.045 152);      /* #203927 - 12.02 on paper; also the band ground */
+    --ink-2: oklch(45% 0.035 152);    /* #475b4c - 7.02 */
+    --ink-3: oklch(52% 0.028 152);    /* #5d6e61 - 5.21 */
+    --rule: oklch(65.5% 0.03 152);    /* #849688 - 3.01 on paper AND 4.00 on the band: one rule, two grounds */
+    --gold-ink: oklch(55% 0.12 62);   /* #a25f12 - 4.82 on paper, 4.61 on panel, 4.39 on a tint (banned) */
+    --gold-dark: oklch(76% 0.06 84);  /* #c3ae86 - 5.80 on the band */
+    --band-text: oklch(93% 0.008 152);/* #e4e9e5 - 10.19 on the band */
+    --p1: oklch(50% 0.11 205); --p1t: oklch(95% 0.03 205);
+    --p2: oklch(47% 0.15 315); --p2t: oklch(95% 0.03 315);
+    --p3: oklch(50% 0.14 35);  --p3t: oklch(95% 0.03 35);
+    --p4: oklch(50% 0.10 105); --p4t: oklch(95% 0.03 105);
+
+    /* ---- NEW: the band's own values, solved in the renderer (.design/grill/contrast-oracle.mjs) ----
+       The paper path colours do not cross the dark ground (#007481 on #203927 measures 1.97), so the
+       same four hues need lighter lightness on ink. Solved to clear 4.5 with margin, not to the wire. */
+    --bp1: oklch(70% 0.11 205);  /* #2cb2bf  4.91 on the band */
+    --bp2: oklch(72% 0.15 315);  /* #c885e5  4.74 */
+    --bp3: oklch(71% 0.14 35);   /* #eb7e63  4.59 */
+    --bp4: oklch(69% 0.1 105);   /* #a49f51  4.57 */
+    --br1: oklch(22% 0.05 205);  /* #002126  1.35 vs the band: a recess, carries the hue at 5.97 */
+    --br2: oklch(22% 0.05 315);
+    --br3: oklch(22% 0.05 35);
+    --br4: oklch(22% 0.05 105);
+
+    /* ---- type (round 5: 1.200 ramp / T3, PT Serif content + Public Sans chrome) ---- */
+    --s-1: 13.3px; --s0: 16px; --s1: 19.2px; --s2: 23px; --s3: 27.7px; --s4: 33.2px; --s5: 39.8px; --s6: 47.8px; --s7: 57.3px;
+    /* ---- spacing (round 5: S3) ---- */
+    --sp1: 4px; --sp2: 8px; --sp3: 12px; --sp4: 16px; --sp5: 24px; --sp6: 32px; --sp7: 48px; --sp8: 64px;
+    --r: 6px;                       /* radius base (round 2) - and measured: that is already what ships */
+    --serif: "PT Serif", ui-serif, Georgia, serif;
+    --ui: "PSVar", ui-sans-serif, system-ui, sans-serif;
+    --d-col: 150ms linear;          /* colour and shadow */
+    --d-mov: 250ms ease-out;        /* anything that moves */
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: oklch(95% 0.004 85); color: var(--ink-2); font-family: var(--ui); font-size: 15px; line-height: 1.55; }
+  main { max-width: 1180px; margin: 0 auto; padding: 36px 20px 96px; }
+  h1 { font-family: var(--serif); font-weight: 700; font-size: 26px; color: var(--ink); margin: 0 0 8px; }
+  .lead { font-family: var(--serif); font-size: 16.5px; line-height: 1.6; color: var(--ink-2); max-width: 78ch; margin: 0 0 22px; }
+  h2.up { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); margin: 44px 0 8px; }
+  .note { font-family: var(--serif); font-size: 15.5px; line-height: 1.6; color: var(--ink); max-width: 86ch; margin: 12px 0; }
+  .wrap-x { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-family: ui-monospace, monospace; font-size: 12.5px; background: #fff; color: var(--ink); }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid oklch(85% 0.01 152); white-space: nowrap; }
+  th { font-family: var(--ui); font-weight: 600; font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-2); }
+  .good { color: #0a6b3d; } .bad { color: #b00020; }
+  .verdict { font-family: var(--ui); font-size: 13.5px; line-height: 1.55; color: var(--ink-2); margin: 6px 0 0; max-width: 96ch; }
+  .verdict b, .note b, td b { color: var(--ink); }
+  .lbl { font-family: var(--ui); font-weight: 600; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+  .frame { width: min(375px, 100%); container-type: inline-size; background: var(--paper); color: var(--ink); border: 1px solid var(--rule); border-radius: 8px; overflow: hidden; margin-top: 12px; }
+  .duo { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .duo { grid-template-columns: 1fr 1fr; } }
+  .trio { display: grid; gap: 16px; grid-template-columns: 1fr; }
+  @media (min-width: 900px) { .trio { grid-template-columns: 1fr 1fr 1fr; } }
+
+  /* ================= CONTROLS ================================================================
+     Two rules make the heights arithmetic instead of decoration:
+     (1) height = line box + 2 x padding, line box snapped to the 4px grid, padding drawn from S3
+         (4,8,12,16,24,32,48,64) - so a height is a sum of ratified numbers, and the reachable set is
+         enumerable (below);
+     (2) keylines are INSET SHADOWS, not borders. A 1px border adds 2px to every box, which is how a
+         "40px" button silently becomes 42, and why one shipped button family currently measures
+         50 at 375, 58 at 1240 and 62 on the 404 page. With inset shadows the arithmetic is exact and
+         swapping a variant never moves the layout.                                                       */
+  .btn { font-family: var(--ui); font-weight: 500; display: inline-flex; align-items: center; gap: var(--sp2);
+         border: 0; border-radius: var(--r); text-decoration: none; transition: background-color var(--d-col), box-shadow var(--d-col), color var(--d-col); }
+  .btn:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--gold-ink); outline-offset: 3px; }
+  .h32 { height: 32px;  font-size: var(--s-1); line-height: 16px; padding: var(--sp2) var(--sp3); }   /* 16 + 2x8  = 32 */
+  .h40 { height: 40px;  font-size: var(--s0);  line-height: 24px; padding: var(--sp2) var(--sp4); }   /* 24 + 2x8  = 40 */
+  .h44 { height: 44px;  font-size: var(--s0);  line-height: 20px; padding: var(--sp3) var(--sp4); }   /* 20 + 2x12 = 44 */
+  .h48 { height: 48px;  font-size: var(--s0);  line-height: 24px; padding: var(--sp3) var(--sp5); }   /* 24 + 2x12 = 48 */
+  .h56 { height: 56px;  font-size: var(--s1);  line-height: 24px; padding: var(--sp4) var(--sp5); }   /* 24 + 2x16 = 56 */
+
+  .b-primary   { background: var(--ink); color: var(--band-text); }                        /* 10.19 */
+  .b-primary:hover  { background: oklch(40% 0.055 152); }                                  /* 7.33  */
+  .b-secondary { background: var(--paper); color: var(--ink); box-shadow: inset 0 0 0 1px var(--rule); }  /* 12.02 / keyline 3.01 */
+  .b-secondary:hover { background: var(--tint); }                                          /* ink on tint 10.96 */
+  .b-quiet     { background: transparent; color: var(--gold-ink); box-shadow: inset 0 -1px 0 var(--gold-ink); }  /* 4.82 both */
+  .b-quiet:hover { background: var(--panel); }                                             /* 4.61, still above 4.5 */
+
+  .chip, .chipband, .tag { display: inline-flex; align-items: center; gap: var(--sp1); font-family: var(--ui);
+    font-size: var(--s-1); line-height: 16px; padding: var(--sp1) var(--sp2); height: 24px; border-radius: var(--r);
+    text-decoration: none; transition: background-color var(--d-col); }
+  .chip { box-shadow: inset 0 0 0 1px currentColor; }
+  .chip.c1 { color: var(--p1); background: var(--p1t); }   /* 4.81 */
+  .chip.c2 { color: var(--p2); background: var(--p2t); }   /* 6.34 */
+  .chip.c3 { color: var(--p3); background: var(--p3t); }   /* 5.46 */
+  .chip.c4 { color: var(--p4); background: var(--p4t); }   /* 5.13 */
+  .tag { color: var(--ink-2); background: var(--tint); }
+  .big { height: 32px; padding: var(--sp2) var(--sp3); }
+
+  /* ================= SPECIMEN PAGES ========================================================= */
+  .page { background: var(--paper); color: var(--ink); }
+  .page nav { display: flex; align-items: baseline; gap: var(--sp1) var(--sp4); padding: var(--sp3) var(--sp4); border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+  .mark { font-family: var(--serif); font-weight: 700; font-size: var(--s1); letter-spacing: -0.01em; }
+  .mark em { font-style: normal; color: var(--gold-ink); }
+  /* inline links get vertical padding, or their target is just the line box - which is the shipped bug */
+  .page nav :is(a, summary).nl { font-size: var(--s-1); line-height: 24px; padding: var(--sp2) 0; color: var(--ink-2); text-decoration: none; }
+  .page nav :is(a, summary).nl[aria-current] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--gold-ink); }
+  .page nav :is(a, summary).nl:hover { color: var(--ink); }
+  .page nav details { position: relative; }
+  .page nav details > div { display: flex; flex-direction: column; gap: var(--sp1); padding-top: var(--sp2); }
+  .kick { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); }
+  .hero { padding: var(--sp5) var(--sp4); }
+  .hero h4 { font-family: var(--serif); font-weight: 700; font-size: var(--s3); line-height: 44px; letter-spacing: -0.015em; margin: var(--sp1) 0 var(--sp2); max-width: 22ch; }
+  .cta-row { display: flex; flex-wrap: wrap; gap: var(--sp3); align-items: center; }
+
+  /* schedule rows: the row shape D70 defined (title, date, venue, series, status) and the real case
+     where the club's own feed carries no clock for two of four November dates */
+  .rows { border-top: 1px solid var(--rule); }
+  .row { display: grid; grid-template-columns: 1fr; gap: var(--sp1); padding: var(--sp3) var(--sp4); border-bottom: 1px solid var(--rule); }
+  .row .d { font-family: var(--ui); font-weight: 600; font-size: var(--s0); line-height: 20px; color: var(--gold-ink); font-variant-numeric: tabular-nums; }
+  .row .d small { display: block; font-family: var(--ui); font-weight: 500; font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-3); margin-top: var(--sp1); }
+  .row .t { font-family: var(--serif); font-weight: 700; font-size: var(--s1); line-height: 24px; }
+  .row .m { font-family: var(--ui); font-size: var(--s-1); color: var(--ink-3); }
+  .row .s { font-family: var(--ui); font-weight: 600; font-size: 11.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  .row.compact { gap: var(--sp1); padding: var(--sp2) var(--sp4); }
+  .row.comfy   { gap: var(--sp2); padding: var(--sp3) var(--sp4); }
+  .row.airy    { gap: var(--sp3); padding: var(--sp4) var(--sp4); }
+  .row > .btn  { justify-self: start; }   /* otherwise the grid stretches the CTA to the column and the target stops being a control */
+  @container (min-width: 700px) { .row.wide { grid-template-columns: 104px 1fr auto; gap: var(--sp4); align-items: baseline; } }
+
+  /* the dark band: one per screen, and cards sit IN it */
+  .band { background: var(--ink); color: var(--band-text); padding: var(--sp5) var(--sp4); }
+  .band h5 { font-family: var(--serif); font-weight: 700; font-size: var(--s2); line-height: 32px; margin: 0 0 var(--sp1); color: var(--band-text); }
+  .band .kick { color: var(--gold-dark); }
+  .bcard { border-radius: var(--r); padding: var(--sp3) var(--sp4); box-shadow: inset 0 0 0 1px var(--rule); transition: box-shadow var(--d-col); }
+  .bcard:hover { box-shadow: inset 0 0 0 1px var(--gold-dark); }
+  .bcard + .bcard { margin-top: var(--sp3); }
+  .bcard .vt { font-family: var(--serif); font-weight: 700; font-size: var(--s1); line-height: 24px; color: var(--band-text); }
+  .bcard .vm { font-family: var(--ui); font-size: var(--s-1); color: oklch(78% 0.02 152); margin-top: var(--sp1); }
+  .bcard blockquote { margin: 0; font-family: var(--serif); font-size: var(--s0); line-height: 1.6; color: var(--band-text); }
+  .bcard cite { display: block; font-family: var(--ui); font-style: normal; font-size: var(--s-1); color: var(--gold-dark); margin-top: var(--sp2); font-variant-numeric: tabular-nums; }
+  .bcard.recess { background: var(--br2); box-shadow: none; }
+  .bcard.paper-card { background: var(--paper); }
+  .bcard.paper-card :is(.vt, blockquote) { color: var(--ink); }
+  .bcard.paper-card .vm { color: var(--ink-3); }
+  .bcard.paper-card cite { color: var(--gold-ink); }
+  .chipband.b1 { color: var(--bp1); }
+  .chipband.b2 { color: var(--bp2); }
+  .chipband.b1f { color: var(--bp1); background: var(--br1); }
+  .trust { font-family: var(--serif); font-size: var(--s-1); line-height: 1.6; color: var(--ink-3); max-width: 48ch; margin: 0; }
+  .trust b { color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+  /* share card: laid out at its real 1200x630 and zoomed, so the ratio and the line breaks are the
+     real ones (zoom changes the layout box; transform: scale would leave a 1200px box clipped by the
+     wrapper, which the layout probe then rightly reports as hidden overflow) */
+  /* zoom scales the layout box, so the card really is 1200x630 and measures 336x176. The min-width:0
+     is load-bearing: without it the grid item's min-content is the *unzoomed* 1200px, which pushes the
+     document sideways (measured: scrollWidth 368 at a 375 viewport). */
+  .duo > div { min-width: 0; }
+  .sharewrap { width: 100%; max-width: 272px; min-width: 0; margin-top: 12px; }
+  .share { zoom: 0.22; width: 1200px; height: 630px; background: var(--paper); color: var(--ink); padding: 56px 64px; font-family: var(--serif); }
+  .share .sk { font-family: var(--ui); font-weight: 600; font-size: 22px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-ink); }
+  .share .sd { font-weight: 700; font-size: 132px; line-height: 136px; letter-spacing: -0.02em; margin: 16px 0 8px; font-variant-numeric: tabular-nums; }
+  .share .st { font-size: 46px; line-height: 1.35; max-width: 22ch; }
+  .share .sm { font-family: var(--ui); font-size: 28px; color: var(--ink-3); margin-top: 24px; }
+
+  /* ================= PATTERNS (round 7) ====================================================
+     One notice grammar. Severity is carried by a WORD and a KEYLINE, not by a fill - because the
+     fills available measure FLAT (tint 1.10 vs paper, panel 1.04, shipped red-50 1.09 vs white) and
+     a fill also forbids the hairline (rule on tint 2.74, under the 3.0 non-text bar).
+     The round-6 arithmetic is unchanged: height = line box + 2 x an S3 pad, keyline is an inset
+     shadow (a border all round adds 2px and breaks the sum). A ONE-SIDED separator is different and round 6
+     accepted it: .row / nav carry border-bottom 1px solid var(--rule).                        */
+  :root { --signal: oklch(52% 0.15 355); }   /* round-7 CANDIDATE ONLY (Q1 option B): the warm hue the scan found legal on every bar. Not ratified. */
+  /* tracked status words go to 11.1px = the T3 step BELOW --s-1 (13.3 / 1.2), which the nav's narrow
+     tier already uses. round-6's specimen wrote 11.5px in .kick/.lbl - an off-ramp one-off to be
+     mapped in apply, not a new step. */
+  .st { font-family: var(--ui); font-weight: 600; font-size: 11.1px; line-height: 24px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .notice { font-family: var(--ui); font-size: var(--s-1); line-height: 24px; border-radius: var(--r); padding: var(--sp3) var(--sp4);
+    box-shadow: inset 0 0 0 1px var(--rule); }   /* the strut must be the 24px line box, or the sum drifts a pixel */
+  .notice .st { display: block; }   /* a label is a line of its own; as an inline box its baseline drift adds a px to the sum */
+  .notice .nw { color: var(--ink); }
+  .notice .nb { font-family: var(--serif); font-size: var(--s0); line-height: 24px; color: var(--ink-2); margin: 2px 0 0; }
+  .notice .nm { font-family: var(--ui); font-size: var(--s-1); color: var(--ink-3); margin-top: var(--sp1); font-variant-numeric: tabular-nums; }
+  .notice .na { display: flex; flex-wrap: wrap; gap: var(--sp2); margin-top: var(--sp3); }
+  .notice.caution { box-shadow: inset 0 0 0 1px var(--gold-ink); }        /* 4.82 as a keyline - the mark colour, already in the system */
+  .notice.caution .nw { color: var(--gold-ink); }
+  .notice.signal { box-shadow: inset 0 0 0 1px var(--signal); }           /* option B only: hue 355, 5.77 */
+  .notice.signal .nw { color: var(--signal); }
+  .notice.filled { background: var(--tint); box-shadow: inset 0 0 0 1px var(--rule); }  /* fill 1.10 FLAT, edge 2.74 FAIL */
+  .notice.band { background: var(--ink); color: var(--band-text); box-shadow: inset 0 0 0 1px var(--rule); }  /* 4.00 / 10.19 */
+  .notice.band .nb { color: oklch(78% 0.02 152); }
+  .notice.band .nm { color: var(--gold-dark); }
+  /* everything from here down is the SHIPPED shape, reproduced so it can be measured - it is not
+     a colour proposal. Colours are the resolved Tailwind v4 values from the built css. */
+
+  /* ---- shipped-state reproductions: colour values are the resolved Tailwind v4 values read out of
+     the built css (dist/client/_astro/Layout.BuEHVvju.css), not remembered. ---- */
+  .ship { --red50: oklch(97.1% .013 17.38); --red600: oklch(57.7% .245 27.325); --blue50: oklch(97% .014 254.604);
+          --gray50: oklch(98.5% .002 247.839); --gray100: oklch(96.7% .003 264.542); --gray200: oklch(92.8% .006 264.531);
+          --gray500: oklch(55.1% .027 264.364); --gray600: oklch(44.6% .03 256.802); --gray800: oklch(27.8% .033 256.848); }
+  .ship .err { background: var(--red50); border-radius: 8px; padding: 32px; text-align: center; }   /* bg-red-50 rounded-lg p-8 */
+  .ship .err p { margin: 0; color: var(--red600); font-family: var(--ui); font-size: 16px; line-height: 24px; }  /* text-red-600, inherits 16px */
+  .ship .card { background: var(--gray50); border: 1px solid var(--gray200); border-radius: 8px; overflow: hidden; }
+  .ship .card > .hd { background: var(--gray100); border-bottom: 1px solid var(--gray200); padding: 12px 16px; color: var(--gray800); font-family: var(--ui); font-weight: 500; }
+  .ship .fresh { color: var(--gray500); font-family: var(--ui); font-size: 14px; }
+  .ship .spinner { width: 32px; height: 32px; border-radius: 50%; box-shadow: inset 0 -2px 0 oklch(54.6% .245 262.881); animation: spin 1s linear infinite; }
+  .ship .loadwrap { display: flex; align-items: center; justify-content: center; gap: 12px; padding: 48px 0; }  /* py-12: measured 128px tall */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .ship .spinner { animation-duration: 6s; } }   /* the guard the artifact does NOT have */
+  .loadline { font-family: var(--ui); font-size: var(--s-1); line-height: 24px; }   /* a state is a line, 24px like every other line */
+  .loadline .st { display: block; }   /* same reason as .notice .st: an inline box's baseline drift adds a px */
+  .card-rule { border-radius: var(--r); box-shadow: inset 0 0 0 1px var(--rule); }   /* on the page: a hairline, no elevation */
+  .skel { height: 12px; border-radius: 6px; background: oklch(98.5% .002 247.839); box-shadow: inset 0 0 0 1px oklch(92.8% .006 264.531); }
+
+  /* ---- Q5: event status, in the row grammar round 6 accepted ---- */
+  .row .status { display: inline-flex; align-items: center; height: 24px; padding: 0 var(--sp2); border-radius: var(--r);
+    box-shadow: inset 0 0 0 1px var(--rule); color: var(--ink); }
+  .row.cancelled .t, .row.cancelled .m, .row.cancelled .d { color: var(--ink-2); }        /* 7.02: legible, secondary - not struck, not coloured */
+  .row.cancelled .d small { color: var(--ink-3); }
+  .row .d .clock { color: var(--ink-3); }                                                /* "time not set": 5.21 */
+  .row .s .sw { color: var(--ink); }             /* the status WORD, in the series lane at narrow widths */
+  .row .sl { display: flex; align-items: baseline; }
+  /* wide row: the status gets its own column, so a status can never reflow the list */
+  @container (min-width: 700px) { .row.wide.has-status { grid-template-columns: 104px 1fr auto auto; } }
+
+  /* ---- Q6: what a shadow means. sh1/sh2 solve to the 1.35 layer bar at the contact edge (black .13 /
+     ink .165 at the stop); shship is shipped shadow-lg, which measures 1.25 painted / 1.26 nominal, so
+     it is decoration. ---- */
+  .shship { box-shadow: 0 10px 15px -3px rgba(0,0,0,.102), 0 4px 6px -4px rgba(0,0,0,.102); }
+  .shshipmd { box-shadow: 0 4px 6px -1px rgba(0,0,0,.102), 0 2px 4px -2px rgba(0,0,0,.102); }
+  .sh1 { box-shadow: 0 1px 2px 0 rgba(32,57,39,.165); }
+  .sh2 { box-shadow: 0 2px 5px -1px rgba(32,57,39,.22), 0 12px 28px -6px rgba(32,57,39,.3); }
+  .float { position: relative; }
+  .float > .pop { position: absolute; left: 8px; top: 8px; width: 150px; background: var(--paper); padding: 12px; border-radius: var(--r); }
+
+  /* ---- empty states reuse the row ground; no new container role ---- */
+  .empty { padding: var(--sp5) var(--sp4); }
+  .empty .et { font-family: var(--serif); font-weight: 700; font-size: var(--s1); line-height: 24px; color: var(--ink); margin: var(--sp1) 0 var(--sp2); }
+  .empty .eb { font-family: var(--serif); font-size: var(--s0); line-height: 24px; color: var(--ink-2); max-width: 46ch; }
+  .asof { font-family: var(--ui); font-size: var(--s-1); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+  .cmp { border-top: 1px solid var(--rule); }
+  .control { font-family: var(--mono, var(--ui)); font-size: 13.3px; color: var(--ink-3); }
+  code { overflow-wrap: anywhere; }   /* page chrome only: a long file path must not widen the document at 375 */
+</style>
+</head>
+<body>
+<main>
+  <h1>Round 7. Patterns.</h1>
+  <p class="lead"><strong>ANSWERED 2026-11-01 UTC (operator): Q1 A, Q2 A, Q3 A, Q4 A, Q5 A, Q6 A - the recommendation on all
+  six.</strong> What that commits, in one line each: a notice is a <em>word plus a keyline</em> and the system gains
+  <strong>no new hue</strong>; the zero-upcoming empty state <em>converts</em>; the site states its copy date and
+  <em>raises no alarm</em>; the Discord island's loading is a 24px line and its failure is the same notice with a 40px
+  retry; status is a <em>word</em> (Cancelled / Scheduled / Past / time not set), never a strike and never a colour alone;
+  and a hairline means "on the page" while a shadow means "above it". Net token change: <strong>zero new colours</strong>,
+  two elevation shadows (ink-tinted, solved to clear the 1.35 layer bar), one notice component serving paper, panel and
+  the ink band. Two syntheses this page does not itself decide are recorded in D102-D105 and in
+  <code>.design/decisions.json</code>: whether a notice's own action button is <code>secondary</code> (a second
+  <code>rule</code> hairline 12px inside the notice's own) or <code>quiet</code> (no keyline at all), and the fact that
+  declining Q3-B removes the <em>visitor-facing</em> stale notice while leaving the <code>check:events-feed</code> build
+  failure (maintainer-facing) intact.</p>
+  <p class="lead">This round decides <strong>what a state is made of</strong> - empty, stale, failed, cancelled, "time not
+  set", loading - and <strong>what a shadow means</strong>. Components (32/40/48, three buttons + chips, the nav, comfy
+  rows, flat band cards) are settled; so is the layer bar round 6 discovered (<strong>1.35</strong> = "reads as a separate
+  surface"). Every number below is measured twice: the <em>before</em> column off the built artifact and the shipped
+  classes resolved out of the built CSS, the <em>after</em> column off this specimen through
+  <code>.design/grill/artifact-measure.mjs</code>, and every colour pair through the renderer oracle
+  (<code>.design/grill/contrast/out/cfg-r7.txt</code> - 50 pairs, 8 solves); the hue and shadow arithmetic comes from
+  <code>.design/grill/round7-math.mjs</code>, and the specimen's own geometry from <code>.design/grill/round7-measure.js</code>
+  - its report is in <code>.design/grill/round7/</code> at four widths (1240, 900, 375, 320) and every number quoted in a
+  verdict below is copied from it or from the oracle. The probe also plants four defects (see the last section) and
+  prints <code>CONTROLS 4/4</code> only if it catches them.</p>
+  <p class="lead"><strong>Why these questions and not others:</strong> the end-state architecture pre-answers most of R5.
+  The public site never fetches Mobilizon at request time (D73), so <em>events have no loading state by construction</em> -
+  no skeletons, no spinners. The feed is <strong>upcoming-only</strong>, so <em>zero upcoming events is a real production
+  state</em>, not a hypothetical. There is no account, no login and no roster UI (D73/D77), so there is no
+  permission/empty-inbox pattern to design. That leaves exactly one dynamic surface with loading - the Discord island -
+  plus the states that come from the data itself.</p>
+
+  <h2 class="up">what ships today, measured in the browser and off the built CSS</h2>
+  <div class="wrap-x">
+  <table>
+    <tr><th>shipped pattern</th><th>measured</th><th>verdict</th><th>what that means</th></tr>
+    <tr><td>Discord error block<br><code>bg-red-50 + text-red-600</code></td><td>text pair <b>4.36</b> (bar 4.5)</td><td class="bad">FAILS AA</td><td>the failure message itself is under AA. The site's other under-AA text pair is its most important control: the hero <code>View Schedule</code> CTA is <code>text-blue-600</code> on <code>bg-blue-100</code>, measured <b>4.30</b> in the same run (on plain white the same ink measures 5.25 - the <em>fill</em> is what pushes it under). So the shipped palette fails at the surface that carries state and at the surface that carries action.</td></tr>
+    <tr><td>every colored state box<br><code>red-50 / blue-50 / gray-50</code></td><td>layer vs white <b>1.09 / 1.09 / 1.05</b></td><td class="bad">FLAT</td><td>under the 1.35 layer bar. The "warning box" is not a separate surface - it is a slightly warm rectangle. The signal is the hue, and the hue is the only thing carrying it.</td></tr>
+    <tr><td>card / header edges<br><code>border-gray-200</code></td><td>1.18 on gray-50, 1.24 on white (bar 3.0)</td><td class="bad">DECORATION</td><td>the shipped boundary is not a boundary. Our ratified <code>rule</code> is 3.01 on paper and 4.00 on the band, so one token fixes both.</td></tr>
+    <tr><td>island loading region (server-rendered)</td><td><b>864x128</b> at 1240, <b>343x128</b> at 375: <code>py-12</code> = 48+48 plus a 32px arc; <code>animation: spin 1s infinite</code></td><td class="bad">no guard, no reservation</td><td><code>prefers-reduced-motion</code> appears <b>nowhere</b> in the artifact CSS (measured across every stylesheet rule). Nothing reserves the height, so the content that replaces it moves the page.</td></tr>
+    <tr><td>a visitor with JavaScript off</td><td>static HTML contains the loading block; the error and empty branches are <b>absent</b> (<code>grep</code> of <code>dist/client/chat/index.html</code>: "Failed to load" 0, "No channels available" 0)</td><td class="bad">spinner forever</td><td>the fetch is the only way out of the loading branch, so a JS-off visitor watches a spinning circle for the life of the page. The site's JS-optional rule (D73, static-first) is broken at its one dynamic surface.</td></tr>
+    <tr><td>a channel with no summary</td><td><code>DiscordSummary.svelte:96</code> <code>{#if summary?.summary}</code> with <b>no <code>{:else}</code></b> (:122-123)</td><td class="bad">silent blank</td><td>the card renders a header and nothing else. The visitor cannot tell "no summary yet" from "the page is broken" - which is the difference between an empty state and a defect.</td></tr>
+    <tr><td>the empty copy</td><td>"No channels available. Please check back later."</td><td class="bad">no action</td><td>an empty state with no path out, in a site whose whole job is paths out (Meetup, Discord, calendar, Mobilizon).</td></tr>
+    <tr><td>zero upcoming events</td><td>no such state exists; <code>UpcomingMeetups.astro</code> is behind a flag and its copy is fabricated ("Saturday, 2:00 PM at the Local Library")</td><td class="bad">not designed</td><td>and the state is guaranteed to happen: the feed we will mirror is upcoming-only, so in a gap between events the list is genuinely empty.</td></tr>
+    <tr><td>shipped elevation<br><code>shadow-lg / shadow-md</code></td><td>painted composite <b>1.25</b> vs paper (stop arithmetic 1.26; bar 1.35)</td><td class="bad">FLAT</td><td>17 shadow writes - 1 <code>shadow-sm</code>, 7 <code>shadow-md</code>, 3 <code>shadow-lg</code>, 6 <code>hover:shadow-lg</code> (counted in <code>src/</code>, not in the bundle): a hover affordance whose measured delta is 1.25 over a 1.05 fill. To clear 1.35 the contact stop needs alpha <b>.13</b> (black) or <b>.165</b> (ink-tinted) - and at a wide blur that same arithmetic becomes a visible grey band (.30 black = 2.1), which is why the level below is a question and not a token.</td></tr>
+  </table>
+  </div>
+  <p class="note"><strong>The through-line:</strong> every shipped state is made of <em>fill and hue</em>, and both measure
+  flat (1.05-1.09), while the one thing that would carry meaning - a boundary - is missing or decorative (1.13-1.24).
+  The ratified system already has the opposite: <code>rule</code> at 3.01/4.00, ink at 12.02, gold at 4.82. So the round-7
+  question is mostly <em>what carries severity</em>, not what colour severity is.</p>
+
+  <!-- ==================================================== Q1 -->
+  <h2 class="up">Q1 - what a notice is made of, and whether this system is allowed a new hue</h2>
+  <p class="note">Same sentence, three ways. All three sit on the round-6 arithmetic (height = line box + 2 x pad, keyline
+  as an inset shadow), so the choice is about <em>what carries the meaning</em>. The hue question was measured before
+  asking: <code>.design/grill/round7-math.mjs</code> scans every 5&deg; of hue for one that clears 4.5 as text on paper,
+  stays in gamut, sits <strong>&ge; 40&deg;</strong> from every hue already in use (ink 152, gold 62, path cyan 205 /
+  plum 315 / coral 35 / olive 105), and stays <strong>&ge; 0.05</strong> delta-OKLab from every brand colour D88
+  catalogued. <strong>The legal warm hue is 355&deg;; the naive red is not legal.</strong></p>
+  <div class="trio">
+    <div class="frame page" data-opt="A" style="padding:20px">
+      <p class="lbl">A - word + keyline, no new hues <span class="good">(recommended)</span></p>
+      <div class="notice" style="margin-bottom:12px">
+        <div class="st nw">Out of date</div>
+        <p class="nb">This list may be missing the newest event. The schedule is copied from the club's own calendar, and the copy is refreshed when a member updates it.</p>
+        <div class="na"><a class="btn b-secondary h32" href="#">Join on Meetup</a><a class="btn b-quiet h32" href="#">Discord</a></div>
+        <div class="nm">copied 30 Oct · [N] events listed</div>
+      </div>
+      <div class="notice caution">
+        <div class="st nw">Time not set</div>
+        <p class="nb">Doors at [time]. The clock is posted in the club Discord a few days before each meeting and appears here the same day.</p>
+      </div>
+      <div class="notice" data-claim="notice1" style="margin-top:12px"><span class="st nw">Nothing scheduled</span></div>
+      <p class="verdict"><b>ANSWERED: A.</b> Measured: edge <code>rule</code> <b>3.01</b>, word ink <b>12.02</b>, body ink-2 <b>7.02</b>, meta ink-3 <b>5.21</b>; the caution variant takes the existing gold (keyline <b>4.82</b>, word <b>4.82</b>). A one-line notice is <b>48px</b> and a two-line body <b>64px</b> - the same arithmetic as the control ladder (line box 24 + 2 x an S3 pad), and the keyline is an inset shadow so it costs nothing. <b>Zero new tokens.</b></p>
+    </div>
+    <div class="frame page" data-opt="B" style="padding:20px">
+      <p class="lbl">B - one new signal hue (hue 355)</p>
+      <div class="notice signal" style="margin-bottom:12px">
+        <div class="st nw">Out of date</div>
+        <p class="nb">This list may be missing the newest event. The schedule is copied from the club's own calendar, and the copy is refreshed when a member updates it.</p>
+      </div>
+      <div class="notice" style="background: oklch(95% 0.03 355)">
+        <div class="st nw" style="color: var(--signal)">the same hue on its own tint</div>
+        <p class="nb" style="color: var(--ink-2)">fill 1.12 vs paper = still FLAT, so the tint cannot carry the state on its own either.</p>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> Kept in the record because the scan is the durable part: <code>oklch(52% 0.15 355)</code> = <b>#a73b6d</b>: text <b>5.77</b> (oracle; the standalone solver says 5.74), keyline <b>5.77</b>, on its own tint <b>5.14</b>; <b>0.120</b> from UMN maroon (furthest of any red tested) and 40&deg; from path plum. Costs <b>+2 tokens</b> (signal, signal-tint) and a rule about where it may sit. The naive choices fail the same scan: hue 25 is <b>10&deg;</b> from the coral join-path hue and 0.070 from Target red; Tailwind's <code>red-600</code> is <b>out of gamut</b> and <b>0.030</b> from the generic web error red; a warning amber at hue 70 is out of gamut and <b>8&deg;</b> from our gold.</p>
+    </div>
+    <div class="frame page" data-opt="C" style="padding:20px">
+      <p class="lbl">C - the shipped shape: a filled block</p>
+      <div class="ship">
+        <div class="err" style="margin-bottom:12px"><p>Failed to load Discord summary</p></div>
+      </div>
+      <div class="notice filled">
+        <div class="st nw" style="color: var(--ink)">Out of date</div>
+        <p class="nb" style="color: var(--ink)">Same message on a tint fill.</p>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN - and this is the shipped shape, so it is retired.</b> Measured, both halves of it fail: the shipped pair is <b>4.36</b> (under 4.5) and the fill is <b>1.09</b> vs white, so it is not a layer; our tint version reads <b>1.10</b> vs paper <em>and</em> its hairline drops to <b>2.74</b> (under 3.0), and if the label is gold it is <b>4.39</b>. A filled notice has to give up its own boundary.</p>
+    </div>
+  </div>
+  <div class="duo" style="margin-top:16px">
+    <div>
+      <p class="lbl">the hue scan, in full (bar: 4.5 text on paper, &ge;40&deg; from a hue in use, &ge;0.05 from any brand)</p>
+      <div class="wrap-x">
+      <table>
+        <tr><th>candidate</th><th>renders</th><th>text on paper</th><th>nearest brand</th><th>closest hue in use</th><th></th></tr>
+        <tr><td>warm signal 355&deg; C.15</td><td>#a73b6d</td><td>5.77</td><td>0.120 UMN maroon</td><td>40&deg; (path plum)</td><td class="good">legal</td></tr>
+        <tr><td>cool signal 245-275&deg; C.10</td><td>#3f6aa1</td><td>5.32</td><td class="bad">0.066 Amazon link blue</td><td>40-55&deg;</td><td>legal bars, <b>D88 says no</b></td></tr>
+        <tr><td>naive red 25&deg; C.15</td><td>#af3c3a</td><td>5.71</td><td>0.070 Target red</td><td class="bad">10&deg; (path coral)</td><td class="bad">collides with a join path</td></tr>
+        <tr><td>warning amber 70&deg; C.14</td><td>#9a5600</td><td>5.44</td><td>0.145 Target red</td><td class="bad">8&deg; (gold) · out of gamut</td><td class="bad">no</td></tr>
+        <tr><td>Tailwind red-600 (shipped)</td><td>#e7000b</td><td>4.56 on paper / <b>4.36 on its own red-50</b></td><td class="bad">0.030 web error red</td><td class="bad">8&deg; (path coral)</td><td class="bad">the generic error colour</td></tr>
+        <tr><td>gold-ink (already ours)</td><td>#a25f12</td><td>4.82</td><td>0.135 Target red</td><td>0&deg; (gold) - it IS a role</td><td class="good">legal as the caution</td></tr>
+      </table>
+      </div>
+    </div>
+    <div>
+      <p class="lbl">the same grammar, on the dark band (no new tokens there either)</p>
+      <div class="frame" style="border-color:var(--ink);padding:16px">
+        <div class="notice band">
+          <div class="st nw" style="color:var(--gold-dark)">Schedule copied [MONTH DAY]</div>
+          <p class="nb">Dates and venues come from the club's own calendar; this page is a copy of it.</p>
+          <div class="nm">add to calendar · Meetup · Discord</div>
+        </div>
+      </div>
+      <p class="verdict">edge <code>rule</code> <b>4.00</b> on ink (round 6), body <b>10.19</b>, word gold <b>5.80</b>: one
+      notice component for both grounds, exactly the way one <code>rule</code> role already serves both.</p>
+    </div>
+  </div>
+
+  <!-- ==================================================== Q2 -->
+  <h2 class="up">Q2 - zero upcoming events: the state the architecture guarantees we will have</h2>
+  <p class="note">Mobilizon's public feed is <strong>upcoming-only</strong> (measured in their source:
+  <code>list_public_upcoming_events_for_actor</code>), so between events the snapshot legitimately holds nothing. Three
+  surfaces show it: the hero's "Next:" line, the <code>/schedule</code> list, and the 404 page (which today re-publishes
+  two dead nav links). The copy rule is load-bearing here: <strong>D92 says the site publishes series names and real
+  dates, never a frequency</strong> - which is exactly how "join us every week" survived two years. The specimen's own
+  empty-state text is grepped for frequency words by its probe, and the probe reports the count.</p>
+  <div class="trio">
+    <div class="frame page" data-opt="A">
+      <div class="rows">
+        <div class="empty">
+          <div class="st" style="color:var(--ink-3)">Nothing scheduled</div>
+          <p class="et">No date is on the calendar yet.</p>
+          <p class="eb">Dates are set in the club Discord and copied here the day they are set. [venue blurb, one line]</p>
+          <div class="cta-row" style="margin-top:16px"><a class="btn b-primary h48" href="#">Join on Meetup</a><a class="btn b-secondary h40" href="#">Past meetings</a></div>
+          <div class="asof" style="margin-top:12px">calendar copied 30 Oct · [N] meetings held since [YEAR]</div>
+        </div>
+      </div>
+      <p class="verdict"><b>ANSWERED: A.</b> <b>The empty state converts.</b> Measured in the renderer:
+      the block is <b>305px</b> tall in a 375 frame (<b>357px</b> at 375 viewport), built from a 24px status line, a
+      <code>--s1</code> title, a two-line body and two controls - the primary at <b>48</b> clears the 44px AAA bar, the
+      secondary at <b>40</b> clears AA. It states the fact, names where the fact comes from, and gives two paths out. The
+      <code>as of</code> line makes the emptiness auditable instead of mysterious.</p>
+    </div>
+    <div class="frame page" data-opt="B">
+      <div class="rows">
+        <div class="empty">
+          <p class="eb" style="color:var(--ink-3)">No upcoming events. Please check back later.</p>
+        </div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> <b>B - a sentence</b> (the shipped grammar: "No channels available. Please check back later."). Measured: the block is <b>104px</b> - one line at <b>5.21</b> plus its padding, nothing to press. Cheapest, and it sends the visitor away from the one thing the site exists to do.</p>
+    </div>
+    <div class="frame page" data-opt="C">
+      <div class="rows">
+        <div class="empty" style="padding:0">
+          <div style="padding:12px 16px"><span class="asof">Next meeting: see the schedule</span></div>
+        </div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> <b>C - hide it</b>: the hero drops its "Next" block when there is no event and <code>/schedule</code> shows only the archive. Measured: <b>47px</b> of page. Nothing is wrong, but a visitor who came for "when do you meet?" gets silence, and the probe records no emptiness at all - an absence is not a state you can test.</p>
+    </div>
+  </div>
+  <p class="note"><strong>What the same grammar costs elsewhere, measured:</strong> the hero's "Next:" line has a
+  second-order problem - if the snapshot holds nothing, a "Next:" label with nothing after it is a defect, so the empty
+  state must also decide what the hero says. A recommends <em>the label changes</em> ("Nothing scheduled") rather than
+  the label disappearing, so a visitor can tell an empty calendar from a broken page. The 404 page uses the same
+  component (its current three links include <code>/schedule</code> and <code>/members</code>, both live 404s - D63).</p>
+
+  <!-- ==================================================== Q3 -->
+  <h2 class="up">Q3 - freshness: what the site is allowed to claim about its own age</h2>
+  <p class="note">The schedule is a <strong>copy</strong> of the club's calendar (D73: never fetched at request time), so a
+  visitor needs to know how current the copy is. Two facts bound what we can build:</p>
+  <div class="wrap-x">
+  <table>
+    <tr><th>claim</th><th>computable where?</th><th>evidence</th></tr>
+    <tr><td>"the newest listed event is already in the past"</td><td class="good">yes - at build time</td><td>the feed is upcoming-only, so a snapshot whose latest date has passed is provably stale without knowing when it was copied</td></tr>
+    <tr><td>"this page is N days old"</td><td class="bad">no - not in a prerendered page</td><td>the page is static HTML served from the edge; the only clock it carries is the build stamp, and a static page cannot compare it to now without script</td></tr>
+    <tr><td>"nothing scheduled within N days = suspicious"</td><td class="bad">would lie</td><td>the four real harvested dates (D90) are 7, 12, 21, 26 Nov: consecutive gaps of <b>4, 10, 4 days</b>. A 7-day version of this claim fires in an ordinary month; 14 days never fires on that real sample</td></tr>
+  </table>
+  </div>
+  <div class="trio" style="margin-top:12px">
+    <div class="frame page" data-opt="A" style="padding:16px">
+      <p class="lbl">A - a dated line, always; no alarm <span class="good">(recommended)</span></p>
+      <div class="rows">
+        <div class="cmp" style="padding:12px 16px">
+          <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span class="asof">Schedule copied 30 Oct 2026</span><a class="btn b-quiet h32" href="/events.ics">add to calendar</a></div>
+          <div class="rows" style="margin-top:12px">
+            <div class="row comfy"><div class="d">7 Nov<small>Sat · [time]</small></div><div><div class="s">Bimonthly social</div><div class="t">MPLS Math Club - Bimonthly Social</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div><a class="btn b-quiet h32" href="#">details</a></div>
+          </div>
+        </div>
+      </div>
+      <p class="verdict"><b>ANSWERED: A.</b> One line, ink-3 <b>5.21</b>, tabular numerals, in the same place on every surface. It is a fact the build can guarantee, and it makes a stale snapshot visible to a human reader without inventing a threshold.</p>
+    </div>
+    <div class="frame page" data-opt="B" style="padding:16px">
+      <p class="lbl">B - A, plus a build-time notice when the copy is provably past</p>
+      <div class="notice caution" style="margin-bottom:12px">
+        <div class="st nw">Check before you go</div>
+        <p class="nb">Every date on this page has passed. The calendar copy has not been refreshed since [DATE]; the live list is on Meetup.</p>
+        <div class="na"><a class="btn b-secondary h32" href="#">Meetup list</a><a class="btn b-quiet h32" href="#">Discord</a></div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN for the visitor</b> - the <em>build</em> half survives as a gate, not as a notice. The only staleness a static page can <em>know</em>: computable at build from the data itself, and it pairs with the Q2 empty state (same notice component, same gold keyline 4.82). The gate writes itself: <code>check:events-feed</code> can fail a build where the newest row is in the past and no notice was rendered.</p>
+    </div>
+    <div class="frame page" data-opt="C" style="padding:16px">
+      <p class="lbl">C - B, plus a script that ages the page in the browser</p>
+      <div class="rows">
+        <div class="cmp" style="padding:12px 16px"><span class="asof">Schedule copied 30 Oct 2026 · <span style="color:var(--gold-ink)">that is 19 days ago</span></span></div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> Adds the one claim a static page cannot otherwise make. Cost: it is the only reason the schedule page would need an island, against a rule that the brochure plane is prerendered (D73, and static is the CPU/budget lever, D32/D46). With script off the highlighted phrase must simply be absent - so the <em>dated line still has to carry the meaning alone</em>, which is option A.</p>
+    </div>
+  </div>
+  <div class="duo" style="margin-top:16px">
+    <div>
+      <p class="lbl">the Discord island's freshness line, as shipped</p>
+      <div class="frame ship page" style="padding:20px">
+        <p class="fresh">Generated by our bot from recent channel activity · refreshed about daily · last updated Oct 30, 2026, 9:14 PM UTC</p>
+        <p class="verdict">Measured <b>4.84</b> on white - it passes the 4.5 bar with 0.34 to spare. Re-rendered as <code>ink-3</code> on paper it is <b>5.21</b>. Keep the sentence - it is the only place the site already tells the truth about its own age - and put it on the token rather than a Tailwind palette colour.</p>
+      </div>
+    </div>
+    <div>
+      <p class="lbl">what "as of" is a fact about</p>
+      <p class="note">Two different clocks are being conflated: the <em>copy</em>'s age (our build) and the <em>event</em>'s
+      date. Only one number per surface, always next to the thing it qualifies: the schedule header carries the copy
+      date, each row carries its own date, and the Discord line carries the bot's run time. A notice that says "out of
+      date" without naming which clock is the kind of state that gets ignored.</p>
+    </div>
+  </div>
+
+  <!-- ==================================================== Q4 -->
+  <h2 class="up">Q4 - the one dynamic surface: loading, failing, and having nothing yet</h2>
+  <p class="note">Events have no loading state by construction (D73), so this is the whole of it: the Discord island. Its
+  shipped loading region is a <strong>128px</strong> band with a spinning 32px arc, no reduced-motion guard, no height
+  reservation, and - measured off the static HTML - it is the <strong>only</strong> branch a JS-off visitor ever sees.
+  The retry question is not optional: <code>design-critique.md</code> already flagged the absence of an action, and the
+  error text is the 4.36 pair from Q1.</p>
+  <div class="trio">
+    <div class="frame page" data-opt="A">
+      <p class="lbl" style="margin-bottom:8px">A - no motion, no reserved band; the state is a line, the failure is a notice <span class="good">(recommended)</span></p>
+      <div class="loadline" data-claim="line" style="padding:12px 0;border-bottom:1px solid var(--rule)"><span class="st" style="color:var(--ink-3)" role="status">Loading channel summaries…</span></div>
+      <div class="notice" style="margin-top:12px">
+        <div class="st nw">Could not load</div>
+        <p class="nb">The summaries come from our bot. The channel itself is fine - it is this copy that failed.</p>
+        <div class="na"><a class="btn b-secondary h40" href="#">Try again</a><a class="btn b-quiet h40" href="#">Open Discord</a></div>
+        <div class="nm">last successful copy 30 Oct 2026, 9:14 PM UTC</div>
+      </div>
+      <p class="verdict"><b>ANSWERED: A.</b> Loading = one 24px line with <code>role="status"</code>, 0 motion, nothing to guard. Failure = the Q1 notice, with a <b>40px</b> retry (AA floor; a 24px "retry" link is the 19px-link bug class again). Measured specimen: the loading line is <b>24px</b> tall, so the region that replaces it moves the page less than the shipped 128px band does.</p>
+    </div>
+    <div class="frame ship page" data-opt="B">
+      <p class="lbl" style="margin-bottom:8px">B - keep the spinner, fix the guard and the reservation</p>
+      <div class="loadwrap"><span class="spinner"></span><span class="st" style="color:var(--ink-3)">Loading</span></div>
+      <p class="verdict"><b>NOT CHOSEN.</b> The reduced-motion guard and the height reservation are taken anyway - they are defects. The arc's own contrast is legal (<code>blue-600</code> on white measures <b>5.25</b> against the 3.0 graphic bar) so this is not a legibility fix; it is a motion and layout fix: <code>animation-duration</code> under <code>prefers-reduced-motion</code> (the specimen demonstrates it) plus a min-height so the swap does not shove the page. Costs 128px of a 667px phone viewport while a 0.1-2s request is in flight.</p>
+    </div>
+    <div class="frame page" data-opt="C">
+      <p class="lbl" style="margin-bottom:8px">C - a skeleton</p>
+      <div style="padding:12px 0;display:grid;gap:12px">
+        <div class="skel" style="width:34%"></div>
+        <div style="border-radius:6px;box-shadow:inset 0 0 0 1px var(--rule);padding:12px"><div class="skel" style="width:80%;margin-bottom:12px"></div><div class="skel" style="width:96%"></div><div class="skel" style="width:60%;margin-top:12px"></div></div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> The honest version of a skeleton in this system needs the panel+rule pair, and even then: the shipped skeleton material (gray-50 on white, gray-200 edge) measures <b>1.05</b> and <b>1.18</b> - a flat rectangle pretending to be content. And the island's shape is unknown until it loads, so the skeleton would be a guess about a layout nobody has fixed yet.</p>
+    </div>
+  </div>
+  <div class="duo" style="margin-top:16px">
+    <div>
+      <p class="lbl">the blank card, and the JS-off case (both are defects, not decisions)</p>
+      <div class="frame ship page" style="padding:16px">
+        <div class="card"><div class="hd">#general</div></div>
+        <p class="verdict" style="margin-top:8px">Measured reproduction: header only, <b>0px</b> of body - because <code>{#if summary?.summary}</code> has no <code>{:else}</code>. The fix is the same notice component at its smallest: <b>"No summary yet for #general"</b> + the path to the channel.</p>
+      </div>
+    </div>
+    <div>
+      <p class="lbl">JS off</p>
+      <div class="frame page" style="padding:16px">
+        <div class="notice">
+          <div class="st nw">Needs JavaScript</div>
+          <p class="nb">These summaries are copied by our bot. The channel itself is on Discord, and it does not need this page.</p>
+          <div class="na"><a class="btn b-secondary h40" href="#">Open Discord</a></div>
+        </div>
+      </div>
+      <p class="verdict">Rendered as a <code>&lt;noscript&gt;</code> sibling, this converts the forever-spinner into the same state grammar with one path out. Nothing about the layout depends on script (D73 rule 2).</p>
+    </div>
+  </div>
+
+  <!-- ==================================================== Q5 -->
+  <h2 class="up">Q5 - status grammar: cancelled, "time not set", and a past permalink</h2>
+  <p class="note">The row shape D70 defined carries <code>status</code> but no slot for it, and two of the four real harvested dates carry
+  no usable clock (<code>T00:00:00</code> is a date with no clock attached, not midnight - D90). A cancelled meeting is a
+  thing that happens ("sometimes we miss one" is a first-class case in the ICS design: <code>STATUS:CANCELLED</code> is
+  how a subscriber learns). The question is what a visitor sees, and the constraint is that <strong>colour alone cannot
+  carry it</strong> - which the shipped palette would have done badly anyway at 4.36.</p>
+  <div class="trio">
+    <div class="frame page" data-opt="A">
+      <p class="lbl" style="margin-bottom:8px">A - a word in the status slot, weight and colour secondary <span class="good">(recommended)</span></p>
+      <div class="rows">
+        <div class="row comfy cancelled">
+          <div class="d">21 Nov<small>Sat · [time]</small></div>
+          <div><div class="s"><span class="sw">Cancelled</span> · topology</div><div class="t">Topology reading group</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div>
+          <a class="btn b-quiet h32" href="#">details</a>
+        </div>
+        <div class="row comfy">
+          <div class="d">12 Nov<small class="clock">time not set</small></div>
+          <div><div class="s">Study session</div><div class="t">Parallel learning for mathematical minds</div><div class="m">[venue] · the clock is posted a few days before</div></div>
+          <a class="btn b-quiet h32" href="#">details</a>
+        </div>
+      </div>
+      <div class="rows" style="margin-top:12px">
+        <div class="row comfy" data-claim="row-a"><div class="d">21 Nov<small>Sat · [time]</small></div><div><div class="s">Study session</div><div class="t">Parallel learning for mathematical minds</div><div class="m">[venue] · Northeast Minneapolis</div></div><a class="btn b-quiet h32" href="#">details</a></div>
+        <div class="row comfy" data-claim="row-b"><div class="d">21 Nov<small>Sat · [time]</small></div><div><div class="s"><span class="status st">Cancelled</span> Study session</div><div class="t">Parallel learning for mathematical minds</div><div class="m">[venue] · Northeast Minneapolis</div></div><a class="btn b-quiet h32" href="#">details</a></div>
+        <div class="row comfy" data-claim="row-c"><div class="d">21 Nov<small>Sat · [time]</small></div><div><div class="s"><span class="sw">Cancelled</span> · study session</div><div class="t">Parallel learning for mathematical minds</div><div class="m">[venue] · Northeast Minneapolis</div></div><a class="btn b-quiet h32" href="#">details</a></div>
+      </div>
+      <p class="note" style="margin-top:6px">the same row three times - no status, the status as a <b>chip</b> in the series
+      lane, the status as a <b>word</b>. The probe compares the three heights: a status that reflows a stacked row is a
+      defect, and it is what the chip does here (the numbers are in the verdict).</p>
+      <p class="verdict"><b>ANSWERED: A.</b> Cancelled: title <code>ink-2</code> <b>7.02</b>, status word in <code>ink</code> <b>12.02</b>. The probe
+      measures the reflow directly at 1240/900: the same stacked row is <b>203px</b> with no status, <b>203px</b> with the
+      status as a word (<b>+0</b>), <b>210px</b> with the status as a chip (<b>+7</b> - the chip claims a line of its own).
+      So the word is the narrow form, and the chip lives in the wide row's own status column, where all three rows measure
+      an identical <b>96px</b> (scheduled, cancelled, and no-clock alike). "Time not set" sits in the date lane's small line
+      at <b>5.21</b> (gold version 4.82 also legal) - the absence is stated where the value would have been, never defaulted
+      to 12:00 am. <b>Zero new tokens.</b></p>
+    </div>
+    <div class="frame page" data-opt="B">
+      <p class="lbl" style="margin-bottom:8px">B - strikethrough and colour</p>
+      <div class="rows">
+        <div class="row comfy">
+          <div class="d" style="color:var(--ink-3)">21 Nov<small>Sat · [time]</small></div>
+          <div><div class="s" style="color:var(--ink-3)">Study session</div><div class="t" style="text-decoration:line-through;text-decoration-thickness:2px;color:var(--ink-3)">Topology reading group</div><div class="m" style="color:var(--ink-3)">Ambrosia Coffee · Northeast Minneapolis</div></div>
+          <span class="st" style="color:oklch(52% 0.15 25)">cancelled</span>
+        </div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> Measured costs: the naive red that reads as "cancelled" is <b>10&deg;</b> from the coral join-path hue (Q1's scan) and 0.070 from Target red; at 13.3px with a strike, ink-3 drops the title to <b>5.21</b> while the strike itself becomes the only cue for a colour-blind reader, which is the one use-of-colour failure mode that is easy to avoid here. Cheapest to draw, worst to read.</p>
+    </div>
+    <div class="frame page" data-opt="C">
+      <p class="lbl" style="margin-bottom:8px">C - drop cancelled rows from the list</p>
+      <div class="rows">
+        <div class="empty"><div class="st" style="color:var(--ink-3)">1 event on the calendar</div><p class="eb" style="margin-top:8px">Only the study session is listed. A reader cannot tell that a meeting was called off.</p></div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> Consequences measured elsewhere: our own <code>/events.ics</code> is designed to <em>announce</em> cancellations to subscribers (<code>STATUS:CANCELLED</code>), so the page and the calendar would disagree - and a member deciding whether to go to Ambrosia on 21 Nov learns nothing. Kept in the round only to be declined.</p>
+    </div>
+  </div>
+  <p class="lbl" style="margin:16px 0 4px">and at the wide row layout, the status gets its own column - the chip stops
+  being a problem because it stops competing with the title for the line</p>
+  <div style="container-type:inline-size">
+    <div class="rows">
+      <div class="row wide comfy has-status" data-claim="row-w1"><div class="d">7 Nov<small>Sat · [time]</small></div><div><div class="s">Bimonthly social</div><div class="t">MPLS Math Club - Bimonthly Social</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div><div class="sl"><span class="status st">Scheduled</span></div><a class="btn b-quiet h32" href="#">details</a></div>
+      <div class="row wide comfy has-status cancelled" data-claim="row-w2"><div class="d">21 Nov<small>Sat · [time]</small></div><div><div class="s">Topology</div><div class="t">Topology reading group</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div><div class="sl"><span class="status st">Cancelled</span></div><a class="btn b-quiet h32" href="#">details</a></div>
+      <div class="row wide comfy has-status" data-claim="row-w3"><div class="d">12 Nov<small class="clock">time not set</small></div><div><div class="s">Study session</div><div class="t">Parallel learning for mathematical minds</div><div class="m">[venue] · the clock is posted a few days before</div></div><div class="sl"><span class="status st">Scheduled</span></div><a class="btn b-quiet h32" href="#">details</a></div>
+    </div>
+  </div>
+
+  <p class="note"><strong>Past permalinks, in the same grammar:</strong> a past event's page stays up (it is the archive and
+  the JSON-LD), so the status slot takes <code>Past</code> rather than the page going dark - one component, three values
+  (<code>Scheduled</code> / <code>Cancelled</code> / <code>Past</code>), no new tokens.</p>
+
+  <!-- ==================================================== Q6 -->
+  <h2 class="up">Q6 - what a shadow means, given that the layer bar is 1.35</h2>
+  <p class="note">The design tree's default is "shadows show how far something sits above the page, three levels". This
+  system measured something else: <strong>the shipped shadow is under the layer bar</strong> (<code>shadow-lg</code>
+  paints a contact edge at <b>1.25</b> against paper; its stop alpha of .102 arithmetically reaches only 1.26). Solving
+  for the bar: stop alpha <b>.13</b> black or <b>.165</b> ink-tinted. That is cheap at a tight blur (a thin darker edge)
+  and expensive at a wide one (a .30 black band measures 2.10, i.e. a visible grey rectangle). So a shadow that means
+  something is available, but it is stronger than what ships, and a hairline is cheaper and already legal (3.01 on paper,
+  4.00 on the band).</p>
+  <div class="trio">
+    <div class="frame page" data-opt="A" style="padding:20px">
+      <p class="lbl">A - hairlines for content; shadows only for things that float <span class="good">(recommended)</span></p>
+      <div style="display:grid;gap:16px">
+        <div class="card-rule" style="padding:12px 16px"><span class="st" style="color:var(--ink-3)">on the page</span><div style="font-family:var(--serif);font-weight:700;font-size:19.2px;color:var(--ink);line-height:24px">schedule row · venue card · quote card</div><div class="asof">edge = rule 3.01, no shadow</div></div>
+        <div class="float" style="min-height:120px"><div class="card-rule" style="padding:12px 16px"><span class="st" style="color:var(--ink-3)">the page itself</span></div><div class="pop sh2"><span class="st" style="color:var(--gold-ink)">a menu, open</span><div style="font-family:var(--ui);font-size:13.3px;color:var(--ink-2);margin-top:4px">above the page</div></div></div>
+        <div class="float" style="min-height:76px"><div class="card-rule" style="padding:12px 16px"><span class="st" style="color:var(--ink-3)">a single line, hovered</span></div><div class="pop sh1" style="top:44px;left:8px;width:110px"><span class="st" style="color:var(--ink-3)">level 1</span></div></div>
+      </div>
+      <p class="verdict"><b>ANSWERED: A.</b> Two levels and one rule of language: <b>if it has a hairline it is part of the page; if it has a shadow it is above the page</b>. The floating level is solved to clear 1.35 at the contact edge (ink .165 / .22), so it actually reads as a layer - the shipped one does not (1.25).</p>
+    </div>
+    <div class="frame page" data-opt="B" style="padding:20px">
+      <p class="lbl">B - three levels, including cards (the tree default)</p>
+      <div style="display:grid;gap:16px">
+        <div class="shship" style="background:var(--paper);padding:12px 16px;border-radius:6px"><span class="st" style="color:var(--ink-3)">level 1</span><div style="font-family:var(--serif);font-weight:700;font-size:19.2px;color:var(--ink);line-height:24px">card</div></div>
+        <div class="shshipmd" style="background:var(--paper);padding:12px 16px;border-radius:6px"><span class="st" style="color:var(--ink-3)">level 2</span><div style="font-family:var(--serif);font-weight:700;font-size:19.2px;color:var(--ink);line-height:24px">hovered card</div></div>
+        <div class="sh2" style="background:var(--paper);padding:12px 16px;border-radius:6px"><span class="st" style="color:var(--ink-3)">level 3</span><div style="font-family:var(--serif);font-weight:700;font-size:19.2px;color:var(--ink);line-height:24px">overlay</div></div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> The two shipped levels are the 1.25 pair - a card and a hovered card that measure the same. To make them distinct, every level has to be solved to clear 1.35, at which point a card sits on a visible grey band (see the third specimen: the .22/.30 pair) and the site acquires the "everything is a card" reading the operator's character ruling (playful-as-plurality, no oversized rounded-everything) rules out. the 17 shadow writes in <code>src/</code> (1 <code>shadow-sm</code>, 7 <code>shadow-md</code>, 3 <code>shadow-lg</code>, 6 <code>hover:shadow-lg</code>) carry no measured difference - <code>shadow-md</code> and <code>shadow-lg</code> differ only in offsets, their stop alpha is the same .102, so both composite to 1.26.</p>
+    </div>
+    <div class="frame page" data-opt="C" style="padding:20px">
+      <p class="lbl">C - no shadows at all</p>
+      <div style="display:grid;gap:16px">
+        <div class="card-rule" style="padding:12px 16px"><span class="st" style="color:var(--ink-3)">card</span><div style="font-family:var(--serif);font-weight:700;font-size:19.2px;color:var(--ink);line-height:24px">everything is on the page</div></div>
+        <div style="padding:12px 16px;border-radius:6px;background:var(--ink);color:var(--band-text)"><span class="st" style="color:var(--gold-dark)">an open menu</span><div style="font-family:var(--ui);font-size:13.3px;margin-top:4px">marked by the ink band instead of by depth</div></div>
+      </div>
+      <p class="verdict"><b>NOT CHOSEN.</b> Simplest, and defensible: <code>box-shadow</code> disappears from the token set and the linter can forbid it. Cost: nothing then distinguishes an overlay from the page except a colour inversion, and the one dark band per screen rule (D89) means the inversion is already spoken for.</p>
+    </div>
+  </div>
+
+  <h2 class="up">confirmed by rulings already made - look, and object if wrong</h2>
+  <div class="duo">
+    <div>
+      <p class="lbl">narrow viewports: lists stack, they never scroll sideways</p>
+      <div class="frame page" style="max-width:320px;width:100%">
+        <div class="rows">
+          <div class="row comfy"><div class="d">7 Nov<small>Sat · [time]</small></div><div><div class="s">Bimonthly social</div><div class="t">MPLS Math Club - Bimonthly Social</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div><a class="btn b-quiet h32" href="#">details</a></div>
+        </div>
+      </div>
+      <p class="verdict">Round 6's row is one component: stacked below 700px, three lanes above. Measured in the 320 frame: no sideways document scroll, and the layout probe confirms it at 320 - the archive and the topic index reuse it rather than becoming a <code>&lt;table&gt;</code> in a scroller. Where a real table exists (none does in <code>src/</code> today), the rule is the same: re-stack, do not scroll.</p>
+    </div>
+    <div>
+      <p class="lbl">the motion guard, now that durations are settled</p>
+      <p class="note">D1 (150ms colour/shadow, 250ms movement) plus <code>prefers-reduced-motion</code>, which appears
+      <strong>zero times</strong> in <code>src/</code> and zero times in the built CSS (measured, both by grep and by
+      walking every rule in the artifact's stylesheets). Under the guard: colour transitions drop to 0ms, and nothing
+      that spins or slides keeps doing so. This is a defect fix, not a decision.</p>
+      <p class="lbl">focus, in the same grammar</p>
+      <div class="frame page" style="padding:16px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+        <a class="btn b-secondary h40" href="#" style="outline:2px solid var(--gold-ink);outline-offset:3px">Try again</a>
+        <span class="asof">gold ring = 4.82 on paper, 5.80 on the band</span>
+      </div>
+      <p class="verdict">One focus treatment for both grounds, using the mark colour - the same token that carries "pay attention" in the caution notice. Round 6's specimen already draws it; the point here is that states inherit it.</p>
+    </div>
+  </div>
+  <h2 class="up">probe controls - these exist so the measurements above can be falsified</h2>
+  <p class="note">Every "measured" claim on this page comes from <code>.design/grill/round7-measure.js</code> walking
+  what the renderer actually painted. To make a clean report mean something, four defects are planted here; the probe
+  prints <code>CONTROLS 4/4</code> only if it catches all four, and prints a hard failure line if it does not.</p>
+  <div class="frame page" style="padding:16px">
+    <p class="asof" data-control="banned-copy">control 1 - a frequency claim in prose: "we meet every other week" (D92 forbids it; the probe greps the prose slots only, so the series name "Bimonthly Social" in a row does not trip it)</p>
+    <div style="background:var(--tint);padding:8px 12px;border-radius:6px;margin-top:8px"><span class="st" data-control="banned-pair" style="color:var(--gold-ink)">control 2 - gold on a tint fill, must measure under 4.5</span></div>
+    <div class="notice" data-control="bordered" style="border:1px solid var(--rule);box-shadow:none;margin-top:8px"><span class="st nw">control 3 - a bordered notice</span><span class="asof" style="margin-left:8px">adds 2px and breaks the height arithmetic</span></div>
+    <div class="shship" style="background:var(--paper);padding:8px 12px;border-radius:6px;margin-top:8px"><span class="st" style="color:var(--ink-3)">control 4 - the shipped shadow, alpha must read under the floor</span></div>
+    <p class="control" style="margin-top:10px">re-run: <code>node .design/grill/round7-math.mjs</code> (hue scan, shadow solves, notice heights, gap arithmetic) and <code>node .design/grill/contrast/gen-r7-cfg.mjs &amp;&amp; node .design/grill/contrast-oracle.mjs .design/grill/contrast/cfg-r7.json --out .design/grill/contrast/out</code> (50 pairs + 8 solves).</p>
+  </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 5 - the type family, and the three number scales the colour rounds preempted</title>
+<style>
+  /* Faces loaded from the same woff2 files a self-hosted build would ship (downloaded into .design/fonts/).
+     Nothing here is a system-font stand-in, because the whole question is which faces we ship. */
+  @font-face { font-family:"PT Serif"; font-weight:400; font-display:block; src:url("../fonts/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PT Serif"; font-weight:700; font-display:block; src:url("../fonts/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PT Sans"; font-weight:400; font-display:block; src:url("../fonts/pt-sans-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PT Sans"; font-weight:700; font-display:block; src:url("../fonts/pt-sans-latin-700-normal.woff2") format("woff2"); }
+  @font-face { font-family:"PSVar"; font-weight:100 900; font-display:block; src:url("../fonts/public-sans-latin-wght-normal.woff2") format("woff2"); }
+  @font-face { font-family:"IBM Plex Mono"; font-weight:400; font-display:block; src:url("../fonts/ibm-plex-mono-latin-400-normal.woff2") format("woff2"); }
+
+  /* ---- the ratified light theme from round 4 (unchanged here on purpose: only type changes) ---- */
+  :root {
+    --paper: oklch(98.5% 0.006 85);
+    --panel: oklch(97% 0.008 85);
+    --ink: oklch(32% 0.045 152);      /* 11.92 on paper */
+    --ink-2: oklch(45% 0.035 152);    /* 7.00 */
+    --ink-3: oklch(52% 0.028 152);    /* 5.20 */
+    --rule: oklch(65.5% 0.03 152);    /* exactly 3.00 */
+    --tint: oklch(95% 0.03 152);
+    --gold-ink: oklch(55% 0.12 62);   /* 4.81 */
+    --band-text: oklch(93% 0.008 152);
+    --gold-on-dark: oklch(76% 0.06 84);
+    --p1: oklch(50% 0.11 205); --p1t: oklch(95% 0.03 205);
+    --p2: oklch(47% 0.15 315); --p2t: oklch(95% 0.03 315);
+    --p3: oklch(50% 0.14 35);  --p3t: oklch(95% 0.03 35);
+    --p4: oklch(50% 0.10 105); --p4t: oklch(95% 0.03 105);
+
+    /* settled in round 2: 4px grid, 1.200 ratio, 6px radius, ease-out + linear-for-colour */
+    --s-1: 13.3px; --s0: 16px; --s1: 19.2px; --s2: 23px; --s3: 27.7px; --s4: 33.2px; --s5: 39.8px; --s6: 47.8px; --s7: 57.3px;
+    /* the 8-step spacing scale (S3 in .design/round5-math.json): 4,8,12,16,24,32,48,64 */
+    --sp1: 4px; --sp2: 8px; --sp3: 12px; --sp4: 16px; --sp5: 24px; --sp6: 32px; --sp7: 48px; --sp8: 64px;
+    --r: 6px;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: oklch(90% 0.004 85); color: #23282a; font-family: "PSVar", system-ui, sans-serif; font-size: 15px; line-height: 1.55; }
+  main { max-width: 1180px; margin: 0 auto; padding: 36px 20px 80px; }
+  h1 { font-family: "PT Serif", serif; font-weight: 700; font-size: 26px; margin: 0 0 8px; }
+  .lead { font-family: "PT Serif", serif; font-size: 16.5px; line-height: 1.6; color: oklch(40% 0.01 152); max-width: 74ch; margin: 0 0 22px; }
+  h2.up { font-family: "PSVar", system-ui, sans-serif; font-weight: 600; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: oklch(45% 0.01 152); margin: 38px 0 6px; }
+  h3.q { font-family: "PT Serif", serif; font-weight: 700; font-size: 21px; margin: 4px 0 10px; }
+  .note { font-family: "PT Serif", serif; font-size: 15px; line-height: 1.6; color: oklch(38% 0.01 152); max-width: 82ch; margin: 10px 0; }
+  .wrap-x { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 12.5px; background: #fff; }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid oklch(88% 0.01 152); white-space: nowrap; }
+  th { font-family: "PSVar", system-ui, sans-serif; font-weight: 600; font-size: 10.5px; letter-spacing: 0.07em; text-transform: uppercase; color: oklch(45% 0.01 152); }
+  td.n { font-variant-numeric: tabular-nums; }
+  .good { color: #0a6b3d; } .bad { color: #b00020; }
+  .tag { font-size: 11px; padding: 2px 6px; border: 1px solid var(--rule); border-radius: 4px; }
+
+  /* ---------- the four type specimens share one layout: only the families differ ---------- */
+  .page { border-radius: 8px; overflow: hidden; margin: 14px 0 6px; background: var(--paper); color: var(--ink); border: 1px solid var(--rule); }
+  .page .chrome-ui { font-family: var(--ui); }
+  .page .serif { font-family: var(--body); }
+  .page nav { display: flex; align-items: baseline; gap: 6px 16px; padding: 13px 20px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; font-family: var(--ui); }
+  .mark { font-family: var(--body); font-weight: 700; font-size: var(--s1); letter-spacing: -0.01em; flex: 1 1 100%; }
+  @media (min-width: 760px) { .mark { flex: 0 0 auto; } }
+  .mark em { font-style: normal; color: var(--gold-ink); }
+  .page nav a { font-size: 14px; color: var(--ink-2); text-decoration: none; padding: 4px 0; }
+  .page nav a[aria-current] { color: var(--ink); box-shadow: inset 0 -2px 0 var(--gold-ink); }
+  .hero { padding: 22px 20px 24px; }
+  .kick { font-family: var(--ui); font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-3); }
+  .nextdate { font-family: var(--ui); font-size: var(--s1); color: var(--gold-ink); font-variant-numeric: tabular-nums; margin: 5px 0 0; }
+  .hero h4 { font-family: var(--body); font-weight: 700; font-size: var(--s4); line-height: 1.1; letter-spacing: -0.015em; margin: 10px 0 8px; max-width: 20ch; }
+  .lede { font-family: var(--body); font-size: var(--s1); line-height: 1.5; color: var(--ink-2); max-width: 44ch; margin: 0 0 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: var(--sp2); }
+  .chip-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--ui); font-size: 13px; padding: 6px 10px; border-radius: var(--r); text-decoration: none; border: 1px solid; }
+  .c1 { color: var(--p1); border-color: var(--p1); background: var(--p1t); }
+  .c2 { color: var(--p2); border-color: var(--p2); background: var(--p2t); }
+  .c3 { color: var(--p3); border-color: var(--p3); background: var(--p3t); }
+  .row { display: grid; grid-template-columns: 1fr; gap: var(--sp1); padding: 16px 20px; border-top: 1px solid var(--rule); }
+  @media (min-width: 700px) { .row { grid-template-columns: 96px 1fr auto; gap: var(--sp4); align-items: baseline; } }
+  .row .d { font-family: var(--dt); font-size: 15px; color: var(--gold-ink); font-variant-numeric: tabular-nums; }
+  .row .d small { display: block; font-size: 11.5px; color: var(--ink-3); letter-spacing: 0.04em; text-transform: uppercase; }
+  .row .t { font-family: var(--body); font-weight: 700; font-size: var(--s2); line-height: 1.2; }
+  .row .m { font-family: var(--ui); font-size: 13.5px; color: var(--ink-3); margin-top: 3px; }
+  .row .a { font-family: var(--ui); font-size: 13px; color: var(--gold-ink); text-decoration: none; border-bottom: 1px solid var(--gold-ink); justify-self: start; }
+  .lbl { font-family: "IBM Plex Mono", ui-monospace, monospace; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: oklch(45% 0.01 152); }
+  .spec-A { --ui: "PT Serif", serif; --body: "PT Serif", serif; --dt: "PT Serif", serif; }
+  .spec-B { --ui: "PSVar", sans-serif; --body: "PT Serif", serif; --dt: "PSVar", sans-serif; }
+  .spec-C { --ui: "PT Sans", sans-serif; --body: "PT Serif", serif; --dt: "PT Sans", sans-serif; }
+  .spec-D { --ui: "PSVar", sans-serif; --body: "PT Serif", serif; --dt: "IBM Plex Mono", monospace; }
+  .verdict { font-family: "PSVar", system-ui, sans-serif; font-size: 13px; color: oklch(40% 0.01 152); margin: 0 0 4px; }
+  .verdict b { color: #1b1f20; }
+
+  /* ---------- spacing specimen ---------- */
+  .spx { display: grid; gap: 10px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .spx { grid-template-columns: 1fr 1fr; } }
+  .card { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: var(--sp4); }
+  .card .bar { height: 10px; background: var(--tint); border-radius: 3px; }
+  .card h5 { margin: 0 0 var(--sp2); font-family: "PT Serif", serif; font-size: 19px; font-weight: 700; }
+  .card p { margin: 0 0 var(--sp3); font-family: "PT Serif", serif; font-size: 15px; line-height: 1.6; color: var(--ink-2); }
+  .gaps { display: flex; align-items: flex-end; gap: var(--sp1); flex-wrap: wrap; margin-top: var(--sp3); }
+  .gapchip { background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 3px 6px; font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-2); }
+
+  /* ---------- type ramp + leading ---------- */
+  .ramp { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .ramp { grid-template-columns: repeat(3, 1fr); } }
+  .rampcard { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: var(--sp4); }
+  .rampcard .steps { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--ink-3); margin-top: 10px; }
+  .disp { font-family: "PT Serif", serif; font-weight: 700; letter-spacing: -0.015em; margin: 0; }
+  .d10 { font-size: 47.8px; line-height: 0.98; }
+  .d11 { font-size: 47.8px; line-height: 1.15; }
+  .d9 { font-size: 57.3px; line-height: 1.05; }
+  .read { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .read { grid-template-columns: 1fr 1fr; } }
+  .readcard { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: var(--sp4); }
+  .readcard p { font-family: "PT Serif", serif; font-size: 19.2px; color: var(--ink); margin: 0; max-width: 46ch; }
+  .r15 p { line-height: 1.5; }
+  .r16 p { line-height: 1.6; }
+
+  /* ---------- durations (hover to feel) ---------- */
+  .dur { display: grid; gap: 12px; grid-template-columns: 1fr; }
+  @media (min-width: 760px) { .dur { grid-template-columns: repeat(3, 1fr); } }
+  .durcard { background: #fff; border: 1px solid var(--rule); border-radius: 8px; padding: var(--sp4); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--ui); font-size: 14px; font-weight: 500;
+         border-radius: var(--r); padding: 10px 16px; text-decoration: none; border: 1px solid var(--ink); background: var(--ink); color: var(--band-text); }
+  .btn.b150 { transition: background-color 150ms linear, box-shadow 150ms linear; }
+  .btn.b300 { transition: background-color 300ms ease-in-out, box-shadow 300ms ease-in-out; }
+  .btn.b250 { transition: background-color 250ms ease-out, box-shadow 250ms ease-out; }
+  .btn:hover { background: oklch(40% 0.055 152); box-shadow: 0 2px 0 var(--gold-ink); }
+  .btn:focus-visible { outline: 2px solid var(--gold-ink); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .btn { transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Round 5. The type family — and the three number scales the colour rounds preempted.</h1>
+  <p class="lead">Round 3 turned into a brand-distance investigation, so the plain numeric questions the tree puts
+  before components (which spacing steps, which font sizes and line heights, which durations) never got asked. They
+  are here, plus the one ruling the grill still owes you: <strong>which faces do we actually ship</strong>. Components
+  come next round, because control heights are supposed to be taken from the spacing steps you pick below.</p>
+
+  <h2 class="up">the fact that makes the type question real</h2>
+  <div class="wrap-x">
+  <table>
+    <tr><th>what</th><th>measured</th><th>what it means</th></tr>
+    <tr><td>weight renderings today</td><td class="n">400 → 14.50% ink · 500 → 14.50% · 600/700/800 → 17.97%</td><td>the 30 weight writes collapse to <b>two</b> renderings: <code>font-medium</code> is the regular face, and semibold/bold/extrabold are one synthesised thickening. Ink coverage of the same string at 100px, counted per pixel.</td></tr>
+    <tr><td>a static 400+700 pair</td><td class="n">400 → 13.97% · 500 → 13.97% · 600+ → 21.12%</td><td>a real bold, but 500 and 600 still don't exist as themselves.</td></tr>
+    <tr><td>a variable wght file</td><td class="n">15.77 · 17.76 · 19.38 · 22.01 · 24.76%</td><td>400/500/600/700/800 all render differently — from <b>one</b> file.</td></tr>
+    <tr><td>what a visitor downloads now</td><td class="n">33,116 B (1 file)</td><td>measured, not inferred: a loopback server logged every font request for an English page with “Café” in it. Only <code>latin</code> was fetched; <code>unicode-range</code> gates the rest.</td></tr>
+    <tr><td>what the bundle carries</td><td class="n">107,680 B, of which 53,016 B is cyrillic</td><td>that 49% is a <b>bundle</b> cost, not a download cost. The old “−44,976 B” framing was wrong; deleting dead subsets is tidiness, adding a face is what a visitor pays.</td></tr>
+    <tr><td>the chrome you approved in round 4</td><td class="n">system-ui on this rig: x-height 0.48, cap 0.69</td><td>the nav in the specimen you liked rendered in <b>this machine's</b> OS font. x-height is smaller than PT Serif's 0.50. On Windows that is Segoe UI, on macOS SF Pro — the design you ratified is not the design that ships.</td></tr>
+  </table>
+  </div>
+  <p class="note"><strong>Bytes per option, latin subset, read from disk:</strong> PT Serif latin 400 = 33,116 B, latin 700 = 29,588 B ·
+  Public Sans <b>variable</b> (wght 100–900, one file) = 26,832 B · Public Sans static 400+700 = 29,232 B ·
+  PT Sans static 400+700 = 92,712 B · IBM Plex Mono 400 = 14,708 B · Inter variable = 48,256 B.
+  PT Serif has <b>no</b> variable build (404 from the registry), so the serif is 400+700 or nothing.</p>
+
+  <h2 class="up">Q1 · the type family — four specimens, same content, same colour, same scale</h2>
+
+  <div class="page spec-A" aria-label="Option A specimen">
+    <nav><span class="mark">Minneapolis <em>Math</em> Book Club</span><a href="#" aria-current="page">Schedule</a><a href="#">Events</a><a href="#">Interests</a><a href="#">About</a></nav>
+    <div class="hero">
+      <div class="kick">Next meeting</div>
+      <div class="nextdate">Sat 7 Nov, [time]</div>
+      <h4>A proof, four ways. Bring the one you like.</h4>
+      <p class="lede">We read one paper and take it apart until someone finds a second route to the result. Coffee first, then the board.</p>
+      <div class="chips"><a class="chip-link c1" href="#">Add to calendar</a><a class="chip-link c2" href="#">Meetup</a><a class="chip-link c3" href="#">Discord</a></div>
+    </div>
+    <div class="row">
+      <div class="d">12 Nov<small>[time]</small></div>
+      <div><div class="t">Parallel learning for mathematical minds</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div>
+      <a class="a" href="#">add to calendar</a>
+    </div>
+  </div>
+  <p class="verdict"><b>A — one family.</b> Serif everywhere, including nav and labels. 62,704 B downloaded. Nothing unpredictable, cheapest, and the most honest about the site being a reading matter — but nav and 11px labels at serif x-height 0.50 are the hard part; look at the nav and the “NEXT MEETING” kicker.</p>
+
+  <div class="page spec-B" aria-label="Option B specimen">
+    <nav><span class="mark">Minneapolis <em>Math</em> Book Club</span><a href="#" aria-current="page">Schedule</a><a href="#">Events</a><a href="#">Interests</a><a href="#">About</a></nav>
+    <div class="hero">
+      <div class="kick">Next meeting</div>
+      <div class="nextdate">Sat 7 Nov, [time]</div>
+      <h4>A proof, four ways. Bring the one you like.</h4>
+      <p class="lede">We read one paper and take it apart until someone finds a second route to the result. Coffee first, then the board.</p>
+      <div class="chips"><a class="chip-link c1" href="#">Add to calendar</a><a class="chip-link c2" href="#">Meetup</a><a class="chip-link c3" href="#">Discord</a></div>
+    </div>
+    <div class="row">
+      <div class="d">12 Nov<small>[time]</small></div>
+      <div><div class="t">Parallel learning for mathematical minds</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div>
+      <a class="a" href="#">add to calendar</a>
+    </div>
+  </div>
+  <p class="verdict"><b>B — serif for content, Public Sans (variable) for chrome.</b> 89,536 B. One extra file buys nav, buttons, labels and a <b>real</b> 500/600 for the chrome — which is what the 30 weight writes were reaching for. This is what round 4 looked like, except now it is the same on every machine. <b>Recommended.</b></p>
+
+  <div class="page spec-C" aria-label="Option C specimen">
+    <nav><span class="mark">Minneapolis <em>Math</em> Book Club</span><a href="#" aria-current="page">Schedule</a><a href="#">Events</a><a href="#">Interests</a><a href="#">About</a></nav>
+    <div class="hero">
+      <div class="kick">Next meeting</div>
+      <div class="nextdate">Sat 7 Nov, [time]</div>
+      <h4>A proof, four ways. Bring the one you like.</h4>
+      <p class="lede">We read one paper and take it apart until someone finds a second route to the result. Coffee first, then the board.</p>
+      <div class="chips"><a class="chip-link c1" href="#">Add to calendar</a><a class="chip-link c2" href="#">Meetup</a><a class="chip-link c3" href="#">Discord</a></div>
+    </div>
+    <div class="row">
+      <div class="d">12 Nov<small>[time]</small></div>
+      <div><div class="t">Parallel learning for mathematical minds</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div>
+      <a class="a" href="#">add to calendar</a>
+    </div>
+  </div>
+  <p class="verdict"><b>C — serif + PT Sans (static pair).</b> 155,416 B. The same-foundry twin: measured x-height 0.50 vs the serif's 0.50, cap 0.70 vs 0.70, and it sets <b>narrower</b> than the serif (the same sentence is 579.7px vs 599.2px at 16px). Best metric match on the page, worst on the wire — and no real 500/600.</p>
+
+  <div class="page spec-D" aria-label="Option D specimen">
+    <nav><span class="mark">Minneapolis <em>Math</em> Book Club</span><a href="#" aria-current="page">Schedule</a><a href="#">Events</a><a href="#">Interests</a><a href="#">About</a></nav>
+    <div class="hero">
+      <div class="kick">Next meeting</div>
+      <div class="nextdate">Sat 7 Nov, [time]</div>
+      <h4>A proof, four ways. Bring the one you like.</h4>
+      <p class="lede">We read one paper and take it apart until someone finds a second route to the result. Coffee first, then the board.</p>
+      <div class="chips"><a class="chip-link c1" href="#">Add to calendar</a><a class="chip-link c2" href="#">Meetup</a><a class="chip-link c3" href="#">Discord</a></div>
+    </div>
+    <div class="row">
+      <div class="d">12 Nov<small>[time]</small></div>
+      <div><div class="t">Parallel learning for mathematical minds</div><div class="m">Ambrosia Coffee · Northeast Minneapolis</div></div>
+      <a class="a" href="#">add to calendar</a>
+    </div>
+  </div>
+  <p class="verdict"><b>D — B, plus IBM Plex Mono for dates and kickers.</b> 104,244 B. Round 4's look leaned on a mono for dates; the cost is horizontal: a mono sets that same sentence at <b>816px</b> where the serif needs 599px (+36%), and a mono is 310.8px of nav width where the serif needs 221.8px. It is also largely unnecessary: <b>PT Serif's digits are tabular by default</b> (measured — “1111” and “8888” are the same width), so date columns already line up without a third face.</p>
+
+  <h2 class="up">the horizontal cost of each chrome face (measured in Firefox at the sizes we would use)</h2>
+  <div class="wrap-x">
+  <table>
+    <tr><th>face</th><th>x-height</th><th>nav row, one line @375</th><th>one sentence at 16px</th><th>tabular digits</th><th>latin bytes</th></tr>
+    <tr><td>PT Serif</td><td class="n">0.50</td><td class="n bad">needs 534 (+191)</td><td class="n">599.2px</td><td>default</td><td class="n">33,116 + 29,588</td></tr>
+    <tr><td>PT Sans</td><td class="n">0.50</td><td class="n bad">needs 503 (+160)</td><td class="n">579.7px</td><td>default</td><td class="n">45,532 + 47,180</td></tr>
+    <tr><td>Public Sans var</td><td class="n">0.52</td><td class="n bad">needs 549 (+206)</td><td class="n">624.9px</td><td>needs tnum</td><td class="n">26,832 (one file, 100–900)</td></tr>
+    <tr><td>Source Sans 3</td><td class="n">0.49</td><td class="n bad">needs 567 (+224)</td><td class="n">561.5px</td><td>default</td><td class="n">15,696 + 15,596</td></tr>
+    <tr><td>IBM Plex Sans</td><td class="n">0.52</td><td class="n bad">needs 567 (+224)</td><td class="n">605.7px</td><td>default</td><td class="n">22,588 + 22,832</td></tr>
+    <tr><td>Inter var</td><td class="n">0.55</td><td class="n bad">needs 555 (+212)</td><td class="n">640.4px</td><td>needs tnum</td><td class="n">48,256 (one file)</td></tr>
+    <tr><td>system-ui (today)</td><td class="n">0.48 here</td><td class="n bad">needs 527 (+184)</td><td class="n">596.8px</td><td>needs tnum</td><td class="n">0 — and nothing on another OS matches</td></tr>
+  </table>
+  </div>
+  <p class="note"><strong>The nav column is the same finding as round 4's defect, and it is not a type decision.</strong> The row
+  has 343px of content width at a 375px viewport (16px side padding) and every face wants 503–567px on one line: the
+  narrowest (PT Sans) is <b>160px</b> too wide, the widest <b>224px</b>. No face choice saves the nav — the row must wrap, or
+  the label set must shrink, as a <em>component</em> decision next round. So choose the type answer on legibility and
+  character, not on whether it fits the nav.</p>
+
+  <!-- ==================== Q2 spacing ==================== -->
+  <h2 class="up">Q2 · which spacing steps (this one is almost answered by the code itself)</h2>
+  <p class="note">66 spacing writes, 9 distinct values (the 67th write in <code>drift.json</code> is <code>-mr-1</code>, a negative
+  margin, which no scale governs). <strong>S3 = 4, 8, 12, 16, 24, 32, 48, 64 fits 65 of 66 writes
+  (98.5%)</strong>; the only orphan is <code>mt-5</code> (20px, 1 write). S2 drops 64 and moves 3 writes; S1 drops 4 and 64
+  and moves 5. Anything built on a different rhythm (powers of two, a 1.5× progression) fits 73% and 41% and would rewrite
+  18–39 writes. So this is a confirm, not a debate: the question is really <em>where 20px goes</em>.</p>
+  <div class="spx">
+    <div class="card">
+      <h5>S3 — eight steps (recommended)</h5>
+      <p>Padding 16, gap under the title 8, gap under the paragraph 12, section gap 24. All four exist in the code today.</p>
+      <div class="bar"></div>
+      <div class="gaps"><span class="gapchip">4</span><span class="gapchip">8</span><span class="gapchip">12</span><span class="gapchip">16</span><span class="gapchip">24</span><span class="gapchip">32</span><span class="gapchip">48</span><span class="gapchip">64</span></div>
+    </div>
+    <div class="card">
+      <h5>S2 — seven steps, no 64</h5>
+      <p>Identical except the biggest section gap has to fold into 48, which touches <code>mt-16</code> three times on the home page.</p>
+      <div class="bar"></div>
+      <div class="gaps"><span class="gapchip">4</span><span class="gapchip">8</span><span class="gapchip">12</span><span class="gapchip">16</span><span class="gapchip">24</span><span class="gapchip">32</span><span class="gapchip">48</span></div>
+    </div>
+  </div>
+
+  <!-- ==================== Q3 type steps + leading ==================== -->
+  <h2 class="up">Q3 · how many font sizes, and what line height means</h2>
+  <p class="note">46 font-size writes across 9 rendered sizes (14, 16, 18, 20, 24, 30, 36, 48, 60 px). The 1.200 ratio is
+  ratified; what is open is <em>how many steps</em>, and that changes how big the hero title is allowed to be. “Travel” is
+  the total distance every current size has to move, weighted by how often it is used.</p>
+  <div class="ramp">
+    <div class="rampcard">
+      <p class="lbl">T1 · six steps — travel 70.3px</p>
+      <p class="disp d10">A proof, four ways.</p>
+      <p class="steps">13.3 16 19.2 23 33.2 47.8 — the hero's 60px folds to 47.8 (−12.2). Tightest discipline, biggest rewrite.</p>
+    </div>
+    <div class="rampcard">
+      <p class="lbl">T2 · eight steps — travel 66.7px</p>
+      <p class="disp d11">A proof, four ways.</p>
+      <p class="steps">13.3 16 19.2 23 27.7 33.2 39.8 47.8 — same top step, but 27.7 and 39.8 exist so headings stop jumping 3.2px.</p>
+    </div>
+    <div class="rampcard">
+      <p class="lbl">T3 · nine steps (+57.3) — travel 47.7px</p>
+      <p class="disp d9">A proof, four ways.</p>
+      <p class="steps">…39.8 47.8 57.3 — keeps today's hero size (−2.7) and gives the numerals a display step, which is what the timeline and the interview series asked for.</p>
+    </div>
+  </div>
+  <p class="note"><strong>Line height: 58 of 71 writes (81.7%) already inherit it from the size token</strong>, so that part is
+  settled by rule — leading travels with size, and the one-off <code>leading-6/9/10</code> values get deleted. What is open is
+  the two ends of the ramp, and both are measurable:</p>
+  <div class="read">
+    <div class="readcard r15">
+      <p class="lbl">Tailwind's own pairing — body 1.50 (24px at 16px) · top of ramp 0.98</p>
+      <p>We read one paper and take it apart until someone finds a second route to the result, and then we argue about which route was the better one.</p>
+    </div>
+    <div class="readcard r16">
+      <p class="lbl">A reading setting for serif body — 1.60 (25.6px at 16px)</p>
+      <p>We read one paper and take it apart until someone finds a second route to the result, and then we argue about which route was the better one.</p>
+    </div>
+  </div>
+  <p class="note"><strong>And a floor for display type.</strong> Tailwind pairs 47.8px with 1.00 and 57.3px with 0.98. I measured
+  PT Serif's own ink box instead of assuming one: at 60px weight 700, “Typographic” inks <b>61.3px</b> deep — 47.3px above the
+  baseline and 14.0px below. At leading 0.98 two lines of that heading collide by <b>2.5px</b>, at 1.00 by 1.3px, and clear by
+  1.7px at 1.05. So the rule I propose is: leading comes from the size token, but <b>display sizes floor at 1.05</b> and
+  <b>serif body copy reads at 1.6</b>.</p>
+
+  <!-- ==================== Q4 durations ==================== -->
+  <h2 class="up">Q4 · durations — hover each button and feel the difference</h2>
+  <p class="note">36 transition writes, two speeds: 18 inherit Tailwind's 150ms and 18 write <code>duration-300</code>. They
+  animate the <b>same properties</b> — every transition in <code>src/</code> is a colour or a box-shadow; the only other animation
+  in the codebase is <code>animate-spin</code> on the Discord island loader. There is no modal and no dropdown, so a 400ms tier
+  has nothing to attach to. Nothing in <code>src/</code> respects <code>prefers-reduced-motion</code> today (the specimen below does).</p>
+  <div class="dur">
+    <div class="durcard">
+      <p class="lbl">D1 · 150ms colour/shadow + 250ms anything that moves (recommended)</p>
+      <a class="btn b150" href="#">View the schedule</a>
+      <p class="steps" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:oklch(45% 0.01 152)">linear for colour, per the round-2 easing answer</p>
+    </div>
+    <div class="durcard">
+      <p class="lbl">D3 · keep 300ms as shipped</p>
+      <a class="btn b300" href="#">View the schedule</a>
+      <p class="steps" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:oklch(45% 0.01 152)">ease-in-out, 18 writes say this, 18 say 150</p>
+    </div>
+    <div class="durcard">
+      <p class="lbl">D2 · 150 / 250 / 400</p>
+      <a class="btn b250" href="#">View the schedule</a>
+      <p class="steps" style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:oklch(45% 0.01 152)">250ms shown here; the 400ms tier would be new and unused</p>
+    </div>
+  </div>
+
+  <h2 class="up">what I would have done that you did not ask for</h2>
+  <p class="note">I nearly asked “which sans?” without measuring what the site currently renders. It renders
+  <strong>nothing we chose</strong>: <code>--font-sans</code> names “Inter var”, which no file provides, so chrome is the
+  visitor's OS face. And I nearly quoted the 107,680 B font figure as a download. Measured, a visitor gets
+  <strong>33,116 B</strong>. Those two corrections change the arithmetic of the ruling: option B costs a visitor
+  <strong>+56,420 B</strong> over today (the real bold serif + one variable sans), not “free because we delete cyrillic”.</p>
+  <p class="note"><strong>What is still owed after this round:</strong> components (control heights from the spacing steps,
+  button variants, the density of a <code>/schedule</code> row) and then the pattern set (zero-upcoming empty state, stale
+  snapshot, Discord error+retry, cancelled event, and “time not set” — two of your four real November dates carry no clock).</p>
+</main>
+</body>
+</html>

@@ -1,0 +1,744 @@
+{
+ "spacing": [
+  {
+   "name": "S1 six (8,12,16,24,32,48)",
+   "scale": [
+    8,
+    12,
+    16,
+    24,
+    32,
+    48
+   ],
+   "writes": 66,
+   "exact": 61,
+   "pct": 92.4,
+   "moved": 5,
+   "travelPx": 56,
+   "moves": [
+    "64->48 (3x mt-16)",
+    "4->8 (1x mt-1)",
+    "20->16 (1x mt-5)"
+   ]
+  },
+  {
+   "name": "S2 seven (4,8,12,16,24,32,48)",
+   "scale": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48
+   ],
+   "writes": 66,
+   "exact": 62,
+   "pct": 93.9,
+   "moved": 4,
+   "travelPx": 52,
+   "moves": [
+    "64->48 (3x mt-16)",
+    "20->16 (1x mt-5)"
+   ]
+  },
+  {
+   "name": "S3 eight (+64)",
+   "scale": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64
+   ],
+   "writes": 66,
+   "exact": 65,
+   "pct": 98.5,
+   "moved": 1,
+   "travelPx": 4,
+   "moves": [
+    "20->16 (1x mt-5)"
+   ]
+  },
+  {
+   "name": "S4 eight, powers of 2 (4,8,16,24,32,40,48,64)",
+   "scale": [
+    4,
+    8,
+    16,
+    24,
+    32,
+    40,
+    48,
+    64
+   ],
+   "writes": 66,
+   "exact": 48,
+   "pct": 72.7,
+   "moved": 18,
+   "travelPx": 72,
+   "moves": [
+    "12->8 (17x mt-3,ml-3)",
+    "20->16 (1x mt-5)"
+   ]
+  },
+  {
+   "name": "S5 seven, 1.5x rhythm (4,8,12,18,28,42,64)",
+   "scale": [
+    4,
+    8,
+    12,
+    18,
+    28,
+    42,
+    64
+   ],
+   "writes": 66,
+   "exact": 27,
+   "pct": 40.9,
+   "moved": 39,
+   "travelPx": 130,
+   "moves": [
+    "16->18 (20x mb-4,mt-4,gap-4,ml-4)",
+    "48->42 (8x mt-12,mb-12)",
+    "32->28 (6x mb-8,gap-8,mt-8)",
+    "24->28 (4x mb-6)",
+    "20->18 (1x mt-5)"
+   ]
+  }
+ ],
+ "type": [
+  {
+   "name": "T1 six (13.3,16,19.2,23,33.2,47.8)",
+   "scale": [
+    13.3,
+    16,
+    19.2,
+    23,
+    33.2,
+    47.8
+   ],
+   "writes": 46,
+   "exact": 11,
+   "pct": 23.9,
+   "travelPx": 70.3,
+   "moves": [
+    "20->19.2 (Δ-0.8, 13x)",
+    "18->19.2 (Δ1.2, 6x)",
+    "30->33.2 (Δ3.2, 4x)",
+    "36->33.2 (Δ-2.8, 4x)",
+    "14->13.3 (Δ-0.7, 3x)",
+    "24->23 (Δ-1, 2x)",
+    "48->47.8 (Δ-0.2, 1x)",
+    "60->47.8 (Δ-12.2, 2x)"
+   ]
+  },
+  {
+   "name": "T2 eight (13.3,16,19.2,23,27.7,33.2,39.8,47.8)",
+   "scale": [
+    13.3,
+    16,
+    19.2,
+    23,
+    27.7,
+    33.2,
+    39.8,
+    47.8
+   ],
+   "writes": 46,
+   "exact": 11,
+   "pct": 23.9,
+   "travelPx": 66.7,
+   "moves": [
+    "20->19.2 (Δ-0.8, 13x)",
+    "18->19.2 (Δ1.2, 6x)",
+    "30->27.7 (Δ-2.3, 4x)",
+    "36->33.2 (Δ-2.8, 4x)",
+    "14->13.3 (Δ-0.7, 3x)",
+    "24->23 (Δ-1, 2x)",
+    "48->47.8 (Δ-0.2, 1x)",
+    "60->47.8 (Δ-12.2, 2x)"
+   ]
+  },
+  {
+   "name": "T3 nine (…+57.3 for the hero)",
+   "scale": [
+    13.3,
+    16,
+    19.2,
+    23,
+    27.7,
+    33.2,
+    39.8,
+    47.8,
+    57.3
+   ],
+   "writes": 46,
+   "exact": 11,
+   "pct": 23.9,
+   "travelPx": 47.7,
+   "moves": [
+    "20->19.2 (Δ-0.8, 13x)",
+    "18->19.2 (Δ1.2, 6x)",
+    "30->27.7 (Δ-2.3, 4x)",
+    "36->33.2 (Δ-2.8, 4x)",
+    "14->13.3 (Δ-0.7, 3x)",
+    "24->23 (Δ-1, 2x)",
+    "48->47.8 (Δ-0.2, 1x)",
+    "60->57.3 (Δ-2.7, 2x)"
+   ]
+  },
+  {
+   "name": "T4 seven starting 14.6 (1.225 for contrast)",
+   "scale": [
+    14.6,
+    17.9,
+    21.9,
+    26.8,
+    32.8,
+    40.2,
+    49.2
+   ],
+   "writes": 46,
+   "exact": 0,
+   "pct": 0,
+   "travelPx": 93.5,
+   "moves": [
+    "20->21.9 (Δ1.9, 13x)",
+    "16->14.6 (Δ-1.4, 11x)",
+    "18->17.9 (Δ-0.1, 6x)",
+    "30->32.8 (Δ2.8, 4x)",
+    "36->32.8 (Δ-3.2, 4x)",
+    "14->14.6 (Δ0.6, 3x)",
+    "24->21.9 (Δ-2.1, 2x)",
+    "48->49.2 (Δ1.2, 1x)",
+    "60->49.2 (Δ-10.8, 2x)"
+   ]
+  }
+ ],
+ "leading": {
+  "totalWrites": 71,
+  "implicitFromSize": 58,
+  "pctImplicit": 81.7,
+  "explicit": [
+   {
+    "value": 1,
+    "count": 5,
+    "tokens": [
+     "sm:leading-none",
+     "sm:text-6xl",
+     "lg:text-5xl",
+     "xl:text-6xl",
+     "sm:text-5xl"
+    ]
+   },
+   {
+    "value": 24,
+    "count": 3,
+    "tokens": [
+     "leading-6"
+    ]
+   },
+   {
+    "value": 40,
+    "count": 2,
+    "tokens": [
+     "leading-10",
+     "sm:leading-10"
+    ]
+   },
+   {
+    "value": 16,
+    "count": 1,
+    "tokens": [
+     "leading-4"
+    ]
+   },
+   {
+    "value": 36,
+    "count": 1,
+    "tokens": [
+     "leading-9"
+    ]
+   },
+   {
+    "value": 28,
+    "count": 1,
+    "tokens": [
+     "leading-7"
+    ]
+   }
+  ]
+ },
+ "leadTable": [
+  {
+   "px": 13.3,
+   "tailwindDefault": 20,
+   "ratioTw": 1.5
+  },
+  {
+   "px": 16,
+   "tailwindDefault": 24,
+   "ratioTw": 1.5
+  },
+  {
+   "px": 19.2,
+   "tailwindDefault": 28,
+   "ratioTw": 1.46
+  },
+  {
+   "px": 23,
+   "tailwindDefault": 32,
+   "ratioTw": 1.39
+  },
+  {
+   "px": 27.7,
+   "tailwindDefault": 36,
+   "ratioTw": 1.3
+  },
+  {
+   "px": 33.2,
+   "tailwindDefault": 40,
+   "ratioTw": 1.2
+  },
+  {
+   "px": 39.8,
+   "tailwindDefault": 44,
+   "ratioTw": 1.11
+  },
+  {
+   "px": 47.8,
+   "tailwindDefault": 48,
+   "ratioTw": 1
+  },
+  {
+   "px": 57.3,
+   "tailwindDefault": 56,
+   "ratioTw": 0.98
+  }
+ ],
+ "durations": {
+  "writes": 36,
+  "distinct": 2,
+  "values": [
+   {
+    "value": "var(--tw-duration, var(--default-transition-duration))",
+    "count": 18,
+    "tokens": [
+     "transition"
+    ]
+   },
+   {
+    "value": "300ms",
+    "count": 18,
+    "tokens": [
+     "duration-300"
+    ]
+   }
+  ],
+  "easing": [
+   {
+    "value": "var(--tw-ease, var(--default-transition-timing-function))",
+    "count": 18,
+    "tokens": [
+     "transition"
+    ]
+   },
+   {
+    "value": "var(--ease-in-out)",
+    "count": 12,
+    "tokens": [
+     "ease-in-out"
+    ]
+   }
+  ],
+  "note": "every transition in src/ animates colour or box-shadow; the only other animation is animate-spin on the Discord island loader. There is no modal, dropdown, or enter/exit transition in the codebase.",
+  "candidates": {
+   "D1 two (150 colour/shadow, 250 movement)": [
+    150,
+    250
+   ],
+   "D2 three (150, 250, 400)": [
+    150,
+    250,
+    400
+   ],
+   "D3 one (300 as shipped today)": [
+    300
+   ]
+  }
+ },
+ "faces": [
+  {
+   "family": "PT Serif",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 70,
+   "digitAdv": 53,
+   "emAdv": 87,
+   "ascent": 104,
+   "descent": 29,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 221.8,
+   "bodyPxAt16": 599.2,
+   "chEm": 0.533
+  },
+  {
+   "family": "PT Serif",
+   "weight": 700,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 71,
+   "digitAdv": 57,
+   "emAdv": 93,
+   "ascent": 104,
+   "descent": 29,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 239.8,
+   "bodyPxAt16": 650.2,
+   "chEm": 0.565
+  },
+  {
+   "family": "PT Sans",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 70,
+   "digitAdv": 55,
+   "emAdv": 79,
+   "ascent": 102,
+   "descent": 28,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 215.3,
+   "bodyPxAt16": 579.7,
+   "chEm": 0.545
+  },
+  {
+   "family": "PT Sans",
+   "weight": 700,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 51,
+   "capHeight": 71,
+   "digitAdv": 57,
+   "emAdv": 80,
+   "ascent": 102,
+   "descent": 28,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 214,
+   "bodyPxAt16": 579.4,
+   "chEm": 0.567
+  },
+  {
+   "family": "Public Sans",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 52,
+   "capHeight": 73,
+   "digitAdv": 61,
+   "emAdv": 89,
+   "ascent": 95,
+   "descent": 22,
+   "digitsDefaultTabular": false,
+   "tnumChanges": true,
+   "navPxAt14": 231.9,
+   "bodyPxAt16": 624.9,
+   "chEm": 0.612
+  },
+  {
+   "family": "Public Sans",
+   "weight": 700,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 52,
+   "capHeight": 73,
+   "digitAdv": 64,
+   "emAdv": 92,
+   "ascent": 95,
+   "descent": 22,
+   "digitsDefaultTabular": false,
+   "tnumChanges": true,
+   "navPxAt14": 238.4,
+   "bodyPxAt16": 639.3,
+   "chEm": 0.644
+  },
+  {
+   "family": "Source Sans 3",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 49,
+   "capHeight": 66,
+   "digitAdv": 50,
+   "emAdv": 73,
+   "ascent": 102,
+   "descent": 40,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 206.2,
+   "bodyPxAt16": 561.5,
+   "chEm": 0.497
+  },
+  {
+   "family": "Source Sans 3",
+   "weight": 700,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 66,
+   "digitAdv": 53,
+   "emAdv": 76,
+   "ascent": 102,
+   "descent": 40,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 219.4,
+   "bodyPxAt16": 592,
+   "chEm": 0.528
+  },
+  {
+   "family": "IBM Plex Sans",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 52,
+   "capHeight": 71,
+   "digitAdv": 60,
+   "emAdv": 81,
+   "ascent": 102,
+   "descent": 27,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 229.3,
+   "bodyPxAt16": 605.7,
+   "chEm": 0.6
+  },
+  {
+   "family": "IBM Plex Sans",
+   "weight": 700,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 53,
+   "capHeight": 71,
+   "digitAdv": 60,
+   "emAdv": 82,
+   "ascent": 102,
+   "descent": 27,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 240.6,
+   "bodyPxAt16": 634.5,
+   "chEm": 0.6
+  },
+  {
+   "family": "Inter",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 55,
+   "capHeight": 73,
+   "digitAdv": 63,
+   "emAdv": 90,
+   "ascent": 97,
+   "descent": 24,
+   "digitsDefaultTabular": false,
+   "tnumChanges": true,
+   "navPxAt14": 238.4,
+   "bodyPxAt16": 640.4,
+   "chEm": 0.631
+  },
+  {
+   "family": "Inter",
+   "weight": 700,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 55,
+   "capHeight": 73,
+   "digitAdv": 67,
+   "emAdv": 93,
+   "ascent": 97,
+   "descent": 24,
+   "digitsDefaultTabular": false,
+   "tnumChanges": true,
+   "navPxAt14": 246.7,
+   "bodyPxAt16": 656.8,
+   "chEm": 0.674
+  },
+  {
+   "family": "PT Mono",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 70,
+   "digitAdv": 60,
+   "emAdv": 60,
+   "ascent": 89,
+   "descent": 24,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 310.8,
+   "bodyPxAt16": 816,
+   "chEm": 0.6
+  },
+  {
+   "family": "IBM Plex Mono",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 52,
+   "capHeight": 71,
+   "digitAdv": 60,
+   "emAdv": 60,
+   "ascent": 102,
+   "descent": 27,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 310.8,
+   "bodyPxAt16": 816,
+   "chEm": 0.6
+  },
+  {
+   "family": "JetBrains Mono",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 55,
+   "capHeight": 73,
+   "digitAdv": 60,
+   "emAdv": 60,
+   "ascent": 102,
+   "descent": 30,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 310.8,
+   "bodyPxAt16": 816,
+   "chEm": 0.6
+  },
+  {
+   "family": "Space Mono",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 70,
+   "digitAdv": 61,
+   "emAdv": 61,
+   "ascent": 112,
+   "descent": 36,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 317,
+   "bodyPxAt16": 832.3,
+   "chEm": 0.612
+  },
+  {
+   "family": "PT Sans Narrow",
+   "weight": 400,
+   "matchedFaces": 1,
+   "checkNow": true,
+   "xHeight": 50,
+   "capHeight": 70,
+   "digitAdv": 45,
+   "emAdv": 64,
+   "ascent": 102,
+   "descent": 28,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 173.3,
+   "bodyPxAt16": 466.8,
+   "chEm": 0.45
+  },
+  {
+   "family": "system-ui",
+   "weight": 400,
+   "matchedFaces": 0,
+   "checkNow": true,
+   "xHeight": 48,
+   "capHeight": 69,
+   "digitAdv": 61,
+   "emAdv": 86,
+   "ascent": 99,
+   "descent": 22,
+   "digitsDefaultTabular": false,
+   "tnumChanges": true,
+   "navPxAt14": 220.1,
+   "bodyPxAt16": 596.8,
+   "chEm": 0.614
+  },
+  {
+   "family": "ui-monospace",
+   "weight": 400,
+   "matchedFaces": 0,
+   "checkNow": true,
+   "xHeight": 54,
+   "capHeight": 72,
+   "digitAdv": 56,
+   "emAdv": 94,
+   "ascent": 107,
+   "descent": 29,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 235.7,
+   "bodyPxAt16": 644.7,
+   "chEm": 0.559
+  },
+  {
+   "family": "Georgia",
+   "weight": 400,
+   "matchedFaces": 0,
+   "checkNow": true,
+   "xHeight": 54,
+   "capHeight": 72,
+   "digitAdv": 56,
+   "emAdv": 94,
+   "ascent": 107,
+   "descent": 29,
+   "digitsDefaultTabular": true,
+   "tnumChanges": false,
+   "navPxAt14": 235.7,
+   "bodyPxAt16": 644.7,
+   "chEm": 0.559
+  }
+ ],
+ "bytes": {
+  "ibm-plex-mono-latin-400-normal.woff2": 14708,
+  "ibm-plex-mono-latin-700-normal.woff2": 14908,
+  "ibm-plex-sans-latin-400-normal.woff2": 22588,
+  "ibm-plex-sans-latin-700-normal.woff2": 22832,
+  "ibm-plex-sans-latin-wght-normal.woff2": 45712,
+  "inter-latin-400-normal.woff2": 23664,
+  "inter-latin-700-normal.woff2": 24356,
+  "inter-latin-wght-normal.woff2": 48256,
+  "jetbrains-mono-latin-400-normal.woff2": 21168,
+  "jetbrains-mono-latin-wght-normal.woff2": 40404,
+  "pt-mono-latin-400-normal.woff2": 27436,
+  "pt-sans-latin-400-italic.woff2": 42612,
+  "pt-sans-latin-400-normal.woff2": 45532,
+  "pt-sans-latin-700-normal.woff2": 47180,
+  "pt-sans-narrow-latin-400-normal.woff2": 36344,
+  "pt-sans-narrow-latin-700-normal.woff2": 51384,
+  "pt-serif-latin-400-italic.woff2": 34896,
+  "pt-serif-latin-400-normal.woff2": 33116,
+  "pt-serif-latin-700-normal.woff2": 29588,
+  "pt-serif-latin-ext-400-normal.woff2": 21548,
+  "public-sans-latin-400-normal.woff2": 14632,
+  "public-sans-latin-700-normal.woff2": 14600,
+  "public-sans-latin-wght-normal.woff2": 26832,
+  "source-sans-3-latin-400-normal.woff2": 15696,
+  "source-sans-3-latin-700-normal.woff2": 15596,
+  "space-mono-latin-400-normal.woff2": 16520
+ }
+}

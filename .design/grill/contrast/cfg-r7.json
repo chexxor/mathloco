@@ -1,0 +1,477 @@
+{
+ "page": "blank",
+ "width": 1240,
+ "tokens": {
+  "paper": "oklch(98.5% 0.006 85)",
+  "panel": "oklch(97% 0.008 85)",
+  "tint": "oklch(95% 0.03 152)",
+  "ink": "oklch(32% 0.045 152)",
+  "ink2": "oklch(45% 0.035 152)",
+  "ink3": "oklch(52% 0.028 152)",
+  "rule": "oklch(65.5% 0.03 152)",
+  "goldInk": "oklch(55% 0.12 62)",
+  "goldDark": "oklch(76% 0.06 84)",
+  "bandText": "oklch(93% 0.008 152)",
+  "band": "oklch(32% 0.045 152)",
+  "p1": "oklch(50% 0.11 205)",
+  "p3": "oklch(50% 0.14 35)",
+  "p2": "oklch(47% 0.15 315)",
+  "p4": "oklch(50% 0.10 105)",
+  "white": "#ffffff",
+  "red50": "oklch(97.1% .013 17.38)",
+  "red600": "oklch(57.7% .245 27.325)",
+  "blue50": "oklch(97% .014 254.604)",
+  "blue100": "oklch(93.2% .032 255.585)",
+  "blue600": "oklch(54.6% .245 262.881)",
+  "gray50": "oklch(98.5% .002 247.839)",
+  "gray100": "oklch(96.7% .003 264.542)",
+  "gray200": "oklch(92.8% .006 264.531)",
+  "gray500": "oklch(55.1% .027 264.364)",
+  "gray600": "oklch(44.6% .03 256.802)",
+  "gray800": "oklch(27.8% .033 256.848)",
+  "sigRedNaive": "oklch(52% 0.15 25)",
+  "sigRedLegal": "oklch(52% 0.15 355)",
+  "sigRedTint": "oklch(95% 0.03 355)",
+  "sigAmberNaive": "oklch(52% 0.14 70)",
+  "sigBlueLegal": "oklch(52% 0.10 255)",
+  "webErrDefault": "#DC2626"
+ },
+ "pairs": [
+  {
+   "kind": "text",
+   "name": "SHIPPED Discord error: red-600 on red-50",
+   "fg": "@red600",
+   "bg": "@red50",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED error text on white (no box)",
+   "fg": "@red600",
+   "bg": "@white",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED empty channels: gray-600 on blue-50",
+   "fg": "@gray600",
+   "bg": "@blue50",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED freshness line: gray-500 on white",
+   "fg": "@gray500",
+   "bg": "@white",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED hero CTA \"View Schedule\": blue-600 on blue-100",
+   "fg": "@blue600",
+   "bg": "@blue100",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED hero CTA text on white (no fill)",
+   "fg": "@blue600",
+   "bg": "@white",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED channel header: gray-800 on gray-100",
+   "fg": "@gray800",
+   "bg": "@gray100",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "SHIPPED channel body: gray-700-ish on gray-50 -> gray-600",
+   "fg": "@gray600",
+   "bg": "@gray50",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "SHIPPED spinner arc: blue-600 on white",
+   "fg": "@blue600",
+   "bg": "@white",
+   "bar": 3
+  },
+  {
+   "kind": "keyline",
+   "name": "SHIPPED card edge: gray-200 on gray-50",
+   "fg": "@gray200",
+   "bg": "@gray50",
+   "bar": 3
+  },
+  {
+   "kind": "keyline",
+   "name": "SHIPPED header edge: gray-200 on gray-100",
+   "fg": "@gray200",
+   "bg": "@gray100",
+   "bar": 3
+  },
+  {
+   "kind": "keyline",
+   "name": "SHIPPED card edge on white: gray-200",
+   "fg": "@gray200",
+   "bg": "@white",
+   "bar": 3
+  },
+  {
+   "kind": "layer",
+   "name": "SHIPPED error box: red-50 vs white",
+   "fill": "@red50",
+   "ground": "@white",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "SHIPPED empty box: blue-50 vs white",
+   "fill": "@blue50",
+   "ground": "@white",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "SHIPPED summary card: gray-50 vs white",
+   "fill": "@gray50",
+   "ground": "@white",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "SHIPPED card header: gray-100 vs gray-50",
+   "fill": "@gray100",
+   "ground": "@gray50",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "web error default #DC2626 on white as text",
+   "fg": "@webErrDefault",
+   "bg": "@white",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "notice word (ink) on paper",
+   "fg": "@ink",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "notice body (ink-2) on paper",
+   "fg": "@ink2",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "notice meta (ink-3) on paper",
+   "fg": "@ink3",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "notice keyline: rule on paper",
+   "fg": "@rule",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "keyline",
+   "name": "notice keyline: rule on panel (red line)",
+   "fg": "@rule",
+   "bg": "@panel",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "caution word: gold-ink on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "caution hairline: gold-ink on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "GOLD on a tint fill (red line)",
+   "fg": "@goldInk",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "notice body ink on a tint fill",
+   "fg": "@ink",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "notice body ink-2 on a tint fill",
+   "fg": "@ink2",
+   "bg": "@tint",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "tint notice fill vs paper",
+   "fill": "@tint",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "panel notice fill vs paper",
+   "fill": "@panel",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "keyline",
+   "name": "rule on tint",
+   "fg": "@rule",
+   "bg": "@tint",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "naive failure red (hue 25) as text",
+   "fg": "@sigRedNaive",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "legal warm signal (hue 355) as text",
+   "fg": "@sigRedLegal",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "legal warm signal (hue 355) as keyline",
+   "fg": "@sigRedLegal",
+   "bg": "@paper",
+   "bar": 3
+  },
+  {
+   "kind": "text",
+   "name": "legal warm signal on its own tint",
+   "fg": "@sigRedLegal",
+   "bg": "@sigRedTint",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "legal warm signal tint vs paper",
+   "fill": "@sigRedTint",
+   "ground": "@paper",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "naive warning amber (hue 70, out of gamut)",
+   "fg": "@sigAmberNaive",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "legal cool signal (hue 255) as text",
+   "fg": "@sigBlueLegal",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path coral as text on paper (what a red would be confused with)",
+   "fg": "@p3",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "path plum as text on paper (what hue 355 sits nearest)",
+   "fg": "@p2",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "shadow",
+   "name": "SHIPPED shadow-lg / shadow-md contact (alpha .102)",
+   "top": "rgba(0,0,0,0.102)",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "shadow",
+   "name": "black at .13 (the solve)",
+   "top": "rgba(0,0,0,0.13)",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "shadow",
+   "name": "ink-tinted .165 (the solve)",
+   "top": "rgba(32,57,39,0.165)",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "shadow",
+   "name": "ink-tinted .22 (elevation)",
+   "top": "rgba(32,57,39,0.22)",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "shadow",
+   "name": "ink-tinted .30 (heavy, floating)",
+   "top": "rgba(32,57,39,0.3)",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "shadow",
+   "name": "shipped hover card: shadow-lg under a white card on blue-50",
+   "top": "rgba(0,0,0,0.102)",
+   "onto": "@blue50",
+   "label": "@gray800",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "cancelled title: ink-2",
+   "fg": "@ink2",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "cancelled title: ink-3",
+   "fg": "@ink3",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "cancelled word on panel fill",
+   "fg": "@ink2",
+   "bg": "@panel",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "time-not-set word: ink-3 on paper",
+   "fg": "@ink3",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "time-not-set word: gold-ink on paper",
+   "fg": "@goldInk",
+   "bg": "@paper",
+   "bar": 4.5
+  },
+  {
+   "kind": "text",
+   "name": "band: stale notice band-text on band",
+   "fg": "@bandText",
+   "bg": "@band",
+   "bar": 4.5
+  },
+  {
+   "kind": "keyline",
+   "name": "band: rule hairline on band (round 6)",
+   "fg": "@rule",
+   "bg": "@band",
+   "bar": 3
+  }
+ ],
+ "solves": [
+  {
+   "label": "legal warm signal hue 355, text on paper",
+   "C": 0.15,
+   "H": 355,
+   "against": "@paper",
+   "target": 4.5,
+   "near": 52
+  },
+  {
+   "label": "legal warm signal hue 355, keyline on paper",
+   "C": 0.15,
+   "H": 355,
+   "against": "@paper",
+   "target": 3,
+   "near": 62
+  },
+  {
+   "label": "legal warm signal hue 355 on its tint",
+   "C": 0.15,
+   "H": 355,
+   "against": "@sigRedTint",
+   "target": 4.5,
+   "near": 52
+  },
+  {
+   "label": "naive failure red hue 25, text on paper",
+   "C": 0.15,
+   "H": 25,
+   "against": "@paper",
+   "target": 4.5,
+   "near": 52
+  },
+  {
+   "label": "legal cool signal hue 255, text on paper",
+   "C": 0.1,
+   "H": 255,
+   "against": "@paper",
+   "target": 4.5,
+   "near": 52
+  },
+  {
+   "label": "ink-3 muted, text on paper",
+   "C": 0.028,
+   "H": 152,
+   "against": "@paper",
+   "target": 4.5,
+   "near": 52
+  },
+  {
+   "label": "rule as a notice keyline on paper",
+   "C": 0.03,
+   "H": 152,
+   "against": "@paper",
+   "target": 3,
+   "near": 65.5
+  },
+  {
+   "label": "rule darkened for a panel fill",
+   "C": 0.03,
+   "H": 152,
+   "against": "@panel",
+   "target": 3,
+   "near": 65.5
+  }
+ ]
+}

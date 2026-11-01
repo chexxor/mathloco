@@ -1,0 +1,9 @@
+{
+ "report": "viewport innerWidth=1240  fonts: PT Serif LOADED, PSVar LOADED\nvariant              available  needed  delta  wraps  navH   links (w x h)                      verdict\nB-chosen                1068     310    758  yes      54  59x29 55x29 29x29                    fits\nB-fullname              1068     397    671  yes      54  59x29 55x29 29x29                    fits\nB-tight                 1068     298    770  yes      54  59x29 55x29 29x29                    fits\nA-stacked               1068     397    671  yes      80  59x29 55x29 29x29                    fits\nC-disclosure            1068     267    801  yes      43  45x13 45x29 45x29 45x29              fits  target 13px < 24 AA\nB-smalllinks            1068     274    794  yes      52  49x27 46x27 25x27                    fits\nCONTROL (must defect)     1068     648    420  yes      54  112x29 112x29 112x29 129x29          *** PROBE BROKEN: control passed ***\nrows measured: 6; control defects: false; PROBE NOT TRUSTWORTHY",
+ "rows": 6,
+ "controlCaught": false,
+ "faces": [
+  "PT Serif LOADED",
+  "PSVar LOADED"
+ ]
+}

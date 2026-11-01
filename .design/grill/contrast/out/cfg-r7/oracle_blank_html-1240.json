@@ -1,0 +1,570 @@
+{
+ "out": "token (as written)                              rendered\npaper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)\npanel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)\ntint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)\nink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)\nrule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)\ngoldInk = oklch(55% 0.12 62)               #a25f12 rgba(162,95,18,1)\ngoldDark = oklch(76% 0.06 84)              #c3ae86 rgba(195,174,134,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\nband = oklch(32% 0.045 152)                #203927 rgba(32,57,39,1)\np1 = oklch(50% 0.11 205)                   #007481 rgba(0,116,129,1)\np3 = oklch(50% 0.14 35)                    #a33e25 rgba(163,62,37,1)\np2 = oklch(47% 0.15 315)                   #793a93 rgba(121,58,147,1)\np4 = oklch(50% 0.10 105)                   #6c6610 rgba(108,102,16,1)\nwhite = #ffffff                            #ffffff rgba(255,255,255,1)\nred50 = oklch(97.1% .013 17.38)            #fef2f2 rgba(254,242,242,1)\nred600 = oklch(57.7% .245 27.325)          #e7000b rgba(231,0,11,1)\nblue50 = oklch(97% .014 254.604)           #eff6ff rgba(239,246,255,1)\nblue100 = oklch(93.2% .032 255.585)        #dbeafe rgba(219,234,254,1)\nblue600 = oklch(54.6% .245 262.881)        #155dfc rgba(21,93,252,1)\ngray50 = oklch(98.5% .002 247.839)         #f9fafb rgba(249,250,251,1)\ngray100 = oklch(96.7% .003 264.542)        #f3f4f6 rgba(243,244,246,1)\ngray200 = oklch(92.8% .006 264.531)        #e5e7eb rgba(229,231,235,1)\ngray500 = oklch(55.1% .027 264.364)        #6a7282 rgba(106,114,130,1)\ngray600 = oklch(44.6% .03 256.802)         #4a5565 rgba(74,85,101,1)\ngray800 = oklch(27.8% .033 256.848)        #1e2939 rgba(30,41,57,1)\nsigRedNaive = oklch(52% 0.15 25)           #af3c3a rgba(175,60,58,1)\nsigRedLegal = oklch(52% 0.15 355)          #a73b6d rgba(167,59,109,1)\nsigRedTint = oklch(95% 0.03 355)           #ffe7ef rgba(255,231,239,1)\nsigAmberNaive = oklch(52% 0.14 70)         #9a5600 rgba(154,86,0,1)\nsigBlueLegal = oklch(52% 0.10 255)         #3f6aa1 rgba(63,106,161,1)\nwebErrDefault = #DC2626                    #dc2626 rgba(220,38,38,1)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nSHIPPED Discord error: red-600 on red-50   text     #e7000b      #fef2f2     4.36   4.5   FAIL\nSHIPPED error text on white (no box)       text     #e7000b      #ffffff     4.77   4.5   PASS\nSHIPPED empty channels: gray-600 on blue-50 text     #4a5565      #eff6ff     6.94   4.5   PASS\nSHIPPED freshness line: gray-500 on white  text     #6a7282      #ffffff     4.84   4.5   PASS\nSHIPPED hero CTA \"View Schedule\": blue-600 on blue-100 text     #155dfc      #dbeafe     4.3    4.5   FAIL\nSHIPPED hero CTA text on white (no fill)   text     #155dfc      #ffffff     5.25   4.5   PASS\nSHIPPED channel header: gray-800 on gray-100 text     #1e2939      #f3f4f6     13.33  4.5   PASS\nSHIPPED channel body: gray-700-ish on gray-50 -> gray-600 text     #4a5565      #f9fafb     7.23   4.5   PASS\nSHIPPED spinner arc: blue-600 on white     keyline  #155dfc      #ffffff     5.25   3     PASS\nSHIPPED card edge: gray-200 on gray-50     keyline  #e5e7eb      #f9fafb     1.18   3     FAIL\nSHIPPED header edge: gray-200 on gray-100  keyline  #e5e7eb      #f3f4f6     1.13   3     FAIL\nSHIPPED card edge on white: gray-200       keyline  #e5e7eb      #ffffff     1.24   3     FAIL\nSHIPPED error box: red-50 vs white         layer    #fef2f2      #ffffff     1.09   1.35  FLAT (decoration)\nSHIPPED empty box: blue-50 vs white        layer    #eff6ff      #ffffff     1.09   1.35  FLAT (decoration)\nSHIPPED summary card: gray-50 vs white     layer    #f9fafb      #ffffff     1.05   1.35  FLAT (decoration)\nSHIPPED card header: gray-100 vs gray-50   layer    #f3f4f6      #f9fafb     1.05   1.35  FLAT (decoration)\nweb error default #DC2626 on white as text text     #dc2626      #ffffff     4.83   4.5   PASS\nnotice word (ink) on paper                 text     #203927      #fcfaf6     12.02  4.5   PASS\nnotice body (ink-2) on paper               text     #475b4c      #fcfaf6     7.02   4.5   PASS\nnotice meta (ink-3) on paper               text     #5d6e61      #fcfaf6     5.21   4.5   PASS\nnotice keyline: rule on paper              keyline  #849688      #fcfaf6     3.01   3     PASS\nnotice keyline: rule on panel (red line)   keyline  #849688      #f8f5ef     2.88   3     FAIL\ncaution word: gold-ink on paper            text     #a25f12      #fcfaf6     4.82   4.5   PASS\ncaution hairline: gold-ink on paper        keyline  #a25f12      #fcfaf6     4.82   3     PASS\nGOLD on a tint fill (red line)             text     #a25f12      #e0f5e5     4.39   4.5   FAIL\nnotice body ink on a tint fill             text     #203927      #e0f5e5     10.96  4.5   PASS\nnotice body ink-2 on a tint fill           text     #475b4c      #e0f5e5     6.4    4.5   PASS\ntint notice fill vs paper                  layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT (decoration)\npanel notice fill vs paper                 layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT (decoration)\nrule on tint                               keyline  #849688      #e0f5e5     2.74   3     FAIL\nnaive failure red (hue 25) as text         text     #af3c3a      #fcfaf6     5.71   4.5   PASS\nlegal warm signal (hue 355) as text        text     #a73b6d      #fcfaf6     5.77   4.5   PASS\nlegal warm signal (hue 355) as keyline     keyline  #a73b6d      #fcfaf6     5.77   3     PASS\nlegal warm signal on its own tint          text     #a73b6d      #ffe7ef     5.14   4.5   PASS\nlegal warm signal tint vs paper            layer    #ffe7ef      #fcfaf6     1.12   1.35  FLAT (decoration)\nnaive warning amber (hue 70, out of gamut) text     #9a5600      #fcfaf6     5.44   4.5   PASS\nlegal cool signal (hue 255) as text        text     #3f6aa1      #fcfaf6     5.32   4.5   PASS\npath coral as text on paper (what a red would be confused with) text     #a33e25      #fcfaf6     6.15   4.5   PASS\npath plum as text on paper (what hue 355 sits nearest) text     #793a93      #fcfaf6     7.09   4.5   PASS\nSHIPPED shadow-lg / shadow-md contact (alpha .102) shadow   #203927      #e3e1dd     1.25   1.35  FLAT (decoration)  [label on the composite: 9.59]\nblack at .13 (the solve)                   shadow   #203927      #dbdad6     1.35   1.35  LAYERED  [label on the composite: 8.93]\nink-tinted .165 (the solve)                shadow   #203927      #d8dad4     1.35   1.35  LAYERED  [label on the composite: 8.89]\nink-tinted .22 (elevation)                 shadow   #203927      #ccd0c8     1.51   1.35  LAYERED  [label on the composite: 7.98]\nink-tinted .30 (heavy, floating)           shadow   #203927      #bac0b8     1.78   1.35  LAYERED  [label on the composite: 6.76]\nshipped hover card: shadow-lg under a white card on blue-50 shadow   #1e2939      #d7dde6     1.25   1.35  FLAT (decoration)  [label on the composite: 10.77]\ncancelled title: ink-2                     text     #475b4c      #fcfaf6     7.02   4.5   PASS\ncancelled title: ink-3                     text     #5d6e61      #fcfaf6     5.21   4.5   PASS\ncancelled word on panel fill               text     #475b4c      #f8f5ef     6.73   4.5   PASS\ntime-not-set word: ink-3 on paper          text     #5d6e61      #fcfaf6     5.21   4.5   PASS\ntime-not-set word: gold-ink on paper       text     #a25f12      #fcfaf6     4.82   4.5   PASS\nband: stale notice band-text on band       text     #e4e9e5      #203927     10.19  4.5   PASS\nband: rule hairline on band (round 6)      keyline  #849688      #203927     4      3     PASS\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)\nlegal warm signal hue 355, text on paper (bar 4.5) oklch(52% 0.15 355)        renders #a73b6d    ratio 5.77\nlegal warm signal hue 355, keyline on paper (bar 3) oklch(62% 0.15 355)        renders #c95a8b    ratio 3.79\nlegal warm signal hue 355 on its tint (bar 4.5) oklch(52% 0.15 355)        renders #a73b6d    ratio 5.14\nnaive failure red hue 25, text on paper (bar 4.5) oklch(52% 0.15 25)         renders #af3c3a    ratio 5.71\nlegal cool signal hue 255, text on paper (bar 4.5) oklch(52% 0.1 255)         renders #3f6aa1    ratio 5.32\nink-3 muted, text on paper (bar 4.5)       oklch(52% 0.028 152)       renders #5d6e61    ratio 5.21\nrule as a notice keyline on paper (bar 3)  oklch(65.5% 0.03 152)      renders #849688    ratio 3.01\nrule darkened for a panel fill (bar 3)     oklch(64% 0.03 152)        renders #7f9283    ratio 3.04",
+ "report": "token (as written)                              rendered\npaper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)\npanel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)\ntint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)\nink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)\nrule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)\ngoldInk = oklch(55% 0.12 62)               #a25f12 rgba(162,95,18,1)\ngoldDark = oklch(76% 0.06 84)              #c3ae86 rgba(195,174,134,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\nband = oklch(32% 0.045 152)                #203927 rgba(32,57,39,1)\np1 = oklch(50% 0.11 205)                   #007481 rgba(0,116,129,1)\np3 = oklch(50% 0.14 35)                    #a33e25 rgba(163,62,37,1)\np2 = oklch(47% 0.15 315)                   #793a93 rgba(121,58,147,1)\np4 = oklch(50% 0.10 105)                   #6c6610 rgba(108,102,16,1)\nwhite = #ffffff                            #ffffff rgba(255,255,255,1)\nred50 = oklch(97.1% .013 17.38)            #fef2f2 rgba(254,242,242,1)\nred600 = oklch(57.7% .245 27.325)          #e7000b rgba(231,0,11,1)\nblue50 = oklch(97% .014 254.604)           #eff6ff rgba(239,246,255,1)\nblue100 = oklch(93.2% .032 255.585)        #dbeafe rgba(219,234,254,1)\nblue600 = oklch(54.6% .245 262.881)        #155dfc rgba(21,93,252,1)\ngray50 = oklch(98.5% .002 247.839)         #f9fafb rgba(249,250,251,1)\ngray100 = oklch(96.7% .003 264.542)        #f3f4f6 rgba(243,244,246,1)\ngray200 = oklch(92.8% .006 264.531)        #e5e7eb rgba(229,231,235,1)\ngray500 = oklch(55.1% .027 264.364)        #6a7282 rgba(106,114,130,1)\ngray600 = oklch(44.6% .03 256.802)         #4a5565 rgba(74,85,101,1)\ngray800 = oklch(27.8% .033 256.848)        #1e2939 rgba(30,41,57,1)\nsigRedNaive = oklch(52% 0.15 25)           #af3c3a rgba(175,60,58,1)\nsigRedLegal = oklch(52% 0.15 355)          #a73b6d rgba(167,59,109,1)\nsigRedTint = oklch(95% 0.03 355)           #ffe7ef rgba(255,231,239,1)\nsigAmberNaive = oklch(52% 0.14 70)         #9a5600 rgba(154,86,0,1)\nsigBlueLegal = oklch(52% 0.10 255)         #3f6aa1 rgba(63,106,161,1)\nwebErrDefault = #DC2626                    #dc2626 rgba(220,38,38,1)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nSHIPPED Discord error: red-600 on red-50   text     #e7000b      #fef2f2     4.36   4.5   FAIL\nSHIPPED error text on white (no box)       text     #e7000b      #ffffff     4.77   4.5   PASS\nSHIPPED empty channels: gray-600 on blue-50 text     #4a5565      #eff6ff     6.94   4.5   PASS\nSHIPPED freshness line: gray-500 on white  text     #6a7282      #ffffff     4.84   4.5   PASS\nSHIPPED hero CTA \"View Schedule\": blue-600 on blue-100 text     #155dfc      #dbeafe     4.3    4.5   FAIL\nSHIPPED hero CTA text on white (no fill)   text     #155dfc      #ffffff     5.25   4.5   PASS\nSHIPPED channel header: gray-800 on gray-100 text     #1e2939      #f3f4f6     13.33  4.5   PASS\nSHIPPED channel body: gray-700-ish on gray-50 -> gray-600 text     #4a5565      #f9fafb     7.23   4.5   PASS\nSHIPPED spinner arc: blue-600 on white     keyline  #155dfc      #ffffff     5.25   3     PASS\nSHIPPED card edge: gray-200 on gray-50     keyline  #e5e7eb      #f9fafb     1.18   3     FAIL\nSHIPPED header edge: gray-200 on gray-100  keyline  #e5e7eb      #f3f4f6     1.13   3     FAIL\nSHIPPED card edge on white: gray-200       keyline  #e5e7eb      #ffffff     1.24   3     FAIL\nSHIPPED error box: red-50 vs white         layer    #fef2f2      #ffffff     1.09   1.35  FLAT (decoration)\nSHIPPED empty box: blue-50 vs white        layer    #eff6ff      #ffffff     1.09   1.35  FLAT (decoration)\nSHIPPED summary card: gray-50 vs white     layer    #f9fafb      #ffffff     1.05   1.35  FLAT (decoration)\nSHIPPED card header: gray-100 vs gray-50   layer    #f3f4f6      #f9fafb     1.05   1.35  FLAT (decoration)\nweb error default #DC2626 on white as text text     #dc2626      #ffffff     4.83   4.5   PASS\nnotice word (ink) on paper                 text     #203927      #fcfaf6     12.02  4.5   PASS\nnotice body (ink-2) on paper               text     #475b4c      #fcfaf6     7.02   4.5   PASS\nnotice meta (ink-3) on paper               text     #5d6e61      #fcfaf6     5.21   4.5   PASS\nnotice keyline: rule on paper              keyline  #849688      #fcfaf6     3.01   3     PASS\nnotice keyline: rule on panel (red line)   keyline  #849688      #f8f5ef     2.88   3     FAIL\ncaution word: gold-ink on paper            text     #a25f12      #fcfaf6     4.82   4.5   PASS\ncaution hairline: gold-ink on paper        keyline  #a25f12      #fcfaf6     4.82   3     PASS\nGOLD on a tint fill (red line)             text     #a25f12      #e0f5e5     4.39   4.5   FAIL\nnotice body ink on a tint fill             text     #203927      #e0f5e5     10.96  4.5   PASS\nnotice body ink-2 on a tint fill           text     #475b4c      #e0f5e5     6.4    4.5   PASS\ntint notice fill vs paper                  layer    #e0f5e5      #fcfaf6     1.1    1.35  FLAT (decoration)\npanel notice fill vs paper                 layer    #f8f5ef      #fcfaf6     1.04   1.35  FLAT (decoration)\nrule on tint                               keyline  #849688      #e0f5e5     2.74   3     FAIL\nnaive failure red (hue 25) as text         text     #af3c3a      #fcfaf6     5.71   4.5   PASS\nlegal warm signal (hue 355) as text        text     #a73b6d      #fcfaf6     5.77   4.5   PASS\nlegal warm signal (hue 355) as keyline     keyline  #a73b6d      #fcfaf6     5.77   3     PASS\nlegal warm signal on its own tint          text     #a73b6d      #ffe7ef     5.14   4.5   PASS\nlegal warm signal tint vs paper            layer    #ffe7ef      #fcfaf6     1.12   1.35  FLAT (decoration)\nnaive warning amber (hue 70, out of gamut) text     #9a5600      #fcfaf6     5.44   4.5   PASS\nlegal cool signal (hue 255) as text        text     #3f6aa1      #fcfaf6     5.32   4.5   PASS\npath coral as text on paper (what a red would be confused with) text     #a33e25      #fcfaf6     6.15   4.5   PASS\npath plum as text on paper (what hue 355 sits nearest) text     #793a93      #fcfaf6     7.09   4.5   PASS\nSHIPPED shadow-lg / shadow-md contact (alpha .102) shadow   #203927      #e3e1dd     1.25   1.35  FLAT (decoration)  [label on the composite: 9.59]\nblack at .13 (the solve)                   shadow   #203927      #dbdad6     1.35   1.35  LAYERED  [label on the composite: 8.93]\nink-tinted .165 (the solve)                shadow   #203927      #d8dad4     1.35   1.35  LAYERED  [label on the composite: 8.89]\nink-tinted .22 (elevation)                 shadow   #203927      #ccd0c8     1.51   1.35  LAYERED  [label on the composite: 7.98]\nink-tinted .30 (heavy, floating)           shadow   #203927      #bac0b8     1.78   1.35  LAYERED  [label on the composite: 6.76]\nshipped hover card: shadow-lg under a white card on blue-50 shadow   #1e2939      #d7dde6     1.25   1.35  FLAT (decoration)  [label on the composite: 10.77]\ncancelled title: ink-2                     text     #475b4c      #fcfaf6     7.02   4.5   PASS\ncancelled title: ink-3                     text     #5d6e61      #fcfaf6     5.21   4.5   PASS\ncancelled word on panel fill               text     #475b4c      #f8f5ef     6.73   4.5   PASS\ntime-not-set word: ink-3 on paper          text     #5d6e61      #fcfaf6     5.21   4.5   PASS\ntime-not-set word: gold-ink on paper       text     #a25f12      #fcfaf6     4.82   4.5   PASS\nband: stale notice band-text on band       text     #e4e9e5      #203927     10.19  4.5   PASS\nband: rule hairline on band (round 6)      keyline  #849688      #203927     4      3     PASS\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)\nlegal warm signal hue 355, text on paper (bar 4.5) oklch(52% 0.15 355)        renders #a73b6d    ratio 5.77\nlegal warm signal hue 355, keyline on paper (bar 3) oklch(62% 0.15 355)        renders #c95a8b    ratio 3.79\nlegal warm signal hue 355 on its tint (bar 4.5) oklch(52% 0.15 355)        renders #a73b6d    ratio 5.14\nnaive failure red hue 25, text on paper (bar 4.5) oklch(52% 0.15 25)         renders #af3c3a    ratio 5.71\nlegal cool signal hue 255, text on paper (bar 4.5) oklch(52% 0.1 255)         renders #3f6aa1    ratio 5.32\nink-3 muted, text on paper (bar 4.5)       oklch(52% 0.028 152)       renders #5d6e61    ratio 5.21\nrule as a notice keyline on paper (bar 3)  oklch(65.5% 0.03 152)      renders #849688    ratio 3.01\nrule darkened for a panel fill (bar 3)     oklch(64% 0.03 152)        renders #7f9283    ratio 3.04",
+ "facesLoaded": [],
+ "fontSet": 0,
+ "pairs": [
+  {
+   "name": "SHIPPED Discord error: red-600 on red-50",
+   "kind": "text",
+   "fg": "#e7000b",
+   "bg": "#fef2f2",
+   "ratio": 4.36,
+   "bar": 4.5,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED error text on white (no box)",
+   "kind": "text",
+   "fg": "#e7000b",
+   "bg": "#ffffff",
+   "ratio": 4.77,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED empty channels: gray-600 on blue-50",
+   "kind": "text",
+   "fg": "#4a5565",
+   "bg": "#eff6ff",
+   "ratio": 6.94,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED freshness line: gray-500 on white",
+   "kind": "text",
+   "fg": "#6a7282",
+   "bg": "#ffffff",
+   "ratio": 4.84,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED hero CTA \"View Schedule\": blue-600 on blue-100",
+   "kind": "text",
+   "fg": "#155dfc",
+   "bg": "#dbeafe",
+   "ratio": 4.3,
+   "bar": 4.5,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED hero CTA text on white (no fill)",
+   "kind": "text",
+   "fg": "#155dfc",
+   "bg": "#ffffff",
+   "ratio": 5.25,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED channel header: gray-800 on gray-100",
+   "kind": "text",
+   "fg": "#1e2939",
+   "bg": "#f3f4f6",
+   "ratio": 13.33,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED channel body: gray-700-ish on gray-50 -> gray-600",
+   "kind": "text",
+   "fg": "#4a5565",
+   "bg": "#f9fafb",
+   "ratio": 7.23,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED spinner arc: blue-600 on white",
+   "kind": "keyline",
+   "fg": "#155dfc",
+   "bg": "#ffffff",
+   "ratio": 5.25,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED card edge: gray-200 on gray-50",
+   "kind": "keyline",
+   "fg": "#e5e7eb",
+   "bg": "#f9fafb",
+   "ratio": 1.18,
+   "bar": 3,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED header edge: gray-200 on gray-100",
+   "kind": "keyline",
+   "fg": "#e5e7eb",
+   "bg": "#f3f4f6",
+   "ratio": 1.13,
+   "bar": 3,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED card edge on white: gray-200",
+   "kind": "keyline",
+   "fg": "#e5e7eb",
+   "bg": "#ffffff",
+   "ratio": 1.24,
+   "bar": 3,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED error box: red-50 vs white",
+   "kind": "layer",
+   "fg": "#fef2f2",
+   "bg": "#ffffff",
+   "ratio": 1.09,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED empty box: blue-50 vs white",
+   "kind": "layer",
+   "fg": "#eff6ff",
+   "bg": "#ffffff",
+   "ratio": 1.09,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED summary card: gray-50 vs white",
+   "kind": "layer",
+   "fg": "#f9fafb",
+   "bg": "#ffffff",
+   "ratio": 1.05,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED card header: gray-100 vs gray-50",
+   "kind": "layer",
+   "fg": "#f3f4f6",
+   "bg": "#f9fafb",
+   "ratio": 1.05,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "web error default #DC2626 on white as text",
+   "kind": "text",
+   "fg": "#dc2626",
+   "bg": "#ffffff",
+   "ratio": 4.83,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "notice word (ink) on paper",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#fcfaf6",
+   "ratio": 12.02,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "notice body (ink-2) on paper",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#fcfaf6",
+   "ratio": 7.02,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "notice meta (ink-3) on paper",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#fcfaf6",
+   "ratio": 5.21,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "notice keyline: rule on paper",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#fcfaf6",
+   "ratio": 3.01,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "notice keyline: rule on panel (red line)",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#f8f5ef",
+   "ratio": 2.88,
+   "bar": 3,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "caution word: gold-ink on paper",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "caution hairline: gold-ink on paper",
+   "kind": "keyline",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "GOLD on a tint fill (red line)",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#e0f5e5",
+   "ratio": 4.39,
+   "bar": 4.5,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "notice body ink on a tint fill",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#e0f5e5",
+   "ratio": 10.96,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "notice body ink-2 on a tint fill",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#e0f5e5",
+   "ratio": 6.4,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "tint notice fill vs paper",
+   "kind": "layer",
+   "fg": "#e0f5e5",
+   "bg": "#fcfaf6",
+   "ratio": 1.1,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "panel notice fill vs paper",
+   "kind": "layer",
+   "fg": "#f8f5ef",
+   "bg": "#fcfaf6",
+   "ratio": 1.04,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "rule on tint",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#e0f5e5",
+   "ratio": 2.74,
+   "bar": 3,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "naive failure red (hue 25) as text",
+   "kind": "text",
+   "fg": "#af3c3a",
+   "bg": "#fcfaf6",
+   "ratio": 5.71,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "legal warm signal (hue 355) as text",
+   "kind": "text",
+   "fg": "#a73b6d",
+   "bg": "#fcfaf6",
+   "ratio": 5.77,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "legal warm signal (hue 355) as keyline",
+   "kind": "keyline",
+   "fg": "#a73b6d",
+   "bg": "#fcfaf6",
+   "ratio": 5.77,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "legal warm signal on its own tint",
+   "kind": "text",
+   "fg": "#a73b6d",
+   "bg": "#ffe7ef",
+   "ratio": 5.14,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "legal warm signal tint vs paper",
+   "kind": "layer",
+   "fg": "#ffe7ef",
+   "bg": "#fcfaf6",
+   "ratio": 1.12,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "naive warning amber (hue 70, out of gamut)",
+   "kind": "text",
+   "fg": "#9a5600",
+   "bg": "#fcfaf6",
+   "ratio": 5.44,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "legal cool signal (hue 255) as text",
+   "kind": "text",
+   "fg": "#3f6aa1",
+   "bg": "#fcfaf6",
+   "ratio": 5.32,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "path coral as text on paper (what a red would be confused with)",
+   "kind": "text",
+   "fg": "#a33e25",
+   "bg": "#fcfaf6",
+   "ratio": 6.15,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "path plum as text on paper (what hue 355 sits nearest)",
+   "kind": "text",
+   "fg": "#793a93",
+   "bg": "#fcfaf6",
+   "ratio": 7.09,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "SHIPPED shadow-lg / shadow-md contact (alpha .102)",
+   "kind": "shadow",
+   "fg": "#203927",
+   "bg": "#e3e1dd",
+   "ratio": 1.25,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": 9.59
+  },
+  {
+   "name": "black at .13 (the solve)",
+   "kind": "shadow",
+   "fg": "#203927",
+   "bg": "#dbdad6",
+   "ratio": 1.35,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": 8.93
+  },
+  {
+   "name": "ink-tinted .165 (the solve)",
+   "kind": "shadow",
+   "fg": "#203927",
+   "bg": "#d8dad4",
+   "ratio": 1.35,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": 8.89
+  },
+  {
+   "name": "ink-tinted .22 (elevation)",
+   "kind": "shadow",
+   "fg": "#203927",
+   "bg": "#ccd0c8",
+   "ratio": 1.51,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": 7.98
+  },
+  {
+   "name": "ink-tinted .30 (heavy, floating)",
+   "kind": "shadow",
+   "fg": "#203927",
+   "bg": "#bac0b8",
+   "ratio": 1.78,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": 6.76
+  },
+  {
+   "name": "shipped hover card: shadow-lg under a white card on blue-50",
+   "kind": "shadow",
+   "fg": "#1e2939",
+   "bg": "#d7dde6",
+   "ratio": 1.25,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": 10.77
+  },
+  {
+   "name": "cancelled title: ink-2",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#fcfaf6",
+   "ratio": 7.02,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "cancelled title: ink-3",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#fcfaf6",
+   "ratio": 5.21,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "cancelled word on panel fill",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#f8f5ef",
+   "ratio": 6.73,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "time-not-set word: ink-3 on paper",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#fcfaf6",
+   "ratio": 5.21,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "time-not-set word: gold-ink on paper",
+   "kind": "text",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "band: stale notice band-text on band",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#203927",
+   "ratio": 10.19,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "band: rule hairline on band (round 6)",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#203927",
+   "ratio": 4,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  }
+ ],
+ "solves": [
+  {
+   "label": "legal warm signal hue 355, text on paper",
+   "at": "oklch(52% 0.15 355)",
+   "ratio": 5.77
+  },
+  {
+   "label": "legal warm signal hue 355, keyline on paper",
+   "at": "oklch(62% 0.15 355)",
+   "ratio": 3.79
+  },
+  {
+   "label": "legal warm signal hue 355 on its tint",
+   "at": "oklch(52% 0.15 355)",
+   "ratio": 5.14
+  },
+  {
+   "label": "naive failure red hue 25, text on paper",
+   "at": "oklch(52% 0.15 25)",
+   "ratio": 5.71
+  },
+  {
+   "label": "legal cool signal hue 255, text on paper",
+   "at": "oklch(52% 0.1 255)",
+   "ratio": 5.32
+  },
+  {
+   "label": "ink-3 muted, text on paper",
+   "at": "oklch(52% 0.028 152)",
+   "ratio": 5.21
+  },
+  {
+   "label": "rule as a notice keyline on paper",
+   "at": "oklch(65.5% 0.03 152)",
+   "ratio": 3.01
+  },
+  {
+   "label": "rule darkened for a panel fill",
+   "at": "oklch(64% 0.03 152)",
+   "ratio": 3.04
+  }
+ ]
+}

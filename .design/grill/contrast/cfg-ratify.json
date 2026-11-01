@@ -1,0 +1,408 @@
+{
+ "page": "blank",
+ "width": 1240,
+ "tokens": {
+  "paper": "oklch(98.5% 0.006 85)",
+  "panel": "oklch(97% 0.008 85)",
+  "tint": "oklch(95% 0.03 152)",
+  "ink": "oklch(32% 0.045 152)",
+  "ink2": "oklch(45% 0.035 152)",
+  "ink3": "oklch(52% 0.028 152)",
+  "rule": "oklch(65.5% 0.03 152)",
+  "gold": "oklch(55% 0.12 62)",
+  "goldOnInk": "oklch(76% 0.06 84)",
+  "bandText": "oklch(93% 0.008 152)",
+  "band": "oklch(32% 0.045 152)",
+  "e1stop": "rgba(32, 57, 39, 0.165)",
+  "e2stop": "rgba(32, 57, 39, 0.22)",
+  "p_calendar": "oklch(50% 0.11 205)",
+  "p_calendar_tint": "oklch(95% 0.03 205)",
+  "p_calendar_onink": "oklch(70% 0.11 205)",
+  "p_meetup": "oklch(47% 0.15 315)",
+  "p_meetup_tint": "oklch(95% 0.03 315)",
+  "p_meetup_onink": "oklch(72% 0.15 315)",
+  "p_discord": "oklch(50% 0.14 35)",
+  "p_discord_tint": "oklch(95% 0.03 35)",
+  "p_discord_onink": "oklch(71% 0.14 35)",
+  "p_mobilizon": "oklch(50% 0.10 105)",
+  "p_mobilizon_tint": "oklch(95% 0.03 105)",
+  "p_mobilizon_onink": "oklch(69% 0.10 105)",
+  "white": "#ffffff",
+  "red50": "oklch(97.1% .013 17.38)",
+  "red600": "oklch(57.7% .245 27.325)",
+  "blue100": "oklch(93.2% .032 255.585)",
+  "blue600": "oklch(54.6% .245 262.881)",
+  "shippedShadowStop": "#0000001a"
+ },
+ "pairs": [
+  {
+   "kind": "text",
+   "name": "ink on paper",
+   "bar": 4.5,
+   "expect": 12.02,
+   "must": "pass",
+   "fg": "@ink",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "ink-2 on paper (secondary text, chip label, cancelled title)",
+   "bar": 4.5,
+   "expect": 7.02,
+   "must": "pass",
+   "fg": "@ink2",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "ink-3 on paper (meta, dated line, \"time not set\")",
+   "bar": 4.5,
+   "expect": 5.21,
+   "must": "pass",
+   "fg": "@ink3",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "gold as text (quiet action, notice word)",
+   "bar": 4.5,
+   "expect": 4.82,
+   "must": "pass",
+   "fg": "@gold",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "gold on a panel fill (notice on panel)",
+   "bar": 4.5,
+   "expect": 4.61,
+   "must": "pass",
+   "fg": "@gold",
+   "bg": "@panel"
+  },
+  {
+   "kind": "text",
+   "name": "ink on tint (secondary hover fill) — tints carry INK",
+   "bar": 4.5,
+   "expect": 10.96,
+   "must": "pass",
+   "fg": "@ink",
+   "bg": "@tint"
+  },
+  {
+   "kind": "text",
+   "name": "ink-2 on tint",
+   "bar": 4.5,
+   "expect": null,
+   "must": "pass",
+   "fg": "@ink2",
+   "bg": "@tint"
+  },
+  {
+   "kind": "text",
+   "name": "band-text on the band",
+   "bar": 4.5,
+   "expect": 10.19,
+   "must": "pass",
+   "fg": "@bandText",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "gold-on-ink on the band",
+   "bar": 4.5,
+   "expect": 5.8,
+   "must": "pass",
+   "fg": "@goldOnInk",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "path-calendar on paper",
+   "bar": 4.5,
+   "expect": 5.28,
+   "must": "pass",
+   "fg": "@p_calendar",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "path-meetup on paper",
+   "bar": 4.5,
+   "expect": 7.07,
+   "must": "pass",
+   "fg": "@p_meetup",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "path-discord on paper",
+   "bar": 4.5,
+   "expect": 6.14,
+   "must": "pass",
+   "fg": "@p_discord",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "path-mobilizon on paper",
+   "bar": 4.5,
+   "expect": 5.68,
+   "must": "pass",
+   "fg": "@p_mobilizon",
+   "bg": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "path-calendar-on-ink on the band",
+   "bar": 4.5,
+   "expect": 4.91,
+   "must": "pass",
+   "fg": "@p_calendar_onink",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "path-meetup-on-ink on the band",
+   "bar": 4.5,
+   "expect": 4.74,
+   "must": "pass",
+   "fg": "@p_meetup_onink",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "path-discord-on-ink on the band",
+   "bar": 4.5,
+   "expect": 4.59,
+   "must": "pass",
+   "fg": "@p_discord_onink",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "path-mobilizon-on-ink on the band",
+   "bar": 4.5,
+   "expect": 4.57,
+   "must": "pass",
+   "fg": "@p_mobilizon_onink",
+   "bg": "@band"
+  },
+  {
+   "kind": "keyline",
+   "name": "path keyline on paper (chip edge)",
+   "bar": 3,
+   "expect": 5.28,
+   "must": "pass",
+   "note": "round 6 measured this family at 5.28-6.15 on paper",
+   "fg": "@p_calendar",
+   "bg": "@paper"
+  },
+  {
+   "kind": "keyline",
+   "name": "path keyline on the band",
+   "bar": 3,
+   "expect": 4.59,
+   "must": "pass",
+   "fg": "@p_discord_onink",
+   "bg": "@band"
+  },
+  {
+   "kind": "layer",
+   "name": "chip track vs paper — FLAT on purpose, the hue keyline + word carry it",
+   "bar": 1.35,
+   "expect": 1.1,
+   "must": "flat",
+   "fill": "@p_meetup_tint",
+   "ground": "@paper"
+  },
+  {
+   "kind": "text",
+   "name": "chip label ink-2 on a chip track",
+   "bar": 4.5,
+   "expect": null,
+   "must": "pass",
+   "fg": "@ink2",
+   "bg": "@p_meetup_tint"
+  },
+  {
+   "kind": "keyline",
+   "name": "rule on paper",
+   "bar": 3,
+   "expect": 3.01,
+   "must": "pass",
+   "fg": "@rule",
+   "bg": "@paper"
+  },
+  {
+   "kind": "keyline",
+   "name": "rule on the band",
+   "bar": 3,
+   "expect": 4,
+   "must": "pass",
+   "fg": "@rule",
+   "bg": "@band"
+  },
+  {
+   "kind": "keyline",
+   "name": "notice: rule keyline on paper",
+   "bar": 3,
+   "expect": 3.01,
+   "must": "pass",
+   "fg": "@rule",
+   "bg": "@paper"
+  },
+  {
+   "kind": "keyline",
+   "name": "caution notice: gold keyline on paper",
+   "bar": 3,
+   "expect": 4.82,
+   "must": "pass",
+   "fg": "@gold",
+   "bg": "@paper"
+  },
+  {
+   "kind": "keyline",
+   "name": "caution notice on the band: gold-on-ink keyline",
+   "bar": 3,
+   "expect": 5.8,
+   "must": "pass",
+   "fg": "@goldOnInk",
+   "bg": "@band"
+  },
+  {
+   "kind": "layer",
+   "name": "panel vs paper",
+   "bar": 1.35,
+   "expect": 1.04,
+   "must": "flat",
+   "note": "a tint, not a layer",
+   "fill": "@panel",
+   "ground": "@paper"
+  },
+  {
+   "kind": "layer",
+   "name": "tint vs paper",
+   "bar": 1.35,
+   "expect": 1.1,
+   "must": "flat",
+   "note": "a hover fill, not a layer",
+   "fill": "@tint",
+   "ground": "@paper"
+  },
+  {
+   "kind": "shadow",
+   "name": "elevation level 1 contact edge",
+   "top": "@e1stop",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35,
+   "expect": null,
+   "must": "layered",
+   "note": "solved to clear the bar (D105)"
+  },
+  {
+   "kind": "shadow",
+   "name": "elevation level 2 first stop",
+   "top": "@e2stop",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35,
+   "expect": null,
+   "must": "layered",
+   "note": "solved to clear the bar (D105)"
+  },
+  {
+   "kind": "text",
+   "name": "BANNED gold on a tint",
+   "bar": 4.5,
+   "expect": 4.39,
+   "must": "fail",
+   "note": "under AA: tints carry ink, gold carries paper",
+   "fg": "@gold",
+   "bg": "@tint"
+  },
+  {
+   "kind": "keyline",
+   "name": "BANNED rule as a keyline on a panel",
+   "bar": 3,
+   "expect": 2.88,
+   "must": "fail",
+   "note": "under the 3.0 boundary bar",
+   "fg": "@rule",
+   "bg": "@panel"
+  },
+  {
+   "kind": "keyline",
+   "name": "BANNED paper path hue used on the band",
+   "bar": 3,
+   "expect": 2.28,
+   "must": "fail",
+   "note": "why path-*-on-ink exists",
+   "fg": "@p_calendar",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "BANNED gold as text on the band",
+   "bar": 4.5,
+   "expect": null,
+   "must": "fail",
+   "note": "why gold-on-ink exists",
+   "fg": "@gold",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "RETIRED shipped Discord error: red-600 on red-50",
+   "bar": 4.5,
+   "expect": 4.36,
+   "must": "fail",
+   "note": "under AA (D102)",
+   "fg": "@red600",
+   "bg": "@red50"
+  },
+  {
+   "kind": "text",
+   "name": "RETIRED shipped hero CTA: blue-600 on blue-100",
+   "bar": 4.5,
+   "expect": 4.3,
+   "must": "fail",
+   "note": "under AA (D102)",
+   "fg": "@blue600",
+   "bg": "@blue100"
+  },
+  {
+   "kind": "shadow",
+   "name": "RETIRED shipped shadow-lg stop",
+   "top": "@shippedShadowStop",
+   "onto": "@paper",
+   "label": "@ink",
+   "bar": 1.35,
+   "expect": 1.25,
+   "must": "flat",
+   "note": "decoration: under the layer bar (D105)"
+  },
+  {
+   "kind": "layer",
+   "name": "RETIRED shipped error fill red-50 vs white",
+   "bar": 1.35,
+   "expect": 1.09,
+   "must": "flat",
+   "note": "D102",
+   "fill": "@red50",
+   "ground": "@white"
+  },
+  {
+   "kind": "text",
+   "name": "RETIRED shipped amber as text (book-theme #f59e0b)",
+   "bar": 4.5,
+   "expect": 2.15,
+   "must": "fail",
+   "note": "D82/D88: template leftover",
+   "fg": "#f59e0b",
+   "bg": "@paper"
+  }
+ ],
+ "solves": []
+}

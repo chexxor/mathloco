@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 3b - you were right about Amazon. Here is where it actually lives.</title>
+<style>
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 400; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 700; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  :root {
+    --body: "PT Serif", Georgia, serif;
+    --ui: system-ui, -apple-system, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Menlo, Consolas, monospace;
+    --paper: oklch(98.5% 0.006 85);
+    --ink: oklch(24% 0.02 265);
+    --ink2: oklch(45% 0.02 265);
+    --rule: oklch(90% 0.01 265);
+    --amber-now: oklch(76.9% 0.165 70.1);
+    --amazon-orange: #FF9900; --amazon-navy: #232F3E;
+    --ochre: oklch(55% 0.12 62);
+    --leaf: oklch(84% 0.095 86);
+    --on-dark-gold: oklch(76% 0.06 84);
+    --d-chalk: oklch(32% 0.045 152);
+    --d-sumi: oklch(28% 0.015 60);
+    --d-maroon: oklch(38% 0.13 27);
+    --d-petrol: oklch(35% 0.055 195);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9e9ea; color: var(--ink); font-family: var(--ui); }
+  main { max-width: 1140px; margin: 0 auto; padding: 40px 24px 96px; }
+  h1 { font-family: var(--body); font-weight: 700; font-size: 27px; margin: 0 0 4px; }
+  .lead { font-family: var(--body); font-size: 17px; line-height: 1.55; color: var(--ink2); max-width: 78ch; margin: 0 0 24px; }
+  h2 { font-family: var(--ui); font-weight: 500; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink2); margin: 44px 0 14px; }
+  table { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 12.5px; background: #fff; }
+  .wrap-x { overflow-x: auto; }
+  @media (max-width: 760px) {
+    table { min-width: 860px; }
+    main { padding: 24px 14px 64px; }
+  }
+  th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+  th { font-family: var(--ui); font-weight: 500; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink2); }
+  td.n { font-variant-numeric: tabular-nums; }
+  .chip { display: inline-block; width: 30px; height: 30px; border-radius: 4px; border: 1px solid rgba(0,0,0,.14); vertical-align: middle; margin-right: 8px; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .card { background: #fff; border: 1px solid var(--rule); border-radius: 6px; padding: 18px; }
+  .key { display: flex; gap: 10px; align-items: baseline; font-family: var(--ui); font-weight: 500; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+  .opt { font-family: var(--body); font-weight: 700; font-size: 21px; margin: 6px 0 6px; }
+  .why { font-family: var(--body); font-size: 14.5px; line-height: 1.55; color: var(--ink2); }
+  .num { font-family: var(--mono); font-size: 12px; color: var(--ink2); margin-top: 10px; }
+  .rec { box-shadow: inset 3px 0 0 var(--ochre); }
+  .recflag { font-family: var(--ui); font-weight: 500; font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ochre); }
+  .no { color: oklch(45% 0.15 25); }
+  .spec { border-radius: 6px; overflow: hidden; margin-top: 14px; }
+  .band { padding: 18px 20px; }
+  .band .kick { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  .band .big { font-family: var(--mono); font-size: 30px; font-variant-numeric: tabular-nums; line-height: 1.1; margin-top: 4px; }
+  .band .sub { font-family: var(--body); font-size: 14px; margin-top: 4px; }
+  .row { display: flex; gap: 14px; padding: 14px 18px; background: var(--paper); align-items: baseline; flex-wrap: wrap; }
+  .row .date { font-family: var(--mono); font-size: 15px; font-variant-numeric: tabular-nums; }
+  .row .t { font-family: var(--body); font-weight: 700; font-size: 17px; color: var(--ink); flex: 1 1 200px; }
+  .row .v { font-family: var(--ui); font-size: 13px; color: var(--ink2); }
+  .row .cal { font-family: var(--ui); font-size: 13px; }
+  .note { font-family: var(--body); font-size: 15px; line-height: 1.6; color: var(--ink2); max-width: 78ch; }
+  .note strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Round 3b. You were right, and the culprit is not the primary.</h1>
+  <p class="lead">I measured the pairing you objected to against published brand colours. Distance in OKLab under about 0.05 is the same colour to a human at a glance - which is how brand association happens. The <strong>bright amber token in this repo is Amazon orange</strong>, to within 0.019. So every dark I offered, paired with that amber, lands on Amazon. The fix is in the gold, not the dark.</p>
+
+  <h2>Round 3a - the measurement behind your objection</h2>
+  <div class="wrap-x">
+  <table>
+    <tr><th>swatch</th><th>what it is</th><th>OKLCH</th><th>nearest brand colour</th><th>delta-OKLab</th><th>hue gap</th><th>chroma gap</th></tr>
+    <tr><td><span class="chip" style="background:#f59e0b"></span></td><td>the shipped <code>--color-book-theme</code></td><td>76.9 / 0.165 / 70</td><td>Amazon orange #FF9900</td><td class="n no">0.019 - the same colour</td><td class="n">6deg</td><td class="n">0.009</td></tr>
+    <tr><td><span class="chip" style="background:#232F3E"></span></td><td>P2 graphite from round 3</td><td>30 / 0.02 / 262</td><td>Amazon navy #232F3E</td><td class="n no">0.012 - the same colour</td><td class="n">7deg</td><td class="n">0.01</td></tr>
+    <tr><td><span class="chip" style="background:oklch(42% 0.11 262)"></span></td><td>P1 pigment indigo from round 3</td><td>42 / 0.11 / 262</td><td>UCLA blue #00558C</td><td class="n">0.035 (collegiate, but also IKEA blue at 0.051)</td><td class="n">8deg</td><td class="n">0.05</td></tr>
+    <tr><td><span class="chip" style="background:oklch(55% 0.12 62)"></span></td><td>deep ochre gold</td><td>55 / 0.12 / 62</td><td>Target red #CC0000</td><td class="n">0.135 - farther from every brand colour than any other gold tested</td><td class="n">-</td><td class="n">-</td></tr>
+    <tr><td><span class="chip" style="background:oklch(84% 0.095 86)"></span></td><td>gold-leaf / champagne</td><td>84 / 0.095 / 86</td><td>Walmart yellow #FFC220</td><td class="n">0.073 (Amazon orange 0.115)</td><td class="n">21deg</td><td class="n">0.079</td></tr>
+    <tr><td><span class="chip" style="background:oklch(76% 0.06 84)"></span></td><td>desaturated gold for on-dark numerals</td><td>76 / 0.06 / 84</td><td>Amazon orange #FF9900</td><td class="n">0.120</td><td class="n">14deg</td><td class="n">0.105</td></tr>
+  </table>
+  </div>
+  <p class="note"><strong>The pattern.</strong> Brightness plus hue plus chroma is what carries the brand read. Hue at or below about 75 with chroma at or above about 0.15 and high lightness is the commerce badge zone - Amazon orange, Amazon yellow #FFB300, UPS gold, Walmart yellow, IKEA yellow, FedEx orange all sit in it, and so does the token this repo inherited from its 2024 template. <strong>Gold at L 55 C 0.12 hue 62 sits outside it</strong> - that is a gold used as ink and hairline, which is also the only gold that passes AA as text (4.81 on paper) and as a keyline (4.81 against the 3.0 non-text bar).</p>
+  <p class="note">The honest trade: <strong>a bright gold <em>fill</em> can never be far from a commerce yellow</strong> - every value from L 76 to L 84 lands 0.07-0.08 from Amazon yellow, UPS gold, Walmart yellow, and also from UMN gold #FFCD0B and UCLA gold #FFD100. Lower the chroma and it stops being a badge: at C 0.06 the distance to Amazon orange roughly doubles to 0.120, and it still clears AA on a dark ground at 6.3-6.8.</p>
+
+  <h2>Q1 - what happens to bright gold</h2>
+  <div class="cards">
+    <div class="card rec">
+      <div class="key"><span class="recflag">recommended</span></div>
+      <div class="opt">G1 - gold as ink and hairline, never as a bright fill</div>
+      <div class="why">Deep ochre for text, keylines, rules and small marks; a desaturated gold for numerals sitting on a dark ground. No bright gold band anywhere. This is the option that removes the commerce read at its source, and it is also the only one where gold text is legible.</div>
+      <div class="spec">
+        <div class="band" style="background:var(--d-chalk); color:oklch(93% 0.008 152)">
+          <div class="kick" style="color:var(--on-dark-gold)">Next meeting</div>
+          <div class="big" style="color:var(--on-dark-gold)">Sat 7 Nov</div>
+          <div class="sub">Northeast Minneapolis</div>
+        </div>
+        <div class="row"><span class="date" style="color:var(--ochre)">12 Nov</span><span class="t">A proof with many proofs</span><span class="v">a cafe</span><span class="cal" style="color:var(--ochre)">add to calendar</span></div>
+      </div>
+      <div class="num">ochre on paper 4.81 (AA text) | ochre keyline on paper 4.81 (&gt; 3.0) | on-dark gold on chalkboard 6.34, on sumi 6.80 | nearest brand colour 0.120</div>
+    </div>
+    <div class="card">
+      <div class="key">G2</div>
+      <div class="opt">Gold-leaf band - a bright fill, but off the commerce hue</div>
+      <div class="why">Keeps the warm floor you liked in round 2, moved to hue 86 (gold-leaf yellow rather than traffic orange) and chroma 0.095. Dark ink on it reads at 10.05. Still measures 0.073 from Walmart yellow and 0.086 from UMN gold, so it reads collegiate-to-commerce rather than neutral.</div>
+      <div class="spec">
+        <div class="band" style="background:var(--leaf); color:oklch(24% 0.02 265)">
+          <div class="kick">Next meeting</div>
+          <div class="big">Sat 7 Nov</div>
+          <div class="sub">Northeast Minneapolis</div>
+        </div>
+      </div>
+      <div class="num">ink on leaf 10.05 | leaf as a keyline on paper 1.57 (invisible - needs the ochre for rules) | nearest brand 0.073</div>
+    </div>
+    <div class="card">
+      <div class="key"><span class="no">not recommended</span></div>
+      <div class="opt">G3 - keep the inherited amber</div>
+      <div class="why">Measurably Amazon orange (0.019), and unusable as text (2.15). The reason round 3 looked like Amazon is this swatch, not the indigo.</div>
+      <div class="spec"><div class="band" style="background:var(--amber-now); color:oklch(24% 0.02 265)"><div class="kick">Next meeting</div><div class="big">Sat 7 Nov</div><div class="sub">Northeast Minneapolis</div></div></div>
+      <div class="num">delta to Amazon orange 0.019 | as text on paper 2.15 (fails)</div>
+    </div>
+  </div>
+
+  <h2>Q2 - the dark ground, measured against brand colours and against the path hues</h2>
+  <div class="cards">
+    <div class="card rec">
+      <div class="key"><span class="recflag">recommended</span></div>
+      <div class="opt">A - chalkboard green-black</div>
+      <div class="why">oklch(32% 0.045 152). The club's own visual record is two chalkboards and a diagram on near-black, so this is the dark their material already has. Green-black is far from Amazon navy (0.063) and no commerce brand uses it. Playful rather than corporate.</div>
+      <div class="spec"><div class="band" style="background:var(--d-chalk); color:oklch(93% 0.008 152)"><div class="kick" style="color:var(--on-dark-gold)">Next meeting</div><div class="big" style="color:var(--on-dark-gold)">Sat 7 Nov</div><div class="sub">a proof with many proofs - Northeast Minneapolis</div></div></div>
+      <div class="num">paper on it 11.92 | it as text 11.92 | on its own tint 10.87 | nearest brand 0.063 Amazon navy (weak, low chroma) | collides with the grass path hue at 2deg - move that path hue to about 105</div>
+    </div>
+    <div class="card">
+      <div class="key">B</div>
+      <div class="opt">Warm sumi / iron-gall ink</div>
+      <div class="why">oklch(28% 0.015 60). Near-black with warmth rather than Amazon's cool navy - 0.051 from Amazon navy, 0.036 from UPS brown, so the near-neutrals are where the risk is. Letterpress and manuscript rather than storefront. Maximum contrast of any option.</div>
+      <div class="spec"><div class="band" style="background:var(--d-sumi); color:oklch(93% 0.008 85)"><div class="kick" style="color:var(--on-dark-gold)">Next meeting</div><div class="big" style="color:var(--on-dark-gold)">Sat 7 Nov</div><div class="sub">a proof with many proofs - Northeast Minneapolis</div></div></div>
+      <div class="num">paper on it 14.01 | it as text 14.01 | on its own tint 12.58 | nearest path hue 35deg (rose) - workable without re-assigning path hues</div>
+    </div>
+    <div class="card">
+      <div class="key">C</div>
+      <div class="opt">UMN maroon</div>
+      <div class="why">oklch(38% 0.13 27), 0.066 from University of Minnesota maroon #98021E. Deliberately institutional, and it ties to the practising-mathematician lectures the club attends. Zero commerce association. But maroon plus gold is the most common university athletics pairing there is, and it collides with the rose path hue at 2deg.</div>
+      <div class="spec"><div class="band" style="background:var(--d-maroon); color:oklch(93% 0.008 27)"><div class="kick" style="color:var(--on-dark-gold)">Next meeting</div><div class="big" style="color:var(--on-dark-gold)">Sat 7 Nov</div><div class="sub">a proof with many proofs - Northeast Minneapolis</div></div></div>
+      <div class="num">paper on it 10.22 | it as text 10.22 | on its own tint 9.13 | needs the rose path hue moved</div>
+    </div>
+    <div class="card">
+      <div class="key">D</div>
+      <div class="opt">Ink petrol</div>
+      <div class="why">oklch(35% 0.055 195). Cool, quiet, one step from the diagram's own near-black navy hue of 240-270 without being Amazon navy. Collides with the calendar-teal path hue at 5deg, so the path set would need re-assigning.</div>
+      <div class="spec"><div class="band" style="background:var(--d-petrol); color:oklch(93% 0.008 195)"><div class="kick" style="color:var(--on-dark-gold)">Next meeting</div><div class="big" style="color:var(--on-dark-gold)">Sat 7 Nov</div><div class="sub">a proof with many proofs - Northeast Minneapolis</div></div></div>
+      <div class="num">paper on it 10.55 | it as text 10.55 | on its own tint 9.62 | nearest brand 0.068 Amazon navy</div>
+    </div>
+  </div>
+
+  <h2>If the dark changes, the path hues move with it</h2>
+  <p class="note">Those hues are ours, not the platforms' - they mean "this is the path", not "this is Discord". The rule is 40deg or more of separation between the primary and every path hue. Current set is calendar 190 / Meetup 305 / Discord 25 / Mobilizon 150. Against chalkboard (152) that collides; the set <strong>cyan 205, plum 315, coral 35, olive 105</strong> separates by at least 47deg from chalkboard. Against sumi (60) the current set already clears 35deg or more, which is the one argument for B beyond taste.</p>
+
+  <h2>The ask</h2>
+  <p class="note"><strong>Q1:</strong> G1, G2 or G3 - what happens to bright gold. My pick is <strong>G1</strong>: the commerce read you caught is carried by bright, high-chroma warm fill, and G1 is the only option that removes it rather than shifting it. <strong>Q2:</strong> A, B, C or D for the dark ground. My pick is <strong>A chalkboard</strong>, because it comes from the club's own material rather than from a brand; <strong>B</strong> if you want maximum quiet and no path-hue churn.</p>
+  <p class="note">What this decides: <code>--color-brand-*</code>, <code>--color-band</code>, the gold role tokens, and which path hues get re-assigned. Everything else from round 2 stands: 4px grid, 1.200 type scale, 6px radius, ease-out movement, linear colour, OKLCH.</p>
+</main>
+</body>
+</html>

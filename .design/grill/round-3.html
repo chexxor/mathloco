@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 3 - which primary, with gold demoted to accent</title>
+<style>
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 400; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2") format("woff2"); }
+  @font-face { font-family: "PT Serif"; font-style: normal; font-weight: 700; src: url("../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2") format("woff2"); }
+  :root { --serif: "PT Serif", Georgia, serif; --sans: system-ui, -apple-system, "Segoe UI", sans-serif; --line: oklch(90% 0.01 250); --paper: oklch(98.5% 0.006 85); }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: oklch(24% 0.02 265); font-family: var(--serif); }
+  header { padding: 22px 24px 14px; border-bottom: 1px solid var(--line); }
+  h1 { font-size: 21px; line-height: 1.2; margin: 0 0 8px; font-weight: 700; }
+  .meta { font-family: var(--sans); font-size: 12px; line-height: 1.5; color: oklch(45% 0.02 265); max-width: 80ch; }
+  .q { padding: 22px 24px; border-bottom: 1px solid var(--line); }
+  .q > h2 { font-size: 17px; margin: 0 0 6px; font-weight: 700; }
+  .why { font-family: var(--sans); font-size: 12px; line-height: 1.5; color: oklch(45% 0.02 265); margin: 0 0 14px; max-width: 80ch; }
+  .opts { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); }
+  .opt { border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+  .opt .body { padding: 12px 13px; }
+  .name { font-family: var(--sans); font-size: 13px; font-weight: 650; margin: 0 0 6px; }
+  .name span { font-weight: 400; color: oklch(45% 0.02 265); }
+  .data { font-family: var(--sans); font-size: 11.5px; line-height: 1.55; color: oklch(40% 0.02 265); margin: 10px 0 0; }
+  .bad { color: oklch(45% 0.16 25); } .good { color: oklch(42% 0.12 150); }
+  table { border-collapse: collapse; font-family: var(--sans); font-size: 11.5px; margin-top: 10px; }
+  th, td { text-align: left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--line); }
+  .settled { background: oklch(97.5% 0.012 250); border-radius: 6px; padding: 12px 14px; }
+  .settled ul { font-family: var(--sans); font-size: 12.5px; line-height: 1.6; margin: 6px 0 0; padding-left: 18px; }
+  /* specimen: /schedule row + a hero band, painted by each candidate */
+  .spec { border-top: 1px solid var(--line); }
+  .pad { padding: 12px 13px; }
+  .kick { font-family: var(--sans); font-size: 10.5px; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+  .ttl { font-size: 17px; font-weight: 700; line-height: 1.25; margin: 3px 0 2px; }
+  .sub { font-size: 13px; line-height: 1.5; margin: 0; }
+  .band { padding: 9px 13px; font-family: var(--sans); font-size: 11.5px; font-weight: 600; }
+  .paths { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+  .chip { font-family: var(--sans); font-size: 10.5px; font-weight: 600; padding: 3px 7px; border-radius: 4px; border: 1px solid; }
+  .ratio { font-family: ui-monospace, SFMono-Regular, monospace; font-size: 10.5px; margin: 0; padding: 7px 13px; font-family: var(--sans); }
+  .c1 { background: var(--c1); color: var(--c1fg); border-color: var(--c1b); }
+  .c2 { background: var(--c2); color: var(--c2fg); border-color: var(--c2b); }
+  .c3 { background: var(--c3); color: var(--c3fg); border-color: var(--c3b); }
+  .c4 { background: var(--c4); color: var(--c4fg); border-color: var(--c4b); }
+  .p1 { --c1: oklch(95% 0.03 190); --c1fg: oklch(50% 0.11 190); --c1b: oklch(82% 0.05 190);
+        --c2: oklch(95% 0.035 305); --c2fg: oklch(47% 0.15 305); --c2b: oklch(83% 0.05 305);
+        --c3: oklch(95% 0.035 25); --c3fg: oklch(50% 0.15 25); --c3b: oklch(83% 0.05 25);
+        --c4: oklch(95% 0.03 150); --c4fg: oklch(48% 0.11 150); --c4b: oklch(82% 0.045 150); }
+  .hero { padding: 13px; }
+  .hero .h { font-size: 19px; font-weight: 700; line-height: 1.2; margin: 0 0 4px; }
+  .hero .s { font-size: 12.5px; line-height: 1.5; margin: 0 0 9px; }
+  .btn { display: inline-block; font-family: var(--sans); font-size: 11.5px; font-weight: 650; padding: 7px 12px; border-radius: 4px; border: 1px solid transparent; }
+  .goldrule { display: grid; gap: 8px; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); margin-top: 12px; }
+  .gr { border: 1px solid var(--line); border-radius: 6px; padding: 10px; font-family: var(--sans); font-size: 11.5px; line-height: 1.5; }
+  .gr b { display: block; font-size: 12px; margin-bottom: 4px; }
+  .gr .sw { display: block; height: 30px; border-radius: 4px; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Round 3 - gold demoted to accent: which primary takes its place</h1>
+  <p class="meta">Your ruling: too much gold risks reading as Amazon/ecommerce, so gold becomes an accent and the primary
+  changes. The measurement says your instinct is right but points at a different cause - and the fix is measurable.</p>
+</header>
+
+<div class="q">
+  <h2>Diagnosis, measured: the commerce read is saturation plus a complementary pair, not gold by itself</h2>
+  <div class="settled">
+    <ul>
+      <li><b>The loudest token on your site is not the gold.</b> Chroma ranking of everything the build resolves:
+        <code>blue-600 C 0.245</code> (5 uses), <code>amber C 0.165</code>, <code>blue-100 C 0.032</code>,
+        <code>blue-50 C 0.014</code>, <code>gray-50 C 0.002</code>. <b>Two of five sit above a C 0.16 commerce budget</b>,
+        and they are the pair.</li>
+      <li><b>Those two sit 167&deg; apart in hue</b> - near-complementary blue-plus-orange at maximum chroma. That
+        specific pairing is the conversion-optimisation palette of the web. Change the chroma and the pairing, and the
+        commerce reading goes away even while the gold stays.</li>
+      <li><b>Per-page colour load today:</b> <code>index.html</code> carries 6 painted surfaces of which 2 are chromatic;
+        <code>404.html</code> and <code>chat/</code> carry 1 each. That is the baseline to beat, and it is a rule the
+        phase-5 linter can enforce (chroma budget + chromatic fills per page), not a vibe.</li>
+      <li><b>Path hues constrain the primary.</b> Four hues already carry meaning (calendar teal 190&deg;, Meetup plum
+        305&deg;, Discord rose 25&deg;, Mobilizon grass 150&deg;). A primary that sits near one of them makes the
+        plurality picture unreadable - which eliminates three attractive candidates:</li>
+    </ul>
+    <table>
+      <tr><th>candidate primary</th><th>light text on it</th><th>it as text on paper</th><th>on its own tint</th><th>chroma</th><th>nearest path hue</th><th>verdict</th></tr>
+      <tr><td>P1 pigment indigo oklch(42% 0.11 262)</td><td>8.21</td><td>8.21</td><td>7.41</td><td>0.11</td><td>plum, 43&deg;</td><td class="good">works</td></tr>
+      <tr><td>P2 graphite oklch(30% 0.02 262)</td><td>13.06</td><td>13.06</td><td>11.79</td><td>0.02</td><td>plum, 43&deg;</td><td class="good">works</td></tr>
+      <tr><td>P3 malachite oklch(43% 0.09 152)</td><td>7.44</td><td>7.44</td><td>6.78</td><td>0.09</td><td>grass, 2&deg;</td><td class="bad">collides with the Mobilizon path hue</td></tr>
+      <tr><td>P4 petrol oklch(45% 0.10 196)</td><td>6.78</td><td>6.78</td><td>6.18</td><td>0.10</td><td>teal, 6&deg;</td><td class="bad">collides with the calendar path hue</td></tr>
+      <tr><td>P5 claret oklch(42% 0.13 25)</td><td>8.66</td><td>8.66</td><td>7.73</td><td>0.13</td><td>rose, 0&deg;; gold, 37&deg;</td><td class="bad">collides with the Discord hue, and gold stops reading as separate</td></tr>
+      <tr><td>today's web blue oklch(54.6% 0.245 263)</td><td>5.03</td><td>5.03</td><td>4.54</td><td>0.245</td><td>plum, 42&deg;; gold, 159&deg;</td><td class="bad">the loudest thing in the system, 167&deg; from the amber</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Q1. Pick the primary (specimens: a hero band and a real <code>/schedule</code> row)</h2>
+  <p class="why">Same content, same layout, same gold accents - only the primary changes. Gold's job in every specimen:
+  the "next meeting" marker, one numeral, and one keyline. It never fills a large area.</p>
+  <div class="opts">
+    <div class="opt p1">
+      <div class="hero" style="background:oklch(42% 0.11 262);color:oklch(98.5% 0.006 85)">
+        <p class="h">Mathematics, out loud</p>
+        <p class="s" style="color:oklch(88% 0.02 260)">Every second Thursday. Coffee, proofs, arguments.</p>
+        <span class="btn" style="background:oklch(82% 0.10 80);color:oklch(24% 0.02 265)">Next meeting</span>
+      </div>
+      <div class="body" style="background:var(--paper)">
+        <div class="kick" style="color:oklch(55% 0.13 62)">Next meeting</div>
+        <p class="ttl">Ellenberg, <i>The Music of the Primes</i>, ch. 4</p>
+        <p class="sub" style="color:oklch(45% 0.02 265)">Northfield, 7:00pm. Two proofs of the same lemma.</p>
+        <div class="paths"><span class="chip c1">Calendar file</span><span class="chip c2">Meetup</span><span class="chip c3">Discord</span><span class="chip c4">Mobilizon</span></div>
+      </div>
+      <p class="ratio" style="background:oklch(42% 0.11 262);color:oklch(82% 0.10 80)">band: gold-on-indigo 4.87 &middot; paper-on-indigo 8.21</p>
+      <div class="body">
+        <p class="name">P1. Pigment indigo <span>(recommended)</span></p>
+        <p class="data">Keeps the site's blue lineage - measured: blue is painted in 19 places across 8 files - while
+        dropping its chroma from <b>0.245 to 0.11</b>. Ultramarine and gold leaf is the manuscript pairing, and the gap to
+        the gold hue (160&deg;) stays complementary without either side shouting. Cheapest to migrate, and the least
+        commerce reading of any blue.</p>
+      </div>
+    </div>
+
+    <div class="opt p1">
+      <div class="hero" style="background:oklch(30% 0.02 262);color:oklch(98.5% 0.006 85)">
+        <p class="h">Mathematics, out loud</p>
+        <p class="s" style="color:oklch(85% 0.01 260)">Every second Thursday. Coffee, proofs, arguments.</p>
+        <span class="btn" style="background:oklch(82% 0.10 80);color:oklch(24% 0.02 265)">Next meeting</span>
+      </div>
+      <div class="body" style="background:var(--paper)">
+        <div class="kick" style="color:oklch(55% 0.13 62)">Next meeting</div>
+        <p class="ttl">Ellenberg, <i>The Music of the Primes</i>, ch. 4</p>
+        <p class="sub" style="color:oklch(45% 0.02 265)">Northfield, 7:00pm. Two proofs of the same lemma.</p>
+        <div class="paths"><span class="chip c1">Calendar file</span><span class="chip c2">Meetup</span><span class="chip c3">Discord</span><span class="chip c4">Mobilizon</span></div>
+      </div>
+      <p class="ratio" style="background:oklch(30% 0.02 262);color:oklch(82% 0.10 80)">band: gold-on-graphite 7.75 &middot; paper-on-graphite 13.06</p>
+      <div class="body">
+        <p class="name">P2. Graphite (near-neutral)</p>
+        <p class="data">Zero commerce reading, since chroma 0.02 is not a colour you can sell with. Then the only colour on
+        the site is the gold and the four path hues - which makes those four hues <i>more</i> legible as meanings, and makes
+        the gold rarer and therefore more precious. Cost: it replaces all 19 blue paints with neutral, so the page reads
+        quieter and more typographic; playfulness then rests entirely on type contrast and the path hues.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Gold demoted to accent - what that means in practice, measured</h2>
+  <p class="why">"Accent" is a set of roles, and each role needs its own value because one gold fails three of them.
+  Every line below is a measured pass or failure, and all of them are enforceable in phase 5.</p>
+  <div class="goldrule">
+    <div class="gr"><b>gold-ink &middot; oklch(55% 0.13 62)</b>
+      <span class="sw" style="background:var(--paper);border:1px solid var(--line)"><span style="color:oklch(55% 0.13 62);font-family:var(--sans);font-size:11.5px;font-weight:650;padding:6px 8px;display:inline-block">kicker, numeral, keyline</span></span>
+      text on paper <b>4.83</b> &middot; keyline on paper <b>4.83</b> &middot; <span class="bad">on a pale gold field 4.35 FAIL - never gold text on a gold field</span></div>
+    <div class="gr"><b>gold-fill &middot; oklch(76.9% 0.165 70)</b>
+      <span class="sw" style="background:oklch(76.9% 0.165 70)"><span style="color:oklch(24% 0.02 265);font-family:var(--sans);font-size:11.5px;font-weight:700;padding:6px 8px;display:inline-block">the one band per screen</span></span>
+      dark ink on it <b>7.67</b> &middot; <span class="bad">as a boundary against paper 2.05 FAIL - needs a graphite keyline</span> &middot; capped at <b>one fill per page</b></div>
+    <div class="gr"><b>gold-on-dark &middot; oklch(82% 0.10 80)</b>
+      <span class="sw" style="background:oklch(30% 0.02 262)"><span style="color:oklch(82% 0.10 80);font-family:var(--sans);font-size:11.5px;font-weight:650;padding:6px 8px;display:inline-block">numerals on the band</span></span>
+      on graphite <b>7.75</b> &middot; on indigo <b>4.87</b> &middot; <span class="bad">deep gold on a dark band 2.71 FAIL</span> - the lighter gold is a different value, not a tweak</div>
+    <div class="gr"><b>the rarity rule</b>
+      baseline measured today: <b>2</b> chromatic surfaces on <code>index.html</code>, <b>1</b> on <code>404.html</code> and <code>chat/</code>.
+      Proposed cap: <b>1 gold fill per screen</b>, no token above <b>C 0.16</b> except that fill, path hues only where a path exists.
+      A pale field never reads as a field on its own (measured <b>1.11</b>), so chips and bands always carry a keyline.</div>
+  </div>
+</div>
+
+<div class="q">
+  <h2>Settled earlier in this pass - recorded, not up for re-asking</h2>
+  <div class="settled">
+    <ul>
+      <li><b>Character:</b> playful, on purpose; art as plurality, not emotion.</li>
+      <li><b>Colour format:</b> OKLCH (the build already resolves to it).</li>
+      <li><b>Path hues:</b> yes - reserved, one per real path (calendar, Meetup, Discord, Mobilizon) and reused for interests.</li>
+      <li><b>Spacing grid:</b> 4px base (fits 9 of 9 values already in use; 8px would move 4, 12 and 20).</li>
+      <li><b>Type scale:</b> 1.200 (fits 7 of 7 sizes, 4.3px total movement, leaves room for display numerals and pull quotes).</li>
+      <li><b>Radius base:</b> 6px (fits 3 of 3 candidates; avoids the candy reading).</li>
+      <li><b>Easing:</b> ease-out for movement, linear for colour (18 transitions currently name no duration at all).</li>
+      <li><b>Phi stays out of the type ramp</b> (fits 3 of 7, moves 17px) and goes into layout proportions instead:
+      today's hero split is exactly 2:1; a <code>grid-cols-13</code> 8/5 split is 1.6.</li>
+    </ul>
+  </div>
+</div>
+</body>
+</html>

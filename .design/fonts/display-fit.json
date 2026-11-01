@@ -1,0 +1,253 @@
+{
+ "out": [
+  {
+   "size": 33.2,
+   "leadingAt1_05": 34.9,
+   "words": {
+    "Parallel": {
+     "px": 117.5,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Mathematical": {
+     "px": 211,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Quantum": {
+     "px": 144.1,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Minneapolis": {
+     "px": 189.6,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Bimonthly": {
+     "px": 160.9,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Cryptography": {
+     "px": 209.6,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "four": {
+     "px": 63.3,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    }
+   }
+  },
+  {
+   "size": 39.8,
+   "leadingAt1_05": 41.8,
+   "words": {
+    "Parallel": {
+     "px": 142.4,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Mathematical": {
+     "px": 255.7,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Quantum": {
+     "px": 174.6,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Minneapolis": {
+     "px": 229.8,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Bimonthly": {
+     "px": 195.1,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Cryptography": {
+     "px": 254,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "four": {
+     "px": 76.7,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    }
+   }
+  },
+  {
+   "size": 47.8,
+   "leadingAt1_05": 50.2,
+   "words": {
+    "Parallel": {
+     "px": 171,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Mathematical": {
+     "px": 306.9,
+     "fits": {
+      "288": false,
+      "343": true,
+      "700": true
+     }
+    },
+    "Quantum": {
+     "px": 209.6,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Minneapolis": {
+     "px": 275.9,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Bimonthly": {
+     "px": 234.1,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Cryptography": {
+     "px": 304.9,
+     "fits": {
+      "288": false,
+      "343": true,
+      "700": true
+     }
+    },
+    "four": {
+     "px": 92.1,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    }
+   }
+  },
+  {
+   "size": 57.3,
+   "leadingAt1_05": 60.2,
+   "words": {
+    "Parallel": {
+     "px": 204.7,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Mathematical": {
+     "px": 367.6,
+     "fits": {
+      "288": false,
+      "343": false,
+      "700": true
+     }
+    },
+    "Quantum": {
+     "px": 251,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Minneapolis": {
+     "px": 330.4,
+     "fits": {
+      "288": false,
+      "343": true,
+      "700": true
+     }
+    },
+    "Bimonthly": {
+     "px": 280.4,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    },
+    "Cryptography": {
+     "px": 365.1,
+     "fits": {
+      "288": false,
+      "343": false,
+      "700": true
+     }
+    },
+    "four": {
+     "px": 110.3,
+     "fits": {
+      "288": true,
+      "343": true,
+      "700": true
+     }
+    }
+   }
+  }
+ ],
+ "done": true
+}

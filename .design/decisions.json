@@ -1,0 +1,362 @@
+{
+ "character": {
+  "value": "playful",
+  "source": "user",
+  "round": 1,
+  "asked": "What kind of product is this? (dense-productive / calm-editorial / playful-consumer / premium-restrained)",
+  "operator_ruling": "Playful and inviting, because mathematics is treated as unplayful in conventional thinking. The operator's definition of playful is explicit: mathematics as ART, where art means 'multiple ways to reach the same goal/proof', NOT 'multiple ways to express an emotion'.",
+  "design_consequence": "Playful here means combinatorial and intellectual, not consumer-cute: no candy pastels, no oversized rounded-everything, no bounce for its own sake. Plurality gets made visible: the same event shown as several equivalent paths (calendar/ICS, Meetup, Discord, Mobilizon, the page itself), which is also exactly what the end-state architecture already provides. Energy comes from contrast (size, weight, colour used with intent) rather than from decoration.",
+  "rejects": "the recommended 'calm and editorial' default of round 1"
+ },
+ "colourFormat": {
+  "value": "oklch",
+  "source": "pre-settled",
+  "evidence": "Tailwind 4 with @theme in src/styles/global.css (no tailwind.config.*, no components.json/shadcn), and the palette the build already resolves to is oklch: blue-600 = oklch(54.6% 0.245 262.881), gray-900 = oklch(21% 0.034 264.665). HSL would mean fighting the framework.",
+  "round": 2
+ },
+ "accentAttachment": {
+  "value": "amber/gold, kept deliberately",
+  "source": "user",
+  "round": 2,
+  "operator_ruling": "\"I do like the amber color, because it evokes the idea of golden precision or nobility, which is like the golden ratio and other geometric aspects of mathematics.\" Alternatives in the same idea-family are invited.",
+  "measured_constraint": "One gold cannot do both jobs. The shipped #f59e0b: ink-on-gold = 8.09 PASS, but gold-as-text-on-white = 2.15 FAIL. A deepened gold oklch(55% 0.13 62): gold-as-ink-on-paper = 4.83 PASS, but ink-on-that-gold-surface = 3.27 (large/bold text only). So the system needs two golds: a bright gold floor that dark ink sits on, and a deep gold that is allowed to be text."
+ },
+ "paletteProvenance": {
+  "value": "no design rationale exists",
+  "source": "measured",
+  "evidence": "Init commit 74c90f6 (2024-11-16, authored 'Alex Berg', package name 'landing-page-book-astro-svelte-tailwind', LICENSE 'Copyright (c) 2020-2030 Alex Berg') already contained src/config.json with theme.color #f59e0b alongside a placeholder domain (mathbookclubsite.com), placeholder email, and boilerplate SEO copy for a generic literary book club; blue-600/blue-100 come from Tailwind 3 defaults used by the template's components (init used tailwindcss ^3.4.4 + @astrojs/tailwind + tailwind.config.cjs). The @theme tokens --color-book-gray/--color-book-theme were introduced by 8ce9607 'style(tailwind): migrate to Tailwind 4 through @tailwindcss/vite' - carried over during migration, not chosen. ec4e0e9 later made ::selection render the declared token instead of a hardcoded #3b82f6, which is why amber paints exactly one surface today."
+ },
+ "brandDistance": {
+  "value": "the operator's Amazon objection is measured and correct; the amber token is the carrier",
+  "source": "measured",
+  "round": "3b",
+  "operator_objection": "the indigo and gold from round 3 look exactly like the Amazon colours",
+  "findings": {
+   "shippedAmber": "#f59e0b = oklch(76.9% 0.165 70.1) vs Amazon orange #FF9900: delta-OKLab 0.019, hue gap 6deg, chroma gap 0.009 - the same colour",
+   "round3Graphite": "oklch(30% 0.02 262) vs Amazon navy #232F3E: delta 0.012 - also the same colour, so both offered primaries were doomed by the amber rather than by themselves",
+   "round3Indigo": "oklch(42% 0.11 262): 0.035 from UCLA blue, 0.051 from IKEA blue - collegiate but adjacent to commerce",
+   "commerceZone": "hue <= ~75 with chroma >= ~0.15 at high lightness: Amazon orange/yellow, UPS gold, Walmart yellow, IKEA yellow, FedEx orange all sit there, and so does the template-inherited token",
+   "methodNote": "delta under ~0.05 in OKLab is the same colour to a human at a glance, which is the mechanism of brand association"
+  },
+  "evidence": ".design/brand-distance.mjs, D88"
+ },
+ "pathHues": {
+  "value": "reserved, one per real path",
+  "source": "user",
+  "round": 2,
+  "detail": "calendar teal oklch(50% 0.11 190) 5.43 / Meetup plum oklch(47% 0.15 305) 7.03 / Discord rose oklch(50% 0.15 25) 6.21 / Mobilizon grass oklch(48% 0.11 150) 5.95 - all AA as text on paper and on their own tints. Rule: a hue appears only where a path exists; tints alone are indistinguishable (1.02) so every chip carries a word and a keyline. Reused for interests (D84). Conditional on the dark ground: >= 40deg separation is required, so chalkboard (152) forces grass to about 105 (set cyan 205 / plum 315 / coral 35 / olive 105, min 47deg) and maroon (27) forces rose to move; sumi (60) and the current set already clear 35deg.",
+  "evidence": ".design/palette-math.mjs",
+  "final": "against chalkboard ink: cyan oklch(50% 0.11 205), plum 47/.15/315, coral 50/.14/35, olive 50/.10/105 - all pass 4.5 as text and >= 40deg from the ink hue"
+ },
+ "spacingGrid": {
+  "value": "4px",
+  "source": "user",
+  "round": 2,
+  "evidence": "4px fits 9/9 spacing values in use; 8px fits 6/9 and would move 4, 12 and 20"
+ },
+ "typeScale": {
+  "value": "1.200",
+  "source": "user",
+  "round": 2,
+  "evidence": "fits 7/7 sizes in use (14,16,18,20,24,30,36px), 4.3px total movement; 1.618 fits only 3/7 and moves 17px, so phi goes into layout proportions instead"
+ },
+ "radiusBase": {
+  "value": "6px",
+  "source": "user",
+  "round": 2,
+  "evidence": "6px base fits 3/3 candidate radii; rounded-lg is 13 of 23 radius uses; 8px risks the candy reading the operator ruled out"
+ },
+ "easing": {
+  "value": "ease-out for movement, linear for colour",
+  "source": "user",
+  "round": 2,
+  "evidence": "18 of 36 transitions name no duration, 18 name 300ms, zero name an easing"
+ },
+ "goldRoles": {
+  "value": "gold demoted to accent; and as accent it is a mark, not a surface (round 3b supersedes the bright gold fill)",
+  "source": "user+measured",
+  "round": "3b",
+  "detail": "gold-ink / deep ochre oklch(55% 0.12 62) - text, keylines, hairlines, small marks: 4.81 on paper as text (AA) and 4.81 as a boundary (3.0 bar), and the only gold whose minimum distance to any brand colour tested is 0.135, i.e. brand-neutral. gold-on-dark oklch(76% 0.06 84) - numerals on the dark ground: 6.34 on graphite, 6.80 on sumi, 5.78 on chalkboard, and 0.120 from Amazon orange (twice the distance of any brighter gold). gold-leaf oklch(84% 0.095 86) - the G2 alternative if a bright warm band is wanted: ink on it 10.05, but only 0.073 from Walmart yellow and 0.086 from UMN gold, and invisible as a keyline (1.57). The inherited bright fill oklch(76.9% 0.165 70.1) is withdrawn: 0.019 from Amazon orange, 2.15 as text.",
+  "measuredTension": "a bright gold fill cannot be made brand-neutral - every L 76-84 value lands 0.07-0.08 from a commerce yellow and 0.086-0.092 from a university gold. Lowering chroma is the only escape: C 0.06 doubles the distance to Amazon orange while keeping AA on dark.",
+  "commerceDiagnosis": "the commerce read is saturation plus a complementary pair, not gold alone: blue-600 C 0.245 and amber C 0.165 are the only two tokens above a C 0.16 budget, and they sit 167deg apart. Per page today: index.html 6 painted surfaces / 2 chromatic; 404.html and chat/ 1 each.",
+  "evidence": ".design/primary-math.mjs"
+ },
+ "graphicMotif": {
+  "value": "several paths, one meeting point (derived from the club's own sphere diagram)",
+  "source": "measured",
+  "round": 3,
+  "detail": "the club's four Meetup images contain no people: warm pale cover illustration (96% warm-hue pixels, mean luminance 0.791), chalkboard photo (83% of pixels below L 0.30, sin^2x+cos^2x=1 legible), spherical-geometry diagram labelled 'S pole - meet here' (90% below L 0.30, 93% cool-hue, dominant hue 240-270 at mean chroma 0.037 - corrected from an earlier 0.255 produced by a 4-channel JPEG scan bug), quantum-computer photo (mean luminance 0.628, 76% neutral). Stock crowd photography is out; dark board photos go in frames or become a dark band with light type; text colour on an image card is derived from the image, because the club's images split light/dark.",
+  "evidence": ".notes/asset-sources.md, D86"
+ },
+ "darkGround": {
+  "choice": "A chalkboard green-black oklch(32% 0.045 152)",
+  "chosen": "operator, 2026-10-31",
+  "role": "ink, not surface - one dark band per screen at most",
+  "contrast": "11.92 on paper"
+ },
+ "lightTheme": {
+  "paper": "oklch(98.5% 0.006 85)",
+  "panel": "oklch(97% 0.008 85)",
+  "ink": "oklch(32% 0.045 152)",
+  "ink_secondary": "oklch(45% 0.035 152)",
+  "ink_muted": "oklch(52% 0.028 152)",
+  "rule": "oklch(65.5% 0.03 152) = exactly 3.0",
+  "band_text": "oklch(93% 0.008 152)",
+  "note": "every value has a measured ratio in .design/light-roles.mjs; the obvious L78-80 rule measured 1.9 and was rejected"
+ },
+ "goldRole": "G1 settled: gold as ink/hairline (oklch(55% 0.12 62), 4.81 on paper) and on-dark numerals (oklch(76% 0.06 84), 5.78 on the band). Never a bright fill. Gold never sits on a tint: gold-on-tint measured 4.39.",
+ "typeFamilyConstraintMeasured": "PT Serif has no variable build (registry 404), so serif weights are 400+700 only: font-weight 500 and 600 on serif text renders as the regular face and the real bold respectively. A variable sans gives 400/500/600/700 as five distinct renderings from one 26,832 B file.",
+ "typeFamily": {
+  "value": "PT Serif (latin 400 + latin 700, static) for content + Public Sans variable (latin, wght 100-900, one file) for chrome",
+  "source": "user",
+  "round": 5,
+  "operator_ruling": "Q1: B the recommended is good.",
+  "bytes": "33,116 + 29,588 serif + 26,832 sans = 89,536 B latin. Today a real English page fetches only 33,116 B, so this is +56,420 B on first visit.",
+  "measured_reasons": {
+   "kills_the_phantom": "--font-sans names 'Inter var', which no file provides: the chrome ratified in round 4 rendered in this rig's system-ui (x-height 0.48, cap 0.69).",
+   "weights": "one variable file gives 400/500/600/700/800 as five distinct renderings (15.77/17.76/19.38/22.01/24.76% ink) where a static pair gives two (13.97/21.12) and today's single-file serif gives 400 and one synthesised thickening (14.50/17.97).",
+   "serif_constraint": "PT Serif has no variable build (registry 404), so serif weight is 400 or 700 only - font-weight 500/600 on serif text is the regular face or the real bold, nothing in between.",
+   "rejected": "C PT Sans pair (155,416 B, best metric twin, no real 500/600); D adding IBM Plex Mono (104,244 B, +36% width per line, and PT Serif digits are already tabular by default); A serif-only (cheapest, but 11px tracked labels and nav in serif at x-height 0.50)"
+  },
+  "not_proven": "Inter vs Public Sans as the chrome face was decided on bytes (26,832 vs 48,256) and x-height 0.52 vs 0.55, and on Public Sans being the smaller variable file. No side-by-side specimen of the two was ratified."
+ },
+ "spacingSizes": {
+  "value": "S3 = 4, 8, 12, 16, 24, 32, 48, 64 px (the 4px grid ratified in round 2, eight named steps)",
+  "source": "user",
+  "round": 5,
+  "evidence": "fits 65 of 66 spacing writes (98.5%); the 67th write (-mr-1, a negative margin) is outside the scale. S2 fits 93.9%, powers-of-two 72.7%, a 1.5x rhythm 40.9%.",
+  "open": "RESOLVED in ratify 2026-11-01 -> decisions.spacingOrphan (20px illegal: 5 occurrences, 4 live, all -> 24)"
+ },
+ "fontSizes": {
+  "value": "T3 nine steps of the 1.200 ramp: 13.3, 16, 19.2, 23, 27.7, 33.2, 39.8, 47.8, 57.3 px",
+  "source": "user",
+  "round": 5,
+  "operator_ruling": "Q3: T3 is fine, as long as you agree the geometry matches the tone we set out in the beginning.",
+  "agreement_tested_not_assumed": {
+   "tone": "round 1 set playful = plurality made visible, with energy from contrast of size/weight/colour used with intent, and explicitly no oversized-everything. T3's top step is 3.58x body against T1's 2.99x; the ratio stays 1.200, so the extra step buys contrast without buying a marketing ratio.",
+   "geometry": "the display line boxes land on the 4px grid: 33.2->36, 39.8->44, 47.8->52, 57.3->60 px, an arithmetic ladder of step 8. Measured ink of 'Typographic' at 700: 32.7 / 39.8 / 49.0 / 58.2 px, so each grid leading clears by 3.3 / 4.2 / 3.0 / 1.8 px. Tailwind's own pairs collide: 47.8 at 1.00 collides by 1.2 px, 57.3 at 0.98 by 2.0 px.",
+   "guardrail": "one display step per screen, mirroring the round-4 rule of one dark band per screen - and the display step is for the WHEN (dates, numerals, the next-meeting line), which is the site's job, not for an invented punchline.",
+   "narrow_cap": "at 57.3px the club's own words break the viewport: 'Mathematical' 367.6px and 'Cryptography' 365.1px do not fit 343px (375 viewport), 'Minneapolis' 330.4px does not fit 288px (320 viewport). At 47.8 every word tested fits 343 but not 288. So the top step needs a viewport cap (e.g. 57.3 only above ~700px content, 47.8 below), proved by probe-run.sh rather than by clamp()"
+  }
+ },
+ "lineHeight": {
+  "value": "the size token carries leading (58 of 71 writes already do); display sizes get 4px-grid px values 36/44/52/60 with a floor of 1.05; serif body copy reads at 1.6",
+  "source": "delegate-proposed, operator-accepted-with-round-5",
+  "round": 5,
+  "deletes": "leading-4/6/7/9/10 and leading-none as one-offs"
+ },
+ "durations": {
+  "value": "D1: 150ms for colour and shadow (linear, per round 2), 250ms for anything that moves. No 400ms tier.",
+  "source": "user",
+  "round": 5,
+  "evidence": "36 transition writes at two speeds (18 inherit --default-transition-duration, measured .15s in the built CSS, 18 write duration-300) for the same properties; every transition in src/ animates a colour or a box-shadow, the only other animation is animate-spin. No modal or dropdown exists, so a third tier would be unused.",
+  "also": "add prefers-reduced-motion: reduce - grep finds no occurrence anywhere in src/ today."
+ },
+ "controlHeights": {
+  "value": "32 / 40 / 48 px, and nothing painted outside that set",
+  "rule": "height = ceil4(measured line box) + 2 x an S3 pad. Pads only from 4,8,12,16,24,32,48,64. 32 = chip/inline/quiet, 40 = secondary, 48 = primary/join path (the only step that clears the 44px WCAG 2.2 AAA target).",
+  "reachable_set": "chrome text 13.3px: 24,28,32,36,40,44,48,52,56,64 - 16px body controls: 28..60",
+  "source": "round 6 Q1, operator took A (2026-10-31)",
+  "operator_ruling": "A",
+  "evidence": "35 specimen controls: arithmetic exact on 35 of 35 measured in Firefox (.design/grill/round6/); 35/35 >= 24px AA, 5/35 >= 44px AAA; .design/round6-math.mjs derives the set from the ratified 4px grid + S3",
+  "why_not_picked_by_eye": "the shipped artifact has one component family at three heights (50/58/62px across breakpoints) and two 19px-high links on the 404 page, because utility padding and font-size accumulate with no height rule",
+  "corollaries": [
+   "keylines are inset box-shadows, never borders - a border adds 2px and silently breaks the arithmetic",
+   "no control below 24px except a chip, and a chip must then satisfy the WCAG 2.2 SC 2.5.8 spacing exception (probe computes it per axis)"
+  ]
+ },
+ "buttonVariants": {
+  "value": "three buttons - primary, secondary, quiet - plus chips as their own component (labels/tags), not a button variant",
+  "operator_ruling": "A (2026-10-31)",
+  "source": "round 6 Q2",
+  "measured": {
+   "primary": "ink fill + band text: 10.19, hover ink(40%) 7.33",
+   "secondary": "paper fill + ink text 12.02, keyline `rule` 3.01, hover fill tint with ink 10.96",
+   "quiet": "gold text 4.82 + gold hairline 4.82, hover to panel 4.61",
+   "chip": "label ink-2 on chip track 5.37; the chip edge is the path hue (5.28-6.15 on paper)"
+  },
+  "structural_rules_this_ruling_creates": [
+   "a tint fill carries ink, never gold: gold-ink on tint = 4.39 FAIL. The round-2 'gold never sits on a tint' line is now a component rule, not advice",
+   "a keylined control may sit on paper but not on a panel: `rule` on panel = 2.88, under the 3.0 non-text bar. Either keep keylined controls on paper, or take rule to oklch(62.6% 0.03 152) on panel surfaces",
+   "a gold-labelled secondary is legal at rest (4.82) but its hover fill is the tint (4.39), so that variant would need a second hover token - one reason the Q2 option 'fold quiet into secondary' was left unbuilt"
+  ],
+  "evidence": ".design/grill/contrast/cfg-r6.txt (renderer oracle: canvas fillStyle canonicalisation, WCAG arithmetic on the rendered channels)"
+ },
+ "navShape": {
+  "value": "B: one row - mark 'MPLS Math Club' (serif 16px, 'Math' in gold) + Schedule / Interests / Chat, home = the mark",
+  "operator_ruling": "B, chosen for looking cleaner on a small display (2026-10-31)",
+  "source": "round 6 Q3",
+  "tier_required_by_measurement": {
+   ">= 360px": "mark 16px, links 13.3px chrome, 16px gaps -> needs 310px; a 375 viewport gives 343 (+33)",
+   "< 360px": "links take the ratified 11.1px chrome step, gaps go to 8px -> needs 262px; fits 320 (288, +26) and 300 (268, +6)"
+  },
+  "why_a_tier_not_a_shape_change": "B measured 310 against 288 at a 320 viewport (-22), so one row at 320 is impossible without a type step; the 11.1px step is already ratified in T3, so the fix costs one breakpoint, not a new component",
+  "rejected": "A (mark row + links row) needs 397px, so it always wraps; C (details disclosure) needs 267 and fits 300 by 1px, but its summary measured a 13px target (AA fail until padded) and it hides the site's structure until tapped",
+  "assertion": "nav is `flex-wrap: nowrap`, so a label set that no longer fits is a probe failure, not a silent wrap that clips links (the shipped defect this prevents)",
+  "evidence": ".design/grill/nav-fit.html + nav-fit-measure.js, output .design/grill/navfit/, faces loaded (PT Serif + PSVar LOADED at every width)"
+ },
+ "rowDensity": {
+  "value": "comfy: 12px row padding, 8px gaps (compact 8/4 held for inherently dense lists)",
+  "operator_ruling": "A (2026-10-31)",
+  "source": "round 6 Q4",
+  "maps_existing_writes": "gap-3.5 (14px) -> 12; gap-1.5 (6px) -> 8; both are off the ratified scale today",
+  "measured": "rows 179px and 203px stacked at 375; 95px wide-frame comfy vs 103px airy; compact saves ~16px per row at 375",
+  "evidence": ".design/grill/round6/round-6_html-375.json"
+ },
+ "bandCards": {
+  "value": "flat cards inside the dark band, edged with the SAME `rule` token used on paper",
+  "operator_ruling": "A (2026-10-31)",
+  "source": "round 6 Q5",
+  "key_finding": "one boundary role serves both grounds: `rule` = 3.01 on paper and 4.00 on the ink band (a hairline bar is 3.0), so no `rule-dark` token is needed",
+  "what_the_band_does_need": "path hues solved up, not down: cyan oklch(70% 0.11 205) 4.91, plum oklch(72% 0.15 315) 4.74, coral oklch(71% 0.14 35) 4.59, olive oklch(69% 0.10 105) 4.57 - the paper set measures ~1.97 on ink. `gold-dark` (5.80) and `band-text` (10.19) need no second value",
+  "rejected": "recessed band cards: a neutral recess oklch(28.5% 0.012 152) is 1.14 vs the band (below the 1.35 layer bar - it reads flat), so a real recess needs four hue-tinted dark fills (e.g. oklch(22% 0.05 205) = 1.35) for a benefit the hairline already provides",
+  "evidence": ".design/grill/contrast/cfg-r6.txt, 'solve' block: the L nearest the candidate that clears the bar in the renderer"
+ },
+ "layeringBar": {
+  "value": "1.35 contrast between a surface and its ground is the line for 'reads as a separate layer'; hairlines stay governed by the 3.0 non-text bar",
+  "source": "round 6 measurement, adopted with the Q5 ruling",
+  "measured": "panel vs paper 1.04 FLAT, tint chip 1.10 FLAT, path chip 1.10 FLAT, deepened panel 1.12 FLAT, chip track 1.31 FLAT, cyan recess 1.35 LAYERED, primary hover 1.39 LAYERED",
+  "trap_this_exists_to_prevent": "deepening a panel far enough to *see* it as a layer (L 94.7) still measures 1.12 vs paper, and costs both gold (4.30) and rule (2.68). Depth by darkening is not a free move: it needs a second gold (L 53.5) and a second rule (L 62.5)"
+ },
+ "noticeGrammar": {
+  "value": "a notice is a WORD plus a KEYLINE on the page's own ground - never a fill, never a hue alone",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q1)",
+  "source": "round 7 Q1",
+  "anatomy": {
+   "edge": "inset-shadow keyline, `rule` = 3.01 on paper / 4.00 on the ink band",
+   "word": "ink 12.02",
+   "body": "ink-2 7.02",
+   "meta": "ink-3 5.21",
+   "action": "controls from the round-6 ladder (32 in-list, 40 for a retry)",
+   "padding": "12px/16px"
+  },
+  "variants": {
+   "plain": "rule keyline, ink word",
+   "caution": "gold keyline + gold word, both 4.82 (the only severity the system carries)",
+   "band": "same component on the ink band: edge rule 4.00, body band-text 10.19, word gold-dark 5.80"
+  },
+  "heights": "one-line 48px, two-line body 64px - the D98 arithmetic (line box 24 + 2 x an S3 pad), keyline inset so it costs nothing",
+  "retired": "the shipped filled block: red-600 on red-50 = 4.36 (under AA) and its fill measures 1.09 vs white (flat under the 1.35 layer bar); our own tint version 1.10 and its hairline drops to 2.74",
+  "open_synthesis": "RESOLVED in ratify 2026-11-01 -> decisions.noticeAction (quiet label, one boundary per box)",
+  "zero_new_tokens": true
+ },
+ "signalHue": {
+  "value": "NO new signal hue. Severity is carried by the word and by the existing gold.",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q1)",
+  "source": "round 7 Q1 hue scan, .design/grill/round7-math.txt section A",
+  "the_scan": "every 5 degrees, screened for: >=4.5 as text on paper, in-gamut, >=40 degrees from every hue in use (ink 152, gold 62, path cyan 205 / plum 315 / coral 35 / olive 105), >=0.05 delta-OKLab from every brand colour D88 catalogued",
+  "legal_but_unadopted": "warm 355 oklch(52% .15 355) #a73b6d, text 5.77, 0.120 from UMN maroon, 40 degrees from path plum; cool 245-275 clears the bars but sits 0.066 from Amazon link blue (D88 forbids)",
+  "illegal": "naive red hue 25 = 10 degrees from our coral join-path hue and 0.070 from Target red; warning amber hue 70 out of gamut and 8 degrees from gold; Tailwind red-600 out of gamut, 0.030 from the generic web error red, 8 degrees from coral",
+  "why_this_is_durable": "a signal hue would collide with a join-path hue (coral = Meetup) or with the gold mark, i.e. the failure colour would compete with the thing the site wants clicked"
+ },
+ "emptyState": {
+  "value": "the zero-upcoming empty state CONVERTS - it is not a sentence and it is never hidden",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q2)",
+  "source": "round 7 Q2",
+  "why_guaranteed": "Mobilizon's public feed is upcoming-only, so between events the snapshot legitimately holds nothing (D73/D74)",
+  "measured": "305px tall in a 375 frame (357px at a 375 viewport) vs 104px for a sentence and 47px for hiding it; built from a 24px status line, an s1 title, a two-line body, a 48px primary (clears the 44px AAA bar) and a 40px secondary, plus the dated line",
+  "copy_rule": "states the fact, names where the fact comes from, gives two paths out, and carries the copy date - and never a frequency (D92). The probe greps prose slots for frequency words; the specimen plants one as a control and is caught.",
+  "hero": "when the snapshot is empty the hero's label changes to 'Nothing scheduled' rather than disappearing, so an empty calendar is distinguishable from a broken page",
+  "surfaces": "/schedule list, hero Next line, the 404 page (which today re-publishes two dead nav links, D63)"
+ },
+ "freshnessClaim": {
+  "value": "a dated line, always, in the same slot on every surface; no staleness alarm and no invented threshold",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q3)",
+  "source": "round 7 Q3",
+  "form": "`Schedule copied 30 Oct 2026` - ink-3 5.21, tabular numerals, next to the thing it qualifies",
+  "measured_reason_no_threshold": "the four real harvested dates have consecutive gaps of 4, 10 and 4 days, so a 7-day 'nothing scheduled' alarm fires in an ordinary month; 14 days never fires on that real sample",
+  "not_chosen": "B (a build-time notice when every listed date has passed) and C (a script that ages the page - costs an island on a prerendered plane, against D73/D32)",
+  "still_true": "SUPERSEDED by the operator 2026-11-01: the build-time staleness assertion is DECLINED. Staleness is a maintainer-facing warning in events:pull; a build never fails for missing/empty content. See decisions.missingContentIsNotABuildFailure."
+ },
+ "dynamicSurfaceStates": {
+  "value": "the Discord island: loading = one 24px line with role=status and zero motion; failure = the Q1 notice with a 40px retry; no spinner, no skeleton",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q4)",
+  "source": "round 7 Q4",
+  "measured": "specimen loading line 24px tall vs a shipped 128px band (py-12 x2 + a 32px arc) on a 667px phone viewport; the arc's own contrast is legal (blue-600 on white 5.25 against the 3.0 graphic bar), so the shipped spinner was never a legibility problem - it was motion, height and a missing escape",
+  "skeleton_rejected": "shipped skeleton material measures 1.05 fill / 1.18 edge - a flat rectangle pretending to be content; and the island's shape is unknown until it loads",
+  "defects_fixed_regardless": [
+   "no prefers-reduced-motion guard anywhere in the artifact CSS (measured by walking every rule)",
+   "nothing reserves the loading height",
+   "a JS-off visitor can never leave the loading branch (static HTML holds the loading block; the error and empty branches are absent) -> fix with a <noscript> notice sibling",
+   "DiscordSummary.svelte:96 {#if summary?.summary} has no {:else} -> a channel with no summary renders a header and 0px of body"
+  ],
+  "events_have_no_loading_state": "by construction - the public site never fetches Mobilizon at request time (D73)"
+ },
+ "statusGrammar": {
+  "value": "status is a WORD - Scheduled / Cancelled / Past - in the series lane when stacked and its own status column when wide; 'time not set' is stated in the date lane",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q5)",
+  "source": "round 7 Q5",
+  "measured_reflow": "the same stacked row: 203px with no status, 203px with the status as a WORD (+0), 210px with the status as a CHIP (+7 - a chip claims a line). At the wide layout all three rows are 96px (scheduled, cancelled, no clock alike).",
+  "never": "strikethrough or colour as the only cue (the red that reads as 'cancelled' is the 10-degree collision from the Q1 scan); dropping cancelled rows (our own /events.ics announces STATUS:CANCELLED, so the page and the calendar would disagree); defaulting a missing clock to 12:00 am",
+  "tokens": "zero new - cancelled title ink-2 7.02, status word ink 12.02, 'time not set' ink-3 5.21 (gold 4.82 also legal)",
+  "chip": "24px tall at the 11.1px chrome step, used only where it has its own column"
+ },
+ "shadowSemantics": {
+  "value": "hairline = part of the page; shadow = above the page. Two elevation levels, and cards never get one.",
+  "operator_ruling": "A (2026-11-01 UTC, round 7 Q6)",
+  "source": "round 7 Q6",
+  "solved": "stop alpha must clear the 1.35 layer bar at the contact edge: black .13 or ink-tinted .165. Adopted stops are INK-TINTED (level 1 .165 at 0 1px 2px; level 2 .22 at 0 2px 5px -1px + .30 at 0 12px 28px -6px), because a black stop wide enough to read at a wide blur paints a 2.10 grey band.",
+  "shipped": "the shipped shadow census in src/ is 17 writes: 1 shadow-sm, 7 shadow-md, 3 shadow-lg, 6 hover:shadow-lg. shadow-md and shadow-lg differ only in offsets - the stop alpha is the same .102 - so both composite to 1.25-1.26 vs paper = FLAT decoration. All 17 come out in design-apply.",
+  "why_not_three_levels": "a card and a hovered card measure the same today; making them distinct puts every card on a visible grey band, which the playful-as-plurality ruling rules out",
+  "today": "nothing in src/ floats (no modal, no dropdown), so both elevation tokens ship unused-but-defined until a menu exists; the linter can forbid box-shadow outside those two tokens CONFIRMED in ratify: both tokens ship defined-but-unused."
+ },
+ "noticeAction": {
+  "value": "a notice's action is the `quiet` LABEL with no keyline of its own, at the 40px step, underlined at rest",
+  "source": "delegate, 2026-11-01, on the operator's blanket ruling: \"I'll accept whatever you decide.\"",
+  "rule": "a box has exactly ONE boundary: a notice is the only keylined thing in that box",
+  "reason_measured": "secondary would put a second `rule` hairline 12px inside the notice keyline (3.01 on paper but 2.88 on a panel = illegal), and two identical hairlines at a 12px gap read as a double border; quiet is ground-agnostic (gold 4.82 paper / 4.61 panel, gold-on-ink 5.80 on the band) so the same notice works on all three grounds with zero new tokens",
+  "because_gold_is_also_caution": "in a caution notice the action is separated from the status word by an underline at rest, its lane and its size - never by a second hue (D102 declines a signal hue)",
+  "ban_added": "a keylined notice never sits on a panel (rule on panel = 2.88)",
+  "closes": "noticeGrammar.open_synthesis",
+  "record": ".design/records/0008-component-grammar.md"
+ },
+ "spacingOrphan": {
+  "value": "20px is illegal: `mt-5` -> `mt-6` (24) and `sm:mt-5` -> `sm:mt-6` in design-apply; design-enforce flags any 20px write",
+  "source": "delegate, 2026-11-01, on the operator's blanket ruling: \"I'll accept whatever you decide.\"",
+  "correction": "the grill called this \"one orphan write\" - counted in src/ it is 5 occurrences, 4 live: mt-5 x1 (HeroSection:47) and sm:mt-5 x3 (27/34/41) plus one inside a comment (68)",
+  "reason": "rounding up keeps the row air the ruling was about; rounding to 16 would put a section gap closer than the section padding",
+  "closes": "spacingSizes.open",
+  "record": ".design/records/0003-spacing-grid.md"
+ },
+ "radiusRoles": {
+  "value": "--radius-control and --radius-card, both 6px from one base; no pill role; chips are not pills",
+  "source": "delegate, 2026-11-01, on the operator's blanket ruling: \"I'll accept whatever you decide.\"",
+  "reason": "round 2 ratified only the 6px base (fits 3/3 candidates; 8px risked the candy reading the operator ruled out). A pill would be a second radius role with no measured need - the chip is already carried by hue keyline + word - and every extra role is another thing design-enforce must police",
+  "record": ".design/records/0001-token-naming.md"
+ },
+ "derivedLeadings": {
+  "value": "text-subhead 23px -> 28px, text-heading 27.7px -> 36px, DERIVED by the rule \"next 4px multiple >= size x 1.2\" and marked derived in the token file",
+  "source": "delegate, 2026-11-01, on the operator's blanket ruling: \"I'll accept whatever you decide.\"",
+  "reason": "the grill ratified 16/24/28/36/44/52/60 and left these two steps unmeasured; inventing a number would dress a derived value as a measured one",
+  "revisit": "if either reads wrong against a real page, measure it in the renderer and promote it to ratified",
+  "record": ".design/records/0004-type-scale.md"
+ },
+ "elevationTokensShip": {
+  "value": "shadow-e1 and shadow-e2 ship defined-but-unused until the first floating surface exists",
+  "source": "delegate, 2026-11-01 (D105 already anticipated this); operator accepted the Q6 recommendation",
+  "reason": "the stops are solved against the 1.35 layer bar - re-deriving them is the cost, and leaving them out of @theme invites an ad-hoc shadow the moment a menu is needed. design-enforce forbids box-shadow outside these two tokens, so an unused token cannot rot into use",
+  "today": "nothing in src/ floats: no modal, no dropdown"
+ },
+ "tokenContrastGate": {
+  "value": "node .design/ratify-check.mjs - the token block is asserted by Tailwind's own resolver plus the renderer contrast oracle, and the colour values are PARSED OUT of src/styles/global.css",
+  "source": "delegate, 2026-11-01",
+  "asserts": "43 promised utilities resolve; no accidental override of a Tailwind default theme key (a tokens-only branch must not restyle existing pages); duration-color resolves to NOTHING (v4 has no --duration-* namespace); 39 colour pairs return their recorded ratio (0.15 tolerance) or the required verdict, including the rows that must FAIL",
+  "found": "two record numbers were pre-renderer: path-calendar on paper 5.47 -> 5.28 and on the band 1.97 -> 2.28. The hand oklab math in .design/light-roles.mjs agrees to 0.02 for plum/coral/olive and is 0.19 off for cyan, whose oklch sits on the sRGB gamut edge (#007481, red channel 0). No decision moved.",
+  "status": "not in npm run verify yet - design-enforce (phase 5) decides the baseline and whether CI fails on it"
+ },
+ "missingContentIsNotABuildFailure": {
+  "value": "a gate may fail a build over a MALFORMED feed; it must never fail one because there is nothing to show. An empty section gets designed content instead.",
+  "source": "operator, 2026-11-01",
+  "operator_verbatim": "\"If we have no upcoming events, we should have different content for that entire page section, rather than fail the build. Failing a build to [have] missing content seems like an inelegant solution.\"",
+  "consequence_for_stage1": "npm run check:events-feed asserts the CONTRACT (parses, required fields, real dates, ordering, byte-identical VEVENT blocks across builds) and EXITS 0 on an empty snapshot; staleness (\"the newest listed date has already passed\") becomes a maintainer-facing warning printed by events:pull, never a red build and never a visitor-facing alarm (Q3 A)",
+  "consequence_for_design": "emptyState A is the sanctioned handling: the zero-upcoming empty state converts (305px, two paths out, the dated line) and the hero label changes to \"Nothing scheduled\" rather than disappearing",
+  "closes": "the flagged half of D103 (\"check:events-feed can still fail a BUILD whose newest row is past\") - DECLINED by the operator"
+ },
+ "pastEventPlacement": {
+  "value": "UNRESOLVED on purpose, deferred past the design work. Constraint that binds now: past events never render inside the upcoming section, and if the site shows them at all it is a separate surface, never interleaved.",
+  "source": "operator, 2026-11-01",
+  "operator_verbatim": "\"I don't know whether it's beneficial to show events that are in the past. If we do, they should be in a different place in the website.\"",
+  "what_is_decided_anyway": "a past permalink stays up with the status WORD `Past` (D104) instead of 404ing, so \"past\" is a state of a row and not a page that must exist; `src/config.json` already gates the brochure's stub sections (showUpcomingEvents/showPastEvents = false) and PastEvents.astro is an empty stub",
+  "revisit": "the events/architecture review the operator scheduled for after the design pass (\"When we finish our exercises and design work we will review that\")"
+ }
+}

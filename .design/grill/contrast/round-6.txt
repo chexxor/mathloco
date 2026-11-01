@@ -1,0 +1,90 @@
+token (as written)                              rendered sRGB
+paper = oklch(98.5% 0.006 85)              #fcfaf6
+panel = oklch(97% 0.008 85)                #f8f5ef
+tint = oklch(95% 0.03 152)                 #e0f5e5
+ink = oklch(32% 0.045 152)                 #203927
+ink2 = oklch(45% 0.035 152)                #475b4c
+ink3 = oklch(52% 0.028 152)                #5d6e61
+rule = oklch(65.5% 0.03 152)               #849688
+goldInk = oklch(55% 0.12 62)               #a25f12
+goldDark = oklch(76% 0.06 84)              #c3ae86
+bandText = oklch(93% 0.008 152)            #e4e9e5
+p1 = oklch(50% 0.11 205)                   #007481
+p1t = oklch(95% 0.03 205)                  #d8f5f8
+p2 = oklch(47% 0.15 315)                   #793a93
+p2t = oklch(95% 0.03 315)                  #f6e9fd
+p3 = oklch(50% 0.14 35)                    #a33e25
+p3t = oklch(95% 0.03 35)                   #ffe8e1
+p4 = oklch(50% 0.10 105)                   #6c6610
+p4t = oklch(95% 0.03 105)                  #f1f0d9
+bandRule = oklch(58.4% 0.03 152)           #6f8173
+bandPanel = oklch(28.5% 0.012 152)         #262c27
+bp1 = oklch(68% 0.11 205)                  #21abb8
+bp2 = oklch(70.8% 0.15 315)                #c482e1
+bp3 = oklch(70.6% 0.14 35)                 #ea7d62
+bp4 = oklch(68.8% 0.10 105)                #a49e51
+br1 = oklch(22.8% 0.05 205)                #002327
+br2 = oklch(23.9% 0.05 315)                #28172f
+br3 = oklch(23.8% 0.05 35)                 #33150e
+br4 = oklch(23.2% 0.05 105)                #211e00
+hoverInk = oklch(40% 0.055 152)            #305039
+deepPanel = oklch(94.7% 0.008 85)          #f0ede8
+
+pair (fg vs bg)                              fg        bg        ratio  bar  verdict
+D88 ink body text on paper                 #203927   #fcfaf6   12.02  4.5  PASS
+D88 ink-2 secondary on paper               #475b4c   #fcfaf6   7.02   4.5  PASS
+D88 ink-3 muted on paper                   #5d6e61   #fcfaf6   5.21   4.5  PASS
+D88 rule hairline on paper                 #849688   #fcfaf6   3.01   3    PASS
+D88 gold-ink as text on paper              #a25f12   #fcfaf6   4.82   4.5  PASS
+D88 gold-ink as keyline on paper           #a25f12   #fcfaf6   4.82   3    PASS
+D88 gold-ink on panel (hover)              #a25f12   #f8f5ef   4.61   3    PASS
+D88 gold-ink on tint chip (banned)         #a25f12   #e0f5e5   4.39   4.5  FAIL
+D90 path cyan on its chip                  #007481   #d8f5f8   4.81   4.5  PASS
+D90 path plum on its chip                  #793a93   #f6e9fd   6.34   4.5  PASS
+D90 path coral on its chip                 #a33e25   #ffe8e1   5.46   4.5  PASS
+D90 path olive on its chip                 #6c6610   #f1f0d9   5.13   4.5  PASS
+D90 path cyan as keyline on paper          #007481   #fcfaf6   5.28   3    PASS
+D89 band text on ink                       #e4e9e5   #203927   10.19  4.5  PASS
+D89 gold numerals on ink                   #c3ae86   #203927   5.8    4.5  PASS
+panel vs paper (layer, not boundary)       #f8f5ef   #fcfaf6   1.04   1    PASS
+ink fill carries band text                 #e4e9e5   #203927   10.19  4.5  PASS
+primary hover: ink(40%)                    #e4e9e5   #305039   7.33   4.5  PASS
+secondary keyline (rule) on paper          #849688   #fcfaf6   3.01   3    PASS
+secondary text (ink) on paper              #203927   #fcfaf6   12.02  4.5  PASS
+secondary hover fill: ink on tint          #203927   #e0f5e5   10.96  4.5  PASS
+quiet gold on panel deepened to a layer    #a25f12   #f0ede8   4.3    4.5  FAIL
+rule on that deepened panel                #849688   #f0ede8   2.68   3    FAIL
+paper card on the band                     #203927   #fcfaf6   12.02  4.5  PASS
+band rule on band                          #6f8173   #203927   3.02   3    PASS
+band rule on band panel                    #6f8173   #262c27   3.44   3    PASS
+band text on band panel                    #e4e9e5   #262c27   11.61  4.5  PASS
+band panel vs band (layering)              #262c27   #203927   1.14   1    PASS
+paper text on the band (must NOT work)     #fcfaf6   #203927   12.02  4.5  PASS
+paper rule on the band (must NOT work)     #849688   #203927   4      3    PASS
+band path cyan text                        #21abb8   #203927   4.52   4.5  PASS
+band path plum text                        #c482e1   #203927   4.55   4.5  PASS
+band path coral text                       #ea7d62   #203927   4.54   4.5  PASS
+band path olive text                       #a49e51   #203927   4.53   4.5  PASS
+band path cyan as keyline                  #21abb8   #203927   4.52   3    PASS
+recess cyan vs band (layering)             #002327   #203927   1.32   1    PASS
+band text on cyan recess                   #e4e9e5   #002327   13.46  4.5  PASS
+band path cyan on cyan recess              #21abb8   #002327   5.97   4.5  PASS
+
+solve (lightest/darkest L of C,H that clears the bar; near = closest to this L)
+rule on paper -> 3.0                       oklch(65.5% 0.03 152)      renders #849688   ratio 3.01   vs 3
+gold-ink on paper -> 4.5                   oklch(55.0% 0.12 62)       renders #a25f12   ratio 4.82   vs 4.5
+gold-ink on panel -> 4.5                   oklch(55.0% 0.12 62)       renders #a25f12   ratio 4.61   vs 4.5
+rule on deepPanel -> 3.0                   oklch(62.6% 0.03 152)      renders #7b8d7f   ratio 3.02   vs 3
+band text on ink -> 4.5                    oklch(93.0% 0.008 152)     renders #e4e9e5   ratio 10.19  vs 4.5
+gold on band -> 4.5                        oklch(76.0% 0.06 84)       renders #c3ae86   ratio 5.8    vs 4.5
+band rule on ink -> 3.0                    oklch(60.0% 0.03 152)      renders #738678   ratio 3.23   vs 3
+band path cyan -> 4.5                      oklch(70.0% 0.11 205)      renders #2cb2bf   ratio 4.91   vs 4.5
+band path plum -> 4.5                      oklch(72.0% 0.15 315)      renders #c885e5   ratio 4.74   vs 4.5
+band path coral -> 4.5                     oklch(71.0% 0.14 35)       renders #eb7e63   ratio 4.59   vs 4.5
+band path olive -> 4.5                     oklch(69.0% 0.1 105)       renders #a49f51   ratio 4.57   vs 4.5
+band recess darker than band               oklch(22.0% 0.05 205)      renders #002126   ratio 1.35   vs 1.35
+band raised fill lighter                   oklch(45.0% 0.05 205)      renders #315d62   ratio 1.71   vs 1.35
+ink on paper at 11.9 -> keep               oklch(32.0% 0.045 152)     renders #203927   ratio 12.02  vs 11.5
+ink-2 on paper -> 4.5                      oklch(45.0% 0.035 152)     renders #475b4c   ratio 7.02   vs 4.5
+ink-3 on paper -> 4.5                      oklch(52.0% 0.028 152)     renders #5d6e61   ratio 5.21   vs 4.5
+primary hover ink -> 4.5                   oklch(40.0% 0.055 152)     renders #305039   ratio 7.33   vs 4.5

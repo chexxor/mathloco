@@ -1,0 +1,197 @@
+wrote 4 measurement file(s) to /home/chexxor/Git/mathloco/.design/grill/round7
+
+===== grill_round_7_html-1240 =====
+faces: PT Serif LOADED, PSVar LOADED   viewport 1240
+overflow: documentElement scrollW 1228 vs clientW 1228 (clean); 0 element(s) wider than the viewport outside a scroller
+oracle cross-check: gold-ink/paper 4.82 want 4.82 ok | ink-3/paper 5.21 want 5.21 ok | ink-2/paper 7.02 want 7.02 ok
+arithmetic: one-line notice: content 24px want 24, pads 12px/16px, total 48px want 48 PASS | loading line box 24px want 24 (separator border excluded) PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | stacked row: no status 203 / chip 210 (+7) / word 203 (+0) PASS: the WORD reflows nothing, the chip costs a line | wide rows (4 grid tracks, status column live): 96/96/96 PASS (identical: scheduled, cancelled, no clock)
+
+keyline: 36 keylined specimens (quiet buttons excluded - they carry no keyline), 0 with a real border (want 0 + 1 planted), 0 of 28 that must carry one are missing it (want 0)
+targets: 25 controls, min 24px, 0 under 24 , ladder histogram 24:4 32:15 40:5 48:1 (48 = the AAA bar)
+empty states: 305 / 104 / 47 / 144 (the sentence-only option is the short one)
+
+per-frame worst text pair (measured off what is painted, bar 4.5):
+  A     4.82  "Discord"  on div.frame  PASS
+  B     5.14  "the same hue on its own tint"  on div.notice  PASS
+  C     4.36  "Failed to load Discord summary"  on div.err  FAIL
+  A     5.21  "Nothing scheduled"  on div.frame  PASS
+  B     5.21  "No upcoming events. Please check back la"  on div.frame  PASS
+  C     5.21  "Next meeting: see the schedule"  on div.frame  PASS
+  A     4.82  "add to calendar"  on div.frame  PASS
+  B     4.82  "Check before you go"  on div.frame  PASS
+  C     4.82  "that is 19 days ago"  on div.frame  PASS
+  A     4.82  "Open Discord"  on div.frame  PASS
+  B     5.21  "Loading"  on div.frame  PASS
+  C     7.02  "C - a skeleton"  on div.frame  PASS
+  A     4.82  "details"  on div.frame  PASS
+  B     5.21  "Topology reading group"  on div.frame  PASS
+  C     5.21  "1 event on the calendar"  on div.frame  PASS
+  A     4.82  "a menu, open"  on div.pop  PASS
+  B     5.21  "level 1"  on div.shship  PASS
+  C     5.21  "card"  on div.frame  PASS
+
+notices: 11; padding set(s): 12px/16px; heights 218, 122, 48, 146, 98, 74, 126, 166, 178, 174, 74
+status chips: 4; heights 24, 24, 24, 24; font-size 11.1px (11.1 = the T3 step below --s-1)
+loading line: 24px tall, "Loading channel summaries…"
+shipped arc reproduced: 32x32 (offset box: a rotating element's getBoundingClientRect is its rotated AABB, up to 1.41x), animation spin 1s (the specimen also carries a prefers-reduced-motion override: true)
+
+shadows (renderer solve: black .13 / ink .165 at the contact edge = 1.35):
+  pop sh2                max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  pop sh1                max alpha 0.165  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  shshipmd               max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  sh2                    max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  control 1 (frequency claim, D92): FOUND -> "control 1 - a frequency claim in prose: \"we meet every other"
+  control 2 (gold on a tint fill): FOUND -> 4.39
+  control 3 (a bordered box breaking the height arithmetic): FOUND -> border 1px
+  control 4 (the shipped shadow under the layer bar): FOUND -> alpha 0.1
+
+CONTROLS 4/4
+
+===== grill_round_7_html-900 =====
+faces: PT Serif LOADED, PSVar LOADED   viewport 900
+overflow: documentElement scrollW 888 vs clientW 888 (clean); 0 element(s) wider than the viewport outside a scroller
+oracle cross-check: gold-ink/paper 4.82 want 4.82 ok | ink-3/paper 5.21 want 5.21 ok | ink-2/paper 7.02 want 7.02 ok
+arithmetic: one-line notice: content 24px want 24, pads 12px/16px, total 48px want 48 PASS | loading line box 24px want 24 (separator border excluded) PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | stacked row: no status 203 / chip 210 (+7) / word 203 (+0) PASS: the WORD reflows nothing, the chip costs a line | wide rows (4 grid tracks, status column live): 96/96/96 PASS (identical: scheduled, cancelled, no clock)
+
+keyline: 36 keylined specimens (quiet buttons excluded - they carry no keyline), 0 with a real border (want 0 + 1 planted), 0 of 28 that must carry one are missing it (want 0)
+targets: 25 controls, min 24px, 0 under 24 , ladder histogram 24:4 32:15 40:5 48:1 (48 = the AAA bar)
+empty states: 381 / 128 / 47 / 168 (the sentence-only option is the short one)
+
+per-frame worst text pair (measured off what is painted, bar 4.5):
+  A     4.82  "Discord"  on div.frame  PASS
+  B     5.14  "the same hue on its own tint"  on div.notice  PASS
+  C     4.36  "Failed to load Discord summary"  on div.err  FAIL
+  A     5.21  "Nothing scheduled"  on div.frame  PASS
+  B     5.21  "No upcoming events. Please check back la"  on div.frame  PASS
+  C     5.21  "Next meeting: see the schedule"  on div.frame  PASS
+  A     4.82  "add to calendar"  on div.frame  PASS
+  B     4.82  "Check before you go"  on div.frame  PASS
+  C     4.82  "that is 19 days ago"  on div.frame  PASS
+  A     4.82  "Open Discord"  on div.frame  PASS
+  B     5.21  "Loading"  on div.frame  PASS
+  C     7.02  "C - a skeleton"  on div.frame  PASS
+  A     4.82  "details"  on div.frame  PASS
+  B     5.21  "Topology reading group"  on div.frame  PASS
+  C     5.21  "1 event on the calendar"  on div.frame  PASS
+  A     4.82  "a menu, open"  on div.pop  PASS
+  B     5.21  "level 1"  on div.shship  PASS
+  C     5.21  "card"  on div.frame  PASS
+
+notices: 11; padding set(s): 12px/16px; heights 266, 170, 48, 194, 170, 74, 126, 214, 274, 174, 74
+status chips: 4; heights 24, 24, 24, 24; font-size 11.1px (11.1 = the T3 step below --s-1)
+loading line: 24px tall, "Loading channel summaries…"
+shipped arc reproduced: 32x32 (offset box: a rotating element's getBoundingClientRect is its rotated AABB, up to 1.41x), animation spin 1s (the specimen also carries a prefers-reduced-motion override: true)
+
+shadows (renderer solve: black .13 / ink .165 at the contact edge = 1.35):
+  pop sh2                max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  pop sh1                max alpha 0.165  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  shshipmd               max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  sh2                    max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  control 1 (frequency claim, D92): FOUND -> "control 1 - a frequency claim in prose: \"we meet every other"
+  control 2 (gold on a tint fill): FOUND -> 4.39
+  control 3 (a bordered box breaking the height arithmetic): FOUND -> border 1px
+  control 4 (the shipped shadow under the layer bar): FOUND -> alpha 0.1
+
+CONTROLS 4/4
+
+===== grill_round_7_html-375 =====
+faces: PT Serif LOADED, PSVar LOADED   viewport 375
+overflow: documentElement scrollW 363 vs clientW 363 (clean); 0 element(s) wider than the viewport outside a scroller
+oracle cross-check: gold-ink/paper 4.82 want 4.82 ok | ink-3/paper 5.21 want 5.21 ok | ink-2/paper 7.02 want 7.02 ok
+arithmetic: one-line notice: content 24px want 24, pads 12px/16px, total 48px want 48 PASS | loading line box 24px want 24 (separator border excluded) PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | stacked row: no status 203 / chip 210 (+7) / word 203 (+0) PASS: the WORD reflows nothing, the chip costs a line | wide specimen stacked at this width (1 tracks) - status column not in play, heights not comparable
+
+keyline: 36 keylined specimens (quiet buttons excluded - they carry no keyline), 0 with a real border (want 0 + 1 planted), 0 of 28 that must carry one are missing it (want 0)
+targets: 25 controls, min 24px, 0 under 24 , ladder histogram 24:4 32:15 40:5 48:1 (48 = the AAA bar)
+empty states: 357 / 128 / 47 / 144 (the sentence-only option is the short one)
+
+per-frame worst text pair (measured off what is painted, bar 4.5):
+  A     4.82  "Discord"  on div.frame  PASS
+  B     5.14  "the same hue on its own tint"  on div.notice  PASS
+  C     4.36  "Failed to load Discord summary"  on div.err  FAIL
+  A     5.21  "Nothing scheduled"  on div.frame  PASS
+  B     5.21  "No upcoming events. Please check back la"  on div.frame  PASS
+  C     5.21  "Next meeting: see the schedule"  on div.frame  PASS
+  A     4.82  "add to calendar"  on div.frame  PASS
+  B     4.82  "Check before you go"  on div.frame  PASS
+  C     4.82  "that is 19 days ago"  on div.frame  PASS
+  A     4.82  "Open Discord"  on div.frame  PASS
+  B     5.21  "Loading"  on div.frame  PASS
+  C     7.02  "C - a skeleton"  on div.frame  PASS
+  A     4.82  "details"  on div.frame  PASS
+  B     5.21  "Topology reading group"  on div.frame  PASS
+  C     5.21  "1 event on the calendar"  on div.frame  PASS
+  A     4.82  "a menu, open"  on div.pop  PASS
+  B     5.21  "level 1"  on div.shship  PASS
+  C     5.21  "card"  on div.frame  PASS
+
+notices: 11; padding set(s): 12px/16px; heights 242, 146, 48, 170, 122, 74, 150, 190, 226, 198, 98
+status chips: 4; heights 24, 24, 24, 24; font-size 11.1px (11.1 = the T3 step below --s-1)
+loading line: 24px tall, "Loading channel summaries…"
+shipped arc reproduced: 32x32 (offset box: a rotating element's getBoundingClientRect is its rotated AABB, up to 1.41x), animation spin 1s (the specimen also carries a prefers-reduced-motion override: true)
+
+shadows (renderer solve: black .13 / ink .165 at the contact edge = 1.35):
+  pop sh2                max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  pop sh1                max alpha 0.165  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  shshipmd               max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  sh2                    max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  control 1 (frequency claim, D92): FOUND -> "control 1 - a frequency claim in prose: \"we meet every other"
+  control 2 (gold on a tint fill): FOUND -> 4.39
+  control 3 (a bordered box breaking the height arithmetic): FOUND -> border 1px
+  control 4 (the shipped shadow under the layer bar): FOUND -> alpha 0.1
+
+CONTROLS 4/4
+
+===== grill_round_7_html-320 =====
+faces: PT Serif LOADED, PSVar LOADED   viewport 320
+overflow: documentElement scrollW 308 vs clientW 308 (clean); 0 element(s) wider than the viewport outside a scroller
+oracle cross-check: gold-ink/paper 4.82 want 4.82 ok | ink-3/paper 5.21 want 5.21 ok | ink-2/paper 7.02 want 7.02 ok
+arithmetic: one-line notice: content 24px want 24, pads 12px/16px, total 48px want 48 PASS | loading line box 24px want 24 (separator border excluded) PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | status chip 24px want 24 PASS | stacked row: no status 203 / chip 210 (+7) / word 203 (+0) PASS: the WORD reflows nothing, the chip costs a line | wide specimen stacked at this width (1 tracks) - status column not in play, heights not comparable
+
+keyline: 36 keylined specimens (quiet buttons excluded - they carry no keyline), 0 with a real border (want 0 + 1 planted), 0 of 28 that must carry one are missing it (want 0)
+targets: 25 controls, min 24px, 0 under 24 , ladder histogram 24:4 32:15 40:5 48:1 (48 = the AAA bar)
+empty states: 381 / 128 / 47 / 168 (the sentence-only option is the short one)
+
+per-frame worst text pair (measured off what is painted, bar 4.5):
+  A     4.82  "Discord"  on div.frame  PASS
+  B     5.14  "the same hue on its own tint"  on div.notice  PASS
+  C     4.36  "Failed to load Discord summary"  on div.err  FAIL
+  A     5.21  "Nothing scheduled"  on div.frame  PASS
+  B     5.21  "No upcoming events. Please check back la"  on div.frame  PASS
+  C     5.21  "Next meeting: see the schedule"  on div.frame  PASS
+  A     4.82  "add to calendar"  on div.frame  PASS
+  B     4.82  "Check before you go"  on div.frame  PASS
+  C     4.82  "that is 19 days ago"  on div.frame  PASS
+  A     4.82  "Open Discord"  on div.frame  PASS
+  B     5.21  "Loading"  on div.frame  PASS
+  C     7.02  "C - a skeleton"  on div.frame  PASS
+  A     4.82  "details"  on div.frame  PASS
+  B     5.21  "Topology reading group"  on div.frame  PASS
+  C     5.21  "1 event on the calendar"  on div.frame  PASS
+  A     4.82  "a menu, open"  on div.pop  PASS
+  B     5.21  "level 1"  on div.shship  PASS
+  C     5.21  "card"  on div.frame  PASS
+
+notices: 11; padding set(s): 12px/16px; heights 330, 170, 48, 194, 170, 98, 222, 214, 274, 198, 122
+status chips: 4; heights 24, 24, 24, 24; font-size 11.1px (11.1 = the T3 step below --s-1)
+loading line: 24px tall, "Loading channel summaries…"
+shipped arc reproduced: 32x32 (offset box: a rotating element's getBoundingClientRect is its rotated AABB, up to 1.41x), animation spin 1s (the specimen also carries a prefers-reduced-motion override: true)
+
+shadows (renderer solve: black .13 / ink .165 at the contact edge = 1.35):
+  pop sh2                max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  pop sh1                max alpha 0.165  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  shshipmd               max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  sh2                    max alpha 0.300  clears the solved ink-tinted floor (.165 -> 1.35)
+  shship                 max alpha 0.100  UNDER the 1.35 layer bar (decoration)
+  control 1 (frequency claim, D92): FOUND -> "control 1 - a frequency claim in prose: \"we meet every other"
+  control 2 (gold on a tint fill): FOUND -> 4.39
+  control 3 (a bordered box breaking the height arithmetic): FOUND -> border 1px
+  control 4 (the shipped shadow under the layer bar): FOUND -> alpha 0.1
+
+CONTROLS 4/4
