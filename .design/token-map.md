@@ -5,8 +5,8 @@ add a MAP row to the script instead. `target: (delete)` means the write goes awa
 A write that already names a @theme token is listed as "keep (ratified …)" — the token names are
 parsed from src/styles/global.css (24 colours, 10 type steps, 2 radii, 8 elevations), so a token rename shows up here as a write that stopped being covered.
 
-Class tokens scanned: 177 distinct / 634 writes, of which 123 are in a DORMANT file (see the last section).
-Live writes mapped: 352 across 95 distinct tokens.
+Class tokens scanned: 176 distinct / 634 writes, of which 123 are in a DORMANT file (see the last section).
+Live writes mapped: 352 across 94 distinct tokens.
 Unmapped writes in a replaced bucket: none
 
 ## colour
@@ -16,7 +16,7 @@ Unmapped writes in a replaced bucket: none
 | written class | uses | becomes | why |
 |---|---|---|---|
 | `text-ink` | 24 | `keep (ratified role)` | names a @theme colour role |
-| `text-ink-2` | 16 | `keep (ratified role)` | names a @theme colour role |
+| `text-ink-2` | 17 | `keep (ratified role)` | names a @theme colour role |
 | `bg-paper` | 11 | `keep (ratified role)` | names a @theme colour role |
 | `bg-ink` | 6 | `keep (ratified role)` | names a @theme colour role |
 | `text-band-text` | 6 | `keep (ratified role)` | names a @theme colour role |
@@ -34,7 +34,6 @@ Unmapped writes in a replaced bucket: none
 | `text-red-600` | 1 | `text-ink (notice word)` | with inset-shadow-rule; caution variant uses gold (4.82). Never a fill |
 | `prose-blue` | 1 | `delete with `prose` (write the ramp in tokens)` | `prose-blue` retints every heading/list/link in Tailwind blue — a palette colour where a role exists, banned by DESIGN.md. The block it styles is three element kinds (h4/p/ul), so the ramp is written directly instead |
 | `text-gold-on-ink` | 1 | `keep (ratified role)` | names a @theme colour role |
-| `text-green-500` | 1 | `text-ink-2` | the Checkmark icon: 2.26 today (under the 3.0 graphic bar). The word beside it carries the meaning; the mark is decoration |
 
 ## type
 
