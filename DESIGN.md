@@ -1,7 +1,7 @@
 # Design System
 
 Ratified 2026-11-01 (`design-ratify`, phase 3). Decisions with their reasoning: `.notes/DECISIONS.md`
-D82–D107 and `.design/records/`. Machine record: `.design/decisions.json` (34 keys). Every ratio below
+D82–D109 and `.design/records/`. Machine record: `.design/decisions.json` (42 keys). Every ratio below
 was read back out of the Firefox renderer (`.design/grill/contrast-oracle.mjs`), not computed from the
 oklch by hand — where the two disagree, the renderer won and the older number is corrected in
 `.design/grill/contrast/gen-ratify-cfg.mjs`'s header.
@@ -73,10 +73,11 @@ reads at `leading-prose` (1.6). Display leading floor is 1.05; the four display 
 **Never** use one display step per screen **plus** the dark band in the same screen at full volume —
 one display step per screen, mirroring the one-band rule. **Never** put the display step on a
 punchline: it is reserved for when/where. **Never** use `text-display-4` (57.3px) below a 375 viewport
-without a cap: "Mathematical" measures 367.6px against 343px of content width. Faces: PT Serif latin
-400+700 (`font-body`) for content, Public Sans variable for chrome — the chrome face is not installed
-yet, see "Not wired yet". **Never** set `font-weight: 500/600` on serif text: PT Serif has no variable
-build, so it renders regular or real bold and the weight you wrote is the weight you do not get.
+without a cap: "Mathematical" measures 367.6px against 343px of content width. Faces: PT Serif
+(`font-body`) for content — **only weight 400 is actually loaded today**, see "Not wired yet" — and
+Public Sans variable for chrome, which is not installed yet. **Never** set `font-weight: 500/600` on
+serif text: PT Serif has no variable build, so it renders regular or bold and the weight you wrote is
+the weight you do not get.
 
 ## Radius
 
@@ -198,13 +199,24 @@ two steps are written as the numbers above. **Never** use `duration-300` or a 40
 guard animation with `prefers-reduced-motion: reduce` — the shipped artifact contains 0 occurrences of
 that string.
 
+Weights: PT Serif delivers **400 only** today (see “Not wired yet”), so in serif text the only legal
+weights are `400` and `700`, and the `700` is synthesised until `@fontsource/pt-serif/700.css` is
+imported. `500`/`600`/`800` are legal **only** in chrome (the sans stack), and only once a variable face
+is installed — 30 weight writes in `src/` currently render as whatever the browser can synthesize.
+
 ## Enforcement
 
 ```bash
+node .design/gen-token-map.mjs  # regenerate the apply worklist from src/; exit 1 = a class write has no mapping
 node .design/ratify-check.mjs   # token block → Tailwind resolver + renderer contrast (exit 0 = all bars hold)
 npm run check:classes           # every written class resolves to CSS — catches a token used as a class that does not exist
 npm run verify                  # the full CI gate set
 ```
+
+Two things these gates **cannot** catch, so enforce must be value-aware: Tailwind v4's dynamic spacing
+scale makes `mt-23` (92px) resolve, and "the class exists" is not "the value is on the scale". That is
+why `.design/token-map.md` is generated from the writes rather than written by hand — it exits 1 if any
+class in a replaced bucket has no mapping.
 
 `design-enforce` (phase 5) adds the class-level linter: off-scale spacing, Tailwind colours where a role
 exists, `border` keylines, `shadow-*` outside `e1/e2`, `duration-*` outside 150/250, and any frequency
@@ -215,11 +227,19 @@ word in event prose.
 - Markup still writes the old palette (`gray-*`, `blue-*`, `red-*`, `shadow-*`) and the retired
   `--color-book-*` tokens; the token block keeps those entries only until the class writes go away,
   because deleting a token before its class write does is what `check:classes` exists to catch.
-- Faces: `@fontsource/pt-serif` latin 400+700 and Public Sans variable are **not installed**, so
-  `--font-sans` still names the phantom `"Inter var"` and every chrome label renders in the visitor's
-  system font (measured: x-height 0.48, cap 0.69).
+- Faces: `PT Serif` **400** is installed and imported (`Layout.astro:9` → `@fontsource/pt-serif/index.css`,
+  which declares exactly 4 faces, all `font-weight: 400`). **`700` ships in the package but is never
+  imported**, so every `font-bold` / `font-semibold` / `font-extrabold` on serif text is currently a
+  browser-synthesised bold. `--font-sans` names `"Inter var"`, which no dependency provides, so chrome
+  falls back to `system-ui` (measured: x-height 0.48, cap 0.69 — `.design/fonts/metrics.json`). Public
+  Sans is **not installed**: its variable latin file is 26,832 B for the whole weight axis
+  (`.design/fonts/bytes.json`), which is the cheap way to get chrome weights below 700.
 - `shadow-e1` / `shadow-e2` are defined-but-unused until the first floating surface exists. No modal or
   dropdown is in `src/` today.
 - The four island defects found in round 7 (no reduced-motion guard, no height reservation, no
   JS-off escape from the loading branch, `{#if summary?.summary}` with no `{:else}`) are defects, not
   decisions, and ride along in that branch.
+- `UpcomingMeetups.astro` has no `{:else}` either: an empty feed renders nothing at all. Per **D108**,
+  missing content is a state with designed content — never a blank, and never a build failure. The
+  batch order and the states to build are in `.design/token-plan.md`; the per-class worklist is
+  `.design/token-map.md`.

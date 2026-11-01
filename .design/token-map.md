@@ -47,34 +47,34 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `font-semibold` | 14 | `PT Serif: 400 or 700 only; chrome may use 500/600/800 once Public Sans variable installs` | PT Serif ships one weight today, so 30 weight writes render as 2 faces (measured ink coverage: 400 14.50%, 500 14.50%, 600-800 17.97%) |
+| `font-semibold` | 14 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
 | `text-xl` | 13 | `text-lede` | 18/20 → 19.2px |
 | `text-base` | 11 | `text-body` | 16px, unchanged |
-| `font-medium` | 8 | `PT Serif: 400 or 700 only; chrome may use 500/600/800 once Public Sans variable installs` | PT Serif ships one weight today, so 30 weight writes render as 2 faces (measured ink coverage: 400 14.50%, 500 14.50%, 600-800 17.97%) |
+| `font-medium` | 8 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
 | `text-lg` | 6 | `text-lede` | 18/20 → 19.2px |
-| `font-extrabold` | 6 | `PT Serif: 400 or 700 only; chrome may use 500/600/800 once Public Sans variable installs` | PT Serif ships one weight today, so 30 weight writes render as 2 faces (measured ink coverage: 400 14.50%, 500 14.50%, 600-800 17.97%) |
+| `font-extrabold` | 6 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
 | `text-3xl` | 4 | `text-heading` | 30 → 27.7px |
 | `text-4xl` | 4 | `text-display-1` | 36 → 33.2px |
 | `text-sm` | 3 | `text-label` | 14 → 13.3px |
 | `sm:text-xl` | 3 | `text-lede` | 18/20 → 19.2px |
 | `lg:text-lg` | 3 | `text-lede` | 18/20 → 19.2px |
 | `xl:text-xl` | 3 | `text-lede` | 18/20 → 19.2px |
-| `leading-6` | 3 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
+| `leading-6` | 3 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
 | `md:text-lg` | 3 | `text-lede` | 18/20 → 19.2px |
 | `text-2xl` | 2 | `text-subhead` | 24 → 23px |
-| `font-bold` | 2 | `PT Serif: 400 or 700 only; chrome may use 500/600/800 once Public Sans variable installs` | PT Serif ships one weight today, so 30 weight writes render as 2 faces (measured ink coverage: 400 14.50%, 500 14.50%, 600-800 17.97%) |
+| `font-bold` | 2 | `serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs` | only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build |
 | `sm:text-4xl` | 2 | `text-display-1` | 36 → 33.2px |
-| `leading-4` | 1 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
-| `leading-10` | 1 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
-| `sm:leading-none` | 1 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
+| `leading-4` | 1 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
+| `leading-10` | 1 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
+| `sm:leading-none` | 1 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
 | `sm:text-6xl` | 1 | `text-display-3 (display-4 only with a narrow cap)` | 60 → 47.8/57.3px; one display step per screen, and 57.3px needs a cap below 375 ("Mathematical" 367.6px vs 343px) |
 | `lg:text-5xl` | 1 | `text-display-2` | 48 → 39.8px. The hero ramp INVERTS today (text-4xl sm:text-6xl lg:text-5xl xl:text-6xl): smaller at lg than at sm |
 | `xl:text-6xl` | 1 | `text-display-3 (display-4 only with a narrow cap)` | 60 → 47.8/57.3px; one display step per screen, and 57.3px needs a cap below 375 ("Mathematical" 367.6px vs 343px) |
 | `sm:text-base` | 1 | `text-body` | 16px, unchanged |
 | `sm:text-5xl` | 1 | `text-display-2` | 48 → 39.8px. The hero ramp INVERTS today (text-4xl sm:text-6xl lg:text-5xl xl:text-6xl): smaller at lg than at sm |
-| `leading-9` | 1 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
-| `sm:leading-10` | 1 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
-| `leading-7` | 1 | **(delete)** | the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose |
+| `leading-9` | 1 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
+| `sm:leading-10` | 1 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
+| `leading-7` | 1 | **(delete)** | 9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose |
 
 ## shape
 
@@ -102,7 +102,7 @@ Unmapped writes in a replaced bucket: none
 | written class | uses | becomes | why |
 |---|---|---|---|
 | `transition` | 18 | `keep` | the `@theme` default is now 150ms + linear, which is what every transition in src/ animates |
-| `duration-300` | 18 | `duration-150 (colour/shadow) or duration-250 (movement)` | 18 writes at 300ms for properties that are all colour or box-shadow |
+| `duration-300` | 18 | `duration-150 (colour/shadow) or duration-250 (movement)` | all 18 writes pair the bare `transition` utility; the only hover states in src/ change colour or box-shadow (6 hover:shadow-lg, 6 hover:bg-*, 6 hover:text-*), and no transform/opacity transition exists, so 150ms is the default and movement must opt in at 250 |
 | `ease-in-out` | 12 | `ease-linear for colour, ease-out for movement` | 12 ease-in-out writes; @theme now defaults to 150ms + linear |
 
 ## space

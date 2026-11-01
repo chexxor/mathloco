@@ -68,8 +68,8 @@ const MAP = [
   { bucket: 'type', re: /^text-4xl$/, target: 'text-display-1', note: '36 → 33.2px' },
   { bucket: 'type', re: /^text-5xl$/, target: 'text-display-2', note: '48 → 39.8px. The hero ramp INVERTS today (text-4xl sm:text-6xl lg:text-5xl xl:text-6xl): smaller at lg than at sm' },
   { bucket: 'type', re: /^text-6xl$/, target: 'text-display-3 (display-4 only with a narrow cap)', note: '60 → 47.8/57.3px; one display step per screen, and 57.3px needs a cap below 375 ("Mathematical" 367.6px vs 343px)' },
-  { bucket: 'type', re: /^(sm:|md:|lg:|xl:)?leading-[\w.]+$/, target: '', note: 'the size token carries leading (58 of 71 writes already do); serif prose takes leading-prose' },
-  { bucket: 'type', re: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/, target: 'PT Serif: 400 or 700 only; chrome may use 500/600/800 once Public Sans variable installs', note: 'PT Serif ships one weight today, so 30 weight writes render as 2 faces (measured ink coverage: 400 14.50%, 500 14.50%, 600-800 17.97%)' },
+  { bucket: 'type', re: /^(sm:|md:|lg:|xl:)?leading-[\w.]+$/, target: '', note: '9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose' },
+  { bucket: 'type', re: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/, target: 'serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs', note: 'only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build' },
 
   // ---------- radius / shadow / elevation ----------
   { bucket: 'shape', re: /^rounded-(md|lg|xl)$/, target: 'rounded-control or rounded-card (both 6px)', note: 'radius has exactly two roles and both solve to 6px; the three shipped radii measured 1.38/1.41/1.41 apart = invisible' },
@@ -77,7 +77,7 @@ const MAP = [
   { bucket: 'shape', re: /^(hover:)?shadow-(sm|md|lg|xl)$/, target: '', note: 'all 17 shadow writes are decoration: shadow-md and shadow-lg share a .102 stop and measure 1.25 (bar 1.35). Only shadow-e1/e2 exist, and only for floating surfaces' },
 
   // ---------- motion ----------
-  { bucket: 'motion', re: /^duration-\d+$/, target: 'duration-150 (colour/shadow) or duration-250 (movement)', note: '18 writes at 300ms for properties that are all colour or box-shadow' },
+  { bucket: 'motion', re: /^duration-\d+$/, target: 'duration-150 (colour/shadow) or duration-250 (movement)', note: 'all 18 writes pair the bare `transition` utility; the only hover states in src/ change colour or box-shadow (6 hover:shadow-lg, 6 hover:bg-*, 6 hover:text-*), and no transform/opacity transition exists, so 150ms is the default and movement must opt in at 250' },
   { bucket: 'motion', re: /^ease-(in-out|in|out|linear)$/, target: 'ease-linear for colour, ease-out for movement', note: '12 ease-in-out writes; @theme now defaults to 150ms + linear' },
 
   // ---------- spacing / icon sizes ----------
