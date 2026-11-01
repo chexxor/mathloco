@@ -158,6 +158,9 @@ second colour.
 - A notice = **word + keyline** on the page's own ground: edge `inset-shadow-rule` (3.01 paper / 4.00
   band), word `ink`, body `ink-2`, meta `ink-3`, padding 12/16. One-line notice **48px**, two-line body
   **64px**. Caution variant: `gold` keyline and word (4.82); on the band, `gold-on-ink` (5.80). No fill.
+  `check:render` measures every `role="status"` / `role="alert"` block in the built page and fails on a
+  fill, on an inset other than 1px, on a keyline contrast that is not the rule (2.99 measured in that
+  harness, 3.01 in the specimen), on text under the 4.5 bar, or on a block under 48px.
 - Status is a **word**: `Scheduled` / `Cancelled` / `Past` in the series lane when stacked, in its own
   24px chip column when wide (measured: a word reflows +0px, a chip costs +7px). Cancelled title goes to
   `ink-2`.
@@ -180,6 +183,15 @@ freshness.
 - **Loading is one 24px `role="status"` line, no motion.** No spinner, no skeleton (the shipped skeleton
   material measures 1.05 fill / 1.18 edge = a rectangle pretending to be content). Reserve the height so
   the page does not jump when content lands.
+- **Applied in `DiscordSummary` (apply 4c): the pending block IS that line.** It is the notice grammar
+  (`inset-shadow-rule`, no fill, word `ink`, body `ink-2`, meta `ink-3`), and `min-h-20` reserves the
+  fixed part of whatever lands: dated line 16 + `space-y-6` 24 + a card header 40 = **80px**. Measured in
+  the built page: 80px at 1240, 100px at 390 (the meta line wraps), inset ring **2.99** against its
+  ground, word at **11.73**. The deleted spinner wrote a 2px `border-b-2` at contrast **4.98** — a disc
+  of foreign hue, not a loading indicator.
+- **The pending sentence is also the JavaScript-off state.** It reads "The channel summaries have not
+  loaded" and names the path out (Discord), so it is true whether or not the browser ever runs the fetch.
+  That is how the error branch gets into the server-rendered HTML without the server calling the API.
 - **Failure is the notice above with a 40px retry**, and the error branch must exist in the server-rendered
   HTML: a JavaScript-off visitor can otherwise never leave the loading branch.
 - **Missing content is a designed state, never a build failure** (operator, 2026-11-01). A gate may fail a
@@ -217,8 +229,14 @@ a source exists.
 
 Tailwind v4 has no `--duration-*` namespace (measured: `duration-color` resolves to nothing), so the
 two steps are written as the numbers above. **Never** use `duration-300` or a 400ms tier. **Always**
-guard animation with `prefers-reduced-motion: reduce` — the shipped artifact contains 0 occurrences of
-that string.
+guard animation with `prefers-reduced-motion: reduce` — apply 4c added the one guard the site needs
+(`.love` in `Layout.astro`), and `ratify-check` now fails when `src/` has no `@media` reduced-motion
+block, while counting the string inside a comment does not count.
+
+One animation is left in `src/`: the footer sum glyph pulses `0.5s infinite linear alternate-reverse`.
+**An infinite pulse has no tier in this grammar** (150ms colour, 250ms movement), so it is either a tier
+the grammar is missing or decoration that should go — open question for the operator, flagged in
+`Layout.astro` where the keyframes live.
 
 Weights: PT Serif ships two faces and both are imported (latin 400 + latin 700), so in serif text the
 only legal weights are `400` and `700`. `500`/`600`/`800` are legal **only** in chrome (the sans stack),
@@ -247,11 +265,16 @@ word in event prose.
 
 ## Not wired yet (lands in `design-apply`, phase 4)
 
-- Markup still writes the old palette in the state surfaces only: `DiscordSummary.svelte` (`bg-red-50`,
-  `text-red-600`, `bg-blue-50`, `text-gray-600`, `border-blue-600`, `prose-blue`) and `Checkmark.astro`
-  (`text-green-500`). Those stay open because the fix is a notice/empty-state grammar, not a colour swap,
-  and the token block keeps `--color-book-*` entries until the class writes go away — deleting a token
-  before its class write does is what `check:classes` exists to catch.
+- Palette writes now survive only in **dormant** files: the four never-imported `src/components/icons/*.astro`
+  (choose-icons deletes them, and `--color-book-gray` stays for them until then) and the two gated-off
+  event components. Every live surface writes roles — `ratify-check` greps live `src/` for palette
+  fills, `animate-*` and prose-plugin writes and fails on any, using the same DORMANT exclusion the
+  worklist uses.
+- **Model output no longer rides the prose plugin.** `DiscordSummary` used to write `prose prose-blue`:
+  it coloured the summary through a class that is not a colour utility (so no gate could see the hue)
+  and set 500/600 weights in a serif that ships 400 and 700. The ramp is written in tokens now —
+  `text-lede font-bold` card title, `text-body font-bold` sub-headings,
+  `text-body leading-prose text-ink-2 font-body` paragraphs and list items.
 - **Faces are wired** (apply batch 4a): `Layout.astro` imports `@fontsource/pt-serif/latin-400.css` and
   `latin-700.css`, and `src/styles/fonts.css` declares the one Public Sans variable latin face
   (26,832 B, `wght 100 900`) against the vendor file, because the package's only entry point declares
@@ -263,9 +286,14 @@ word in event prose.
   vendor path fails the gate instead of silently rendering in the fallback stack.
 - `shadow-e1` / `shadow-e2` are defined-but-unused until the first floating surface exists. No modal or
   dropdown is in `src/` today.
-- The four island defects found in round 7 (no reduced-motion guard, no height reservation, no
-  JS-off escape from the loading branch, `{#if summary?.summary}` with no `{:else}`) are defects, not
-  decisions, and ride along in that branch.
+- Three of the four island defects found in round 7 (no reduced-motion guard, no height reservation,
+  no JS-off escape from the loading branch, `{#if summary?.summary}` with no `{:else}`) are closed by
+  apply 4c: the guard exists, `min-h-20` reserves, the pending block is the JS-off state, and both
+  missing-summary branches now render a line.
+- **What is not measurable yet:** the failed and empty branches render only after a real fetch, and
+  `check:render` measures the server-rendered branch (there is no API on `file://`). They inherit the
+  grammar that IS measured; numbers for them land the first time the gate runs against a deploy where
+  `/api/discord-summary` answers.
 - `UpcomingMeetups.astro` has no `{:else}` either: an empty feed renders nothing at all. Per **D108**,
   missing content is a state with designed content — never a blank, and never a build failure. The
   batch order and the states to build are in `.design/token-plan.md`; the per-class worklist is

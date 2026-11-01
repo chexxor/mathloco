@@ -83,11 +83,27 @@ for (const route of routes) {
     // 3. one dark band per screen
     if (j.bands.length > 1) fails.push(`${at}: ${j.bands.length} dark bands (want 1): ${j.bands.map((b) => b.tag + ':' + b.cls.slice(0, 28)).join(' | ')}`);
 
-    // 4. keylines within the layer bar
+    // 4. keylines: a painted border / outline / decoration line darker than a hairline. The ratified
+    //    keyline is `inset-shadow-rule` — a 1px inset ring, measured 2.99 against paper in this same
+    //    harness (DESIGN.md records 3.01) — and it costs no height. A BORDER at the same hue measures
+    //    the same contrast and costs 2px, which is how a 40px control arrives at 42. So the bar here
+    //    is about the grammar, not the hue: D105's 1.35 layer bar is for shadows.
     for (const k of j.keylines) {
       if (k.w >= 1 && k.keylineContrast !== null && k.keylineContrast > 1.4) {
-        fails.push(`${at}: keyline ${k.w}px at contrast ${k.keylineContrast} on its ground is darker than --color-rule (1.27) — ${k.cls.slice(0, 60)}`);
+        fails.push(`${at}: painted keyline ${k.w}px (contrast ${k.keylineContrast} on its ground) is a border/outline, not the 1px inset ring — ${k.cls.slice(0, 60)}`);
       }
+    }
+
+    // 4b. notices and states (DESIGN.md "Notices" + "States"): word + inset hairline on the page's own
+    //     ground, NO fill, one-line 48px (D98), text at or above the contrast bar.
+    for (const n of j.notices || []) {
+      if (n.fill) fails.push(`${at}: ${n.role} block paints a fill (${n.fill}) — a notice is word + keyline, never a fill (D102)`);
+      if (n.inset !== 1) fails.push(`${at}: ${n.role} block keyline is ${n.inset}px, want the 1px inset ring (inset-shadow-rule)`);
+      if (n.keylineContrast !== null && Math.abs(n.keylineContrast - 2.99) > 0.2) {
+        fails.push(`${at}: ${n.role} keyline contrast ${n.keylineContrast} is not the ratified rule (measured 2.99 on paper, 4.00 on the band)`);
+      }
+      if (n.textContrast !== null && n.textContrast < 4.5) fails.push(`${at}: ${n.role} text at contrast ${n.textContrast} is under the 4.5 bar`);
+      if (n.h < 48) fails.push(`${at}: ${n.role} block is ${n.h}px tall — D98 puts a one-line notice at 48px`);
     }
 
     // 5. one display step per screen
@@ -109,7 +125,7 @@ for (const route of routes) {
     const phantom = (j.text || []).filter((t) => /Inter var/.test(t.ff));
     if (phantom.length) warns.push(`${at}: ${phantom.length} text run(s) resolve through the phantom family "Inter var" — the faces batch has not landed`);
 
-    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
     for (const c of j.controls) {
       console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
     }
@@ -117,6 +133,7 @@ for (const route of routes) {
       console.log(`   disp  ${t.fs.padEnd(6)} lh ${t.lh.padEnd(7)} ${String(t.contrast).padStart(6)}  ${t.ff.padEnd(11)} ${t.tag} ${JSON.stringify(t.t).slice(0, 34)}`);
     }
     for (const k of [...new Map(j.keylines.map((k) => [k.w + k.raw + k.keylineContrast, k])).values()]) console.log(`   key   ${String(k.w).padStart(3)}px contrast ${String(k.keylineContrast).padStart(5)}  ${k.raw.padEnd(26)} ${(k.cls || '').slice(0, 40)}`);
+    for (const n of j.notices || []) console.log(`   notc  ${String(n.h).padStart(5)}px x ${String(n.w).padStart(4)}px  inset ${n.inset}px contrast ${String(n.keylineContrast).padStart(5)}  text ${String(n.textContrast).padStart(5)}  ${n.role} ${JSON.stringify(n.text).slice(0, 34)}`);
     for (const b of j.bands) console.log(`   band  ${String(b.h).padStart(5)}px  bg ${b.bg.padEnd(26)} fg ${b.fg.padEnd(24)} ${String(b.contrast).padStart(5)}  ${b.tag} ${(b.cls || '').slice(0, 40)}`);
     for (const s of j.shadows) console.log(`   shdw  ${s.shadow.slice(0, 70)}  ${(s.cls || '').slice(0, 40)}`);
   }

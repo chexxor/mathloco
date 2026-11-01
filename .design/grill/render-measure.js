@@ -17,7 +17,7 @@
 //     measured while PT Serif is still loading is a fallback metric, so this ships in the output.
 (() => {
   const T0 = Date.now();
-  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], shadows: [], text: [], fonts: [] };
+  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], notices: [], shadows: [], text: [], fonts: [] };
   const send = (payload) => {
     out.done = true;
     Object.assign(out, payload);
@@ -142,6 +142,34 @@
     };
   }).filter(Boolean);
 
+  // Notices and states (DESIGN.md "Notices, status words, freshness" + "States"): a word plus an
+  // INSET keyline on the page's own ground, no fill, heights by arithmetic (D98: one-line 48px,
+  // two-line body 64px). Measured so a height reservation (min-h-*) is a number rather than a guess.
+  const notices = all.map((el) => {
+    const role = el.getAttribute('role');
+    if (role !== 'status' && role !== 'alert') return null;
+    const r = el.getBoundingClientRect();
+    if (r.width < 8 || r.height < 8) return null;                 // sr-only lines
+    const cs = getComputedStyle(el);
+    const ground = painted(el);
+    const shadow = cs.boxShadow === 'none' ? '' : cs.boxShadow;
+    // Computed box-shadow puts the colour FIRST and `inset` last, and a Tailwind inset-shadow utility
+    // lands as a 0 0 0 1px spread ring: `oklch(0.655 0.03 152) 0px 0px 0px 1px inset`. Splitting on
+    // top-level commas keeps the colour's own commas inside oklch()/rgba() out of the way.
+    const layer = shadow.split(/,(?![^(]*\))/).find((s) => /\binset\b/.test(s)) ?? '';
+    const thickness = layer ? Math.max(...(layer.match(/-?[\d.]+px/g) ?? []).map((x) => Math.abs(parseFloat(x)))) : 0;
+    const sc = layer.match(/^\s*((?:oklch|oklab|lch|lab|rgb|rgba|hsl|hsla)\([^)]*\))/);
+    return {
+      role, h: +r.height.toFixed(1), w: +r.width.toFixed(1),
+      cls: (el.getAttribute('class') || '').slice(0, 80),
+      text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60),
+      inset: thickness,
+      keylineContrast: sc && opaque(ground) ? ratio(parse(sc[1]), ground) : null,
+      fill: cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : cs.backgroundColor,
+      textContrast: opaque(ground) && parse(cs.color) ? ratio(parse(cs.color), ground) : null,
+    };
+  }).filter(Boolean);
+
   // shadows: measured, because ratify said the shadow question could only be answered by measurement
   const shadows = all.map((el) => {
     const cs = getComputedStyle(el);
@@ -184,6 +212,7 @@
       ? document.documentElement.scrollWidth - innerWidth : 0,
     controls, bands, keylines, shadows, text,
     fonts: (() => { const a = []; document.fonts.forEach((f) => a.push(`${f.family} ${f.weight} ${f.style} ${f.status}`)); return a; })(),
+    notices,
   });
 
   // Measure AFTER the faces settle. A serif line box measured while PT Serif is still swapping in is

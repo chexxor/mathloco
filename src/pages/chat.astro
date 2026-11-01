@@ -6,6 +6,10 @@ import DiscordSummary from '../components/DiscordSummary.svelte';
 // of the page is static markup. Prerendering turns /chat into a static asset (no Worker CPU, no cold
 // start, edge-cacheable) - verified: `dist/client/chat/index.html` appears in the build output.
 export const prerender = true;
+
+// One place for the invite, because the island's empty and failed states need to offer the same
+// path out that the CTA does (D108: a designed state names where the content lives).
+const DISCORD_URL = "https://discord.com/invite/wx5S7YJSkU";
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
@@ -22,7 +26,7 @@ export const prerender = true;
          drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the
          server-rendered heading and the "Join Discord Server" CTA interactive immediately and skips
          the API fetch entirely for visitors who never scroll to it. -->
-    <DiscordSummary client:visible />
+    <DiscordSummary client:visible discordUrl={DISCORD_URL} />
 
     <div class="mt-16 bg-panel rounded-card p-8">
       <div class="text-center">
@@ -31,7 +35,7 @@ export const prerender = true;
           Connect with fellow math enthusiasts, participate in discussions, and be part of our growing community. Our Discord server is a friendly space for mathematical exploration and learning.
         </p>
         <a
-          href="https://discord.com/invite/wx5S7YJSkU"
+          href={DISCORD_URL}
           target="_blank"
           rel="noopener noreferrer"
           class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"

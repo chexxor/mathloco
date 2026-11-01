@@ -17,9 +17,9 @@
 //     decisions: nudge a token and the measured ratio moves with it and the row fails.
 //
 // Run: node .design/ratify-check.mjs      (needs firefox; ~20 s)
-import { readFileSync, existsSync, statSync } from 'node:fs';
+import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
-import { resolve } from 'node:path';
+import { resolve, join } from 'node:path';
 import { __unstable__loadDesignSystem } from '@tailwindcss/node';
 
 const ROOT = resolve(import.meta.dirname, '..'); // this file lives in .design/
@@ -89,6 +89,43 @@ for (const serif of ['latin-400.css', 'latin-700.css']) {
     fail(`Layout.astro no longer imports @fontsource/pt-serif/${serif} — serif would render one weight`);
 }
 ok('serif pair (latin 400 + latin 700) imported in Layout.astro');
+
+// ---------------- 1c. motion and state grammar, grepped out of the live source ----------------
+// DESIGN.md "Motion": every animation carries a reduced-motion guard, and the grammar has two tiers
+// (150ms colour, 250ms movement) — neither of which is an infinite loop. "States": a notice is word +
+// inset keyline, never a palette fill, and model output carries its type in tokens rather than
+// through the prose plugin. DORMANT files are excluded here exactly as .design/gen-token-map.mjs
+// excludes them, so a dormant file cannot make this section green by accident.
+const DORMANT = new Set([
+  'src/components/UpcomingMeetups.astro', 'src/components/PastEvents.astro',
+  'src/components/icons/Instagram.astro', 'src/components/icons/Linkedin.astro',
+  'src/components/icons/Medium.astro', 'src/components/icons/Twitter.astro',
+]);
+const liveFiles = [];
+(function walk(dir, rel) {
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const r = rel ? `${rel}/${e.name}` : e.name;
+    if (e.isDirectory()) { walk(join(dir, e.name), r); continue; }
+    if (!/\.(astro|svelte|ts|css)$/.test(e.name)) continue;
+    const path = `src/${r}`;
+    if (DORMANT.has(path)) continue;
+    liveFiles.push([path, readFileSync(join(dir, e.name), 'utf8')]);
+  }
+})(resolve(ROOT, 'src'), '');
+// the guard has to be a real @media block: global.css MENTIONS the string inside a comment, and a
+// grep that counts comments would report a guard that does not exist
+const guards = liveFiles.reduce((n, [, t]) => n + (t.match(/@media[^{]*\(\s*prefers-reduced-motion/g) ?? []).length, 0);
+if (guards < 1) fail('no prefers-reduced-motion guard in live src — DESIGN.md "Motion" requires one per animation');
+else ok(`${guards} reduced-motion @media guard(s), ${liveFiles.length} live source files scanned`);
+for (const [re, why] of [
+  [/class="[^"]*\sanimate-[a-z-]+/, 'an `animate-*` write (the motion grammar is 150ms colour / 250ms movement — no infinite tier)'],
+  [/class="[^"]*(?:^|\s)prose(?:\s|-blue)/, 'a prose-plugin write (`prose` / `prose-blue`)'],
+  [/\bbg-(?:red|blue|green|amber|yellow|gray|slate)-\d{2,3}/, 'a palette fill in markup, where the grammar says word + keyline'],
+]) {
+  const hits = liveFiles.filter(([, t]) => re.test(t)).map(([f]) => f);
+  if (hits.length) fail(`${why} — still written in ${hits.join(', ')}`);
+  else ok(`clean: ${why}`);
+}
 
 // ---------------- 2. every utility DESIGN.md promises must resolve ----------------------------
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });

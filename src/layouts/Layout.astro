@@ -74,6 +74,18 @@ import Navigation from '../components/Navigation.astro';
         }
       }
 
+      /* DESIGN.md "Motion": animation is always guarded. This is now the only animation left in
+         src/ — apply 4c deleted the `animate-spin` loader, which measured a 2px keyline at contrast
+         4.98 against its ground where --color-rule is 1.27. One thing this guard does not settle,
+         and it is the operator's call not mine: a 0.5s infinite pulse has no tier in the motion
+         grammar (150ms colour, 250ms movement), so it is either a tier the grammar is missing or
+         decoration that should go. */
+      @media (prefers-reduced-motion: reduce) {
+        .love {
+          animation: none;
+        }
+      }
+
       /* The 404 page's link writes the `underline` utility. A GLOBAL class of the same name used
          to sit here: an amber highlighter bar with text-decoration: none, later in the cascade than
          the utility, so every "underline" on the site was painted amber and NOT underlined. It is the

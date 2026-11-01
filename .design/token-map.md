@@ -5,8 +5,8 @@ add a MAP row to the script instead. `target: (delete)` means the write goes awa
 A write that already names a @theme token is listed as "keep (ratified …)" — the token names are
 parsed from src/styles/global.css (24 colours, 10 type steps, 2 radii, 8 elevations), so a token rename shows up here as a write that stopped being covered.
 
-Class tokens scanned: 170 distinct / 629 writes, of which 123 are in a DORMANT file (see the last section).
-Live writes mapped: 345 across 86 distinct tokens.
+Class tokens scanned: 165 distinct / 700 writes, of which 123 are in a DORMANT file (see the last section).
+Live writes mapped: 404 across 80 distinct tokens.
 Unmapped writes in a replaced bucket: none
 
 ## colour
@@ -15,24 +15,18 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `text-ink` | 24 | `keep (ratified role)` | names a @theme colour role |
-| `text-ink-2` | 17 | `keep (ratified role)` | names a @theme colour role |
-| `bg-paper` | 11 | `keep (ratified role)` | names a @theme colour role |
+| `text-ink` | 30 | `keep (ratified role)` | names a @theme colour role |
+| `text-ink-2` | 24 | `keep (ratified role)` | names a @theme colour role |
+| `bg-paper` | 13 | `keep (ratified role)` | names a @theme colour role |
+| `inset-shadow-rule` | 8 | `keep (ratified role)` | names a @theme colour role |
+| `text-ink-3` | 6 | `keep (ratified role)` | names a @theme colour role |
 | `bg-ink` | 6 | `keep (ratified role)` | names a @theme colour role |
 | `text-band-text` | 6 | `keep (ratified role)` | names a @theme colour role |
 | `focus-visible:outline-gold` | 6 | `keep (ratified role)` | names a @theme colour role |
-| `text-ink-3` | 5 | `keep (ratified role)` | names a @theme colour role |
 | `hover:bg-ink-hover` | 5 | `keep (ratified role)` | names a @theme colour role |
+| `hover:bg-tint` | 4 | `keep (ratified role)` | names a @theme colour role |
 | `bg-panel` | 4 | `keep (ratified role)` | names a @theme colour role |
-| `text-gray-600` | 1 | `text-ink-2` | 7.02 |
-| `inset-shadow-rule` | 3 | `keep (ratified role)` | names a @theme colour role |
-| `bg-blue-50` | 1 | `bg-panel` | a quiet fill, 1.04 vs paper — it is a tint, not a card |
-| `hover:bg-tint` | 2 | `keep (ratified role)` | names a @theme colour role |
-| `hover:text-gold` | 2 | `keep (ratified role)` | names a @theme colour role |
-| `border-blue-600` | 1 | `inset-shadow-rule (delete the border)` | a border adds 2px and breaks the height arithmetic (D98) |
-| `bg-red-50` | 1 | **(delete)** | a notice has no fill: red-50 measures 1.09 vs white = flat |
-| `text-red-600` | 1 | `text-ink (notice word)` | with inset-shadow-rule; caution variant uses gold (4.82). Never a fill |
-| `prose-blue` | 1 | `delete with `prose` (write the ramp in tokens)` | `prose-blue` retints every heading/list/link in Tailwind blue — a palette colour where a role exists, banned by DESIGN.md. The block it styles is three element kinds (h4/p/ul), so the ramp is written directly instead |
+| `hover:text-gold` | 3 | `keep (ratified role)` | names a @theme colour role |
 | `text-gold-on-ink` | 1 | `keep (ratified role)` | names a @theme colour role |
 
 ## type
@@ -41,17 +35,18 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `font-semibold` | 14 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `text-lede` | 15 | `keep (ratified step)` | names a @theme type step |
-| `leading-prose` | 15 | `keep (ratified leading)` | the serif prose rule (1.6) is a token, not a duplicate of the size step — this write stays |
-| `text-label` | 14 | `keep (ratified step)` | names a @theme type step |
-| `text-body` | 8 | `keep (ratified step)` | names a @theme type step |
+| `text-label` | 20 | `keep (ratified step)` | names a @theme type step |
+| `leading-prose` | 18 | `keep (ratified leading)` | the serif prose rule (1.6) is a token, not a duplicate of the size step — this write stays |
+| `text-lede` | 16 | `keep (ratified step)` | names a @theme type step |
+| `font-semibold` | 13 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
+| `text-body` | 15 | `keep (ratified step)` | names a @theme type step |
+| `font-medium` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `font-extrabold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `font-medium` | 3 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
+| `font-bold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `text-heading` | 4 | `keep (ratified step)` | names a @theme type step |
+| `leading-6` | 3 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |
 | `text-display-1` | 3 | `keep (ratified step)` | names a @theme type step |
 | `text-subhead` | 2 | `keep (ratified step)` | names a @theme type step |
-| `font-bold` | 2 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `sm:text-display-2` | 1 | `keep (ratified step)` | names a @theme type step |
 
 ## shape
@@ -60,10 +55,8 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `rounded-card` | 12 | `keep (ratified radius)` | radius has two roles, both 6px |
-| `rounded-control` | 7 | `keep (ratified radius)` | radius has two roles, both 6px |
-| `rounded-full` | 1 | `delete with the spinner` | the only rounded-full is the spinner, which Q4 A removes |
-| `border-b-2` | 1 | `inset-shadow-rule (or delete)` | every border write goes: `border`, `border-b`, `border-b-2` (the spinner, deleted), `border-transparent` (dead button boilerplate on 8 CTAs — it paints nothing). A border adds 2px and breaks the height arithmetic |
+| `rounded-control` | 12 | `keep (ratified radius)` | radius has two roles, both 6px |
+| `rounded-card` | 10 | `keep (ratified radius)` | radius has two roles, both 6px |
 
 ## motion
 
@@ -71,21 +64,20 @@ Unmapped writes in a replaced bucket: none
 
 | written class | uses | becomes | why |
 |---|---|---|---|
-| `transition` | 7 | `keep` | the `@theme` default is now 150ms + linear, which is what every transition in src/ animates |
+| `transition` | 9 | `keep` | the `@theme` default is now 150ms + linear, which is what every transition in src/ animates |
 
 ## space
 
-(40 writes already on the ratified scale — kept as written, not listed)
+(42 writes already on the ratified scale — kept as written, not listed)
 
 | written class | uses | becomes | why |
 |---|---|---|---|
 | `h-6` | 4 | `keep` | icon box on the S3 steps |
 | `w-6` | 4 | `keep` | icon box on the S3 steps |
+| `h-10` | 2 | `the nearest S3 step (4=16px, 6=24px)` | icon sizes off the grid |
 | `sm:p-10` | 1 | `keep — section step` | 40/96/128 are section-level; using them BETWEEN components is the same mistake as 20 |
 | `w-4` | 2 | `keep` | icon box on the S3 steps |
 | `h-4` | 2 | `keep` | icon box on the S3 steps |
-| `h-8` | 1 | `keep` | icon box on the S3 steps |
-| `w-8` | 1 | `keep` | icon box on the S3 steps |
 | `md:mt-32` | 1 | `keep — section step` | 40/96/128 are section-level; using them BETWEEN components is the same mistake as 20 |
 | `md:mb-24` | 1 | `keep — section step` | 40/96/128 are section-level; using them BETWEEN components is the same mistake as 20 |
 | `py-24` | 1 | `keep — section step` | 40/96/128 are section-level; using them BETWEEN components is the same mistake as 20 |
@@ -102,26 +94,26 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | written class | dormant uses | file |
 |---|---|---|
 | `items-center` | 5 | src/components/UpcomingMeetups.astro |
-| `flex` | 3 | src/components/UpcomingMeetups.astro |
-| `font-semibold` | 3 | src/components/UpcomingMeetups.astro |
 | `font-body` | 3 | src/components/UpcomingMeetups.astro |
-| `transition` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
-| `ml-3` | 3 | src/components/UpcomingMeetups.astro |
-| `justify-center` | 1 | src/components/UpcomingMeetups.astro |
-| `text-center` | 1 | src/components/UpcomingMeetups.astro |
-| `mx-auto` | 1 | src/components/UpcomingMeetups.astro |
+| `flex` | 3 | src/components/UpcomingMeetups.astro |
 | `px-4` | 1 | src/components/UpcomingMeetups.astro |
+| `font-semibold` | 3 | src/components/UpcomingMeetups.astro |
+| `transition` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
+| `justify-center` | 1 | src/components/UpcomingMeetups.astro |
+| `ml-3` | 3 | src/components/UpcomingMeetups.astro |
+| `mx-auto` | 1 | src/components/UpcomingMeetups.astro |
+| `inline-flex` | 1 | src/components/UpcomingMeetups.astro |
+| `text-center` | 1 | src/components/UpcomingMeetups.astro |
+| `py-3` | 1 | src/components/UpcomingMeetups.astro |
 | `h-6` | 3 | src/components/UpcomingMeetups.astro |
 | `w-6` | 3 | src/components/UpcomingMeetups.astro |
+| `font-medium` | 1 | src/components/UpcomingMeetups.astro |
 | `font-extrabold` | 1 | src/components/UpcomingMeetups.astro |
-| `inline-flex` | 1 | src/components/UpcomingMeetups.astro |
 | `max-w-screen-xl` | 1 | src/components/UpcomingMeetups.astro |
 | `sm:px-6` | 1 | src/components/UpcomingMeetups.astro |
 | `duration-300` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `ease-in-out` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `overflow-hidden` | 1 | src/components/UpcomingMeetups.astro |
-| `py-3` | 1 | src/components/UpcomingMeetups.astro |
-| `font-medium` | 1 | src/components/UpcomingMeetups.astro |
 | `mb-12` | 1 | src/components/UpcomingMeetups.astro |
 | `lg:px-8` | 1 | src/components/UpcomingMeetups.astro |
 | `text-gray-900` | 4 | src/components/UpcomingMeetups.astro |
@@ -132,7 +124,6 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | `fill-current` | 4 | src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `text-book-gray` | 4 | src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `hover:text-gray-500` | 4 | src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
-| `text-gray-600` | 2 | src/components/UpcomingMeetups.astro |
 | `py-16` | 1 | src/components/UpcomingMeetups.astro |
 | `mt-4` | 1 | src/components/UpcomingMeetups.astro |
 | `px-6` | 2 | src/components/UpcomingMeetups.astro |
@@ -143,14 +134,15 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | `gap-8` | 1 | src/components/UpcomingMeetups.astro |
 | `space-y-4` | 2 | src/components/UpcomingMeetups.astro |
 | `text-blue-600` | 3 | src/components/UpcomingMeetups.astro |
-| `bg-blue-50` | 1 | src/components/UpcomingMeetups.astro |
 | `hidden` | 1 | src/components/UpcomingMeetups.astro |
 | `sm:p-10` | 1 | src/components/UpcomingMeetups.astro |
+| `text-gray-600` | 2 | src/components/UpcomingMeetups.astro |
 | `rounded-lg` | 2 | src/components/UpcomingMeetups.astro |
 | `mt-8` | 2 | src/components/UpcomingMeetups.astro |
 | `bg-white` | 1 | src/components/UpcomingMeetups.astro |
 | `text-3xl` | 1 | src/components/UpcomingMeetups.astro |
 | `sm:text-4xl` | 1 | src/components/UpcomingMeetups.astro |
+| `bg-blue-50` | 1 | src/components/UpcomingMeetups.astro |
 | `shadow-lg` | 1 | src/components/UpcomingMeetups.astro |
 | `list-disc` | 1 | src/components/UpcomingMeetups.astro |
 | `list-inside` | 1 | src/components/UpcomingMeetups.astro |
