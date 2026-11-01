@@ -6,6 +6,7 @@
   "panel": "oklch(97% 0.008 85)",
   "tint": "oklch(95% 0.03 152)",
   "ink": "oklch(32% 0.045 152)",
+  "inkHover": "oklch(40% 0.055 152)",
   "ink2": "oklch(45% 0.035 152)",
   "ink3": "oklch(52% 0.028 152)",
   "rule": "oklch(65.5% 0.03 152)",
@@ -97,6 +98,71 @@
    "must": "pass",
    "fg": "@ink2",
    "bg": "@tint"
+  },
+  {
+   "kind": "text",
+   "name": "ink on a panel fill",
+   "bar": 4.5,
+   "expect": 11.51,
+   "must": "pass",
+   "fg": "@ink",
+   "bg": "@panel"
+  },
+  {
+   "kind": "text",
+   "name": "ink-2 on a panel fill (a channel header row)",
+   "bar": 4.5,
+   "expect": 6.73,
+   "must": "pass",
+   "fg": "@ink2",
+   "bg": "@panel"
+  },
+  {
+   "kind": "text",
+   "name": "ink-3 on a panel fill (the dated line on a quiet fill)",
+   "bar": 4.5,
+   "expect": 4.99,
+   "must": "pass",
+   "fg": "@ink3",
+   "bg": "@panel"
+  },
+  {
+   "kind": "text",
+   "name": "primary hover: band-text on the ink-hover fill",
+   "bar": 4.5,
+   "expect": 7.33,
+   "must": "pass",
+   "note": "the number round 6 measured and ratify never wrote down",
+   "fg": "@bandText",
+   "bg": "@inkHover"
+  },
+  {
+   "kind": "layer",
+   "name": "primary hover fill vs the resting ink fill",
+   "bar": 1.35,
+   "expect": 1.39,
+   "must": "layered",
+   "note": "the BINDING bar here is 1.35, not 4.5: at L 36 the fill vs ink is 1.18 = the hover is invisible",
+   "fill": "@inkHover",
+   "ground": "@ink"
+  },
+  {
+   "kind": "keyline",
+   "name": "focus ring on paper: gold",
+   "bar": 3,
+   "expect": 4.82,
+   "must": "pass",
+   "fg": "@gold",
+   "bg": "@paper"
+  },
+  {
+   "kind": "keyline",
+   "name": "focus ring on the band: band-text",
+   "bar": 3,
+   "expect": 10.19,
+   "must": "pass",
+   "fg": "@bandText",
+   "bg": "@band"
   },
   {
    "kind": "text",
@@ -350,6 +416,26 @@
    "must": "fail",
    "note": "why gold-on-ink exists",
    "fg": "@gold",
+   "bg": "@band"
+  },
+  {
+   "kind": "keyline",
+   "name": "BANNED focus ring: gold on the band",
+   "bar": 3,
+   "expect": 2.5,
+   "must": "fail",
+   "note": "why the band takes outline-band-text (10.19)",
+   "fg": "@gold",
+   "bg": "@band"
+  },
+  {
+   "kind": "text",
+   "name": "FIXED ::selection: paper on ink (was white on book-theme amber)",
+   "bar": 4.5,
+   "expect": 12.02,
+   "must": "pass",
+   "note": "Layout.astro: the shipped amber pair is 2.15",
+   "fg": "@paper",
    "bg": "@band"
   },
   {

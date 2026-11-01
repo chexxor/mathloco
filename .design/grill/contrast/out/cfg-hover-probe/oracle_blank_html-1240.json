@@ -1,0 +1,130 @@
+{
+ "out": "token (as written)                              rendered\npaper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)\npanel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)\ntint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)\nink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\nrule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)\ngold = oklch(55% 0.12 62)                  #a25f12 rgba(162,95,18,1)\ngoldOnInk = oklch(76% 0.06 84)             #c3ae86 rgba(195,174,134,1)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nresting primary: band-text on ink          text     #e4e9e5      #203927     10.19  4.5   PASS\nfocus ring on paper: gold (keyline bar 3)  keyline  #a25f12      #fcfaf6     4.82   3     PASS\nfocus ring on the band: band-text (keyline bar 3) keyline  #e4e9e5      #203927     10.19  3     PASS\nBANNED focus ring on the band: gold        keyline  #a25f12      #203927     2.5    3     FAIL\n::selection inverted: paper on ink         text     #fcfaf6      #203927     12.02  4.5   PASS\nink on panel (body copy on a quiet fill)   text     #203927      #f8f5ef     11.51  4.5   PASS\nink-2 on panel (secondary on a quiet fill) text     #475b4c      #f8f5ef     6.73   4.5   PASS\nink-3 on panel (dated line on a quiet fill) text     #5d6e61      #f8f5ef     4.99   4.5   PASS\nrule keyline on panel (expect FAIL)        keyline  #849688      #f8f5ef     2.88   4.5   FAIL\nink-3 on tint (dated line on a hover fill) text     #5d6e61      #e0f5e5     4.75   4.5   PASS\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)\nLIGHTER hover: label bar 4.5 vs band-text (bar 4.5) oklch(45% 0.055 152)       renders #3e5e46    ratio 5.9\nLIGHTER hover: layer bar 1.35 vs ink (bar 1.35) oklch(39% 0.055 152)       renders #2d4e36    ratio 1.35\nDARKER hover: label bar 4.5 vs band-text (bar 4.5) oklch(14% 0.045 152)       renders #000e02    ratio 16.06\nDARKER hover: layer bar 1.35 vs ink (bar 1.35) oklch(20% 0.045 152)       renders #041c0b    ratio 1.43",
+ "report": "token (as written)                              rendered\npaper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)\npanel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)\ntint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)\nink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\nrule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)\ngold = oklch(55% 0.12 62)                  #a25f12 rgba(162,95,18,1)\ngoldOnInk = oklch(76% 0.06 84)             #c3ae86 rgba(195,174,134,1)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nresting primary: band-text on ink          text     #e4e9e5      #203927     10.19  4.5   PASS\nfocus ring on paper: gold (keyline bar 3)  keyline  #a25f12      #fcfaf6     4.82   3     PASS\nfocus ring on the band: band-text (keyline bar 3) keyline  #e4e9e5      #203927     10.19  3     PASS\nBANNED focus ring on the band: gold        keyline  #a25f12      #203927     2.5    3     FAIL\n::selection inverted: paper on ink         text     #fcfaf6      #203927     12.02  4.5   PASS\nink on panel (body copy on a quiet fill)   text     #203927      #f8f5ef     11.51  4.5   PASS\nink-2 on panel (secondary on a quiet fill) text     #475b4c      #f8f5ef     6.73   4.5   PASS\nink-3 on panel (dated line on a quiet fill) text     #5d6e61      #f8f5ef     4.99   4.5   PASS\nrule keyline on panel (expect FAIL)        keyline  #849688      #f8f5ef     2.88   4.5   FAIL\nink-3 on tint (dated line on a hover fill) text     #5d6e61      #e0f5e5     4.75   4.5   PASS\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)\nLIGHTER hover: label bar 4.5 vs band-text (bar 4.5) oklch(45% 0.055 152)       renders #3e5e46    ratio 5.9\nLIGHTER hover: layer bar 1.35 vs ink (bar 1.35) oklch(39% 0.055 152)       renders #2d4e36    ratio 1.35\nDARKER hover: label bar 4.5 vs band-text (bar 4.5) oklch(14% 0.045 152)       renders #000e02    ratio 16.06\nDARKER hover: layer bar 1.35 vs ink (bar 1.35) oklch(20% 0.045 152)       renders #041c0b    ratio 1.43",
+ "facesLoaded": [],
+ "fontSet": 0,
+ "pairs": [
+  {
+   "name": "resting primary: band-text on ink",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#203927",
+   "ratio": 10.19,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "focus ring on paper: gold (keyline bar 3)",
+   "kind": "keyline",
+   "fg": "#a25f12",
+   "bg": "#fcfaf6",
+   "ratio": 4.82,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "focus ring on the band: band-text (keyline bar 3)",
+   "kind": "keyline",
+   "fg": "#e4e9e5",
+   "bg": "#203927",
+   "ratio": 10.19,
+   "bar": 3,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "BANNED focus ring on the band: gold",
+   "kind": "keyline",
+   "fg": "#a25f12",
+   "bg": "#203927",
+   "ratio": 2.5,
+   "bar": 3,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "::selection inverted: paper on ink",
+   "kind": "text",
+   "fg": "#fcfaf6",
+   "bg": "#203927",
+   "ratio": 12.02,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "ink on panel (body copy on a quiet fill)",
+   "kind": "text",
+   "fg": "#203927",
+   "bg": "#f8f5ef",
+   "ratio": 11.51,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "ink-2 on panel (secondary on a quiet fill)",
+   "kind": "text",
+   "fg": "#475b4c",
+   "bg": "#f8f5ef",
+   "ratio": 6.73,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "ink-3 on panel (dated line on a quiet fill)",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#f8f5ef",
+   "ratio": 4.99,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "rule keyline on panel (expect FAIL)",
+   "kind": "keyline",
+   "fg": "#849688",
+   "bg": "#f8f5ef",
+   "ratio": 2.88,
+   "bar": 4.5,
+   "verdict": "FAIL",
+   "labelOn": null
+  },
+  {
+   "name": "ink-3 on tint (dated line on a hover fill)",
+   "kind": "text",
+   "fg": "#5d6e61",
+   "bg": "#e0f5e5",
+   "ratio": 4.75,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  }
+ ],
+ "solves": [
+  {
+   "label": "LIGHTER hover: label bar 4.5 vs band-text",
+   "at": "oklch(45% 0.055 152)",
+   "ratio": 5.9
+  },
+  {
+   "label": "LIGHTER hover: layer bar 1.35 vs ink",
+   "at": "oklch(39% 0.055 152)",
+   "ratio": 1.35
+  },
+  {
+   "label": "DARKER hover: label bar 4.5 vs band-text",
+   "at": "oklch(14% 0.045 152)",
+   "ratio": 16.06
+  },
+  {
+   "label": "DARKER hover: layer bar 1.35 vs ink",
+   "at": "oklch(20% 0.045 152)",
+   "ratio": 1.43
+  }
+ ]
+}

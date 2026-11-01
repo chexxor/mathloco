@@ -48,7 +48,7 @@ const PATHS = {
 
 const tokens = {
   paper: colour('paper'), panel: colour('panel'), tint: colour('tint'),
-  ink: colour('ink'), ink2: colour('ink-2'), ink3: colour('ink-3'),
+  ink: colour('ink'), inkHover: colour('ink-hover'), ink2: colour('ink-2'), ink3: colour('ink-3'),
   rule: colour('rule'), gold: colour('gold'), goldOnInk: colour('gold-on-ink'),
   bandText: colour('band-text'), band: colour('ink'), // D89: the band ground IS ink
   e1stop: shadowStop('shadow-e1'), e2stop: shadowStop('shadow-e2'),
@@ -96,6 +96,19 @@ const pairs = [
   T('gold on a panel fill (notice on panel)', '@gold', '@panel', 4.61),
   T('ink on tint (secondary hover fill) — tints carry INK', '@ink', '@tint', 10.96),
   T('ink-2 on tint', '@ink2', '@tint', null),
+  // apply landed these three: every text role on a `panel` fill, because the site puts meta and
+  // channel headers on panel and the ratio drops slightly against paper. Measured 2026-11-01.
+  T('ink on a panel fill', '@ink', '@panel', 11.51),
+  T('ink-2 on a panel fill (a channel header row)', '@ink2', '@panel', 6.73),
+  T('ink-3 on a panel fill (the dated line on a quiet fill)', '@ink3', '@panel', 4.99),
+
+  // ---- the primary hover fill (DESIGN.md recorded 7.33 and no value; apply solved it) --------
+  T('primary hover: band-text on the ink-hover fill', '@bandText', '@inkHover', 7.33, 'pass', 'the number round 6 measured and ratify never wrote down'),
+  L('primary hover fill vs the resting ink fill', '@inkHover', '@ink', 1.39, 'layered', 'the BINDING bar here is 1.35, not 4.5: at L 36 the fill vs ink is 1.18 = the hover is invisible'),
+
+  // ---- focus rings: one role per ground (the ring is a boundary, so bar 3.0) ------------------
+  K('focus ring on paper: gold', '@gold', '@paper', 4.82),
+  K('focus ring on the band: band-text', '@bandText', '@band', 10.19),
 
   // ---- the ink band (D89: at most one per screen, ground = ink) ----
   T('band-text on the band', '@bandText', '@band', 10.19),
@@ -133,6 +146,8 @@ const pairs = [
   K('BANNED rule as a keyline on a panel', '@rule', '@panel', 2.88, 'fail', 'under the 3.0 boundary bar'),
   K('BANNED paper path hue used on the band', '@p_calendar', '@band', 2.28, 'fail', 'why path-*-on-ink exists'),
   T('BANNED gold as text on the band', '@gold', '@band', null, 'fail', 'why gold-on-ink exists'),
+  K('BANNED focus ring: gold on the band', '@gold', '@band', 2.5, 'fail', 'why the band takes outline-band-text (10.19)'),
+  T('FIXED ::selection: paper on ink (was white on book-theme amber)', '@paper', '@band', 12.02, 'pass', 'Layout.astro: the shipped amber pair is 2.15'),
   T('RETIRED shipped Discord error: red-600 on red-50', '@red600', '@red50', 4.36, 'fail', 'under AA (D102)'),
   T('RETIRED shipped hero CTA: blue-600 on blue-100', '@blue600', '@blue100', 4.3, 'fail', 'under AA (D102)'),
   S('RETIRED shipped shadow-lg stop', '@shippedShadowStop', '@paper', '@ink', 1.25, 'flat', 'decoration: under the layer bar (D105)'),

@@ -1,0 +1,36 @@
+token (as written)                              rendered
+ink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)
+bandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)
+
+pair                                       kind     fg          bg          ratio  bar  verdict
+L36 C.055: band-text label on fill         text     #e4e9e5      #25452f     8.67   4.5   PASS
+L36 C.055: fill vs resting ink             layer    #25452f      #203927     1.18   1.35  FLAT (decoration)
+L37 C.055: band-text label on fill         text     #e4e9e5      #284831     8.29   4.5   PASS
+L37 C.055: fill vs resting ink             layer    #284831      #203927     1.23   1.35  FLAT (decoration)
+L38 C.055: band-text label on fill         text     #e4e9e5      #2b4b34     7.91   4.5   PASS
+L38 C.055: fill vs resting ink             layer    #2b4b34      #203927     1.29   1.35  FLAT (decoration)
+L39 C.055: band-text label on fill         text     #e4e9e5      #2d4e36     7.58   4.5   PASS
+L39 C.055: fill vs resting ink             layer    #2d4e36      #203927     1.35   1.35  LAYERED
+L40 C.055: band-text label on fill         text     #e4e9e5      #305039     7.33   4.5   PASS
+L40 C.055: fill vs resting ink             layer    #305039      #203927     1.39   1.35  LAYERED
+L41 C.055: band-text label on fill         text     #e4e9e5      #33533b     7      4.5   PASS
+L41 C.055: fill vs resting ink             layer    #33533b      #203927     1.46   1.35  LAYERED
+L42 C.055: band-text label on fill         text     #e4e9e5      #35563e     6.69   4.5   PASS
+L42 C.055: fill vs resting ink             layer    #35563e      #203927     1.52   1.35  LAYERED
+L43 C.055: band-text label on fill         text     #e4e9e5      #385941     6.39   4.5   PASS
+L43 C.055: fill vs resting ink             layer    #385941      #203927     1.6    1.35  LAYERED
+L44 C.055: band-text label on fill         text     #e4e9e5      #3b5b43     6.18   4.5   PASS
+L44 C.055: fill vs resting ink             layer    #3b5b43      #203927     1.65   1.35  LAYERED
+L45 C.055: band-text label on fill         text     #e4e9e5      #3e5e46     5.9    4.5   PASS
+L45 C.055: fill vs resting ink             layer    #3e5e46      #203927     1.73   1.35  LAYERED
+L46 C.055: band-text label on fill         text     #e4e9e5      #406149     5.65   4.5   PASS
+L46 C.055: fill vs resting ink             layer    #406149      #203927     1.8    1.35  LAYERED
+L47 C.055: band-text label on fill         text     #e4e9e5      #43644c     5.4    4.5   PASS
+L47 C.055: fill vs resting ink             layer    #43644c      #203927     1.89   1.35  LAYERED
+L48 C.055: band-text label on fill         text     #e4e9e5      #46674e     5.16   4.5   PASS
+L48 C.055: fill vs resting ink             layer    #46674e      #203927     1.98   1.35  LAYERED
+L38 C.045 (ink chroma): fill vs resting ink layer    #304936      #203927     1.27   1.35  FLAT (decoration)
+L40 C.045 (ink chroma): fill vs resting ink layer    #354f3c      #203927     1.39   1.35  LAYERED
+L42 C.045 (ink chroma): fill vs resting ink layer    #3a5441      #203927     1.51   1.35  LAYERED
+
+solve (L of oklch(L C H) nearest `near` that still clears the bar)

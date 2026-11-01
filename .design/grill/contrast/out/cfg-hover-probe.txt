@@ -1,0 +1,29 @@
+token (as written)                              rendered
+paper = oklch(98.5% 0.006 85)              #fcfaf6 rgba(252,250,246,1)
+panel = oklch(97% 0.008 85)                #f8f5ef rgba(248,245,239,1)
+tint = oklch(95% 0.03 152)                 #e0f5e5 rgba(224,245,229,1)
+ink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)
+ink2 = oklch(45% 0.035 152)                #475b4c rgba(71,91,76,1)
+ink3 = oklch(52% 0.028 152)                #5d6e61 rgba(93,110,97,1)
+bandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)
+rule = oklch(65.5% 0.03 152)               #849688 rgba(132,150,136,1)
+gold = oklch(55% 0.12 62)                  #a25f12 rgba(162,95,18,1)
+goldOnInk = oklch(76% 0.06 84)             #c3ae86 rgba(195,174,134,1)
+
+pair                                       kind     fg          bg          ratio  bar  verdict
+resting primary: band-text on ink          text     #e4e9e5      #203927     10.19  4.5   PASS
+focus ring on paper: gold (keyline bar 3)  keyline  #a25f12      #fcfaf6     4.82   3     PASS
+focus ring on the band: band-text (keyline bar 3) keyline  #e4e9e5      #203927     10.19  3     PASS
+BANNED focus ring on the band: gold        keyline  #a25f12      #203927     2.5    3     FAIL
+::selection inverted: paper on ink         text     #fcfaf6      #203927     12.02  4.5   PASS
+ink on panel (body copy on a quiet fill)   text     #203927      #f8f5ef     11.51  4.5   PASS
+ink-2 on panel (secondary on a quiet fill) text     #475b4c      #f8f5ef     6.73   4.5   PASS
+ink-3 on panel (dated line on a quiet fill) text     #5d6e61      #f8f5ef     4.99   4.5   PASS
+rule keyline on panel (expect FAIL)        keyline  #849688      #f8f5ef     2.88   4.5   FAIL
+ink-3 on tint (dated line on a hover fill) text     #5d6e61      #e0f5e5     4.75   4.5   PASS
+
+solve (L of oklch(L C H) nearest `near` that still clears the bar)
+LIGHTER hover: label bar 4.5 vs band-text (bar 4.5) oklch(45% 0.055 152)       renders #3e5e46    ratio 5.9
+LIGHTER hover: layer bar 1.35 vs ink (bar 1.35) oklch(39% 0.055 152)       renders #2d4e36    ratio 1.35
+DARKER hover: label bar 4.5 vs band-text (bar 4.5) oklch(14% 0.045 152)       renders #000e02    ratio 16.06
+DARKER hover: layer bar 1.35 vs ink (bar 1.35) oklch(20% 0.045 152)       renders #041c0b    ratio 1.43

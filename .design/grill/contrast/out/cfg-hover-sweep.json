@@ -1,0 +1,300 @@
+{
+ "out": "token (as written)                              rendered\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nL36 C.055: band-text label on fill         text     #e4e9e5      #25452f     8.67   4.5   PASS\nL36 C.055: fill vs resting ink             layer    #25452f      #203927     1.18   1.35  FLAT (decoration)\nL37 C.055: band-text label on fill         text     #e4e9e5      #284831     8.29   4.5   PASS\nL37 C.055: fill vs resting ink             layer    #284831      #203927     1.23   1.35  FLAT (decoration)\nL38 C.055: band-text label on fill         text     #e4e9e5      #2b4b34     7.91   4.5   PASS\nL38 C.055: fill vs resting ink             layer    #2b4b34      #203927     1.29   1.35  FLAT (decoration)\nL39 C.055: band-text label on fill         text     #e4e9e5      #2d4e36     7.58   4.5   PASS\nL39 C.055: fill vs resting ink             layer    #2d4e36      #203927     1.35   1.35  LAYERED\nL40 C.055: band-text label on fill         text     #e4e9e5      #305039     7.33   4.5   PASS\nL40 C.055: fill vs resting ink             layer    #305039      #203927     1.39   1.35  LAYERED\nL41 C.055: band-text label on fill         text     #e4e9e5      #33533b     7      4.5   PASS\nL41 C.055: fill vs resting ink             layer    #33533b      #203927     1.46   1.35  LAYERED\nL42 C.055: band-text label on fill         text     #e4e9e5      #35563e     6.69   4.5   PASS\nL42 C.055: fill vs resting ink             layer    #35563e      #203927     1.52   1.35  LAYERED\nL43 C.055: band-text label on fill         text     #e4e9e5      #385941     6.39   4.5   PASS\nL43 C.055: fill vs resting ink             layer    #385941      #203927     1.6    1.35  LAYERED\nL44 C.055: band-text label on fill         text     #e4e9e5      #3b5b43     6.18   4.5   PASS\nL44 C.055: fill vs resting ink             layer    #3b5b43      #203927     1.65   1.35  LAYERED\nL45 C.055: band-text label on fill         text     #e4e9e5      #3e5e46     5.9    4.5   PASS\nL45 C.055: fill vs resting ink             layer    #3e5e46      #203927     1.73   1.35  LAYERED\nL46 C.055: band-text label on fill         text     #e4e9e5      #406149     5.65   4.5   PASS\nL46 C.055: fill vs resting ink             layer    #406149      #203927     1.8    1.35  LAYERED\nL47 C.055: band-text label on fill         text     #e4e9e5      #43644c     5.4    4.5   PASS\nL47 C.055: fill vs resting ink             layer    #43644c      #203927     1.89   1.35  LAYERED\nL48 C.055: band-text label on fill         text     #e4e9e5      #46674e     5.16   4.5   PASS\nL48 C.055: fill vs resting ink             layer    #46674e      #203927     1.98   1.35  LAYERED\nL38 C.045 (ink chroma): fill vs resting ink layer    #304936      #203927     1.27   1.35  FLAT (decoration)\nL40 C.045 (ink chroma): fill vs resting ink layer    #354f3c      #203927     1.39   1.35  LAYERED\nL42 C.045 (ink chroma): fill vs resting ink layer    #3a5441      #203927     1.51   1.35  LAYERED\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)",
+ "report": "token (as written)                              rendered\nink = oklch(32% 0.045 152)                 #203927 rgba(32,57,39,1)\nbandText = oklch(93% 0.008 152)            #e4e9e5 rgba(228,233,229,1)\n\npair                                       kind     fg          bg          ratio  bar  verdict\nL36 C.055: band-text label on fill         text     #e4e9e5      #25452f     8.67   4.5   PASS\nL36 C.055: fill vs resting ink             layer    #25452f      #203927     1.18   1.35  FLAT (decoration)\nL37 C.055: band-text label on fill         text     #e4e9e5      #284831     8.29   4.5   PASS\nL37 C.055: fill vs resting ink             layer    #284831      #203927     1.23   1.35  FLAT (decoration)\nL38 C.055: band-text label on fill         text     #e4e9e5      #2b4b34     7.91   4.5   PASS\nL38 C.055: fill vs resting ink             layer    #2b4b34      #203927     1.29   1.35  FLAT (decoration)\nL39 C.055: band-text label on fill         text     #e4e9e5      #2d4e36     7.58   4.5   PASS\nL39 C.055: fill vs resting ink             layer    #2d4e36      #203927     1.35   1.35  LAYERED\nL40 C.055: band-text label on fill         text     #e4e9e5      #305039     7.33   4.5   PASS\nL40 C.055: fill vs resting ink             layer    #305039      #203927     1.39   1.35  LAYERED\nL41 C.055: band-text label on fill         text     #e4e9e5      #33533b     7      4.5   PASS\nL41 C.055: fill vs resting ink             layer    #33533b      #203927     1.46   1.35  LAYERED\nL42 C.055: band-text label on fill         text     #e4e9e5      #35563e     6.69   4.5   PASS\nL42 C.055: fill vs resting ink             layer    #35563e      #203927     1.52   1.35  LAYERED\nL43 C.055: band-text label on fill         text     #e4e9e5      #385941     6.39   4.5   PASS\nL43 C.055: fill vs resting ink             layer    #385941      #203927     1.6    1.35  LAYERED\nL44 C.055: band-text label on fill         text     #e4e9e5      #3b5b43     6.18   4.5   PASS\nL44 C.055: fill vs resting ink             layer    #3b5b43      #203927     1.65   1.35  LAYERED\nL45 C.055: band-text label on fill         text     #e4e9e5      #3e5e46     5.9    4.5   PASS\nL45 C.055: fill vs resting ink             layer    #3e5e46      #203927     1.73   1.35  LAYERED\nL46 C.055: band-text label on fill         text     #e4e9e5      #406149     5.65   4.5   PASS\nL46 C.055: fill vs resting ink             layer    #406149      #203927     1.8    1.35  LAYERED\nL47 C.055: band-text label on fill         text     #e4e9e5      #43644c     5.4    4.5   PASS\nL47 C.055: fill vs resting ink             layer    #43644c      #203927     1.89   1.35  LAYERED\nL48 C.055: band-text label on fill         text     #e4e9e5      #46674e     5.16   4.5   PASS\nL48 C.055: fill vs resting ink             layer    #46674e      #203927     1.98   1.35  LAYERED\nL38 C.045 (ink chroma): fill vs resting ink layer    #304936      #203927     1.27   1.35  FLAT (decoration)\nL40 C.045 (ink chroma): fill vs resting ink layer    #354f3c      #203927     1.39   1.35  LAYERED\nL42 C.045 (ink chroma): fill vs resting ink layer    #3a5441      #203927     1.51   1.35  LAYERED\n\nsolve (L of oklch(L C H) nearest `near` that still clears the bar)",
+ "facesLoaded": [],
+ "fontSet": 0,
+ "pairs": [
+  {
+   "name": "L36 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#25452f",
+   "ratio": 8.67,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L36 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#25452f",
+   "bg": "#203927",
+   "ratio": 1.18,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "L37 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#284831",
+   "ratio": 8.29,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L37 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#284831",
+   "bg": "#203927",
+   "ratio": 1.23,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "L38 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#2b4b34",
+   "ratio": 7.91,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L38 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#2b4b34",
+   "bg": "#203927",
+   "ratio": 1.29,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "L39 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#2d4e36",
+   "ratio": 7.58,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L39 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#2d4e36",
+   "bg": "#203927",
+   "ratio": 1.35,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L40 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#305039",
+   "ratio": 7.33,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L40 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#305039",
+   "bg": "#203927",
+   "ratio": 1.39,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L41 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#33533b",
+   "ratio": 7,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L41 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#33533b",
+   "bg": "#203927",
+   "ratio": 1.46,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L42 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#35563e",
+   "ratio": 6.69,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L42 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#35563e",
+   "bg": "#203927",
+   "ratio": 1.52,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L43 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#385941",
+   "ratio": 6.39,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L43 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#385941",
+   "bg": "#203927",
+   "ratio": 1.6,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L44 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#3b5b43",
+   "ratio": 6.18,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L44 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#3b5b43",
+   "bg": "#203927",
+   "ratio": 1.65,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L45 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#3e5e46",
+   "ratio": 5.9,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L45 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#3e5e46",
+   "bg": "#203927",
+   "ratio": 1.73,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L46 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#406149",
+   "ratio": 5.65,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L46 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#406149",
+   "bg": "#203927",
+   "ratio": 1.8,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L47 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#43644c",
+   "ratio": 5.4,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L47 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#43644c",
+   "bg": "#203927",
+   "ratio": 1.89,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L48 C.055: band-text label on fill",
+   "kind": "text",
+   "fg": "#e4e9e5",
+   "bg": "#46674e",
+   "ratio": 5.16,
+   "bar": 4.5,
+   "verdict": "PASS",
+   "labelOn": null
+  },
+  {
+   "name": "L48 C.055: fill vs resting ink",
+   "kind": "layer",
+   "fg": "#46674e",
+   "bg": "#203927",
+   "ratio": 1.98,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L38 C.045 (ink chroma): fill vs resting ink",
+   "kind": "layer",
+   "fg": "#304936",
+   "bg": "#203927",
+   "ratio": 1.27,
+   "bar": 1.35,
+   "verdict": "FLAT (decoration)",
+   "labelOn": null
+  },
+  {
+   "name": "L40 C.045 (ink chroma): fill vs resting ink",
+   "kind": "layer",
+   "fg": "#354f3c",
+   "bg": "#203927",
+   "ratio": 1.39,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  },
+  {
+   "name": "L42 C.045 (ink chroma): fill vs resting ink",
+   "kind": "layer",
+   "fg": "#3a5441",
+   "bg": "#203927",
+   "ratio": 1.51,
+   "bar": 1.35,
+   "verdict": "LAYERED",
+   "labelOn": null
+  }
+ ],
+ "solves": [],
+ "width": 1240
+}

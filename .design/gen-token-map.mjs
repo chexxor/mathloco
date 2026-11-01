@@ -15,7 +15,9 @@ const walk = (d) => readdirSync(d).forEach((e) => (statSync(join(d, e)).isDirect
 walk(SRC);
 
 // class writes: class="…" / class='…' / class:list={[…]} literal strings
-const writes = new Map(); // token -> {count, where:Set}
+// Per-FILE counts matter, not just a total: the same class can be live in one file and dormant in
+// another, and "how much of this bucket is left to apply" must not count dormant writes.
+const writes = new Map(); // token -> {count, files:Map<file,count>}
 for (const f of files) {
   const text = readFileSync(f, 'utf8');
   for (const m of text.matchAll(/class(?::list)?=(?:"([^"]*)"|'([^']*)'|\{\[[^\]]*\]\})/g)) {
@@ -23,8 +25,8 @@ for (const f of files) {
     for (const tok of body.split(/[\s,]+/).filter(Boolean)) {
       if (!/^[\w:\-[\]/.%!]+$/.test(tok)) continue;
       const bare = tok.replace(/^!/, '');
-      const rec = writes.get(bare) ?? { count: 0, where: new Set() };
-      rec.count++; rec.where.add(`${f}`);
+      const rec = writes.get(bare) ?? { count: 0, files: new Map() };
+      rec.count++; rec.files.set(f, (rec.files.get(f) ?? 0) + 1);
       writes.set(bare, rec);
     }
   }
@@ -46,7 +48,7 @@ const MAP = [
   { bucket: 'colour', re: /^text-red-600$/, target: 'text-ink (notice word)', note: 'with inset-shadow-rule; caution variant uses gold (4.82). Never a fill' },
   { bucket: 'colour', re: /^bg-red-50$/, target: '', note: 'a notice has no fill: red-50 measures 1.09 vs white = flat' },
   { bucket: 'colour', re: /^bg-blue-600$/, target: 'bg-ink', note: 'primary fill, label text-band-text (10.19)' },
-  { bucket: 'colour', re: /^hover:bg-blue-700$/, target: 'OPEN: needs a primary-hover fill token', note: 'round 6 measured the hover at 7.33 against band-text but ratify has no token for it — solve L in the renderer before use (fill vs ink must clear 1.35, label must stay ≥4.5)' },
+  { bucket: 'colour', re: /^hover:bg-blue-700$/, target: 'hover:bg-ink-hover', note: 'the gap is CLOSED: `--color-ink-hover` = oklch(40% .055 152) — band-text on it 7.33 (bar 4.5), it vs resting `ink` 1.39 (layer bar 1.35), measured in the renderer (.design/grill/contrast/cfg-hover-sweep.json, Firefox 158.0.1, Linux/x64)' },
   { bucket: 'colour', re: /^bg-blue-200$|^hover:bg-blue-200$/, target: 'hover:bg-tint', note: 'ink on tint = 10.96; never gold on tint (4.39)' },
   { bucket: 'colour', re: /^bg-blue-100$/, target: 'bg-tint', note: 'or delete with the CTA it fills' },
   { bucket: 'colour', re: /^bg-blue-50$/, target: 'bg-panel', note: 'a quiet fill, 1.04 vs paper — it is a tint, not a card' },
@@ -54,7 +56,10 @@ const MAP = [
   { bucket: 'colour', re: /^hover:bg-gray-50$/, target: 'hover:bg-panel', note: 'a keylined control may NOT sit on panel (rule 2.88) — check the neighbours' },
   { bucket: 'colour', re: /^bg-gray-100$/, target: 'bg-panel', note: '' },
   { bucket: 'colour', re: /^border-(gray-200|gray-300|blue-600)$/, target: 'inset-shadow-rule (delete the border)', note: 'a border adds 2px and breaks the height arithmetic (D98)' },
-  { bucket: 'colour', re: /^focus-visible:outline-blue-600$/, target: 'focus-visible:outline-gold + focus-visible:outline-offset-2', note: '4.82 on paper; on the ink band use outline-band-text (10.19) — gold there is 2.50' },
+  { bucket: 'colour', re: /^focus-visible:outline-blue-600$/, target: 'focus-visible:outline-gold + focus-visible:outline-offset-2', note: '4.82 on paper; on the ink band use outline-band-text (10.19) — gold there is 2.50 (both pairs now asserted in .design/grill/contrast/gen-ratify-cfg.mjs)' },
+  // @tailwindcss/typography paints its own palette through a class that is NOT a Tailwind colour
+  // utility, so the PALETTE regex below cannot see it and `prose-blue` was invisible to the gate.
+  { bucket: 'colour', re: /^prose-\w+$/, target: 'delete with `prose` (write the ramp in tokens)', note: '`prose-blue` retints every heading/list/link in Tailwind blue — a palette colour where a role exists, banned by DESIGN.md. The block it styles is three element kinds (h4/p/ul), so the ramp is written directly instead' },
   { bucket: 'colour', re: /^bg-book-gray$/, target: 'bg-ink', note: 'the one dark band, and the footer' },
   { bucket: 'colour', re: /^text-book-gray$|^bg-book-theme$|^text-book-theme$/, target: 'delete the write', note: '::selection goes to ink/paper inverted (the shipped white-on-#f59e0b is 2.15)' },
 
@@ -101,6 +106,13 @@ const AUTO = [
   { bucket: 'space', re: /^[wh]-(\d+(?:\.\d+)?)$/, set: ICON_SIZES, target: 'keep', note: 'icon box on the S3 steps' },
 ];
 
+// Files that are DORMANT — either gated off by src/config.json or a stub — and slated for
+// replacement rather than restyling. Restyling invented content launders fiction: the roadmap note
+// (.notes/roadmap-events.md) says flipping showUpcomingEvents on would "publish fiction about a real
+// club". Their writes are reported here, separately, so they stay a visible decision instead of
+// being silently counted as "applied".
+const DORMANT = ['src/components/UpcomingMeetups.astro', 'src/components/PastEvents.astro'];
+
 const PREFIX = /^(?:[\w-]+:)+/;
 const rows = []; const unmapped = [];
 const autoHit = (tok) => {
@@ -111,15 +123,23 @@ const autoHit = (tok) => {
   }
   return null;
 };
+const liveCount = (rec) => [...rec.files].reduce((s, [f, n]) => s + (DORMANT.includes(f) ? 0 : n), 0);
+const dormantCount = (rec) => [...rec.files].reduce((s, [f, n]) => s + (DORMANT.includes(f) ? n : 0), 0);
+const dormantRows = [];
 for (const [tok, rec] of [...writes].sort((a, b) => b[1].count - a[1].count)) {
+  if (dormantCount(rec) > 0) dormantRows.push({ tok, count: dormantCount(rec), files: [...rec.files.keys()].filter((f) => DORMANT.includes(f)) });
+}
+for (const [tok, rec] of [...writes].sort((a, b) => b[1].count - a[1].count)) {
+  const live = liveCount(rec);
+  if (live === 0) continue;                     // dormant-only: reported in its own section
   const bare = tok.replace(PREFIX, '');
   const hit = MAP.find((m) => m.re.test(tok) || m.re.test(bare)) || autoHit(tok);
-  if (hit) rows.push({ bucket: hit.bucket, tok, count: rec.count, target: hit.target, note: hit.note });
-  else unmapped.push({ tok, count: rec.count });
+  if (hit) rows.push({ bucket: hit.bucket, tok, count: live, target: hit.target, note: hit.note });
+  else unmapped.push({ tok, count: live });
 }
 
 // what buckets do we even care about? colour writes are the ones naming a palette hue
-const PALETTE = /(bg|text|border|outline|ring|from|to|via|decoration|fill|stroke|accent|caret|shadow)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-\d+|book-(gray|theme)/;
+const PALETTE = /(bg|text|border|outline|ring|from|to|via|decoration|fill|stroke|accent|caret|shadow|prose)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-\d+)?\b/;
 const TYPE = /^(?:(?:sm|md|lg|xl|2xl):)?(?:text-(?:xs|sm|base|lg|xl|[2-9]xl)|leading-[\w.]+|font-(?:thin|extralight|light|normal|medium|semibold|bold|extrabold|black))$/;
 const SHAPE = /^(?:(?:sm|md|lg|xl):)?(?:rounded(-[\w.]+)?|shadow(-[\w]+)?|border(-[\w-]+)?)$/;
 const MOTION = /^(?:(?:hover|focus|focus-visible):)?(?:duration-\d+|ease-[\w-]+|transition(-[\w]+)?)$/;
@@ -127,7 +147,10 @@ const SPACE = /^(?:(?:sm|md|lg|xl):)?-?[pm][tblrxy]?-[\d.]+$/;
 const ICON = /^[wh]-[\d.]+$/;
 const inBucket = (t) => PALETTE.test(t) || TYPE.test(t) || SHAPE.test(t) || MOTION.test(t) || SPACE.test(t) || ICON.test(t);
 const covered = (t) => MAP.some((m) => m.re.test(t) || m.re.test(t.replace(PREFIX, ''))) || !!autoHit(t);
-const gaps = [...writes.keys()].filter((t) => inBucket(t) && !covered(t));
+const gaps = [...writes.keys()].filter((t) => {
+  const rec = writes.get(t);
+  return liveCount(rec) > 0 && inBucket(t) && !covered(t);
+});
 
 const byBucket = {};
 for (const r of rows) (byBucket[r.bucket] ??= []).push(r);
@@ -136,8 +159,8 @@ out.push('# Token map — design-apply\'s worklist', '',
   'Generated by `node .design/gen-token-map.mjs` from the class writes in `src/`. Do not hand-edit;',
   'add a MAP row to the script instead. `target: (delete)` means the write goes away entirely.',
   '',
-  `Class tokens scanned: ${writes.size} distinct / ${[...writes.values()].reduce((s, r) => s + r.count, 0)} writes.`,
-  `Mapped: ${rows.reduce((s, r) => s + r.count, 0)} writes across ${rows.length} distinct tokens.`,
+  `Class tokens scanned: ${writes.size} distinct / ${[...writes.values()].reduce((s, r) => s + r.count, 0)} writes, of which ${dormantRows.reduce((s, r) => s + r.count, 0)} are in a DORMANT file (see the last section).`,
+  `Live writes mapped: ${rows.reduce((s, r) => s + r.count, 0)} across ${rows.length} distinct tokens.`,
   `Unmapped writes in a replaced bucket: ${gaps.length ? gaps.join(', ') : 'none'}`,
   '');
 for (const b of ['colour', 'type', 'shape', 'motion', 'space']) {
@@ -149,14 +172,25 @@ for (const b of ['colour', 'type', 'shape', 'motion', 'space']) {
   for (const r of list) out.push(`| \`${r.tok}\` | ${r.count} | ${r.target === '' ? '**(delete)**' : `\`${r.target}\``} | ${r.note} |`);
   out.push('');
 }
-out.push('## Gaps the map found in the token block itself', '',
-  '1. **No primary-hover fill token.** Round 6 measured the primary hover at 7.33 against `band-text`, and',
-  '   `hover:bg-blue-700` maps to a value `@theme` does not define. Solve `L` in the renderer (label ≥ 4.5 on',
-  '   the fill, fill vs `ink` ≥ 1.35) and add `--color-ink-hover` before any primary button gets a hover.',
-  '2. **No focus-ring pair on the band.** `outline-gold` is legal on paper (4.82) and illegal on ink (2.50);',
-  '   the band needs `outline-band-text`. Both pairs exist in the oracle, neither is asserted yet.',
-  '3. **The footer ∑ is a coloured glyph on the dark band** (`text-pink-400`): gold at 2.50 there, so it must',
-  '   take `gold-on-ink`. Cheap to get wrong because `gold` is the "accent" name in prose.',
+out.push('## DORMANT files — deliberately NOT restyled', '',
+  'These files are gated off by `src/config.json` (`sections.showUpcomingEvents` / `showPastEvents` are both',
+  '`false` in the artifact and prod agrees — see `.notes/roadmap-events.md`) or are empty stubs, and their',
+  'content is invented placeholder copy. Restyling fiction makes it look ratified, so apply leaves them',
+  'alone; the roadmap says any real schedule work REPLACES the component rather than enabling it.', '',
+  '| written class | dormant uses | file |', '|---|---|---|');
+for (const r of dormantRows) out.push(`| \`${r.tok}\` | ${r.count} | ${r.files.join(', ')} |`);
+out.push('');
+out.push('## Token-block gaps this map found — status', '',
+  '1. **Primary-hover fill — CLOSED.** `--color-ink-hover: oklch(40% .055 152)`. Measured in the renderer',
+  '   (`.design/grill/contrast/cfg-hover-sweep.json`, Firefox 158.0.1, Linux/x64): `band-text` on it = 7.33',
+  '   (bar 4.5) and it vs resting `ink` = 1.39 (layer bar 1.35). Sweeping L 36–48 the label bar is never the',
+  '   binding one (8.67 → 5.16); the layer bar is: FLAT below L 39. Asserted in `gen-ratify-cfg.mjs`.',
+  '2. **Focus ring on the band — CLOSED.** `outline-gold` 4.82 on paper / 2.50 on ink (FAIL); the band takes',
+  '   `outline-band-text` (10.19). Both pairs + the banned gold-on-ink ring are now asserted rows.',
+  '3. **Footer ∑ glyph — mapped, not yet applied**: `text-pink-400` → `text-gold-on-ink` (5.80 on the band);',
+  '   plain `gold` there is 2.50. Cheap to get wrong because "accent" in prose means `gold`.',
+  '4. **`prose-blue` was invisible to this gate** — the typography plugin colours through a class that is not',
+  '   a Tailwind colour utility, so the palette regex missed it. Now in a bucket, with a target.',
   '');
 writeFileSync('.design/token-map.md', out.join('\n'));
 const bad = gaps.length;

@@ -56,6 +56,8 @@ if (missing.length) fail(`expected tokens absent from @theme: ${missing.join(', 
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });
 const promised = [
   'bg-paper', 'bg-panel', 'bg-tint', 'bg-ink', 'bg-path-mobilizon-tint',
+  'bg-ink-hover', 'hover:bg-ink-hover', 'hover:bg-tint',
+  'focus-visible:outline-gold', 'focus-visible:outline-band-text', 'focus-visible:outline-2', 'focus-visible:outline-offset-2',
   'text-ink', 'text-ink-2', 'text-ink-3', 'text-gold', 'text-gold-on-ink', 'text-band-text',
   'text-path-calendar', 'text-path-meetup-on-ink',
   'inset-shadow-rule', 'inset-shadow-gold', 'inset-shadow-path-calendar', 'inset-shadow-path-meetup',

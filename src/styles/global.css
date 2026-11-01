@@ -25,6 +25,18 @@
   --color-panel: oklch(97% 0.008 85);   /* 1.04 vs paper = a tint, NOT a layer (layer bar is 1.35) */
   --color-tint: oklch(95% 0.03 152);    /* hover fill; carries ink (10.96), never gold (4.39 = FAIL) */
   --color-ink: oklch(32% 0.045 152);    /* 12.02 on paper; also the ONE dark band per screen (D89) */
+  /* the primary button's hover fill (DESIGN.md's button table records "primary | ink fill,
+     band-text label, 48px | 10.19, hover 7.33"). Ratify wrote the RATIO and never wrote the VALUE
+     down, so apply solved it in the renderer (.design/grill/contrast/cfg-hover-sweep.json;
+     Firefox 158.0.1, Linux/x64, 2026-11-01). At L 40 C .055 H 152: label `band-text` on the fill =
+     7.33 (bar 4.5) and fill vs resting `ink` = 1.39 (layer bar 1.35) — reproducing round 6's number.
+     The BINDING bar is the layer one, not legibility: sweeping L 36..48 at this C,H the label stays
+     8.67..5.16 (always >= 4.5) while fill-vs-ink is FLAT below L 39 (L 36 = 1.18, L 38 = 1.29) and
+     clears at L 39 = 1.35. So L 40 is the nearest step above the layer bar that keeps margin, and
+     chroma is not what buys it — at C .045 the same L 40 also measures 1.39 (measured).
+     Direction is a rule, not a coincidence: a hover always goes LIGHTER (the secondary hover fill
+     `tint` is lighter too); two controls moving in opposite directions is two grammars. */
+  --color-ink-hover: oklch(40% 0.055 152); /* 7.33 under band-text; 1.39 over ink */
   --color-ink-2: oklch(45% 0.035 152);  /* 7.02 — secondary text, chip label, cancelled title */
   --color-ink-3: oklch(52% 0.028 152);  /* 5.21 — meta, the dated freshness line, "time not set" */
   --color-rule: oklch(65.5% 0.03 152);  /* solved to the 3.0 bar, not by eye: 3.01 on paper, 4.00 on

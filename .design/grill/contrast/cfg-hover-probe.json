@@ -1,0 +1,34 @@
+{
+  "page": "blank",
+  "width": 1240,
+  "tokens": {
+    "paper": "oklch(98.5% 0.006 85)",
+    "panel": "oklch(97% 0.008 85)",
+    "tint": "oklch(95% 0.03 152)",
+    "ink": "oklch(32% 0.045 152)",
+    "ink2": "oklch(45% 0.035 152)",
+    "ink3": "oklch(52% 0.028 152)",
+    "bandText": "oklch(93% 0.008 152)",
+    "rule": "oklch(65.5% 0.03 152)",
+    "gold": "oklch(55% 0.12 62)",
+    "goldOnInk": "oklch(76% 0.06 84)"
+  },
+  "pairs": [
+    { "kind": "text", "name": "resting primary: band-text on ink", "fg": "@bandText", "bg": "@ink", "bar": 4.5 },
+    { "kind": "keyline", "name": "focus ring on paper: gold (keyline bar 3)", "fg": "@gold", "bg": "@paper", "bar": 3.0 },
+    { "kind": "keyline", "name": "focus ring on the band: band-text (keyline bar 3)", "fg": "@bandText", "bg": "@ink", "bar": 3.0 },
+    { "kind": "keyline", "name": "BANNED focus ring on the band: gold", "fg": "@gold", "bg": "@ink", "bar": 3.0 },
+    { "kind": "text", "name": "::selection inverted: paper on ink", "fg": "@paper", "bg": "@ink", "bar": 4.5 },
+    { "kind": "text", "name": "ink on panel (body copy on a quiet fill)", "fg": "@ink", "bg": "@panel", "bar": 4.5 },
+    { "kind": "text", "name": "ink-2 on panel (secondary on a quiet fill)", "fg": "@ink2", "bg": "@panel", "bar": 4.5 },
+    { "kind": "text", "name": "ink-3 on panel (dated line on a quiet fill)", "fg": "@ink3", "bg": "@panel", "bar": 4.5 },
+    { "kind": "keyline", "name": "rule keyline on panel (expect FAIL)", "fg": "@rule", "bg": "@panel", "bar": 4.5 },
+    { "kind": "text", "name": "ink-3 on tint (dated line on a hover fill)", "fg": "@ink3", "bg": "@tint", "bar": 4.5 }
+  ],
+  "solves": [
+    { "label": "LIGHTER hover: label bar 4.5 vs band-text", "C": 0.055, "H": 152, "against": "@bandText", "target": 4.5, "near": 45 },
+    { "label": "LIGHTER hover: layer bar 1.35 vs ink", "C": 0.055, "H": 152, "against": "@ink", "target": 1.35, "near": 35 },
+    { "label": "DARKER hover: label bar 4.5 vs band-text", "C": 0.045, "H": 152, "against": "@bandText", "target": 4.5, "near": 14 },
+    { "label": "DARKER hover: layer bar 1.35 vs ink", "C": 0.045, "H": 152, "against": "@ink", "target": 1.35, "near": 20 }
+  ]
+}

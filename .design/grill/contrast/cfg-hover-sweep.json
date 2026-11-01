@@ -1,0 +1,214 @@
+{
+ "page": "blank",
+ "width": 1240,
+ "tokens": {
+  "ink": "oklch(32% 0.045 152)",
+  "bandText": "oklch(93% 0.008 152)"
+ },
+ "pairs": [
+  {
+   "kind": "text",
+   "name": "L36 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(36% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L36 C.055: fill vs resting ink",
+   "fill": "oklch(36% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L37 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(37% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L37 C.055: fill vs resting ink",
+   "fill": "oklch(37% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L38 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(38% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L38 C.055: fill vs resting ink",
+   "fill": "oklch(38% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L39 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(39% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L39 C.055: fill vs resting ink",
+   "fill": "oklch(39% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L40 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(40% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L40 C.055: fill vs resting ink",
+   "fill": "oklch(40% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L41 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(41% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L41 C.055: fill vs resting ink",
+   "fill": "oklch(41% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L42 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(42% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L42 C.055: fill vs resting ink",
+   "fill": "oklch(42% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L43 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(43% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L43 C.055: fill vs resting ink",
+   "fill": "oklch(43% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L44 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(44% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L44 C.055: fill vs resting ink",
+   "fill": "oklch(44% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L45 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(45% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L45 C.055: fill vs resting ink",
+   "fill": "oklch(45% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L46 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(46% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L46 C.055: fill vs resting ink",
+   "fill": "oklch(46% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L47 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(47% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L47 C.055: fill vs resting ink",
+   "fill": "oklch(47% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "text",
+   "name": "L48 C.055: band-text label on fill",
+   "fg": "@bandText",
+   "bg": "oklch(48% 0.055 152)",
+   "bar": 4.5
+  },
+  {
+   "kind": "layer",
+   "name": "L48 C.055: fill vs resting ink",
+   "fill": "oklch(48% 0.055 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "L38 C.045 (ink chroma): fill vs resting ink",
+   "fill": "oklch(38% 0.045 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "L40 C.045 (ink chroma): fill vs resting ink",
+   "fill": "oklch(40% 0.045 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  },
+  {
+   "kind": "layer",
+   "name": "L42 C.045 (ink chroma): fill vs resting ink",
+   "fill": "oklch(42% 0.045 152)",
+   "ground": "@ink",
+   "bar": 1.35
+  }
+ ],
+ "solves": []
+}

@@ -21,6 +21,7 @@ not a design value.
 | `panel` | `oklch(97% .008 85)` | a quiet fill, **not** a layer | 1.04 vs paper |
 | `tint` | `oklch(95% .03 152)` | hover fill; carries ink | ink on tint 10.96 |
 | `ink` | `oklch(32% .045 152)` | text, and the ground of the one dark band | 12.02 on paper |
+| `ink-hover` | `oklch(40% .055 152)` | the primary button's hover fill | 7.33 under `band-text`, 1.39 over `ink` |
 | `ink-2` | `oklch(45% .035 152)` | secondary text, chip label, cancelled title | 7.02 |
 | `ink-3` | `oklch(52% .028 152)` | meta, the dated line, "time not set" | 5.21 |
 | `rule` | `oklch(65.5% .03 152)` | the only boundary role | 3.01 on paper, 4.00 on ink |
@@ -41,6 +42,15 @@ fill measures 1.05–1.09 = flat).
 Bars, non-negotiable: **4.5** text (3.0 for text at/below the `display-2` step), **3.0** for a boundary
 or graphic, **1.35** for "this is a separate layer", **24px** minimum target, **44px** for the primary
 path.
+
+**A hover always goes lighter.** `ink` → `ink-hover`, `paper` → `tint`; a control that darkens on hover
+next to one that lightens is two grammars. On the layer bar this is not cosmetic: at `L` 38 the hover
+fill sits 1.29 from the resting fill, which is FLAT — the hover simply does not happen.
+
+**Focus rings take one role per ground:** `outline-gold` on paper (4.82) and `outline-band-text` on the
+dark band (10.19), always with `outline-2 outline-offset-2`. `gold` on the band is 2.50 = an invisible
+keyboard ring, and the shipped artifact proved that failure mode twice (`focus:shadow-outline-blue` was
+a Tailwind 2 name that generated nothing).
 
 ## Spacing — 4px grid, eight steps
 
