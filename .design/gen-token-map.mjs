@@ -19,7 +19,10 @@ walk(SRC);
 // another, and "how much of this bucket is left to apply" must not count dormant writes.
 const writes = new Map(); // token -> {count, files:Map<file,count>}
 for (const f of files) {
-  const text = readFileSync(f, 'utf8');
+  // HTML comments are stripped before scanning: the hero keeps a commented-out "Next meetup" block,
+  // and counting its classes as live writes inflated the worklist by 5 tokens and made "applied"
+  // unreachable - a write inside a comment is not a write.
+  const text = readFileSync(f, 'utf8').replace(/<!--[\s\S]*?-->/g, ' ');
   for (const m of text.matchAll(/class(?::list)?=(?:"([^"]*)"|'([^']*)'|\{\[[^\]]*\]\})/g)) {
     const body = (m[1] ?? m[2] ?? m[0]).replace(/\{[^}]*\}/g, ' ');
     for (const tok of body.split(/[\s,]+/).filter(Boolean)) {
@@ -34,6 +37,9 @@ for (const f of files) {
 
 // --- the map. `re` matches a written class (after variant prefixes are stripped into `prefix`).
 // target '' means "delete the write". Every entry carries WHY, because apply is a different session.
+// A row whose bucket is not in BUCKETS would never print yet would still mark its write "covered",
+// so the write would vanish from the worklist unmapped. Asserted below.
+const BUCKETS = ['colour', 'type', 'shape', 'motion', 'space'];
 const MAP = [
   // ---------- colour: Tailwind palette -> named roles ----------
   { bucket: 'colour', re: /^text-gray-(900|800)$/, target: 'text-ink', note: '12.02 on paper; the shipped pair is gray-900 on white at 17.4 — legal but unnamed' },
@@ -73,7 +79,8 @@ const MAP = [
   { bucket: 'type', re: /^text-4xl$/, target: 'text-display-1', note: '36 → 33.2px' },
   { bucket: 'type', re: /^text-5xl$/, target: 'text-display-2', note: '48 → 39.8px. The hero ramp INVERTS today (text-4xl sm:text-6xl lg:text-5xl xl:text-6xl): smaller at lg than at sm' },
   { bucket: 'type', re: /^text-6xl$/, target: 'text-display-3 (display-4 only with a narrow cap)', note: '60 → 47.8/57.3px; one display step per screen, and 57.3px needs a cap below 375 ("Mathematical" 367.6px vs 343px)' },
-  { bucket: 'type', re: /^(sm:|md:|lg:|xl:)?leading-[\w.]+$/, target: '', note: '9 leading writes exist and all duplicate what the size token already carries; serif prose takes leading-prose' },
+  { bucket: 'type', re: /^(?:(?:sm|md|lg|xl):)?leading-prose$/, target: 'keep (ratified leading)', note: 'the serif prose rule (1.6) is a token, not a duplicate of the size step — this write stays' },
+  { bucket: 'type', re: /^leading-[\w.]+$/, target: '', note: 'a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping)' },
   { bucket: 'type', re: /^font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)$/, target: 'serif: 400 or 700 only; chrome may use 500/600/800 once a variable face installs', note: 'only `font-weight: 400` is loaded today (index.css declares 4 faces, all 400) so all 30 weight writes render as 400 plus browser-synthesised bold; PT Serif has no variable build' },
 
   // ---------- radius / shadow / elevation ----------
@@ -99,19 +106,60 @@ const MAP = [
 const S3_STEPS = new Set(['0', '1', '2', '3', '4', '6', '8', '12', '16']);
 const SECTION_STEPS = new Set(['10', '24', '32']);
 const ICON_SIZES = new Set(['3', '4', '6', '8', '12', '16']);
+// AUTO rules are derived from the token block itself, not remembered: a class that names a ratified
+// token is already applied, and the map must say so instead of calling it an unmapped write. If the
+// parse finds too few names, the token file moved or renamed — fail loudly, because the alternative
+// is the map quietly treating the whole token system as un-mapped writes.
+const css = readFileSync('src/styles/global.css', 'utf8');
+const tokenNames = (prefix) => new Set([...css.matchAll(new RegExp(`^\\s*--${prefix}([a-z0-9-]+)\\s*:`, 'gm'))]
+  .map((m) => m[1]).filter((n) => !n.includes('--line-height')));
+const TEXT_NAMES = tokenNames('text-');
+const COLOR_NAMES = tokenNames('color-');
+const RADIUS_NAMES = tokenNames('radius-');
+const SHADOW_NAMES = new Set([...tokenNames('shadow-'), ...tokenNames('inset-shadow-')]);
+const LEADING_NAMES = tokenNames('leading-');
+if (COLOR_NAMES.size < 15 || TEXT_NAMES.size < 9) {
+  throw new Error(`token parse found ${COLOR_NAMES.size} colours / ${TEXT_NAMES.size} type steps in src/styles/global.css — the @theme block moved or renamed.`);
+}
+
 const AUTO = [
-  { bucket: 'space', re: /^(?:(?:sm|md|lg|xl|2xl):)?-?[pm][tblrxy]?-(\d+(?:\.\d+)?)$/, set: S3_STEPS, target: 'keep (on S3)', note: 'on the ratified 4px scale' },
-  { bucket: 'space', re: /^(?:(?:sm|md|lg|xl|2xl):)?-?[pm][tblrxy]?-(\d+(?:\.\d+)?)$/, set: SECTION_STEPS, target: 'keep — section step', note: '40/96/128 are section-level; using them BETWEEN components is the same mistake as 20' },
-  { bucket: 'space', re: /^gap-(\d+(?:\.\d+)?)$/, set: S3_STEPS, target: 'keep (on S3)', note: 'on the ratified 4px scale' },
+  { bucket: 'space', re: /^(?:(?:sm|md|lg|xl|2xl):)?-?[pm][tblrxy]?(?:x|y)?-(\d+(?:\.\d+)?)$/, set: S3_STEPS, target: 'keep (on S3)', note: 'on the ratified 4px scale' },
+  { bucket: 'space', re: /^(?:(?:sm|md|lg|xl|2xl):)?-?[pm][tblrxy]?(?:x|y)?-(\d+(?:\.\d+)?)$/, set: SECTION_STEPS, target: 'keep — section step', note: '40/96/128 are section-level; using them BETWEEN components is the same mistake as 20' },
+  { bucket: 'space', re: /^gap[x-y]?-(\d+(?:\.\d+)?)$/, set: S3_STEPS, target: 'keep (on S3)', note: 'on the ratified 4px scale' },
   { bucket: 'space', re: /^[wh]-(\d+(?:\.\d+)?)$/, set: ICON_SIZES, target: 'keep', note: 'icon box on the S3 steps' },
+  // already on the token block: these names come from the file, so a token rename shows up here as a
+  // write that is no longer covered.
+  { bucket: 'type', re: /^text-([\w-]+)$/, set: TEXT_NAMES, target: 'keep (ratified step)', note: 'names a @theme type step' },
+  { bucket: 'type', re: /^leading-([\w-]+)$/, set: LEADING_NAMES, target: 'keep (ratified leading)', note: 'serif prose leading is a token, not a size step' },
+  { bucket: 'colour', re: /^text-([\w-]+)$/, set: COLOR_NAMES, target: 'keep (ratified role)', note: 'names a @theme colour role' },
+  { bucket: 'colour', re: /^(?:bg|border|outline|ring|fill|stroke|decoration|shadow|inset-shadow)-([\w-]+)$/, set: COLOR_NAMES, target: 'keep (ratified role)', note: 'names a @theme colour role' },
+  { bucket: 'shape', re: /^rounded-([\w-]+)$/, set: RADIUS_NAMES, target: 'keep (ratified radius)', note: 'radius has two roles, both 6px' },
+  { bucket: 'shape', re: /^(?:shadow|inset-shadow)-([\w-]+)$/, set: SHADOW_NAMES, target: 'keep (ratified elevation)', note: 'elevation comes from @theme' },
 ];
 
-// Files that are DORMANT — either gated off by src/config.json or a stub — and slated for
+// Files that are DORMANT — gated off by src/config.json, a stub, or never imported — and slated for
 // replacement rather than restyling. Restyling invented content launders fiction: the roadmap note
 // (.notes/roadmap-events.md) says flipping showUpcomingEvents on would "publish fiction about a real
-// club". Their writes are reported here, separately, so they stay a visible decision instead of
-// being silently counted as "applied".
-const DORMANT = ['src/components/UpcomingMeetups.astro', 'src/components/PastEvents.astro'];
+// club". The four icons/*.astro files are a different kind of dormant: no file in src/ imports them
+// (grep for `icons/` finds nothing), so they ship nothing, and choose-icons will replace them. Their
+// writes are reported in their own section so they stay a visible decision instead of being silently
+// counted as "applied".
+const DORMANT = [
+  'src/components/UpcomingMeetups.astro',
+  'src/components/PastEvents.astro',
+  'src/components/icons/Instagram.astro',
+  'src/components/icons/Linkedin.astro',
+  'src/components/icons/Medium.astro',
+  'src/components/icons/Twitter.astro',
+];
+
+// A MAP row whose bucket name is not a bucket would never print, yet would still count as "covered",
+// so the write would vanish from the worklist without being mapped. Fail loudly instead.
+for (const m of MAP) {
+  if (!BUCKETS.includes(m.bucket)) {
+    throw new Error(`MAP row /${m.re.source}/ has bucket "${m.bucket}"; buckets are ${BUCKETS.join(', ')}.`);
+  }
+}
 
 const PREFIX = /^(?:[\w-]+:)+/;
 const rows = []; const unmapped = [];
@@ -141,7 +189,7 @@ for (const [tok, rec] of [...writes].sort((a, b) => b[1].count - a[1].count)) {
 // what buckets do we even care about? colour writes are the ones naming a palette hue
 const PALETTE = /(bg|text|border|outline|ring|from|to|via|decoration|fill|stroke|accent|caret|shadow|prose)-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)(-\d+)?\b/;
 const TYPE = /^(?:(?:sm|md|lg|xl|2xl):)?(?:text-(?:xs|sm|base|lg|xl|[2-9]xl)|leading-[\w.]+|font-(?:thin|extralight|light|normal|medium|semibold|bold|extrabold|black))$/;
-const SHAPE = /^(?:(?:sm|md|lg|xl):)?(?:rounded(-[\w.]+)?|shadow(-[\w]+)?|border(-[\w-]+)?)$/;
+const SHAPE = /^(?:(?:sm|md|lg|xl):)?(?:rounded(?:-[\w.]+)?|shadow(?:-[\w]+)?|border(?:-[\w-]+)?)$/;
 const MOTION = /^(?:(?:hover|focus|focus-visible):)?(?:duration-\d+|ease-[\w-]+|transition(-[\w]+)?)$/;
 const SPACE = /^(?:(?:sm|md|lg|xl):)?-?[pm][tblrxy]?-[\d.]+$/;
 const ICON = /^[wh]-[\d.]+$/;
@@ -158,12 +206,14 @@ const out = [];
 out.push('# Token map — design-apply\'s worklist', '',
   'Generated by `node .design/gen-token-map.mjs` from the class writes in `src/`. Do not hand-edit;',
   'add a MAP row to the script instead. `target: (delete)` means the write goes away entirely.',
+  `A write that already names a @theme token is listed as "keep (ratified …)" — the token names are`,
+  `parsed from src/styles/global.css (${COLOR_NAMES.size} colours, ${TEXT_NAMES.size} type steps, ${RADIUS_NAMES.size} radii, ${SHADOW_NAMES.size} elevations), so a token rename shows up here as a write that stopped being covered.`,
   '',
   `Class tokens scanned: ${writes.size} distinct / ${[...writes.values()].reduce((s, r) => s + r.count, 0)} writes, of which ${dormantRows.reduce((s, r) => s + r.count, 0)} are in a DORMANT file (see the last section).`,
   `Live writes mapped: ${rows.reduce((s, r) => s + r.count, 0)} across ${rows.length} distinct tokens.`,
   `Unmapped writes in a replaced bucket: ${gaps.length ? gaps.join(', ') : 'none'}`,
   '');
-for (const b of ['colour', 'type', 'shape', 'motion', 'space']) {
+for (const b of BUCKETS) {
   const list = (byBucket[b] || []).filter((r) => r.target !== 'keep (on S3)');
   const keeps = (byBucket[b] || []).length - list.length;
   out.push(`## ${b}`, '',
@@ -173,10 +223,12 @@ for (const b of ['colour', 'type', 'shape', 'motion', 'space']) {
   out.push('');
 }
 out.push('## DORMANT files — deliberately NOT restyled', '',
-  'These files are gated off by `src/config.json` (`sections.showUpcomingEvents` / `showPastEvents` are both',
-  '`false` in the artifact and prod agrees — see `.notes/roadmap-events.md`) or are empty stubs, and their',
-  'content is invented placeholder copy. Restyling fiction makes it look ratified, so apply leaves them',
-  'alone; the roadmap says any real schedule work REPLACES the component rather than enabling it.', '',
+  'Gated off by `src/config.json` (`sections.showUpcomingEvents` / `showPastEvents` are both `false` in',
+  'the artifact and prod agrees — see `.notes/roadmap-events.md`), empty stubs, or never imported (the',
+  'four `icons/*.astro` files: no `icons/` import exists in `src/`, so they ship nothing). The event',
+  'components hold invented placeholder copy; restyling fiction makes it look ratified, so apply leaves',
+  'them alone — the roadmap says real schedule work REPLACES the component rather than enabling it, and',
+  'choose-icons replaces the icons wholesale. Either way their writes stay a visible decision here.', '',
   '| written class | dormant uses | file |', '|---|---|---|');
 for (const r of dormantRows) out.push(`| \`${r.tok}\` | ${r.count} | ${r.files.join(', ')} |`);
 out.push('');
