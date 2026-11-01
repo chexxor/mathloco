@@ -1,0 +1,24 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>display fit — chrome face, real strings</title>
+<style>
+  /* Why this specimen exists: .design/fonts/display-fit.json measured the display ramp in PT SERIF,
+     because at ratify the display face question was still open. The landing title renders in the
+     chrome stack (Public Sans Variable) at weight 800, which is a different set of widths — wider
+     per glyph and much wider at 800 than 400. Choosing a display step for a real page needs the
+     widths of the real strings in the real face at the real weight, so this measures exactly that.
+     Face body copied from src/styles/fonts.css; sizes copied from the @theme block, not remembered. */
+  @font-face {
+    font-family: 'Public Sans Variable';
+    font-style: normal;
+    font-display: block;
+    font-weight: 100 900;
+    src: url('../../node_modules/@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2') format('woff2-variations');
+  }
+  body { margin: 0; background: #fff; }
+  div { white-space: nowrap; }
+  span { font-family: 'Public Sans Variable', sans-serif; }
+</style>
+<body>
+  <div><span id="probe"></span></div>
+</body>

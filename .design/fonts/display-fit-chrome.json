@@ -1,0 +1,550 @@
+{
+ "done": false,
+ "sizes": [
+  33.2,
+  39.8,
+  47.8,
+  57.3
+ ],
+ "weights": [
+  700,
+  800
+ ],
+ "boxes": [
+  343,
+  700
+ ],
+ "rows": [
+  {
+   "size": 33.2,
+   "weight": 700,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 452.4,
+     "longestWord": 193,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 193,
+     "longestWord": 193,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 481.5,
+     "longestWord": 92,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 318.3,
+     "longestWord": 183.4,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 431.6,
+     "longestWord": 87.1,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 33.2,
+   "weight": 800,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 458,
+     "longestWord": 196,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 196,
+     "longestWord": 196,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 486.6,
+     "longestWord": 93.5,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 322.7,
+     "longestWord": 186.6,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 435.1,
+     "longestWord": 87.9,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 39.8,
+   "weight": 700,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 542.2,
+     "longestWord": 231.4,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 231.4,
+     "longestWord": 231.4,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 577.1,
+     "longestWord": 110.2,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 381.5,
+     "longestWord": 219.8,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 517.3,
+     "longestWord": 104.4,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 39.8,
+   "weight": 800,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 549.1,
+     "longestWord": 234.9,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 234.9,
+     "longestWord": 234.9,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 583.4,
+     "longestWord": 112.1,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 386.8,
+     "longestWord": 223.6,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 521.6,
+     "longestWord": 105.4,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 47.8,
+   "weight": 700,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 651.2,
+     "longestWord": 277.9,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 277.9,
+     "longestWord": 277.9,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 693.2,
+     "longestWord": 132.4,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 458.2,
+     "longestWord": 264,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 621.4,
+     "longestWord": 125.4,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 47.8,
+   "weight": 800,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 659.5,
+     "longestWord": 282.1,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 282.1,
+     "longestWord": 282.1,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 700.6,
+     "longestWord": 134.6,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 464.6,
+     "longestWord": 268.6,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 626.4,
+     "longestWord": 126.6,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 57.3,
+   "weight": 700,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 780.6,
+     "longestWord": 333.1,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 333.1,
+     "longestWord": 333.1,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 831,
+     "longestWord": 158.7,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 549.3,
+     "longestWord": 316.5,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 744.9,
+     "longestWord": 150.3,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    }
+   }
+  },
+  {
+   "size": 57.3,
+   "weight": 800,
+   "strings": {
+    "Minneapolis Math Book Club": {
+     "nowrap": 790.5,
+     "longestWord": 338.2,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    },
+    "Minneapolis": {
+     "nowrap": 338.2,
+     "longestWord": 338.2,
+     "wrapped": {
+      "343": {
+       "lines": 1
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "Why Join Our Math Book Club?": {
+     "nowrap": 839.8,
+     "longestWord": 161.4,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    },
+    "Join Our Community": {
+     "nowrap": 556.9,
+     "longestWord": 322,
+     "wrapped": {
+      "343": {
+       "lines": 2
+      },
+      "700": {
+       "lines": 1
+      }
+     }
+    },
+    "We could not find that page": {
+     "nowrap": 750.9,
+     "longestWord": 151.8,
+     "wrapped": {
+      "343": {
+       "lines": 3
+      },
+      "700": {
+       "lines": 2
+      }
+     }
+    }
+   }
+  }
+ ],
+ "fonts": [
+  "Public Sans Variable 100 900 loaded"
+ ]
+}
