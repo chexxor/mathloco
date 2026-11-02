@@ -50,7 +50,7 @@
 import { execFileSync, execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
@@ -286,7 +286,7 @@ for (const route of routes) {
       if (m.w < 40 || m.h < 20) fails.push(`${at2}: box is ${m.w}x${m.h} — the mark collapsed instead of scaling to its column`);
       if (m.role === 'img' && !m.label) fails.push(`${at2}: role="img" with no accessible name — it announces nothing`);
       if (!m.role && !m.hidden) fails.push(`${at2}: visible with no role and no aria-hidden — name it or hide it (the hero's old photo invented "Math Study Group Session", D120)`);
-      for (const s of m.shapes) {
+      for (const [i, s] of m.shapes.entries()) {
         const cands = [s.strokeContrast, s.fillContrast].filter((x) => x !== null);
         if (!cands.length) fails.push(`${at2}: <${s.tag}> painted nothing (stroke ${s.stroke}, fill ${s.fill}) — an unmapped colour role means no paint: ${s.cls}`);
         else {
@@ -294,6 +294,18 @@ for (const route of routes) {
           if (best < 3.0) fails.push(`${at2}: <${s.tag}> reads ${best} against its ground, under the 3.0 graphic bar (D101) — stroke ${s.stroke} / fill ${s.fill}`);
         }
         if (s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
+        // A declared dash has to ARRIVE. On this mark the far half of the equator is dashed and the near half is
+        // solid, and that difference is the occlusion cue that makes the ring read as a sphere rather than a disc
+        // (src/lib/brand-mark.mjs, operator ruling 2026-11-02). Two silent failures are possible: a renderer that
+        // drops stroke-dasharray, and a drawn scale so small the dashes fuse back into one line — either turns the
+        // sphere back into a disc without changing the shape count or a single contrast number.
+        const want = MARK.shapes[i]?.dash;
+        if (want && (!s.dash || s.dash === 'none')) fails.push(`${at2}: shape ${i} declares dash "${want}" but paints dash "${s.dash}" — the far half of the equator is no longer denoted differently from the near half, so the mark reads as a disc`);
+        if (!want && s.dash && s.dash !== 'none') fails.push(`${at2}: shape ${i} paints dash "${s.dash}" but the geometry table declares none — an undeclared dash on the near half would hide the side of the sphere the viewer is standing on`);
+        if (want && Array.isArray(s.dashDevice)) {
+          const [on, off] = s.dashDevice;
+          if (on < 1.5 || (off ?? 0) < 1.5) fails.push(`${at2}: shape ${i}'s dash lands at ${on}px on / ${off}px off at scale ${m.scale} — under 1.5px the pattern fuses into a solid line (D119's floor, applied to the gap as well as the mark)`);
+        }
       }
     }
 
@@ -314,6 +326,7 @@ for (const route of routes) {
     for (const s of j.shadows) console.log(`   shdw  ${s.shadow.slice(0, 70)}  ${(s.cls || '').slice(0, 40)}`);
     for (const m of j.marks || []) {
       console.log(`   mark  ${m.name} ${m.w}x${m.h} at ${m.x},${m.y} (viewBox ${m.vbW}x${m.vbH}, scale ${m.scale}, shapes ${m.count}/${MARK_SHAPE_COUNT}, ratio ${m.ratio} vs ${m.wantRatio}) role="${m.role}" ${JSON.stringify(m.label)}`);
+      for (const s of m.shapes.filter((x) => x.dash && x.dash !== 'none')) console.log(`         dashed: <${s.tag}> declared "${s.dash}" units -> ${s.dashDevice} px on screen`);
       for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} sw ${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
     }
   }

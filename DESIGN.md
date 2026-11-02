@@ -336,8 +336,9 @@ stock crowd shot with a scrim and `#f59e0b` type over it.
 - **The paths row is the footer's grammar** (D115, D106): word plus hue, in `path-meetup-on-ink` /
   `path-discord-on-ink`, the domain in `gold-on-ink`, hairline `rule` between. No fill buttons on a band —
   `ink` on `ink` is invisible.
-- **The mark is the operator's sphere diagram** (geometry from the ratified round-4 specimen). The two
-  curves arriving at the meeting point carry `gold-on-ink`; `gold` on ink is 2.50 and banned.
+- **The mark is the operator's sphere diagram** (geometry from the ratified round-4 specimen, corrected on
+  the operator's rulings of 2026-11-02 — see *Graphics* below). The two curves arriving at the meeting point
+  carry `gold-on-ink`; `gold` on ink is 2.50 and banned.
 - **firefox composes the pixels**, through the same `design/grill/page-measure.mjs` loop the gates use,
   and the generator refuses to write a card when `document.fonts.load()` reports any ratified face missing.
 - **What the card does not say:** no cadence word ("monthly" in config vs "weekly" in the old hero is the
@@ -380,13 +381,43 @@ false statement about who attends), and `ratify-check.mjs` enforces it structura
 `src/` may import a raster. The only rasters in the repo are generated (`public/book-club-social-share.jpg`)
 or third-party brand marks in `public/` that are never imported.
 
-The mark lives in **one file**: `src/lib/brand-mark.mjs` exports `MARK` (viewBox 240x150, the sphere, three
-routes, two accent segments, the meeting point, per-shape stroke widths in **viewBox units**),
-`MARK_SHAPE_COUNT` and `MARK_COLOURS`. The hero and the share-card composer both draw from that table;
-there is no second copy of the geometry, and a copy cannot be smuggled in because both surfaces are
-measured against the table's shape count.
+The mark lives in **one file**: `src/lib/brand-mark.mjs` exports `MARK` (viewBox 240x150 — the surface ring,
+the two halves of the equator, the two routes, the two right-angle marks, the meeting point — with
+per-shape stroke widths in **viewBox units**, a `role` per shape, a `face` on the equator halves and a
+`dash` on the far one), `MARK_SHAPE_COUNT` and `MARK_COLOURS`. The hero and the share-card composer both
+draw from that table; there is no second copy of the geometry, and a copy cannot be smuggled in because both
+surfaces are measured against the table's shape count.
+
+**What the drawing means** (three operator rulings, 2026-11-02, correcting an earlier reading of the source
+figure): two lines leave a sphere's equator **parallel** — the right-angle marks are the construction that
+says so — and **cross** at the pole, because the surface they are drawn on is curved. That is the club's
+metaphor: mathematicians who start out parallel meet because of the surface they are on. It is not a circle
+with a chord across it, and a mark that reads that way is a defect, not a style choice.
 
 Rules for drawing it:
+
+- **The surface has to be drawn curved, and the far half denoted differently from the near half.** A plain
+  `<circle>` plus a straight chord reads as a flat disc; the cue that turns a ring into a sphere is the
+  **tilted great circle**: two arcs sharing endpoints at the ring's widest points, bowing equal amounts up and
+  down (semiminor 21 units against a 58-unit radius, 0.36r). The **far** arc is dashed (`dash: "5 4"` in
+  viewBox units) and the **near** arc is solid — occlusion, the standard globe cue, and the one cue that costs
+  no new colour and no fill. A dashed near half would draw the sphere inside out, so the gate checks which
+  half is broken, not just that one is.
+- **A dash is a claim about device pixels, not about a path attribute.** D119's floor applies to the gap as
+  well as the stroke: at the smallest hero box (276px, scale 1.15) `5 4` lands as **6.0px on / 4.8px off**, at
+  1240 (scale 1.55) as **7.8 / 6.2**. Both clear the ~1.5px fusion floor; a dash that fuses back into a line is
+  the mark losing its sphere again while every count still passes.
+- **Deferred, with its price measured: tonal shading.** A light-source shade would be a stronger depth cue
+  than a dash, but it needs a **filled** shape (so the bar is D101's 1.35 layer contrast, not the 3.0 graphic
+  line bar), gradient support in the share-card's SVG document, and a new colour role. Not built; revisit if
+  the mark ever ships somewhere small enough that the dash stops surviving.
+- **Deferred by the operator to the roadmap (low priority): what the surface *is*.** The sphere is correct
+  geometry, but the operator has raised making the surface a place — the outline of Minnesota (two meridians
+  through one state converging northward is the same theorem, and it is *our* surface), the cherry from the
+  Cherry Bridge, or another Twin Cities icon. Any such change replaces the ring's geometry in the same table
+  and must re-run `check:mark`, `check:render`, `check:social` and the shape-count coupling; a silhouette is
+  only shippable if it still reads at the 276px phone box, which needs a measured overlap test against real
+  boundary data rather than an opinion.
 
 - **Colour by role, in literal classes**: `stroke-rule` (sphere), `stroke-ink` (routes), `stroke-gold`
   (accents, meeting dot), `fill-gold`. Tailwind generates CSS only for classes it sees in source, so the
@@ -402,11 +433,29 @@ Rules for drawing it:
   fully covered pixel, so it has no byte identity and its *painted* contrast is always below its token
   pair (D119). The gate holds both: the pair >= 3.0, and the device stroke >= 1px.
 
-Measured consequence, kept in view rather than tuned away: at 320 the sphere's 0.9-unit stroke lands at
-**1.03px** and its pixels top out near 1.7-2.6 against sand where the token pair is 3.01, while the routes
+Measured consequence, kept in view rather than tuned away: at 320 the sphere's 1.3-unit stroke lands at
+**1.49px** and its pixels top out near 2-3 against sand where the token pair is 3.01, while the routes
 (1.61px, pair 12.02) and the gold (1.84px, pair 4.82) stay fully covered. So at phone width the mark reads
 as routes arriving at a point without its context ring. `node design/mark-pixels.mjs <shot> <report>`
 re-measures this; changing `MARK.shapes[*].sw` re-runs the card pipeline, not just the render gate.
+
+**Meaning is measured from two sides** (2026-11-02): `npm run check:mark` asks two probes about the built
+page, because the mark can be wrong in the table, wrong on the screen, or — the interesting case — the table
+and the screen can disagree.
+
+- `design/mark-geometry.mjs` reads the table *and* the painted pixels and asserts the semantics: a surface
+  circle, exactly two lines, a curved equator, one dashed half and one solid half with the **broken one
+  being the far one**, both starting stretches parallel in the table (52 units) **and** in the pixels (51.3),
+  a real crossing, the pole dot on the painted ring (measured against the ring's own top rim, so the dot
+  cannot certify its own position), and the right angles marked.
+- `design/mark-pixels.mjs` counts how much of the box's ink clears the bar: at the corrected geometry,
+  **718 px** at/over 3.0 in the 276px box and **1,538** in the 372px box (the M-B figures in D125 — 1,070 /
+  2,038 — were measured against the *wrong* drawing and are not comparable; a re-ruling of line weight is
+  cheap now that the geometry is right).
+- The probe calibrates its own colour roles from the per-shape contrast numbers the page report carries
+  (line pair 3.01, route pair 12.02, gold pair 4.82; neutral roles split at the geometric mean, warm roles by
+  R−B ≥ 25). Guessing them from luminance classified the sphere ring as route ink and produced confident
+  nonsense ("0 crossings", "0 gold pixels near the pole").
 
 ## Enforcement
 
@@ -424,6 +473,11 @@ npm run check:render            # build, then measure dist/client in Firefox: co
 npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
                                 # or whenever a rebuild would undo the thing being measured
 node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
+node design/mark-check.mjs      # npm run check:mark - both mark probes, at the two widths that bracket the
+                                # box (320: 276px wide, scale 1.15; 1240: 372px, scale 1.55). Needs a built dist.
+node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints: % of pixels at
+                                # chroma >= 0.04, mean chroma of that ink, and how many 30-degree hue families
+                                # carry it. No pass/fail: it is the before-number a colour round argues from.
 node design/mark-pixels.mjs <shot> <report> [--crop out.png]   # what the mark actually painted in its box, by
                                 # colour cluster; --crop writes the box up 3x so you can look at what was clustered
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
@@ -477,6 +531,22 @@ word in event prose.
 
 ## Open threads that are not gates yet
 
+- **The site is colour-sparse, and that is now measured rather than felt** (`design/color-survey.mjs`,
+  2026-11-02, operator request). On the built pages, with a chroma bar of 0.04: the landing page paints
+  **3.8%** chromatic pixels at 1240 (mean chroma of that ink 0.070) across 3 hue families, and **5.2%** at 320
+  across **1** family. `/404` and `/chat` paint **0.5%**, each with **one** hue family — the green-ink family.
+  The single most saturated thing on the landing page is **not ours**: 14,820 px of `rgb(237,28,64)` at
+  C 0.226 is the **Meetup logo** in the Join-community CTA. A round is needed, and every hue it adds has to
+  clear, on painted bytes: **3.0** as a graphic, **4.5** as text (**7.0** as body), **1.35** as a fill against
+  its ground (D101/D116); **≥40°** of hue separation from the primary and from the reserved path hues (round
+  3b); gold keeps its **0.135** minimum distance to every other colour (the Amazon/UMN gold zone, D88); any
+  role the mark or a band uses needs an `-on-ink` variant, because the footer band inverts the ground; and the
+  card re-runs through `assets:social` + `check:social` in the same commit.
+  Photographs are the other lever and they are **blocked on a phone camera, not on code**: D94 forbids stock
+  people photography (no photo of this club exists, so strangers are a false statement about who attends), and
+  the accepted shot list — the board after a meeting, venues, hands and materials, the diagram artwork itself —
+  is in `.notes/asset-sources.md`. Strip EXIF/GPS on commit; faces need the opt-in rule in
+  `.notes/consent-and-data-policy.md`.
 - **Body line spacing is now 1.36, and that is a ruling waiting to happen.** `text-body` 17.6px with the
   derived 24px line box is a ratio of 1.36; serif prose writes `leading-prose` (1.6 → 28.2px) and is fine, but
   6 writes carry the bare token (the island's three state sentences, the wordmark, the footer identity line,

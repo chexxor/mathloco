@@ -45,6 +45,9 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/grill/dist-measure.mjs dist/client <page> <measure.js> <width…>` | measure one built page at given widths (the harness behind `check:render`) | yes |
 | `node design/grill/contrast-oracle.mjs <cfg.json>` | the renderer-side colour oracle over a config (`cd design/grill` first — it resolves config paths against its own directory) | yes |
 | `node design/mark-pixels.mjs <shot.png> <report.json>` | what a drawn mark actually painted inside its box, by colour cluster, how many pixels clear the 1.5 and 3.0 bars, and what share of the ink is visible (`--json` for a machine-readable record) | no |
+| `node design/mark-geometry.mjs <shot.png> <report.json>` | does the mark MEAN what the table says — a surface, exactly two lines that start parallel, a curved equator with the FAR half dashed, a real crossing, the pole on the painted ring, right angles marked — checked in the table **and** in the painted pixels. Exits 1 on a disagreement between the two | no |
+| `npm run check:mark` | the two mark probes, at 320 and 1240, in one command (writes `.design/render/mark-<w>.png` and `_-<w>.json`). Needs a built dist; diagnostic, not in `verify` | yes |
+| `npm run check:color` (`node design/color-survey.mjs`) | how much colour a built page actually paints: % of pixels at chroma ≥ 0.04, mean chroma of that ink, how many 30° hue families carry it. Exits 0 whatever it finds — it is the before-number for a colour round. Records land in `.design/tmp-color/` | yes |
 | `npm run lines:measure` / `:dist` | characters per line, measured off the built page's own line boxes at the shipped widths (`--no-build` for the dist that exists). A diagnostic, not a gate: it exits 0 whatever it finds, it is browser-only so it is not in `verify` | yes |
 | `node design/round8.mjs [--crop]` | one design round in a command: generate the specimens, then measure characters-per-line per ramp, control heights, notice height, the display cap against the longest club name, and each mark candidate's painted coverage; saves `design/grill/round8/report.json` (`--crop` writes `zoom`-scaled PNG crops of each mark for eyeballing) | yes |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
@@ -55,6 +58,21 @@ five-mutation render selftest ≈ 4.7 s; `check:social:live` ≈ 1.3 s. Four seq
 posted cleanly; one serialized run of 9 needed a retry, which is why a cell gets two attempts — the
 harness's known flake is a firefox that starts and never posts. The browser gates are cheap; what keeps
 them out of `verify` is needing Firefox in the runner, which is an operator call (`.notes/NEXT.md`).
+
+## the harness contract — three rules every probe here has to keep
+
+1. **Measure the settled page.** `grill/render-measure.js` waits for the ratified faces to report `loaded`
+   *before it reads a single rect*, not merely before it posts. It once did the latter, and the report was
+   quietly wrong about position: at 320 the hero mark's box sits at y 1121.6 in the fallback stack and y 1014
+   once PT Serif lands (108px of reflow at 320×1400), while firefox's screenshot always shows the settled page.
+   Heights survived that bug — they come from px tokens — positions did not, and any probe that reads pixels at
+   report coordinates was measuring empty paper. See `design/decisions.json` → `renderHarnessSettle`.
+2. **Post with `fetch(window.__MEASURE_ENDPOINT, …)` and include `done: true`.** A custom probe that never
+   posts gets the misleading `TIMEOUT: the page never posted - check the measure script calls __send()`.
+3. **A pixel probe needs coordinates that match the shot.** `window.scrollTo(0, 0)` is called before measuring
+   and again before posting, and the report carries `scroll`, `innerW`, `innerH` so a probe can tell whether the
+   PNG it is reading is the page it was promised. A shot that does not contain the thing being measured must
+   fail loudly, not report zero ink.
 
 ## evidence — read these, they are dated
 

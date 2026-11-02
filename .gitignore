@@ -63,6 +63,10 @@ pnpm-debug.log*
 .design/fonts/*.woff2
 .design/render/
 .design/tmp-*
+# The operator's source figure, fetched from Meetup's CDN to read its geometry. Meetup's images are not
+# ours to republish on another domain (.notes/asset-sources.md), so the pixels stay out of git even though the
+# reading of them (DESIGN.md's mark rules, D126) is tracked.
+.design/mark-src/
 .probe-shot-*.png
 .measured-*.html
 rendered-*.html

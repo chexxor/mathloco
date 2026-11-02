@@ -142,16 +142,19 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
   <div class="run lede" data-band="lede">We read mathematical texts and talk about them.</div>
   <div class="run focus" data-band="focus">Current focus &#183; number theory and abstract algebra</div>
 
-  <!-- the club's mark: several paths, different routes, one meeting point. Geometry from
-       src/lib/brand-mark.mjs (derived from the operator's own sphere diagram, D86/D94, as ratified in the
-       round-4 specimen). The two curves arriving at the point carry gold-on-ink, the only accent the band
-       grammar allows on ink (DESIGN.md: gold on ink is 2.50 and banned). -->
-  <svg class="motif" data-mark="card" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" role="img" aria-label="Several curved paths arriving at one point, drawn like the club's sphere diagram">
+  <!-- the club's mark: two lines that leave a sphere's equator at right angles - so parallel - and cross at the
+       pole. Geometry from src/lib/brand-mark.mjs, corrected on 2026-11-02 against the club's own source figure
+       (the operator ruled the previous drawing an incorrect reading of it; the correction and how the source was
+       measured are recorded in that file). The right-angle marks and the pole carry gold-on-ink, the only accent
+       the band grammar allows on ink (DESIGN.md: gold on ink is 2.50 and banned). -->
+  <svg class="motif" data-mark="card" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" role="img" aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole, drawn like the club's sphere diagram">
     ${MARK.shapes.map((s) => (s.tag === 'circle'
-      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"/>`
-      : `<path d="${s.d}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"/>`)).join('\n    ')}
+      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`
+      : `<path d="${s.d}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`)).join('\n    ')}
     <circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${markStroke(MARK.dot.role)}"/>
-    <text x="${MARK.meet.x}" y="146" text-anchor="middle" font-size="9" fill="currentColor">meet here</text>
+    <!-- the source figure's own label, kept because the figure is the club's and the label is what the club
+         writes on it ("S pole — meet here"). It sits below the pole dot, clear of it by 3 units. -->
+    <text x="${MARK.meet.x}" y="149" text-anchor="middle" font-size="8.5" fill="currentColor">meet here</text>
   </svg>
 
   <!-- The paths, in the footer's order and grammar (D115: the band is the site's exit, and paths are named

@@ -115,11 +115,11 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
         viewBox={`0 0 ${MARK.vbW} ${MARK.vbH}`}
         class='w-full h-auto block'
         role='img'
-        aria-label='Several curved routes arriving at one point'
+        aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole"
       >
         {MARK.shapes.map((s) => (s.tag === 'circle'
-          ? <circle cx={s.cx} cy={s.cy} r={s.r} stroke-width={s.sw} class={`fill-none ${STROKE_CLASS[s.role]}`} />
-          : <path d={s.d} stroke-width={s.sw} class={`fill-none ${STROKE_CLASS[s.role]}`} />))}
+          ? <circle cx={s.cx} cy={s.cy} r={s.r} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.role]}`} />
+          : <path d={s.d} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.role]}`} />))}
         <circle cx={MARK.dot.cx} cy={MARK.dot.cy} r={MARK.dot.r} class={`stroke-none ${FILL_CLASS[MARK.dot.role]}`} />
       </svg>
     </div>

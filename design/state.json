@@ -1,10 +1,7 @@
 {
  "pipeline": "design-system",
- "phase": "4-design-apply (round 8 applied 2026-11-02: reading ramp + measure cap + mark line weight)",
+ "phase": "4-design-apply (round 8 applied; the mark geometry corrected on three operator rulings 2026-11-02)",
  "round": "8 (asked and ANSWERED 2026-11-02: B, cap prose at ~70 characters, keep the cap rule, M-B)",
- "awaiting": [
-  "the mark GEOMETRY fix: the operator ruled that the drawn mark misreads their source image (two parallel lines meeting on a curved surface)"
- ],
  "asked_at": "2026-10-31",
  "previews": {
   "1": "design/grill/round-1.html",
@@ -383,5 +380,28 @@
   6,
   7,
   8
+ ],
+ "markGeometry": {
+  "corrected_at": "2026-11-02",
+  "source_figure": "the operator's Meetup event art (highres_534396312), read by pixel scan in .design/mark-src/ (gitignored: Meetup CDN files are not ours to republish)",
+  "table": "ring r58 at 120,78; great circle as two arcs (semiminor 21 = 0.36r) sharing the ring's widest points; FAR arc dashed \"5 4\", NEAR arc solid; two routes 94,59 and 146,59 -> 120,136; two right-angle marks; pole dot r4 at the crossing",
+  "measured": {
+   "dash_device": "phone box 276px scale 1.15: 6.0px on / 4.8px off; desktop 372px scale 1.55: 7.8 / 6.2 (D119 fusion floor is 1.5)",
+   "separation": "table 52 units, painted 51.3 (spread 0.0 across five sample rows)",
+   "crossing": "120,136 = 58.0 units from the centre; the ring's own radius measured to the top rim is 58.4",
+   "occlusion": "near arc longest unbroken run 13.9 units vs far arc 5.2 units in 4 pieces (declared on-length 5)",
+   "coverage": "pixels at/over the 3.0 bar: 718 in the 276px box, 1,538 in the 372px box (the corrected drawing carries less ink than the wrong one: 1,070 / 2,038)"
+  },
+  "tooling": [
+   "design/mark-geometry.mjs (table AND pixels)",
+   "design/mark-check.mjs / npm run check:mark (both probes at 320 and 1240)",
+   "render-gate dash checks",
+   "render-gate-selftest dash cases"
+  ]
+ },
+ "awaiting": [
+  "round 9 (COLOUR) is not asked yet: the before-number is measured, the bars a new hue must clear are written in DESIGN.md",
+  "body line spacing 1.36 vs a published 1.5 floor / 1.6 comfort - DESIGN.md open thread, moves D98s 80px one-line notice",
+  "mark SURFACE identity (Minnesota outline / Cherry Bridge cherry / other) - operator ruled it LOW PRIORITY, roadmap: .notes/roadmap-brand.md"
  ]
 }

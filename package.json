@@ -25,6 +25,8 @@
     "lines:measure:dist": "node design/line-length.mjs --no-build",
     "round8": "node design/round8.mjs",
     "check:render:dist": "node design/render-gate.mjs --no-build",
+    "check:mark": "node design/mark-check.mjs",
+    "check:color": "node design/color-survey.mjs",
     "check:discord": "tsx scripts/check-discord-access.ts",
     "check:ai": "tsx scripts/check-ai-model.ts",
     "check:deploy": "tsx scripts/check-deploy-target.ts",

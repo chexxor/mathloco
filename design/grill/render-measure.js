@@ -113,6 +113,27 @@
     'nav[aria-label]', 'header', 'footer', 'section', 'h1', 'h2', 'h3', 'h4', 'p', 'li', 'td', 'th', 'article', 'aside',
     '[class*="bg-"]', '[class*="border"]', '[class*="ring"]', '[class*="divide"]', '[class*="outline"]',
     '[class*="shadow"]', '[class*="text-"]'];
+  const wantFaces = ['400 16px "PT Serif"', '700 16px "PT Serif"', '600 16px "Public Sans Variable"'];
+  const settle = () => document.fonts && document.fonts.load
+    ? Promise.all(wantFaces.map((f) => document.fonts.load(f).then(() => {}, () => {})))
+        .then(() => document.fonts.ready).then(() => {}, () => {})
+    : Promise.resolve();
+
+  // MEASURE AFTER THE FACES SETTLE — every rect, not just the text ones. The first version asked the fonts to
+  // settle before POSTING, while the rects themselves were taken at script-eval time, and that silently measured
+  // a layout that never exists on screen: on the landing page at 320px the hero mark's box sits at y 1121.6 with
+  // the fallback stack and at y 1014 once PT Serif lands — 108px of reflow at --window-size 320,1400 and 34px at
+  // 320,4800, while firefox's own screenshot always shows the settled page. Every position in this report was
+  // therefore provisional, and the pixel probes (mark-pixels, mark-geometry) were reading the blank band where
+  // the mark should have been. Heights survived because they come from px tokens, not font metrics; positions
+  // did not. The fix is to measure the settled page, so the shot and the numbers describe the same layout.
+  const measure = () => {
+  // Go to the top of the document BEFORE anything is measured, and stay there. getBoundingClientRect is
+  // viewport-relative, and firefox paints its --screenshot after this script has posted: a page sitting at a
+  // scroll offset therefore reports one set of coordinates and paints another. scrollAtMeasure is what a pixel
+  // probe checks to know whether the shot it is reading is the page it was told about.
+  try { window.scrollTo(0, 0); } catch {}
+  const scrollAtMeasure = { x: Math.round(scrollX), y: Math.round(scrollY) };
   const all = [...document.querySelectorAll(SEL.join(','))];
 
   // controls: anything you can click or type in, measured where it sits
@@ -273,6 +294,12 @@
         tag: el.tagName.toLowerCase(),
         stroke: cs.stroke, fill: cs.fill,
         sw, swDevice: +(sw * (scale || 0)).toFixed(2),
+        // computed, so it is in device px: a dash declared in viewBox units is only a depth cue if it still
+        // arrives at the size the mark is actually drawn at (the hero on a 320px viewport scales the 240-unit
+        // box to 276px; a '5 4' declaration lands as 5.75,4.6 there, and as none at all if a renderer drops it)
+        dash: cs.strokeDasharray,
+        dashDevice: cs.strokeDasharray && cs.strokeDasharray !== 'none'
+          ? cs.strokeDasharray.split(/[\s,]+/).map((v) => +(parseFloat(v) * (scale || 0)).toFixed(2)) : null,
         strokeContrast: sc && opaque(sc) && opaque(ground) ? ratio(sc, ground) : null,
         fillContrast: fc && opaque(fc) && opaque(ground) ? ratio(fc, ground) : null,
         cls: (el.getAttribute('class') || '').slice(0, 60),
@@ -323,8 +350,13 @@
   // Snapshot the faces INSIDE report(). Taken at script-eval time it is always the pre-load state —
   // every face "unloaded" — and the gate then fails runs whose fonts loaded fine.
 
-  const report = () => send({
+  const report = () => {
+    // And again before posting: the screenshot is taken after this script runs, so wherever the page ended up
+    // is what gets painted, and the probes would be reading a different viewport than the one measured.
+    try { window.scrollTo(0, 0); } catch {}
+    send({
     url: location.href, elapsedMs: Date.now() - T0,
+    scroll: scrollAtMeasure, innerW: innerWidth, innerH: innerHeight,
     doc: {
       bg: getComputedStyle(document.body).backgroundColor,
       fg: getComputedStyle(document.body).color,
@@ -337,18 +369,15 @@
     notices,
     nav,
     marks,
-  });
+    });
+  };
+  report();
+  };
 
-  // Measure AFTER the faces settle. A serif line box measured while PT Serif is still swapping in is
-  // a fallback metric, and every height the gate reports would be a lie about the fallback stack.
-  // document.fonts.ready alone is NOT enough: measured on this rig it resolves before the faces are
-  // even requested (status still "loading"), so each ratified face is asked for by name first.
-  // Bounded at 8s so a page that never finishes still posts instead of hanging the run; the gate then
-  // fails the run with "never loaded" rather than reporting fallback heights as if they were real.
-  const wantFaces = ['400 16px "PT Serif"', '700 16px "PT Serif"', '600 16px "Public Sans Variable"'];
-  const settle = () => document.fonts && document.fonts.load
-    ? Promise.all(wantFaces.map((f) => document.fonts.load(f).then(() => {}, () => {})))
-        .then(() => document.fonts.ready).then(() => {}, () => {})
-    : Promise.resolve();
-  Promise.race([settle(), new Promise((r) => setTimeout(r, 8000))]).then(report);
+  // Bounded at 8s so a page that never finishes still posts instead of hanging the run; the gate then fails the
+  // run with "never loaded" rather than reporting fallback metrics as if they were real. The window heights the
+  // gate uses (1400 at phone widths, 2400 at desktop) are shorter than the documents, which is fine now: the
+  // rects are measured once the faces are in, and a pixel probe that asks for a shot taller than the document
+  // gets one that matches them.
+  Promise.race([settle(), new Promise((r) => setTimeout(r, 8000))]).then(measure);
 })();
