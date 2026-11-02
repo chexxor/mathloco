@@ -92,6 +92,11 @@ Then execute on that resulting promp.
 4. Take notes in appropriate about trouble or pitfalls you encountered as well as propose solutions to ensure future efforts can shortcut the trouble.
 5. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
 6. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
+7. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
+   push it, and report the preview URL (`npm run preview:deploy` - it runs `verify` first, then deploys a
+   Worker Preview). `staging` is a review environment, not the site: it gets the preview D1 and preview KV,
+   and it never touches the apex triggers. Protocol and gotchas: `.notes/runbooks/staging-branch-preview.md`
+   (D124). `staging` -> `main`, and any production deploy, stay the operator's.
 
 ## Non-negotiables
 
@@ -103,7 +108,9 @@ Then execute on that resulting promp.
   work (the commit boundary is scoped per item - stage explicit paths only, never `git add -A`).
   Push requires the operator's explicit grant, and **only the operator runs `git push`** - a granted
   push is not delegated, it is done by the operator. This repo has a live production site behind
-  `main`; merging and deploying stay with the operator for the same reason.
+  `main`; merging and deploying stay with the operator for the same reason. The one exception the operator
+  is considering (D124, not yet ruled) is the review branch: pushing **`staging`** after they approve an
+  item, because a Worker Preview is not the site. Until they rule, do not push `staging` either - ask.
 - **Native host OS only** - never `wsl`, `docker`, or `docker-compose`. Linux and Windows are both operating
   platforms for this rig (D131); run natively wherever it lives, and **name the OS in every measurement you
   report**: tool names, path fixtures and process-death semantics differ.
