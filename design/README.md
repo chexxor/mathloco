@@ -34,8 +34,9 @@ so both locations stay clean. They are still scratch — do not commit them.
 | command | what it does | browser? |
 | --- | --- | --- |
 | `npm run verify` | the CI gate set; browser-free | no |
-| `npm run check:render` | `astro build`, then measure `dist/client` in Firefox: control geometry, painted contrast, bands, keylines, notices, nav fit, one display step, faces loaded, the hero mark | yes |
-| `node design/render-gate.mjs [route…]` | the same measurement without the build; `RENDER_WIDTHS=…` to pick widths | yes |
+| `npm run check:render` | build, then measure `dist/client` in Firefox: control geometry, painted contrast, bands, keylines, notices, nav fit, one display step, faces loaded, the hero mark | yes |
+| `npm run check:render:dist` | the same measurement on the `dist` that is already there (`--no-build`) — right after `verify`, or when a rebuild would undo what you are testing | yes |
+| `node design/render-gate.mjs [route…]` | the gate itself; it builds unless `--no-build`, runs its route × width matrix 4 ff at once (`RENDER_JOBS=1` to serialize), and retries a firefox that posted nothing once (`RENDER_ATTEMPTS`) | yes |
 | `node design/render-gate-selftest.mjs` | mutate the built page five ways, require `check:render` to FAIL each — proves the mark checks can still fail | yes |
 | `npm run check:social` / `:selftest` / `:live` | the committed share card's painted bytes / synthetic failures / the producer run into a gitignored temp file | live: yes |
 | `node design/ratify-check.mjs` | the ratified `@theme` block through the Tailwind resolver + renderer contrast | no |
@@ -46,8 +47,11 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/mark-pixels.mjs <shot.png> <report.json>` | what a drawn mark actually painted inside its box, by colour cluster | no |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist | no |
 
-Measured cost on this rig (16 CPUs): `check:render` ≈ 11.4 s (of which `astro build` ≈ 3.8 s), the render
-selftest's five mutations ≈ 4.6 s, `check:social:live` ≈ 1.3 s. The browser gates are cheap; what keeps
+Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
+3 × 3 matrix serialized ≈ 7.8 s, at `RENDER_JOBS=4` ≈ 4.2 s; `check:render` with its build ≈ 8.3 s; the
+five-mutation render selftest ≈ 4.7 s; `check:social:live` ≈ 1.3 s. Four sequential 9-cell runs (36 cells)
+posted cleanly; one serialized run of 9 needed a retry, which is why a cell gets two attempts — the
+harness's known flake is a firefox that starts and never posts. The browser gates are cheap; what keeps
 them out of `verify` is needing Firefox in the runner, which is an operator call (`.notes/NEXT.md`).
 
 ## evidence — read these, they are dated

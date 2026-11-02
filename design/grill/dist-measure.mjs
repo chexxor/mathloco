@@ -23,7 +23,7 @@
 // What it does NOT cover: the island's client-side fetch (there is no API on file://). The markup that
 // gets measured is the server-rendered branch — which is the branch a JavaScript-off visitor sees, and
 // DESIGN.md requires that branch to exist regardless.
-import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, unlinkSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, unlinkSync, renameSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { join, resolve, basename, dirname } from 'node:path';
 
@@ -40,6 +40,12 @@ if (!existsSync(assetDir)) { console.error(`no _astro directory under ${dist} �
 let cssCopies = 0;
 for (const f of readdirSync(assetDir)) {
   if (!f.endsWith('.css') || f.endsWith('.rel.css')) continue;
+  const dest = join(assetDir, f.replace(/\.css$/, '.rel.css'));
+  // Skip a copy that is already current: nine runs of the matrix rewriting the same two files is
+  // wasted work, and mtime is enough because dist/ is deleted and rebuilt by astro build.
+  try {
+    if (statSync(dest).mtimeMs >= statSync(join(assetDir, f)).mtimeMs) continue;
+  } catch {}
   // The copy lives INSIDE _astro, so a hashed-asset url drops the _astro segment (./x.woff2) and a
   // public-dir url goes up one (../x.png). Getting this wrong is silent and expensive: the woff2 404s,
   // the face sits at "loading" forever, and every height the gate reports is a fallback metric — which
@@ -47,7 +53,10 @@ for (const f of readdirSync(assetDir)) {
   const css = readFileSync(join(assetDir, f), 'utf8')
     .replace(/url\((['"]?)\/_astro\//g, 'url($1./')
     .replace(/url\((['"]?)\/(?!\/)/g, 'url($1../');
-  writeFileSync(join(assetDir, f.replace(/\.css$/, '.rel.css')), css);
+  // write-then-rename, so a parallel run never reads a half-written stylesheet
+  const tmp = `${dest}.writing`;
+  writeFileSync(tmp, css);
+  renameSync(tmp, dest);
   cssCopies++;
 }
 
@@ -64,7 +73,9 @@ let html = readFileSync(srcPage, 'utf8')
   .replace(/((?:href|src|srcset|content)=")\/(?!\/)/g, '$1' + rel)
   .replace(new RegExp(`(${rel})_astro/([A-Za-z0-9._-]+)\\.css`, 'g'), `$1_astro/$2.rel.css`);
 
-const probe = join(probeDir, `rendered-${route === '/' ? 'index' : route.replace(/[\/]/g, '-')}.html`);
+// One probe copy per route AND width: the gate runs its route x width matrix in parallel, and three
+// runs probing `/` would otherwise write over the same file while reading from it.
+const probe = join(probeDir, `rendered-${route === '/' ? 'index' : route.replace(/[\/]/g, '-')}.${w}.html`);
 writeFileSync(probe, html);
 console.error(`probing ${basename(probe)} — ${cssCopies} rewritten css copies, asset prefix ${rel}`);
 try {

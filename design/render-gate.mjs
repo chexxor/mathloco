@@ -1,10 +1,19 @@
 #!/usr/bin/env node
 // render-gate.mjs — do the ratified tokens survive contact with a real browser?
 //
-//   node .design/render-gate.mjs            # '/', '/404' and '/chat' at 1240 and 390
-//   node .design/render-gate.mjs /chat      # one page
+//   node design/render-gate.mjs            # '/', '/404' and '/chat' at 1240, 390, 320
+//   node design/render-gate.mjs /chat      # one page
+//   node design/render-gate.mjs --no-build # measure the dist that is already there (see below)
+//   RENDER_JOBS=1 node design/render-gate.mjs   # serialize the firefox runs (default 4 at once)
+//   RENDER_ATTEMPTS=1 ...                        # no retry on a firefox that posted nothing (default 2)
 //
-// Run `npm run build` first: this measures dist/client, not src.
+// This measures dist/client, not src — so by default it builds first (3.8 s) rather than let a green
+// result stand for a page nobody rebuilt. `--no-build` skips that step when dist is already current,
+// which is the case immediately after `npm run verify` (its last step is a build) and the case in
+// `render-gate-selftest.mjs`, where a rebuild would wipe the mutation being tested. Measured here
+// (16 CPU rig, Firefox 158.0.1, Linux): one page at one width 0.89 s; the 3 x 3 matrix serialized 8.0 s,
+// with --no-build off 11.4 s total; the five-mutation selftest 4.6 s. So the browser gates are not
+// expensive — what is expensive is a cold `astro build` on every repeat of the ritual.
 //
 // The scanner (npm run check:classes) proves a class NAME exists in markup and resolves through
 // Tailwind. It cannot prove what that class BECAME. This gate measures the built page in Firefox and
@@ -38,7 +47,7 @@
 //
 // Each run also reports whether the webfonts had loaded. A serif line box measured while PT Serif is
 // still loading is a fallback metric, so this shows up as a warning rather than a pass.
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
@@ -49,12 +58,15 @@ import { MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 // primary also wraps to 64px. That is declared, not discovered: the alternative measured 254 (the mark
 // down a tier), which fits 256 by 2px, and D100 keeps the mark at 16px serif at every width because the
 // face is what carries the club's name. 300/310 are still worth looking at, so ask for them:
-//   RENDER_WIDTHS=1240,390,375,360,320,310,300 node .design/render-gate.mjs /
+//   RENDER_WIDTHS=1240,390,375,360,320,310,300 node design/render-gate.mjs /
 // They report the overflow instead of hiding it, and the gate refuses to run a default set that has
 // quietly dropped the floor.
 const FLOOR = 320;
 const widths = (process.env.RENDER_WIDTHS || "1240,390,320").split(",").map(Number);
-const pages = process.argv.slice(2).filter((a) => a.startsWith('/'));
+const argv = process.argv.slice(2);
+const NO_BUILD = argv.includes('--no-build');
+const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 4));
+const pages = argv.filter((a) => a.startsWith('/'));
 const routes = pages.length ? pages : ['/', '/404', '/chat'];
 const dist = resolve('dist/client');
 // the tier boundary is read out of the token block, not remembered: a moved --breakpoint-nav-narrow
@@ -73,29 +85,80 @@ if (process.env.RENDER_WIDTHS) {
   process.exit(1);
 }
 if (!existsSync(dist)) { console.error('dist/client missing — run npm run build first'); process.exit(1); }
+if (!NO_BUILD) {
+  // the same script CI runs, so the gate cannot measure a build the pipeline would not make. npm is
+  // npm.cmd on Windows, and this rig runs natively on both (D131).
+  execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'build'], { stdio: ['ignore', 'ignore', 'inherit'] });
+} else {
+  console.log('(measuring the dist that is already built — --no-build)');
+}
 mkdirSync('.design/render', { recursive: true });
 
 const fails = [];
 const warns = [];
 const num = (v) => (typeof v === 'number' ? v : NaN);
 
-function measure(route, width) {
+// The nine measurements are independent, and each one is a cold firefox: 0.89 s of its own, ~8 s back to
+// back. They run JOBS at a time, and only the *measurement* is parallel — the assertions below still run
+// one route and width at a time, in a fixed order, so the report and the failure list stay diffable.
+// page-measure binds port 0 and dist-measure names each probe copy per width, so runs cannot collide.
+const run = (route, width) => new Promise((done) => {
   const height = width === 390 ? 844 : 1400;
-  const out = execFileSync(process.execPath,
+  execFile(process.execPath,
     ['design/grill/dist-measure.mjs', dist, route, 'design/grill/render-measure.js', String(width), String(height)],
-    { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 180000 });
-  const json = out.slice(out.indexOf('{'), out.lastIndexOf('}') + 1);
-  if (!json) throw new Error(`no JSON from firefox for ${route} @ ${width}`);
-  const j = JSON.parse(json);
-  writeFileSync(`.design/render/${route.replace(/\//g, '_') || 'root'}-${width}.json`, JSON.stringify(j, null, 1));
-  return j;
+    { encoding: 'utf8', timeout: 180000, maxBuffer: 32 * 1024 * 1024 },
+    (err, out, stderr) => done({ route, width, out, err, stderr }));
+});
+
+// A firefox that posts nothing is this harness's known flake (fresh profile, cold start, the page never
+// calling __send()). One in nine showed up while timing this. A gate that flakes is a gate people learn
+// to re-run instead of trust, so a cell gets a second attempt; two failures in a row is a real FAIL and
+// the report says which it was.
+const ATTEMPTS = Number(process.env.RENDER_ATTEMPTS || 2);
+async function measureCell(route, width) {
+  let last = null;
+  for (let n = 1; n <= ATTEMPTS; n++) {
+    const r = await run(route, width);
+    const json = r.out ? r.out.slice(r.out.indexOf('{'), r.out.lastIndexOf('}') + 1) : '';
+    if (json) {
+      try { return { j: JSON.parse(json), tries: n }; }
+      catch (e) { last = { err: e, stderr: r.stderr }; }
+    } else {
+      last = { err: r.err || new Error('no JSON from firefox'), stderr: r.stderr };
+    }
+    if (n < ATTEMPTS) console.error(`  retry ${route} @${width} — ${last.err && last.err.message ? String(last.err.message).slice(0, 60) : 'no report posted'}`);
+  }
+  const tail = (last.stderr || '').split('\n').filter(Boolean).slice(-2).join(' | ');
+  return { err: new Error(`${last.err && last.err.message ? last.err.message : 'no report'}${tail ? ' :: ' + tail.slice(0, 160) : ''}`) };
+}
+
+async function pool(jobs, items, work) {
+  const out = [];
+  let i = 0;
+  await Promise.all(Array.from({ length: jobs }, async () => {
+    while (i < items.length) {
+      const k = i++;
+      out[k] = await work(items[k]);
+    }
+  }));
+  return out;
+}
+
+const cells = routes.flatMap((route) => widths.map((w) => [route, w]));
+const got = new Map();
+const raw = await pool(Math.min(JOBS, cells.length), cells, ([route, w]) => measureCell(route, w).then((r) => ({ route, width: w, ...r })));
+for (const r of raw) {
+  const at = `${r.route} @${r.width}`;
+  if (r.err) { got.set(at, { err: r.err }); continue; }
+  writeFileSync(`.design/render/${r.route.replace(/\//g, '_') || 'root'}-${r.width}.json`, JSON.stringify(r.j, null, 1));
+  got.set(at, { j: r.j });
 }
 
 for (const route of routes) {
   for (const w of widths) {
-    let j;
-    try { j = measure(route, w); }
-    catch (e) { fails.push(`${route} @${w}: measurement failed — ${String(e.message).slice(0, 120)}`); continue; }
+    const cell = got.get(`${route} @${w}`);
+    if (!cell || cell.err) { fails.push(`${route} @${w}: measurement failed — ${String(cell && cell.err ? cell.err.message : 'no run recorded').slice(0, 220)}`); continue; }
+    const j = cell.j;
     const at = `${route} @${w}`;
     console.log(`\n=== ${at} (viewport ${j.vw}) ===`);
 

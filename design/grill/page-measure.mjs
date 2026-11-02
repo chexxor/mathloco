@@ -37,12 +37,8 @@ const page = fs.realpathSync(pageArg);
 const measure = fs.realpathSync(measureArg);
 const dir = path.dirname(page);
 const probed = path.join(dir, `.measured-${path.basename(page, '.html')}.html`);
-const port = 8731 + (Math.floor(Math.random() * 40) * 7);
 
 const src = fs.readFileSync(page, 'utf8');
-const tag = `<script>window.__MEASURE_ENDPOINT='http://127.0.0.1:${port}/';</script>\n<script src="${measure}"></script>`;
-fs.writeFileSync(probed, src.includes('</body>') ? src.replace('</body>', tag + '</body>') : src + tag);
-
 const prof = fs.mkdtempSync(path.join(os.tmpdir(), 'ffprof.'));
 let code = 1;
 const server = http.createServer((req, res) => {
@@ -69,7 +65,15 @@ function close() {
   try { fs.rmSync(prof, { recursive: true, force: true }); } catch {}
   process.exit(code);
 }
-server.listen(port, '127.0.0.1', () => {
+server.listen(0, '127.0.0.1', () => {
+  // The OS picks a free port, and the probe file is written only once that port is known. The old
+  // scheme guessed `8731 + random*7`: two concurrent runs could guess the same one (one dies with
+  // EADDRINUSE, or worse, one page posts its numbers into the other run's server and the gate reads a
+  // different page's report). Port 0 makes that impossible, which is what lets the gate run its
+  // route x width matrix in parallel.
+  const port = server.address().port;
+  const tag = `<script>window.__MEASURE_ENDPOINT='http://127.0.0.1:${port}/';</script>\n<script src="${measure}"></script>`;
+  fs.writeFileSync(probed, src.includes('</body>') ? src.replace('</body>', tag + '</body>') : src + tag);
   try {
     execFileSync('firefox', ['--headless', '--no-remote', '--profile', prof,
       `--window-size=${wArg},${hArg}`, '--screenshot', path.join(prof, 'm.png'), `file://${probed}`],

@@ -379,7 +379,10 @@ npm run check:classes           # every written class resolves to CSS — catche
 npm run check:render            # build, then measure dist/client in Firefox: control heights, measured contrast,
                                 # one dark band and the paths inside it, keyline grammar, notice grammar,
                                 # the nav's width probe, one display step, faces actually loaded, and the hero
-                                # mark (shape count, box ratio vs viewBox, per-shape contrast, device stroke)
+                                # mark (shape count, box ratio vs viewBox, per-shape contrast, device stroke).
+                                # Builds first unless --no-build; 4 firefox at once, one retry per cell.
+npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
+                                # or whenever a rebuild would undo the thing being measured
 node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
 node design/mark-pixels.mjs <shot> <report>   # what the mark actually painted in its box, by colour cluster
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —

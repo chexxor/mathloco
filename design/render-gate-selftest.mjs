@@ -1,6 +1,10 @@
 // render-gate-selftest.mjs — can the hero mark's checks in `check:render` fail, or do they only ever nod?
 //
-//   node design/render-gate-selftest.mjs        # needs a built dist/ and firefox; ~15 s per case
+//   node design/render-gate-selftest.mjs        # needs a built dist/ and firefox; ~1 s per case
+//   node design/render-gate-selftest.mjs "paint" # a substring picks which cases to run
+//
+// It always passes --no-build: the gate builds by default, and rebuilding would restore the page the
+// mutation just broke, turning every case into a pass that proves nothing.
 //
 // D118's rule, applied to the gate that measures the mark: a pixel/layout gate needs a control that can
 // fail, because the failure mode of a gate is not a wrong number, it is a green line on a broken page.
@@ -67,7 +71,7 @@ try {
     let out = '';
     let failed = false;
     try {
-      out = execFileSync(process.execPath, ['design/render-gate.mjs', '/'], {
+      out = execFileSync(process.execPath, ['design/render-gate.mjs', '/', '--no-build'], {
         encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 180000,
         env: { ...process.env, RENDER_WIDTHS: '1240' },
       });
