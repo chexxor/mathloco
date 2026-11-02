@@ -30,3 +30,20 @@ cp node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2 desig
 **Worth revisiting if** the evidence base grows past what a clone should carry (then keep the generators
 and the configs, and commit only the `.txt` summaries), or if `.notes/` ever gets tracked — at which point
 DECISIONS.md and these records should be cross-referenced rather than duplicated.
+
+## Addendum (2026-11-02, commit `cec861f`)
+
+The evidence base now lives in **`design/`** — no leading dot — and it is the tracked half of a
+two-directory split:
+
+- `design/` ships the gates and their harness, the probes behind every number `DESIGN.md` quotes, the
+  specimens the operator chose from, the machine records, and the one-shot apply history;
+- `.design/` (with the dot) keeps only what a run regenerates: `tmp-*`, `render/` (the render gate's raw
+  per-run reports), `.probe-shot-*.png`, candidate `fonts/*.woff2`.
+
+The ruling in this record is unchanged — the evidence ships with the repo, because a design claim is only
+auditable if the probe that produced it does. What the rename added is the failure mode it creates: a doc
+that cites a path which no longer exists. That is now a gate, `npm run check:design`
+(`design/audit-references.mjs --stale`), inside `verify`: it exits 1 when any code file, skill or
+`DESIGN.md` names a design path that does not resolve. `design/README.md` is the entry point for what
+belongs on which side; `.notes/DECISIONS.md` D122 is the why.
