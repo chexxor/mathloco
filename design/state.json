@@ -2,6 +2,11 @@
  "pipeline": "design-system",
  "phase": "4-design-apply (round 8 applied; the mark geometry corrected on three operator rulings 2026-11-02)",
  "round": "8 (asked and ANSWERED 2026-11-02: B, cap prose at ~70 characters, keep the cap rule, M-B)",
+ "awaiting": [
+  "round 9 (COLOUR) is not asked yet: the before-number is measured (design/color-survey.mjs), the bars a new hue must clear are written down, and the specimen needs building",
+  "body line spacing 1.36 vs a published 1.5 floor / 1.6 comfort - DESIGN.md open thread, moves D98's 80px one-line notice",
+  "mark SURFACE identity (Minnesota outline / Cherry Bridge cherry / other) - operator ruled it LOW PRIORITY, on the roadmap: .notes/roadmap-brand.md"
+ ],
  "asked_at": "2026-10-31",
  "previews": {
   "1": "design/grill/round-1.html",
@@ -399,9 +404,10 @@
    "render-gate-selftest dash cases"
   ]
  },
- "awaiting": [
-  "round 9 (COLOUR) is not asked yet: the before-number is measured, the bars a new hue must clear are written in DESIGN.md",
-  "body line spacing 1.36 vs a published 1.5 floor / 1.6 comfort - DESIGN.md open thread, moves D98s 80px one-line notice",
-  "mark SURFACE identity (Minnesota outline / Cherry Bridge cherry / other) - operator ruled it LOW PRIORITY, roadmap: .notes/roadmap-brand.md"
- ]
+ "colorSurvey": {
+  "at": "2026-11-02",
+  "tool": "design/color-survey.mjs / npm run check:color (records .design/tmp-color/*.json)",
+  "headline": "the landing page paints 3.8% chromatic pixels at 1240 across 3 hue families; /404 and /chat paint 0.5% with ONE family each; the single most saturated thing on the landing page is the Meetup logo (rgb 237,28,64, 14,820 px, C 0.226)",
+  "note": "reporting tool, deliberately no pass/fail: the number is the before-half of a colour round"
+ }
 }
