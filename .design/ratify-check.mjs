@@ -96,6 +96,15 @@ ok('serif pair (latin 400 + latin 700) imported in Layout.astro');
 // inset keyline, never a palette fill, and model output carries its type in tokens rather than
 // through the prose plugin. DORMANT files are excluded here exactly as .design/gen-token-map.mjs
 // excludes them, so a dormant file cannot make this section green by accident.
+// Comments are stripped before ANY of these greps run. This section's first version matched
+// `animation:` inside a comment I wrote in Layout.astro explaining the motion rule, and reported a
+// green gate as red on a file with no animation in it. Prose about a rule is not a write of the rule —
+// same reason the scanner strips HTML comments and the guard check refuses to count a string in a
+// comment: a grep that cannot tell documentation from markup will be re-weakened by the next session.
+const stripComments = (t) => t
+  .replace(/\/\*[\s\S]*?\*\//g, ' ')     /* css + js block */
+  .replace(/^\s*\/\/.*$/gm, ' ')          /* js line */
+  .replace(/<!--[\s\S]*?-->/g, ' ');       /* astro/html */
 const DORMANT = new Set([
   'src/components/UpcomingMeetups.astro', 'src/components/PastEvents.astro',
   'src/components/icons/Instagram.astro', 'src/components/icons/Linkedin.astro',
@@ -109,23 +118,46 @@ const liveFiles = [];
     if (!/\.(astro|svelte|ts|css)$/.test(e.name)) continue;
     const path = `src/${r}`;
     if (DORMANT.has(path)) continue;
-    liveFiles.push([path, readFileSync(join(dir, e.name), 'utf8')]);
+    liveFiles.push([path, stripComments(readFileSync(join(dir, e.name), 'utf8'))]);
   }
 })(resolve(ROOT, 'src'), '');
 // the guard has to be a real @media block: global.css MENTIONS the string inside a comment, and a
 // grep that counts comments would report a guard that does not exist
 const guards = liveFiles.reduce((n, [, t]) => n + (t.match(/@media[^{]*\(\s*prefers-reduced-motion/g) ?? []).length, 0);
-if (guards < 1) fail('no prefers-reduced-motion guard in live src — DESIGN.md "Motion" requires one per animation');
-else ok(`${guards} reduced-motion @media guard(s), ${liveFiles.length} live source files scanned`);
+// Motion, after the footer ruling (2026-11-02): the grammar has two tiers, 150ms colour and 250ms
+// movement, and NEITHER is an infinite loop — so no keyframe animation is ratified at all, and the
+// footer's `0.5s infinite` pulse is retired with the band it lived in (D115). A guard is still
+// required for any `animation:` write that does appear, so motion comes back only by taking a tier
+// AND its guard.
+const anims = liveFiles.flatMap(([f, t]) => (t.match(/animation:\s*[^;]+/g) ?? []).map((m) => `${f} ${m.trim()}`));
+const keyframes = liveFiles.flatMap(([f, t]) => (t.match(/@keyframes\s+[\w-]+/g) ?? []).map((m) => `${f} ${m}`));
+if (keyframes.length) fail(`${keyframes.length} @keyframes in live src (${keyframes.join('; ')}) — no keyframe tier is ratified; the infinite pulse was ruled out with the footer redesign`);
+else ok('clean: no @keyframes in live src — the retired footer pulse stays retired');
+if (anims.length && guards < 1) fail(`${anims.length} animation write(s) (${anims.join('; ')}) and no prefers-reduced-motion guard — DESIGN.md "Motion" requires the guard with the animation`);
+else ok(`${anims.length} animation write(s), ${guards} reduced-motion @media guard(s), ${liveFiles.length} live source files scanned`);
+// Quote-agnostic on purpose: this repo writes both class="..." and class='...'. The first version of
+// these greps matched only double quotes, so a single-quoted `animate-spin` or palette fill would have
+// passed a GREEN gate.
 for (const [re, why] of [
-  [/class="[^"]*\sanimate-[a-z-]+/, 'an `animate-*` write (the motion grammar is 150ms colour / 250ms movement — no infinite tier)'],
-  [/class="[^"]*(?:^|\s)prose(?:\s|-blue)/, 'a prose-plugin write (`prose` / `prose-blue`)'],
+  [/class=["'][^"']*\sanimate-[a-z-]+/, 'an `animate-*` write (the motion grammar is 150ms colour / 250ms movement — no infinite tier)'],
+  [/class=["'][^"']*(?:^|\s)prose(?:\s|-blue)/, 'a prose-plugin write (`prose` / `prose-blue`)'],
   [/\bbg-(?:red|blue|green|amber|yellow|gray|slate)-\d{2,3}/, 'a palette fill in markup, where the grammar says word + keyline'],
+  [/#f59e0b/i, 'the retired amber (#f59e0b) — delta-OKLab 0.019 from Amazon orange, and 2.06 as text on paper (D82/D88)'],
 ]) {
   const hits = liveFiles.filter(([, t]) => re.test(t)).map(([f]) => f);
   if (hits.length) fail(`${why} — still written in ${hits.join(', ')}`);
   else ok(`clean: ${why}`);
 }
+
+// ---------------- 1d. the band's own grammar, grepped out of Footer.astro ----------------------
+// gold is banned as text AND as a ring on ink (2.50), so every focusable thing in the band takes the
+// band-text ring. This is file-scoped because a headless screenshot cannot focus anything, so
+// `check:render` cannot see a focus ring at all — this grep is the only gate that can.
+const footer = readFileSync(join(ROOT, 'src/components/Footer.astro'), 'utf8');
+const bandRings = (footer.match(/focus-visible:outline-band-text/g) ?? []).length;
+if (/outline-gold/.test(footer)) fail('Footer.astro writes a gold focus ring on the ink band — the oracle bans gold on ink at 2.50');
+else if (bandRings < 4) fail(`Footer.astro has ${bandRings} band focus rings; every focusable link in the band needs focus-visible:outline-band-text (gold on ink = 2.50, banned)`);
+else ok(`${bandRings} band focus rings, no gold ring on the band`);
 
 // ---------------- 2. every utility DESIGN.md promises must resolve ----------------------------
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });
@@ -134,7 +166,8 @@ const promised = [
   'bg-ink-hover', 'hover:bg-ink-hover', 'hover:bg-tint',
   'focus-visible:outline-gold', 'focus-visible:outline-band-text', 'focus-visible:outline-2', 'focus-visible:outline-offset-2',
   'text-ink', 'text-ink-2', 'text-ink-3', 'text-gold', 'text-gold-on-ink', 'text-band-text',
-  'text-path-calendar', 'text-path-meetup-on-ink',
+  'text-path-calendar', 'text-path-meetup-on-ink', 'text-path-discord-on-ink',
+  'hover:text-gold-on-ink', 'hover:underline', 'gap-x-6', 'gap-y-2', 'flex-wrap',
   'inset-shadow-rule', 'inset-shadow-gold', 'inset-shadow-path-calendar', 'inset-shadow-path-meetup',
   'inset-shadow-path-discord', 'inset-shadow-path-mobilizon',
   'shadow-e1', 'shadow-e2',

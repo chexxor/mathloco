@@ -47,50 +47,30 @@ import Navigation from '../components/Navigation.astro';
     <Navigation />
     <slot />
     <style lang="scss" is:global>
-      /* The theme colour is the token from src/styles/global.css (@theme --color-book-theme).
-         src/config.json declares the same hex under `theme.color`, but nothing reads it, so this
-         token is the source of truth. These rules used to hardcode a different blue (#3b82f6),
-         so the only places a theme colour actually rendered disagreed with the colour the rest of
-         the site declares. */
+      /* `::selection` is the one place this file paints, and the pair is measured: paper on ink =
+         12.02, asserted in .design/grill/contrast/gen-ratify-cfg.mjs. The retired amber pair measured
+         2.06, under the 4.5 bar; the amber is delta-OKLab 0.019 from Amazon orange #FF9900 (D82/D88),
+         which is why the token went, not just this rule. The amber also used to sit in
+         src/config.json as `theme.color`, still declaring a colour nothing read — that key is gone
+         too, so the retired hue has one home left in this repo (see the social-share note in
+         .notes/NEXT.md). */
       ::selection {
-        /* paper on ink = 12.02, asserted in .design/grill/contrast/gen-ratify-cfg.mjs. The retired
-           amber pair measured 2.06, under the 4.5 bar; the amber is delta-OKLab 0.019 from Amazon
-           orange #FF9900 (D82/D88), which is why the token goes, not just this rule. */
         background: var(--color-ink);
         color: var(--color-paper);
       }
 
-      .love {
-        display: inline-block;
-        position: relative;
-        top: 0.1em;
-        transform: scale(0.9);
-        animation: love 0.5s infinite linear alternate-reverse;
-      }
+      /* No keyframes ship in src/. The one that used to sit here pulsed the footer's sum glyph at
+         0.5s infinite linear alternate-reverse, which has no tier in the motion grammar (150ms colour,
+         250ms movement) — guarded decoration is still decoration, so the operator ruled it out with the
+         rest of the old footer band (2026-11-02). `ratify-check` now fails on any `@keyframes` in live
+         src, and separately fails on an unguarded `animation:` write, so motion can come back only by
+         taking a tier AND its reduced-motion guard. */
 
-      @keyframes love {
-        to {
-          transform: scale(1.1);
-        }
-      }
-
-      /* DESIGN.md "Motion": animation is always guarded. This is now the only animation left in
-         src/ — apply 4c deleted the `animate-spin` loader, which measured a 2px keyline at contrast
-         4.98 against its ground where --color-rule is 1.27. One thing this guard does not settle,
-         and it is the operator's call not mine: a 0.5s infinite pulse has no tier in the motion
-         grammar (150ms colour, 250ms movement), so it is either a tier the grammar is missing or
-         decoration that should go. */
-      @media (prefers-reduced-motion: reduce) {
-        .love {
-          animation: none;
-        }
-      }
-
-      /* The 404 page's link writes the `underline` utility. A GLOBAL class of the same name used
-         to sit here: an amber highlighter bar with text-decoration: none, later in the cascade than
-         the utility, so every "underline" on the site was painted amber and NOT underlined. It is the
-         reason the class gate could not see the last amber write on the site — the appearance came
-         from a <style> block, not a class. Utility wins now. */
+      /* The 404 page's link writes the `underline` utility. A GLOBAL class of the same name used to
+         sit here: an amber highlighter bar with `text-decoration: none`, later in the cascade than the
+         utility, so every "underline" on the site painted amber and was NOT underlined. It is why the
+         class gate could not see the last amber write on the site — the appearance came from a <style>
+         block, not a class. Keep it that way: no global element/class rules in this file. */
     </style>
   </body>
 </html>

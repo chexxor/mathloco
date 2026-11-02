@@ -159,8 +159,8 @@ second colour.
   band), word `ink`, body `ink-2`, meta `ink-3`, padding 12/16. One-line notice **48px**, two-line body
   **64px**. Caution variant: `gold` keyline and word (4.82); on the band, `gold-on-ink` (5.80). No fill.
   `check:render` measures every `role="status"` / `role="alert"` block in the built page and fails on a
-  fill, on an inset other than 1px, on a keyline contrast that is not the rule (2.99 measured in that
-  harness, 3.01 in the specimen), on text under the 4.5 bar, or on a block under 48px.
+  fill, on an inset other than 1px, on a keyline contrast that is not the rule (**3.01 in both the
+  specimen and the built page** — D116), on text under the 4.5 bar, or on a block under 48px.
 - Status is a **word**: `Scheduled` / `Cancelled` / `Past` in the series lane when stacked, in its own
   24px chip column when wide (measured: a word reflows +0px, a chip costs +7px). Cancelled title goes to
   `ink-2`.
@@ -186,9 +186,10 @@ freshness.
 - **Applied in `DiscordSummary` (apply 4c): the pending block IS that line.** It is the notice grammar
   (`inset-shadow-rule`, no fill, word `ink`, body `ink-2`, meta `ink-3`), and `min-h-20` reserves the
   fixed part of whatever lands: dated line 16 + `space-y-6` 24 + a card header 40 = **80px**. Measured in
-  the built page: 80px at 1240, 100px at 390 (the meta line wraps), inset ring **2.99** against its
-  ground, word at **11.73**. The deleted spinner wrote a 2px `border-b-2` at contrast **4.98** — a disc
-  of foreign hue, not a loading indicator.
+  the built page: 80px at 1240, 100px at 390 (the meta line wraps), 124px at 320; inset ring **3.01**
+  against its ground, word at **12.02**. The deleted spinner painted 2px of `blue-600` — measured 4.98
+  under the arithmetic path D116 replaced, and higher than that in painted bytes, which only strengthens
+  the point: 2px of foreign hue is not the 1px `rule` ring the grammar names.
 - **The pending sentence is also the JavaScript-off state.** It reads "The channel summaries have not
   loaded" and names the path out (Discord), so it is true whether or not the browser ever runs the fetch.
   That is how the error branch gets into the server-rendered HTML without the server calling the API.
@@ -204,7 +205,24 @@ freshness.
 ## Layout rules that came out of the colour rounds
 
 - **At most one dark band per screen**, ground = `ink`, text `band-text`. That is where the quote and
-  interview cards live; cards inside it are flat with the same `rule` hairline (4.00 there).
+  interview cards live; cards inside it are flat with the same `rule` hairline (4.00 there). Today the
+  one band is the footer, and the footer is the site's **exit**, so it carries paths, identity and date —
+  never a slogan:
+  - It must contain **pressable paths**. `check:render` fails a band with no link in it (D115); the band
+    that used to sit here was a sentence with a pulsing glyph and zero links.
+  - **No fill buttons on the band.** The primary control is an `ink` fill, and ink on ink is invisible,
+    so band paths are links named by hue instead: `text-path-meetup-on-ink` (4.74) and
+    `text-path-discord-on-ink` (4.59), the variants the token block solved for this ground.
+  - **The focus ring on the band is `outline-band-text`.** Gold on ink measures 2.50 and is banned, and a
+    headless screenshot cannot focus anything, so `check:render` cannot see a focus ring at all —
+    `ratify-check` greps `Footer.astro` for the rings and fails if a gold one comes back.
+  - **Targets**: band path links pad to 32px like the nav; a link inside a sentence keeps its 24px line
+    box, and the gate floor for any band target is 24px.
+  - **Identity, not a locator**: the club name in `text-body` serif at every width, never a display step
+    (D112 — the display step belongs to a screen's locator, never to a punchline), with the ∑ glyph inline
+    at the size of the word beside it, `gold-on-ink`, `aria-hidden`, and **static**.
+  - **Small print** carries place and date only. No frequency (D92), and the old "All rights reserved"
+    boilerplate went with the band it lived in.
 - **Photo-free by construction**: no surface may require a photograph, because none of the club's
   existing images contains a person (D86/D94). The hero motif may be derived from the operator's own
   sphere diagram only.
@@ -224,11 +242,14 @@ freshness.
   browser the scrollbar costs ~12px, so a 360 viewport offers 316 and the wide tier's 321 does not fit —
   measured 6px short. 370 is the smallest value that keeps the wide tier where it fits (375 offers 331)
   and moves it where it does not (360). Nothing about the tiers changed: same two type steps, same gaps.
-- **Below 320 the grammar does not fit as ratified** and no markup change here hides that: the nav needs
-  273 where a 300 container offers 256, and the hero's primary control wraps to 64px there. D100's own
-  probe measured a row that would close the nav half ("mark also down to 13.3" = 254, fits 256 by 2), but
-  D100 keeps the mark at 16px serif at every width, so the floor is an operator call — see D113. A label
-  set that stops fitting is a probe failure, never a silent re-wrap; at 320 the margin is 3px.
+- **The site's floor is 320px** (D114, operator ruling 2026-11-02). The wide tier needs 321 and the
+  narrow tier 273; a 320 viewport's container offers 276, so the margin is 3px, and `check:render`
+  refuses to run a default width set that has dropped 320. Below the floor the grammar does not fit and
+  the gate says so rather than hiding it: at 310 the container offers 266 and at 300 it offers 256, and
+  at 300 the hero primary also wraps to 64px. The alternative was measured — D100's own probe row "mark
+  also down to 13.3" needs 254, which fits 256 by 2 — and rejected: 2px of margin is not a margin, and the
+  16px serif mark is what carries the club's name. Ask for the sub-floor widths any time with
+  `RENDER_WIDTHS=1240,390,375,360,320,310,300 node .design/render-gate.mjs /`.
 
 ## Copy
 
@@ -247,14 +268,14 @@ a source exists.
 
 Tailwind v4 has no `--duration-*` namespace (measured: `duration-color` resolves to nothing), so the
 two steps are written as the numbers above. **Never** use `duration-300` or a 400ms tier. **Always**
-guard animation with `prefers-reduced-motion: reduce` — apply 4c added the one guard the site needs
-(`.love` in `Layout.astro`), and `ratify-check` now fails when `src/` has no `@media` reduced-motion
-block, while counting the string inside a comment does not count.
+guard animation with `prefers-reduced-motion: reduce` — and a guard inside a comment does not count.
 
-One animation is left in `src/`: the footer sum glyph pulses `0.5s infinite linear alternate-reverse`.
-**An infinite pulse has no tier in this grammar** (150ms colour, 250ms movement), so it is either a tier
-the grammar is missing or decoration that should go — open question for the operator, flagged in
-`Layout.astro` where the keyframes live.
+**No keyframe animation ships in `src/` at all.** The footer's sum glyph used to pulse
+`0.5s infinite linear alternate-reverse`, which has no tier here: 150ms and 250ms are both *transitions*,
+and nothing in the grammar is infinite. A guarded infinite pulse is still decoration, so the operator
+ruled it out with the rest of the old band (D115). `ratify-check` now fails on any `@keyframes` in live
+`src/`, and separately fails any `animation:` write that has no `@media (prefers-reduced-motion)` guard —
+so motion can come back only by taking a tier **and** its guard.
 
 Weights: PT Serif ships two faces and both are imported (latin 400 + latin 700), so in serif text the
 only legal weights are `400` and `700`. `500`/`600`/`800` are legal **only** in chrome (the sans stack),
@@ -268,9 +289,18 @@ node .design/gen-token-map.mjs  # regenerate the apply worklist from src/; exit 
 node .design/ratify-check.mjs   # token block → Tailwind resolver + renderer contrast (exit 0 = all bars hold)
 npm run check:classes           # every written class resolves to CSS — catches a token used as a class that does not exist
 npm run check:render            # build, then measure dist/client in Firefox: control heights, measured contrast,
-                                # one dark band, keyline layer bar, one display step, faces actually loaded
+                                # one dark band and the paths inside it, keyline grammar, notice grammar,
+                                # the nav's width probe, one display step, faces actually loaded
 npm run verify                  # the full CI gate set
 ```
+
+**Contrast numbers in this file are painted bytes, not arithmetic** (D116). Firefox returns computed
+colours in author syntax (`oklch(0.71 0.14 35)`), and the first version of `check:render` converted those
+through OKLab by hand — which measured a colour no screen shows and read every pair 0.1–0.3 low (band
+text on ink 10.00 against a record of 10.19, `path-discord-on-ink` 4.47 against 4.59, which would have
+failed a token that passes). The harness now paints each colour into a 1px canvas and reads the byte
+back, which is why the harness and the oracle now agree exactly: rule on paper 3.01, ink on paper 12.02,
+band text 10.19, meetup/discord on ink 4.74 / 4.59.
 
 Two things these gates **cannot** catch, so enforce must be value-aware: Tailwind v4's dynamic spacing
 scale makes `mt-23` (92px) resolve, and "the class exists" is not "the value is on the scale". That is

@@ -10,10 +10,8 @@
     "locale": "en_US",
     "image": "/book-club-social-share.jpg"
   },
-  "theme": {
-    "color": "#f59e0b"
-  },
   "URLs": {
-    "meetupGroup": "https://www.meetup.com/minneapolis-mathematics-book-club"
+    "meetupGroup": "https://www.meetup.com/minneapolis-mathematics-book-club",
+    "discordInvite": "https://discord.com/invite/wx5S7YJSkU"
   }
 }

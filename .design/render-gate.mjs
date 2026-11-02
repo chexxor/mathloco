@@ -15,9 +15,10 @@
 //     problem ratify refused
 //   - the contrast the oracle promised is the contrast that painted, on the page a visitor gets
 //   - one dark band per screen (a footer + a dark CTA is two bands, which is what the old book-theme
-//     ribbon produced)
-//   - no keyline drawn as a border/outline (the ratified keyline is a 1px INSET ring, measured 2.99
-//     against paper in this harness; a border costs 2px, which is how a 40px control arrives at 42)
+//     ribbon produced), and that band must contain paths a visitor can press (D115)
+//   - no keyline drawn as a border/outline (the ratified keyline is a 1px INSET ring, measured 3.01
+//     against paper in this harness — the same number the specimen records; a border costs 2px, which
+//     is how a 40px control arrives at 42)
 //   - notices and states: every role=status/alert block has no fill, a 1px inset ring at the ratified
 //     rule contrast, text at or above the 4.5 bar, and a height that clears D98's 48px one-line figure
 //   - the nav: one row at every width, flex-wrap: nowrap, one type tier per viewport, and the row must
@@ -26,10 +27,13 @@
 //   - one display step per screen
 //   - no horizontal overflow at any measured width, and tap targets that clear 44px at 390
 //
-// Default widths are 1240, 390 and 320 — the tightest viewport D100's adopted tier claims. 300 is not
-// in the default set: measured, the narrow tier needs 273px and a 300 viewport's container offers 256
-// (D100's 268 figure is scrollbar-free). Closing that gap needs the mark tier decision, which is the
-// operator's; see D113. Run RENDER_WIDTHS=1240,390,360,320,300 to see it.
+// Default widths are 1240, 390 and 320 — the floor, and the two widths the design was grilled at.
+//
+// Contrast is measured on PAINTED BYTES (D116): the harness paints each computed colour into a 1px
+// canvas and reads the byte back, because a screen is 8-bit and hand-written OKLab arithmetic read every
+// pair 0.1-0.3 low (path-discord-on-ink read 4.47 against a true 4.59, which would have failed a token
+// that passes). If a contrast number here ever disagrees with the oracle's record again, the harness is
+// wrong, not the token.
 //
 // Each run also reports whether the webfonts had loaded. A serif line box measured while PT Serif is
 // still loading is a fallback metric, so this shows up as a warning rather than a pass.
@@ -37,6 +41,16 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
+// The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
+// a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
+// grammar does not fit — at 310 the container offers 266 and at 300 it offers 256, and at 300 the hero
+// primary also wraps to 64px. That is declared, not discovered: the alternative measured 254 (the mark
+// down a tier), which fits 256 by 2px, and D100 keeps the mark at 16px serif at every width because the
+// face is what carries the club's name. 300/310 are still worth looking at, so ask for them:
+//   RENDER_WIDTHS=1240,390,375,360,320,310,300 node .design/render-gate.mjs /
+// They report the overflow instead of hiding it, and the gate refuses to run a default set that has
+// quietly dropped the floor.
+const FLOOR = 320;
 const widths = (process.env.RENDER_WIDTHS || "1240,390,320").split(",").map(Number);
 const pages = process.argv.slice(2).filter((a) => a.startsWith('/'));
 const routes = pages.length ? pages : ['/', '/404', '/chat'];
@@ -45,6 +59,12 @@ const dist = resolve('dist/client');
 // moves this gate with it instead of quietly disagreeing with the CSS
 const NAV_NARROW = Number((readFileSync('src/styles/global.css', 'utf8').match(/--breakpoint-nav-narrow:\s*(\d+)px/) ?? [])[1]);
 if (!NAV_NARROW) { console.error('no --breakpoint-nav-narrow in src/styles/global.css — the nav probe needs it'); process.exit(1); }
+if (process.env.RENDER_WIDTHS) {
+  if (!widths.includes(FLOOR)) console.log(`NOTE  RENDER_WIDTHS overrides the default set and omits ${FLOOR} — the declared floor. The shipped gate must measure it.`);
+} else if (!widths.includes(FLOOR)) {
+  console.error(`the default width set no longer contains ${FLOOR} — the floor is a ratified claim (D114), so it has to stay gated`);
+  process.exit(1);
+}
 if (!existsSync(dist)) { console.error('dist/client missing — run npm run build first'); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
 
@@ -94,12 +114,22 @@ for (const route of routes) {
       if (t.contrast !== null && t.contrast < bar) fails.push(`${at}: ${t.tag} "${t.t}" at ${t.fs} is ${t.contrast} on its ground (bar ${bar})`);
     }
 
-    // 3. one dark band per screen
+    // 3. one dark band per screen — and the band has to be an EXIT, not a poster. A band with no link
+    //    in it is what the old footer was: a slogan with a pulsing glyph and nowhere to go (D115).
     if (j.bands.length > 1) fails.push(`${at}: ${j.bands.length} dark bands (want 1): ${j.bands.map((b) => b.tag + ':' + b.cls.slice(0, 28)).join(' | ')}`);
+    for (const b of j.bands) {
+      const links = b.links || [];
+      if (!links.length) fails.push(`${at}: the dark band (${b.tag}) paints no path out — the band is the site's exit, it must offer the paths (D115)`);
+      for (const l of links) {
+        if (l.contrast !== null && l.contrast < 4.5) fails.push(`${at}: band link ${JSON.stringify(l.t)} is ${l.contrast} on the band (bar 4.5) — ${l.color}`);
+        if (l.h < 24) fails.push(`${at}: band link ${JSON.stringify(l.t)} is ${l.h}px tall — 24px is the floor for a target a pointer must hit`);
+      }
+    }
 
     // 4. keylines: a painted border / outline / decoration line darker than a hairline. The ratified
-    //    keyline is `inset-shadow-rule` — a 1px inset ring, measured 2.99 against paper in this same
-    //    harness (DESIGN.md records 3.01) — and it costs no height. A BORDER at the same hue measures
+    //    keyline is `inset-shadow-rule` — a 1px inset ring, measured 3.01 against paper in this same
+    //    harness, which is the number the specimen records — and it costs no height. A BORDER at the
+    //    same hue measures
     //    the same contrast and costs 2px, which is how a 40px control arrives at 42. So the bar here
     //    is about the grammar, not the hue: D105's 1.35 layer bar is for shadows.
     for (const k of j.keylines) {
@@ -113,8 +143,8 @@ for (const route of routes) {
     for (const n of j.notices || []) {
       if (n.fill) fails.push(`${at}: ${n.role} block paints a fill (${n.fill}) — a notice is word + keyline, never a fill (D102)`);
       if (n.inset !== 1) fails.push(`${at}: ${n.role} block keyline is ${n.inset}px, want the 1px inset ring (inset-shadow-rule)`);
-      if (n.keylineContrast !== null && Math.abs(n.keylineContrast - 2.99) > 0.2) {
-        fails.push(`${at}: ${n.role} keyline contrast ${n.keylineContrast} is not the ratified rule (measured 2.99 on paper, 4.00 on the band)`);
+      if (n.keylineContrast !== null && Math.abs(n.keylineContrast - 3.01) > 0.2) {
+        fails.push(`${at}: ${n.role} keyline contrast ${n.keylineContrast} is not the ratified rule (measured 3.01 on paper, 4.00 on the band)`);
       }
       if (n.textContrast !== null && n.textContrast < 4.5) fails.push(`${at}: ${n.role} text at contrast ${n.textContrast} is under the 4.5 bar`);
       if (n.h < 48) fails.push(`${at}: ${n.role} block is ${n.h}px tall — D98 puts a one-line notice at 48px`);
@@ -173,7 +203,10 @@ for (const route of routes) {
     }
     for (const k of [...new Map(j.keylines.map((k) => [k.w + k.raw + k.keylineContrast, k])).values()]) console.log(`   key   ${String(k.w).padStart(3)}px contrast ${String(k.keylineContrast).padStart(5)}  ${k.raw.padEnd(26)} ${(k.cls || '').slice(0, 40)}`);
     for (const n of j.notices || []) console.log(`   notc  ${String(n.h).padStart(5)}px x ${String(n.w).padStart(4)}px  inset ${n.inset}px contrast ${String(n.keylineContrast).padStart(5)}  text ${String(n.textContrast).padStart(5)}  ${n.role} ${JSON.stringify(n.text).slice(0, 34)}`);
-    for (const b of j.bands) console.log(`   band  ${String(b.h).padStart(5)}px  bg ${b.bg.padEnd(26)} fg ${b.fg.padEnd(24)} ${String(b.contrast).padStart(5)}  ${b.tag} ${(b.cls || '').slice(0, 40)}`);
+    for (const b of j.bands) {
+      console.log(`   band  ${String(b.h).padStart(5)}px  bg ${b.bg.padEnd(26)} fg ${b.fg.padEnd(24)} ${String(b.contrast).padStart(5)}  ${b.tag} ${(b.cls || '').slice(0, 40)}`);
+      for (const l of b.links || []) console.log(`          link ${String(l.h).padStart(4)}px ${l.fs.padEnd(6)} ${String(l.contrast).padStart(6)}  ${JSON.stringify(l.t)}`);
+    }
     for (const s of j.shadows) console.log(`   shdw  ${s.shadow.slice(0, 70)}  ${(s.cls || '').slice(0, 40)}`);
   }
 }

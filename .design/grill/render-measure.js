@@ -26,6 +26,33 @@
     }).catch(() => {});
   };
 
+  // Painted bytes, not author syntax. A screen is 8-bit: the browser converts oklch to sRGB, gamut-
+  // maps it, quantises to 1/255, and paints THAT. Feeding WCAG luminance from un-quantised linear
+  // channels — which is what the first version of this harness did — measures a colour nobody sees, and
+  // it drifted from the contrast oracle's records by ~0.1 on every pair (ink on paper read 11.73 here
+  // against a recorded 12.02). Canvas is the only oracle available here that is not my own arithmetic:
+  // fill a 1px canvas, read the byte back. That is the pixel.
+  const cvs = document.createElement('canvas');
+  cvs.width = cvs.height = 1;
+  const c2d = cvs.getContext('2d', { willReadFrequently: true });
+  const paintedCache = new Map();
+  const paintBytes = (s) => {
+    if (paintedCache.has(s)) return paintedCache.get(s);
+    c2d.globalCompositeOperation = 'source-over';
+    c2d.clearRect(0, 0, 1, 1);
+    c2d.fillStyle = '#00e600';               // sentinel: an unparseable assignment leaves this in place
+    c2d.fillStyle = s;
+    if (String(c2d.fillStyle) === '#00e600') { paintedCache.set(s, null); return null; }
+    c2d.fillRect(0, 0, 1, 1);
+    const d = c2d.getImageData(0, 0, 1, 1).data;
+    const v = d[3] === 0 ? null : { r: d[3] === 255 ? d[0] : Math.round(d[0] / (d[3] / 255)),
+                                    g: d[3] === 255 ? d[1] : Math.round(d[1] / (d[3] / 255)),
+                                    b: d[3] === 255 ? d[2] : Math.round(d[2] / (d[3] / 255)),
+                                    a: d[3] / 255 };
+    paintedCache.set(s, v);
+    return v;
+  };
+
   const oklchToLinear = (L, C, H) => {
     const hr = (H * Math.PI) / 180, a = C * Math.cos(hr), b = C * Math.sin(hr);
     const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
@@ -41,6 +68,12 @@
   };
   const parse = (s) => {
     s = (s || '').trim();
+    // Modern colour syntax goes through the browser's own converter; rgb()/hex are already bytes.
+    if (/^(oklch|oklab|lch|lab|hsl|hwb|color)\(/.test(s)) {
+      const p = paintBytes(s);
+      if (p) return p;
+      out.errors.push(`canvas could not paint ${s} — falling back to the arithmetic path`);
+    }
     let m = /^oklch\(([\d.]+)(?:e-?\d+)?\s+([\d.]+)(?:e-?\d+)?\s+([\d.]+)/.exec(s);
     if (m) return oklchToLinear(+m[1], +m[2], +m[3]);
     m = /^color\(srgb ([^)]+)\)/.exec(s);
@@ -112,6 +145,16 @@
   }).map((el) => {
     const cs = getComputedStyle(el), r = el.getBoundingClientRect(), c = parse(cs.backgroundColor);
     const fg = parse(cs.color);
+    // a band is the site's exit, so what matters is what you can press inside it: the harness reports
+    // the links with their painted colour, contrast against the band, and target height.
+    const links = [...el.querySelectorAll('a')].map((a) => {
+      const ar = a.getBoundingClientRect(), ac = parse(getComputedStyle(a).color);
+      return {
+        t: (a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 28),
+        fs: getComputedStyle(a).fontSize, h: +ar.height.toFixed(1), color: getComputedStyle(a).color,
+        contrast: ac && opaque(c) ? ratio(ac, c) : null,
+      };
+    });
     return {
       tag: el.tagName.toLowerCase(),
       cls: (el.getAttribute('class') || '').slice(0, 100),
@@ -119,6 +162,7 @@
       bg: cs.backgroundColor, fg: cs.color,
       contrast: fg && opaque(parse(cs.backgroundColor)) ? ratio(fg, c) : null,
       shadow: cs.boxShadow === 'none' ? '' : cs.boxShadow.slice(0, 60),
+      links,
     };
   });
 

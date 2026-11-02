@@ -1,12 +1,76 @@
 ---
+import config from '../config.json';
+
+// The band is the site's EXIT, so it answers the three things a visitor asks at the bottom of a page:
+// where do I go next, who is this, and when was this written. What used to sit here was a slogan
+// ("Join our Math ∑ Book Community") with a glyph pulsing at 0.5s forever and no links at all — the
+// glyph was the second-largest thing on the screen (29.9px), which is exactly what D112 forbids: the
+// display step belongs to a screen's locator, never to a punchline. Operator ruling, 2026-11-02: the
+// footer is designed entirely, and the pulse goes.
+//
+// Why there is no button in here: the primary control is an `ink` FILL (DESIGN.md "Buttons"), and an
+// ink fill on the ink band is invisible. So paths on the band are named by hue instead — the
+// `--color-path-*-on-ink` steps exist for precisely this ("the same four paths on the dark band",
+// 4.74 meetup / 4.59 discord, asserted in the contrast oracle) — and the band gets exactly one dark
+// region, which is what `check:render` counts.
+//
+// No "Home" link: the serif mark below is the home path, same as in the nav (D100, and the operator
+// confirmed the fourth nav link goes too).
+const year = new Date().getFullYear();
 ---
 
-<div
-  class='bg-ink text-band-text py-12 flex flex-col justify-center items-center'
->
-  <p class='text-lede text-center mb-4'>
-    Join our Math<!-- -->
-    <span class='text-heading text-gold-on-ink love'>∑</span>
-    <!-- -->Book Community
-  </p>
-</div>
+<footer class="bg-ink text-band-text">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <p class="text-micro uppercase tracking-wide">Where to next</p>
+
+    <!-- Targets are 32px tall (16px line box + py-2), the same accepted shape as the nav links; do not
+         shave the pad. `outline-band-text` is the focus ring HERE: gold on ink measures 2.50, which the
+         oracle bans, and `ratify-check` fails this file if a gold ring comes back. -->
+    <nav
+      aria-label="Where to next"
+      class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2"
+    >
+      <a
+        href='/chat'
+        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+      >
+        Community chat
+      </a>
+      <a
+        href={`${config.URLs.meetupGroup}/join`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class='py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+      >
+        Join on Meetup
+      </a>
+      <a
+        href={config.URLs.discordInvite}
+        target="_blank"
+        rel="noopener noreferrer"
+        class='py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+      >
+        Discord
+      </a>
+    </nav>
+
+    <!-- Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
+         because the club's name is carried by the face (D95/D100). The summand is the club's own glyph,
+         set inline at the size of the word beside it, in gold-on-ink (5.80), and NOT read aloud — it is
+         punctuation here, not a word. -->
+    <p class="mt-8 font-body text-body font-bold">
+      <a
+        href='/'
+        aria-label="Minneapolis Math Book Club, home"
+        class='py-1 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+      >
+        Minneapolis Math Book Club <span aria-hidden="true" class="text-gold-on-ink">∑</span>
+      </a>
+    </p>
+
+    <!-- Small print carries the place and the date, and nothing else: no frequency claim (D92), and the
+         old "All rights reserved" boilerplate is gone with the rest of the old band. -->
+    <p class="mt-6 text-micro">Minneapolis, Minnesota</p>
+    <p class="mt-1 text-micro">&#169; {year} Minneapolis Math Book Club</p>
+  </div>
+</footer>

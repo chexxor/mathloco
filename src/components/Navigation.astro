@@ -14,10 +14,12 @@ const navItems = [
 
 <header class="bg-paper">
   <nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-    <!-- D100 shape B, measured in .design/grill/nav-fit.html: one row at every width, the mark
-         shortened to "MPLS Math Club" so the row needs 310px and a 375 viewport's content box is
-         343. Below the `nav-narrow` breakpoint (360px) the links take the already-ratified 11.1px
-         chrome step and the gap goes to 8px: needs 262px, fits a 320's 288 and a 300's 268.
+    <!-- D100 shape B, re-measured on the built artifact by `npm run check:render`: one row at every
+         width, `flex-wrap: nowrap`, and the row needs 321px in the wide tier and 273px in the narrow
+         one. The boundary is --breakpoint-nav-narrow (370px, src/styles/global.css): at a 360 viewport
+         the container offers 316 and the wide tier misses by 6px; at 375 it offers 331 and fits. Below
+         the tier the links take the already-ratified 11.1px chrome step and the gap goes to 8px, and
+         available is 276 at a 320 viewport (+3) — 320 is the site's floor (D114).
 
          `flex-nowrap` is the load-bearing part. The shipped nav was `flex-col` + `flex-wrap`, which
          is why the page clipped and links disappeared (A needed 397px, more than every content box

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.svelte';
+import config from '../config.json';
 
 // Nothing here is per-request: the island fetches /api/discord-summary in the browser, and the rest
 // of the page is static markup. Prerendering turns /chat into a static asset (no Worker CPU, no cold
@@ -8,8 +9,9 @@ import DiscordSummary from '../components/DiscordSummary.svelte';
 export const prerender = true;
 
 // One place for the invite, because the island's empty and failed states need to offer the same
-// path out that the CTA does (D108: a designed state names where the content lives).
-const DISCORD_URL = "https://discord.com/invite/wx5S7YJSkU";
+// path out that the CTA does (D108: a designed state names where the content lives) — and the footer
+// band names the same destination. That one place is `URLs.discordInvite` in src/config.json.
+const DISCORD_URL = config.URLs.discordInvite;
 ---
 
 <Layout title="Discord Chat - Minneapolis Math Book Club">
