@@ -352,14 +352,21 @@ const logoRow = `
 <div class="palrow" data-panel="P-logo" data-policy="logo">
   <div class="phead"><b>L-A / L-B</b> The most saturated pixel on the landing page belongs to Meetup</div>
   <div class="swrow">
-    <img src="../../public/Meetup_Logo.png" alt="Meetup logo as shipped" width="96" height="96" data-slot="logo-colour">
-    <img src="../../public/Meetup_Logo.png" alt="Meetup logo in ink" width="96" height="96" data-slot="logo-ink" style="filter:grayscale(1) brightness(0.35)">
+    <!-- The mark file is gone from the site (deleted 2026-11-02, round 10 ruling), so this panel shows the
+         colour that was measured in it rather than the file itself: the evidence is the bytes and the pixel
+         count, and a specimen that points at a deleted path is a broken image wearing evidence's clothes. -->
+    <div class="sw" data-slot="logo-colour" style="background: rgb(237,28,64);"></div>
+    <div class="sw" data-slot="logo-ink" style="background: oklch(32% 0.045 152);"></div>
   </div>
   <p class="note">Measured: <code>rgb(237,28,64)</code>, 14,820 px at chroma 0.226 (x 631–828, y 1956–2144) —
   <b>0.52% of the landing page at 1240, and the most chromatic thing on it</b>. Our own highest-chroma role is
   <code>gold</code> at C 0.12. So "the site is drab" and "the page is loud in one red spot" are both true at once.
   The options: leave the third-party logo as it is; draw our own join-path glyph so nothing third-party saturates
-  the page; or out-colour it by raising our own area (Q1/Q2).</p>
+  the page; or out-colour it by raising our own area (Q1/Q2).
+  <b>Decided 2026-11-02:</b> the mark is removed and the platforms are named in our own type, with one attribution
+  line in the footer (round 10, D132/D133). Consequence measured with the corrected survey: the reader-named colour
+  band (C >= 0.08) fell from 0.48% of desktop pixels to 0.02% — the red really was most of our saturation. See
+  <code>design/records/0013-*</code> for the rule and its gaps.</p>
 </div>`;
 
 // ================= operator-facing specimen =================

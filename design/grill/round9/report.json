@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-11-02 09:55",
+  "measuredAt": "2026-11-02 23:48",
   "window": "1240x3504",
   "shot": ".design/tmp-color/round9/census.png",
   "dpr": 1,
@@ -21,14 +21,14 @@
       "chromaticPct": 13.6,
       "strongPct": 0,
       "meanChroma": 0.045,
-      "faintPct": 3.42,
+      "faintPct": 3.41,
       "whitePct": 82.23,
       "blackPct": 0,
       "hueFamilies": 2,
       "bands": [
         {
           "hueFrom": 150,
-          "pct": 13.54
+          "pct": 13.55
         },
         {
           "hueFrom": 60,
@@ -47,17 +47,17 @@
         "h": 925.2
       },
       "px": 1117400,
-      "chromaticPct": 12.7,
+      "chromaticPct": 12.8,
       "strongPct": 0.4,
       "meanChroma": 0.047,
-      "faintPct": 4.49,
+      "faintPct": 4.46,
       "whitePct": 82.09,
       "blackPct": 0,
       "hueFamilies": 5,
       "bands": [
         {
           "hueFrom": 150,
-          "pct": 12.24
+          "pct": 12.27
         },
         {
           "hueFrom": 60,
@@ -73,7 +73,7 @@
         },
         {
           "hueFrom": 30,
-          "pct": 0.04
+          "pct": 0.03
         }
       ],
       "mostSaturated": [
@@ -122,14 +122,14 @@
       "chromaticPct": 12.9,
       "strongPct": 0.5,
       "meanChroma": 0.048,
-      "faintPct": 46.88,
+      "faintPct": 46.86,
       "whitePct": 39.76,
       "blackPct": 0,
       "hueFamilies": 6,
       "bands": [
         {
           "hueFrom": 150,
-          "pct": 12.29
+          "pct": 12.31
         },
         {
           "hueFrom": 60,
@@ -145,7 +145,7 @@
         },
         {
           "hueFrom": 30,
-          "pct": 0.04
+          "pct": 0.03
         },
         {
           "hueFrom": 90,
@@ -2892,7 +2892,7 @@
       "slot": "path-0",
       "x": 30,
       "y": 760.2,
-      "w": 337.2,
+      "w": 333.4,
       "h": 30,
       "color": "oklch(0.93 0.008 152)",
       "colorBytes": [
@@ -2916,9 +2916,9 @@
     {
       "panel": "S-A",
       "slot": "path-1",
-      "x": 383.2,
+      "x": 379.4,
       "y": 760.2,
-      "w": 291.5,
+      "w": 287.7,
       "h": 30,
       "color": "oklch(0.93 0.008 152)",
       "colorBytes": [
@@ -2937,14 +2937,14 @@
       "shadow": null,
       "font": "PT Serif",
       "fontSize": "16px",
-      "text": "Discord Join our active community of 158"
+      "text": "Discord Join our active community of 211"
     },
     {
       "panel": "S-A",
       "slot": "path-2",
-      "x": 690.7,
+      "x": 683.1,
       "y": 760.2,
-      "w": 316.7,
+      "w": 312.9,
       "h": 30,
       "color": "oklch(0.93 0.008 152)",
       "colorBytes": [
@@ -3282,7 +3282,7 @@
       "slot": "path-0",
       "x": 30,
       "y": 1685.4,
-      "w": 337.2,
+      "w": 333.4,
       "h": 30,
       "color": "oklch(0.72 0.15 315)",
       "colorBytes": [
@@ -3306,9 +3306,9 @@
     {
       "panel": "S-B",
       "slot": "path-1",
-      "x": 383.2,
+      "x": 379.4,
       "y": 1685.4,
-      "w": 291.5,
+      "w": 287.7,
       "h": 30,
       "color": "oklch(0.71 0.14 35)",
       "colorBytes": [
@@ -3327,14 +3327,14 @@
       "shadow": null,
       "font": "PT Serif",
       "fontSize": "16px",
-      "text": "Discord Join our active community of 158"
+      "text": "Discord Join our active community of 211"
     },
     {
       "panel": "S-B",
       "slot": "path-2",
-      "x": 690.7,
+      "x": 683.1,
       "y": 1685.4,
-      "w": 316.7,
+      "w": 312.9,
       "h": 30,
       "color": "oklch(0.7 0.11 205)",
       "colorBytes": [
@@ -3672,7 +3672,7 @@
       "slot": "path-0",
       "x": 30,
       "y": 2610.6,
-      "w": 337.2,
+      "w": 333.4,
       "h": 30,
       "color": "oklch(0.72 0.15 315)",
       "colorBytes": [
@@ -3696,9 +3696,9 @@
     {
       "panel": "S-C",
       "slot": "path-1",
-      "x": 383.2,
+      "x": 379.4,
       "y": 2610.6,
-      "w": 291.5,
+      "w": 287.7,
       "h": 30,
       "color": "oklch(0.71 0.14 35)",
       "colorBytes": [
@@ -3717,14 +3717,14 @@
       "shadow": null,
       "font": "PT Serif",
       "fontSize": "16px",
-      "text": "Discord Join our active community of 158"
+      "text": "Discord Join our active community of 211"
     },
     {
       "panel": "S-C",
       "slot": "path-2",
-      "x": 690.7,
+      "x": 683.1,
       "y": 2610.6,
-      "w": 316.7,
+      "w": 312.9,
       "h": 30,
       "color": "oklch(0.7 0.11 205)",
       "colorBytes": [
