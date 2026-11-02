@@ -384,12 +384,24 @@ npm run check:render            # build, then measure dist/client in Firefox: co
 npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
                                 # or whenever a rebuild would undo the thing being measured
 node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
-node design/mark-pixels.mjs <shot> <report>   # what the mark actually painted in its box, by colour cluster
+node design/mark-pixels.mjs <shot> <report> [--crop out.png]   # what the mark actually painted in its box, by
+                                # colour cluster; --crop writes the box up 3x so you can look at what was clustered
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
                                 # the producer itself, not the shipped artifact (D121). Needs firefox, so
                                 # like check:render it is outside verify: run it beside check:render.
 npm run check:social            # measure the committed share card's painted bytes against the page report
 npm run check:social:selftest   # prove the share-card checks can still fail (seven synthetic cards)
+```
+
+**These pixel gates are cheap, and they are the ones CI does not run.** Measured on the dev rig (Linux, 16 CPU,
+Firefox 158.0.1, native): one page at one width **0.83–0.89s**, the 3x3 matrix **4.2s** at `RENDER_JOBS=4`
+(7.6s serialized), `check:render` with its build **8.3s**, the render selftest **4.7s**,
+`check:social:live` **1.3s** — the whole browser ritual is **~14s** (**D123**). `verify` stays browser-free
+because the runner has no Firefox, which means `check:render`, `check:render:dist`,
+`design/render-gate-selftest.mjs` and `check:social:live` currently run on human ritual before a deploy, not on
+every PR. The recommendation is to install Firefox in CI and add a `verify:browser` chain — `check:render:dist`
+after `verify`'s build, plus the selftests and the live card. Until someone does that, run them yourself before
+suggesting a merge.
 npm run verify                  # the full CI gate set
 ```
 

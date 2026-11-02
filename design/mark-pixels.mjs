@@ -1,9 +1,13 @@
 // mark-pixels.mjs — what did the hero's drawn mark ACTUALLY paint, in bytes?
 //
-//   node design/mark-pixels.mjs <shot.png> <render-json> [markIndex]
+//   node design/mark-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]
 //   e.g.
 //     node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 320 1400 .design/tmp-mark-320.png
-//     node design/mark-pixels.mjs .design/tmp-mark-320.png .design/render/_-320.json
+//     node design/mark-pixels.mjs .design/tmp-mark-320.png .design/render/_-320.json --crop .design/tmp-mark-320-crop.png
+//
+// --crop writes the measured box out (up-scaled with nearest-neighbour, default 3x) so the thing being
+// clustered can be LOOKED at next to the numbers — the line-weight question is exactly the kind a number
+// alone settles badly. It is scratch output: name it .design/tmp-*.
 //
 // Why: the mark is line art, and line art is where D119 bites hardest — a stroke thinner than about 1.5px
 // never contains a fully-covered pixel, so "the token pair is 3.01" and "what the screen shows" are
@@ -13,11 +17,18 @@
 //
 // Not a gate. It is the measurement a decision about line weight has to be taken from; the gate stays
 // `check:render` (pair, 3.0 graphic bar, >=1px device stroke, shape count).
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import sharp from 'sharp';
 
-const [shot, jsonFile, idxArg = '0'] = process.argv.slice(2);
-if (!shot || !jsonFile) { console.error('usage: node design/mark-pixels.mjs <shot.png> <render-json> [markIndex]'); process.exit(2); }
+const argv = process.argv.slice(2);
+// this probe's output gets piped into head a lot; a closed pipe is not a crash
+process.stdout.on('error', () => process.exit(0));
+const flag = (name, def) => { const i = argv.indexOf(`--${name}`); return i === -1 ? def : argv[i + 1] ?? def; };
+const positional = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--crop' && argv[i - 1] !== '--zoom');
+const [shot, jsonFile, idxArg = '0'] = positional;
+const cropOut = argv.includes('--crop') ? flag('crop') : null;
+const zoom = Math.max(1, Number(flag('zoom', 3)));
+if (!shot || !jsonFile) { console.error('usage: node design/mark-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]'); process.exit(2); }
 const j = JSON.parse(readFileSync(jsonFile, 'utf8'));
 const m = j.marks[Number(idxArg)];
 if (!m) { console.error(`${jsonFile} reports no measured mark`); process.exit(1); }
@@ -33,14 +44,33 @@ const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 // The ground, sampled from a strip beside the mark rather than from a token: the page's ground is a
 // painted background, and the question is what the pixels under the mark are.
 const gy = Math.round(m.y + m.h / 2);
+if (gy < 0 || gy >= height) {
+  console.error(`the mark's vertical centre (y=${gy}) is outside the ${height}-tall shot. firefox --screenshot
+captures the WINDOW, so a shot taken shorter than y+h simply does not contain the mark: re-measure with the
+height the gate uses — node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 320 1400 shot.png`);
+  process.exit(1);
+}
 const strip = [];
-for (let x = Math.max(0, m.x - 12); x < Math.max(0, m.x - 2); x++) strip.push(at(x, gy));
-const ground = strip.reduce((best, c) => (strip.filter((o) => dist(o, c) < 12).length > strip.filter((o) => dist(o, best) < 12).length ? c : best), strip[0]);
-
+for (let x = Math.max(0, m.x - 12); x < Math.max(0, m.x - 2); x++) if (x >= 0 && x < width) strip.push(at(x, gy));
+const ground = strip.length
+  ? strip.reduce((best, c) => (strip.filter((o) => dist(o, c) < 12).length > strip.filter((o) => dist(o, best) < 12).length ? c : best), strip[0])
+  : null;
+if (!ground) {
+  console.error(`no strip beside the mark to sample the ground from (mark starts at x=${Math.round(m.x)} of a ${width}-wide shot). Measure a page where the mark is not flush against the edge, or compare against the band colour the report names.`);
+  process.exit(1);
+}
 const x0 = Math.max(0, Math.round(m.x)), x1 = Math.min(width - 1, Math.round(m.x + m.w));
 const y0 = Math.max(0, Math.round(m.y)), y1 = Math.min(height - 1, Math.round(m.y + m.h));
 const inks = [];
 for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const c = at(x, y); if (dist(c, ground) > 24) inks.push(c); }
+if (!inks.length) {
+  console.error(`no ink inside the box: ${m.w}x${m.h} at ${m.x},${m.y} inside a ${width}x${height} shot. Two usual causes:
+  1. the shot does not contain the mark — firefox --screenshot captures the WINDOW, so a shot shorter than
+     y+h drops it. Use the height the gate uses: dist-measure.mjs dist/client / render-measure.js 320 1400 shot.png;
+  2. the ground strip beside it landed on the mark itself (sampled ${ground.join(',')}) — then everything in
+     the box counts as "same as ground". Try another page or another mark index.`);
+  process.exit(1);
+}
 // cluster like scripts/check-social-card.mjs does (40 RGB units) so anti-aliased blends of one stroke
 // collapse into one row instead of forty
 const clusters = [];
@@ -52,16 +82,26 @@ for (const c of inks) {
 clusters.sort((a, b) => b.n - a.n);
 const total = (x1 - x0 + 1) * (y1 - y0 + 1);
 
-console.log(`mark "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${m.scale}) in a ${width}x${height} shot`);
-console.log(`ground sampled beside it: ${ground.join(',')} — ink threshold 24 RGB units, ${inks.length}/${total} pixels in the box are ink (${((inks.length / total) * 100).toFixed(1)}%)`);
-for (const cl of clusters.slice(0, 8)) {
-  const c = cl.c.map(Math.round);
-  console.log(`  ${String(cl.n).padStart(5)} px  ${c.join(',').padEnd(13)} contrast ${String(contrast(c, ground)).padStart(6)}  (token pair of its colour: see the run's strokeContrast column)`);
-}
 const strongest = clusters.reduce((a, b) => (contrast(b.c, ground) > contrast(a.c, ground) ? b : a), clusters[0]);
 const perStroke = m.shapes.map((s) => {
   const pair = s.strokeContrast ?? s.fillContrast;
   return `${s.tag} ${s.sw}u=${s.swDevice}px pair ${pair}`;
 });
-console.log(`\n  per shape (pair, from author syntax via the browser's own paint): ${perStroke.join(' | ')}`);
+if (cropOut) {
+  // written before any printing: a pipe closed by `| head` must not cost you the image
+  const left = Math.max(0, Math.round(m.x)), top = Math.max(0, Math.round(m.y));
+  await sharp(shot)
+    .extract({ left, top, width: Math.min(width - left, Math.round(m.w)), height: Math.min(height - top, Math.round(m.h)) })
+    .resize({ width: Math.round(m.w * zoom), kernel: 'nearest' })
+    .png()
+    .toFile(cropOut);
+}
+console.log(`mark "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${m.scale}) in a ${width}x${height} shot`);
+console.log(`ground sampled beside it: ${ground.join(',')} — ink threshold 24 RGB units, ${inks.length}/${total} pixels in the box are ink (${((inks.length / total) * 100).toFixed(1)}%)`);
+for (const cl of clusters.slice(0, 8)) {
+  const c = cl.c.map(Math.round);
+  console.log(`  ${String(cl.n).padStart(5)} px  ${c.join(',').padEnd(13)} contrast ${String(contrast(c, ground)).padStart(6)}  (token pair of its colour: see the per-shape line below)`);
+}
+console.log(`  per shape (pair, from author syntax via the browser's own paint): ${perStroke.join(' | ')}`);
 console.log(`  strongest painted cluster: ${strongest.c.map(Math.round).join(',')} at ${contrast(strongest.c, ground)} — the coverage ceiling for this box at this width.`);
+if (cropOut) console.log(`  crop written: ${cropOut} (${Math.round(m.w * zoom)}px wide, ${zoom}x nearest — name it .design/tmp-* so it stays scratch)`);
