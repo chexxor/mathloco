@@ -45,7 +45,7 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/grill/dist-measure.mjs dist/client <page> <measure.js> <width…>` | measure one built page at given widths (the harness behind `check:render`) | yes |
 | `node design/grill/contrast-oracle.mjs <cfg.json>` | the renderer-side colour oracle over a config (`cd design/grill` first — it resolves config paths against its own directory) | yes |
 | `node design/mark-pixels.mjs <shot.png> <report.json>` | what a drawn mark actually painted inside its box, by colour cluster | no |
-| `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist | no |
+| `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
 
 Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
 3 × 3 matrix serialized ≈ 7.8 s, at `RENDER_JOBS=4` ≈ 4.2 s; `check:render` with its build ≈ 8.3 s; the

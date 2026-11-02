@@ -19,7 +19,7 @@
 // --stale is the one to run after any rename: a doc that cites a path which no longer exists is a
 // pointer a future session will follow into a wall. Path literals named *because* they are gone, or
 // that were never paths, are listed in KNOWN_GONE with the reason — this is meant to be a gate, so it
-// may not shrug at anything else.
+// may not shrug at anything else. Scratch files never count as citable sources unless --scratch is set.
 import { execSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -46,11 +46,16 @@ const subjects = (scratch ? walk('design').concat(existsSync('.design') ? walk('
 
 const ROOTS = ['package.json', 'DESIGN.md', 'AGENTS.md', 'README.md', 'src', 'scripts', '.agents', '.notes', 'design', '.design', '.github'];
 const textExt = /\.(m?js|ts|tsx|json|md|astro|svelte|sh|css|py|yml|txt)$/;
+// Scratch is not a citable source. `.design/` is scratch by rule (design/README.md), and the harness
+// writes `.probe-shot-*` / `.measured-*` / `rendered-*` next to whatever it probes. A scratch log that
+// happened to record a failing command line turned this gate red by quoting a path that never existed —
+// the gate judges tracked, durable text, and `--scratch` opts the rest back in.
+const scratchFile = (f) => f.startsWith('.design/') || /(^|[\\/])(\.probe-shot-|\.measured-|rendered-)/.test(f);
 const sources = ROOTS.filter(existsSync)
   .flatMap((r) => (statSync(r).isDirectory() ? walk(r) : [r]))
   .filter((f) => textExt.test(f))
   .map((f) => [f, (() => { try { return readFileSync(f, 'utf8'); } catch { return ''; } })()])
-  .filter(([f, t]) => t);
+  .filter(([f, t]) => t && (scratch || !scratchFile(f)));
 
 // every path literal that looks like a repo path, so --stale can resolve it
 const PATHRE = /['"`]((?:design|\.design|src|scripts|public)\/[A-Za-z0-9._/-]*[A-Za-z0-9])['"`]/g;

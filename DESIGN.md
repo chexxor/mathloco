@@ -391,6 +391,7 @@ npm run check:social:live       # run the card generator into a gitignored temp 
                                 # like check:render it is outside verify: run it beside check:render.
 npm run check:social            # measure the committed share card's painted bytes against the page report
 npm run check:social:selftest   # prove the share-card checks can still fail (seven synthetic cards)
+npm run verify                  # the browser-free CI gate set (everything above except the pixel gates)
 ```
 
 **These pixel gates are cheap, and they are the ones CI does not run.** Measured on the dev rig (Linux, 16 CPU,
@@ -402,8 +403,6 @@ because the runner has no Firefox, which means `check:render`, `check:render:dis
 every PR. The recommendation is to install Firefox in CI and add a `verify:browser` chain — `check:render:dist`
 after `verify`'s build, plus the selftests and the live card. Until someone does that, run them yourself before
 suggesting a merge.
-npm run verify                  # the full CI gate set
-```
 
 That `design/` tooling is **tracked**: record 0009 says design evidence ships with the repo, and only
 `tmp-*`, `render/`, probe screenshots and candidate font files are ignored (they stay in `.design/`, the
