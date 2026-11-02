@@ -547,7 +547,7 @@ word in event prose.
   the accepted shot list — the board after a meeting, venues, hands and materials, the diagram artwork itself —
   is in `.notes/asset-sources.md`. Strip EXIF/GPS on commit; faces need the opt-in rule in
   `.notes/consent-and-data-policy.md`.
-- **Round 9 (colour) is built and measured; the ruling is the operator's** (`node npm run round9`, 2026-11-02 —
+- **Round 9 (colour) is built and measured; the ruling is the operator's** (`npm run round9`, 2026-11-02 —
   specimen `design/grill/round-9.html`, numbers `design/grill/round9/report.json`, record `colourRound9` in
   `design/decisions.json`). What the scan settled, before any taste: the reserved hues leave **exactly one open
   window, 246–274°, 29° wide**, because round 3b's ≥40° rule is arithmetic on a wheel. The shipped palette
