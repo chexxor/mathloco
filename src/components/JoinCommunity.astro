@@ -49,21 +49,15 @@ import config from '../config.json';
             </ul>
           </div>
 
-          <!-- PS-3, the join media column (operator ruling, grill round 10: reserve it now). `check:space`
-               measures this column at 526x165 at 1240 and 298x225 at 390 — the 165 is set by the copy column
-               beside it, and the png that used to sit here was 200x192 inside a box 2.6x its area. So the shot
-               list for this place is 526x316 (3:2 of the row the copy already makes), and until a real
-               photograph exists the column carries the join path itself, which is what it carries now.
-               `data-slot` is a probe handle: `check:space` and `npm run round10` re-measure the applied box
-               rather than trusting this comment. -->
-          <div data-slot="PS-3">
           <!-- PS-3, the join media column (round 10 ruling: reserve it now). `check:space` measures this column
                at 532x128 at 1240 and 310x245 at 390. Unlike the hero column this one is NOT spare air: its height
                is the call-to-action's own height, so a photo here is a GROWTH, not a reclamation - at the column's
                measured 532x128 it adds ~152px to the card (and `check:rhythm` says page height is not free). That
                is worth paying once a real photograph of this club exists; it is not worth paying for a stock one
                (D94). The call-to-action below stays whether or not the photo does: a photograph may add to the
-               join path here, never replace it. -->
+               join path here, never replace it. `data-slot` is a probe handle: `check:space` and `npm run
+               round10` re-measure the applied box instead of trusting this comment. -->
+          <div data-slot="PS-3">
           <PhotoSlot
             slot="join"
             ratio="532 / 128"
