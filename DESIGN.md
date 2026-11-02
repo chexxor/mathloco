@@ -457,32 +457,51 @@ and the screen can disagree.
   R−B ≥ 25). Guessing them from luminance classified the sphere ring as route ink and produced confident
   nonsense ("0 crossings", "0 gold pixels near the pole").
 
-### Photograph slots and third-party marks (ruled 2026-11-02)
+### Photograph slots and third-party marks (ruled 2026-11-02, applied)
 
-- **Photo slots are fixed-aspect and have a defined empty state.** A slot without a photo shows the drawn mark
-  or nothing at all — never a grey void (`design/records/0010-missing-content-is-a-state.md`). Declared aspect:
-  a `width`/`height` pair that agrees with the file, because Tailwind preflight's `img { height: auto }` makes an
-  HTML height attribute inert, and a lazy image whose box is wrong reflows the page — measured on the one image
-  the landing page ships: **2495px → 2607px, 112px** when it decoded.
-  The reserved slots and their sizes are drawn to scale in `design/grill/round-10-photos.html`, and every box is a
-  **measured grid column** rather than a drawn guess (`npm run round10` measures the drawing back and fails above
-  1px): hero media column **372×564** at 1240 (below 1024px the hero is not a grid; the mark there is 346×216); a
-  venue strip **1180×320** at 1240 / **346×230** at 390, where 1180 and 346 are the measured content widths; the join
-  media column **526×165** today, proposed **526×316** because the copy column beside it makes that row 316 tall; and
-  an event-card thumb **319×110** inside the measured **366.7×204.7** card, whose `p-6` leaves a 319×157 interior.
+- **A reserved place is a component: `src/components/PhotoSlot.astro`.** Drop
+  `src/assets/photos/<slot>.<ext>` and the call site uses it; until then the call site renders its own
+  **usable** empty state — the hero column keeps the drawn mark, the join column keeps the join path. A grey box
+  labelled "photo coming" is a production note wearing a visitor's clothes (`design/records/0010-missing-content-is-a-state.md`).
+  A photo that exists **requires an `alt` describing what it shows**, or the build throws: an invented alt is the
+  same defect as an invented photograph, and nothing renders it visually.
+- **The aspect ratio is declared in CSS, never left to the file.** Tailwind preflight's `img { height: auto }`
+  makes an HTML height attribute inert — the png this page shipped asked for `200x80` and rendered **200×192** —
+  and a lazy image whose box is undeclared reflows the page: measured **2495px → 2607px, 112px**, which is also
+  why a measurement has to let the images settle before it chooses a crop.
+- **The reserved sizes are measured columns, not drawn guesses, and the specimen looks them up rather than
+  remembering them** (`npm run round10` fails if a matcher finds no such slot on the built page, and measures the
+  drawing back to within 1px; the numbers come from `npm run check:space`, which walks grid/flex children by
+  computed `display`, and the page labels its own places with `data-slot` so a specimen is not matching a slot to
+  a Tailwind class). At 1240 today: hero media column **376×564** with a **376×235** mark in it, so **329px of a
+  column the page already pays for paints nothing** — the reserved place is **376×250** above the mark, which costs
+  **no page height at all**. Join media column **532×128** at 1240 / **310×245** at 390: unlike the hero this is
+  **not spare air** — its height is the call-to-action's own height, so a photo there is a ~152px *growth*, worth
+  paying for a real photograph and not for a stock one; the call-to-action renders whether the photo does or not.
+  *Proposed*: a venue strip **1192×320** at 1240 / **358×230** at 390, where 1192 and 358 are the widest containers
+  the page reports, and an event-card thumb **323×110** inside the measured **371×205** card whose `p-6` leaves a
+  **323×157** interior. The px figures move by ~4px depending on whether the document fits the window (a scrollbar
+  takes width), so **the ratio is the contract and the px is the shot list** — the shot list per slot is
+  `src/assets/photos/README.md`. A slot's height claim must name which neighbour made it: an earlier version of
+  this section said the join row was "316 tall because the copy column beside it makes it so", and the columns were
+  labelled backwards — the 316 was the media column, because it was holding a 192px image.
 - **A third-party mark is never our brand colour, and it is named in our type before it is drawn.** Platforms are
-  referred to by a link plus our own words ("Sessions are posted on Meetup"); the `path-*` hues are *wayfinding*
-  colours of ours, not the platforms' palettes. If a mark appears at all it is the **official file, unmodified,
-  in clearspace, next to the name it stands for** — a recoloured or re-drawn third-party mark is a different risk
-  from a recoloured word, and it is the one the retrievable terms (Discord's) name explicitly. Meetup's own brand
-  terms are **not retrievable from this rig** (JS shell / 403), so nobody may assert them from memory.
-- **Attribution is one static line in the footer, not a component.** Specific wording, no boilerplate (D92):
-  "Meetup and the Meetup logo are trademarks of Meetup, Inc. This site is the Minneapolis Mathematics Book
-  Club's own; it is not Meetup's or Discord's." Cost measured: ~16px of a 131px footer.
-- **Measured, so the trade-off is visible:** the Meetup png is **1.24%** of the desktop page's area (200×192) and
-  **the most saturated colour on the site** (0.523% of pixels at hue 0–30°, mean chroma 0.226). Removing it takes
-  the page's chromatic share from **3.77%** to about **3.25%**. The drabness therefore has to be answered by area
-  and by true content — photographs and the surfaces that carry real facts — not by borrowing another company's red.
+  referred to by a link plus our own words ("Sessions are posted on Meetup, where the calendar and the sign-up
+  live"); the `path-*` hues are *wayfinding* colours of ours, not the platforms' palettes. If a mark appears at all
+  it is the **official file, unmodified, in clearspace, next to the name it stands for** — a recoloured or re-drawn
+  third-party mark is a different risk from a recoloured word, and it is the one the retrievable terms (Discord's)
+  name explicitly. Meetup's own brand terms are **not retrievable from this rig** (JS shell / 403), so nobody may
+  assert them from memory. Applied: the Meetup png is out of `public/` and out of the join card.
+- **Attribution is one static line in the footer, not a component.** Written: "Meetup and Discord are trademarks of
+  their owners. This site is the club's own — not sponsored or endorsed by either." It is capped at
+  `max-w-measure` like any prose block.
+- **Measured, so the trade-off is visible** (`npm run check:color`, whole-page crop, settled images — see the
+  instrument note under Enforcement). Before, at 1240: **0.49%** of the page was colour a reader would name
+  (chroma ≥ 0.08) and **0.48 points of that was Meetup's red** — i.e. **96% of the site's visible colour belonged
+  to another company**. After the demotion: **0.02%** at 1240 and **0.05%** at 320. At 320 before: **1.06%**, of
+  which **1.04** was that red. So the drabness was never caused by too little of *our* colour being available; it
+  is caused by area and content, and the answer is photographs and surfaces that carry real facts — not borrowing
+  another company's red.
 
 ## Enforcement
 
@@ -502,9 +521,20 @@ npm run check:render:dist       # the same measurement on the dist that exists (
 node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
 node design/mark-check.mjs      # npm run check:mark - both mark probes, at the two widths that bracket the
                                 # box (320: 276px wide, scale 1.15; 1240: 372px, scale 1.55). Needs a built dist.
-node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints: % of pixels at
-                                # chroma >= 0.04, mean chroma of that ink, and how many 30-degree hue families
-                                # carry it. No pass/fail: it is the before-number a colour round argues from.
+node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints. Two-pass: it asks
+                                # the page its own settled height, then shoots the WHOLE page (a fixed 2400px frame
+                                # of a 2495px document hid the ink footer and reported a different page). Reports
+                                # chroma >= 0.04, chroma >= 0.08 ("colour a reader would name" - ink is C 0.045, so
+                                # the first bar counts every glyph), faint 0.012-0.04, and 30-degree hue families.
+                                # No pass/fail: it is the before-number a colour round argues from.
+npm run check:space             # where emptiness is: per-surface painted share, chars/1000px, empty rows above and
+                                # below the first/last line, declared padding vs where paint starts, the biggest
+                                # copy-to-copy gaps, every media box, and the grid/flex CHILD columns a photo slot
+                                # would take (matched by computed display, so a lg:grid that only exists at 1024px
+                                # is not missed). position:fixed elements are excluded and the count is printed.
+npm run check:rhythm            # the same page with each proposed spacing option applied to a COPY of dist, measured
+                                # at both widths: edges / edges+rules / interior / slots / all. Writes
+                                # design/rhythm/report.json. Nothing here mutates the shipped artifact.
 node design/mark-pixels.mjs <shot> <report> [--crop out.png]   # what the mark actually painted in its box, by
                                 # colour cluster; --crop writes the box up 3x so you can look at what was clustered
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
@@ -559,13 +589,19 @@ word in event prose.
 ## Open threads that are not gates yet
 
 - **The site is colour-sparse, and that is now measured rather than felt** (`design/color-survey.mjs`,
-  2026-11-02, operator request). On the built pages, with a chroma bar of 0.04: the landing page paints
-  **3.8%** chromatic pixels at 1240 (mean chroma of that ink 0.070) across 3 hue families, and **5.2%** at 320
-  across **1** family. `/404` and `/chat` paint **0.5%**, each with **one** hue family — the green-ink family.
-  The single most saturated thing on the landing page is **not ours**: 14,820 px of `rgb(237,28,64)` at
-  C 0.226 is the **Meetup logo** in the Join-community CTA. A round is needed, and every hue it adds has to
-  clear, on painted bytes: **3.0** as a graphic, **4.5** as text (**7.0** as body), **1.35** as a fill against
-  its ground (D101/D116); **≥40°** of hue separation from the primary and from the reserved path hues (round
+  2026-11-02, operator request). **The first version of these numbers was a crop, not a page** — the survey shot a
+  fixed 2400px frame of a 2495px document (and 1400px of a ~4500px one at 320), which put the `bg-ink` footer band
+  out of frame and reported **3.8%** chromatic. It now shoots the settled whole page. At 1240 (**1240×2607** before
+  the mark demotion, **1240×2492** after): **11.3%** / **12.6%** of pixels clear the 0.04 chroma bar — but
+  **10.8 / 12.6 points of that is the ink ground itself** (`--color-ink` is C 0.045, so every glyph and the footer
+  band count). The number that means what "drab" means is **chroma ≥ 0.08 — colour a reader would name: 0.49%**
+  before, **0.02%** after; at 320 it is **1.06% → 0.05%**. Gold paints **0.01–0.03%** of the page. `/404` and
+  `/chat` are worse: one hue family each, the green-ink family.
+  Until 2026-11-02 the single most saturated thing on the landing page was **not ours**: 14,820 px of
+  `rgb(237,28,64)` at C 0.226 was the **Meetup logo** in the Join-community CTA — 96% of the site's reader-visible
+  colour. That is removed (see "Photograph slots and third-party marks"), which is why the remaining colour budget
+  has to be spent on area and real content. A round still has to clear, on painted bytes: **3.0** as a graphic,
+  **4.5** as text (**7.0** as body), **1.35** as a fill against its ground (D101/D116); **≥40°** of hue separation from the primary and from the reserved path hues (round
   3b); gold keeps its **0.135** minimum distance to every other colour (the Amazon/UMN gold zone, D88); any
   role the mark or a band uses needs an `-on-ink` variant, because the footer band inverts the ground; and the
   card re-runs through `assets:social` + `check:social` in the same commit.
@@ -597,24 +633,48 @@ word in event prose.
   **Ruled 2026-11-02 (partial):** **H-A approved** — no new hue; the free win is spending colour on things that
   mean something. **K-B provisionally accepted** — one route line gold (`gold-on-ink` on dark grounds) "until we
   find something better"; hold the caveat that mark colouring is coverage-flat, so this buys distinctness, not
-  legibility, and re-run `design/mark-pixels.mjs` before shrinking the mark further. **Still needing a ruling:**
-  surface policy **S-A/S-B/S-C**; the **27° `gold ↔ path-discord`** twin (exception or fix); and whether the
-  leading miss below rides this round or takes its own.
+  legibility, and re-run `design/mark-pixels.mjs` before shrinking the mark further. **Ruled 2026-11-02 (rest of
+  the round):** surface policy **S-B** — colour where it means something; `S-C` (colour as area) rejected because
+  its area measured **46.9% faint tint and 0.5% strong**, a wash the census cannot even see as colour, and area is
+  now carried by photographs instead. The **27° `gold ↔ path-discord`** twin is ruled a **defect to fix**, in its own
+  measured round (the fix re-homes `path-discord` into the only open window, 246–274°, and moves 12 measured pairs).
+  **Body line spacing gets its own round** (round 11), because it moves geometry the rest of the system depends on.
+- **Vertical rhythm is measured and unruled** (`npm run check:rhythm`, 2026-11-02; rows in
+  `design/rhythm/report.json`). Each option is applied as CSS to a **copy** of `dist/client`
+  (`.design/tmp-whitespace/dist-<option>/`) and measured there — the shipped artifact is never mutated, and a cached
+  variant report is invalidated when the built page's fingerprint changes. At 1240, shipped: **2492px**, **41.5%**
+  of the height in 8 empty runs, **4.30%** painted. Options measured: **edges** (hero margins 128/96 → 64/64,
+  section padding 64 → 48) **−160px** tall, **37.5%** empty, biggest run 217 → 169; **edges+1px rules** −158px and
+  no painted-share change (a rule costs air, not ink, so these two are a *look* decision the numbers cannot make);
+  **interior** (the six-card grid's padding and gaps) **−32px** and, after the demotion, **more** emptiness (+42px in
+  9 runs) — the cheap lever is not a good one here; **slots** (PS-1 and PS-3 filled at their approved sizes)
+  **page height unchanged**, −51px empty, painted **4.30% → 10.99%**; **all** −192px tall, 37.7% empty, painted
+  11.91%. At 390 the levers move: the hero is not a grid below 1024, so **slots** buys only −67px there, while
+  **interior** buys −135px — which is the same finding as round 10's, that on a phone the emptiness lives *between
+  the six cards*. Emptiness splits **509px at surface edges** (what padding and line boxes declare) against the rest
+  **between elements inside a surface**, where padding cannot reach. The recommendation is a **sequence, not a
+  ruling in the abstract**: fill the two approved slots first (it costs no height and roughly doubles painted
+  share), then re-measure, and only then decide whether the 160px of edge air still reads as air.
 - **The page is thin, not wide — round 10 (area)** (`npm run check:space`, 2026-11-02, operator: "the landing page
-  is still mostly whitespace"). At 1240 the built document is **2495px** tall (**2607px** once the lazy image
-  decodes), **4.56%** of pixels differ from their own ground by the 0.05 same-colour bar, and **42%** of the page
-  height sits in **8** empty runs ≥ 60px (biggest **217px**); at 390, **8.16%** painted and **35.7%** empty in
-  **14** runs, and those runs move *inside* `section.bg-panel` between cards. Read per line, nothing is over-long —
-  prose measures **29–38 characters per line** at every shipped width (`npm run lines:measure`), i.e. under the
-  comfort band rather than over it — so this is **not** a line-length problem and no type ruling fixes it. The
-  emptiness decomposes into **structure** (declared padding **256px** plus a **128px** header→main gap and a **96px**
-  main→section gap; `section.bg-paper` alone wastes **170px** above its first line and **278px** below its last),
-  **media** (the photo slots: hero **6.78%**, venue strip **12.2%** of the page), **content** (the two disabled event
-  sections — the dates do not live in this repo, and D69 forbids making Meetup's feed an architecture input) and
-  **copy** (the panel section's 866 characters are six generic cards). Two of the four are not code. Side finding,
-  given the site rule "a hairline rule at most": the header band is **1240×72** with **1.0%** of its pixels differing
-  from the page behind it and the footer is **1240×248** at **0.7%** — mass, not weight, is what breaks that rule
-  today.
+  is still mostly whitespace"). Measured on the settled, whole-page crop **after** the mark demotion: at 1240 the
+  built document is **2492px** tall, **4.30%** of pixels differ from their own ground by the 0.05 same-colour bar,
+  and **41.5%** of the page height sits in **8** empty runs ≥ 60px (biggest **217px**); at 390 it is **4127px**,
+  **7.70%** painted and **36.8%** empty in **14** runs, and those runs move *inside* `section.bg-panel` between
+  cards. (The first figures quoted **2495px / 4.56% / 42%** on the pre-demotion page, and they were shot before the
+  lazy image decoded — the crop clipped 112px of footer. Both are superseded here.) Read per line, nothing is
+  over-long — prose measures **29–38 characters per line** at every shipped width (`npm run lines:measure`), i.e.
+  under the comfort band rather than over it — so this is **not** a line-length problem and no type ruling fixes it.
+  The emptiness decomposes into **structure** (declared padding **256px** plus a **128px** header→main gap and a
+  **96px** main→section gap; `section.bg-paper` wastes **74px** above its first line and **96px** below its last,
+  and the copy gaps run to **288px**), **media** (the photo slots: hero column ~2.9% painted by the mark, the join
+  column 165px tall holding nothing but a button now), **content** (the two disabled event sections — and the
+  operator has ruled the schedule's source must be **phone-editable**, Mobilizon or an ICS feed, not a repo file:
+  see `.notes/roadmap-events.md`) and **copy** (the panel section's **866** characters are six generic cards, and
+  the largest copy gap on the page follows the "Current Focus" line). Two of the four are not code. Side finding,
+  given the site rule "a hairline rule at most": the header band is **1240×72** with **1.0%** of its pixels
+  differing from the page behind it (18 characters in it), and the footer is **1240×284** at **1.9%** — the single
+  largest unbroken field on the page. Mass, not weight, is what breaks that rule today, which is why the attribution
+  line went into the footer rather than being another band.
 - **Body line spacing is now 1.36, and that is a ruling waiting to happen.** `text-body` 17.6px with the
   derived 24px line box is a ratio of 1.36; serif prose writes `leading-prose` (1.6 → 28.2px) and is fine, but
   6 writes carry the bare token (the island's three state sentences, the wordmark, the footer identity line,
