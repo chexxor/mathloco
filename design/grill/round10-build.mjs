@@ -34,45 +34,106 @@ const surfaceOf = (page, clsStart, tag) =>
   page.surfaces.find((x) => x.tag === tag && (x.cls || '').startsWith(clsStart));
 const boxOf = (page, pred) => page.media.find(pred);
 
-// Slot boxes are MEASURED, not drawn to taste. `design/whitespace-survey.mjs` reports the children of every
-// grid/flex container on the built page (matched on COMPUTED display, because the hero grid here is `lg:grid
-// lg:grid-cols-12` and a `.grid` class selector silently misses variant classes). A photo goes INTO a container,
-// so the container is the slot: the hero's media column is 372x564 while the drawing inside it is 372x232.5.
-// `proposed` boxes take their width from measured neighbours -- content width is 1180 at 1240 and 346 at 390.
+// Slot boxes are MEASURED, not drawn to taste, and they are looked up rather than remembered.
+// `design/whitespace-survey.mjs` reports the children of every container whose COMPUTED display is grid/flex
+// (matching a `.grid` class misses the hero's `lg:grid lg:grid-cols-12`), plus every such container itself.
+// A photo goes INTO a container, so the container's column is the slot.
+//
+// This file used to hard-code the boxes. That is how it started asserting numbers the page had already changed
+// (372x564 -> 376x564 when the third-party image left the page, since a lazy image's box is also a scrollbar's
+// box), and one pair of columns was labelled backwards. So: every number below is fetched from the report by a
+// matcher, and a matcher that finds nothing THROWS - a stale assumption in a specimen fails the build instead of
+// becoming a plausible sentence (design/records/0014, design/records/0015).
+const R = (v) => Math.round(v);
+const need = (page, pred, what) => {
+  const hit = page.slots.find(pred);
+  if (!hit) {
+    throw new Error(
+      `round10-build: no ${what} in the slots report for ${page.width}px - the page changed shape and this ` +
+      `matcher is stale. Slots found: ${page.slots.map((x) => `${x.tag}.${(x.cls || '').slice(0, 30)}`).join(' | ')}`,
+    );
+  }
+  return hit;
+};
+const geo = {};
+for (const w of SRC) {
+  const page = pages[w];
+  // The hero's media column only exists where `lg:` applies (>=1024px); below that the hero stacks and the only
+  // thing in it is the mark. Recorded as null so the specimen says that instead of inventing a scaled number.
+  // The page names its own places (`data-slot`), so that is the matcher. `lg:col-span-4` is not: the report
+  // truncates class strings, and matching a slot to a styling class is matching it to whatever the layout
+  // happens to be called this week.
+  const hero = page.slots.find((x) => x.dataSlot === 'PS-1') || null;
+  // Below 1024 the hero wrapper is not flex either, so the mark is not a grid/flex CHILD; it is still in the
+  // media list, which reports every drawing at its computed box. Prefer the slot (it carries the container's
+  // display and gap), fall back to media, and throw if neither knows about it.
+  const mark = page.slots.find((x) => x.tag === 'svg' && /w-full h-auto/.test(x.cls || ''))
+    || page.media.find((x) => x.tag === 'svg' && /w-full h-auto/.test(x.cls || ''));
+  if (!mark) throw new Error(`round10-build: the hero mark is in neither the slots nor the media report at ${w}px`);
+  const joinCols = page.slots.filter((x) => /items-center/.test(x.parent) && x.tag === 'div');
+  if (joinCols.length < 2) throw new Error(`round10-build: expected two columns in the join card at ${w}px, found ${joinCols.length}`);
+  // The card's two columns, in source order: [the list column, the call-to-action column]. Which one is TALLER
+  // is what sets the row height - and getting that backwards is how "the copy column already makes the row 316
+  // tall" ended up in a doc: it was the media column that was 316 tall, because it held the image.
+  const [listCol, ctaCol] = joinCols;
+  const card = need(page, (x) => /rounded-card/.test(x.cls || '') && /p-6/.test(x.cls || ''), 'a feature card');
+  const cta = page.slots.find((x) => x.dataSlot === 'PS-3') || null;
+  const contentW = Math.max(...page.regions.map((r) => r.w));
+  geo[w] = {
+    hero: hero ? [R(hero.w), R(hero.h)] : null,
+    mark: [R(mark.w), R(mark.h)],
+    // PS-3 is whatever the page calls PS-3; only if the label is missing do we fall back to "the second column
+    // of the join card", and the row-height claim still uses both columns.
+    join: [R(cta ? cta.w : ctaCol.w), R(cta ? cta.h : ctaCol.h)],
+    joinLabelled: !!cta,
+    listCol: [R(listCol.w), R(listCol.h)],
+    rowH: R(Math.max(listCol.h, ctaCol.h)),
+    card: [R(card.w), R(card.h)],
+    cardInner: [R(card.w) - 48, R(card.h) - 48],
+    contentW: R(contentW),
+  };
+}
+const g = (w, k) => (geo[w][k] === null ? 'n/a' : geo[w][k].join(' x '));
+const n = (w, k) => geo[w][k];
+
 const slots = [
   {
     id: 'PS-1', name: 'Hero media column',
-    live: { 1240: [372, 564], 390: [346, 216] },
-    aspect: 'portrait at 1240 (372 x 564, 1:1.52); at 390 the hero stops being a grid, so there is no empty column -- the mark alone is 346 x 216',
-    fills: 'Shot 2 (venue interior) or shot 3 (hands and materials). Today the column holds the drawn mark at 372 x 232.5, so 331px of a 564px column paints nothing.',
-    empty: 'The drawn mark, exactly as shipped today -- a slot with no photo is a state, not a grey rectangle (design/records/0010).',
-    note: 'The mark stays in this column when there is no photo: photo-free by construction is still the rule (D94); the slot only changes what CAN go there.',
+    live: { 1240: geo[1240].hero, 390: geo[390].mark },
+    proposed: { 1240: [n(1240, 'mark')[0], n(1240, 'hero')[1] - n(1240, 'mark')[1] - 32], 390: null },
+    aspect: `at 1240 the column is ${g(1240, 'hero')} and the mark inside it paints ${g(1240, 'mark')} - so ${n(1240, 'hero')[1] - n(1240, 'mark')[1]}px of a column the page already pays for paints nothing. At 390 the hero is not a grid, so there is no empty column: the mark alone is ${g(390, 'mark')}.`,
+    fills: 'Shot 2 (venue interior) or shot 3 (hands and materials). The reserved place is the free part of the column beside the mark: 376 x 250 at 1240, which lands the column at ~517 of its 564 without moving the row.',
+    empty: 'The drawn mark, exactly as shipped - a slot with no photo is a state, not a grey rectangle (design/records/0010).',
+    note: 'The mark stays in this column whether or not a photo exists: photo-free by construction is still the rule (D94); the slot only changes what CAN go there.',
   },
   {
     id: 'PS-2', name: 'Venue strip (proposed)',
-    proposed: { 1240: [1180, 320], 390: [346, 230] },
-    aspect: '1180 x 320 is 3.69:1 -- a phone camera at 4:3 crops to this with real height lost, so shoot wide and level',
+    proposed: { 1240: [geo[1240].contentW, 320], 390: [geo[390].contentW, 230] },
+    aspect: `${n(1240, 'contentW')} x 320 is ${(n(1240, 'contentW') / 320).toFixed(2)}:1 - a phone camera at 4:3 crops to this with real height lost, so shoot wide and level`,
     fills: 'Shot 2 (venues): one strip per venue, the honest answer to "interesting venues" (Ambrosia Coffee is the venue node on the club\'s own group page).',
     empty: 'No strip at all. A proposed slot must not ship as an empty band.',
-    note: "Width is not a taste call: 1180 is the measured content width at 1240 (the hero grid's own box) and 346 at 390. This is the largest area gain on the list.",
+    note: `Width is not a taste call: ${n(1240, 'contentW')} and ${n(390, 'contentW')} are the widest containers the page reports at those widths. This is the largest area gain on the list, and the largest risk of shipping a void.`,
   },
   {
     id: 'PS-3', name: 'Join media column',
-    live: { 1240: [526, 165], 390: [298, 225] },
-    proposed: { 1240: [526, 316], 390: [298, 225] },
-    aspect: 'the column is 526 x 165 today; the proposed photo is 526 x 316 because the copy column beside it already makes the row 316 tall',
-    fills: 'Shot 1 (the board after a meeting) or shot 3 (materials). This is the column that today holds the Meetup png.',
-    empty: 'Today: the Meetup logo at 200 x 192 (1.24% of the desktop page) inside a column 2.6x its area -- and the site\'s loudest colour belongs to Meetup.',
-    note: 'Whatever goes here must be a FIXED box: the current image asks for 200x80 while its file is 834x799, and the page shifts 112px when it decodes (measured 2495 -> 2607).',
+    live: { 1240: geo[1240].join, 390: geo[390].join },
+    proposed: { 1240: geo[1240].join, 390: geo[390].join },
+    aspect: `the column is ${g(1240, 'join')} at 1240 and ${g(390, 'join')} at 390; the list column beside it is ${g(1240, 'listCol')}, and the taller of the two sets the row (${n(1240, 'rowH')}px). This column's height is the call-to-action's own height, so a photo here is a growth, not a reclamation.`,
+    labelled: n(1240, 'joinLabelled') ? 'PS-3 matched by its data-slot on the built page' : 'PS-3 label missing on the page - matched positionally instead',
+    liveWhat: 'the column as it stands today - the call-to-action is what gives it this height',
+    proposedWhat: "a photo at the column's measured size: the width is not a guess, and the height is the honest cost of putting an image here",
+    fills: "Shot 1 (the board after a meeting) or shot 3 (materials). Unlike PS-1 this is not spare air: the column is as tall as the call-to-action, so a photo here adds its own height plus the gap (~152px at 532 x 128) to the card. Pay that for a photograph of this club, not for a stock one (D94).",
+    empty: `Today the column carries the join path itself (the CTA), since the third-party mark was removed from the build on 2026-11-02. That is the state: it is not a void.`,
+    note: 'Whatever goes here is a FIXED box: the image that used to sit here asked for 200x80 while its file is 834x799, preflight made the height attribute inert, and the page shifted 112px when it decoded (2495 -> 2607).',
   },
   {
     id: 'PS-4', name: 'Event-card thumb (proposed)',
-    live: { 1240: [367, 205], 390: [346, 205] },
-    proposed: { 1240: [319, 110], 390: [298, 110] },
-    aspect: '2.9:1 at 319 x 110 -- the measured card is 366.7 x 204.7 and its p-6 padding leaves a 319 x 157 interior, so the thumb fits above the copy without growing the card',
+    live: { 1240: geo[1240].card, 390: geo[390].card },
+    proposed: { 1240: [geo[1240].cardInner[0], 110], 390: [geo[390].cardInner[0], 110] },
+    aspect: `the measured card is ${g(1240, 'card')} and its p-6 padding leaves a ${g(1240, 'cardInner')} interior, so a ${n(1240, 'cardInner')[0]} x 110 thumb (${(n(1240, 'cardInner')[0] / 110).toFixed(2)}:1) fits above the copy without growing the card`,
     fills: 'Shot 1 (board) or shot 4 (the sphere diagram artwork, which needs creator + licence, not just a file).',
     empty: 'No thumb: the card\'s type carries it (the share card already proves a drawn motif works).',
-    note: 'This slot waits on the schedule surface, not on photography: the two event sections are switched off in src/config.json because the dates do not live in this repo yet.',
+    note: 'This slot waits on the schedule surface, not on photography: the two event sections are switched off in src/config.json because the dates do not live in this repo yet - and the operator has ruled the source must be phone-editable (Mobilizon or an ICS feed).',
   },
 ];
 
@@ -198,19 +259,19 @@ const html = `<!doctype html>
 
  <h2>Two numbers that make the rules concrete</h2>
  <ul>
-  <li><b>Fixed boxes, or the page moves.</b> The one image on the landing page asks for 200&times;80 while its
-   file is 834&times;799, and Tailwind's preflight sets <code>img { height: auto }</code> &mdash; so the
-   rendered box is 200&times;192, and because it is lazy-loaded the page reflows by
-   <b>${meet ? Math.round(2607 - 2495) : '?'}px</b> when it decodes (measured: document height 2495 without it, 2607 with).
-   Every photo slot gets a declared aspect ratio for this reason.</li>
-  <li><b>The loudest colour on the site is not ours.</b> The Meetup png is <b>${colourSurvey ? colourSurvey.bands.find((b) => b.hueFrom === 0).pct : '?'}%</b>
-   of the desktop page's pixels at hue 0-30&deg; and its mean chroma (0.226) is the highest in the system
-   (round 9's census). Dropping it takes the page's chromatic share from
-   <b>${colourSurvey ? colourSurvey.chromaticPct : '?'}%</b> to about
-   <b>${colourSurvey ? (colourSurvey.chromaticPct - colourSurvey.bands.find((b) => b.hueFrom === 0).pct).toFixed(2) : '?'}%</b>
-   &mdash; which is the honest cost of the operator's Q4 ruling, and the reason area (photos, content) has to
-   pay for the drabness instead.</li>
- </ul>
+  <li><b>Fixed boxes, or the page moves.</b> The image this page used to ship asked for 200&times;80 while its
+   file was 834&times;799, and Tailwind's preflight sets <code>img { height: auto }</code> &mdash; so the rendered
+   box was 200&times;192, and because it was lazy-loaded the page reflowed by <b>112px</b> when it decoded
+   (measured: document 2495px without it, 2607px with). It is out of the build now, which is why nothing in the
+   media list is a photograph &mdash; but every photo slot still declares its aspect ratio for exactly this reason.</li>
+  <li><b>The loudest colour on the site was not ours.</b> Before the 2026-11-02 mark demotion the survey found
+   <b>0.48%</b> of the desktop page at hue 0-30&deg; with mean chroma 0.226 &mdash; the Meetup png &mdash; against
+   <b>0.49%</b> of the whole page at the "colour a reader would name" bar. On mobile it was 1.04 of 1.06. So
+   <b>~96% of the site's visible colour belonged to another company</b>. It is gone: the 0-30&deg; band is now
+   empty (the survey reports ${colourSurvey ? colourSurvey.bands.length : '?'} families, none of them red), and the
+   page's reader-named colour is <b>${colourSurvey ? colourSurvey.strongPct : '?'}%</b>. The drabness is area and
+   content, not another company's red &mdash; which is what these slots are for.</li>
+</ul>
 
  <h2>Rules every slot inherits (already ruled, not new)</h2>
  <ul>

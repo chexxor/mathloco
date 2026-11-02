@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+
+/**
+ * A reserved photograph place, with its size declared rather than discovered.
+ *
+ * Why this exists (operator ruling, grill round 10, 2026-11-02): the club has no photographs yet, and
+ * "no photos" has been used as a reason for empty columns. A slot that is *reserved* — measured geometry,
+ * a declared aspect ratio, and a defined state when there is no picture — turns "get photos" into a shot
+ * list instead of a mood. The two reserved now (PS-1 hero, PS-3 join) are area the page already pays for:
+ * the hero media column is `376x564` and its mark paints `376x235` of it (329px of it paints nothing), and
+ * the join media column is `532x128` — which is NOT spare air: its height is the call-to-action's height, so a
+ * photo there is a growth of ~152px rather than a reclamation. Those numbers come from `npm run check:space` walking the built page's grid/flex children;
+ * `design/grill/round10/report.json` is the record. They are NOT design tokens — they are what the layout
+ * already is, so a filled slot cannot quietly change the page's geometry.
+ *
+ * The aspect ratio is declared in CSS, not left to the file. Tailwind's preflight sets `img { height:
+ * auto }`, which makes an HTML `height` attribute inert: the Meetup png in this same column asked for
+ * `200x80` and rendered `200x192`, because only its width was ever honoured (`design/records/0013`,
+ * `design/records/0014`). Without a declared ratio the document reflows when the image decodes — measured
+ * here as `2495px -> 2607px`, a 112px jump.
+ *
+ * The empty state is the fallback content, chosen per call site, and it is always something a visitor can
+ * use. A grey box labelled "photo coming" is a production note wearing a visitor's clothes — hatched
+ * placeholders belong in `npm run round10`'s diagrams, where they tell the operator what to shoot, not on
+ * the site (DESIGN.md "States: empty, loading, failed").
+ */
+type Props = {
+  /** Which file fills this place: `src/assets/photos/<slot>.<ext>`. First match wins. */
+  slot: string;
+  /** What the photograph shows, in the club's own words. Required the moment a photo exists (see below). */
+  alt?: string;
+  /** CSS `aspect-ratio`, e.g. `376 / 250`. Must match the crop in the shot list. */
+  ratio: string;
+  class?: string;
+};
+
+// Files land here rather than in `public/` so Astro's asset pipeline resizes and formats them: a phone
+// camera frame is ~4000x3000 and the slot it fills is 526 CSS px wide.
+const PHOTOS = import.meta.glob('../assets/photos/*.{jpg,jpeg,png,avif,webp}', { eager: true });
+const found = Object.keys(PHOTOS)
+  .filter((k) => k.split('/').pop()!.toLowerCase().startsWith(`${Astro.props.slot.toLowerCase()}.`))
+  .sort()[0];
+const photo = found ? (PHOTOS[found] as { default?: unknown }).default : undefined;
+
+const { ratio } = Astro.props;
+// An invented or placeholder alt is the same defect as an invented photograph, and it is the kind that
+// ships silently because nothing renders it visually. So the build refuses instead: when a photo lands in
+// src/assets/photos/, the call site has to say what it shows.
+if (photo && !Astro.props.alt) {
+  throw new Error(
+    `PhotoSlot "${Astro.props.slot}": ${found} needs an alt describing what the photograph shows — ` +
+      `an invented or missing alt asserts something the picture does not support`,
+  );
+}
+---
+
+{
+  photo ? (
+    <Image
+      src={photo as never}
+      alt={Astro.props.alt!}
+      loading="eager"
+      decoding="async"
+      class={`w-full block object-cover ${Astro.props.class ?? ''}`}
+      style={`aspect-ratio: ${ratio};`}
+    />
+  ) : (
+    <slot />
+  )
+}

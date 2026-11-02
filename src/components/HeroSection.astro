@@ -1,5 +1,6 @@
 ---
 import { MARK } from '../lib/brand-mark.mjs';
+import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
@@ -100,8 +101,21 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
       </div>
     </div>
     <div
+      data-slot="PS-1"
       class='mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-4 lg:flex lg:items-center'
     >
+      <!-- PS-1, the hero media column, reserved for a real photograph (round 10 ruling). `check:space`
+           measures this column at 376x564 at 1240, and the mark below paints 376x235 of it — so 329px of
+           a column the page is already paying for paints nothing. The reserved place is 376x250 (3:2), which
+           sits above the mark and lands the column at ~517 of its 564 without moving the row's geometry. It
+           renders nothing until `src/assets/photos/hero.<ext>` exists: the mark is this slot's empty state,
+           not a grey box. Below 1024 the hero stops being a grid, which is why the mobile figure is the mark
+           alone at 346x216 rather than a scaled version of these numbers. -->
+      <PhotoSlot
+        slot="hero"
+        ratio="376 / 250"
+        class="mb-8"
+      />
       <!-- No frame, no fill, no keyline around the mark. The `rounded-card overflow-hidden` wrapper here
            was a photograph's frame; around a drawn mark it is a rectangle pretending to be content —
            the same defect that deleted the island's skeleton in apply 4c. The mark is part of the page
