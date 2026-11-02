@@ -20,15 +20,13 @@
      design-enforce then flags any 20px write. ---- */
   --spacing: 0.25rem;
 
-  /* ---- One breakpoint, and it is a layout role not a size preference (D100). The nav's narrow tier
-     is where the wide tier stops fitting. D100 ratified the tier at "below ~360px" from an arithmetic
-     that took a 320 viewport's content box as 288 — that figure is scrollbar-FREE. Measured in the
-     built artifact (.design/render/, Firefox 158, headless), a 360 viewport's container offers 316, not
-     328, because the scrollbar costs ~12; the wide tier needs 322. So 360 was 6px short. 370 is the
-     smallest value that keeps the wide tier wherever the measurement says it fits (375 offers 331 and
-     the row needs 322) and puts the narrow tier where it does not (360 -> needs 273, has 316).
-     Type steps and gaps are unchanged from D100: links 11.1px / 8px gaps below, 13.3px / 16px above. ---- */
-  --breakpoint-nav-narrow: 370px;
+  /* RETIRED (D117, apply 4f): --breakpoint-nav-narrow is gone, and it stays gone. The nav needed a
+     narrow type tier only because it carried four labels (mark + Schedule + Chat + Members), and two of
+     those pointed at pages the build never emitted. With the dead paths dropped the wide tier needs 171px
+     against a 320 container's 276 — and 256 even at 300 — so one tier fits everywhere and the second tier
+     bought nothing. If a real page adds a label back, measure first (check:render prints
+     needed-of-available per width): "Schedule" is 57.6px at this tier, so the row would need 245 — inside
+     276 — and a third path would not fit. ONE more path, not two. */
 
   /* ---- colour ROLES, named for what they are for (D89). Contrast pairs are renderer-measured. ---- */
   --color-paper: oklch(98.5% 0.006 85); /* ground for the page; #fcfaf6 */

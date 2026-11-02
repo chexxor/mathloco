@@ -48,7 +48,7 @@ const ALLOWED_COLLISIONS = new Set([
 // A retired token must STAY retired. book-theme's last two references were ::selection and a global
 // `.underline` class in Layout.astro that painted an amber highlighter instead of underlining; both
 // went in apply batch 3, so its return to @theme would be a regression, not a typo.
-const RETIRED_GONE = ['--color-book-theme'];
+const RETIRED_GONE = ['--color-book-theme', '--breakpoint-nav-narrow'];
 const collisions = declared.filter((d) => twDefaults.has(d) && !ALLOWED_COLLISIONS.has(d));
 console.log('\n== token block: declared keys, collisions with Tailwind defaults ==');
 console.log(`  ${declared.length} keys declared; ${new Set(declared).size} distinct`);
@@ -143,6 +143,9 @@ for (const [re, why] of [
   [/class=["'][^"']*(?:^|\s)prose(?:\s|-blue)/, 'a prose-plugin write (`prose` / `prose-blue`)'],
   [/\bbg-(?:red|blue|green|amber|yellow|gray|slate)-\d{2,3}/, 'a palette fill in markup, where the grammar says word + keyline'],
   [/#f59e0b/i, 'the retired amber (#f59e0b) — delta-OKLab 0.019 from Amazon orange, and 2.06 as text on paper (D82/D88)'],
+  // an ad-hoc arbitrary breakpoint is how a layout tier stops being enforced: the token is the thing
+  // `check:render` reads, and a bracket writes nothing to it (D117 retired the nav tier and its token)
+  [/class=["'][^"']*(?:min|max)-\[/, 'an arbitrary `min-[…]:` / `max-[…]:` breakpoint — a layout tier needs a ratified --breakpoint-* token, which is what the gates read'],
 ]) {
   const hits = liveFiles.filter(([, t]) => re.test(t)).map(([f]) => f);
   if (hits.length) fail(`${why} — still written in ${hits.join(', ')}`);
@@ -176,9 +179,9 @@ const promised = [
   'rounded-control', 'rounded-card',
   'duration-150', 'duration-250', 'ease-out', 'ease-linear',
   'p-3', 'p-6', 'mt-6', 'gap-2', 'font-body',
-  // the nav tier is a token (--breakpoint-nav-narrow), so its variant must resolve — otherwise the
-  // narrow tier silently disappears and the wide tier overflows a phone
-  'nav-narrow:text-label', 'nav-narrow:gap-4', 'text-micro',
+  // text-micro is the kickers' and the footer's small print. The nav's narrow tier is retired (D117),
+  // and --breakpoint-nav-narrow is asserted ABSENT with the other retired tokens.
+  'text-micro',
 ];
 console.log('\n== utilities the token block must produce ==');
 const unresolved = promised.filter((c) => !ds.candidatesToCss([c])[0]);

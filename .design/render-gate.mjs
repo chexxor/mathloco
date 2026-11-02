@@ -23,7 +23,8 @@
 //     rule contrast, text at or above the 4.5 bar, and a height that clears D98's 48px one-line figure
 //   - the nav: one row at every width, flex-wrap: nowrap, one type tier per viewport, and the row must
 //     FIT the container's content box (D100's needed-vs-available probe, run on the built artifact).
-//     The tier boundary is read from --breakpoint-nav-narrow so this gate cannot drift from the CSS.
+//     The tier boundary, if there is one, is read from --breakpoint-nav-narrow so this gate cannot
+//     drift from the CSS; that token is currently retired (D117), so the nav holds one tier everywhere.
 //   - one display step per screen
 //   - no horizontal overflow at any measured width, and tap targets that clear 44px at 390
 //
@@ -57,8 +58,13 @@ const routes = pages.length ? pages : ['/', '/404', '/chat'];
 const dist = resolve('dist/client');
 // the tier boundary is read out of the token block, not remembered: a moved --breakpoint-nav-narrow
 // moves this gate with it instead of quietly disagreeing with the CSS
-const NAV_NARROW = Number((readFileSync('src/styles/global.css', 'utf8').match(/--breakpoint-nav-narrow:\s*(\d+)px/) ?? [])[1]);
-if (!NAV_NARROW) { console.error('no --breakpoint-nav-narrow in src/styles/global.css — the nav probe needs it'); process.exit(1); }
+// The tier boundary is READ from the token block, never remembered, so this gate cannot drift from the
+// CSS. It is now optional: the token was retired in D117 (the nav's two dead-path labels went, and the
+// wide tier fits everywhere), and the gate honours either shape — one tier at every width, or a ratified
+// --breakpoint-nav-narrow with a tier each side of it. The one shape it will not accept is an ad-hoc
+// `min-[412px]:` bracket, because a bracket writes nothing that any gate reads.
+const navTier = readFileSync('src/styles/global.css', 'utf8').match(/--breakpoint-nav-narrow:\s*(\d+)px/);
+const NAV_NARROW = navTier ? Number(navTier[1]) : null;
 if (process.env.RENDER_WIDTHS) {
   if (!widths.includes(FLOOR)) console.log(`NOTE  RENDER_WIDTHS overrides the default set and omits ${FLOOR} — the declared floor. The shipped gate must measure it.`);
 } else if (!widths.includes(FLOOR)) {
@@ -160,8 +166,8 @@ for (const route of routes) {
       if (Math.max(...centres) - Math.min(...centres) > 1) fails.push(`${at}: nav links are not on one row (centres ${centres.join(', ')}) — D100 shape B is a single row`);
       const links = j.nav.links.slice(1);              // links[0] is the mark
       const tiers = new Set(links.map((l) => l.fs));
-      if (tiers.size > 1) fails.push(`${at}: nav links mix ${tiers.size} type tiers (${[...tiers].join(', ')}) — one tier per viewport`);
-      const want = w < NAV_NARROW ? '11.1px' : '13.3px';   // text-micro / text-label (DESIGN.md's type table)
+      if (tiers.size > 1) fails.push(`${at}: nav links mix ${tiers.size} type tiers (${[...tiers].join(', ')}) — one tier per viewport` + (NAV_NARROW === null ? ', and no --breakpoint-nav-narrow is declared: a second tier needs a ratified token, not a bracket (D117)' : ''));
+      const want = NAV_NARROW === null ? '13.3px' : (w < NAV_NARROW ? '11.1px' : '13.3px');   // DESIGN.md's type table
       for (const l of links) if (l.fs !== want) fails.push(`${at}: nav link ${JSON.stringify(l.t)} renders ${l.fs} at ${w}px, want ${want}`);
       const right = Math.max(...j.nav.links.map((l) => l.right));
       if (right > j.vw) fails.push(`${at}: nav row reaches ${right}px on a ${j.vw}px viewport — the label set no longer fits (D100's probe)`);
