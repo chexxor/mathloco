@@ -1,0 +1,4087 @@
+{
+  "measuredAt": "2026-11-02 09:55",
+  "window": "1240x3504",
+  "shot": ".design/tmp-color/round9/census.png",
+  "dpr": 1,
+  "chromaBar": 0.04,
+  "band": 30,
+  "familyFloorPx": 300,
+  "before": null,
+  "panels": [
+    {
+      "id": "S-A",
+      "policy": "S-A",
+      "box": {
+        "x": 16,
+        "y": 24,
+        "w": 1208,
+        "h": 925.2
+      },
+      "px": 1117400,
+      "chromaticPct": 13.6,
+      "strongPct": 0,
+      "meanChroma": 0.045,
+      "faintPct": 3.42,
+      "whitePct": 82.23,
+      "blackPct": 0,
+      "hueFamilies": 2,
+      "bands": [
+        {
+          "hueFrom": 150,
+          "pct": 13.54
+        },
+        {
+          "hueFrom": 60,
+          "pct": 0.05
+        }
+      ],
+      "mostSaturated": []
+    },
+    {
+      "id": "S-B",
+      "policy": "S-B",
+      "box": {
+        "x": 16,
+        "y": 949.2,
+        "w": 1208,
+        "h": 925.2
+      },
+      "px": 1117400,
+      "chromaticPct": 12.7,
+      "strongPct": 0.4,
+      "meanChroma": 0.047,
+      "faintPct": 4.49,
+      "whitePct": 82.09,
+      "blackPct": 0,
+      "hueFamilies": 5,
+      "bands": [
+        {
+          "hueFrom": 150,
+          "pct": 12.24
+        },
+        {
+          "hueFrom": 60,
+          "pct": 0.35
+        },
+        {
+          "hueFrom": 300,
+          "pct": 0.05
+        },
+        {
+          "hueFrom": 180,
+          "pct": 0.05
+        },
+        {
+          "hueFrom": 30,
+          "pct": 0.04
+        }
+      ],
+      "mostSaturated": [
+        {
+          "rgb": [
+            198,
+            131,
+            227
+          ],
+          "px": 3,
+          "chroma": 0.152,
+          "hue": 315
+        },
+        {
+          "rgb": [
+            199,
+            132,
+            228
+          ],
+          "px": 3,
+          "chroma": 0.152,
+          "hue": 315
+        },
+        {
+          "rgb": [
+            200,
+            133,
+            229
+          ],
+          "px": 103,
+          "chroma": 0.151,
+          "hue": 315
+        }
+      ]
+    },
+    {
+      "id": "S-C",
+      "policy": "S-C",
+      "box": {
+        "x": 16,
+        "y": 1874.4,
+        "w": 1208,
+        "h": 925.2
+      },
+      "px": 1117400,
+      "chromaticPct": 12.9,
+      "strongPct": 0.5,
+      "meanChroma": 0.048,
+      "faintPct": 46.88,
+      "whitePct": 39.76,
+      "blackPct": 0,
+      "hueFamilies": 6,
+      "bands": [
+        {
+          "hueFrom": 150,
+          "pct": 12.29
+        },
+        {
+          "hueFrom": 60,
+          "pct": 0.44
+        },
+        {
+          "hueFrom": 300,
+          "pct": 0.05
+        },
+        {
+          "hueFrom": 180,
+          "pct": 0.05
+        },
+        {
+          "hueFrom": 30,
+          "pct": 0.04
+        },
+        {
+          "hueFrom": 90,
+          "pct": 0.03
+        }
+      ],
+      "mostSaturated": [
+        {
+          "rgb": [
+            198,
+            131,
+            227
+          ],
+          "px": 3,
+          "chroma": 0.152,
+          "hue": 315
+        },
+        {
+          "rgb": [
+            199,
+            132,
+            228
+          ],
+          "px": 3,
+          "chroma": 0.152,
+          "hue": 315
+        },
+        {
+          "rgb": [
+            200,
+            133,
+            229
+          ],
+          "px": 103,
+          "chroma": 0.151,
+          "hue": 315
+        }
+      ]
+    },
+    {
+      "id": "P-H-A",
+      "policy": "H-A",
+      "box": {
+        "x": 16,
+        "y": 2799.6,
+        "w": 1208,
+        "h": 200
+      },
+      "px": 241600,
+      "chromaticPct": 2,
+      "strongPct": 0.3,
+      "meanChroma": 0.058,
+      "faintPct": 3.54,
+      "whitePct": 93.84,
+      "blackPct": 0,
+      "hueFamilies": 3,
+      "bands": [
+        {
+          "hueFrom": 150,
+          "pct": 1.51
+        },
+        {
+          "hueFrom": 60,
+          "pct": 0.32
+        },
+        {
+          "hueFrom": 300,
+          "pct": 0.16
+        }
+      ],
+      "mostSaturated": [
+        {
+          "rgb": [
+            198,
+            131,
+            227
+          ],
+          "px": 6,
+          "chroma": 0.152,
+          "hue": 315
+        },
+        {
+          "rgb": [
+            199,
+            132,
+            228
+          ],
+          "px": 2,
+          "chroma": 0.152,
+          "hue": 315
+        },
+        {
+          "rgb": [
+            200,
+            133,
+            229
+          ],
+          "px": 92,
+          "chroma": 0.151,
+          "hue": 315
+        }
+      ]
+    },
+    {
+      "id": "P-H-B",
+      "policy": "H-B",
+      "box": {
+        "x": 16,
+        "y": 2999.6,
+        "w": 1208,
+        "h": 200
+      },
+      "px": 241600,
+      "chromaticPct": 1.8,
+      "strongPct": 0,
+      "meanChroma": 0.046,
+      "faintPct": 3.92,
+      "whitePct": 93.55,
+      "blackPct": 0,
+      "hueFamilies": 2,
+      "bands": [
+        {
+          "hueFrom": 150,
+          "pct": 1.52
+        },
+        {
+          "hueFrom": 240,
+          "pct": 0.28
+        }
+      ],
+      "mostSaturated": []
+    },
+    {
+      "id": "P-H-C",
+      "policy": "H-C",
+      "box": {
+        "x": 16,
+        "y": 3199.6,
+        "w": 1208,
+        "h": 200
+      },
+      "px": 241600,
+      "chromaticPct": 2.1,
+      "strongPct": 0.3,
+      "meanChroma": 0.054,
+      "faintPct": 4.83,
+      "whitePct": 91.99,
+      "blackPct": 0,
+      "hueFamilies": 2,
+      "bands": [
+        {
+          "hueFrom": 150,
+          "pct": 1.51
+        },
+        {
+          "hueFrom": 90,
+          "pct": 0.43
+        }
+      ],
+      "mostSaturated": []
+    }
+  ],
+  "pairs": [
+    {
+      "panel": "S-A",
+      "label": "focus line on hero",
+      "ground": "paper",
+      "slot": "focus",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "cta label on ink",
+      "ground": "paper",
+      "slot": "cta-primary",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 4.5,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "secondary label on its own fill",
+      "ground": "paper",
+      "slot": "cta-secondary",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-0",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-1",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-2",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "path Join on Meetup on band",
+      "ground": "ink",
+      "slot": "path-0",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 4.5,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "band",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 3,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "path Discord on band",
+      "ground": "ink",
+      "slot": "path-1",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 4.5,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "band",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 3,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "path Add the .ics on band",
+      "ground": "ink",
+      "slot": "path-2",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 4.5,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "band",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 3,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-A",
+      "label": "notice word on page",
+      "ground": "paper",
+      "slot": "body",
+      "fgToken": "gold",
+      "bgToken": "paper",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.82,
+      "bar": 4.5,
+      "specRatio": 4.82,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "focus line on hero",
+      "ground": "paper",
+      "slot": "focus",
+      "fgToken": "gold",
+      "bgToken": "paper",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.82,
+      "bar": 4.5,
+      "specRatio": 4.82,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "cta label on ink",
+      "ground": "paper",
+      "slot": "cta-primary",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 4.5,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "secondary label on its own fill",
+      "ground": "paper",
+      "slot": "cta-secondary",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-0",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-1",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-2",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "path Join on Meetup on band",
+      "ground": "ink",
+      "slot": "path-0",
+      "fgToken": "path-meetup-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        200,
+        133,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.74,
+      "bar": 4.5,
+      "specRatio": 4.74,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "span",
+      "fgToken": "ink",
+      "bgToken": "path-meetup-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        246,
+        233,
+        253
+      ],
+      "ratio": 10.74,
+      "bar": 3,
+      "specRatio": 10.74,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "path Discord on band",
+      "ground": "ink",
+      "slot": "path-1",
+      "fgToken": "path-discord-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        235,
+        126,
+        99
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.59,
+      "bar": 4.5,
+      "specRatio": 4.59,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "span",
+      "fgToken": "ink",
+      "bgToken": "path-discord-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        255,
+        232,
+        225
+      ],
+      "ratio": 10.67,
+      "bar": 3,
+      "specRatio": 10.67,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "path Add the .ics on band",
+      "ground": "ink",
+      "slot": "path-2",
+      "fgToken": "path-calendar-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        44,
+        178,
+        191
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.91,
+      "bar": 4.5,
+      "specRatio": 4.91,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "span",
+      "fgToken": "ink",
+      "bgToken": "path-calendar-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        216,
+        245,
+        248
+      ],
+      "ratio": 10.94,
+      "bar": 3,
+      "specRatio": 10.94,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-B",
+      "label": "notice word on page",
+      "ground": "paper",
+      "slot": "body",
+      "fgToken": "gold",
+      "bgToken": "paper",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.82,
+      "bar": 4.5,
+      "specRatio": 4.82,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "focus line on hero",
+      "ground": "tint",
+      "slot": "focus",
+      "fgToken": "gold",
+      "bgToken": "tint",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        224,
+        245,
+        229
+      ],
+      "ratio": 4.39,
+      "bar": 4.5,
+      "specRatio": 4.39,
+      "pass": false,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "cta label on ink",
+      "ground": "tint",
+      "slot": "cta-primary",
+      "fgToken": "band-text",
+      "bgToken": "ink",
+      "fg": [
+        228,
+        233,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 10.19,
+      "bar": 4.5,
+      "specRatio": 10.19,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "secondary label on its own fill",
+      "ground": "tint",
+      "slot": "cta-secondary",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-0",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-1",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "feature body on page",
+      "ground": "paper",
+      "slot": "feat-2",
+      "fgToken": "ink",
+      "bgToken": "paper",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 12.02,
+      "bar": 4.5,
+      "specRatio": 12.02,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "path Join on Meetup on band",
+      "ground": "ink",
+      "slot": "path-0",
+      "fgToken": "path-meetup-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        200,
+        133,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.74,
+      "bar": 4.5,
+      "specRatio": 4.74,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "span",
+      "fgToken": "ink",
+      "bgToken": "path-meetup-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        246,
+        233,
+        253
+      ],
+      "ratio": 10.74,
+      "bar": 3,
+      "specRatio": 10.74,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "path Discord on band",
+      "ground": "ink",
+      "slot": "path-1",
+      "fgToken": "path-discord-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        235,
+        126,
+        99
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.59,
+      "bar": 4.5,
+      "specRatio": 4.59,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "span",
+      "fgToken": "ink",
+      "bgToken": "path-discord-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        255,
+        232,
+        225
+      ],
+      "ratio": 10.67,
+      "bar": 3,
+      "specRatio": 10.67,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "path Add the .ics on band",
+      "ground": "ink",
+      "slot": "path-2",
+      "fgToken": "path-calendar-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        44,
+        178,
+        191
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.91,
+      "bar": 4.5,
+      "specRatio": 4.91,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "chip on chip-track",
+      "ground": "ink",
+      "slot": "span",
+      "fgToken": "ink",
+      "bgToken": "path-calendar-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        216,
+        245,
+        248
+      ],
+      "ratio": 10.94,
+      "bar": 3,
+      "specRatio": 10.94,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "S-C",
+      "label": "notice word on page",
+      "ground": "paper",
+      "slot": "body",
+      "fgToken": "gold",
+      "bgToken": "paper",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.82,
+      "bar": 4.5,
+      "specRatio": 4.82,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-A",
+      "label": "H-A Current Focus",
+      "ground": "paper",
+      "slot": "sw-text",
+      "fgToken": "gold",
+      "bgToken": "paper",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.82,
+      "bar": 4.5,
+      "specRatio": 4.82,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-A",
+      "label": "H-A 158+ members",
+      "ground": "paper",
+      "slot": "sw-chip",
+      "fgToken": "ink",
+      "bgToken": "path-meetup-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        246,
+        233,
+        253
+      ],
+      "ratio": 10.74,
+      "bar": 4.5,
+      "specRatio": 10.74,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-A",
+      "label": "H-A Not loading",
+      "ground": "paper",
+      "slot": "sw-notice",
+      "fgToken": "gold",
+      "bgToken": "paper",
+      "fg": [
+        162,
+        95,
+        18
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.82,
+      "bar": 4.5,
+      "specRatio": 4.82,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-A",
+      "label": "H-A band word",
+      "ground": "paper",
+      "slot": "bandchip-H-A",
+      "fgToken": "path-meetup-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        200,
+        133,
+        229
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.74,
+      "bar": 4.5,
+      "specRatio": 4.74,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-B",
+      "label": "H-B Current Focus",
+      "ground": "paper",
+      "slot": "sw-text",
+      "fgToken": "accent",
+      "bgToken": "paper",
+      "fg": [
+        98,
+        115,
+        151
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.56,
+      "bar": 4.5,
+      "specRatio": 4.61,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-B",
+      "label": "H-B 158+ members",
+      "ground": "paper",
+      "slot": "sw-chip",
+      "fgToken": "ink",
+      "bgToken": "accent-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        229,
+        239,
+        255
+      ],
+      "ratio": 10.81,
+      "bar": 4.5,
+      "specRatio": 10.81,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-B",
+      "label": "H-B Not loading",
+      "ground": "paper",
+      "slot": "sw-notice",
+      "fgToken": "accent",
+      "bgToken": "paper",
+      "fg": [
+        98,
+        115,
+        151
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 4.56,
+      "bar": 4.5,
+      "specRatio": 4.61,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-B",
+      "label": "H-B band word",
+      "ground": "paper",
+      "slot": "bandchip-H-B",
+      "fgToken": "accent-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        138,
+        155,
+        193
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 4.5,
+      "bar": 4.5,
+      "specRatio": 4.5,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-C",
+      "label": "H-C Current Focus",
+      "ground": "paper",
+      "slot": "sw-text",
+      "fgToken": "w-olive",
+      "bgToken": "paper",
+      "fg": [
+        119,
+        106,
+        21
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 5.22,
+      "bar": 4.5,
+      "specRatio": 5.22,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-C",
+      "label": "H-C 158+ members",
+      "ground": "paper",
+      "slot": "sw-chip",
+      "fgToken": "ink",
+      "bgToken": "path-mobilizon-tint",
+      "fg": [
+        32,
+        57,
+        39
+      ],
+      "bg": [
+        241,
+        240,
+        217
+      ],
+      "ratio": 10.86,
+      "bar": 4.5,
+      "specRatio": 10.86,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-C",
+      "label": "H-C Not loading",
+      "ground": "paper",
+      "slot": "sw-notice",
+      "fgToken": "w-olive",
+      "bgToken": "paper",
+      "fg": [
+        119,
+        106,
+        21
+      ],
+      "bg": [
+        252,
+        250,
+        246
+      ],
+      "ratio": 5.22,
+      "bar": 4.5,
+      "specRatio": 5.22,
+      "pass": true,
+      "disagree": null
+    },
+    {
+      "panel": "P-H-C",
+      "label": "H-C band word",
+      "ground": "paper",
+      "slot": "bandchip-H-C",
+      "fgToken": "w-olive-on-ink",
+      "bgToken": "ink",
+      "fg": [
+        179,
+        166,
+        89
+      ],
+      "bg": [
+        32,
+        57,
+        39
+      ],
+      "ratio": 5.08,
+      "bar": 4.5,
+      "specRatio": 5.08,
+      "pass": true,
+      "disagree": null
+    }
+  ],
+  "marks": [
+    {
+      "id": "K-A-paper",
+      "set": "K-A",
+      "ground": "paper",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:rule sphere:rule sphere:rule route:ink route:ink accent:gold accent:gold accent:gold",
+      "strokes": [
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "route:ink sw 1.4 -> 1.61px",
+        "route:ink sw 1.4 -> 1.61px",
+        "accent:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        252,
+        250,
+        246
+      ],
+      "inkPixels": 4522,
+      "inkPct": 8.12,
+      "at15": 3973,
+      "at30": 2831,
+      "at30Pct": 62.6,
+      "strongest": {
+        "c": [
+          33,
+          58,
+          40
+        ],
+        "contrast": 11.85
+      },
+      "clusters": [
+        {
+          "n": 1951,
+          "c": [
+            33,
+            58,
+            40
+          ],
+          "contrast": 11.85
+        },
+        {
+          "n": 802,
+          "c": [
+            158,
+            171,
+            159
+          ],
+          "contrast": 2.29
+        },
+        {
+          "n": 736,
+          "c": [
+            216,
+            219,
+            212
+          ],
+          "contrast": 1.34
+        },
+        {
+          "n": 446,
+          "c": [
+            132,
+            148,
+            135
+          ],
+          "contrast": 3.07
+        },
+        {
+          "n": 379,
+          "c": [
+            97,
+            113,
+            100
+          ],
+          "contrast": 4.97
+        },
+        {
+          "n": 73,
+          "c": [
+            189,
+            196,
+            187
+          ],
+          "contrast": 1.71
+        },
+        {
+          "n": 72,
+          "c": [
+            162,
+            95,
+            18
+          ],
+          "contrast": 4.82
+        },
+        {
+          "n": 30,
+          "c": [
+            177,
+            123,
+            62
+          ],
+          "contrast": 3.49
+        }
+      ]
+    },
+    {
+      "id": "K-A-ink",
+      "set": "K-A",
+      "ground": "ink",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:band-text sphere:band-text sphere:band-text route:band-text route:band-text accent:gold-on-ink accent:gold-on-ink accent:gold-on-ink",
+      "strokes": [
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "route:band-text sw 1.4 -> 1.61px",
+        "route:band-text sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        32,
+        57,
+        39
+      ],
+      "inkPixels": 2058,
+      "inkPct": 3.72,
+      "at15": 1909,
+      "at30": 1489,
+      "at30Pct": 72.4,
+      "strongest": {
+        "c": [
+          224,
+          230,
+          225
+        ],
+        "contrast": 9.88
+      },
+      "clusters": [
+        {
+          "n": 573,
+          "c": [
+            224,
+            230,
+            225
+          ],
+          "contrast": 9.89
+        },
+        {
+          "n": 426,
+          "c": [
+            191,
+            200,
+            193
+          ],
+          "contrast": 7.31
+        },
+        {
+          "n": 407,
+          "c": [
+            67,
+            88,
+            73
+          ],
+          "contrast": 1.63
+        },
+        {
+          "n": 323,
+          "c": [
+            150,
+            160,
+            148
+          ],
+          "contrast": 4.63
+        },
+        {
+          "n": 253,
+          "c": [
+            108,
+            124,
+            110
+          ],
+          "contrast": 2.83
+        },
+        {
+          "n": 72,
+          "c": [
+            195,
+            174,
+            134
+          ],
+          "contrast": 5.8
+        },
+        {
+          "n": 4,
+          "c": [
+            115,
+            132,
+            120
+          ],
+          "contrast": 3.16
+        }
+      ]
+    },
+    {
+      "id": "K-B-paper",
+      "set": "K-B",
+      "ground": "paper",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:rule sphere:rule sphere:rule route:ink route:gold accent:gold accent:gold accent:gold",
+      "strokes": [
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "route:ink sw 1.4 -> 1.61px",
+        "route:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        252,
+        250,
+        246
+      ],
+      "inkPixels": 4510,
+      "inkPct": 8.1,
+      "at15": 3930,
+      "at30": 2794,
+      "at30Pct": 62,
+      "strongest": {
+        "c": [
+          32,
+          57,
+          39
+        ],
+        "contrast": 12.02
+      },
+      "clusters": [
+        {
+          "n": 1798,
+          "c": [
+            32,
+            57,
+            39
+          ],
+          "contrast": 12.02
+        },
+        {
+          "n": 874,
+          "c": [
+            141,
+            157,
+            144
+          ],
+          "contrast": 2.74
+        },
+        {
+          "n": 729,
+          "c": [
+            194,
+            200,
+            191
+          ],
+          "contrast": 1.64
+        },
+        {
+          "n": 361,
+          "c": [
+            229,
+            230,
+            223
+          ],
+          "contrast": 1.21
+        },
+        {
+          "n": 325,
+          "c": [
+            102,
+            118,
+            105
+          ],
+          "contrast": 4.62
+        },
+        {
+          "n": 126,
+          "c": [
+            162,
+            96,
+            19
+          ],
+          "contrast": 4.77
+        },
+        {
+          "n": 117,
+          "c": [
+            178,
+            124,
+            61
+          ],
+          "contrast": 3.45
+        },
+        {
+          "n": 101,
+          "c": [
+            60,
+            81,
+            65
+          ],
+          "contrast": 8.24
+        }
+      ]
+    },
+    {
+      "id": "K-B-ink",
+      "set": "K-B",
+      "ground": "ink",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:band-text sphere:band-text sphere:band-text route:band-text route:gold-on-ink accent:gold-on-ink accent:gold-on-ink accent:gold-on-ink",
+      "strokes": [
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "route:band-text sw 1.4 -> 1.61px",
+        "route:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        32,
+        57,
+        39
+      ],
+      "inkPixels": 2052,
+      "inkPct": 3.71,
+      "at15": 1900,
+      "at30": 1474,
+      "at30Pct": 71.8,
+      "strongest": {
+        "c": [
+          224,
+          230,
+          225
+        ],
+        "contrast": 9.87
+      },
+      "clusters": [
+        {
+          "n": 519,
+          "c": [
+            224,
+            230,
+            225
+          ],
+          "contrast": 9.89
+        },
+        {
+          "n": 411,
+          "c": [
+            68,
+            88,
+            71
+          ],
+          "contrast": 1.63
+        },
+        {
+          "n": 378,
+          "c": [
+            153,
+            158,
+            140
+          ],
+          "contrast": 4.55
+        },
+        {
+          "n": 351,
+          "c": [
+            191,
+            199,
+            192
+          ],
+          "contrast": 7.25
+        },
+        {
+          "n": 263,
+          "c": [
+            109,
+            123,
+            108
+          ],
+          "contrast": 2.8
+        },
+        {
+          "n": 122,
+          "c": [
+            194,
+            173,
+            134
+          ],
+          "contrast": 5.74
+        },
+        {
+          "n": 8,
+          "c": [
+            130,
+            135,
+            112
+          ],
+          "contrast": 3.37
+        }
+      ]
+    },
+    {
+      "id": "K-C-paper",
+      "set": "K-C",
+      "ground": "paper",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:rule sphere:rule sphere:rule route:ink route:accent accent:gold accent:gold accent:gold",
+      "strokes": [
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "route:ink sw 1.4 -> 1.61px",
+        "route:accent sw 1.4 -> 1.61px",
+        "accent:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1.4 -> 1.61px",
+        "accent:gold sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        252,
+        250,
+        246
+      ],
+      "inkPixels": 4508,
+      "inkPct": 8.1,
+      "at15": 3960,
+      "at30": 2780,
+      "at30Pct": 61.7,
+      "strongest": {
+        "c": [
+          32,
+          57,
+          39
+        ],
+        "contrast": 12.02
+      },
+      "clusters": [
+        {
+          "n": 1795,
+          "c": [
+            32,
+            57,
+            39
+          ],
+          "contrast": 12.02
+        },
+        {
+          "n": 807,
+          "c": [
+            158,
+            171,
+            162
+          ],
+          "contrast": 2.29
+        },
+        {
+          "n": 781,
+          "c": [
+            214,
+            217,
+            211
+          ],
+          "contrast": 1.37
+        },
+        {
+          "n": 495,
+          "c": [
+            131,
+            147,
+            138
+          ],
+          "contrast": 3.1
+        },
+        {
+          "n": 319,
+          "c": [
+            101,
+            118,
+            104
+          ],
+          "contrast": 4.64
+        },
+        {
+          "n": 90,
+          "c": [
+            57,
+            79,
+            63
+          ],
+          "contrast": 8.52
+        },
+        {
+          "n": 72,
+          "c": [
+            162,
+            95,
+            18
+          ],
+          "contrast": 4.82
+        },
+        {
+          "n": 52,
+          "c": [
+            100,
+            116,
+            152
+          ],
+          "contrast": 4.48
+        }
+      ]
+    },
+    {
+      "id": "K-C-ink",
+      "set": "K-C",
+      "ground": "ink",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:band-text sphere:band-text sphere:band-text route:band-text route:accent-on-ink accent:gold-on-ink accent:gold-on-ink accent:gold-on-ink",
+      "strokes": [
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "route:band-text sw 1.4 -> 1.61px",
+        "route:accent-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:gold-on-ink sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        32,
+        57,
+        39
+      ],
+      "inkPixels": 2051,
+      "inkPct": 3.7,
+      "at15": 1893,
+      "at30": 1430,
+      "at30Pct": 69.7,
+      "strongest": {
+        "c": [
+          224,
+          230,
+          225
+        ],
+        "contrast": 9.88
+      },
+      "clusters": [
+        {
+          "n": 514,
+          "c": [
+            224,
+            230,
+            225
+          ],
+          "contrast": 9.89
+        },
+        {
+          "n": 413,
+          "c": [
+            66,
+            88,
+            73
+          ],
+          "contrast": 1.63
+        },
+        {
+          "n": 346,
+          "c": [
+            191,
+            200,
+            193
+          ],
+          "contrast": 7.31
+        },
+        {
+          "n": 317,
+          "c": [
+            149,
+            159,
+            149
+          ],
+          "contrast": 4.58
+        },
+        {
+          "n": 264,
+          "c": [
+            106,
+            123,
+            112
+          ],
+          "contrast": 2.79
+        },
+        {
+          "n": 83,
+          "c": [
+            134,
+            151,
+            186
+          ],
+          "contrast": 4.27
+        },
+        {
+          "n": 72,
+          "c": [
+            195,
+            174,
+            134
+          ],
+          "contrast": 5.8
+        },
+        {
+          "n": 42,
+          "c": [
+            109,
+            128,
+            148
+          ],
+          "contrast": 3.08
+        }
+      ]
+    },
+    {
+      "id": "K-D-paper",
+      "set": "K-D",
+      "ground": "paper",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:rule sphere:rule sphere:rule route:gold route:gold accent:ink accent:ink accent:ink",
+      "strokes": [
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "sphere:rule sw 1.3 -> 1.49px",
+        "route:gold sw 1.4 -> 1.61px",
+        "route:gold sw 1.4 -> 1.61px",
+        "accent:ink sw 1.4 -> 1.61px",
+        "accent:ink sw 1.4 -> 1.61px",
+        "accent:ink sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        252,
+        250,
+        246
+      ],
+      "inkPixels": 4536,
+      "inkPct": 8.15,
+      "at15": 3950,
+      "at30": 2743,
+      "at30Pct": 60.5,
+      "strongest": {
+        "c": [
+          32,
+          57,
+          39
+        ],
+        "contrast": 12.02
+      },
+      "clusters": [
+        {
+          "n": 1830,
+          "c": [
+            32,
+            57,
+            39
+          ],
+          "contrast": 12.02
+        },
+        {
+          "n": 745,
+          "c": [
+            137,
+            152,
+            139
+          ],
+          "contrast": 2.91
+        },
+        {
+          "n": 696,
+          "c": [
+            220,
+            221,
+            213
+          ],
+          "contrast": 1.31
+        },
+        {
+          "n": 582,
+          "c": [
+            173,
+            183,
+            173
+          ],
+          "contrast": 1.98
+        },
+        {
+          "n": 304,
+          "c": [
+            92,
+            109,
+            95
+          ],
+          "contrast": 5.29
+        },
+        {
+          "n": 200,
+          "c": [
+            167,
+            104,
+            31
+          ],
+          "contrast": 4.34
+        },
+        {
+          "n": 107,
+          "c": [
+            189,
+            143,
+            89
+          ],
+          "contrast": 2.78
+        },
+        {
+          "n": 47,
+          "c": [
+            213,
+            183,
+            148
+          ],
+          "contrast": 1.83
+        }
+      ]
+    },
+    {
+      "id": "K-D-ink",
+      "set": "K-D",
+      "ground": "ink",
+      "boxW": 276,
+      "scale": 1.15,
+      "painted": "sphere:band-text sphere:band-text sphere:band-text route:gold-on-ink route:gold-on-ink accent:band-text accent:band-text accent:band-text",
+      "strokes": [
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "sphere:band-text sw 1.3 -> 1.49px",
+        "route:gold-on-ink sw 1.4 -> 1.61px",
+        "route:gold-on-ink sw 1.4 -> 1.61px",
+        "accent:band-text sw 1.4 -> 1.61px",
+        "accent:band-text sw 1.4 -> 1.61px",
+        "accent:band-text sw 1 -> 1.15px"
+      ],
+      "groundRgb": [
+        32,
+        57,
+        39
+      ],
+      "inkPixels": 2043,
+      "inkPct": 3.69,
+      "at15": 1893,
+      "at30": 1474,
+      "at30Pct": 72.1,
+      "strongest": {
+        "c": [
+          225,
+          230,
+          226
+        ],
+        "contrast": 9.91
+      },
+      "clusters": [
+        {
+          "n": 532,
+          "c": [
+            225,
+            230,
+            226
+          ],
+          "contrast": 9.92
+        },
+        {
+          "n": 406,
+          "c": [
+            68,
+            88,
+            70
+          ],
+          "contrast": 1.63
+        },
+        {
+          "n": 306,
+          "c": [
+            150,
+            159,
+            146
+          ],
+          "contrast": 4.58
+        },
+        {
+          "n": 296,
+          "c": [
+            192,
+            200,
+            193
+          ],
+          "contrast": 7.32
+        },
+        {
+          "n": 265,
+          "c": [
+            110,
+            123,
+            107
+          ],
+          "contrast": 2.81
+        },
+        {
+          "n": 168,
+          "c": [
+            188,
+            169,
+            130
+          ],
+          "contrast": 5.45
+        },
+        {
+          "n": 70,
+          "c": [
+            145,
+            139,
+            106
+          ],
+          "contrast": 3.64
+        }
+      ]
+    }
+  ],
+  "tokens": {
+    "--color-paper": {
+      "css": "oklch(0.985 0.006 85)",
+      "bytes": [
+        252,
+        250,
+        246
+      ]
+    },
+    "--color-panel": {
+      "css": "oklch(0.97 0.008 85)",
+      "bytes": [
+        248,
+        245,
+        239
+      ]
+    },
+    "--color-tint": {
+      "css": "oklch(0.95 0.03 152)",
+      "bytes": [
+        224,
+        245,
+        229
+      ]
+    },
+    "--color-ink": {
+      "css": "oklch(0.32 0.045 152)",
+      "bytes": [
+        32,
+        57,
+        39
+      ]
+    },
+    "--color-ink-hover": {
+      "css": "oklch(0.4 0.055 152)",
+      "bytes": [
+        48,
+        80,
+        57
+      ]
+    },
+    "--color-ink-2": {
+      "css": "oklch(0.45 0.035 152)",
+      "bytes": [
+        71,
+        91,
+        76
+      ]
+    },
+    "--color-ink-3": {
+      "css": "oklch(0.52 0.028 152)",
+      "bytes": [
+        93,
+        110,
+        97
+      ]
+    },
+    "--color-rule": {
+      "css": "oklch(0.655 0.03 152)",
+      "bytes": [
+        132,
+        150,
+        136
+      ]
+    },
+    "--color-gold": {
+      "css": "oklch(0.55 0.12 62)",
+      "bytes": [
+        162,
+        95,
+        18
+      ]
+    },
+    "--color-gold-on-ink": {
+      "css": "oklch(0.76 0.06 84)",
+      "bytes": [
+        195,
+        174,
+        134
+      ]
+    },
+    "--color-band-text": {
+      "css": "oklch(0.93 0.008 152)",
+      "bytes": [
+        228,
+        233,
+        229
+      ]
+    },
+    "--color-path-calendar": {
+      "css": "oklch(0.5 0.11 205)",
+      "bytes": [
+        0,
+        116,
+        129
+      ]
+    },
+    "--color-path-meetup": {
+      "css": "oklch(0.47 0.15 315)",
+      "bytes": [
+        121,
+        58,
+        147
+      ]
+    },
+    "--color-path-discord": {
+      "css": "oklch(0.5 0.14 35)",
+      "bytes": [
+        163,
+        62,
+        37
+      ]
+    },
+    "--color-path-mobilizon": {
+      "css": "oklch(0.5 0.1 105)",
+      "bytes": [
+        108,
+        102,
+        16
+      ]
+    },
+    "--color-path-calendar-tint": {
+      "css": "oklch(0.95 0.03 205)",
+      "bytes": [
+        216,
+        245,
+        248
+      ]
+    },
+    "--color-path-meetup-tint": {
+      "css": "oklch(0.95 0.03 315)",
+      "bytes": [
+        246,
+        233,
+        253
+      ]
+    },
+    "--color-path-discord-tint": {
+      "css": "oklch(0.95 0.03 35)",
+      "bytes": [
+        255,
+        232,
+        225
+      ]
+    },
+    "--color-path-mobilizon-tint": {
+      "css": "oklch(0.95 0.03 105)",
+      "bytes": [
+        241,
+        240,
+        217
+      ]
+    },
+    "--color-path-calendar-on-ink": {
+      "css": "oklch(0.7 0.11 205)",
+      "bytes": [
+        44,
+        178,
+        191
+      ]
+    },
+    "--color-path-meetup-on-ink": {
+      "css": "oklch(0.72 0.15 315)",
+      "bytes": [
+        200,
+        133,
+        229
+      ]
+    },
+    "--color-path-discord-on-ink": {
+      "css": "oklch(0.71 0.14 35)",
+      "bytes": [
+        235,
+        126,
+        99
+      ]
+    },
+    "--color-path-mobilizon-on-ink": {
+      "css": "oklch(0.69 0.1 105)",
+      "bytes": [
+        164,
+        159,
+        81
+      ]
+    },
+    "--color-book-gray": {
+      "css": "rgb(26, 26, 28)",
+      "bytes": [
+        26,
+        26,
+        28
+      ]
+    },
+    "--c-accent": {
+      "css": "oklch(0.555 0.06 266)",
+      "bytes": [
+        98,
+        115,
+        151
+      ]
+    },
+    "--c-accent-on-ink": {
+      "css": "oklch(0.69 0.06 266)",
+      "bytes": [
+        138,
+        155,
+        193
+      ]
+    },
+    "--c-accent-graphic": {
+      "css": "oklch(0.655 0.06 266)",
+      "bytes": [
+        127,
+        144,
+        182
+      ]
+    },
+    "--c-accent-tint": {
+      "css": "oklch(0.95 0.03 266)",
+      "bytes": [
+        229,
+        239,
+        255
+      ]
+    },
+    "--w-gold": {
+      "css": "oklch(0.55 0.12 50)",
+      "bytes": [
+        168,
+        90,
+        40
+      ]
+    },
+    "--w-gold-on-ink": {
+      "css": "oklch(0.76 0.06 50)",
+      "bytes": [
+        209,
+        167,
+        143
+      ]
+    },
+    "--w-olive": {
+      "css": "oklch(0.52 0.1 100)",
+      "bytes": [
+        119,
+        106,
+        21
+      ]
+    },
+    "--w-olive-on-ink": {
+      "css": "oklch(0.72 0.1 100)",
+      "bytes": [
+        179,
+        166,
+        89
+      ]
+    }
+  },
+  "drift": [],
+  "tokenChecked": 32,
+  "tokenUnresolved": [],
+  "surfaceMislabels": [],
+  "slots": [
+    {
+      "panel": "S-A",
+      "slot": "hero",
+      "x": 16,
+      "y": 64,
+      "w": 1208,
+      "h": 423.2,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Monthly Meetups Minneapolis Math Book Cl"
+    },
+    {
+      "panel": "S-A",
+      "slot": "kicker",
+      "x": 30,
+      "y": 78,
+      "w": 1180,
+      "h": 16,
+      "color": "oklch(0.52 0.028 152)",
+      "colorBytes": [
+        93,
+        110,
+        97
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Monthly Meetups"
+    },
+    {
+      "panel": "S-A",
+      "slot": "lede",
+      "x": 30,
+      "y": 155.7,
+      "w": 1180,
+      "h": 28,
+      "color": "oklch(0.45 0.035 152)",
+      "colorBytes": [
+        71,
+        91,
+        76
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "21.1px",
+      "text": "Join our passionate community of math en"
+    },
+    {
+      "panel": "S-A",
+      "slot": "focus",
+      "x": 30,
+      "y": 195.7,
+      "w": 1180,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "17.6px",
+      "text": "Current Focus: Number Theory and Abstrac"
+    },
+    {
+      "panel": "S-A",
+      "slot": "cta-primary",
+      "x": 30,
+      "y": 233.7,
+      "w": 156.2,
+      "h": 48,
+      "color": "oklch(0.93 0.008 152)",
+      "colorBytes": [
+        228,
+        233,
+        229
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Join Our Group"
+    },
+    {
+      "panel": "S-A",
+      "slot": "cta-secondary",
+      "x": 198.2,
+      "y": 233.7,
+      "w": 165.7,
+      "h": 48,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Community chat"
+    },
+    {
+      "panel": "S-A",
+      "slot": "intro",
+      "x": 16,
+      "y": 495.2,
+      "w": 1208,
+      "h": 213,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Why Join Our Math Book Club? Sessions mo"
+    },
+    {
+      "panel": "S-A",
+      "slot": "feat-0",
+      "x": 16,
+      "y": 598.2,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-A",
+      "slot": "feat-1",
+      "x": 16,
+      "y": 630.2,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-A",
+      "slot": "feat-2",
+      "x": 16,
+      "y": 662.2,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-A",
+      "slot": "band",
+      "x": 16,
+      "y": 720.2,
+      "w": 1208,
+      "h": 112,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Where to next Join on Meetup Join our ac"
+    },
+    {
+      "panel": "S-A",
+      "slot": "path-0",
+      "x": 30,
+      "y": 760.2,
+      "w": 337.2,
+      "h": 30,
+      "color": "oklch(0.93 0.008 152)",
+      "colorBytes": [
+        228,
+        233,
+        229
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "rgba(0, 0, 0, 0)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Join on Meetup Join our active community"
+    },
+    {
+      "panel": "S-A",
+      "slot": "path-1",
+      "x": 383.2,
+      "y": 760.2,
+      "w": 291.5,
+      "h": 30,
+      "color": "oklch(0.93 0.008 152)",
+      "colorBytes": [
+        228,
+        233,
+        229
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "rgba(0, 0, 0, 0)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Discord Join our active community of 158"
+    },
+    {
+      "panel": "S-A",
+      "slot": "path-2",
+      "x": 690.7,
+      "y": 760.2,
+      "w": 316.7,
+      "h": 30,
+      "color": "oklch(0.93 0.008 152)",
+      "colorBytes": [
+        228,
+        233,
+        229
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "rgba(0, 0, 0, 0)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Add the .ics Join our active community o"
+    },
+    {
+      "panel": "S-A",
+      "slot": "notice",
+      "x": 16,
+      "y": 840.2,
+      "w": 480,
+      "h": 94,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Not loading Learn from experienced mathe"
+    },
+    {
+      "panel": "S-B",
+      "slot": "hero",
+      "x": 16,
+      "y": 989.2,
+      "w": 1208,
+      "h": 423.2,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Monthly Meetups Minneapolis Math Book Cl"
+    },
+    {
+      "panel": "S-B",
+      "slot": "kicker",
+      "x": 30,
+      "y": 1003.2,
+      "w": 1180,
+      "h": 16,
+      "color": "oklch(0.52 0.028 152)",
+      "colorBytes": [
+        93,
+        110,
+        97
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Monthly Meetups"
+    },
+    {
+      "panel": "S-B",
+      "slot": "lede",
+      "x": 30,
+      "y": 1080.9,
+      "w": 1180,
+      "h": 28,
+      "color": "oklch(0.45 0.035 152)",
+      "colorBytes": [
+        71,
+        91,
+        76
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "21.1px",
+      "text": "Join our passionate community of math en"
+    },
+    {
+      "panel": "S-B",
+      "slot": "focus",
+      "x": 30,
+      "y": 1120.9,
+      "w": 1180,
+      "h": 24,
+      "color": "oklch(0.55 0.12 62)",
+      "colorBytes": [
+        162,
+        95,
+        18
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "17.6px",
+      "text": "Current Focus: Number Theory and Abstrac"
+    },
+    {
+      "panel": "S-B",
+      "slot": "cta-primary",
+      "x": 30,
+      "y": 1158.9,
+      "w": 156.2,
+      "h": 48,
+      "color": "oklch(0.93 0.008 152)",
+      "colorBytes": [
+        228,
+        233,
+        229
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Join Our Group"
+    },
+    {
+      "panel": "S-B",
+      "slot": "cta-secondary",
+      "x": 198.2,
+      "y": 1158.9,
+      "w": 165.7,
+      "h": 48,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Community chat"
+    },
+    {
+      "panel": "S-B",
+      "slot": "intro",
+      "x": 16,
+      "y": 1420.4,
+      "w": 1208,
+      "h": 213,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Why Join Our Math Book Club? Sessions mo"
+    },
+    {
+      "panel": "S-B",
+      "slot": "feat-0",
+      "x": 16,
+      "y": 1523.4,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": "oklch(0.47 0.15 315)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-B",
+      "slot": "feat-1",
+      "x": 16,
+      "y": 1555.4,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": "oklch(0.5 0.14 35)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-B",
+      "slot": "feat-2",
+      "x": 16,
+      "y": 1587.4,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": "oklch(0.5 0.11 205)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-B",
+      "slot": "band",
+      "x": 16,
+      "y": 1645.4,
+      "w": 1208,
+      "h": 112,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Where to next Join on Meetup Join our ac"
+    },
+    {
+      "panel": "S-B",
+      "slot": "path-0",
+      "x": 30,
+      "y": 1685.4,
+      "w": 337.2,
+      "h": 30,
+      "color": "oklch(0.72 0.15 315)",
+      "colorBytes": [
+        200,
+        133,
+        229
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "oklch(0.47 0.15 315)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Join on Meetup Join our active community"
+    },
+    {
+      "panel": "S-B",
+      "slot": "path-1",
+      "x": 383.2,
+      "y": 1685.4,
+      "w": 291.5,
+      "h": 30,
+      "color": "oklch(0.71 0.14 35)",
+      "colorBytes": [
+        235,
+        126,
+        99
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "oklch(0.5 0.14 35)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Discord Join our active community of 158"
+    },
+    {
+      "panel": "S-B",
+      "slot": "path-2",
+      "x": 690.7,
+      "y": 1685.4,
+      "w": 316.7,
+      "h": 30,
+      "color": "oklch(0.7 0.11 205)",
+      "colorBytes": [
+        44,
+        178,
+        191
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "oklch(0.5 0.11 205)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Add the .ics Join our active community o"
+    },
+    {
+      "panel": "S-B",
+      "slot": "notice",
+      "x": 16,
+      "y": 1765.4,
+      "w": 480,
+      "h": 94,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.55 0.12 62) 0px 0px 0px 1px inset",
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Not loading Learn from experienced mathe"
+    },
+    {
+      "panel": "S-C",
+      "slot": "hero",
+      "x": 16,
+      "y": 1914.4,
+      "w": 1208,
+      "h": 423.2,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.95 0.03 152)",
+      "paintedOn": "oklch(0.95 0.03 152)",
+      "paintedOnBytes": [
+        224,
+        245,
+        229
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Monthly Meetups Minneapolis Math Book Cl"
+    },
+    {
+      "panel": "S-C",
+      "slot": "kicker",
+      "x": 30,
+      "y": 1928.4,
+      "w": 1180,
+      "h": 16,
+      "color": "oklch(0.52 0.028 152)",
+      "colorBytes": [
+        93,
+        110,
+        97
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.95 0.03 152)",
+      "paintedOnBytes": [
+        224,
+        245,
+        229
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Monthly Meetups"
+    },
+    {
+      "panel": "S-C",
+      "slot": "lede",
+      "x": 30,
+      "y": 2006.1,
+      "w": 1180,
+      "h": 28,
+      "color": "oklch(0.45 0.035 152)",
+      "colorBytes": [
+        71,
+        91,
+        76
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.95 0.03 152)",
+      "paintedOnBytes": [
+        224,
+        245,
+        229
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "21.1px",
+      "text": "Join our passionate community of math en"
+    },
+    {
+      "panel": "S-C",
+      "slot": "focus",
+      "x": 30,
+      "y": 2046.1,
+      "w": 1180,
+      "h": 24,
+      "color": "oklch(0.55 0.12 62)",
+      "colorBytes": [
+        162,
+        95,
+        18
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.95 0.03 152)",
+      "paintedOnBytes": [
+        224,
+        245,
+        229
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "17.6px",
+      "text": "Current Focus: Number Theory and Abstrac"
+    },
+    {
+      "panel": "S-C",
+      "slot": "cta-primary",
+      "x": 30,
+      "y": 2084.1,
+      "w": 156.2,
+      "h": 48,
+      "color": "oklch(0.93 0.008 152)",
+      "colorBytes": [
+        228,
+        233,
+        229
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Join Our Group"
+    },
+    {
+      "panel": "S-C",
+      "slot": "cta-secondary",
+      "x": 198.2,
+      "y": 2084.1,
+      "w": 165.7,
+      "h": 48,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset",
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Community chat"
+    },
+    {
+      "panel": "S-C",
+      "slot": "intro",
+      "x": 16,
+      "y": 2345.6,
+      "w": 1208,
+      "h": 213,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Why Join Our Math Book Club? Sessions mo"
+    },
+    {
+      "panel": "S-C",
+      "slot": "feat-0",
+      "x": 16,
+      "y": 2448.6,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": "oklch(0.47 0.15 315)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-C",
+      "slot": "feat-1",
+      "x": 16,
+      "y": 2480.6,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": "oklch(0.5 0.14 35)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-C",
+      "slot": "feat-2",
+      "x": 16,
+      "y": 2512.6,
+      "w": 1208,
+      "h": 24,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": "oklch(0.5 0.11 205)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Learn from experienced mathematicians an"
+    },
+    {
+      "panel": "S-C",
+      "slot": "band",
+      "x": 16,
+      "y": 2570.6,
+      "w": 1208,
+      "h": 112,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Where to next Join on Meetup Join our ac"
+    },
+    {
+      "panel": "S-C",
+      "slot": "path-0",
+      "x": 30,
+      "y": 2610.6,
+      "w": 337.2,
+      "h": 30,
+      "color": "oklch(0.72 0.15 315)",
+      "colorBytes": [
+        200,
+        133,
+        229
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "oklch(0.47 0.15 315)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Join on Meetup Join our active community"
+    },
+    {
+      "panel": "S-C",
+      "slot": "path-1",
+      "x": 383.2,
+      "y": 2610.6,
+      "w": 291.5,
+      "h": 30,
+      "color": "oklch(0.71 0.14 35)",
+      "colorBytes": [
+        235,
+        126,
+        99
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "oklch(0.5 0.14 35)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Discord Join our active community of 158"
+    },
+    {
+      "panel": "S-C",
+      "slot": "path-2",
+      "x": 690.7,
+      "y": 2610.6,
+      "w": 316.7,
+      "h": 30,
+      "color": "oklch(0.7 0.11 205)",
+      "colorBytes": [
+        44,
+        178,
+        191
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": "oklch(0.5 0.11 205)",
+      "shadow": null,
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Add the .ics Join our active community o"
+    },
+    {
+      "panel": "S-C",
+      "slot": "notice",
+      "x": 16,
+      "y": 2690.6,
+      "w": 480,
+      "h": 94,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "rgba(0, 0, 0, 0)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": "oklch(0.55 0.12 62) 0px 0px 0px 1px inset",
+      "font": "PT Serif",
+      "fontSize": "16px",
+      "text": "Not loading Learn from experienced mathe"
+    },
+    {
+      "panel": "P-H-A",
+      "slot": "sw-text",
+      "x": 16,
+      "y": 2906.1,
+      "w": 112.8,
+      "h": 32,
+      "color": "oklch(0.55 0.12 62)",
+      "colorBytes": [
+        162,
+        95,
+        18
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Current Focus"
+    },
+    {
+      "panel": "P-H-A",
+      "slot": "sw-chip",
+      "x": 140.8,
+      "y": 2906.1,
+      "w": 116.7,
+      "h": 32,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.95 0.03 315)",
+      "paintedOn": "oklch(0.95 0.03 315)",
+      "paintedOnBytes": [
+        246,
+        233,
+        253
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "158+ members"
+    },
+    {
+      "panel": "P-H-A",
+      "slot": "sw-notice",
+      "x": 269.5,
+      "y": 2906.1,
+      "w": 96.4,
+      "h": 32,
+      "color": "oklch(0.55 0.12 62)",
+      "colorBytes": [
+        162,
+        95,
+        18
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Not loading"
+    },
+    {
+      "panel": "P-H-A",
+      "slot": "bandchip-H-A",
+      "x": 377.9,
+      "y": 2906.1,
+      "w": 126.6,
+      "h": 32,
+      "color": "oklch(0.72 0.15 315)",
+      "colorBytes": [
+        200,
+        133,
+        229
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Community chat"
+    },
+    {
+      "panel": "P-H-B",
+      "slot": "sw-text",
+      "x": 16,
+      "y": 3106.1,
+      "w": 112.8,
+      "h": 32,
+      "color": "oklch(0.555 0.06 266)",
+      "colorBytes": [
+        98,
+        115,
+        151
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Current Focus"
+    },
+    {
+      "panel": "P-H-B",
+      "slot": "sw-chip",
+      "x": 140.8,
+      "y": 3106.1,
+      "w": 116.7,
+      "h": 32,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.95 0.03 266)",
+      "paintedOn": "oklch(0.95 0.03 266)",
+      "paintedOnBytes": [
+        229,
+        239,
+        255
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "158+ members"
+    },
+    {
+      "panel": "P-H-B",
+      "slot": "sw-notice",
+      "x": 269.5,
+      "y": 3106.1,
+      "w": 96.4,
+      "h": 32,
+      "color": "oklch(0.555 0.06 266)",
+      "colorBytes": [
+        98,
+        115,
+        151
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Not loading"
+    },
+    {
+      "panel": "P-H-B",
+      "slot": "bandchip-H-B",
+      "x": 377.9,
+      "y": 3106.1,
+      "w": 126.6,
+      "h": 32,
+      "color": "oklch(0.69 0.06 266)",
+      "colorBytes": [
+        138,
+        155,
+        193
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Community chat"
+    },
+    {
+      "panel": "P-H-C",
+      "slot": "sw-text",
+      "x": 16,
+      "y": 3306.1,
+      "w": 112.8,
+      "h": 32,
+      "color": "oklch(0.52 0.1 100)",
+      "colorBytes": [
+        119,
+        106,
+        21
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Current Focus"
+    },
+    {
+      "panel": "P-H-C",
+      "slot": "sw-chip",
+      "x": 140.8,
+      "y": 3306.1,
+      "w": 116.7,
+      "h": 32,
+      "color": "oklch(0.32 0.045 152)",
+      "colorBytes": [
+        32,
+        57,
+        39
+      ],
+      "background": "oklch(0.95 0.03 105)",
+      "paintedOn": "oklch(0.95 0.03 105)",
+      "paintedOnBytes": [
+        241,
+        240,
+        217
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "158+ members"
+    },
+    {
+      "panel": "P-H-C",
+      "slot": "sw-notice",
+      "x": 269.5,
+      "y": 3306.1,
+      "w": 96.4,
+      "h": 32,
+      "color": "oklch(0.52 0.1 100)",
+      "colorBytes": [
+        119,
+        106,
+        21
+      ],
+      "background": "oklch(0.985 0.006 85)",
+      "paintedOn": "oklch(0.985 0.006 85)",
+      "paintedOnBytes": [
+        252,
+        250,
+        246
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Not loading"
+    },
+    {
+      "panel": "P-H-C",
+      "slot": "bandchip-H-C",
+      "x": 377.9,
+      "y": 3306.1,
+      "w": 126.6,
+      "h": 32,
+      "color": "oklch(0.72 0.1 100)",
+      "colorBytes": [
+        179,
+        166,
+        89
+      ],
+      "background": "oklch(0.32 0.045 152)",
+      "paintedOn": "oklch(0.32 0.045 152)",
+      "paintedOnBytes": [
+        32,
+        57,
+        39
+      ],
+      "borderLeft": null,
+      "shadow": null,
+      "font": "Public Sans Variable",
+      "fontSize": "13.3px",
+      "text": "Community chat"
+    }
+  ]
+}

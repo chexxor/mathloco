@@ -547,6 +547,26 @@ word in event prose.
   the accepted shot list — the board after a meeting, venues, hands and materials, the diagram artwork itself —
   is in `.notes/asset-sources.md`. Strip EXIF/GPS on commit; faces need the opt-in rule in
   `.notes/consent-and-data-policy.md`.
+- **Round 9 (colour) is built and measured; the ruling is the operator's** (`node npm run round9`, 2026-11-02 —
+  specimen `design/grill/round-9.html`, numbers `design/grill/round9/report.json`, record `colourRound9` in
+  `design/decisions.json`). What the scan settled, before any taste: the reserved hues leave **exactly one open
+  window, 246–274°, 29° wide**, because round 3b's ≥40° rule is arithmetic on a wheel. The shipped palette
+  breaks that rule itself — **gold ↔ path-discord is 27°** (gold ↔ gold-on-ink is 22°, fine: per-ground twins).
+  And one colour can never do both jobs: for anything between paper and ink in luminance,
+  contrast-on-paper × contrast-on-ink = **12.02**, and 4.5 × 3.0 = 13.5 > 12.02 — which is why every role has an
+  `-on-ink` twin and why `MARK_COLOURS` is keyed per ground.
+  Measured on painted pixels (two bars, because one bar hides one trap: **ink itself is chroma 0.045**, so the
+  0.04 count includes every glyph; **0.08** sits above every neutral and is the colour a reader would call
+  colour): as shipped **13.6% / 0.0% / 2 hue families**; colour-on-meaningful-things **12.7% / 0.4% / 5**;
+  colour-as-area **12.9% / 0.5% / 6, but 46.9% faint**. That last one is the finding: the shipped
+  `oklch(95% 0.03 …)` tints sit **under** the census bar, so a tinted field buys no measurable colour, and it
+  costs gold its text bar — **gold on a tinted hero is 4.39** against 4.5 (4.82 on paper). The open-window
+  accent (hue 266, L 55.5, C 0.06) is legal but tight — **4.56 on paper, 4.5 on ink**, both inside the noise of a
+  font change — and its nearest commerce brand is **0.11**, dirtier than gold's 0.135. A warm accent needs the
+  **R-4** re-arrangement (fold the gold twins, retire `path-mobilizon`, move discord) which costs **12 measured
+  pairs**; retiring mobilizon alone, or moving gold+discord, does **not** open a warm window. The mark's four
+  colourings measure the same coverage (8.10–8.15% of box; 3930–3973 px at the 1.5 device-px floor), so that
+  choice is about the two lines staying two *things*, not about legibility.
 - **Body line spacing is now 1.36, and that is a ruling waiting to happen.** `text-body` 17.6px with the
   derived 24px line box is a ratio of 1.36; serif prose writes `leading-prose` (1.6 → 28.2px) and is fine, but
   6 writes carry the bare token (the island's three state sentences, the wordmark, the footer identity line,

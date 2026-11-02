@@ -42,20 +42,7 @@ if (!existsSync(resolve('dist/client/index.html'))) {
 }
 mkdirSync('.design/render', { recursive: true });
 
-const srgbToLinear = (v) => (v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4);
-function oklch(r, g, b) {                                    // r,g,b in 0..255 -> {L, C, h}
-  const lin = [srgbToLinear(r / 255), srgbToLinear(g / 255), srgbToLinear(b / 255)];
-  const l = Math.cbrt(0.4122214708 * lin[0] + 0.5363325363 * lin[1] + 0.0514459929 * lin[2]);
-  const m = Math.cbrt(0.2119034982 * lin[0] + 0.6806995451 * lin[1] + 0.1073969566 * lin[2]);
-  const s = Math.cbrt(0.0883024619 * lin[0] + 0.2817188376 * lin[1] + 0.6299787005 * lin[2]);
-  const L = 0.2104542553 * l + 0.7936177850 * m - 0.0040720468 * s;
-  const A = 1.9779984951 * l - 2.4285922050 * m + 0.4505937099 * s;
-  const B = 0.0259040371 * l + 0.7827717662 * m - 0.8086757660 * s;
-  const C = Math.hypot(A, B);
-  let h = (Math.atan2(B, A) * 180) / Math.PI;
-  if (h < 0) h += 360;
-  return { L, C, h };
-}
+import { oklchFromRgb } from './grill/okcolor.mjs';
 
 const CHROMA_MIN = 0.04;                                     // below this a pixel is a neutral tint, not a colour
 const BAND = 30;                                             // hue band width in degrees; 12 bands around the wheel
@@ -77,7 +64,7 @@ for (const route of routes) {
     for (let p = 0; p < width * height; p++) {
       const i = p * channels;
       if (channels >= 4 && d[i + 3] < 8) continue;            // fully transparent: not painted at all
-      const c = oklch(d[i], d[i + 1], d[i + 2]);
+      const c = oklchFromRgb(d[i], d[i + 1], d[i + 2]);
       total++;
       if (c.C >= CHROMA_MIN) {
         chromaN++; chromaSum += c.C;

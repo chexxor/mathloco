@@ -50,6 +50,8 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `npm run check:color` (`node design/color-survey.mjs`) | how much colour a built page actually paints: % of pixels at chroma ≥ 0.04, mean chroma of that ink, how many 30° hue families carry it. Exits 0 whatever it finds — it is the before-number for a colour round. Records land in `.design/tmp-color/` | yes |
 | `npm run lines:measure` / `:dist` | characters per line, measured off the built page's own line boxes at the shipped widths (`--no-build` for the dist that exists). A diagnostic, not a gate: it exits 0 whatever it finds, it is browser-only so it is not in `verify` | yes |
 | `node design/round8.mjs [--crop]` | one design round in a command: generate the specimens, then measure characters-per-line per ramp, control heights, notice height, the display cap against the longest club name, and each mark candidate's painted coverage; saves `design/grill/round8/report.json` (`--crop` writes `zoom`-scaled PNG crops of each mark for eyeballing) | yes |
+| `npm run round9` (`node design/round9.mjs`) | the colour round in one command: build the three specimens, measure each panel's PAINTED pixels (chroma ≥ 0.04 as `check:color` counts it, plus ≥ 0.08 as the level a reader would call colour, and the 0.01–0.04 "faint" band where the shipped tints live), resolve every planted contrast pair off the bytes the browser paints, run `mark-pixels.mjs` over the four mark colourings on both grounds, and check every specimen token against its spec; saves `design/grill/round9/report.json` and re-embeds the numbers into `round-9.html`. Exits 1 if a planted pair misses its bar — a specimen option that breaks a rule is supposed to be loud | yes |
+| `node design/grill/okcolor.mjs --selftest` | the OKLab/OKLCH/contrast/hue-window/brand-distance maths one shared module, asserted against the numbers `DESIGN.md` and `.notes/DECISIONS.md` cite (paper–ink 12.02, gold 4.82, D88's 0.135, the 0.05 same-colour bar). `color-survey.mjs`, `round9-palette.mjs` and `round9.mjs` all import it, so the predictor and the survey cannot drift apart | no |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
 
 Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
@@ -94,6 +96,20 @@ them out of `verify` is needing Firefox in the runner, which is an operator call
   `grill/round8-build.mjs` from `grill/round8-ramps.mjs`, the `@theme` block as shipped, and the sentences
   the built page actually rendered. Edit the builder or the candidate table, never the HTML; the specimen
   embeds the last measured numbers, so re-run the builder after `node design/round8.mjs` to refresh them.
+- `grill/round-9.html` (colour: three surface policies, three hue sets, four mark colourings),
+  `grill/round-9-census.html` (the same panels with nothing around them, which is what the pixel census crops)
+  and `grill/round-9-mark.html` (one mark per row, clean ground beside it, for `mark-pixels.mjs`) are
+  **generated** by `grill/round9-build.mjs` from `grill/round9-palette.mjs` — the hue-window scan, the accent
+  search, the re-arrangement cost model and `WARM`, the set R-4 would open. Same rule: edit the builder or the
+  palette module, never the HTML. Two things about this round's specimen are load-bearing:
+  - candidate values are written `--c-*` (an accent from the currently open hue window) and `--w-*` (the warm
+    set, which only exists if the palette is re-arranged). They are **provisional**; nothing may copy them into
+    `@theme` until the operator rules, and the namespaces exist so a batch cannot mistake them for roles.
+  - a `data-pair="label|fg|bg"` attribute is an assertion about what is PAINTED, not about what the policy slot
+    is called. The measure script walks to the nearest painted ancestor and reads both colours back out of a
+    1px canvas, so a label claiming `ink on tint` on an element that sits on paper is caught as a surface
+    mismatch by `design/round9.mjs` — this round found three such labels, and each one was a bug in the
+    specimen, not in the palette.
 - `grill/contrast/cfg-*.json` + `grill/contrast/out/` — the colour oracle's configs and outputs, including
   `cfg-ratify` (the palette as ratified).
 - `fonts/` — face-selection and ramp evidence: `metrics.json`, `bytes.json`, `display-fit*.json`,

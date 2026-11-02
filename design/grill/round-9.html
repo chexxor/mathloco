@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 9 — colour: where it goes, how many hues, and the mark’s two lines</title>
+<style>
+:root {
+  --color-paper: oklch(98.5% 0.006 85);
+  --color-panel: oklch(97% 0.008 85);
+  --color-tint: oklch(95% 0.03 152);
+  --color-ink: oklch(32% 0.045 152);
+  --color-ink-hover: oklch(40% 0.055 152);
+  --color-ink-2: oklch(45% 0.035 152);
+  --color-ink-3: oklch(52% 0.028 152);
+  --color-rule: oklch(65.5% 0.03 152);
+  --color-gold: oklch(55% 0.12 62);
+  --color-gold-on-ink: oklch(76% 0.06 84);
+  --color-band-text: oklch(93% 0.008 152);
+  --color-path-calendar: oklch(50% 0.11 205);
+  --color-path-meetup: oklch(47% 0.15 315);
+  --color-path-discord: oklch(50% 0.14 35);
+  --color-path-mobilizon: oklch(50% 0.10 105);
+  --color-path-calendar-tint: oklch(95% 0.03 205);
+  --color-path-meetup-tint: oklch(95% 0.03 315);
+  --color-path-discord-tint: oklch(95% 0.03 35);
+  --color-path-mobilizon-tint: oklch(95% 0.03 105);
+  --color-path-calendar-on-ink: oklch(70% 0.11 205);
+  --color-path-meetup-on-ink: oklch(72% 0.15 315);
+  --color-path-discord-on-ink: oklch(71% 0.14 35);
+  --color-path-mobilizon-on-ink: oklch(69% 0.10 105);
+  --color-book-gray: #1a1a1c;
+  --c-accent: oklch(55.5% 0.06 266);
+  --c-accent-on-ink: oklch(69% 0.06 266);
+  --c-accent-graphic: oklch(65.5% 0.06 266);
+  --c-accent-tint: oklch(95% 0.03 266);
+  --w-gold: oklch(55% 0.12 50);
+  --w-gold-on-ink: oklch(76% 0.06 50);
+  --w-olive: oklch(52% 0.1 100);
+  --w-olive-on-ink: oklch(72% 0.1 100);
+}
+
+@font-face { font-family: 'Public Sans Variable'; font-style: normal; font-display: block; font-weight: 100 900;
+  src: url('../../node_modules/@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2') format('woff2-variations'); }
+@font-face { font-family: 'PT Serif'; font-style: normal; font-display: block; font-weight: 400;
+  src: url('../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'PT Serif'; font-style: normal; font-display: block; font-weight: 700;
+  src: url('../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2') format('woff2'); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--color-paper); color: var(--color-ink); font-family: 'PT Serif', Georgia, serif; }
+h1, h2, p, ul { margin: 0 0 12px 0; }
+ul { list-style: none; padding: 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 24px 16px 96px; }
+h1.q { font-family: 'Public Sans Variable', sans-serif; font-weight: 800; font-size: 30.4px; line-height: 40px; }
+h2.q { font-family: 'Public Sans Variable', sans-serif; font-weight: 800; font-size: 25.3px; line-height: 32px; margin-top: 32px; }
+.note { font-family: 'Public Sans Variable', sans-serif; font-size: 13.3px; line-height: 20px; color: var(--color-ink-2); max-width: 80ch; }
+ul.note { list-style: disc; padding-left: 22px; }
+ul.note li { margin-bottom: 8px; }
+code { font-family: ui-monospace, monospace; font-size: 12px; }
+.panel { padding: 20px 0 28px; border-bottom: 1px solid var(--color-rule); }
+.phead { font-family: 'Public Sans Variable', sans-serif; font-size: 13.3px; line-height: 20px; margin-bottom: 10px; color: var(--color-ink-2); }
+.phead .adds { display: block; color: var(--color-ink-3); }
+.hero { padding: 20px; margin-bottom: 12px; }
+.hero .kicker { text-transform: uppercase; letter-spacing: .06em; font-family:'Public Sans Variable', sans-serif; font-size:13.3px; line-height:16px; margin-bottom:6px; }
+.ctarow { display: flex; gap: 12px; margin: 14px 0; flex-wrap: wrap; }
+.ctrl { display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; padding: 16px 32px; }
+.ctrl.primary { background: var(--color-ink); color: var(--color-band-text); }
+.ctrl.secondary { background: var(--color-paper); color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-rule); }
+.markrow { margin-top: 10px; }
+.intro { padding: 16px 0; }
+.feats li { padding-left: 12px; margin-bottom: 8px; }
+.band { padding: 20px; margin: 12px 0; }
+.band .bkicker { text-transform: uppercase; letter-spacing: .06em; font-family:'Public Sans Variable', sans-serif; font-size:11.1px; line-height:16px; margin-bottom:10px; }
+.band .paths { display: flex; gap: 16px; flex-wrap: wrap; }
+.band .path { display: block; padding-left: 12px; }
+.band .path .chip { display: inline-block; margin-top: 6px; padding: 4px 8px; border-radius: 4px; }
+.band .ident { margin-top: 12px; }
+.notice { box-shadow: inset 0 0 0 1px var(--color-rule); border-radius: 6px; padding: 12px 16px; min-height: 80px; max-width: 480px; }
+.notice .word { text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+.palrow { padding: 14px 0; border-bottom: 1px solid var(--color-rule); }
+.swrow { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.sw, .bandchip { display: inline-block; padding: 8px 12px; border-radius: 4px; }
+table.m { border-collapse: collapse; font-family: 'Public Sans Variable', sans-serif; font-size: 13.3px; line-height: 18px; margin: 12px 0; max-width: 100%; }
+table.m th, table.m td { border: 1px solid var(--color-rule); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.m th { font-weight: 600; }
+table.m td.bad { color: var(--color-gold); font-weight: 700; }
+.marks { display: flex; gap: 28px; flex-wrap: wrap; align-items: flex-start; }
+.markcell { font-family: 'Public Sans Variable', sans-serif; font-size: 12px; color: var(--color-ink-2); margin-bottom: 28px; }
+pre.scan { font-family: ui-monospace, monospace; font-size: 12px; line-height: 16px; background: var(--color-panel); padding: 12px; overflow-x: auto; }
+
+</style></head><body><div class="wrap">
+<h1 class="q">Round 9: colour — where it goes, how many hues, and the mark’s two lines</h1>
+<p class="note">Generated by <code>node design/grill/round9-build.mjs</code> from
+<code>design/grill/round9-palette.mjs</code>, the <code>@theme</code> block,
+<code>src/lib/brand-mark.mjs</code> and the sentences the built landing page actually renders. Candidate tokens
+are written <code>--c-*</code> / <code>--w-*</code> so they cannot be mistaken for ratified roles. Numbers under
+each option are measured by <code>design/grill/round9-measure.js</code> in the same browser the gates use.</p>
+
+<h2 class="q">Before any option: what the palette can even hold</h2>
+<p class="note">Six hue families are already reserved — <code>ink/rule/tint/band-text</code> at 152°,
+<code>gold</code>/<code>gold-on-ink</code> at 62°/84°, and one hue per join path at 35°, 105°, 205°, 315°.
+Round 3b ratified that a NEW hue keeps ≥ 40° from the primary and from every reserved path hue. That rule is
+arithmetic on a wheel, so the room left is arithmetic too:</p>
+<pre class="scan">banned 355-75   from path-discord at 35 deg
+banned  22-102  from gold at 62 deg
+banned  44-124  from gold-on-ink at 84 deg
+banned  65-145  from path-mobilizon at 105 deg
+banned 112-192  from ink family (ink/rule/tint/band-text) at 152 deg
+banned 165-245  from path-calendar at 205 deg
+banned 275-355  from path-meetup at 315 deg
+FREE: 29 of 360 degrees -> 246-274 (29 wide)</pre>
+<p class="note">And the shipped palette measured against its own rule — two of these are per-ground twins of one
+role (allowed, they never share a ground), but <b>gold vs path-discord is 27°</b>, under the bar a new hue is
+asked to clear. Whether that is an exception to write down or a bug to fix is a question for this round:</p>
+<pre class="scan">gold-on-ink <-> path-mobilizon: 21 deg  (delta-OKLab 0.265)
+gold <-> gold-on-ink: 22 deg  (delta-OKLab 0.221)
+gold <-> path-discord: 27 deg  (delta-OKLab 0.081)</pre>
+<p class="note">One more arithmetic result, because it decides what a new token has to look like: for any colour
+whose luminance sits between paper and ink, its two contrasts multiply to the paper–ink pair (
+<b>12.02</b>). Asking for 4.5 text on paper AND 3.0 graphics on ink asks for
+13.5 &gt; 12.02 — impossible with one value. That is the proof behind
+every <code>-on-ink</code> twin, and behind <code>MARK_COLOURS</code> being keyed per ground.</p>
+
+<h2 class="q">The accent candidates inside the open window</h2>
+<p class="note">For each hue and chroma: the lightest value that clears 4.5 as text on paper, the value that
+clears the 3.0 graphic bar on paper, the darkest value that carries 4.5 text on the ink band, and how far the
+recommendation sits from a commerce brand (delta-OKLab; this repo's own reading is that &lt; 0.05 is the same
+colour, and D88 held gold to 0.135). Out-of-gamut is flagged, not clipped.</p>
+<table class="m"><tr><th>hue</th><th>C</th><th>text on paper</th><th>graphic on paper</th><th>on-ink twin</th><th>recommended (L chosen for brand distance)</th><th>nearest brand</th></tr>
+<tr><td>246°</td><td>0.06</td><td>L55.5 @4.51</td><td>L65.5 @3.01</td><td>L69 @4.57</td><td>L55.5 @4.51; nearest role ink3 0.076</td><td>0.108 Walmart blue #0071CE</td></tr><tr><td>246°</td><td>0.09</td><td>L55.5 @4.51</td><td>L65.5 @3.02</td><td>L69 @4.55</td><td>L53.5 @4.91; nearest role pathCalendar 0.081</td><td>0.079 Walmart blue #0071CE</td></tr><tr><td>246°</td><td>0.12</td><td>L55.5 @4.53</td><td>L65.5 @3.01</td><td>L69 @4.57</td><td>L49 @5.94; nearest role pathCalendar 0.082</td><td>0.054 UCLA blue #00558C</td></tr><tr><td>256°</td><td>0.06</td><td>L55.5 @4.54</td><td>L65.5 @3.03</td><td>L69 @4.51</td><td>L55.5 @4.54; nearest role ink3 0.08</td><td>0.107 Walmart blue #0071CE</td></tr><tr><td>256°</td><td>0.09</td><td>L55.5 @4.54</td><td>L65.5 @3.04</td><td>L69 @4.54</td><td>L53.5 @4.95; nearest role pathCalendar 0.095</td><td>0.078 Amazon link blue #0066C3</td></tr><tr><td>256°</td><td>0.12</td><td>L56 @4.5</td><td>L65.5 @3.06</td><td>L69 @4.5</td><td>L49 @6.08; nearest role pathCalendar 0.1</td><td>0.052 Amazon link blue #0066C3</td></tr><tr><td>266°</td><td>0.06</td><td>L55.5 @4.61</td><td>L65.5 @3.07</td><td>L69 @4.5</td><td>L55.5 @4.61; nearest role ink3 0.084</td><td>0.11 Walmart blue #0071CE</td></tr><tr><td>266°</td><td>0.09</td><td>L56 @4.5</td><td>L66 @3.01</td><td>L69.5 @4.58</td><td>L56 @4.5; nearest role ink3 0.112</td><td>0.083 Walmart blue #0071CE</td></tr><tr><td>266°</td><td>0.12</td><td>L56 @4.53</td><td>L66 @3.03</td><td>L69.5 @4.54</td><td>L49 @6.13; nearest role pathCalendar 0.117</td><td>0.059 Amazon link blue #0066C3</td></tr>
+</table>
+
+<h2 class="q">Could a WARM accent be made legal? What it costs</h2>
+<pre class="scan">R-0 As shipped
+   free 29 deg; windows 246-274(29); olive at 100 deg still banned; cost 0 pairs
+
+
+R-1 Retire path-mobilizon (the feed is undecided: Mobilizon vs a plain .ics — .notes/roadmap-events.md)
+   free 29 deg; windows 246-274(29); olive at 100 deg still banned; cost 3 pairs
+     - path-mobilizon retired: its 3 tokens leave @theme (a join path the site does not use yet)
+
+R-2 Warm the set: gold 62 -> 50, path-discord 35 -> 25
+   free 29 deg; windows 246-274(29); olive at 100 deg still banned; cost 6 pairs
+     - gold 62 -> 50: paper pair, on-ink pair and tint all re-solve
+     - path-discord 35 -> 25: paper pair, on-ink pair and tint all re-solve
+
+R-3 Both: retire path-mobilizon, gold 62 -> 50, path-discord 35 -> 25
+   free 29 deg; windows 246-274(29); olive at 100 deg still banned; cost 9 pairs
+     - gold 62 -> 50: paper pair, on-ink pair and tint all re-solve
+     - path-discord 35 -> 25: paper pair, on-ink pair and tint all re-solve
+     - path-mobilizon retired: its 3 tokens leave @theme (a join path the site does not use yet)
+
+R-4 Fold the gold twin into its family (gold-on-ink 84 -> 50) too, retire mobilizon, discord -> 25
+   free 50 deg; windows 246-274(29) 91-111(21); olive at 100 deg LEGAL; cost 12 pairs
+     - gold 62 -> 50: paper pair, on-ink pair and tint all re-solve
+     - gold-on-ink 84 -> 50: paper pair, on-ink pair and tint all re-solve
+     - path-discord 35 -> 25: paper pair, on-ink pair and tint all re-solve
+     - path-mobilizon retired: its 3 tokens leave @theme (a join path the site does not use yet)</pre>
+
+<h2 class="q">Q1. WHERE colour goes — the same page, three colour policies</h2>
+<p class="note">Identical layout and copy in all three; only the colour policy changes, so the census under each
+one is a comparison rather than a coincidence. Recommendation: <b>S-B</b> — it spends colour on things that mean
+something (a join path, the current focus) and buys most of its chromatic area from roles that already exist.</p>
+
+<section class="panel" data-panel="S-A" data-policy="S-A">
+  <div class="phead"><b>S-A</b> As shipped — colour in the join paths and the mark only</div>
+  <div class="hero" data-slot="hero" data-ground="paper" style="background:var(--color-paper);box-shadow:inset 0 0 0 1px var(--color-rule)">
+    <div class="kicker" data-slot="kicker" style="color:var(--color-ink-3)">Monthly Meetups</div>
+    <h1 style="font-family:'Public Sans Variable', sans-serif;font-weight:800;font-size:36.4px;line-height:43.7px;color:var(--color-ink)">Minneapolis Math Book Club</h1>
+    <p data-slot="lede" style="font-family:'PT Serif', Georgia, serif;font-size:21.1px;line-height:28px;color:var(--color-ink-2)">Join our passionate community of math enthusiasts as we explore fascinating mathematical t</p>
+    <p class="focus" data-slot="focus" data-pair="focus line on hero|ink|paper" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:17.6px;line-height:24px;color:var(--color-ink)">Current Focus: Number Theory and Abstract Algebra</p>
+    <div class="ctarow">
+      <div class="ctrl primary" data-slot="cta-primary" data-pair="cta label on ink|band-text|ink" style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Join Our Group</div>
+      <div class="ctrl secondary" data-slot="cta-secondary" data-pair="secondary label on its own fill|ink|paper" style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:500">Community chat</div>
+    </div>
+    <div class="markrow"><svg data-mark="S-A-mark" data-markset="S-A-mark" data-ground="paper" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, colouring S-A-mark">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg></div>
+  </div>
+
+  <div class="intro" data-slot="intro" style="border-top:1px solid var(--color-rule)">
+    <h2 style="font-family:'Public Sans Variable', sans-serif;font-weight:800;font-size:30.4px;line-height:40px;color:var(--color-ink)">Why Join Our Math Book Club?</h2>
+    <p style="font-family:'PT Serif', Georgia, serif;font-size:21.1px;line-height:28px;color:var(--color-ink-2)">Sessions most months, on different mathematical topics, from number theory to abstract alg</p>
+    <ul class="feats">
+      <li data-slot="feat-0" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-transparent)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li><li data-slot="feat-1" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-transparent)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li><li data-slot="feat-2" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-transparent)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li>
+    </ul>
+  </div>
+
+  <div class="band" data-slot="band" data-ground="ink" style="background:var(--color-ink)">
+    <div class="bkicker" style="color:var(--color-band-text)">Where to next</div>
+    <div class="paths">
+      
+      <a class="path" data-slot="path-0" data-pair="path Join on Meetup on band|band-text|ink" style="border-left:4px solid transparent;color:var(--color-band-text)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-band-text)">Join on Meetup</span>
+        <span class="chip" data-pair="chip on chip-track|band-text|ink" style="background:none;color:inherit;font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+      <a class="path" data-slot="path-1" data-pair="path Discord on band|band-text|ink" style="border-left:4px solid transparent;color:var(--color-band-text)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-band-text)">Discord</span>
+        <span class="chip" data-pair="chip on chip-track|band-text|ink" style="background:none;color:inherit;font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+      <a class="path" data-slot="path-2" data-pair="path Add the .ics on band|band-text|ink" style="border-left:4px solid transparent;color:var(--color-band-text)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-band-text)">Add the .ics</span>
+        <span class="chip" data-pair="chip on chip-track|band-text|ink" style="background:none;color:inherit;font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+    </div>
+    <div class="ident" style="color:var(--color-band-text);font-family:'Public Sans Variable', sans-serif;font-size:11.1px;line-height:16px">Minneapolis, Minnesota · Minneapolis Math Book Club</div>
+  </div>
+
+  <div class="notice" data-slot="notice" style="box-shadow:inset 0 0 0 1px var(--color-rule)">
+    <div class="word" data-pair="notice word on page|gold|paper" style="color:var(--color-gold);font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px">Not loading</div>
+    <div class="body" style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="S-B" data-policy="S-B">
+  <div class="phead"><b>S-B</b> Colour where it MEANS something — path hues on the three ways in, gold on the fact that is current</div>
+  <div class="hero" data-slot="hero" data-ground="paper" style="background:var(--color-paper);box-shadow:inset 0 0 0 1px var(--color-rule)">
+    <div class="kicker" data-slot="kicker" style="color:var(--color-ink-3)">Monthly Meetups</div>
+    <h1 style="font-family:'Public Sans Variable', sans-serif;font-weight:800;font-size:36.4px;line-height:43.7px;color:var(--color-ink)">Minneapolis Math Book Club</h1>
+    <p data-slot="lede" style="font-family:'PT Serif', Georgia, serif;font-size:21.1px;line-height:28px;color:var(--color-ink-2)">Join our passionate community of math enthusiasts as we explore fascinating mathematical t</p>
+    <p class="focus" data-slot="focus" data-pair="focus line on hero|gold|paper" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:17.6px;line-height:24px;color:var(--color-gold)">Current Focus: Number Theory and Abstract Algebra</p>
+    <div class="ctarow">
+      <div class="ctrl primary" data-slot="cta-primary" data-pair="cta label on ink|band-text|ink" style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Join Our Group</div>
+      <div class="ctrl secondary" data-slot="cta-secondary" data-pair="secondary label on its own fill|ink|paper" style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:500">Community chat</div>
+    </div>
+    <div class="markrow"><svg data-mark="S-B-mark" data-markset="S-B-mark" data-ground="paper" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, colouring S-B-mark">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg></div>
+  </div>
+
+  <div class="intro" data-slot="intro" style="border-top:1px solid var(--color-rule)">
+    <h2 style="font-family:'Public Sans Variable', sans-serif;font-weight:800;font-size:30.4px;line-height:40px;color:var(--color-ink)">Why Join Our Math Book Club?</h2>
+    <p style="font-family:'PT Serif', Georgia, serif;font-size:21.1px;line-height:28px;color:var(--color-ink-2)">Sessions most months, on different mathematical topics, from number theory to abstract alg</p>
+    <ul class="feats">
+      <li data-slot="feat-0" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-path-meetup)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li><li data-slot="feat-1" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-path-discord)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li><li data-slot="feat-2" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-path-calendar)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li>
+    </ul>
+  </div>
+
+  <div class="band" data-slot="band" data-ground="ink" style="background:var(--color-ink)">
+    <div class="bkicker" style="color:var(--color-band-text)">Where to next</div>
+    <div class="paths">
+      
+      <a class="path" data-slot="path-0" data-pair="path Join on Meetup on band|path-meetup-on-ink|ink" style="border-left:4px solid var(--color-path-meetup);color:var(--color-path-meetup-on-ink)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-path-meetup-on-ink)">Join on Meetup</span>
+        <span class="chip" data-pair="chip on chip-track|ink|path-meetup-tint" style="background:var(--color-path-meetup-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+      <a class="path" data-slot="path-1" data-pair="path Discord on band|path-discord-on-ink|ink" style="border-left:4px solid var(--color-path-discord);color:var(--color-path-discord-on-ink)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-path-discord-on-ink)">Discord</span>
+        <span class="chip" data-pair="chip on chip-track|ink|path-discord-tint" style="background:var(--color-path-discord-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+      <a class="path" data-slot="path-2" data-pair="path Add the .ics on band|path-calendar-on-ink|ink" style="border-left:4px solid var(--color-path-calendar);color:var(--color-path-calendar-on-ink)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-path-calendar-on-ink)">Add the .ics</span>
+        <span class="chip" data-pair="chip on chip-track|ink|path-calendar-tint" style="background:var(--color-path-calendar-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+    </div>
+    <div class="ident" style="color:var(--color-band-text);font-family:'Public Sans Variable', sans-serif;font-size:11.1px;line-height:16px">Minneapolis, Minnesota · Minneapolis Math Book Club</div>
+  </div>
+
+  <div class="notice" data-slot="notice" style="box-shadow:inset 0 0 0 1px var(--color-gold)">
+    <div class="word" data-pair="notice word on page|gold|paper" style="color:var(--color-gold);font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px">Not loading</div>
+    <div class="body" style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </div>
+  </div>
+</section>
+
+<section class="panel" data-panel="S-C" data-policy="S-C">
+  <div class="phead"><b>S-C</b> Colour as AREA — a tinted hero field, path tints as fills, coloured rules</div>
+  <div class="hero" data-slot="hero" data-ground="tint" style="background:var(--color-tint);box-shadow:inset 0 0 0 1px var(--color-rule)">
+    <div class="kicker" data-slot="kicker" style="color:var(--color-ink-3)">Monthly Meetups</div>
+    <h1 style="font-family:'Public Sans Variable', sans-serif;font-weight:800;font-size:36.4px;line-height:43.7px;color:var(--color-ink)">Minneapolis Math Book Club</h1>
+    <p data-slot="lede" style="font-family:'PT Serif', Georgia, serif;font-size:21.1px;line-height:28px;color:var(--color-ink-2)">Join our passionate community of math enthusiasts as we explore fascinating mathematical t</p>
+    <p class="focus" data-slot="focus" data-pair="focus line on hero|gold|tint" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:17.6px;line-height:24px;color:var(--color-gold)">Current Focus: Number Theory and Abstract Algebra</p>
+    <div class="ctarow">
+      <div class="ctrl primary" data-slot="cta-primary" data-pair="cta label on ink|band-text|ink" style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Join Our Group</div>
+      <div class="ctrl secondary" data-slot="cta-secondary" data-pair="secondary label on its own fill|ink|paper" style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:500">Community chat</div>
+    </div>
+    <div class="markrow"><svg data-mark="S-C-mark" data-markset="S-C-mark" data-ground="paper" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, colouring S-C-mark">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg></div>
+  </div>
+
+  <div class="intro" data-slot="intro" style="border-top:1px solid var(--color-gold)">
+    <h2 style="font-family:'Public Sans Variable', sans-serif;font-weight:800;font-size:30.4px;line-height:40px;color:var(--color-ink)">Why Join Our Math Book Club?</h2>
+    <p style="font-family:'PT Serif', Georgia, serif;font-size:21.1px;line-height:28px;color:var(--color-ink-2)">Sessions most months, on different mathematical topics, from number theory to abstract alg</p>
+    <ul class="feats">
+      <li data-slot="feat-0" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-path-meetup)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li><li data-slot="feat-1" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-path-discord)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li><li data-slot="feat-2" data-pair="feature body on page|ink|paper" style="border-left:4px solid var(--color-path-calendar)"><span style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </span></li>
+    </ul>
+  </div>
+
+  <div class="band" data-slot="band" data-ground="ink" style="background:var(--color-ink)">
+    <div class="bkicker" style="color:var(--color-band-text)">Where to next</div>
+    <div class="paths">
+      
+      <a class="path" data-slot="path-0" data-pair="path Join on Meetup on band|path-meetup-on-ink|ink" style="border-left:4px solid var(--color-path-meetup);color:var(--color-path-meetup-on-ink)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-path-meetup-on-ink)">Join on Meetup</span>
+        <span class="chip" data-pair="chip on chip-track|ink|path-meetup-tint" style="background:var(--color-path-meetup-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+      <a class="path" data-slot="path-1" data-pair="path Discord on band|path-discord-on-ink|ink" style="border-left:4px solid var(--color-path-discord);color:var(--color-path-discord-on-ink)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-path-discord-on-ink)">Discord</span>
+        <span class="chip" data-pair="chip on chip-track|ink|path-discord-tint" style="background:var(--color-path-discord-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+      <a class="path" data-slot="path-2" data-pair="path Add the .ics on band|path-calendar-on-ink|ink" style="border-left:4px solid var(--color-path-calendar);color:var(--color-path-calendar-on-ink)">
+        <span class="plabel" style="font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px;color:var(--color-path-calendar-on-ink)">Add the .ics</span>
+        <span class="chip" data-pair="chip on chip-track|ink|path-calendar-tint" style="background:var(--color-path-calendar-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px">Join our active community of 158+ </span>
+      </a>
+    </div>
+    <div class="ident" style="color:var(--color-band-text);font-family:'Public Sans Variable', sans-serif;font-size:11.1px;line-height:16px">Minneapolis, Minnesota · Minneapolis Math Book Club</div>
+  </div>
+
+  <div class="notice" data-slot="notice" style="box-shadow:inset 0 0 0 1px var(--color-gold)">
+    <div class="word" data-pair="notice word on page|gold|paper" style="color:var(--color-gold);font-family:'Public Sans Variable', sans-serif;font-weight:600;font-size:13.3px;line-height:16px">Not loading</div>
+    <div class="body" style="font-family:'PT Serif', Georgia, serif;font-size:17.6px;line-height:24px;color:var(--color-ink)">Learn from experienced mathematicians and educators who can help clarify complex concepts </div>
+  </div>
+</section>
+
+<h2 class="q">Q2. HOW MANY hues — the same furniture painted from three different sets</h2>
+<p class="note">Each row paints the same five things: a chip label, a notice word, a band path word, a section
+marker and the mark. H-A is the shipped set; H-B adds one accent from the open window; H-C is what the palette
+looks like if the set is re-arranged (R-4) to open a warm one.</p>
+
+<div class="palrow" data-panel="P-H-A" data-policy="H-A">
+  <div class="phead"><b>H-A</b> No new hue — raise the AREA of the hues we already own <span class="adds">@theme: nothing. Roles already exist (gold, the four path hues, tint).</span></div>
+  <div class="swrow">
+    <span class="sw" data-slot="sw-text" data-pair="H-A Current Focus|gold|paper|4.5"
+      style="background:var(--color-paper);color:var(--color-gold);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Current Focus</span>
+    <span class="sw" data-slot="sw-chip" data-pair="H-A 158+ members|ink|path-meetup-tint|4.5"
+      style="background:var(--color-path-meetup-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">158+ members</span>
+    <span class="sw" data-slot="sw-notice" data-pair="H-A Not loading|gold|paper|4.5"
+      style="background:var(--color-paper);color:var(--color-gold);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Not loading</span>
+    <span class="bandchip" data-slot="bandchip-H-A" data-pair="H-A band word|path-meetup-on-ink|ink|4.5" style="background:var(--color-ink);color:var(--color-path-meetup-on-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Community chat</span>
+    <svg data-mark="pal-H-A" data-markset="pal-H-A" data-ground="paper" data-box="200" viewBox="0 0 240 150" width="200" height="125.0" role="img" aria-label="the club's mark, colouring pal-H-A">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg>
+  </div>
+  <p class="note">the drab-meter says the site paints 3.8% chromatic pixels at 1240 and 0.5% on /404 and /chat: the hues are there, they are just tiny. Area is a cheaper lever than a new hue, and it cannot collide with a brand.</p>
+</div>
+
+<div class="palrow" data-panel="P-H-B" data-policy="H-B">
+  <div class="phead"><b>H-B</b> Add ONE accent at 266° (the only window the 40° rule leaves open) <span class="adds">@theme: --color-accent + --color-accent-on-ink, and a --color-accent-tint if a fill wants one.</span></div>
+  <div class="swrow">
+    <span class="sw" data-slot="sw-text" data-pair="H-B Current Focus|accent|paper|4.5"
+      style="background:var(--color-paper);color:oklch(55.5% 0.06 266);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Current Focus</span>
+    <span class="sw" data-slot="sw-chip" data-pair="H-B 158+ members|ink|accent-tint|4.5"
+      style="background:oklch(95% 0.03 266);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">158+ members</span>
+    <span class="sw" data-slot="sw-notice" data-pair="H-B Not loading|accent|paper|4.5"
+      style="background:var(--color-paper);color:oklch(55.5% 0.06 266);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Not loading</span>
+    <span class="bandchip" data-slot="bandchip-H-B" data-pair="H-B band word|accent-on-ink|ink|4.5" style="background:var(--color-ink);color:oklch(69% 0.06 266);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Community chat</span>
+    <svg data-mark="pal-H-B" data-markset="pal-H-B" data-ground="paper" data-box="200" viewBox="0 0 240 150" width="200" height="125.0" role="img" aria-label="the club's mark, colouring pal-H-B">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="oklch(55.5% 0.06 266)" stroke-width="1.4" data-role="accent" data-token="accent" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="oklch(55.5% 0.06 266)" stroke-width="1.4" data-role="accent" data-token="accent" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="oklch(55.5% 0.06 266)" stroke="none" data-role="accent" data-token="accent" data-sw="0"/>
+  </svg>
+  </div>
+  <p class="note">L55.5 C0.06 clears text 4.61 on paper and graphic 3.0 on paper; its -on-ink twin carries 4.5 on the band. Nearest commerce brand 0.11 (Walmart blue #0071CE) — under the 0.135 that gold clears (D88), so this hue is measurably less brand-clean than gold is; nearest role in use 0.084 (ink3)</p>
+</div>
+
+<div class="palrow" data-panel="P-H-C" data-policy="H-C">
+  <div class="phead"><b>H-C</b> Re-arrange the reserved hues so a WARM accent is legal (the hue the complaint actually points at) <span class="adds">@theme: gold 62 -&gt; 50, gold-on-ink 84 -&gt; 50, path-discord 35 -&gt; 25, path-mobilizon retired, + --color-olive / --color-olive-on-ink. 12 measured pairs re-solved, and the share card re-generated.</span></div>
+  <div class="swrow">
+    <span class="sw" data-slot="sw-text" data-pair="H-C Current Focus|w-olive|paper|4.5"
+      style="background:var(--color-paper);color:oklch(52% 0.1 100);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Current Focus</span>
+    <span class="sw" data-slot="sw-chip" data-pair="H-C 158+ members|ink|path-mobilizon-tint|4.5"
+      style="background:var(--color-path-mobilizon-tint);color:var(--color-ink);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">158+ members</span>
+    <span class="sw" data-slot="sw-notice" data-pair="H-C Not loading|w-olive|paper|4.5"
+      style="background:var(--color-paper);color:oklch(52% 0.1 100);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Not loading</span>
+    <span class="bandchip" data-slot="bandchip-H-C" data-pair="H-C band word|w-olive-on-ink|ink|4.5" style="background:var(--color-ink);color:oklch(72% 0.1 100);font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;font-weight:600">Community chat</span>
+    <svg data-mark="pal-H-C" data-markset="pal-H-C" data-ground="paper" data-box="200" viewBox="0 0 240 150" width="200" height="125.0" role="img" aria-label="the club's mark, colouring pal-H-C">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="oklch(55% 0.12 50)" stroke-width="1.4" data-role="accent" data-token="w-gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="oklch(55% 0.12 50)" stroke-width="1.4" data-role="accent" data-token="w-gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="oklch(55% 0.12 50)" stroke="none" data-role="accent" data-token="w-gold" data-sw="0"/>
+  </svg>
+  </div>
+  <p class="note">every re-arrangement short of this one leaves the same 246-274 window: the wheel is closed by which hues EXIST, not by where the path set sits. Only folding the gold twin into its family and retiring mobilizon opens a warm window (91-111). This is the option shown so the operator can SEE what they would be paying 12 pairs of re-measurement for.</p>
+</div>
+
+<h2 class="q">Q3. The mark’s two lines — four colourings, on paper and on the dark band</h2>
+<p class="note">Both grounds are shown because the hero paints the mark on paper and the footer band and the
+share card paint it on ink. Under each pair of marks: the stroke pairs on both grounds, and whether the two
+lines are still <i>two things</i> when hue is taken away (luminance) and by this repo’s own
+&ldquo;&lt; 0.05 delta-OKLab reads as the same colour&rdquo; bar.</p>
+<div class="marks">
+<div class="markcell"><div><b>K-A</b> As shipped — both lines ink, the sphere rule, the marks gold</div>
+  <div style="padding:8px;background:var(--color-paper)"><svg data-mark="preview-K-A-paper" data-markset="K-A" data-ground="paper" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-A">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg></div>
+  <div style="padding:8px;background:var(--color-ink)"><svg data-mark="preview-K-A-ink" data-markset="K-A" data-ground="ink" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-A">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-band-text)" stroke-width="1.4" data-role="route" data-token="band-text" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-band-text)" stroke-width="1.4" data-role="route" data-token="band-text" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="accent" data-token="gold-on-ink" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="accent" data-token="gold-on-ink" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold-on-ink)" stroke="none" data-role="accent" data-token="gold-on-ink" data-sw="0"/>
+  </svg></div>
+  <div>paper: sphere rule 3.01 · route ink 12.02 · accent gold 4.82</div>
+  <div>ink: sphere band-text 10.19 · route band-text 10.19 · accent gold-on-ink 5.8</div>
+  <div>paper: both lines one colour</div><div>ink: both lines one colour</div>
+  
+</div>
+<div class="markcell"><div><b>K-B</b> The two lines carry different roles: one ink, one gold (no new hue)</div>
+  <div style="padding:8px;background:var(--color-paper)"><svg data-mark="preview-K-B-paper" data-markset="K-B" data-ground="paper" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-B">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="route" data-token="gold" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg></div>
+  <div style="padding:8px;background:var(--color-ink)"><svg data-mark="preview-K-B-ink" data-markset="K-B" data-ground="ink" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-B">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-band-text)" stroke-width="1.4" data-role="route" data-token="band-text" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="route" data-token="gold-on-ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="accent" data-token="gold-on-ink" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="accent" data-token="gold-on-ink" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold-on-ink)" stroke="none" data-role="accent" data-token="gold-on-ink" data-sw="0"/>
+  </svg></div>
+  <div>paper: sphere rule 3.01 · route ink 12.02/gold 4.82 · accent gold 4.82</div>
+  <div>ink: sphere band-text 10.19 · route band-text 10.19/gold-on-ink 5.8 · accent gold-on-ink 5.8</div>
+  <div>paper: delta-OKLab 0.263, luminance 2.49x apart</div><div>ink: delta-OKLab 0.179, luminance 1.76x apart</div>
+  <div><i>needs: MARK_COLOURS grammar: `route` -&gt; a per-shape pair (a new role, or an array). Both colours already clear 3.0 on both grounds.</i></div>
+</div>
+<div class="markcell"><div><b>K-C</b> One line ink, one line the new accent (the H-B hue)</div>
+  <div style="padding:8px;background:var(--color-paper)"><svg data-mark="preview-K-C-paper" data-markset="K-C" data-ground="paper" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-C">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="oklch(55.5% 0.06 266)" stroke-width="1.4" data-role="route" data-token="accent" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg></div>
+  <div style="padding:8px;background:var(--color-ink)"><svg data-mark="preview-K-C-ink" data-markset="K-C" data-ground="ink" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-C">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-band-text)" stroke-width="1.4" data-role="route" data-token="band-text" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="oklch(69% 0.06 266)" stroke-width="1.4" data-role="route" data-token="accent-on-ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="accent" data-token="gold-on-ink" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="accent" data-token="gold-on-ink" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold-on-ink)" stroke="none" data-role="accent" data-token="gold-on-ink" data-sw="0"/>
+  </svg></div>
+  <div>paper: sphere rule 3.01 · route ink 12.02/accent 4.61 · accent gold 4.82</div>
+  <div>ink: sphere band-text 10.19 · route band-text 10.19/accent-on-ink 4.5 · accent gold-on-ink 5.8</div>
+  <div>paper: delta-OKLab 0.251, luminance 2.61x apart</div><div>ink: delta-OKLab 0.248, luminance 2.26x apart</div>
+  <div><i>needs: a new role AND the route grammar split — the accent must clear 3.0 as a stroke on paper and on ink, not just 4.5 as text.</i></div>
+</div>
+<div class="markcell"><div><b>K-D</b> Both lines gold, the sphere rule (a warm mark, zero new hue)</div>
+  <div style="padding:8px;background:var(--color-paper)"><svg data-mark="preview-K-D-paper" data-markset="K-D" data-ground="paper" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-D">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="route" data-token="gold" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="route" data-token="gold" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="accent" data-token="ink" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="accent" data-token="ink" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-ink)" stroke="none" data-role="accent" data-token="ink" data-sw="0"/>
+  </svg></div>
+  <div style="padding:8px;background:var(--color-ink)"><svg data-mark="preview-K-D-ink" data-markset="K-D" data-ground="ink" data-box="240" viewBox="0 0 240 150" width="240" height="150.0" role="img" aria-label="the club's mark, colouring K-D">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-band-text)" stroke-width="1.3" data-role="sphere" data-token="band-text" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="route" data-token="gold-on-ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.4" data-role="route" data-token="gold-on-ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-band-text)" stroke-width="1.4" data-role="accent" data-token="band-text" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-band-text)" stroke-width="1.4" data-role="accent" data-token="band-text" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-band-text)" stroke="none" data-role="accent" data-token="band-text" data-sw="0"/>
+  </svg></div>
+  <div>paper: sphere rule 3.01 · route gold 4.82 · accent ink 12.02</div>
+  <div>ink: sphere band-text 10.19 · route gold-on-ink 5.8 · accent band-text 10.19</div>
+  <div>paper: both lines one colour</div><div>ink: both lines one colour</div>
+  <div><i>needs: nothing. It trades the 12.02 line for a 4.82 one, so the covered-pixel count is the question — measured, not asserted.</i></div>
+</div>
+</div>
+
+<h2 class="q">Q4. Whose colour is loudest — the Meetup logo</h2>
+
+<div class="palrow" data-panel="P-logo" data-policy="logo">
+  <div class="phead"><b>L-A / L-B</b> The most saturated pixel on the landing page belongs to Meetup</div>
+  <div class="swrow">
+    <img src="../../public/Meetup_Logo.png" alt="Meetup logo as shipped" width="96" height="96" data-slot="logo-colour">
+    <img src="../../public/Meetup_Logo.png" alt="Meetup logo in ink" width="96" height="96" data-slot="logo-ink" style="filter:grayscale(1) brightness(0.35)">
+  </div>
+  <p class="note">Measured: <code>rgb(237,28,64)</code>, 14,820 px at chroma 0.226 (x 631–828, y 1956–2144) —
+  <b>0.52% of the landing page at 1240, and the most chromatic thing on it</b>. Our own highest-chroma role is
+  <code>gold</code> at C 0.12. So "the site is drab" and "the page is loud in one red spot" are both true at once.
+  The options: leave the third-party logo as it is; draw our own join-path glyph so nothing third-party saturates
+  the page; or out-colour it by raising our own area (Q1/Q2).</p>
+</div>
+
+<h2 class="q">Q5. Photographs — hold slots, or design photo-free</h2>
+
+<div class="palrow" data-panel="P-photo" data-policy="photo">
+  <div class="phead"><b>PH-A</b> Design the surfaces photo-free (as the hero and the card already are)</div>
+  <div class="swrow">
+    <div class="venuecard" data-slot="venuecard-drawn" style="box-shadow:inset 0 0 0 1px var(--color-rule)">
+      <svg data-mark="venue-drawn" data-markset="venue-drawn" data-ground="paper" data-box="160" viewBox="0 0 240 150" width="160" height="100.0" role="img" aria-label="the club's mark, colouring venue-drawn">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 50, 178 50, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" stroke-dasharray="5 4" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M62 78 C62 106, 178 106, 178 78" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-token="rule" data-sw="1.3"/>
+    <path d="M94 59 L94 84 C94 108, 104 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M146 59 L146 84 C146 108, 136 126, 120 136" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-token="ink" data-sw="1.4"/>
+    <path d="M100 59 L100 65 L94 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <path d="M140 59 L140 65 L146 65" fill="none" stroke="var(--color-gold)" stroke-width="1.4" data-role="accent" data-token="gold" data-sw="1.4"/>
+    <circle cx="120" cy="136" r="4" fill="var(--color-gold)" stroke="none" data-role="accent" data-token="gold" data-sw="0"/>
+  </svg>
+      <div style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;color:var(--color-ink-2)">drawn motif · zero bytes · no rights question</div>
+    </div>
+  </div>
+  <p class="note">The hero and the share card already prove the pattern: the graphic that means something is
+  drawn from <code>src/lib/brand-mark.mjs</code>, so it scales, it paints through <code>@theme</code>, and it is
+  gated on painted bytes.</p>
+</div>
+<div class="palrow" data-panel="P-photo-hold" data-policy="photo-hold">
+  <div class="phead"><b>PH-B</b> Hold real slots for real photographs (the accepted shot list)</div>
+  <div class="swrow">
+    <div class="venuecard" data-slot="venuecard-hold">
+      <div class="photoslot" data-pair="photo-slot rule on paper|rule|paper" style="box-shadow:inset 0 0 0 1px var(--color-rule)">
+        <span style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;color:var(--color-ink-3)">one set per venue · hands and materials · the board after a meeting</span>
+      </div>
+      <div style="font-family:'Public Sans Variable', sans-serif;font-size:13.3px;line-height:16px;color:var(--color-ink-2)">a slot that is empty today is a promise; the shot list is blocked on a phone camera at a meetup, not on code</div>
+    </div>
+  </div>
+  <p class="note">D94 forbids stock <i>people</i> photography: no photograph of this club exists, so strangers in
+  a photo are a false statement about who attends. The accepted shot list is
+  <code>.notes/asset-sources.md</code>; strip EXIF/GPS on commit.</p>
+</div>
+
+
+<h2 class="q">Measured off this specimen (report 2026-11-02 09:55 — re-run the builder after a measurement round)</h2>
+<ul class="note"><li>The shipped tints do not read as colour to the census: <b>S-C</b> paints 46.88% of its pixels at chroma 0.01–0.04 (the <code>oklch(95% 0.03 …)</code> fills) but only <b>0.5%</b> at chroma ≥ 0.08, the level a reader would call colour. A wash is not area; if area is the goal, the tint has to go above ~0.04 or a darker field has to be used.</li><li>Spend it on meaning and the census sees it: hue families go <b>2 → 5</b> and the share a reader would call colour goes <b>0% → 0.4%</b>, for a chromatic total that barely moves (13.6% → 12.7%) because the ink band dominates that count.</li><li>1 planted pair(s) fail on the painted bytes: <code>gold</code> on <code>tint</code> at <b>4.39</b> (bar 4.5, S-C). Put a colour on a tinted field and it loses contrast it has on paper — gold is 4.82 on paper and 4.39 on tint.</li><li>Colouring the mark's two lines costs almost nothing in stroke survival — painted ink per box and the px at/over the 1.5 device-px floor are flat across the four options (on paper, px at 1.5 / ink pixels: K-A 3973px at 1.5 / 4522 ink, K-B 3930px at 1.5 / 4510 ink, K-C 3960px at 1.5 / 4508 ink, K-D 3950px at 1.5 / 4536 ink). The difference between them is in the look, not the legibility, so that part is a taste call the numbers cannot make for you.</li><li>The open-window accent is legal but tight: <b>4.56</b> as text on paper (bar 4.5) and 4.5 on the band — both clear by under 0.1, which is inside the noise of a font change. The warm candidate under R-4 sits higher (5.22 on paper) but costs a palette re-arrangement to exist.</li><li>Every one of the <b>32</b> colour tokens in the specimen renders within the same-colour threshold of its spec, so the numbers above describe the values in <code>@theme</code>, not an accident of the specimen.</li></ul>
+<p class="note">The census counts the pixels the browser actually painted inside each panel. Two bars are reported, because one bar hides one trap: chroma ≥ 0.04 is what <code>npm run check:color</code> counts (so these numbers compare with the live page's <b>3.8%</b> at 1240), but <code>ink</code> itself is C 0.045, so that count includes every glyph and the whole dark band; chroma ≥ 0.08 sits above every neutral in <code>@theme</code> and measures the colour a reader would call colour. "Faint" is 0.01–0.04: colourless to an eye, and where a shipped tint lands.</p>
+<table class="m"><tr><th>panel</th><th>chromatic ≥0.04</th><th>≥0.08</th><th>faint 0.01–0.04</th><th>mean chroma</th><th>hue families</th><th>where they sit</th></tr><tr><td><b>S-A</b></td><td>13.6%</td><td>0%</td><td>3.42%</td><td>0.045</td><td>2</td><td>150–180° 13.54%<br>60–90° 0.05%</td></tr><tr><td><b>S-B</b></td><td>12.7%</td><td>0.4%</td><td>4.49%</td><td>0.047</td><td>5</td><td>150–180° 12.24%<br>60–90° 0.35%<br>300–330° 0.05%<br>180–210° 0.05%<br>30–60° 0.04%</td></tr><tr><td><b>S-C</b></td><td>12.9%</td><td>0.5%</td><td>46.88%</td><td>0.048</td><td>6</td><td>150–180° 12.29%<br>60–90° 0.44%<br>300–330° 0.05%<br>180–210° 0.05%<br>30–60° 0.04%<br>90–120° 0.03%</td></tr><tr><td><b>P-H-A</b></td><td>2%</td><td>0.3%</td><td>3.54%</td><td>0.058</td><td>3</td><td>150–180° 1.51%<br>60–90° 0.32%<br>300–330° 0.16%</td></tr><tr><td><b>P-H-B</b></td><td>1.8%</td><td>0%</td><td>3.92%</td><td>0.046</td><td>2</td><td>150–180° 1.52%<br>240–270° 0.28%</td></tr><tr><td><b>P-H-C</b></td><td>2.1%</td><td>0.3%</td><td>4.83%</td><td>0.054</td><td>2</td><td>150–180° 1.51%<br>90–120° 0.43%</td></tr></table>
+<table class="m"><tr><th>mark</th><th>ground</th><th>ink in box</th><th>px at/over 1.5</th><th>px at/over 3.0</th><th>% of its ink at 3.0</th><th>strongest painted rgb</th></tr><tr><td><b>K-A</b></td><td>paper</td><td>8.12% (4522)</td><td>3973</td><td>2831</td><td>62.6%</td><td>rgb(33,58,40) @11.85</td></tr><tr><td><b>K-A</b></td><td>ink</td><td>3.72% (2058)</td><td>1909</td><td>1489</td><td>72.4%</td><td>rgb(224,230,225) @9.88</td></tr><tr><td><b>K-B</b></td><td>paper</td><td>8.1% (4510)</td><td>3930</td><td>2794</td><td>62%</td><td>rgb(32,57,39) @12.02</td></tr><tr><td><b>K-B</b></td><td>ink</td><td>3.71% (2052)</td><td>1900</td><td>1474</td><td>71.8%</td><td>rgb(224,230,225) @9.87</td></tr><tr><td><b>K-C</b></td><td>paper</td><td>8.1% (4508)</td><td>3960</td><td>2780</td><td>61.7%</td><td>rgb(32,57,39) @12.02</td></tr><tr><td><b>K-C</b></td><td>ink</td><td>3.7% (2051)</td><td>1893</td><td>1430</td><td>69.7%</td><td>rgb(224,230,225) @9.88</td></tr><tr><td><b>K-D</b></td><td>paper</td><td>8.15% (4536)</td><td>3950</td><td>2743</td><td>60.5%</td><td>rgb(32,57,39) @12.02</td></tr><tr><td><b>K-D</b></td><td>ink</td><td>3.69% (2043)</td><td>1893</td><td>1474</td><td>72.1%</td><td>rgb(225,230,226) @9.91</td></tr></table>
+<p class="note">Every pair below is measured on the bytes the browser would paint (the specimen's computed colours read back through a 1px canvas), and the second number is the same pair computed from the <code>@theme</code> token it names. The two agreeing is the check that the specimen is painting the palette rather than an accident of its own markup.</p>
+<table class="m"><tr><th>panel</th><th>pair</th><th>tokens</th><th>painted</th><th>token math</th><th>bar</th><th></th></tr><tr><td>S-C</td><td>focus line on hero</td><td><code>gold</code> on <code>tint</code></td><td>4.39</td><td>4.39</td><td>4.5</td><td class="bad">FAILS</td></tr><tr><td>S-A</td><td>focus line on hero</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-A</td><td>secondary label on its own fill</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-A</td><td>feature body on page</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>secondary label on its own fill</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>feature body on page</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>secondary label on its own fill</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>feature body on page</td><td><code>ink</code> on <code>paper</code></td><td>12.02</td><td>12.02</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>chip on chip-track</td><td><code>ink</code> on <code>path-calendar-tint</code></td><td>10.94</td><td>10.94</td><td>3</td><td class="">clears</td></tr><tr><td>S-C</td><td>chip on chip-track</td><td><code>ink</code> on <code>path-calendar-tint</code></td><td>10.94</td><td>10.94</td><td>3</td><td class="">clears</td></tr><tr><td>P-H-C</td><td>H-C 158+ members</td><td><code>ink</code> on <code>path-mobilizon-tint</code></td><td>10.86</td><td>10.86</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-B</td><td>H-B 158+ members</td><td><code>ink</code> on <code>accent-tint</code></td><td>10.81</td><td>10.81</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>chip on chip-track</td><td><code>ink</code> on <code>path-meetup-tint</code></td><td>10.74</td><td>10.74</td><td>3</td><td class="">clears</td></tr><tr><td>S-C</td><td>chip on chip-track</td><td><code>ink</code> on <code>path-meetup-tint</code></td><td>10.74</td><td>10.74</td><td>3</td><td class="">clears</td></tr><tr><td>P-H-A</td><td>H-A 158+ members</td><td><code>ink</code> on <code>path-meetup-tint</code></td><td>10.74</td><td>10.74</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>chip on chip-track</td><td><code>ink</code> on <code>path-discord-tint</code></td><td>10.67</td><td>10.67</td><td>3</td><td class="">clears</td></tr><tr><td>S-C</td><td>chip on chip-track</td><td><code>ink</code> on <code>path-discord-tint</code></td><td>10.67</td><td>10.67</td><td>3</td><td class="">clears</td></tr><tr><td>S-A</td><td>cta label on ink</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-A</td><td>path Join on Meetup on band</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-A</td><td>chip on chip-track</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>3</td><td class="">clears</td></tr><tr><td>S-A</td><td>path Discord on band</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-A</td><td>path Add the .ics on band</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>cta label on ink</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>cta label on ink</td><td><code>band-text</code> on <code>ink</code></td><td>10.19</td><td>10.19</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-C</td><td>H-C Current Focus</td><td><code>w-olive</code> on <code>paper</code></td><td>5.22</td><td>5.22</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-C</td><td>H-C Not loading</td><td><code>w-olive</code> on <code>paper</code></td><td>5.22</td><td>5.22</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-C</td><td>H-C band word</td><td><code>w-olive-on-ink</code> on <code>ink</code></td><td>5.08</td><td>5.08</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>path Add the .ics on band</td><td><code>path-calendar-on-ink</code> on <code>ink</code></td><td>4.91</td><td>4.91</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>path Add the .ics on band</td><td><code>path-calendar-on-ink</code> on <code>ink</code></td><td>4.91</td><td>4.91</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-A</td><td>notice word on page</td><td><code>gold</code> on <code>paper</code></td><td>4.82</td><td>4.82</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>focus line on hero</td><td><code>gold</code> on <code>paper</code></td><td>4.82</td><td>4.82</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>notice word on page</td><td><code>gold</code> on <code>paper</code></td><td>4.82</td><td>4.82</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>notice word on page</td><td><code>gold</code> on <code>paper</code></td><td>4.82</td><td>4.82</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-A</td><td>H-A Current Focus</td><td><code>gold</code> on <code>paper</code></td><td>4.82</td><td>4.82</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-A</td><td>H-A Not loading</td><td><code>gold</code> on <code>paper</code></td><td>4.82</td><td>4.82</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>path Join on Meetup on band</td><td><code>path-meetup-on-ink</code> on <code>ink</code></td><td>4.74</td><td>4.74</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>path Join on Meetup on band</td><td><code>path-meetup-on-ink</code> on <code>ink</code></td><td>4.74</td><td>4.74</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-A</td><td>H-A band word</td><td><code>path-meetup-on-ink</code> on <code>ink</code></td><td>4.74</td><td>4.74</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-B</td><td>path Discord on band</td><td><code>path-discord-on-ink</code> on <code>ink</code></td><td>4.59</td><td>4.59</td><td>4.5</td><td class="">clears</td></tr><tr><td>S-C</td><td>path Discord on band</td><td><code>path-discord-on-ink</code> on <code>ink</code></td><td>4.59</td><td>4.59</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-B</td><td>H-B Current Focus</td><td><code>accent</code> on <code>paper</code></td><td>4.56</td><td>4.61</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-B</td><td>H-B Not loading</td><td><code>accent</code> on <code>paper</code></td><td>4.56</td><td>4.61</td><td>4.5</td><td class="">clears</td></tr><tr><td>P-H-B</td><td>H-B band word</td><td><code>accent-on-ink</code> on <code>ink</code></td><td>4.5</td><td>4.5</td><td>4.5</td><td class="">clears</td></tr></table>
+</div></body></html>
