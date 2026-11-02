@@ -67,6 +67,14 @@ pnpm-debug.log*
 # ours to republish on another domain (.notes/asset-sources.md), so the pixels stay out of git even though the
 # reading of them (DESIGN.md's mark rules, D126) is tracked.
 .design/mark-src/
+# Hand-made snapshots of source files, kept while editing (`.design/keep/*.astro`). The build reads `src/`,
+# so a copy here is inert: editing it changes nothing, and a stale copy is a trap for the next session.
+# Durable versions of these files are in git; this is a scratch duplicate, ignored so `git status` stays
+# honest and nobody mistakes it for a second source tree.
+.design/keep/
+# Ad hoc measurement dumps written by hand at the shell (verify-out.txt, mark-geometry-320.txt). The durable
+# form of any number worth keeping is a JSON under design/ that a script writes and a doc cites.
+.design/*.txt
 .probe-shot-*.png
 .measured-*.html
 rendered-*.html
