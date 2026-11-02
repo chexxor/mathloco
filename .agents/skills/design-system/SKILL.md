@@ -9,9 +9,9 @@ Runs the five Motif phases in order. Each phase reads the file the previous phas
 
 | Phase | Skill | What it does | Writes |
 |---|---|---|---|
-| 1 | `design-extract` | Measures the values the code uses today | `.design/drift.json` |
-| 2 | `design-grill` | Asks the user to settle each design decision | `.design/decisions.json` |
-| 3 | `design-ratify` | Turns the decisions into tokens and docs | tokens, `DESIGN.md`, `.design/records/` |
+| 1 | `design-extract` | Measures the values the code uses today | `design/drift.json` |
+| 2 | `design-grill` | Asks the user to settle each design decision | `design/decisions.json` |
+| 3 | `design-ratify` | Turns the decisions into tokens and docs | tokens, `DESIGN.md`, `design/records/` |
 | 4 | `design-apply` | Updates the code to use the tokens | one commit per batch |
 | 5 | `design-enforce` | Installs a linter so the code stays consistent | `scripts/design-lint.mjs` |
 
@@ -20,7 +20,7 @@ Runs the five Motif phases in order. Each phase reads the file the previous phas
 Check for progress from an earlier run:
 
 ```bash
-ls .design/ 2>/dev/null && cat .design/state.json 2>/dev/null
+ls design/ 2>/dev/null && cat design/state.json 2>/dev/null
 ```
 
 Start at the first phase whose output file is missing, and tell the user which phase that is. This lets an interrupted run pick up where it stopped.

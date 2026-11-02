@@ -18,10 +18,10 @@ import config from '../config.json';
 //
 // role -> class, and the class names are LITERAL strings here because that is what makes them exist:
 // Tailwind's scanner reads raw source text, so a computed name (`stroke-${token}`) generates nothing,
-// and `scripts/check-classes.ts` / `.design/gen-token-map.mjs` scan `.astro`/`.svelte`/`.html` but not
+// and `scripts/check-classes.ts` / `design/gen-token-map.mjs` scan `.astro`/`.svelte`/`.html` but not
 // `.mjs`, so a class written in the geometry module would be invisible to all three. The keys are
 // MARK's roles, and the coupling between these literals and `MARK_COLOURS.paper` is asserted in
-// `.design/ratify-check.mjs`, which imports the module and greps this file. Getting it wrong is
+// `design/ratify-check.mjs`, which imports the module and greps this file. Getting it wrong is
 // measured rather than trusted: an unmapped role paints no stroke, and `check:render`'s `marks` probe
 // fails the run instead of shipping a mark with a hole in it.
 // Type-annotated rather than JSDoc-typed: `astro check` treats frontmatter as TypeScript, and a JSDoc

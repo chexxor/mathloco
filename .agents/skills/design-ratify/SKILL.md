@@ -10,7 +10,7 @@ Write the decisions from `design-grill` into three things: design tokens, a `DES
 ## Before you start
 
 ```bash
-test -f .design/decisions.json || echo "MISSING"
+test -f design/decisions.json || echo "MISSING"
 ```
 
 Stop if the file is missing or if any decision in it is still open.
@@ -83,7 +83,7 @@ Give each category its own **Never** line. Agents follow rules that are written 
 
 ## 3. Decision notes
 
-Write a note in `.design/records/NNNN-short-name.md` only for these decisions, or for any decision where `decisions.json` shows the user chose something other than the recommendation:
+Write a note in `design/records/NNNN-short-name.md` only for these decisions, or for any decision where `decisions.json` shows the user chose something other than the recommendation:
 
 - how tokens are named
 - the spacing grid

@@ -67,7 +67,7 @@
   {#if phase === 'pending'}
     <!-- DESIGN.md "States": loading is one line, `role="status"`, no motion, and it reserves the
          height of the fixed part of what lands (the dated line + 24px gap + a card header = 16 + 24
-         + 40 = 80px = min-h-20, measured in .design/grill/states.html). No spinner: the shipped one
+         + 40 = 80px = min-h-20, measured in design/grill/states.html). No spinner: the shipped one
          measured a 2px keyline at contrast 4.98 against its ground, where --color-rule is 1.27.
          A notice, not a fill (D102): edge inset-shadow-rule, word ink, body ink-2, meta ink-3. -->
     <div

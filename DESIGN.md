@@ -1,10 +1,10 @@
 # Design System
 
 Ratified 2026-11-01 (`design-ratify`, phase 3). Decisions with their reasoning: `.notes/DECISIONS.md`
-D82–D109 and `.design/records/`. Machine record: `.design/decisions.json` (42 keys). Every ratio below
-was read back out of the Firefox renderer (`.design/grill/contrast-oracle.mjs`), not computed from the
+D82–D109 and `design/records/`. Machine record: `design/decisions.json` (42 keys). Every ratio below
+was read back out of the Firefox renderer (`design/grill/contrast-oracle.mjs`), not computed from the
 oklch by hand — where the two disagree, the renderer won and the older number is corrected in
-`.design/grill/contrast/gen-ratify-cfg.mjs`'s header.
+`design/grill/contrast/gen-ratify-cfg.mjs`'s header.
 
 Character: **playful — plurality made possible through mathematics.** Energy comes from contrast of
 size, weight and colour used with intent, never from oversized-everything. Decided 2026-10-31 (round 1,
@@ -94,7 +94,7 @@ footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`.
 the face matters and the older number was taken in the wrong one: in **PT Serif** "Mathematical"
 measures 367.6px against 343px of content width, and in the chrome face the strings that actually sit
 at display size leave 4.8px of margin at display-4 (longest word 338.2px) against 2 lines and 98px at
-display-2 — `.design/fonts/display-fit-chrome.json`, Public Sans Variable at weight 800, since 800 is
+display-2 — `design/fonts/display-fit-chrome.json`, Public Sans Variable at weight 800, since 800 is
 measurably wider than 700 (458.0 vs 452.4 for the club name at display-1). Faces: PT Serif
 (`font-body`) for content — **400 and 700 both load** — and Public Sans variable for chrome, installed
 from `src/styles/fonts.css`. **Never** set `font-weight: 500/600` on serif text: PT Serif has no
@@ -247,7 +247,7 @@ freshness.
   (3px of margin at 320); the nav now clears the floor by 105px, and the binding constraint is the hero
   primary control, which measures 48px at 310 and wraps to 64px at 300 — breaking the control grammar.
   Below the floor the gate says so rather than hiding it. Ask for the sub-floor widths any time with
-  `RENDER_WIDTHS=1240,390,375,360,320,310,300 node .design/render-gate.mjs /`.
+  `RENDER_WIDTHS=1240,390,375,360,320,310,300 node design/render-gate.mjs /`.
 
 ## Copy
 
@@ -298,7 +298,7 @@ stock crowd shot with a scrim and `#f59e0b` type over it.
   `ink` on `ink` is invisible.
 - **The mark is the operator's sphere diagram** (geometry from the ratified round-4 specimen). The two
   curves arriving at the meeting point carry `gold-on-ink`; `gold` on ink is 2.50 and banned.
-- **firefox composes the pixels**, through the same `.design/grill/page-measure.mjs` loop the gates use,
+- **firefox composes the pixels**, through the same `design/grill/page-measure.mjs` loop the gates use,
   and the generator refuses to write a card when `document.fonts.load()` reports any ratified face missing.
 - **What the card does not say:** no cadence word ("monthly" in config vs "weekly" in the old hero is the
   operator's to settle, D26) and no date (D103 — a hand-regenerated card would claim an age it cannot
@@ -322,7 +322,7 @@ Five measured consequences that changed the code, each one invisible to a source
    set in DejaVu).
 
 `npm run check:social` re-measures the committed JPEG with no firefox and no regeneration, against the page
-report the generator leaves in `.design/card-page.json`. `npm run check:social:selftest` proves the checks
+report the generator leaves in `design/card-page.json`. `npm run check:social:selftest` proves the checks
 can fail: painted amber, a light ground, a title box with no ink in it, two runs at display size, and a
 path word painted in the wrong hue all come back FAIL with the reason they were written for. Both run in
 `verify`.
@@ -365,21 +365,23 @@ Rules for drawing it:
 Measured consequence, kept in view rather than tuned away: at 320 the sphere's 0.9-unit stroke lands at
 **1.03px** and its pixels top out near 1.7-2.6 against sand where the token pair is 3.01, while the routes
 (1.61px, pair 12.02) and the gold (1.84px, pair 4.82) stay fully covered. So at phone width the mark reads
-as routes arriving at a point without its context ring. `node .design/mark-pixels.mjs <shot> <report>`
+as routes arriving at a point without its context ring. `node design/mark-pixels.mjs <shot> <report>`
 re-measures this; changing `MARK.shapes[*].sw` re-runs the card pipeline, not just the render gate.
 
 ## Enforcement
 
 ```bash
-node .design/gen-token-map.mjs  # regenerate the apply worklist from src/; exit 1 = a class write has no mapping
-node .design/ratify-check.mjs   # token block → Tailwind resolver + renderer contrast (exit 0 = all bars hold)
+node design/gen-token-map.mjs  # regenerate the apply worklist from src/; exit 1 = a class write has no mapping
+node design/list-writes.mjs    # every live type/space/shape write in src/, counted — choose a batch by coverage
+npm run check:design            # every design path a doc or script cites must resolve (audit-references --stale)
+node design/ratify-check.mjs   # token block → Tailwind resolver + renderer contrast (exit 0 = all bars hold)
 npm run check:classes           # every written class resolves to CSS — catches a token used as a class that does not exist
 npm run check:render            # build, then measure dist/client in Firefox: control heights, measured contrast,
                                 # one dark band and the paths inside it, keyline grammar, notice grammar,
                                 # the nav's width probe, one display step, faces actually loaded, and the hero
                                 # mark (shape count, box ratio vs viewBox, per-shape contrast, device stroke)
-node .design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
-node .design/mark-pixels.mjs <shot> <report>   # what the mark actually painted in its box, by colour cluster
+node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
+node design/mark-pixels.mjs <shot> <report>   # what the mark actually painted in its box, by colour cluster
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
                                 # the producer itself, not the shipped artifact (D121). Needs firefox, so
                                 # like check:render it is outside verify: run it beside check:render.
@@ -388,11 +390,13 @@ npm run check:social:selftest   # prove the share-card checks can still fail (se
 npm run verify                  # the full CI gate set
 ```
 
-That `.design/` tooling is **tracked**: record 0009 says design evidence ships with the repo, and only
-`tmp-*`, `render/` and font scratch are ignored. The rule it implies is that a probe which outlives its
-session has to be committed — `.design/decision-audit.mjs` was written in one session and never committed,
-and it is simply gone now. `check:render`, `ratify-check` and the card gates are only runnable because
-their files are in the tree.
+That `design/` tooling is **tracked**: record 0009 says design evidence ships with the repo, and only
+`tmp-*`, `render/`, probe screenshots and candidate font files are ignored (they stay in `.design/`, the
+scratch half — `design/README.md` states the two-directory rule and lists what is live tooling, what is
+dated evidence, and what is one-shot history not to re-run). The rule this implies is that a probe which
+outlives its session has to be committed — `design/decision-audit.mjs` was written in one session and
+never committed, and it is simply gone now; the path above is kept only as the lesson. `check:render`,
+`ratify-check` and the card gates are only runnable because their files are in the tree.
 
 **Contrast numbers in this file are painted bytes, not arithmetic** (D116). Firefox returns computed
 colours in author syntax (`oklch(0.71 0.14 35)`), and the first version of `check:render` converted those
@@ -404,10 +408,10 @@ band text 10.19, meetup/discord on ink 4.74 / 4.59.
 
 Two things these gates **cannot** catch, so enforce must be value-aware: Tailwind v4's dynamic spacing
 scale makes `mt-23` (92px) resolve, and "the class exists" is not "the value is on the scale". That is
-why `.design/token-map.md` is generated from the writes rather than written by hand — it exits 1 if any
+why `design/token-map.md` is generated from the writes rather than written by hand — it exits 1 if any
 class in a replaced bucket has no mapping.
 
-`check:render`, `.design/render-gate-selftest.mjs` and `check:social:live` all need a browser, so none of
+`check:render`, `design/render-gate-selftest.mjs` and `check:social:live` all need a browser, so none of
 them is in `verify` — `verify` stays browser-free the way it excludes `check:discord` (a token) and
 `check:ai` (a paid call). That is the gap CI still has: **the pixel gates and the card producer run on a
 human's ritual, not on every pull request.** Closing it means installing a browser in the runner, which is
@@ -453,4 +457,4 @@ word in event prose.
   all. No page renders it, so no gate sees it — and it becomes a lie the day the event pipeline lands
   (queue item in `NEXT.md`). Per **D108**, when it does render, missing content is a state with designed
   content — never a blank, and never a build failure. The batch order and the states to build are in
-  `.design/token-plan.md`; the per-class worklist is `.design/token-map.md`.
+  `design/token-plan.md`; the per-class worklist is `design/token-map.md`.

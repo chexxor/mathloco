@@ -1,4 +1,4 @@
-// Runs inside the browser (see .design/grill/page-measure.mjs) on the share-card document. It reports what
+// Runs inside the browser (see design/grill/page-measure.mjs) on the share-card document. It reports what
 // the card page KNOWS about itself, which is the other half of the check: the JPEG gives painted bytes, this
 // gives layout and authoring intent, and the two have to agree.
 //
@@ -101,7 +101,7 @@ async function report() {
   };
 }
 
-// Self-invoking, like .design/grill/render-measure.js: page-measure.mjs only sets the endpoint and loads
+// Self-invoking, like design/grill/render-measure.js: page-measure.mjs only sets the endpoint and loads
 // this file, so a measure script that defines a function and never calls it produces a silent timeout.
 (async () => {
   const post = (obj) => {

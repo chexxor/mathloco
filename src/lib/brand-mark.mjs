@@ -13,7 +13,7 @@
 // the club's "S pole — meet here" event image, measured in D86 (90% of its pixels below L 0.30, 93%
 // cool-hue; two lines taking different routes and meeting at one labelled point) and attributed in
 // D94 ("the sphere diagram is made by the operator"), so deriving from it is licensed by its owner.
-// The ratification of this shape happened in the round-4 specimen (`.design/grill/round-4.html`,
+// The ratification of this shape happened in the round-4 specimen (`design/grill/round-4.html`,
 // lines 178-189), which is where these viewBox units were drawn and approved; the share card shipped
 // from it in apply 4g. The operator's source artwork has still not been handed over — asking for the
 // vector is still worth doing (D94), and when it arrives, this file is the one place to change.
@@ -25,7 +25,7 @@
 // document, which has no Tailwind).
 //
 // Every drawn mark clears the **3.0 graphic bar** (D101). `check:render` measures that on painted
-// bytes, per shape, on the built page (D116) — see the `marks` probe in `.design/grill/render-measure.js`.
+// bytes, per shape, on the built page (D116) — see the `marks` probe in `design/grill/render-measure.js`.
 
 export const MARK = {
   vbW: 240,

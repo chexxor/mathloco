@@ -1,6 +1,6 @@
 ---
 name: design-grill
-description: "Interviews the user to settle every design system decision, asking in dependency order and writing an HTML preview for each round so the user chooses by looking instead of reading numbers. Produces .design/decisions.json. Use as phase 2 of design-system, after design-extract."
+description: "Interviews the user to settle every design system decision, asking in dependency order and writing an HTML preview for each round so the user chooses by looking instead of reading numbers. Produces design/decisions.json. Use as phase 2 of design-system, after design-extract."
 ---
 
 # Design Grill
@@ -12,7 +12,7 @@ Each round is an HTML file the user opens in a browser. Nobody can judge a type 
 ## Before you start
 
 ```bash
-test -f .design/drift.json || echo "MISSING"
+test -f design/drift.json || echo "MISSING"
 ```
 
 If it's missing, stop and run `design-extract` first. Its counts are what let the user check each recommendation.
@@ -39,7 +39,7 @@ Look up anything you can measure. Only ask the user about things the code can't 
 
 ### 3. Render the preview
 
-Write `.design/grill/round-N.html`: a single file with no build step that opens directly in a browser. Start from `assets/round-shell.html`.
+Write `design/grill/round-N.html`: a single file with no build step that opens directly in a browser. Start from `assets/round-shell.html`.
 
 The preview must:
 
@@ -55,7 +55,7 @@ The preview must:
 Print the file path first, then the questions:
 
 ```
-Round 2 preview: .design/grill/round-2.html
+Round 2 preview: design/grill/round-2.html
 
 SETTLED **Radius**: rounded-lg on 94% of surfaces. Using it as the base.
 
@@ -82,7 +82,7 @@ If the user picks something other than your recommendation, accept it. Then work
 
 ## Record each answer
 
-After each round, add the answers to `.design/decisions.json`:
+After each round, add the answers to `design/decisions.json`:
 
 ```json
 {

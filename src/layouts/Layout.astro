@@ -6,7 +6,7 @@ export interface Props {
 
 const { title = seo.title, noindex = false } = Astro.props;
 const robots = noindex ? 'noindex,nofollow' : 'index,follow';
-// The ratified serif pair, latin subset only (.design/decisions.json typeFamily: 33,116 B + 29,588 B).
+// The ratified serif pair, latin subset only (design/decisions.json typeFamily: 33,116 B + 29,588 B).
 // `import "@fontsource/pt-serif"` pulled every subset — the build was shipping cyrillic woff2 for a
 // site whose copy is English.
 import "@fontsource/pt-serif/latin-400.css";
@@ -48,7 +48,7 @@ import Navigation from '../components/Navigation.astro';
     <slot />
     <style lang="scss" is:global>
       /* `::selection` is the one place this file paints, and the pair is measured: paper on ink =
-         12.02, asserted in .design/grill/contrast/gen-ratify-cfg.mjs. The retired amber pair measured
+         12.02, asserted in design/grill/contrast/gen-ratify-cfg.mjs. The retired amber pair measured
          2.06, under the 4.5 bar; the amber is delta-OKLab 0.019 from Amazon orange #FF9900 (D82/D88),
          which is why the token went, not just this rule. The amber also used to sit in
          src/config.json as `theme.color`, still declaring a colour nothing read — that key is gone

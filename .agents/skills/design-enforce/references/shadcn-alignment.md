@@ -61,7 +61,7 @@ Replace them with the shadcn component. Don't just convert their values to token
 
 ## 4. Treat problems in ui/ as errors
 
-Add this to `.design/lint.config.json`:
+Add this to `design/lint.config.json`:
 
 ```json
 {

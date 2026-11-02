@@ -14,7 +14,7 @@ ESLint rules read JavaScript and JSX. They can't see Svelte markup, Vue template
 ## Install
 
 ```bash
-mkdir -p .design scripts
+mkdir -p design scripts
 cp <skill>/assets/design-lint.mjs scripts/design-lint.mjs
 ```
 
@@ -26,7 +26,7 @@ Add it to `package.json`:
 
 ## Config
 
-Write `.design/lint.config.json` using the values in `DESIGN.md`, not the defaults built into the script.
+Write `design/lint.config.json` using the values in `DESIGN.md`, not the defaults built into the script.
 
 ```json
 {
@@ -62,7 +62,7 @@ Keep `raw-palette` as a warning while the code is being migrated, and change it 
 
 On an existing codebase, the first run usually finds hundreds or thousands of problems.
 
-Save that number as the baseline in `.design/lint.config.json`, and set CI to fail only when the count goes above it. Don't make CI fail on every finding. A check that can never pass gets switched off, and a switched-off check looks like it's working while catching nothing.
+Save that number as the baseline in `design/lint.config.json`, and set CI to fail only when the count goes above it. Don't make CI fail on every finding. A check that can never pass gets switched off, and a switched-off check looks like it's working while catching nothing.
 
 Lower the baseline as each `design-apply` batch lands.
 

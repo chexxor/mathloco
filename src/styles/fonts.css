@@ -1,4 +1,4 @@
-/* The chrome face, wired. Ratified in .design/decisions.json (typeFamily): "Public Sans variable
+/* The chrome face, wired. Ratified in design/decisions.json (typeFamily): "Public Sans variable
    (latin, wght 100-900, one file) for chrome", 26,832 B.
 
    Why this @font-face is written here instead of `import "@fontsource-variable/public-sans"`:

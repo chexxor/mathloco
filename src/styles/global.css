@@ -2,10 +2,10 @@
 @plugin "@tailwindcss/typography";
 
 /* Design tokens — ratified 2026-11-01 by `design-ratify` (phase 3 of the design-system pipeline).
-   Machine record: .design/decisions.json (34 keys) + .design/state.json. Measured numbers:
-   .design/grill/contrast/out/*.txt — every ratio below was read back out of the Firefox renderer,
-   not computed from the oklch by hand (.design/grill/contrast-oracle.mjs). Rules and "never" lines:
-   DESIGN.md at the repo root. Expensive-to-reverse reasoning: .design/records/.
+   Machine record: design/decisions.json (34 keys) + design/state.json. Measured numbers:
+   design/grill/contrast/out/*.txt — every ratio below was read back out of the Firefox renderer,
+   not computed from the oklch by hand (design/grill/contrast-oracle.mjs). Rules and "never" lines:
+   DESIGN.md at the repo root. Expensive-to-reverse reasoning: design/records/.
 
    This branch changes TOKENS ONLY. No markup moved, so the shipped pages still render exactly as
    before except that the 18 transition writes which inherit a default now inherit `linear` for
@@ -35,7 +35,7 @@
   --color-ink: oklch(32% 0.045 152);    /* 12.02 on paper; also the ONE dark band per screen (D89) */
   /* the primary button's hover fill (DESIGN.md's button table records "primary | ink fill,
      band-text label, 48px | 10.19, hover 7.33"). Ratify wrote the RATIO and never wrote the VALUE
-     down, so apply solved it in the renderer (.design/grill/contrast/cfg-hover-sweep.json;
+     down, so apply solved it in the renderer (design/grill/contrast/cfg-hover-sweep.json;
      Firefox 158.0.1, Linux/x64, 2026-11-01). At L 40 C .055 H 152: label `band-text` on the fill =
      7.33 (bar 4.5) and fill vs resting `ink` = 1.39 (layer bar 1.35) — reproducing round 6's number.
      The BINDING bar is the layer one, not legibility: sweeping L 36..48 at this C,H the label stays

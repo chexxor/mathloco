@@ -43,10 +43,17 @@ three actors straight is the whole job:
      - free-plan gating and what costs money -> `cloudflare-hardening/SKILL.md`, whose
        `references/paid-features.md` lists what is gated on the Free plan. Read it before proposing any new
        binding: the operator's ceiling is **$1/month**, so the plan is permanently free (`.notes/DECISIONS.md` D32).
+   - **Design work has a tracked home:** `design/` (no dot) holds the design gates, their harness, the
+     probes behind every number `DESIGN.md` quotes, the specimens the operator chose from, and the machine
+     records; `.design/` (with the dot) is gitignored scratch (`tmp-*`, `render/`, probe screenshots,
+     candidate fonts). Read `design/README.md` before adding, renaming or deleting a file in either. After
+     a rename run `node design/audit-references.mjs --stale` — it exits 1 if any doc or script cites a path
+     that no longer exists; a pointer into a wall is how a future session loses a probe for good.
 3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
    once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
-   (check, check:classes, db:check, check:sanitize, check:cache, audit:gate, build, check:deploy). It is
+   (check, check:classes, check:design, check:social, check:social:selftest, db:check, check:sanitize,
+   check:cache, audit:gate, build, check:deploy). It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
    a chain hides which step broke, run the steps separately. `npm run check:discord` and

@@ -184,7 +184,7 @@ fs.writeFileSync(html, doc);
 // ---- 3. firefox composes it, and the page reports its own layout. ----
 fs.rmSync(png, { force: true });
 const shot = execFileSync(process.execPath, [
-  '.design/grill/page-measure.mjs', path.relative(root, html), 'scripts/social-card-measure.js',
+  'design/grill/page-measure.mjs', path.relative(root, html), 'scripts/social-card-measure.js',
   String(W), String(H), png,
 ], { encoding: 'utf8' });
 const posted = JSON.parse(shot.slice(shot.indexOf('{'), shot.lastIndexOf('}') + 1));
@@ -202,11 +202,11 @@ await sharp(png)
   .toFile(out);
 
 // ---- 5. the page's own report becomes evidence: npm run check:social re-checks the committed JPEG against
-// it without firefox. Tracked in git (like .design/fonts/*.json) because it is the other half of the claim:
+// it without firefox. Tracked in git (like design/fonts/*.json) because it is the other half of the claim:
 // "these pixels are what this document painted, in these faces, at these sizes". A run to another output
 // path writes its own report rather than clobbering the shipped artifact's half of the claim.
 const report = out === path.resolve('public/book-club-social-share.jpg')
-  ? path.resolve('.design/card-page.json')
+  ? path.resolve('design/card-page.json')
   : path.resolve(`${out}.report.json`);   // beside the artifact; `tmp-*` keeps it out of git
 fs.writeFileSync(report, JSON.stringify(posted, null, 1) + '\n');
 

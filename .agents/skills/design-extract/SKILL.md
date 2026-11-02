@@ -1,6 +1,6 @@
 ---
 name: design-extract
-description: "Lists every spacing, type, color, radius, shadow and motion value a codebase uses and how often, finds near-duplicates and one-off values, and counts how many existing values each candidate scale would fit. Produces .design/drift.json. Use as phase 1 of design-system, or when the user asks how inconsistent their UI is."
+description: "Lists every spacing, type, color, radius, shadow and motion value a codebase uses and how often, finds near-duplicates and one-off values, and counts how many existing values each candidate scale would fit. Produces design/drift.json. Use as phase 1 of design-system, or when the user asks how inconsistent their UI is."
 ---
 
 # Design Extract
@@ -74,7 +74,7 @@ Then, for each scale the project might adopt, count how many of the current valu
 
 ## Step 4: Write the output
 
-`.design/drift.json`:
+`design/drift.json`:
 
 ```json
 {

@@ -338,13 +338,13 @@ export async function selfTest() {
   cases.push(['two runs at display size', blankFile, twoRamp, /display step|display size on the card/]);
 
   // 5. the subtlest check of all: a path word painted in the wrong hue. Needs the real card's pixels and the
-  // page report the generator left behind (.design/card-page.json), because the assertion is "the ink in
+  // page report the generator left behind (design/card-page.json), because the assertion is "the ink in
   // this word's box is the hue the browser paints for the token that word asked for". The page object is
   // doctored so the word claims a hue the pixels do not show.
-  const reportFile = '.design/card-page.json';
+  const reportFile = 'design/card-page.json';
   if (!fs.existsSync(reportFile)) {
     ok = false;
-    lines.push('  FAIL  selftest "wrong path hue": no .design/card-page.json — run `npm run assets:social` first; without the page report this assertion cannot be exercised at all');
+    lines.push('  FAIL  selftest "wrong path hue": no design/card-page.json — run `npm run assets:social` first; without the page report this assertion cannot be exercised at all');
   } else {
     const real = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
     const wrongHue = JSON.parse(JSON.stringify(real));
@@ -395,14 +395,14 @@ if (process.argv[1] && process.argv[1].endsWith('check-social-card.mjs')) {
     process.exit(0);
   }
   const file = process.argv[2] ?? 'public/book-club-social-share.jpg';
-  // The page report the generator left behind (.design/card-page.json) is what makes the offline gate
+  // The page report the generator left behind (design/card-page.json) is what makes the offline gate
   // stronger than "no amber, and the ink is bright": the colour-pair and path-hue assertions need to know
   // what colour each run asked for. Without it those assertions are skipped, so the absence is reported.
   let page = null;
-  if (fs.existsSync('.design/card-page.json')) page = JSON.parse(fs.readFileSync('.design/card-page.json', 'utf8'));
-  const stale = page && fs.statSync(file).mtimeMs > fs.statSync('.design/card-page.json').mtimeMs + 1000;
+  if (fs.existsSync('design/card-page.json')) page = JSON.parse(fs.readFileSync('design/card-page.json', 'utf8'));
+  const stale = page && fs.statSync(file).mtimeMs > fs.statSync('design/card-page.json').mtimeMs + 1000;
   const r = await checkCard(file, { page });
-  console.log(page ? (stale ? '\n  NOTE  .design/card-page.json is older than the JPEG - the colour-pair and hue assertions may describe a different card. Re-run npm run assets:social.' : '\n  page report: .design/card-page.json (colour pairs and path hues are asserted)') : '\n  NOTE  no .design/card-page.json - colour-pair and path-hue assertions are SKIPPED. Run npm run assets:social to make one.');
+  console.log(page ? (stale ? '\n  NOTE  design/card-page.json is older than the JPEG - the colour-pair and hue assertions may describe a different card. Re-run npm run assets:social.' : '\n  page report: design/card-page.json (colour pairs and path hues are asserted)') : '\n  NOTE  no design/card-page.json - colour-pair and path-hue assertions are SKIPPED. Run npm run assets:social to make one.');
   console.log(`\n== painted pixels of ${file} ==`);
   console.log(r.lines.join('\n'));
   if (!r.ok) { console.error('SOCIAL CARD: FAIL'); process.exit(1); }

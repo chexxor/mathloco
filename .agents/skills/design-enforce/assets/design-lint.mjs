@@ -5,13 +5,13 @@
  *
  *   node design-lint.mjs [--fix-hints] [--json] [--quiet]
  *
- * Config: .design/lint.config.json (written by the design-enforce skill).
+ * Config: design/lint.config.json (written by the design-enforce skill).
  */
 import { readFileSync, existsSync, readdirSync, statSync } from "node:fs";
 import { join, relative, extname } from "node:path";
 
 const ROOT = process.cwd();
-const CFG = ".design/lint.config.json";
+const CFG = "design/lint.config.json";
 const args = new Set(process.argv.slice(2));
 
 const cfg = existsSync(CFG)
