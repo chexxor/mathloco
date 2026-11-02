@@ -68,7 +68,8 @@ three actors straight is the whole job:
 5. Resume from `NEXT.md`. Do not re-derive the priority from the roadmap - the roadmap is not in
    this repo (`AGENTS.md` and `README.md` are the only tracked .md files), so `NEXT.md` is the only
    queue view a session gets. Durable plans that are not queue items live beside it: `roadmap-events.md`
-   (surfacing and syncing the meetup schedule) and `asset-sources.md` (which image sources are
+   (surfacing and syncing the meetup schedule), `roadmap-brand.md` (the mark's surface identity, the colour
+   expansion, and what either re-measures) and `asset-sources.md` (which image sources are
    legitimately usable, and what their terms are).
 
 ## Work protocol
