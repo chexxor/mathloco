@@ -1,0 +1,189 @@
+{
+ "measuredAt": "2026-11-02T23:39:14.079Z",
+ "widths": [
+  1240,
+  390
+ ],
+ "rows": [
+  {
+   "label": "shipped",
+   "what": "as shipped",
+   "by": {
+    "390": {
+     "height": 4127,
+     "pageHeight": 4127,
+     "paintedPct": 7.7,
+     "emptyRunPx": 1518,
+     "emptyRunPct": 36.8,
+     "emptyRuns": 14,
+     "biggestRun": 141,
+     "inside": 1518,
+     "edges": 484,
+     "fixed": 0
+    },
+    "1240": {
+     "height": 2492,
+     "pageHeight": 2492,
+     "paintedPct": 4.3,
+     "emptyRunPx": 1035,
+     "emptyRunPct": 41.5,
+     "emptyRuns": 8,
+     "biggestRun": 217,
+     "inside": 1035,
+     "edges": 509,
+     "fixed": 0
+    }
+   }
+  },
+  {
+   "label": "edges",
+   "what": "declared edges only: hero margins 128/96 -> 64/64, section padding 64 -> 48",
+   "by": {
+    "390": {
+     "height": 4111,
+     "pageHeight": 4111,
+     "paintedPct": 7.73,
+     "emptyRunPx": 1502,
+     "emptyRunPct": 36.5,
+     "emptyRuns": 14,
+     "biggestRun": 143,
+     "inside": 1502,
+     "edges": 420,
+     "fixed": 0
+    },
+    "1240": {
+     "height": 2332,
+     "pageHeight": 2332,
+     "paintedPct": 4.6,
+     "emptyRunPx": 875,
+     "emptyRunPct": 37.5,
+     "emptyRuns": 8,
+     "biggestRun": 169,
+     "inside": 875,
+     "edges": 445,
+     "fixed": 0
+    }
+   }
+  },
+  {
+   "label": "edges-rules",
+   "what": "same trims, with a 1px rule at each band boundary instead of the lost air",
+   "by": {
+    "390": {
+     "height": 4113,
+     "pageHeight": 4113,
+     "paintedPct": 7.73,
+     "emptyRunPx": 1504,
+     "emptyRunPct": 36.6,
+     "emptyRuns": 14,
+     "biggestRun": 144,
+     "inside": 1504,
+     "edges": 422,
+     "fixed": 0
+    },
+    "1240": {
+     "height": 2334,
+     "pageHeight": 2334,
+     "paintedPct": 4.59,
+     "emptyRunPx": 877,
+     "emptyRunPct": 37.6,
+     "emptyRuns": 8,
+     "biggestRun": 170,
+     "inside": 877,
+     "edges": 447,
+     "fixed": 0
+    }
+   }
+  },
+  {
+   "label": "interior",
+   "what": "inside surfaces only: the six-card grid 64px in + 32px gaps -> 40px in + 24px gaps",
+   "by": {
+    "390": {
+     "height": 4055,
+     "pageHeight": 4055,
+     "paintedPct": 7.84,
+     "emptyRunPx": 1454,
+     "emptyRunPct": 35.9,
+     "emptyRuns": 14,
+     "biggestRun": 141,
+     "inside": 1454,
+     "edges": 484,
+     "fixed": 0
+    },
+    "1240": {
+     "height": 2460,
+     "pageHeight": 2460,
+     "paintedPct": 4.36,
+     "emptyRunPx": 1077,
+     "emptyRunPct": 43.8,
+     "emptyRuns": 9,
+     "biggestRun": 217,
+     "inside": 1077,
+     "edges": 509,
+     "fixed": 0
+    }
+   }
+  },
+  {
+   "label": "slots",
+   "what": "PS-1 and PS-3 filled at their approved sizes (hatched stand-in, geometry only)",
+   "by": {
+    "390": {
+     "height": 4127,
+     "pageHeight": 4127,
+     "paintedPct": 8.08,
+     "emptyRunPx": 1514,
+     "emptyRunPct": 36.7,
+     "emptyRuns": 14,
+     "biggestRun": 141,
+     "inside": 1514,
+     "edges": 477,
+     "fixed": 0
+    },
+    "1240": {
+     "height": 2492,
+     "pageHeight": 2492,
+     "paintedPct": 10.99,
+     "emptyRunPx": 984,
+     "emptyRunPct": 39.5,
+     "emptyRuns": 8,
+     "biggestRun": 169,
+     "inside": 984,
+     "edges": 458,
+     "fixed": 0
+    }
+   }
+  },
+  {
+   "label": "all",
+   "what": "edges + interior + slots together, to see the ceiling of the code-only option",
+   "by": {
+    "390": {
+     "height": 4039,
+     "pageHeight": 4039,
+     "paintedPct": 8.26,
+     "emptyRunPx": 1434,
+     "emptyRunPct": 35.5,
+     "emptyRuns": 14,
+     "biggestRun": 136,
+     "inside": 1434,
+     "edges": 413,
+     "fixed": 0
+    },
+    "1240": {
+     "height": 2300,
+     "pageHeight": 2300,
+     "paintedPct": 11.91,
+     "emptyRunPx": 866,
+     "emptyRunPct": 37.7,
+     "emptyRuns": 9,
+     "biggestRun": 124,
+     "inside": 866,
+     "edges": 394,
+     "fixed": 0
+    }
+   }
+  }
+ ]
+}

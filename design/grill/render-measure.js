@@ -114,10 +114,21 @@
     '[class*="bg-"]', '[class*="border"]', '[class*="ring"]', '[class*="divide"]', '[class*="outline"]',
     '[class*="shadow"]', '[class*="text-"]'];
   const wantFaces = ['400 16px "PT Serif"', '700 16px "PT Serif"', '600 16px "Public Sans Variable"'];
-  const settle = () => document.fonts && document.fonts.load
+  // A lazy <img> is part of "settled" too. It decodes after first paint and the document gets taller: this
+  // page measured 2495px before the join-card png decoded and 2607px after, so a pixel crop chosen from the
+  // pre-decode height clips ~112px off the bottom of the page - and a census that clips the ink footer band
+  // reports a different page than the one being looked at. decode() alone does not fetch an image far below
+  // the viewport, so `loading` is forced to eager first; it changes no geometry.
+  const decodeImages = () => {
+    for (const im of document.images) { try { if (im.loading === 'lazy') im.loading = 'eager'; } catch {} }
+    return Promise.all([...document.images].map((im) =>
+      (im.decode ? im.decode() : Promise.resolve()).then(() => {}, () => {})));
+  };
+  const settle = () => (document.fonts && document.fonts.load
     ? Promise.all(wantFaces.map((f) => document.fonts.load(f).then(() => {}, () => {})))
         .then(() => document.fonts.ready).then(() => {}, () => {})
-    : Promise.resolve();
+    : Promise.resolve())
+    .then(decodeImages, decodeImages);
 
   // MEASURE AFTER THE FACES SETTLE — every rect, not just the text ones. The first version asked the fonts to
   // settle before POSTING, while the rects themselves were taken at script-eval time, and that silently measured
@@ -361,6 +372,10 @@
       bg: getComputedStyle(document.body).backgroundColor,
       fg: getComputedStyle(document.body).color,
       ff: getComputedStyle(document.body).fontFamily.split(',')[0],
+      // The document's own height, posted at the same moment as everything else: a pixel census needs to
+      // know whether its frame is the whole page or a crop of it (design/color-survey.mjs shot a fixed
+      // 2400px frame past a 2495px landing page and called the missing footer "not there").
+      scrollHeight: document.documentElement.scrollHeight,
     },
     overflowX: document.documentElement.scrollWidth > innerWidth + 1
       ? document.documentElement.scrollWidth - innerWidth : 0,

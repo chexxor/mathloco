@@ -72,6 +72,11 @@
         bgBytes: rgbOf(cs.backgroundColor),
         padTop: cs.paddingTop,
         padBottom: cs.paddingBottom,
+        // Rhythm needs the margin too: on this page the big gaps between surfaces are the HERO's own
+        // margins (md:mt-32 / md:mb-24), not section padding, and a rhythm proposal that changes the wrong
+        // one of the two is editing the wrong rule.
+        padLeft: cs.paddingLeft, padRight: cs.paddingRight,
+        marginTop: cs.marginTop, marginBottom: cs.marginBottom,
         chars: (el.textContent || '').replace(/\s+/g, ' ').trim().length,
         p: el.querySelectorAll('p').length,
         li: el.querySelectorAll('li').length,
@@ -138,8 +143,13 @@
         if (b.w < 60 || b.h < 60) continue;
         out.slots.push({
           tag: kid.tagName.toLowerCase(),
-          cls: (kid.getAttribute('class') || '').slice(0, 56),
-          parent: (el.getAttribute('class') || '').slice(0, 56),
+          // The name the page gives its own photo place (`<div data-slot="PS-1">`). A consumer that matches on a
+          // Tailwind class is matching on styling: `cls` is truncated, and `lg:col-span-4` falls off the end, so
+          // a specimen that looks its slots up by class silently stops finding them. The page labels the slot,
+          // the probe reports the label, the specimen matches on it.
+          dataSlot: kid.getAttribute('data-slot') || null,
+          cls: (kid.getAttribute('class') || '').slice(0, 120),
+          parent: (el.getAttribute('class') || '').slice(0, 120),
           display: cs.display,
           gap: cs.gap,
           ...b,
@@ -189,12 +199,26 @@
     return;
   }
   const kick = () => Promise.all(wantFaces.map((f) => document.fonts.load(f).then(() => {}, () => {})));
+  // Faces are not the only thing that moves the document. A lazy <img> decodes after first paint and makes
+  // the page taller: the landing page measured 2495px before the join-card png decoded and 2607px after.
+  // `doc.scrollHeight` is what the driver chooses its pixel crop from, so measuring before the images settle
+  // clips the bottom of the page out of the census. `decode()` alone is not enough for an image far below the
+  // viewport, so `loading` is forced to eager first (it changes no geometry - it only stops the fetch being
+  // deferred).
+  const decodeImages = () => {
+    for (const im of document.images) { try { if (im.loading === 'lazy') im.loading = 'eager'; } catch {} }
+    return Promise.all([...document.images].map((im) =>
+      (im.decode ? im.decode() : Promise.resolve()).then(() => {}, () => {})));
+  };
   const deadline = Date.now() + 8000;
   (async () => {
     await kick();
     for (;;) {
       const rows = faceStatus();
-      if (settled(rows) || Date.now() > deadline) { if (settled(rows)) scan(); return report(rows); }
+      if (settled(rows) || Date.now() > deadline) {
+        if (settled(rows)) { await decodeImages(); scan(); }
+        return report(rows);
+      }
       await new Promise((r) => setTimeout(r, 60));
     }
   })().then(() => {}, () => { out.errors.push('probe threw before posting'); report(faceStatus()); });

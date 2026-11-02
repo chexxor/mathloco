@@ -28,6 +28,7 @@ import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
 import { oklabBytes, distLab } from './grill/okcolor.mjs';
+import { readFileSync as readSite } from 'node:fs';
 
 const args = process.argv.slice(2);
 const argList = (flag, dflt) => {
@@ -39,6 +40,13 @@ const argList = (flag, dflt) => {
 };
 const routes = argList('--routes', ['/']);
 const widths = argList('--widths', ['1240', '390']).map(Number);
+// --css <file> measures a PROPOSED page rather than the shipped one: the CSS is injected into a COPY of
+// dist/client, so a rhythm or photo-slot proposal gets the same bars applied to the real page instead of a
+// prediction. dist/ is never mutated (dist/ is what gets deployed). --label names the variant so its records
+// and its printout cannot be mistaken for the shipped numbers.
+const argOne = (flag, dflt) => { const i = process.argv.indexOf(flag); return i < 0 ? dflt : process.argv[i + 1]; };
+const cssFile = argOne('--css', null);
+const label = argOne('--label', 'shipped');
 
 const INK_BAR = 0.05;        // same-colour bar: below this a pixel reads as the ground it sits on
 const GAP_MIN = 60;          // an empty run this tall is a gap a reader notices (roughly two body lines)
@@ -51,7 +59,34 @@ if (!existsSync(resolve('dist/client/index.html'))) {
 mkdirSync('.design/render', { recursive: true });
 mkdirSync('.design/tmp-whitespace', { recursive: true });
 
+// A fingerprint of the SHIPPED page (not of a variant copy), stamped into every report this writes. It is
+// what lets design/rhythm.mjs know that a variant JSON sitting in the scratch dir was probed from this build
+// rather than from an older one - the variants are copies of dist with CSS injected, so their own bytes
+// cannot say which site they were copied out of.
+import { createHash } from 'node:crypto';
+const SITE_FP = (() => {
+  try { return createHash('sha1').update(readSite('dist/client/index.html')).digest('hex').slice(0, 10); }
+  catch { return 'unknown'; }
+})();
+
 const name = (r) => (r === '/' ? 'root' : r.replace(/^\//, '_').replace(/\//g, '-'));
+
+let distDir = 'dist/client';
+if (cssFile) {
+  const { cpSync, rmSync, readFileSync } = await import('node:fs');
+  distDir = `.design/tmp-whitespace/dist-${label}`;
+  rmSync(distDir, { recursive: true, force: true });
+  mkdirSync(distDir, { recursive: true });
+  cpSync('dist/client', distDir, { recursive: true });
+  const htmlPath = resolve(distDir, 'index.html');
+  const html = readFileSync(htmlPath, 'utf8');
+  if (!html.includes('</head>')) throw new Error(`${htmlPath} has no </head> to inject into`);
+  writeFileSync(htmlPath, html.replace(
+    '</head>',
+    `<style id="variant-${label}">\n${readFileSync(cssFile, 'utf8')}\n</style>\n</head>`));
+  console.log(`variant "${label}": ${cssFile} injected into a copy of dist/client (${distDir})`);
+}
+const tag = label === 'shipped' ? '' : `-${label}`;
 
 const probe = (route, w, h, shot) => {
   // One retry: this firefox harness has a known flake (it occasionally renders without posting), and
@@ -61,7 +96,7 @@ const probe = (route, w, h, shot) => {
   for (let attempt = 1; attempt <= 2; attempt++) {
     try {
       return JSON.parse(execFileSync(process.execPath, [
-        'design/grill/dist-measure.mjs', 'dist/client', route, 'design/grill/whitespace-measure.js',
+        'design/grill/dist-measure.mjs', distDir, route, 'design/grill/whitespace-measure.js',
         String(w), String(h), shot,
       ], { stdio: ['ignore', 'pipe', 'pipe'] }).toString());
     } catch (e) {
@@ -77,7 +112,7 @@ for (const route of routes) {
     // and a shot shorter than it hides the bottom of the page).
     const first = probe(route, w, 1200, '');
     const pageH = Math.min(6000, first.doc.scrollHeight);
-    const shot = `.design/render/space-${name(route)}-${w}.png`;
+    const shot = `.design/render/space${tag}-${name(route)}-${w}.png`;
     const dom = probe(route, w, pageH, shot);
     if (dom.errors?.length) console.error(`  probe errors: ${dom.errors.join('; ')}`);
 
@@ -184,7 +219,7 @@ for (const route of routes) {
     }
     const padPx = dom.surfaces.reduce((a, s) => a + (parseFloat(s.padTop) || 0) + (parseFloat(s.padBottom) || 0), 0);
 
-    console.log(`\n${route} @ ${w}x${pageH} — page ${dom.doc.scrollHeight}px tall, ${(width * height).toLocaleString()} px, painted ${(100 * inkTotal / (width * height)).toFixed(1)}% (ink bar ${INK_BAR} delta-OKLab)`);
+    console.log(`\n${label} ${route} @ ${w}x${pageH} — page ${dom.doc.scrollHeight}px tall, ${(width * height).toLocaleString()} px, painted ${(100 * inkTotal / (width * height)).toFixed(1)}% (ink bar ${INK_BAR} delta-OKLab)`);
     console.log(`  empty runs >= ${GAP_MIN}px: ${runs.length} totalling ${gapPx}px (${(100 * gapPx / height).toFixed(1)}% of the page height)`);
     for (const r of runs.slice(0, 12)) console.log(`    ${r.h}px at y=${r.y} inside ${ownerOf(r.y + Math.floor(r.h / 2))}`);
     console.log('  surfaces (height | painted | chars/1000px | ink span | left/right flanks | empty top/bottom):');
@@ -193,6 +228,13 @@ for (const route of routes) {
         `${String(Math.round(s.h)).padStart(5)}px  ${String(s.inkPct).padStart(5)}%  ${String(s.charsPer1000px).padStart(4)}` +
         `  span ${String(s.inkSpanW).padStart(4)}px  flanks ${String(s.flankLeft).padStart(4)}/${String(s.flankRight).padStart(4)}px` +
         `  empty ${String(Math.round(s.emptyTop)).padStart(4)}/${String(Math.round(s.emptyBottom)).padStart(4)}px  media ${s.img + s.svg}  ${s.chars} chars`);
+    }
+    console.log('  rhythm (what the CSS declares vs where paint actually starts and stops):');
+    for (const s of surfaces) {
+      console.log(`    ${s.tag}.${(s.cls || '').split(' ').slice(0, 2).join('.') || s.tag}`.padEnd(30) +
+        `margin ${String(s.marginTop).padStart(6)}/${String(s.marginBottom).padEnd(6)}  padding ${String(s.padTop).padStart(6)}/${String(s.padBottom).padEnd(6)}` +
+        `  paint starts ${String(Math.round(s.emptyTop)).padStart(4)}px in, ends ${String(Math.round(s.emptyBottom)).padStart(4)}px before its bottom` +
+        `  (${s.gapsInside}px of empty run inside)`);
     }
     console.log(`  media (every drawing/photo-sized thing, by painted area):`);
     for (const m of dom.media.slice().sort((a, b) => b.area - a.area).slice(0, 8)) {
@@ -211,9 +253,9 @@ for (const route of routes) {
     console.log(`  biggest gaps between blocks of copy: ${topGaps.map((g) => `${g.gap}px after ${g.after}`).join(' | ') || 'none'}`);
     console.log(`  structure: declared padding ${Math.round(padPx)}px; between surfaces ${between.map((b) => `${b.from}->${b.to} ${b.gap}px`).join(', ') || 'none'}`);
 
-    const file = `.design/tmp-whitespace/space-${name(route)}-${w}.json`;
+    const file = `.design/tmp-whitespace/space${tag}-${name(route)}-${w}.json`;
     writeFileSync(file, JSON.stringify({
-      route, width: width, height, pageHeight: dom.doc.scrollHeight, inkBar: INK_BAR, gapMin: GAP_MIN,
+      route, siteFp: SITE_FP, width: width, height, pageHeight: dom.doc.scrollHeight, inkBar: INK_BAR, gapMin: GAP_MIN,
       paintedPx: inkTotal, paintedPct: +(100 * inkTotal / (width * height)).toFixed(2),
       emptyRuns: runs.length, emptyRunPx: gapPx, emptyRunPct: +(100 * gapPx / height).toFixed(1),
       fixed: dom.fixed, gaps: runs, surfaces, media: dom.media, regions: dom.regions, slots: dom.slots, textGaps, fonts: dom.fonts, betweenSurfaces: between, declaredPaddingPx: Math.round(padPx),

@@ -27,6 +27,7 @@
     "round9": "node design/round9.mjs",
     "round10": "node design/round10.mjs",
     "check:space": "node design/whitespace-survey.mjs",
+    "check:rhythm": "node design/rhythm.mjs",
     "check:render:dist": "node design/render-gate.mjs --no-build",
     "check:mark": "node design/mark-check.mjs",
     "check:color": "node design/color-survey.mjs",
