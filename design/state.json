@@ -1,8 +1,10 @@
 {
  "pipeline": "design-system",
- "phase": "4-design-apply (ratify COMPLETE 2026-11-01)",
- "round": "8 (asked 2026-11-02, awaiting the operator)",
- "awaiting": [],
+ "phase": "4-design-apply (round 8 applied 2026-11-02: reading ramp + measure cap + mark line weight)",
+ "round": "8 (asked and ANSWERED 2026-11-02: B, cap prose at ~70 characters, keep the cap rule, M-B)",
+ "awaiting": [
+  "the mark GEOMETRY fix: the operator ruled that the drawn mark misreads their source image (two parallel lines meeting on a curved surface)"
+ ],
  "asked_at": "2026-10-31",
  "previews": {
   "1": "design/grill/round-1.html",
@@ -353,6 +355,33 @@
    "controls": "label 13.3/16 -> 48/40; label 15/20 -> 52/44 (measured in the specimen)",
    "displayCap": "the club name longest word vs the 276px phone box: A d1 195.7 fits, B d1 215.1 fits, C d1 219.9 fits, D d1 244.6 fits; d3/d4 fail at A/B/C, D fails from d2 up",
    "mark": "sphere 0.9u=1.03px at the 276px hero box; pixels at/over the 3.0 bar: shipped 890, sphere-only 1070, all +25% 1129, device-px 1085 (but 1559 at 372 vs 1722 shipped - non-scaling fixes the phone by thinning the desktop)"
+  },
+  "answered_at": "2026-11-02",
+  "operator_answers": {
+   "type_ramp": "B - the reading ladder +10% (body 17.6/24, lede 21.1/28, subhead 25.3/32, heading 30.4/40, display 36.4/43.7/52.4/62.9), chrome tier unchanged at micro 11.1/16 and label 13.3/16",
+   "measure": "cap prose at ~70 characters; implemented as max-w-measure = 32em, because ch is the \"0\" glyph advance and would have allowed ~93 real characters of PT Serif",
+   "display_cap": "keep the cap rule (measured: Minneapolis at display-4 needs 371.3px; the 320-viewport hero box is 276px)",
+   "mark_line_weight": "M-B - sphere stroke 0.9 -> 1.3 viewBox units (painted pixels at/over the 3.0 bar: 890 -> 1070 at a 276px box, 1722 -> 2038 at 372px)"
+  },
+  "applied": {
+   "at": "2026-11-02",
+   "wrote": [
+    "src/styles/global.css (the reading ladder; --container-measure 32em; display leadings 40/48/56/68 derived at the 1.05 floor)",
+    "max-w-measure on the two section-intro ledes and the 404/chat ledes (replaces max-w-2xl, a px cap whose character count moved with the ramp)",
+    "src/components/DiscordSummary.svelte: three bare leading-6 writes deleted (the size token carries leading)",
+    "src/lib/brand-mark.mjs: sphere stroke 0.9 -> 1.3",
+    "design/ratify-check.mjs section 1f: every line box in the ramp is re-derived from the sizes in the block, and the display specimen must measure the sizes the block ships",
+    "design/render-gate.mjs: the display step and the chrome tiers are read from the token file instead of hard-coded px",
+    "design/grill/display-fit-chrome-measure.js: sizes read from @theme, and it now measures INK DEPTH as well as width"
+   ],
+   "measured_after": "widest prose line on / at 1240: 76 -> 69 characters (675px box); controls still 48/40 at three widths; notice 80/100/124; nav 184 of 276 at 320; card title 62.9px at 10.26 contrast, 33,881 B; display ink clearance 7-11px",
+   "open": "body line spacing is 1.36 at 17.6 (24px box) against a published 1.5 floor / 1.6 comfort (research R1). Recorded in DESIGN.md open threads and .notes/DECISIONS.md rather than applied, because it moves the 80px one-line notice (D98) and the island geometry."
   }
- }
+ },
+ "applied_rounds": [
+  5,
+  6,
+  7,
+  8
+ ]
 }

@@ -96,32 +96,57 @@
 
   /* ---- Type ramp: 1.200, nine steps (T3, D95), plus the 11.1px chrome step below the ladder
      (nav narrow tier D100, status chip and notice labels). Leading is carried by the size token
-     (58 of 71 existing writes already do). The display line boxes land on the 4px grid —
-     36 / 44 / 52 / 60 — and each clears its own measured ink box. The two DERIVED leadings
-     (subhead, heading) follow "next 4px multiple >= size x 1.2"; the rest are ratified numbers.
-     Do NOT use these to override Tailwind's built-in text-sm/text-2xl ramp: apply maps each write
-     across explicitly, and design-enforce forbids the built-ins. ---- */
+     (58 of 71 existing writes already do). The display line boxes land on the 4px grid and each
+     clears its own measured ink box (`design/fonts/display-fit-chrome.json`, chrome face at the weight
+     the title writes). The two DERIVED leadings (subhead, heading) follow "next 4px multiple >= size x
+     1.2"; the rest are ratified numbers. Do NOT use these to override Tailwind's built-in text-sm/
+     text-2xl ramp: apply maps each write across explicitly, and design-enforce forbids the built-ins.
+
+     ROUND 8 (operator ruling 2026-11-02, candidate B): the READING ladder went up 10% and the CHROME
+     tier did not move. Why a set and not a number, and why that set: characters per line are measured
+     at 29-38 everywhere (`npm run lines:measure`), so the boxes, not the sizes, were the constraint;
+     raising only content steps therefore buys legibility without moving anything derived from the
+     chrome tier — control height is `label line box + 2 x pad`, so `text-label` staying 13.3/16 keeps
+     48/40, the notice's 48px one-line figure, the nav fit (273 of 276 at 320) and the card's bands.
+     Candidates C and D both raised the label step, which moves every control to 52/44 — measured, not
+     reasoned, in `design/grill/round-8.html` and `design/grill/round8/report.json`. ---- */
   --text-micro: 11.1px;
   --text-micro--line-height: 16px;
   --text-label: 13.3px;
   --text-label--line-height: 16px;
-  --text-body: 16px;
+  --text-body: 17.6px;
   --text-body--line-height: 24px;
-  --text-lede: 19.2px;
+  --text-lede: 21.1px;
   --text-lede--line-height: 28px;
-  --text-subhead: 23px;            /* leading derived, not measured */
-  --text-subhead--line-height: 28px;
-  --text-heading: 27.7px;          /* leading derived, not measured */
-  --text-heading--line-height: 36px;
-  --text-display-1: 33.2px;
-  --text-display-1--line-height: 36px;
-  --text-display-2: 39.8px;
-  --text-display-2--line-height: 44px;
-  --text-display-3: 47.8px;
-  --text-display-3--line-height: 52px;
-  --text-display-4: 57.3px;
-  --text-display-4--line-height: 60px;
+  --text-subhead: 25.3px;          /* leading derived, not measured */
+  --text-subhead--line-height: 32px;
+  --text-heading: 30.4px;          /* leading derived, not measured */
+  --text-heading--line-height: 40px;
+  --text-display-1: 36.4px;
+  --text-display-1--line-height: 40px;
+  --text-display-2: 43.7px;
+  --text-display-2--line-height: 48px;
+  --text-display-3: 52.4px;
+  --text-display-3--line-height: 56px;
+  --text-display-4: 62.9px;
+  --text-display-4--line-height: 68px;
   --leading-prose: 1.6;            /* serif body copy; a rule, not a size step */
+
+  /* ---- Measure (round 8, operator ruling): a prose block never runs wider than 70 characters of its
+     own size. It is `ch` not px on purpose — a px cap changes meaning when the ramp moves, which is what
+     `max-w-2xl` (672px) had been doing silently: at the round-8 lede size 672px is exactly 70ch, but at
+     the shipped size it was 77ch. Measured before the cap (`npm run lines:measure`): the widest prose on
+     the site was two section-intro ledes in a 1164px box, at 76 and 69 characters — the 1164px box would
+     have carried ~121 characters of that copy, so this is a guardrail on the box as much as a fix for the
+     one line that sat over the 40-75 reading band. ---- */
+  /* v4 reads `max-w-*` from the `--container-*` namespace, so the utility this produces is
+     `max-w-measure` (measured with the resolver: a `--max-w-measure` key produces nothing).
+     It is `em`, not `ch`, because `ch` is the advance of the "0" glyph, not an average character:
+     measured on the built page, PT Serif prose averages 0.455 em per character, so a 70ch cap is
+     ~93 real characters — no cap at all. 32em / 0.455 em = ~70 characters of serif prose, which is
+     the number the round-8 ruling asked for. Same cap on chrome copy would be ~52 characters
+     (Public Sans averages 0.612 em), so this belongs on prose blocks, not on every text block. */
+  --container-measure: 32em;
 
   /* ---- Radius: 6px base (round 2 — fits 3/3 candidate radii; 8px risks the candy reading the
      operator ruled out). One base, two roles, so a future change is one line. No pill role: chips

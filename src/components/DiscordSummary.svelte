@@ -75,7 +75,7 @@
       role="status"
       aria-live="polite"
     >
-      <p class="text-body leading-6 text-ink">The channel summaries have not loaded.</p>
+      <p class="text-body text-ink">The channel summaries have not loaded.</p>
       <p class="text-label text-ink-2">
         They are written by our bot from recent channel activity. Read the same thing where it is
         posted: <a class="underline hover:text-gold" href={discordUrl}>Discord</a>.
@@ -86,8 +86,8 @@
          retry). The error branch is in the server-rendered HTML by construction: 'pending' says out
          loud that nothing has loaded, so nobody is trapped in a spinner. -->
     <div class="inset-shadow-rule rounded-control px-4 py-3 min-h-20" role="alert">
-      <p class="text-body leading-6 text-ink">The channel summaries did not load.</p>
-      <p class="text-body leading-6 text-ink-2">
+      <p class="text-body text-ink">The channel summaries did not load.</p>
+      <p class="text-body text-ink-2">
         They come from our own summary service, not from Discord. Discord is a separate service and
         may be fine.
       </p>

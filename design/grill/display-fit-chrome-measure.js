@@ -8,7 +8,10 @@
 // Public Sans Variable at weight 700/800. Weight is not cosmetic here: the same string at 800 is
 // measurably wider than at 400, so a cap decided in one face or one weight does not transfer.
 (() => {
-  const out = { done: false, sizes: [33.2, 39.8, 47.8, 57.3], weights: [700, 800], boxes: [343, 700], rows: [] };
+  // sizes are the @theme display steps as shipped (round 8 moved them: B raised the content ladder by 10%),
+  // and `ratify-check` asserts this list equals `--text-display-*` in src/styles/global.css, because a
+  // specimen that measures yesterday's sizes is how a cap rule quietly stops describing the site.
+  const out = { done: false, sizes: [36.4, 43.7, 52.4, 62.9], weights: [700, 800], boxes: [343, 700], rows: [] };
   const probe = document.getElementById('probe');
   const strings = [
     'Minneapolis Math Book Club',
@@ -27,11 +30,25 @@
     probe.style.lineHeight = 'normal';
   };
 
+  // Ink depth, not em height: DESIGN.md's display rule is that each line box lands on the 4px grid AND
+  // clears its own measured ink box, so the number that picks a leading is
+  // ascent+descent of the real strings in the real face at the real weight (800 is what the title writes).
+  const canvas = document.createElement('canvas').getContext('2d');
+  const inkDepth = (size, weight) => {
+    canvas.font = `${weight} ${size}px "Public Sans Variable"`;
+    let ink = 0;
+    for (const s of strings.concat(['Typographic', 'jqpyg'])) {
+      const m = canvas.measureText(s);
+      ink = Math.max(ink, m.actualBoundingBoxAscent + m.actualBoundingBoxDescent);
+    }
+    return +ink.toFixed(1);
+  };
+
   (async () => {
     for (const size of out.sizes) {
       for (const weight of out.weights) {
         await fit(size, weight);
-        const row = { size, weight, strings: {} };
+        const row = { size, weight, ink: inkDepth(size, weight), strings: {} };
         for (const s of strings) {
           probe.textContent = s;
           probe.style.whiteSpace = 'nowrap';
@@ -61,6 +78,9 @@
     }
     out.fonts = [];
     document.fonts.forEach((f) => out.fonts.push(`${f.family} ${f.weight} ${f.status}`));
+    // page-measure.mjs exits 0 only on a post with done: true; without this the runner prints TIMEOUT and
+    // exits 1 even though every row arrived, which is how a green measurement looks like a broken probe.
+    out.done = true;
     fetch(window.__MEASURE_ENDPOINT, { method: 'POST', mode: 'no-cors', body: JSON.stringify(out) }).catch(() => {});
   })();
 })();

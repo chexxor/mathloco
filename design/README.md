@@ -39,7 +39,7 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/render-gate.mjs [route…]` | the gate itself; it builds unless `--no-build`, runs its route × width matrix 4 ff at once (`RENDER_JOBS=1` to serialize), and retries a firefox that posted nothing once (`RENDER_ATTEMPTS`) | yes |
 | `node design/render-gate-selftest.mjs` | mutate the built page five ways, require `check:render` to FAIL each — proves the mark checks can still fail | yes |
 | `npm run check:social` / `:selftest` / `:live` | the committed share card's painted bytes / synthetic failures / the producer run into a gitignored temp file | live: yes |
-| `node design/ratify-check.mjs` | the ratified `@theme` block through the Tailwind resolver + renderer contrast | no |
+| `node design/ratify-check.mjs` | the ratified `@theme` block through the Tailwind resolver + renderer contrast; section 1f re-derives every line box in the type ramp from the sizes in the block (next 4px multiple ≥ size × 1.2, display ≥ size × 1.05, each display box clearing its measured ink depth) and fails if `design/grill/display-fit-chrome-measure.js` measured sizes the block does not ship — so a size raise cannot carry stale leadings over | no |
 | `node design/gen-token-map.mjs` | regenerate `design/token-map.md` from the writes in `src/`; exit 1 = a class write has no mapping | no |
 | `node design/list-writes.mjs` | every live type/space/shape class write, counted — pick a batch by coverage | no |
 | `node design/grill/dist-measure.mjs dist/client <page> <measure.js> <width…>` | measure one built page at given widths (the harness behind `check:render`) | yes |

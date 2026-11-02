@@ -5,8 +5,8 @@ add a MAP row to the script instead. `target: (delete)` means the write goes awa
 A write that already names a @theme token is listed as "keep (ratified …)" — the token names are
 parsed from src/styles/global.css (24 colours, 10 type steps, 2 radii, 8 elevations), so a token rename shows up here as a write that stopped being covered.
 
-Class tokens scanned: 176 distinct / 745 writes, of which 123 are in a DORMANT file (see the last section).
-Live writes mapped: 429 across 87 distinct tokens.
+Class tokens scanned: 175 distinct / 746 writes, of which 123 are in a DORMANT file (see the last section).
+Live writes mapped: 426 across 86 distinct tokens.
 Unmapped writes in a replaced bucket: none
 
 ## colour
@@ -48,7 +48,6 @@ Unmapped writes in a replaced bucket: none
 | `font-medium` | 8 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `font-extrabold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
 | `font-bold` | 5 | `chrome (sans stack): 400-800 all real; serif: 400 or 700 only` | apply 4a installed Public Sans variable latin (wght 100-900) and imported PT Serif latin 400+700, so chrome weight writes now render as distinct weights (measured: 46 runs on the landing page at 500/600/800). A 500/600 write on SERIF text is still the regular face or the real bold, nothing in between — the only serif weight writes left are inside the typography-plugin ramp in DiscordSummary |
-| `leading-6` | 3 | **(delete)** | a bare leading-* next to a size write duplicates what the size token already carries; the size token names the line box (variant prefixes are tested after stripping) |
 | `text-micro` | 3 | `keep (ratified step)` | names a @theme type step |
 | `text-display-1` | 3 | `keep (ratified step)` | names a @theme type step |
 | `text-heading` | 3 | `keep (ratified step)` | names a @theme type step |
@@ -106,9 +105,9 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | `px-4` | 1 | src/components/UpcomingMeetups.astro |
 | `font-semibold` | 3 | src/components/UpcomingMeetups.astro |
 | `transition` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
+| `mx-auto` | 1 | src/components/UpcomingMeetups.astro |
 | `justify-center` | 1 | src/components/UpcomingMeetups.astro |
 | `ml-3` | 3 | src/components/UpcomingMeetups.astro |
-| `mx-auto` | 1 | src/components/UpcomingMeetups.astro |
 | `font-medium` | 1 | src/components/UpcomingMeetups.astro |
 | `inline-flex` | 1 | src/components/UpcomingMeetups.astro |
 | `py-3` | 1 | src/components/UpcomingMeetups.astro |

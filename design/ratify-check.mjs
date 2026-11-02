@@ -192,6 +192,58 @@ const raster = liveFiles.filter(([, t]) => /import\s+[A-Za-z_$][\w$]*\s+from\s+[
 if (raster.length) fail(`${raster.length} live src file(s) import a raster image (${raster.join(', ')}) — the site is photo-free by construction (D94/D120); the drawn mark in src/lib/brand-mark.mjs is the graphic`);
 else ok('clean: no live src file imports a raster image — photo-free by construction (D94/D120) is gated, not remembered');
 
+// ---------------- 1f. the ramp satisfies its own documented derivation ----------------------
+// DESIGN.md states how every line box in the ramp is produced, and round 8 (2026-11-02) is the reason
+// that rule lives here as code rather than as prose: raising body 16 -> 17.6 changes what the
+// derivation OUTPUTS, so a leading carried over by hand from the old sizes is a silent ratio change —
+// 24px is 1.5 line spacing at 16px and 1.36 at 17.6. Every step below is re-derived from the size in
+// the block, so a size bump that forgets its leading fails this gate instead of shipping.
+// `micro` and `label` are exempt: their 16px line box is a ratified pair (D100, round 6), not a derived
+// step, because the chrome tier is chosen so a control's height lands on the grid.
+console.log("\n== the ramp satisfies DESIGN.md's derivation ==");
+const STEPS = ['micro', 'label', 'body', 'lede', 'subhead', 'heading', 'display-1', 'display-2', 'display-3', 'display-4'];
+const ramp = {};
+for (const s of STEPS) {
+  const m = new RegExp(`--text-${s}:\\s*([\\d.]+)px`).exec(css);
+  const l = new RegExp(`--text-${s}--line-height:\\s*([\\d.]+)px`).exec(css);
+  if (!m || !l) { fail(`--text-${s} or --text-${s}--line-height is missing from @theme`); continue; }
+  ramp[s] = { size: +m[1], lead: +l[1] };
+}
+const ceil4 = (x) => 4 * Math.ceil(x / 4);
+let rampBad = 0;
+if (Object.keys(ramp).length !== STEPS.length) rampBad++;   // a missing token already failed above
+for (const s of ['body', 'lede', 'subhead', 'heading']) {
+  const want = ceil4(ramp[s].size * 1.2);
+  if (ramp[s].lead !== want) { rampBad++; fail(`text-${s}: leading ${ramp[s].lead}px, but "next 4px multiple >= size x 1.2" at ${ramp[s].size}px says ${want}px (ratio ${(ramp[s].lead / ramp[s].size).toFixed(2)})`); }
+}
+for (const s of ['display-1', 'display-2', 'display-3', 'display-4']) {
+  const want = ceil4(ramp[s].size * 1.05);
+  if (ramp[s].lead !== want) { rampBad++; fail(`text-${s}: leading ${ramp[s].lead}px, but the display rule (smallest 4px multiple >= 1.05 x size) at ${ramp[s].size}px says ${want}px`); }
+}
+if (!rampBad) ok(`7 derived steps re-derived from the block: body ${(ramp.body.lead / ramp.body.size).toFixed(2)} · lede ${(ramp.lede.lead / ramp.lede.size).toFixed(2)} · display ${(ramp['display-1'].lead / ramp['display-1'].size).toFixed(2)}..${(ramp['display-4'].lead / ramp['display-4'].size).toFixed(2)}`);
+
+// The display specimen must measure the sizes as shipped, and each shipped line box must clear the
+// measured ink box. This is the coupling that lets the cap rule in DESIGN.md be quoted at all.
+console.log("\n== the display specimen measures the sizes as shipped, and the line boxes clear the ink ==");
+const fitPath = resolve(ROOT, 'design/fonts/display-fit-chrome.json');
+const fitSrc = resolve(ROOT, 'design/grill/display-fit-chrome-measure.js');
+if (!existsSync(fitPath) || !existsSync(fitSrc)) fail('the chrome display specimen or its report is missing');
+else {
+  const rep = JSON.parse(readFileSync(fitPath, 'utf8'));
+  const shippedDisplay = STEPS.filter((s) => s.startsWith('display')).map((s) => ramp[s].size);
+  if (JSON.stringify(rep.sizes) !== JSON.stringify(shippedDisplay)) fail(`display-fit-chrome-measure.js measures ${rep.sizes.join(', ')} but @theme ships ${shippedDisplay.join(', ')} — a specimen measuring old sizes is how a cap rule quietly stops describing the site`);
+  else ok(`the specimen measures the shipped display sizes: ${shippedDisplay.join(' / ')}`);
+  const bySize = new Map();
+  let inkBad = 0;
+  for (const row of rep.rows || []) if (row.weight === 800) bySize.set(row.size, row.ink);
+  for (const s of STEPS.filter((x) => x.startsWith('display'))) {
+    const ink = bySize.get(ramp[s] && ramp[s].size);
+    if (ink === undefined) { inkBad++; fail(`no 800-weight ink measurement for text-${s} at ${ramp[s] ? ramp[s].size : '?'}px`); continue; }
+    if (ramp[s].lead < ink) { inkBad++; fail(`text-${s}: line box ${ramp[s].lead}px is under the measured ink depth ${ink}px — the lines would collide`); }
+  }
+  if (!inkBad) ok(`every display line box clears its measured ink depth at weight 800 (clearance ${(ramp['display-1'].lead - bySize.get(ramp['display-1'].size))}px .. ${(ramp['display-4'].lead - bySize.get(ramp['display-4'].size))}px)`);
+}
+
 // ---------------- 2. every utility DESIGN.md promises must resolve ----------------------------
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });
 const promised = [
@@ -206,6 +258,8 @@ const promised = [
   'shadow-e1', 'shadow-e2',
   'text-micro', 'text-label', 'text-body', 'text-lede', 'text-subhead', 'text-heading',
   'text-display-1', 'text-display-2', 'text-display-3', 'text-display-4', 'leading-prose',
+  // the measure cap (round 8): a prose block never runs past 70 characters of its own size.
+  'max-w-measure',
   'rounded-control', 'rounded-card',
   'duration-150', 'duration-250', 'ease-out', 'ease-linear',
   'p-3', 'p-6', 'mt-6', 'gap-2', 'font-body',

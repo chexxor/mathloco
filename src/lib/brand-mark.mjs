@@ -33,7 +33,14 @@ export const MARK = {
   // Order is paint order: the sphere sits under the routes, the routes under the meeting point.
   // `role` is not a colour, it is what the shape means, so a ground can supply its own colour map.
   shapes: [
-    { role: 'sphere', tag: 'circle', cx: 120, cy: 78, r: 58, sw: 0.9 },
+    // sw 1.3, not 0.9 (round 8, operator ruling M-B, 2026-11-02). Measured, not tuned by eye: at the
+    // hero's phone box (276px, scale 1.15) a 0.9-unit stroke lands at 1.03 device px and its pixels never
+    // clear the 3.0 graphic bar, so the ring reads as absent at exactly the width the club's flyer-sized
+    // audience sees. Painted pixels at/over 3.0 inside the drawn box: 890 at 0.9u -> 1070 at 1.3u (276px
+    // box), 1722 -> 2038 at the 372px desktop box; ink share of the box moves 4.09% -> 4.53%, so the mark
+    // does not fill up. Every ratio check:render compares is untouched. Evidence:
+    // design/grill/round8/report.json; the candidates are in design/grill/round8-ramps.mjs.
+    { role: 'sphere', tag: 'circle', cx: 120, cy: 78, r: 58, sw: 1.3 },
     { role: 'route', tag: 'path', d: 'M62 34 C 96 62, 118 96, 120 128', sw: 1.4 },
     { role: 'route', tag: 'path', d: 'M178 34 C 146 62, 124 96, 120 128', sw: 1.4 },
     { role: 'route', tag: 'path', d: 'M120 20 L 120 128', sw: 1.4 },

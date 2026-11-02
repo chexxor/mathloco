@@ -76,8 +76,18 @@ const dist = resolve('dist/client');
 // wide tier fits everywhere), and the gate honours either shape — one tier at every width, or a ratified
 // --breakpoint-nav-narrow with a tier each side of it. The one shape it will not accept is an ad-hoc
 // `min-[412px]:` bracket, because a bracket writes nothing that any gate reads.
-const navTier = readFileSync('src/styles/global.css', 'utf8').match(/--breakpoint-nav-narrow:\s*(\d+)px/);
+const THEMED = readFileSync('src/styles/global.css', 'utf8');
+const navTier = THEMED.match(/--breakpoint-nav-narrow:\s*(\d+)px/);
 const NAV_NARROW = navTier ? Number(navTier[1]) : null;
+// The ramp, read out of the block instead of remembered. Round 8 (2026-11-02) raised body 16 -> 17.6 and
+// heading 27.7 -> 30.4, and a gate that remembered "fs >= 30px counts as a display step" then reported every
+// section h2 as a display step: 9 FAILs on a branch that had just done what the operator asked. A px
+// threshold is only a fact for as long as it is read from the thing it describes.
+const textTok = (name) => { const m = THEMED.match(new RegExp(`--text-${name}:\\s*([\\d.]+)px`)); return m ? Number(m[1]) : null; };
+const LABEL = textTok('label');
+const DISPLAY_FLOOR = textTok('display-1');
+if (DISPLAY_FLOOR === null) { console.error('--text-display-1 is not in the token block — the gate cannot tell a display step from a heading, and guessing a px threshold is what just broke'); process.exit(1); }
+if (LABEL === null) { console.error('--text-label is not in the token block — the nav tier cannot be checked'); process.exit(1); }
 if (process.env.RENDER_WIDTHS) {
   if (!widths.includes(FLOOR)) console.log(`NOTE  RENDER_WIDTHS overrides the default set and omits ${FLOOR} — the declared floor. The shipped gate must measure it.`);
 } else if (!widths.includes(FLOOR)) {
@@ -231,7 +241,7 @@ for (const route of routes) {
       const links = j.nav.links.slice(1);              // links[0] is the mark
       const tiers = new Set(links.map((l) => l.fs));
       if (tiers.size > 1) fails.push(`${at}: nav links mix ${tiers.size} type tiers (${[...tiers].join(', ')}) — one tier per viewport` + (NAV_NARROW === null ? ', and no --breakpoint-nav-narrow is declared: a second tier needs a ratified token, not a bracket (D117)' : ''));
-      const want = NAV_NARROW === null ? '13.3px' : (w < NAV_NARROW ? '11.1px' : '13.3px');   // DESIGN.md's type table
+      const want = NAV_NARROW === null ? `${LABEL}px` : (w < NAV_NARROW ? `${textTok('micro')}px` : `${LABEL}px`);   // DESIGN.md's type table, read from the block
       for (const l of links) if (l.fs !== want) fails.push(`${at}: nav link ${JSON.stringify(l.t)} renders ${l.fs} at ${w}px, want ${want}`);
       const right = Math.max(...j.nav.links.map((l) => l.right));
       if (right > j.vw) fails.push(`${at}: nav row reaches ${right}px on a ${j.vw}px viewport — the label set no longer fits (D100's probe)`);
@@ -244,8 +254,9 @@ for (const route of routes) {
       fails.push(`${at}: no <nav> in the page at all — the D100 width probe cannot run`);
     }
 
-    // 5. one display step per screen
-    const display = j.text.filter((t) => parseFloat(t.fs) >= 30);
+    // 5. one display step per screen. The threshold is the smallest display step as shipped, so a ramp move
+    //    moves the check with it; D112's rule is about the locator role, and this is its measurable shadow.
+    const display = j.text.filter((t) => parseFloat(t.fs) >= DISPLAY_FLOOR);
     const steps = new Set(display.map((t) => t.fs));
     if (steps.size > 1) fails.push(`${at}: ${steps.size} display steps on one screen (${[...steps].join(', ')}): ${display.map((t) => t.tag + '“' + t.t.slice(0, 18) + '”').join(' | ')}`);
     if (display.length > 3) fails.push(`${at}: ${display.length} display-size elements on one screen (want at most 3)`);

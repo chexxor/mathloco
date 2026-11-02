@@ -66,32 +66,51 @@ do not write `p-[13px]`.
 
 ## Type — one face for content, one for chrome, 1.200 ramp
 
+Round 8 (operator ruling, 2026-11-02): the reading ladder went up 10% and the chrome tier did not move.
+
 | Token | Size | Line height | Use |
 |---|---|---|---|
 | `text-micro` | 11.1px | 16px | nav narrow tier, chip label, notice meta |
 | `text-label` | 13.3px | 16px | nav links, buttons, meta, status word |
-| `text-body` | 16px | 24px | body copy |
-| `text-lede` | 19.2px | 28px | intro paragraph, card title |
-| `text-subhead` | 23px | 28px *(derived)* | section heading |
-| `text-heading` | 27.7px | 36px *(derived)* | page heading |
-| `text-display-1…4` | 33.2 / 39.8 / 47.8 / 57.3px | 36 / 44 / 52 / 60px | **the locator** — one element per screen: the when/where line once real schedule work exists, the page `h1` until then |
+| `text-body` | 17.6px | 24px | body copy |
+| `text-lede` | 21.1px | 28px | intro paragraph, card title |
+| `text-subhead` | 25.3px | 32px *(derived)* | section heading |
+| `text-heading` | 30.4px | 40px *(derived)* | page heading |
+| `text-display-1…4` | 36.4 / 43.7 / 52.4 / 62.9px | 40 / 48 / 56 / 68px | **the locator** — one element per screen: the when/where line once real schedule work exists, the page `h1` until then |
 
-Leading is carried by the size token — never write a bare `leading-*` next to a size. Serif body copy
-reads at `leading-prose` (1.6). Display leading floor is 1.05; the four display line boxes land on the
-4px grid and each clears its measured ink box.
+Leading is carried by the size token — never write a bare `leading-*` next to a size (three such writes
+survived in the island's states until round 8; `leading-6` is 24px, the token value, so deleting them moved
+nothing and removed a write no gate read). Serif body copy reads at `leading-prose` (1.6).
 
-**Measured line length (2026-11-02), the starting point for any size change: `npm run lines:measure`**
-(`design/line-length.mjs` + `design/grill/line-length-measure.js`, which read characters-per-line off the
-built page's own line boxes). Prose runs **29-38 characters per line at every shipped width** (median 30.1
-at 1240, 29.0 at 390, ~24 at 320) — *under* the 40-75 ch reading band, because the boxes are narrow
-(672/319 at 1240, 298 at 390, 228 at 320), not because the type is large. The one place lines run long is
-the two `text-lede` section intros at 1240: **69 and 76 ch** in an 1164px box. A size raise therefore moves
-the two ends in opposite directions and is not ruled until round 8 (`design/grill/round-8.html`).
+**Every line box in that table is derived, and `node design/ratify-check.mjs` re-derives it from the sizes in
+the block** (section 1f): the non-display steps take "next 4px multiple ≥ size × 1.2", the display steps take
+the smallest 4px multiple ≥ size × 1.05, and each display line box must clear its measured ink depth
+(`design/fonts/display-fit-chrome.json`, chrome face at weight 800 — clearance today **7 to 11px**). That gate
+exists because of this round: 24px is 1.5 line spacing at a 16px body and **1.36** at 17.6px, so a size raise
+that carries its leadings over by hand is a silent ratio change. `micro`/`label` are the exempt pair — their
+16px line box is ratified (D100, round 6) so a control's height lands on the grid.
+
+**Measure: a prose block never runs past `max-w-measure` (32em).** It is `em`, not `ch`, and that is a
+measured correction: `ch` is the advance of the **"0" glyph**, not an average character, and PT Serif prose
+averages **0.455 em** per character on the built page, so a "70ch" cap would have allowed ~93 real characters —
+no cap at all. 32em ÷ 0.455 em ≈ 70 characters of serif prose; in the chrome face (0.612 em) the same 32em is
+~52 characters, which is why the cap belongs on prose blocks rather than on every text block. Applied to the
+two section-intro ledes (they sit in a 1164px box at 1240) and to the 404/chat ledes, where it replaces
+`max-w-2xl` — a 672px cap that meant 77 characters at the old lede size and 70 at the new one, i.e. a rule
+whose meaning moved with the ramp.
+
+**Measured line length after round 8 (`npm run lines:measure`, reports in `.design/render/`):** the widest
+prose line on the landing page is **69 characters** (was 76); the two section intros now sit in a **675px** box
+at **69 and 64**; hero ledes are 67/69/49; card copy runs 29-38 at 1240, and at 320 the body box is **225-256px**
+at 26-31 characters. Most prose on this site still sits **under** the 40-75 character band, because the boxes
+are narrow — that is the standing finding, and it is the reason a size raise was safe here but a *wider box*
+would not be.
 
 **The two faces are 4% apart in x-height** (PT Serif 0.50 em, Public Sans 0.52 em,
 `design/fonts/metrics.json`), so "the serif reads smaller" is not an x-height claim. What differs is the
-advance: the serif averages **0.533 em** per character against chrome's **0.612 em**, so a bump to a
-content step costs fewer characters per line than the same bump to a chrome step.
+advance: the serif averages **0.533 em** per character against chrome's **0.612 em** (`design/fonts/metrics.json`;
+0.455 em measured on rendered sentences), so a bump to a content step costs fewer characters per line than
+the same bump to a chrome step.
 
 **One display step per screen: the screen's primary locator.** That is the one element answering "which
 page is this, and when and where". Section `h2`s are `text-heading`, never a display step; a display
@@ -103,15 +122,17 @@ reserved for content that does not exist, and flattened the title to 27.7px besi
 headings). Applied today: landing `h1` = `text-display-1` base / `text-display-2` at ≥sm, `h2`s and the
 footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`.
 
-**Never** use `text-display-4` (57.3px) below a 375 viewport without a cap. Two measured fits, because
-the face matters and the older number was taken in the wrong one: in **PT Serif** "Mathematical"
-measures 367.6px against 343px of content width, and in the chrome face the strings that actually sit
-at display size leave 4.8px of margin at display-4 (longest word 338.2px) against 2 lines and 98px at
-display-2 — `design/fonts/display-fit-chrome.json`, Public Sans Variable at weight 800, since 800 is
-measurably wider than 700 (458.0 vs 452.4 for the club name at display-1). Faces: PT Serif
-(`font-body`) for content — **400 and 700 both load** — and Public Sans variable for chrome, installed
-from `src/styles/fonts.css`. **Never** set `font-weight: 500/600` on serif text: PT Serif has no
-variable build, so it renders regular or bold and the weight you wrote is the weight you do not get.
+**Never** use `text-display-4` (62.9px) below a 375 viewport without a cap. The fits are measured in the face
+the title actually renders in — Public Sans Variable at the weight it writes, `design/fonts/display-fit-chrome.json`
+(sizes read from the block; `ratify-check` fails if the specimen measures other sizes). Longest real word
+("Minneapolis") at each step, against the hero boxes `check:render` measures (**276px** at a 320 viewport,
+**346px** at 390, **672px** at 1240): display-1 **214.9px** fits; display-2 **258px** fits; display-3
+**309.3px** fits only above ~310px of box; display-4 **371.3px** needs ~372px. The whole club name at display-4
+is **868px** nowrap, which is why the share card (1200px canvas) carries it on one line and a 343px content
+width never can. Weight is not cosmetic: the same string at 800 is wider than at 700 (club name 502.3 vs 496
+at display-1). Faces: PT Serif (`font-body`) for content — **400 and 700 both load** — and Public Sans variable
+for chrome, installed from `src/styles/fonts.css`. **Never** set `font-weight: 500/600` on serif text: PT Serif
+has no variable build, so it renders regular or bold and the weight you wrote is the weight you do not get.
 
 ## Radius
 
@@ -140,6 +161,12 @@ arithmetic. **Never** put a shadow on a card, or on a hovered card: cards are pa
 ## Controls — heights are derived, not chosen
 
 `height = ceil4(measured line box) + 2 × an S3 pad`. Pads come only from the spacing scale.
+
+Round 8 left these heights alone **because the chrome tier did not move**: `text-label` is still 13.3/16, so
+the primary is still 48 and the secondary still 40, re-measured by `check:render` at three widths after the
+ramp changed. That is the whole reason the reading ladder and the chrome tier are separate decisions — a
+label step of 15/20 would make them 52/44 and re-open the nav fit, the notice's 48px one-line figure and the
+card's bands (measured in `design/grill/round8/report.json`).
 
 | Step | Height | Use |
 |---|---|---|
@@ -449,6 +476,20 @@ exists, `border` keylines, `shadow-*` outside `e1/e2`, `duration-*` outside 150/
 word in event prose.
 
 ## Open threads that are not gates yet
+
+- **Body line spacing is now 1.36, and that is a ruling waiting to happen.** `text-body` 17.6px with the
+  derived 24px line box is a ratio of 1.36; serif prose writes `leading-prose` (1.6 → 28.2px) and is fine, but
+  6 writes carry the bare token (the island's three state sentences, the wordmark, the footer identity line,
+  one `h4`). Published figures put 1.5 as the floor and 1.6 as the comfort number for body copy (research R1,
+  2026-11-02: WCAG 2.2 SC 1.4.8 "space-and-a-half"; ODPHP *Health Literacy Online* §5.3; Butterick 120-145%),
+  and SC 1.4.12 (AA) requires that a user's 1.5× line-spacing override cause no loss — which a
+  padding-derived control height survives and a fixed `min-height` may not. Raising body to 28px (1.59) and
+  lede to 32px (1.52) is the clean fix; measured cost is +4px per body line, so the island notice grows
+  ~12px at 1240 (148 → ~160) and the share card's bands re-flow. Not applied: it changes what the operator
+  chose in round 8, and the notice height 80px is D98's ratified one-line figure.
+- **`ch` is not a character count** (see the Measure rule): if a future surface writes prose in the chrome
+  face, `max-w-measure` gives it ~52 characters, not 70. Measure it with `npm run lines:measure` rather than
+  assuming the cap did the job.
 
 - Palette writes now survive only in **dormant** files: the four never-imported `src/components/icons/*.astro`
   (choose-icons deletes them, and `--color-book-gray` stays for them until then) and the two gated-off
