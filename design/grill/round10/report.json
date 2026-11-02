@@ -1,5 +1,5 @@
 {
-  "measuredAt": "2026-11-02T17:53:23.882Z",
+  "measuredAt": "2026-11-02T20:22:41.453Z",
   "tolPx": 1,
   "slots": [
     {
@@ -27,46 +27,46 @@
     {
       "id": "PS-2",
       "scale": 0.5,
-      "wantW": 1228,
+      "wantW": 1180,
       "wantH": 320,
-      "gotW": 614,
+      "gotW": 590,
       "gotH": 160,
       "ok": true,
-      "wantDrawW": 614,
+      "wantDrawW": 590,
       "wantDrawH": 160
     },
     {
       "id": "PS-2",
       "scale": 0.5,
-      "wantW": 378,
+      "wantW": 346,
       "wantH": 230,
-      "gotW": 189,
+      "gotW": 173,
       "gotH": 115,
       "ok": true,
-      "wantDrawW": 189,
+      "wantDrawW": 173,
       "wantDrawH": 115
     },
     {
       "id": "PS-3",
       "scale": 0.5,
-      "wantW": 200,
-      "wantH": 192,
-      "gotW": 100,
-      "gotH": 96,
+      "wantW": 526,
+      "wantH": 165,
+      "gotW": 263,
+      "gotH": 83,
       "ok": true,
-      "wantDrawW": 100,
-      "wantDrawH": 96
+      "wantDrawW": 263,
+      "wantDrawH": 82.5
     },
     {
       "id": "PS-3",
       "scale": 0.5,
-      "wantW": 200,
-      "wantH": 192,
-      "gotW": 100,
-      "gotH": 96,
+      "wantW": 298,
+      "wantH": 225,
+      "gotW": 149,
+      "gotH": 113,
       "ok": true,
-      "wantDrawW": 100,
-      "wantDrawH": 96
+      "wantDrawW": 149,
+      "wantDrawH": 112.5
     },
     {
       "id": "PS-4",
@@ -156,42 +156,42 @@
       "ok": true
     },
     {
-      "want": 77,
-      "got": 39,
+      "want": 130,
+      "got": 65,
       "ok": true
     },
     {
-      "want": 125,
+      "want": 126,
       "got": 63,
       "ok": true
     },
     {
-      "want": 105,
-      "got": 53,
+      "want": 108,
+      "got": 54,
       "ok": true
     },
     {
-      "want": 95,
-      "got": 48,
+      "want": 98,
+      "got": 49,
       "ok": true
     },
     {
-      "want": 95,
-      "got": 48,
+      "want": 98,
+      "got": 49,
       "ok": true
     },
     {
-      "want": 95,
-      "got": 48,
+      "want": 98,
+      "got": 49,
+      "ok": true
+    },
+    {
+      "want": 99,
+      "got": 50,
       "ok": true
     },
     {
       "want": 96,
-      "got": 48,
-      "ok": true
-    },
-    {
-      "want": 95,
       "got": 48,
       "ok": true
     },
@@ -201,7 +201,7 @@
       "ok": true
     },
     {
-      "want": 137,
+      "want": 138,
       "got": 69,
       "ok": true
     },
@@ -211,8 +211,8 @@
       "ok": true
     },
     {
-      "want": 66,
-      "got": 33,
+      "want": 68,
+      "got": 34,
       "ok": true
     },
     {

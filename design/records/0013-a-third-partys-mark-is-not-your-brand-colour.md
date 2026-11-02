@@ -11,17 +11,19 @@ direction from the guess.
 
 **What the measurements said.**
 
-- Emptiness is its own quantity. `design/whitespace-survey.mjs` reports, on the built page at 1240: document
-  **2495px** tall, **5.48%** of pixels differing from their own ground by the 0.05 same-colour bar, and **41.5%**
-  of the page height sitting in 8 empty runs ≥ 60px. At 390: 8.23% painted, 32.5% empty. The two numbers answer
-  different questions and neither is "colour".
-- The page is **thin, not wide**: the header row carries 64 characters, the hero 468, the panel section 866 —
-  all inside WCAG's 80–100 characters per line, and `npm run lines` reports no failure. Round 8's line-length
-  ruling neither caused the emptiness nor can cure it.
+- Emptiness is its own quantity. `design/whitespace-survey.mjs` (`npm run check:space`) reports, on the built page
+  at 1240: document **2495px** tall (2607px once the lazy image decodes), **4.56%** of pixels differing from their
+  own ground by the 0.05 same-colour bar, and **42%** of the page height sitting in 8 empty runs ≥ 60px (biggest
+  217px). At 390: 8.16% painted, 35.7% empty in 14 runs. The two numbers answer different questions and neither is
+  "colour".
+- The page is **thin, not wide**: read per line, no surface is over-long — `main` 468 characters over 564px,
+  `section.bg-panel` 866 over 853px, the footer 131 over 248px, and `npm run lines:measure` puts prose at 29–38
+  characters per line — below comfort, not over it. Round 8's
+  line-length ruling neither caused the emptiness nor can cure it.
 - The loudest colour on the page was **not ours**: the Meetup png paints **1.24%** of the desktop page and holds
   the highest mean chroma in the system (0.226, 0.523% of pixels at hue 0–30°). Removing it lowers the page's
   chromatic share from **3.77%** to about **3.25%** — so the two rulings pull against each other, and the gap has
-  to be paid for by area and true content (photo slots worth 6.78% and 12.70% of the page; real facts in place of
+  to be paid for by area and true content (photo slots worth 6.78% and 12.2% of the page; real facts in place of
   six generic cards), not by keeping another company's red.
 
 **Decision.**
@@ -36,7 +38,7 @@ direction from the guess.
    follows from the nominative-use factors (identify the thing, use only as much as that requires — "the words but
    not the font or symbol" — imply no endorsement), which is a tertiary summary, not primary law.
 3. **Label it in one static footer line**, specific wording, no component (a component invites conditional logic
-   that will be wrong). Cost measured: ~16px of a 131px footer.
+   Cost measured: ~16px added to a footer that is already 248px tall and paints 0.7%.
 4. **PH-B: reserve the photo places now**, drawn to scale from the page's measured geometry
    (`design/grill/round-10-photos.html`), each with a declared aspect ratio and a defined empty state. The one
    image the page ships reflowed the document **112px** (2495 → 2607) when it decoded, because its

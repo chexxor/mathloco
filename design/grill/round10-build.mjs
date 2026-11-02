@@ -34,39 +34,42 @@ const surfaceOf = (page, clsStart, tag) =>
   page.surfaces.find((x) => x.tag === tag && (x.cls || '').startsWith(clsStart));
 const boxOf = (page, pred) => page.media.find(pred);
 
-// Slot definitions. `live` boxes are measured off the built page; `proposed` boxes are sized from a measured
-// neighbour and say so. gainPct is painted area as a share of the page the slot sits on.
+// Slot boxes are MEASURED, not drawn to taste. `design/whitespace-survey.mjs` reports the children of every
+// grid/flex container on the built page (matched on COMPUTED display, because the hero grid here is `lg:grid
+// lg:grid-cols-12` and a `.grid` class selector silently misses variant classes). A photo goes INTO a container,
+// so the container is the slot: the hero's media column is 372x564 while the drawing inside it is 372x232.5.
+// `proposed` boxes take their width from measured neighbours -- content width is 1180 at 1240 and 346 at 390.
 const slots = [
   {
     id: 'PS-1', name: 'Hero media column',
     live: { 1240: [372, 564], 390: [346, 216] },
-    aspect: '2:3 portrait at 1240 (the column is 372 wide and 564 tall); at 390 the same column is a 16:10 landscape',
-    fills: 'Shot 2 (venue interior) or shot 3 (hands and materials). Today the column holds the drawn mark at 372x233, so 331px of a 564px column paints nothing.',
-    empty: 'The drawn mark, exactly as shipped today — a slot with no photo is a state, not a grey rectangle (design/records/0010).',
-    note: 'The mark stays in this column when there is no photo: photo-free by construction is still the rule (D94), the slot only changes what CAN go there.',
+    aspect: 'portrait at 1240 (372 x 564, 1:1.52); at 390 the hero stops being a grid, so there is no empty column -- the mark alone is 346 x 216',
+    fills: 'Shot 2 (venue interior) or shot 3 (hands and materials). Today the column holds the drawn mark at 372 x 232.5, so 331px of a 564px column paints nothing.',
+    empty: 'The drawn mark, exactly as shipped today -- a slot with no photo is a state, not a grey rectangle (design/records/0010).',
+    note: 'The mark stays in this column when there is no photo: photo-free by construction is still the rule (D94); the slot only changes what CAN go there.',
   },
   {
     id: 'PS-2', name: 'Venue strip (proposed)',
-    proposed: { 1240: [1228, 320], 390: [378, 230] },
-    aspect: '1228x320 is 3.84:1 — a phone camera at 4:3 crops to this with ~250px of height lost, so shoot wide and level',
+    proposed: { 1240: [1180, 320], 390: [346, 230] },
+    aspect: '1180 x 320 is 3.69:1 -- a phone camera at 4:3 crops to this with real height lost, so shoot wide and level',
     fills: 'Shot 2 (venues): one strip per venue, the honest answer to "interesting venues" (Ambrosia Coffee is the venue node on the club\'s own group page).',
     empty: 'No strip at all. A proposed slot must not ship as an empty band.',
-    note: 'Width is not a taste call: 1228 is the document\'s own content width at 1240 (measured), 378 at 390.',
+    note: "Width is not a taste call: 1180 is the measured content width at 1240 (the hero grid's own box) and 346 at 390. This is the largest area gain on the list.",
   },
   {
-    id: 'PS-3', name: 'Join card media cell',
-    live: { 1240: [200, 192], 390: [200, 192] },
-    proposed: { 1240: [420, 268], 390: [346, 195] },
-    aspect: 'the card is 1164x268 at 1240 and 346x581 at 390; a 3:2 photo at 420x268 fills the cell without growing the card',
-    fills: 'Shot 1 (the board after a meeting) or shot 3 (materials). This is the cell that today holds the Meetup png.',
-    empty: 'Today: the Meetup logo at 200x192 (38,320 px², 1.24% of the desktop page) and the site\'s loudest colour, which belongs to Meetup.',
-    note: 'Whatever goes here must be a FIXED box: the current image asks for 200x80 while its file is 834x799, so the page shifts 112px when it decodes (measured: 2495 -> 2607).',
+    id: 'PS-3', name: 'Join media column',
+    live: { 1240: [526, 165], 390: [298, 225] },
+    proposed: { 1240: [526, 316], 390: [298, 225] },
+    aspect: 'the column is 526 x 165 today; the proposed photo is 526 x 316 because the copy column beside it already makes the row 316 tall',
+    fills: 'Shot 1 (the board after a meeting) or shot 3 (materials). This is the column that today holds the Meetup png.',
+    empty: 'Today: the Meetup logo at 200 x 192 (1.24% of the desktop page) inside a column 2.6x its area -- and the site\'s loudest colour belongs to Meetup.',
+    note: 'Whatever goes here must be a FIXED box: the current image asks for 200x80 while its file is 834x799, and the page shifts 112px when it decodes (measured 2495 -> 2607).',
   },
   {
     id: 'PS-4', name: 'Event-card thumb (proposed)',
     live: { 1240: [367, 205], 390: [346, 205] },
-    proposed: { 1240: [367, 120], 390: [346, 113] },
-    aspect: '3:1 at 367x120 keeps the existing card height (205px) and puts the thumb above the title',
+    proposed: { 1240: [319, 110], 390: [298, 110] },
+    aspect: '2.9:1 at 319 x 110 -- the measured card is 366.7 x 204.7 and its p-6 padding leaves a 319 x 157 interior, so the thumb fits above the copy without growing the card',
     fills: 'Shot 1 (board) or shot 4 (the sphere diagram artwork, which needs creator + licence, not just a file).',
     empty: 'No thumb: the card\'s type carries it (the share card already proves a drawn motif works).',
     note: 'This slot waits on the schedule surface, not on photography: the two event sections are switched off in src/config.json because the dates do not live in this repo yet.',

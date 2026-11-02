@@ -81,7 +81,7 @@ them out of `verify` is needing Firefox in the runner, which is an operator call
    fail loudly, not report zero ink.
 4. **Read what the browser applies, not what the markup says.** A layout probe takes computed `width`/`height`/
    `background-color`, never HTML attributes or class strings: Tailwind preflight's `img { height: auto }` made an
-   `<img width="200" height="80">` measure 2.5× smaller in area than it paints, and Astro leaves the source of a
+   `<img width="200" height="80">` measure 2.4× smaller in area than it paints, and Astro leaves the source of a
    conditional `class={…}` inside the attribute, so class matching must compare whole tokens. And
    `position: fixed` rects are viewport-relative — exclude fixed content from any page-absolute walk and print how
    many elements were excluded, because a silent filter is how a measurement starts lying.

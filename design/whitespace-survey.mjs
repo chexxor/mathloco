@@ -199,6 +199,15 @@ for (const route of routes) {
       console.log(`    ${m.tag} ${m.src || m.alt || m.cls || ''}`.padEnd(52) + `${Math.round(m.w)}x${Math.round(m.h)} = ${m.area}px² (${(100 * m.area / (width * height)).toFixed(2)}% of page)`);
     }
     const topGaps = textGaps.slice().sort((a, b) => b.gap - a.gap).slice(0, 8);
+    console.log(`  containers a slot could go into (grid/flex children >= 60px both ways):`);
+    for (const r of (dom.regions || []).slice().sort((a, b) => b.area - a.area).slice(0, 10)) {
+      console.log(`    ${r.tag}.${r.cls}`.padEnd(52) + `${Math.round(r.w)}x${Math.round(r.h)} @y${Math.round(r.y)} of ${r.parentTag}.${r.parent}`.slice(0, 96));
+    }
+    console.log(`  position:fixed elements excluded from the page-absolute walk: ${dom.fixed.length ? dom.fixed.join(', ') : 'none'}`);
+    console.log(`  columns inside grid/flex containers (the boxes a photo slot would take):`);
+    for (const r of (dom.slots || []).slice().sort((a, b) => b.area - a.area).slice(0, 8)) {
+      console.log(`    ${r.tag}.${r.cls}`.padEnd(46) + `${Math.round(r.w)}x${Math.round(r.h)} @y${Math.round(r.y)} in [${r.display}, gap ${r.gap}]`.slice(0, 78));
+    }
     console.log(`  biggest gaps between blocks of copy: ${topGaps.map((g) => `${g.gap}px after ${g.after}`).join(' | ') || 'none'}`);
     console.log(`  structure: declared padding ${Math.round(padPx)}px; between surfaces ${between.map((b) => `${b.from}->${b.to} ${b.gap}px`).join(', ') || 'none'}`);
 
@@ -207,7 +216,7 @@ for (const route of routes) {
       route, width: width, height, pageHeight: dom.doc.scrollHeight, inkBar: INK_BAR, gapMin: GAP_MIN,
       paintedPx: inkTotal, paintedPct: +(100 * inkTotal / (width * height)).toFixed(2),
       emptyRuns: runs.length, emptyRunPx: gapPx, emptyRunPct: +(100 * gapPx / height).toFixed(1),
-      gaps: runs, surfaces, media: dom.media, textGaps, fonts: dom.fonts, betweenSurfaces: between, declaredPaddingPx: Math.round(padPx),
+      fixed: dom.fixed, gaps: runs, surfaces, media: dom.media, regions: dom.regions, slots: dom.slots, textGaps, fonts: dom.fonts, betweenSurfaces: between, declaredPaddingPx: Math.round(padPx),
     }, null, 1));
     console.log(`  json: ${file}`);
   }

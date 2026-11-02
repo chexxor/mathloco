@@ -464,10 +464,12 @@ and the screen can disagree.
   a `width`/`height` pair that agrees with the file, because Tailwind preflight's `img { height: auto }` makes an
   HTML height attribute inert, and a lazy image whose box is wrong reflows the page — measured on the one image
   the landing page ships: **2495px → 2607px, 112px** when it decoded.
-  The reserved slots and their sizes are drawn to scale in `design/grill/round-10-photos.html`
-  (`npm run round10`): hero media column **372×564** at 1240 / **346×216** at 390; a venue strip **1228×320**
-  (1228 is the document's own content width, not a taste call); the join card's media cell; an event-card thumb
-  **367×120** inside the measured 367×205 card.
+  The reserved slots and their sizes are drawn to scale in `design/grill/round-10-photos.html`, and every box is a
+  **measured grid column** rather than a drawn guess (`npm run round10` measures the drawing back and fails above
+  1px): hero media column **372×564** at 1240 (below 1024px the hero is not a grid; the mark there is 346×216); a
+  venue strip **1180×320** at 1240 / **346×230** at 390, where 1180 and 346 are the measured content widths; the join
+  media column **526×165** today, proposed **526×316** because the copy column beside it makes that row 316 tall; and
+  an event-card thumb **319×110** inside the measured **366.7×204.7** card, whose `p-6` leaves a 319×157 interior.
 - **A third-party mark is never our brand colour, and it is named in our type before it is drawn.** Platforms are
   referred to by a link plus our own words ("Sessions are posted on Meetup"); the `path-*` hues are *wayfinding*
   colours of ours, not the platforms' palettes. If a mark appears at all it is the **official file, unmodified,
@@ -599,16 +601,19 @@ word in event prose.
   surface policy **S-A/S-B/S-C**; the **27° `gold ↔ path-discord`** twin (exception or fix); and whether the
   leading miss below rides this round or takes its own.
 - **The page is thin, not wide — round 10 (area)** (`npm run check:space`, 2026-11-02, operator: "the landing page
-  is still mostly whitespace"). At 1240 the built document is **2495px** tall (2607px once the lazy image decodes),
-  **5.48%** of pixels differ from their own ground by the 0.05 same-colour bar, and **41.5%** of the page height is
-  empty runs ≥ 60px (biggest 303px); at 390, **8.23%** painted and **32.5%** empty. Characters per surface (header
-  row 64, hero 468, panel section 866, footer 131) sit inside WCAG's 80–100 per line and `npm run lines` finds no
-  failure — so this is **not** a line-length problem and no type ruling fixes it. It decomposes into structure
-  (480px of padding + inter-surface margin at 1240), media (the photo slots: hero 6.78%, venue strip 12.70% of the
-  page), content (the two disabled event sections — the dates do not live in this repo, and D69 forbids scraping
-  Meetup's feed as an architecture input) and copy (866 characters of six generic cards). Two of the four are not
-  code. Side finding, given the site rule "a hairline rule at most": the header band is 1240×64 with **4.8%** of
-  its pixels differing from the page behind it and the footer **0.8%** — mass, not weight, is what breaks the rule
+  is still mostly whitespace"). At 1240 the built document is **2495px** tall (**2607px** once the lazy image
+  decodes), **4.56%** of pixels differ from their own ground by the 0.05 same-colour bar, and **42%** of the page
+  height sits in **8** empty runs ≥ 60px (biggest **217px**); at 390, **8.16%** painted and **35.7%** empty in
+  **14** runs, and those runs move *inside* `section.bg-panel` between cards. Read per line, nothing is over-long —
+  prose measures **29–38 characters per line** at every shipped width (`npm run lines:measure`), i.e. under the
+  comfort band rather than over it — so this is **not** a line-length problem and no type ruling fixes it. The
+  emptiness decomposes into **structure** (declared padding **256px** plus a **128px** header→main gap and a **96px**
+  main→section gap; `section.bg-paper` alone wastes **170px** above its first line and **278px** below its last),
+  **media** (the photo slots: hero **6.78%**, venue strip **12.2%** of the page), **content** (the two disabled event
+  sections — the dates do not live in this repo, and D69 forbids making Meetup's feed an architecture input) and
+  **copy** (the panel section's 866 characters are six generic cards). Two of the four are not code. Side finding,
+  given the site rule "a hairline rule at most": the header band is **1240×72** with **1.0%** of its pixels differing
+  from the page behind it and the footer is **1240×248** at **0.7%** — mass, not weight, is what breaks that rule
   today.
 - **Body line spacing is now 1.36, and that is a ruling waiting to happen.** `text-body` 17.6px with the
   derived 24px line box is a ratio of 1.36; serif prose writes `leading-prose` (1.6 → 28.2px) and is fine, but

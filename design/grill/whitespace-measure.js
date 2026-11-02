@@ -21,7 +21,7 @@
 // callbacks can be throttled away, and the first version of this file hung there and posted nothing at 390.
 (() => {
   const T0 = Date.now();
-  const out = { done: false, errors: [], vw: innerWidth, elapsedMs: 0, facesLoaded: false, doc: {}, surfaces: [], media: [], text: [], fonts: [] };
+  const out = { done: false, errors: [], vw: innerWidth, elapsedMs: 0, facesLoaded: false, doc: {}, fixed: [], surfaces: [], media: [], regions: [], slots: [], text: [], fonts: [] };
   let sent = false;
   const send = () => {
     if (sent) return Promise.resolve();
@@ -42,6 +42,11 @@
   };
   // Box keys are x/y/w/h and nothing in a pushed record may reuse them: an earlier version pushed a heading
   // count under `h` after spreading the box, and every section's height silently became 0, 1, 7, 2, 0.
+  // position:fixed rects are VIEWPORT-relative, so one in a page-absolute walk invents an empty run (or hides
+  // a real one). They are excluded here and the exclusion is reported, because a silent filter is how a
+  // measurement starts lying. There are none on this page today; the count proves it rather than assuming it.
+  const isFixed = (el) => getComputedStyle(el).position === 'fixed';
+
   const box = (el) => {
     const r = el.getBoundingClientRect();
     return { x: +r.x.toFixed(1), y: +(r.y + window.scrollY).toFixed(1), w: +r.width.toFixed(1), h: +r.height.toFixed(1) };
@@ -52,9 +57,12 @@
     out.doc.bodyBg = getComputedStyle(document.body).backgroundColor;
     out.doc.bodyFg = getComputedStyle(document.body).color;
 
+    out.fixed = [...document.querySelectorAll('body *')].filter(isFixed)
+      .map((el) => (el.getAttribute('id') || el.tagName.toLowerCase()).slice(0, 24));
+
     for (const el of document.body.children) {
       const b = box(el);
-      if (b.h < 1) continue;
+      if (b.h < 1 || isFixed(el)) continue;
       const cs = getComputedStyle(el);
       out.surfaces.push({
         tag: el.tagName.toLowerCase(),
@@ -97,6 +105,49 @@
         rec.stroke = st.stroke; rec.fill = st.fill;
       }
       out.media.push(rec);
+    }
+
+    // Slot geometry. A photo goes INTO a container, so the container is what has to be measured: a specimen
+    // that infers a column width from the drawing inside it will size a shot list wrong.
+    // Match by COMPUTED display, not by class: this page's hero grid is `lg:grid lg:grid-cols-12`, and a
+    // `.grid` selector does not match a variant class, so a class-based scan silently misses the biggest slot.
+    for (const el of [...document.querySelectorAll('main *, section *, header *, footer *')]
+      .filter((e) => /^(inline-)?(grid|flex)$/.test(getComputedStyle(e).display))) {
+      const b = box(el);
+      if (b.w < 60 || b.h < 60) continue;
+      const par = el.parentElement;
+      out.regions.push({
+        tag: el.tagName.toLowerCase(),
+        cls: (el.getAttribute('class') || '').slice(0, 56),
+        parent: (par.getAttribute('class') || '').slice(0, 56),
+        parentTag: par.tagName.toLowerCase(),
+        ...b,
+        area: +(b.w * b.h).toFixed(0),
+        media: el.querySelectorAll('img,svg').length,
+        chars: (el.textContent || '').replace(/\s+/g, ' ').trim().length,
+      });
+    }
+
+    // And the CHILDREN of those containers: a photo slot is a column, and the column's box is what a shot
+    // list has to aim at (the hero's media column is 372x564 at 1240 while the drawing inside it is 372x233).
+    for (const el of document.querySelectorAll('main *, section *, header *, footer *')) {
+      const cs = getComputedStyle(el);
+      if (!/^(inline-)?(grid|flex)$/.test(cs.display)) continue;
+      for (const kid of el.children) {
+        const b = box(kid);
+        if (b.w < 60 || b.h < 60) continue;
+        out.slots.push({
+          tag: kid.tagName.toLowerCase(),
+          cls: (kid.getAttribute('class') || '').slice(0, 56),
+          parent: (el.getAttribute('class') || '').slice(0, 56),
+          display: cs.display,
+          gap: cs.gap,
+          ...b,
+          area: +(b.w * b.h).toFixed(0),
+          media: kid.querySelectorAll('img,svg').length,
+          chars: (kid.textContent || '').replace(/\s+/g, ' ').trim().length,
+        });
+      }
     }
 
     // Blocks of copy, so the gaps a READER crosses are separable from the padding a section declares.
