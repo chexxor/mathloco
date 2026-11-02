@@ -12,7 +12,7 @@
     "deploy": "npm run verify && wrangler deploy",
     "preview:deploy": "npm run verify && wrangler preview",
     "build": "astro build",
-    "verify": "npm run check && npm run check:classes && npm run db:check && npm run check:sanitize && npm run check:cache && npm run audit:gate && npm run build && npm run check:deploy",
+    "verify": "npm run check && npm run check:classes && npm run check:social && npm run check:social:selftest && npm run db:check && npm run check:sanitize && npm run check:cache && npm run audit:gate && npm run build && npm run check:deploy",
     "preview": "astro dev --host",
     "preview:workerd": "astro build && astro preview",
     "astro": "astro",
@@ -45,7 +45,9 @@
     "check:cache": "tsx scripts/check-summary-cache.ts",
     "assets:social": "node scripts/make-social-share.mjs",
     "probe:cpu": "node scripts/probe-config.mjs && wrangler deploy --config dist/server/wrangler.probe.json",
-    "falsify:manifest": "node scripts/falsify-manifest-token.mjs"
+    "falsify:manifest": "node scripts/falsify-manifest-token.mjs",
+    "check:social": "node scripts/check-social-card.mjs",
+    "check:social:selftest": "node scripts/check-social-card.mjs --selftest"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.3",

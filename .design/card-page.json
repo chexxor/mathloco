@@ -1,0 +1,185 @@
+{
+ "done": true,
+ "faces": {
+  "400 16px \"PT Serif\"": true,
+  "700 16px \"PT Serif\"": true,
+  "600 16px \"Public Sans Variable\"": true
+ },
+ "ground": "oklch(0.32 0.045 152)",
+ "canvas": {
+  "w": 1200,
+  "h": 630,
+  "dpr": 1
+ },
+ "runs": [
+  {
+   "band": "kicker",
+   "x0": 70,
+   "x1": 203,
+   "top": 80,
+   "height": 16,
+   "width": 133,
+   "sizeInt": 13.3,
+   "face": "Public Sans Variable",
+   "size": "13.3px",
+   "weight": "500",
+   "color": "oklch(0.93 0.008 152)"
+  },
+  {
+   "band": "title",
+   "x0": 70,
+   "x1": 846,
+   "top": 128,
+   "height": 60,
+   "width": 776,
+   "sizeInt": 57.3,
+   "face": "Public Sans Variable",
+   "size": "57.3px",
+   "weight": "800",
+   "color": "oklch(0.93 0.008 152)"
+  },
+  {
+   "band": "lede",
+   "x0": 70,
+   "x1": 675,
+   "top": 213,
+   "height": 36,
+   "width": 605,
+   "sizeInt": 27.7,
+   "face": "PT Serif",
+   "size": "27.7px",
+   "weight": "400",
+   "color": "oklch(0.93 0.008 152)"
+  },
+  {
+   "band": "focus",
+   "x0": 70,
+   "x1": 443,
+   "top": 264,
+   "height": 16,
+   "width": 373,
+   "sizeInt": 11.1,
+   "face": "Public Sans Variable",
+   "size": "11.1px",
+   "weight": "500",
+   "color": "oklch(0.93 0.008 152)"
+  },
+  {
+   "band": "paths",
+   "x0": 70,
+   "x1": 1130,
+   "top": 498,
+   "height": 28,
+   "width": 1060,
+   "sizeInt": 19.2,
+   "face": "Public Sans Variable",
+   "size": "19.2px",
+   "weight": "400",
+   "color": "oklch(0.93 0.008 152)"
+  },
+  {
+   "band": "path-meetup",
+   "x0": 70,
+   "x1": 229,
+   "top": 498,
+   "height": 28,
+   "width": 159,
+   "sizeInt": 19.2,
+   "face": "Public Sans Variable",
+   "size": "19.2px",
+   "weight": "400",
+   "color": "oklch(0.72 0.15 315)"
+  },
+  {
+   "band": "path-discord",
+   "x0": 443,
+   "x1": 610,
+   "top": 498,
+   "height": 28,
+   "width": 167,
+   "sizeInt": 19.2,
+   "face": "Public Sans Variable",
+   "size": "19.2px",
+   "weight": "400",
+   "color": "oklch(0.71 0.14 35)"
+  },
+  {
+   "band": "path-domain",
+   "x0": 823,
+   "x1": 1130,
+   "top": 498,
+   "height": 28,
+   "width": 307,
+   "sizeInt": 19.2,
+   "face": "Public Sans Variable",
+   "size": "19.2px",
+   "weight": "400",
+   "color": "oklch(0.76 0.06 84)"
+  },
+  {
+   "band": "fallback-probe",
+   "x0": 0,
+   "x1": 1200,
+   "top": 0,
+   "height": 60,
+   "width": 1200,
+   "sizeInt": 57.3,
+   "face": "NoSuchFace At All",
+   "size": "57.3px",
+   "weight": "800",
+   "color": "oklch(0.93 0.008 152)"
+  }
+ ],
+ "painted": {
+  "ground": [
+   32,
+   57,
+   39
+  ],
+  "kicker": [
+   228,
+   233,
+   229
+  ],
+  "title": [
+   228,
+   233,
+   229
+  ],
+  "lede": [
+   228,
+   233,
+   229
+  ],
+  "focus": [
+   228,
+   233,
+   229
+  ],
+  "paths": [
+   228,
+   233,
+   229
+  ],
+  "path-meetup": [
+   200,
+   133,
+   229
+  ],
+  "path-discord": [
+   235,
+   126,
+   99
+  ],
+  "path-domain": [
+   195,
+   174,
+   134
+  ],
+  "fallback-probe": [
+   228,
+   233,
+   229
+  ]
+ }
+}

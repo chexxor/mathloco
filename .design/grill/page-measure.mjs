@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 // page-measure.mjs - run JS *inside* a real browser and get the numbers back as text.
 //
-//   node .design/grill/page-measure.mjs <page.html> <measure.js> [width] [height]
+//   node .design/grill/page-measure.mjs <page.html> <measure.js> [width] [height] [shotOut.png]
+//
+//   [shotOut.png] - copy firefox's screenshot out before the profile is deleted. The screenshot is taken
+//   at load, so it is NOT proof that webfonts had applied; that is what the posted layout boxes are for
+//   (scripts/social-card-measure.js compares reported run widths against ink extent in the pixels).
 //
 // Why this exists: `firefox --headless --screenshot` executes page JS but gives back only pixels, so the
 // first version of this loop pushed numbers into a banner and had a local vision model read them off a
@@ -24,9 +28,9 @@ import path from 'node:path';
 import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 
-const [pageArg, measureArg, wArg = '1240', hArg = '1400'] = process.argv.slice(2);
+const [pageArg, measureArg, wArg = '1240', hArg = '1400', shotOut] = process.argv.slice(2);
 if (!pageArg || !measureArg) {
-  console.error('usage: node .design/grill/page-measure.mjs <page.html> <measure.js> [width] [height]');
+  console.error('usage: node .design/grill/page-measure.mjs <page.html> <measure.js> [width] [height] [shotOut.png]');
   process.exit(2);
 }
 const page = fs.realpathSync(pageArg);
@@ -58,6 +62,9 @@ const server = http.createServer((req, res) => {
 });
 function close() {
   server.close();
+  if (shotOut) {
+    try { fs.copyFileSync(path.join(prof, 'm.png'), shotOut); } catch (e) { console.error('no screenshot to copy: ' + e.message); }
+  }
   try { fs.unlinkSync(probed); } catch {}
   try { fs.rmSync(prof, { recursive: true, force: true }); } catch {}
   process.exit(code);

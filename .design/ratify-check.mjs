@@ -181,7 +181,10 @@ const promised = [
   'p-3', 'p-6', 'mt-6', 'gap-2', 'font-body',
   // text-micro is the kickers' and the footer's small print. The nav's narrow tier is retired (D117),
   // and --breakpoint-nav-narrow is asserted ABSENT with the other retired tokens.
-  'text-micro',
+  // The share card is composed from @theme by scripts/make-social-share.mjs (D118) and ships as a JPEG, so
+  // no other gate can see a token retune break it. These are the utilities it asks the block for; the card's
+  // display step (text-display-4) and lede (text-heading) are already in the ramp rows above.
+  'uppercase',
 ];
 console.log('\n== utilities the token block must produce ==');
 const unresolved = promised.filter((c) => !ds.candidatesToCss([c])[0]);
