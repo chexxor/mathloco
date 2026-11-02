@@ -9,6 +9,10 @@
 //   painted    - what the browser's own colour conversion produces for each run's colour and for the ground,
 //                as 8-bit sRGB bytes. This is the number the pixel check compares against, because a card
 //                whose oklch is right and whose bytes are wrong is still a wrong card (D116).
+//   mark       - the drawn mark (src/lib/brand-mark.mjs): how many shapes the document actually contains,
+//                each shape's stroke/fill in author syntax and the bytes the browser paints for them, and
+//                the box it occupies. Counted per shape because an <svg> can lose children silently
+//                (D118 lesson 1) and a box-level measure cannot see that.
 //   canvas     - the size of the drawing surface firefox is about to screenshot.
 //
 // Not a gate on its own: the gate reads the JPEG (scripts/check-social-card.mjs). This half exists so a
@@ -59,6 +63,33 @@ async function report() {
     painted[el.dataset.band] = paintBytes(cs.color);
   }
 
+  // The drawn mark: is the WHOLE mark in the document, and what colours did its shapes ask for?
+  // Counted because an <svg> can lose children silently - measured on this card, firefox painted the
+  // rule and the first path but dropped every path wrapped in a <span>, because SVG treats an unknown
+  // element's subtree as foreign content (D118 lesson 1). A box-level ink measure would still pass that:
+  // one painted path is enough ink in the box. The gate compares `count` against MARK_SHAPE_COUNT, the
+  // table src/components/HeroSection.astro draws from, so hero and card are checked against one shape.
+  const markEl = document.querySelector('svg[data-mark]');
+  const shapes = markEl
+    ? [...markEl.querySelectorAll('circle,path,rect,line,polygon,polyline,ellipse')].map((el) => {
+        const cs = getComputedStyle(el);
+        return {
+          tag: el.tagName.toLowerCase(),
+          stroke: cs.stroke, fill: cs.fill,
+          strokeWidth: parseFloat(cs.strokeWidth) || 0,
+          paintedStroke: cs.stroke && cs.stroke !== 'none' ? paintBytes(cs.stroke) : null,
+          paintedFill: cs.fill && cs.fill !== 'none' ? paintBytes(cs.fill) : null,
+        };
+      })
+    : null;
+  const mark = markEl ? {
+    name: markEl.dataset.mark,
+    viewBox: (markEl.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number),
+    box: (() => { const r = markEl.getBoundingClientRect(); return { x0: Math.round(r.left), x1: Math.round(r.right), top: Math.round(r.top), width: Math.round(r.width), height: Math.round(r.height) }; })(),
+    count: shapes.length,
+    shapes,
+  } : null;
+
   return {
     done: true,
     faces,
@@ -66,6 +97,7 @@ async function report() {
     canvas: { w: innerWidth, h: innerHeight, dpr: devicePixelRatio },
     runs,
     painted,
+    mark,
   };
 }
 

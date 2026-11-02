@@ -17,7 +17,7 @@
 //     measured while PT Serif is still loading is a fallback metric, so this ships in the output.
 (() => {
   const T0 = Date.now();
-  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], notices: [], nav: null, shadows: [], text: [], fonts: [] };
+  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], notices: [], nav: null, marks: [], shadows: [], text: [], fonts: [] };
   const send = (payload) => {
     out.done = true;
     Object.assign(out, payload);
@@ -246,6 +246,52 @@
     })(),
   } : null;
 
+  // drawn marks (D120): the club's mark is geometry, not bytes, so nothing but a measurement proves it
+  // arrived. A designed graphic opts in with data-mark="<surface>". Four separate failures are possible and
+  // only per-shape numbers tell them apart:
+  //   - a shape missing from the DOM: an <svg> silently drops children whose subtree it treats as foreign
+  //     content — measured on the share card, firefox painted the rule and the first path and dropped the
+  //     rest (D118 lesson 1). A box-level "is there ink here" measure still passes that.
+  //   - a shape painted under the 3.0 graphic bar (D101) — a colour that clears paper and not ink.
+  //   - a shape that painted nothing at all: an unmapped colour role means no stroke, and no stroke means
+  //     an invisible shape inside a box that looks fine in the layout.
+  //   - a box that lost the viewBox ratio: an inline <svg> with no intrinsic ratio falls back to the SVG
+  //     default 300x150, which no class grep can see.
+  // Stroke width is reported in DEVICE px as well as viewBox units: the table's `sw` is in viewBox units, a
+  // 0.9-unit stroke is 1.3px on a 347px box, and D119's rule — assert only what a pixel can resolve at the
+  // size you are measuring at — applies to line art exactly as it does to type.
+  const marks = [...document.querySelectorAll('svg[data-mark]')].map((svg) => {
+    const r = svg.getBoundingClientRect(), ground = painted(svg);
+    const vb = (svg.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);
+    const scale = vb[2] ? r.width / vb[2] : NaN;
+    const shapes = [...svg.querySelectorAll('circle,path,rect,line,polygon,polyline,ellipse')].map((el) => {
+      const cs = getComputedStyle(el);
+      const sw = parseFloat(cs.strokeWidth) || 0;
+      const sc = cs.stroke && cs.stroke !== 'none' ? parse(cs.stroke) : null;
+      const fc = cs.fill && cs.fill !== 'none' ? parse(cs.fill) : null;
+      return {
+        tag: el.tagName.toLowerCase(),
+        stroke: cs.stroke, fill: cs.fill,
+        sw, swDevice: +(sw * (scale || 0)).toFixed(2),
+        strokeContrast: sc && opaque(sc) && opaque(ground) ? ratio(sc, ground) : null,
+        fillContrast: fc && opaque(fc) && opaque(ground) ? ratio(fc, ground) : null,
+        cls: (el.getAttribute('class') || '').slice(0, 60),
+      };
+    });
+    return {
+      name: svg.getAttribute('data-mark'),
+      x: +r.left.toFixed(1), y: +r.top.toFixed(1), w: +r.width.toFixed(1), h: +r.height.toFixed(1),
+      vbW: vb[2] || null, vbH: vb[3] || null,
+      scale: Number.isFinite(scale) ? +scale.toFixed(3) : null,
+      ratio: r.width ? +(r.height / r.width).toFixed(4) : null,
+      wantRatio: vb[2] ? +(vb[3] / vb[2]).toFixed(4) : null,
+      role: svg.getAttribute('role') || '', label: svg.getAttribute('aria-label') || '',
+      hidden: svg.getAttribute('aria-hidden') === 'true',
+      cls: (svg.getAttribute('class') || '').slice(0, 90),
+      count: shapes.length, shapes,
+    };
+  });
+
   // shadows: measured, because ratify said the shadow question could only be answered by measurement
   const shadows = all.map((el) => {
     const cs = getComputedStyle(el);
@@ -290,6 +336,7 @@
     fonts: (() => { const a = []; document.fonts.forEach((f) => a.push(`${f.family} ${f.weight} ${f.style} ${f.status}`)); return a; })(),
     notices,
     nav,
+    marks,
   });
 
   // Measure AFTER the faces settle. A serif line box measured while PT Serif is still swapping in is

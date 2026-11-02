@@ -181,5 +181,108 @@
    233,
    229
   ]
+ },
+ "mark": {
+  "name": "card",
+  "viewBox": [
+   0,
+   0,
+   240,
+   150
+  ],
+  "box": {
+   "x0": 700,
+   "x1": 1120,
+   "top": 190,
+   "width": 420,
+   "height": 263
+  },
+  "count": 7,
+  "shapes": [
+   {
+    "tag": "circle",
+    "stroke": "oklch(0.93 0.008 152)",
+    "fill": "none",
+    "strokeWidth": 0.9,
+    "paintedStroke": [
+     228,
+     233,
+     229
+    ],
+    "paintedFill": null
+   },
+   {
+    "tag": "path",
+    "stroke": "oklch(0.93 0.008 152)",
+    "fill": "none",
+    "strokeWidth": 1.4,
+    "paintedStroke": [
+     228,
+     233,
+     229
+    ],
+    "paintedFill": null
+   },
+   {
+    "tag": "path",
+    "stroke": "oklch(0.93 0.008 152)",
+    "fill": "none",
+    "strokeWidth": 1.4,
+    "paintedStroke": [
+     228,
+     233,
+     229
+    ],
+    "paintedFill": null
+   },
+   {
+    "tag": "path",
+    "stroke": "oklch(0.93 0.008 152)",
+    "fill": "none",
+    "strokeWidth": 1.4,
+    "paintedStroke": [
+     228,
+     233,
+     229
+    ],
+    "paintedFill": null
+   },
+   {
+    "tag": "path",
+    "stroke": "oklch(0.76 0.06 84)",
+    "fill": "none",
+    "strokeWidth": 1.6,
+    "paintedStroke": [
+     195,
+     174,
+     134
+    ],
+    "paintedFill": null
+   },
+   {
+    "tag": "path",
+    "stroke": "oklch(0.76 0.06 84)",
+    "fill": "none",
+    "strokeWidth": 1.6,
+    "paintedStroke": [
+     195,
+     174,
+     134
+    ],
+    "paintedFill": null
+   },
+   {
+    "tag": "circle",
+    "stroke": "none",
+    "fill": "oklch(0.76 0.06 84)",
+    "strokeWidth": 1,
+    "paintedStroke": null,
+    "paintedFill": [
+     195,
+     174,
+     134
+    ]
+   }
+  ]
  }
 }

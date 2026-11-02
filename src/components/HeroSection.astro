@@ -1,10 +1,42 @@
 ---
-import { Image } from 'astro:assets';
-// Imported, not referenced by URL string: `src={'/math-group-image.jpg'}` gave astro:assets nothing
-// it could process, so the 6000x4000 / 1,756,478-byte original went to the browser for a ~400 px
-// slot. A local import is what turns on the pipeline (resize + AVIF + srcset).
-import heroImage from '../assets/math-group-image.jpg';
+import { MARK } from '../lib/brand-mark.mjs';
 import config from '../config.json';
+
+// This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
+// 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
+// club held, with people in it who have never attended. Two ratified rulings already forbade it:
+// D86 (stock crowd photography is out, because it shows people who have never attended) and D94 (no
+// club photograph exists, so the site is **photo-free by construction** — no surface may *require* a
+// picture). Deleting the file is applying a ruling that already existed; this column is what the
+// ratified answer for it looks like (D120).
+//
+// The mark is DRAWN, not imported: no bytes, no srcset ladder, no rights question, and it paints
+// through `@theme`, so a stroke here is a colour ROLE that `npm run check:classes` can resolve and
+// `npm run check:render` measures on painted bytes against the 3.0 graphic bar (D101/D116). Geometry
+// comes from `src/lib/brand-mark.mjs` — the same table the share card composer and both pixel gates
+// read, so the two renderings of the club's mark cannot drift.
+//
+// role -> class, and the class names are LITERAL strings here because that is what makes them exist:
+// Tailwind's scanner reads raw source text, so a computed name (`stroke-${token}`) generates nothing,
+// and `scripts/check-classes.ts` / `.design/gen-token-map.mjs` scan `.astro`/`.svelte`/`.html` but not
+// `.mjs`, so a class written in the geometry module would be invisible to all three. The keys are
+// MARK's roles, and the coupling between these literals and `MARK_COLOURS.paper` is asserted in
+// `.design/ratify-check.mjs`, which imports the module and greps this file. Getting it wrong is
+// measured rather than trusted: an unmapped role paints no stroke, and `check:render`'s `marks` probe
+// fails the run instead of shipping a mark with a hole in it.
+// Type-annotated rather than JSDoc-typed: `astro check` treats frontmatter as TypeScript, and a JSDoc
+// `@type` there is reported as a hint and then ignored, so the map would have to be keyed by a literal
+// role union instead of by role name — which is the drift this comment is about, and the throw below is
+// what actually catches it at build time.
+const STROKE_CLASS: Record<string, string> = { sphere: 'stroke-rule', route: 'stroke-ink', accent: 'stroke-gold' };
+const FILL_CLASS: Record<string, string> = { accent: 'fill-gold' };
+// A role with no class paints no stroke, and an invisible shape inside a healthy-looking box is the one
+// failure mode a screenshot review misses. check:render catches it with numbers; the build catching it
+// first is cheaper, so this throws rather than shipping the hole.
+for (const s of MARK.shapes) {
+  if (!STROKE_CLASS[s.role]) throw new Error(`brand-mark role "${s.role}" has no stroke class in HeroSection.astro — add it to STROKE_CLASS`);
+}
+if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot.role}" has no fill class in HeroSection.astro — add it to FILL_CLASS`);
 ---
 
 <main
@@ -70,18 +102,26 @@ import config from '../config.json';
     <div
       class='mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-4 lg:flex lg:items-center'
     >
-      <div class='rounded-card overflow-hidden'>
-        <Image
-          src={heroImage}
-          width={900}
-          height={600}
-          sizes="(min-width: 1024px) 33vw, 100vw"
-          alt={'Math Study Group Session'}
-          format={'avif'}
-          loading={'eager'}
-          class='w-full h-auto'
-        />
-      </div>
+      <!-- No frame, no fill, no keyline around the mark. The `rounded-card overflow-hidden` wrapper here
+           was a photograph's frame; around a drawn mark it is a rectangle pretending to be content —
+           the same defect that deleted the island's skeleton in apply 4c. The mark is part of the page
+           (DESIGN.md "Elevation": hairline means on the page, shadow means above it), so it takes
+           neither. -->
+      <!-- viewBox units, so `sw` below is in the viewBox's own units; the render gate reports what they
+           become in device px, because a 0.9-unit stroke is 1.3px on a 347px box and a sub-pixel
+           stroke has no measurable colour identity (D119's lesson, applied to line art). -->
+      <svg
+        data-mark='hero'
+        viewBox={`0 0 ${MARK.vbW} ${MARK.vbH}`}
+        class='w-full h-auto block'
+        role='img'
+        aria-label='Several curved routes arriving at one point'
+      >
+        {MARK.shapes.map((s) => (s.tag === 'circle'
+          ? <circle cx={s.cx} cy={s.cy} r={s.r} stroke-width={s.sw} class={`fill-none ${STROKE_CLASS[s.role]}`} />
+          : <path d={s.d} stroke-width={s.sw} class={`fill-none ${STROKE_CLASS[s.role]}`} />))}
+        <circle cx={MARK.dot.cx} cy={MARK.dot.cy} r={MARK.dot.r} class={`stroke-none ${FILL_CLASS[MARK.dot.role]}`} />
+      </svg>
     </div>
   </div>
 </main>

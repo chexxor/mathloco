@@ -41,6 +41,7 @@
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
@@ -199,7 +200,30 @@ for (const route of routes) {
     const phantom = (j.text || []).filter((t) => /Inter var/.test(t.ff));
     if (phantom.length) warns.push(`${at}: ${phantom.length} text run(s) resolve through the phantom family "Inter var" — the faces batch has not landed`);
 
-    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    // 7. drawn marks (D120): the hero's graphic is geometry, not bytes, so it is measured like every other
+    //    claim this gate makes. Four failures are possible and only per-shape numbers separate them.
+    if (route === '/' && !(j.marks || []).length) {
+      fails.push(`${at}: the landing page draws no mark at all — the hero column's graphic IS the club's mark (D120); an empty column is a defect, not a blank`);
+    }
+    for (const m of j.marks || []) {
+      const at2 = `${at} mark "${m.name}"`;
+      if (m.count !== MARK_SHAPE_COUNT) fails.push(`${at2}: ${m.count} shape(s) in the document, the geometry table has ${MARK_SHAPE_COUNT} — an <svg> drops children whose subtree it treats as foreign content, without a word (D118 lesson 1)`);
+      if (m.wantRatio && Math.abs(m.ratio - m.wantRatio) > 0.02 * m.wantRatio) fails.push(`${at2}: box is ${m.w}x${m.h} (ratio ${m.ratio}) but the viewBox says ${m.wantRatio} — an inline <svg> that loses its intrinsic ratio falls back to 300x150`);
+      if (m.w < 40 || m.h < 20) fails.push(`${at2}: box is ${m.w}x${m.h} — the mark collapsed instead of scaling to its column`);
+      if (m.role === 'img' && !m.label) fails.push(`${at2}: role="img" with no accessible name — it announces nothing`);
+      if (!m.role && !m.hidden) fails.push(`${at2}: visible with no role and no aria-hidden — name it or hide it (the hero's old photo invented "Math Study Group Session", D120)`);
+      for (const s of m.shapes) {
+        const cands = [s.strokeContrast, s.fillContrast].filter((x) => x !== null);
+        if (!cands.length) fails.push(`${at2}: <${s.tag}> painted nothing (stroke ${s.stroke}, fill ${s.fill}) — an unmapped colour role means no paint: ${s.cls}`);
+        else {
+          const best = Math.max(...cands);
+          if (best < 3.0) fails.push(`${at2}: <${s.tag}> reads ${best} against its ground, under the 3.0 graphic bar (D101) — stroke ${s.stroke} / fill ${s.fill}`);
+        }
+        if (s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
+      }
+    }
+
+    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
     if (j.nav) console.log(`   nav   ${j.nav.links.map((l) => `${l.fs}/${l.h}px`).join(' ')}  wrap ${j.nav.containers.map((c) => c.wrap).join('/')} gap ${j.nav.containers.map((c) => c.gap).join('/')} needed ${j.nav.row?.needed} of ${j.nav.row?.available}`);
     for (const c of j.controls) {
       console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
@@ -214,6 +238,10 @@ for (const route of routes) {
       for (const l of b.links || []) console.log(`          link ${String(l.h).padStart(4)}px ${l.fs.padEnd(6)} ${String(l.contrast).padStart(6)}  ${JSON.stringify(l.t)}`);
     }
     for (const s of j.shadows) console.log(`   shdw  ${s.shadow.slice(0, 70)}  ${(s.cls || '').slice(0, 40)}`);
+    for (const m of j.marks || []) {
+      console.log(`   mark  ${m.name} ${m.w}x${m.h} at ${m.x},${m.y} (viewBox ${m.vbW}x${m.vbH}, scale ${m.scale}, shapes ${m.count}/${MARK_SHAPE_COUNT}, ratio ${m.ratio} vs ${m.wantRatio}) role="${m.role}" ${JSON.stringify(m.label)}`);
+      for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} sw ${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
+    }
   }
 }
 

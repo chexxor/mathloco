@@ -5,8 +5,8 @@ add a MAP row to the script instead. `target: (delete)` means the write goes awa
 A write that already names a @theme token is listed as "keep (ratified …)" — the token names are
 parsed from src/styles/global.css (24 colours, 10 type steps, 2 radii, 8 elevations), so a token rename shows up here as a write that stopped being covered.
 
-Class tokens scanned: 175 distinct / 746 writes, of which 123 are in a DORMANT file (see the last section).
-Live writes mapped: 430 across 87 distinct tokens.
+Class tokens scanned: 176 distinct / 745 writes, of which 123 are in a DORMANT file (see the last section).
+Live writes mapped: 429 across 87 distinct tokens.
 Unmapped writes in a replaced bucket: none
 
 ## colour
@@ -62,7 +62,7 @@ Unmapped writes in a replaced bucket: none
 | written class | uses | becomes | why |
 |---|---|---|---|
 | `rounded-control` | 12 | `keep (ratified radius)` | radius has two roles, both 6px |
-| `rounded-card` | 10 | `keep (ratified radius)` | radius has two roles, both 6px |
+| `rounded-card` | 9 | `keep (ratified radius)` | radius has two roles, both 6px |
 
 ## motion
 
@@ -121,7 +121,6 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | `lg:px-8` | 1 | src/components/UpcomingMeetups.astro |
 | `duration-300` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `ease-in-out` | 5 | src/components/UpcomingMeetups.astro, src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
-| `overflow-hidden` | 1 | src/components/UpcomingMeetups.astro |
 | `mb-12` | 1 | src/components/UpcomingMeetups.astro |
 | `text-gray-900` | 4 | src/components/UpcomingMeetups.astro |
 | `text-xl` | 4 | src/components/UpcomingMeetups.astro |
@@ -131,6 +130,7 @@ choose-icons replaces the icons wholesale. Either way their writes stay a visibl
 | `fill-current` | 4 | src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `text-book-gray` | 4 | src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
 | `hover:text-gray-500` | 4 | src/components/icons/Instagram.astro, src/components/icons/Linkedin.astro, src/components/icons/Medium.astro, src/components/icons/Twitter.astro |
+| `overflow-hidden` | 1 | src/components/UpcomingMeetups.astro |
 | `mt-8` | 2 | src/components/UpcomingMeetups.astro |
 | `py-16` | 1 | src/components/UpcomingMeetups.astro |
 | `mt-4` | 1 | src/components/UpcomingMeetups.astro |

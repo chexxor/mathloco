@@ -2,6 +2,12 @@
 // (src/layouts/Layout.astro declares 1200x630 to match). `npm run assets:social`; needs no credentials and
 // no network, but does need firefox, because the card is composed by the browser.
 //
+// An output path may be given as argv[2] (`node scripts/make-social-share.mjs .design/tmp-card-live.jpg`),
+// which is what `npm run check:social:live` does: run the PRODUCER and gate its fresh output, without
+// rewriting the shipped artifact. It exists because `check:social` reads the committed JPEG, so nothing in
+// the gate set ever exercised the generator itself (D121). It needs firefox, so like `check:render` it is
+// outside `verify`, which stays browser-free: run it in the same breath as `check:render`.
+//
 // What changed and why (apply 4g). The old card was the photo with a scrim: it took
 // `src/assets/math-group-image.jpg`, darkened the bottom, and wrote white type over it in `#f59e0b`. Three
 // problems at once:
@@ -47,6 +53,11 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import sharp from 'sharp';
 import { BANDS, MOTIF, checkCard } from './check-social-card.mjs';
+import { MARK, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
+// The mark's geometry is the site's geometry (`src/lib/brand-mark.mjs`, the same table
+// `src/components/HeroSection.astro` draws and `check:render` measures), so the card and the hero cannot
+// become two different clubs. Colour is per ground: on the card's ink ground that is MARK_COLOURS.ink.
+const markStroke = (role) => `var(--color-${MARK_COLOURS.ink[role]})`;
 // The domain is read out of src/config.json rather than typed here, so the card cannot claim an address the
 // site does not own. Parsed with fs because node's JSON modules expose only a default export, while astro
 // imports the same file with named bindings - the parse is the portable half.
@@ -58,7 +69,7 @@ const W = 1200;
 const H = 630;
 const PAD = 70;
 const root = process.cwd();
-const out = path.resolve('public/book-club-social-share.jpg');
+const out = path.resolve(process.argv[2] ?? 'public/book-club-social-share.jpg');
 const html = path.resolve('.design/tmp-card.html');
 const png = path.resolve('.design/tmp-card.png');
 
@@ -92,7 +103,6 @@ const title = place('title', 'display-4');
 const lede = place('lede', 'heading');
 const focus = place('focus', 'micro');
 const paths = place('paths', 'lede');
-const scale = MOTIF.width / MOTIF.vbW;
 
 const doc = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
@@ -132,18 +142,16 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
   <div class="run lede" data-band="lede">We read mathematical texts and talk about them.</div>
   <div class="run focus" data-band="focus">Current focus &#183; number theory and abstract algebra</div>
 
-  <!-- the operator's sphere diagram (geometry from the ratified round-4 specimen): several paths, different
-       routes, one meeting point. The two curves arriving at the point carry gold-on-ink, the only accent
-       the band grammar allows on ink (DESIGN.md: gold on ink is 2.50 and banned). -->
-  <svg class="motif" viewBox="0 0 ${MOTIF.vbW} ${MOTIF.vbH}" role="img" aria-label="Several curved paths arriving at one point, drawn like the club's sphere diagram">
-    <circle cx="120" cy="78" r="58" fill="none" stroke="currentColor" stroke-width="0.9"/>
-    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
-    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
-    <path d="M120 20 L 120 128" fill="none" stroke="currentColor" stroke-width="1.4"/>
-    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.6"/>
-    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold-on-ink)" stroke-width="1.6"/>
-    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold-on-ink)"/>
-    <text x="120" y="146" text-anchor="middle" font-size="9" fill="currentColor">meet here</text>
+  <!-- the club's mark: several paths, different routes, one meeting point. Geometry from
+       src/lib/brand-mark.mjs (derived from the operator's own sphere diagram, D86/D94, as ratified in the
+       round-4 specimen). The two curves arriving at the point carry gold-on-ink, the only accent the band
+       grammar allows on ink (DESIGN.md: gold on ink is 2.50 and banned). -->
+  <svg class="motif" data-mark="card" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" role="img" aria-label="Several curved paths arriving at one point, drawn like the club's sphere diagram">
+    ${MARK.shapes.map((s) => (s.tag === 'circle'
+      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"/>`
+      : `<path d="${s.d}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"/>`)).join('\n    ')}
+    <circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${markStroke(MARK.dot.role)}"/>
+    <text x="${MARK.meet.x}" y="146" text-anchor="middle" font-size="9" fill="currentColor">meet here</text>
   </svg>
 
   <!-- The paths, in the footer's order and grammar (D115: the band is the site's exit, and paths are named
@@ -195,8 +203,12 @@ await sharp(png)
 
 // ---- 5. the page's own report becomes evidence: npm run check:social re-checks the committed JPEG against
 // it without firefox. Tracked in git (like .design/fonts/*.json) because it is the other half of the claim:
-// "these pixels are what this document painted, in these faces, at these sizes".
-fs.writeFileSync(path.resolve('.design/card-page.json'), JSON.stringify(posted, null, 1) + '\n');
+// "these pixels are what this document painted, in these faces, at these sizes". A run to another output
+// path writes its own report rather than clobbering the shipped artifact's half of the claim.
+const report = out === path.resolve('public/book-club-social-share.jpg')
+  ? path.resolve('.design/card-page.json')
+  : path.resolve(`${out}.report.json`);   // beside the artifact; `tmp-*` keeps it out of git
+fs.writeFileSync(report, JSON.stringify(posted, null, 1) + '\n');
 
 // ---- 6. measure what was actually painted, and refuse to call it done otherwise. ----
 const r = await checkCard(out, { page: posted });

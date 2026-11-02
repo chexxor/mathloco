@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 // dist-measure.mjs — measure the BUILT pages in Firefox without a web server.
 //
-//   node .design/grill/dist-measure.mjs <distDir> <route> <measure.js> [width] [height]
+//   node .design/grill/dist-measure.mjs <distDir> <route> <measure.js> [width] [height] [shotOut.png]
 //   e.g. node .design/grill/dist-measure.mjs dist/client / .design/grill/render-measure.js 1240 1400
+//
+// The optional shotOut.png is firefox's own screenshot of the same page the measure script reported on —
+// which is what makes "what did this stroke actually paint" answerable for a built page rather than only
+// for a specimen (the share card's gate, D116/D118, is built on exactly that pairing: pixels plus the
+// page's own report of where it laid things out).
 //
 // Why this exists next to page-measure.mjs: Astro writes every asset URL absolute — `/_astro/...` in
 // href/src/srcset AND `url(/_astro/...)` inside the built CSS — and a file:// page resolves `/` at the
@@ -22,7 +27,7 @@ import { readFileSync, writeFileSync, existsSync, readdirSync, statSync, unlinkS
 import { execFileSync } from 'node:child_process';
 import { join, resolve, basename, dirname } from 'node:path';
 
-const [distArg, route = '/', measureArg, w = '1240', h = '1400'] = process.argv.slice(2);
+const [distArg, route = '/', measureArg, w = '1240', h = '1400', shotOut] = process.argv.slice(2);
 if (!distArg || !measureArg) {
   console.error('usage: node .design/grill/dist-measure.mjs <distDir> <route> <measure.js> [w] [h]');
   process.exit(2);
@@ -63,7 +68,7 @@ const probe = join(probeDir, `rendered-${route === '/' ? 'index' : route.replace
 writeFileSync(probe, html);
 console.error(`probing ${basename(probe)} — ${cssCopies} rewritten css copies, asset prefix ${rel}`);
 try {
-  execFileSync(process.execPath, ['.design/grill/page-measure.mjs', probe, resolve(measureArg), w, h], { stdio: 'inherit' });
+  execFileSync(process.execPath, ['.design/grill/page-measure.mjs', probe, resolve(measureArg), w, h, ...(shotOut ? [resolve(shotOut)] : [])], { stdio: 'inherit' });
 } finally {
   // page-measure removes its own .measured-* copy; this one is ours, and it sits inside the artifact
   // that gets uploaded — never leave a probe file in dist

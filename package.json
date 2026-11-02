@@ -47,7 +47,8 @@
     "probe:cpu": "node scripts/probe-config.mjs && wrangler deploy --config dist/server/wrangler.probe.json",
     "falsify:manifest": "node scripts/falsify-manifest-token.mjs",
     "check:social": "node scripts/check-social-card.mjs",
-    "check:social:selftest": "node scripts/check-social-card.mjs --selftest"
+    "check:social:selftest": "node scripts/check-social-card.mjs --selftest",
+    "check:social:live": "node scripts/make-social-share.mjs .design/tmp-card-live.jpg"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.3",

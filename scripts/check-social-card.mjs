@@ -15,6 +15,7 @@
 // retired amber absent (D82/D88).
 import fs from 'node:fs';
 import sharp from 'sharp';
+import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 
 export const W = 1200;
 export const H = 630;
@@ -46,14 +47,15 @@ const hueGap = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
 // paper, asserted absent from @theme — and the published card used to paint it. Any appearance fails.
 const RETIRED = [245, 158, 11];
 
-// The drawn motif: the operator's sphere diagram (geometry from the ratified round-4 specimen,
-// .design/grill/round-4.html). This is the one place its box is written; the composer imports it, so the
-// verifier and the composer cannot disagree about where the mark is.
-export const MOTIF = { left: 700, top: 190, width: 420, vbW: 240, vbH: 150 };
+// The drawn mark: the club's mark, in the hero and on the card. Its GEOMETRY lives in
+// `src/lib/brand-mark.mjs` (the same table `src/components/HeroSection.astro` draws from), so this
+// verifier and that composer cannot disagree about where the meeting point is. What lives here is only
+// where the mark sits ON THE CARD, in canvas px — the one number that is the card's, not the mark's.
+export const MOTIF = { left: 700, top: 190, width: 420, vbW: MARK.vbW, vbH: MARK.vbH };
 const mscale = MOTIF.width / MOTIF.vbW;
-const dotX = MOTIF.left + 120 * mscale;   // the meeting point, at viewBox (120,128)
-const dotY = MOTIF.top + 128 * mscale;
-const dotR = 4.5 * mscale;
+const dotX = MOTIF.left + MARK.meet.x * mscale;   // the meeting point, from the mark table
+const dotY = MOTIF.top + MARK.meet.y * mscale;
+const dotR = MARK.dot.r * mscale;
 
 // Bands to measure, in canvas px. The composer centres its runs inside these same boxes.
 // min: text bar 4.5 (D101), graphic bar 3.0. washout 'fail' means that run has to survive a feed
@@ -262,12 +264,39 @@ export async function checkCard(file, { page = null } = {}) {
     }
   }
 
+  // ---- the drawn mark (D120): two failures live here and only a per-shape check tells them apart.
+  //   missing shape   - an <svg> drops children it treats as foreign content, silently; measured on this
+  //                     card (D118 lesson 1). The band-level ink measure would still pass, because one
+  //                     painted path is enough ink in the box. So the DOM count is checked against
+  //                     MARK_SHAPE_COUNT — the same table the hero's mark is drawn from.
+  //   under the bar   - a shape painted under the 3.0 graphic bar (D101): a colour that clears paper and
+  //                     not ink, or a token retune. The colour is the browser's own paint for the author
+  //                     syntax that shape asked for (D116), compared against the JPEG's own ground.
+  if (page?.mark) {
+    if (page.mark.count !== MARK_SHAPE_COUNT) {
+      fail(`the mark reports ${page.mark.count} shape(s) in the document, the geometry table has ${MARK_SHAPE_COUNT} — a shape went missing (SVG treats an unknown element's subtree as foreign content and drops it without a word, D118)`);
+    } else pass(`mark "${page.mark.name}": ${page.mark.count}/${MARK_SHAPE_COUNT} shapes in the document, box ${page.mark.box.width}x${page.mark.box.height} at ${page.mark.box.x0},${page.mark.box.top}`);
+    for (const s of page.mark.shapes ?? []) {
+      const c = s.paintedStroke ?? s.paintedFill;
+      if (!c) { fail(`mark shape <${s.tag}>: neither stroke (${s.stroke}) nor fill (${s.fill}) painted — the shape is invisible`); continue; }
+      const r = contrast(c, g);
+      const chan = s.paintedStroke ? 'stroke' : 'fill';
+      const at = `${s.tag} ${s.strokeWidth} units, ${chan}`;
+      if (r < 3.0) fail(`mark shape <${at}>: ${c.join(',')} reads ${r.toFixed(2)} against the ground, under the 3.0 graphic bar (D101) — asked for stroke ${s.stroke}, fill ${s.fill}`);
+      else pass(`mark shape <${at}>: ${c.join(',')} at ${r.toFixed(2)} vs ground (bar 3.0)`);
+    }
+  } else {
+    note('the page report carries no mark — shape count and per-shape contrast are SKIPPED (run npm run assets:social to make one)');
+  }
+
   return { ok, lines, ground: g, bytes: fs.statSync(file).size };
 }
 
 // A gate that cannot fail is a gate that quietly stops working, so these synthetic cards are checked the
-// same way the real one is. Each case is built from pixels (sharp), not from the composer, and each must
-// come back FAIL with the named reason. `npm run check:social:selftest`.
+// same way the real one is. Most cases are built from pixels (sharp) rather than from the composer; the
+// two mark cases and the hue case doctor the generator's page report instead, because those assertions are
+// about what the document claimed. Each case must come back FAIL with the named reason.
+// `npm run check:social:selftest`.
 export async function selfTest() {
   const flat = async (file, rgb) => { await sharp({ create: { width: W, height: H, channels: 3, background: rgb } }).jpeg().toFile(file); };
   const cases = [];
@@ -322,6 +351,23 @@ export async function selfTest() {
     const word = (wrongHue.painted['path-discord'] = [70, 95, 205]);   // blurple, not the token's red-orange
     cases.push(['path word in the wrong hue', 'public/book-club-social-share.jpg', wrongHue, /different hue than the path grammar/]);
     void word;
+
+    // 6. a mark shape missing from the document. This is the failure mode that produced D118 lesson 1: SVG
+    // treats an unknown element's subtree as foreign content and drops it without a word, and every
+    // box-level ink measure stays green because one painted path is enough ink in the box.
+    if (!real.mark) { console.error('the page report has no mark — selftest 6/7 cannot be exercised'); }
+    else {
+      const dropped = JSON.parse(JSON.stringify(real));
+      dropped.mark.shapes = dropped.mark.shapes.slice(0, MARK_SHAPE_COUNT - 1);
+      dropped.mark.count = dropped.mark.shapes.length;
+      cases.push(['mark missing a shape', 'public/book-club-social-share.jpg', dropped, /shape went missing/]);
+
+      // 7. a mark shape painted under the graphic bar (3.0, D101). Same box, same count, same everything —
+      // one stroke's colour moved a hair towards the ground. Pixels alone cannot see which shape did it.
+      const faint = JSON.parse(JSON.stringify(real));
+      faint.mark.shapes[0].paintedStroke = [46, 62, 50];      // ~1.1 against the card's ink ground
+      cases.push(['mark shape under the graphic bar', 'public/book-club-social-share.jpg', faint, /under the 3.0 graphic bar/]);
+    }
   }
 
   const lines = [];

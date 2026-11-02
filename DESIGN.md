@@ -332,6 +332,42 @@ a PDF, a flyer PNG — is invisible to `check:classes` and `check:render`, becau
 needs its own pixel gate in `verify`, its numbers read off the committed file, and a selftest that proves
 the gate can fail.
 
+## Graphics — the club's own diagram, drawn, one source of truth
+
+The site's graphic language is the club's diagram (D86): routes arriving at one point on a sphere. **No
+stock people photography, ever** (D94: no photograph of this club exists, so a photo of strangers is a
+false statement about who attends), and `ratify-check.mjs` enforces it structurally — no live source under
+`src/` may import a raster. The only rasters in the repo are generated (`public/book-club-social-share.jpg`)
+or third-party brand marks in `public/` that are never imported.
+
+The mark lives in **one file**: `src/lib/brand-mark.mjs` exports `MARK` (viewBox 240x150, the sphere, three
+routes, two accent segments, the meeting point, per-shape stroke widths in **viewBox units**),
+`MARK_SHAPE_COUNT` and `MARK_COLOURS`. The hero and the share-card composer both draw from that table;
+there is no second copy of the geometry, and a copy cannot be smuggled in because both surfaces are
+measured against the table's shape count.
+
+Rules for drawing it:
+
+- **Colour by role, in literal classes**: `stroke-rule` (sphere), `stroke-ink` (routes), `stroke-gold`
+  (accents, meeting dot), `fill-gold`. Tailwind generates CSS only for classes it sees in source, so the
+  class string must be literal in the `.astro` file — a computed name paints nothing (D110). `ratify-check`
+  asserts the literals stay coupled to `MARK_COLOURS`.
+- **Intrinsic sizing, never a pixel box**: `<svg viewBox="0 0 240 150" class="w-full h-auto block">`. Any
+  fixed height, or a lost `viewBox`, falls the box back to 300x150 — at the 320 floor that is wider than
+  the viewport. The render gate compares the measured box ratio to the viewBox ratio.
+- **A graphic is either named or explicitly hidden**: `role="img"` + `aria-label`, or `aria-hidden="true"`.
+  A nameless mark is invisible to a screen reader and invisible to the gate.
+- **Every shape is held to the 3.0 graphic bar (D101), measured per shape** — not "some ink in the box is
+  strong enough". Line art has a second, harsher limit: a stroke under ~1.5 device px never contains a
+  fully covered pixel, so it has no byte identity and its *painted* contrast is always below its token
+  pair (D119). The gate holds both: the pair >= 3.0, and the device stroke >= 1px.
+
+Measured consequence, kept in view rather than tuned away: at 320 the sphere's 0.9-unit stroke lands at
+**1.03px** and its pixels top out near 1.7-2.6 against sand where the token pair is 3.01, while the routes
+(1.61px, pair 12.02) and the gold (1.84px, pair 4.82) stay fully covered. So at phone width the mark reads
+as routes arriving at a point without its context ring. `node .design/mark-pixels.mjs <shot> <report>`
+re-measures this; changing `MARK.shapes[*].sw` re-runs the card pipeline, not just the render gate.
+
 ## Enforcement
 
 ```bash
@@ -340,11 +376,23 @@ node .design/ratify-check.mjs   # token block → Tailwind resolver + renderer c
 npm run check:classes           # every written class resolves to CSS — catches a token used as a class that does not exist
 npm run check:render            # build, then measure dist/client in Firefox: control heights, measured contrast,
                                 # one dark band and the paths inside it, keyline grammar, notice grammar,
-                                # the nav's width probe, one display step, faces actually loaded
+                                # the nav's width probe, one display step, faces actually loaded, and the hero
+                                # mark (shape count, box ratio vs viewBox, per-shape contrast, device stroke)
+node .design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
+node .design/mark-pixels.mjs <shot> <report>   # what the mark actually painted in its box, by colour cluster
+npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
+                                # the producer itself, not the shipped artifact (D121). Needs firefox, so
+                                # like check:render it is outside verify: run it beside check:render.
 npm run check:social            # measure the committed share card's painted bytes against the page report
-npm run check:social:selftest   # prove the share-card checks can still fail (five synthetic cards)
+npm run check:social:selftest   # prove the share-card checks can still fail (seven synthetic cards)
 npm run verify                  # the full CI gate set
 ```
+
+That `.design/` tooling is **tracked**: record 0009 says design evidence ships with the repo, and only
+`tmp-*`, `render/` and font scratch are ignored. The rule it implies is that a probe which outlives its
+session has to be committed — `.design/decision-audit.mjs` was written in one session and never committed,
+and it is simply gone now. `check:render`, `ratify-check` and the card gates are only runnable because
+their files are in the tree.
 
 **Contrast numbers in this file are painted bytes, not arithmetic** (D116). Firefox returns computed
 colours in author syntax (`oklch(0.71 0.14 35)`), and the first version of `check:render` converted those
@@ -359,11 +407,17 @@ scale makes `mt-23` (92px) resolve, and "the class exists" is not "the value is 
 why `.design/token-map.md` is generated from the writes rather than written by hand — it exits 1 if any
 class in a replaced bucket has no mapping.
 
+`check:render`, `.design/render-gate-selftest.mjs` and `check:social:live` all need a browser, so none of
+them is in `verify` — `verify` stays browser-free the way it excludes `check:discord` (a token) and
+`check:ai` (a paid call). That is the gap CI still has: **the pixel gates and the card producer run on a
+human's ritual, not on every pull request.** Closing it means installing a browser in the runner, which is
+an operator call, not a delegate change (`.notes/NEXT.md`).
+
 `design-enforce` (phase 5) adds the class-level linter: off-scale spacing, Tailwind colours where a role
 exists, `border` keylines, `shadow-*` outside `e1/e2`, `duration-*` outside 150/250, and any frequency
 word in event prose.
 
-## Not wired yet (lands in `design-apply`, phase 4)
+## Open threads that are not gates yet
 
 - Palette writes now survive only in **dormant** files: the four never-imported `src/components/icons/*.astro`
   (choose-icons deletes them, and `--color-book-gray` stays for them until then) and the two gated-off
@@ -394,7 +448,9 @@ word in event prose.
   `check:render` measures the server-rendered branch (there is no API on `file://`). They inherit the
   grammar that IS measured; numbers for them land the first time the gate runs against a deploy where
   `/api/discord-summary` answers.
-- `UpcomingMeetups.astro` has no `{:else}` either: an empty feed renders nothing at all. Per **D108**,
-  missing content is a state with designed content — never a blank, and never a build failure. The
-  batch order and the states to build are in `.design/token-plan.md`; the per-class worklist is
-  `.design/token-map.md`.
+- `UpcomingMeetups.astro` is **dormant and fictional**: it hard-codes "Saturday, 2:00 PM", "Local Library -
+  Study Room B" and "Topic: Introduction to Group Theory" in palette classes, with no feed behind it at
+  all. No page renders it, so no gate sees it — and it becomes a lie the day the event pipeline lands
+  (queue item in `NEXT.md`). Per **D108**, when it does render, missing content is a state with designed
+  content — never a blank, and never a build failure. The batch order and the states to build are in
+  `.design/token-plan.md`; the per-class worklist is `.design/token-map.md`.

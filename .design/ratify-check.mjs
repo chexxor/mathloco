@@ -21,6 +21,7 @@ import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve, join } from 'node:path';
 import { __unstable__loadDesignSystem } from '@tailwindcss/node';
+import { MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..'); // this file lives in .design/
 const CSS_PATH = resolve(ROOT, 'src/styles/global.css');
@@ -162,6 +163,35 @@ if (/outline-gold/.test(footer)) fail('Footer.astro writes a gold focus ring on 
 else if (bandRings < 4) fail(`Footer.astro has ${bandRings} band focus rings; every focusable link in the band needs focus-visible:outline-band-text (gold on ink = 2.50, banned)`);
 else ok(`${bandRings} band focus rings, no gold ring on the band`);
 
+// ---------------- 1e. the drawn mark (D120): the coupling that can rot silently ----------------
+// The mark is geometry in src/lib/brand-mark.mjs, drawn by HeroSection.astro and by the share-card
+// composer, measured by check:render and check:social. The one joint no renderer can fail loudly is the
+// role -> class map written in HeroSection.astro: Tailwind's scanner reads RAW source text, so a computed
+// class name (`stroke-${token}`) generates no CSS, and check:classes / gen-token-map scan .astro but not
+// .mjs — so a class cannot live next to the colour map it comes from. Assert the two agree, here, where a
+// token retune shows up as a red line instead of an invisible hero.
+const heroFile = readFileSync(join(ROOT, 'src/components/HeroSection.astro'), 'utf8');
+const heroStripped = stripComments(heroFile);
+const cardComposer = stripComments(readFileSync(join(ROOT, 'scripts/make-social-share.mjs'), 'utf8'));
+const markClasses = Object.entries(MARK_COLOURS.paper)
+  .map(([role, tok]) => [`stroke-${tok}`, role])
+  .concat([[`fill-${MARK_COLOURS.paper.accent}`, `${MARK_COLOURS.paper.accent} fill on the meeting point`]]);
+const missingMarkClasses = markClasses.filter(([cls]) => !new RegExp(`['"\`]${cls}['"\`]`).test(heroStripped));
+if (missingMarkClasses.length) fail(`HeroSection.astro does not write the class for ${missingMarkClasses.map(([cls, role]) => `${role} -> ${cls}`).join(', ')} — the role map in that file and MARK_COLOURS.paper in src/lib/brand-mark.mjs have drifted (Tailwind cannot see a computed class name, so a computed name here means the shape paints nothing)`);
+else ok(`${markClasses.length} mark classes in HeroSection.astro match MARK_COLOURS.paper (${markClasses.map(([c]) => c).join(', ')})`);
+if (!/data-mark=["']hero["']/.test(heroStripped)) fail('HeroSection.astro draws no data-mark="hero" — check:render\'s mark probe would then measure nothing and the hero could go blank silently');
+else if (!/data-mark=["']card["']/.test(cardComposer)) fail('the share-card composer draws no data-mark="card" — check:social\'s shape-count check would have nothing to read');
+else ok('both surfaces opt in to the mark probe (data-mark="hero" / "card"), so both pixel gates read the same shape');
+if (/MARK_SHAPE_COUNT/.test(heroFile) === false && !/MARK\.shapes\.map/.test(heroStripped)) fail('HeroSection.astro does not draw MARK.shapes — the mark has been re-typed by hand instead of read from the geometry table');
+else ok(`the hero draws the shared table (${MARK_SHAPE_COUNT} shapes expected)`);
+// Photo-free by construction (D94), now enforced rather than remembered: the hero held a stock crowd shot
+// for two years while the ruling said otherwise, so the rule that lives only in a .md is the rule that
+// silently comes back (D120). A raster IMPORT is how a photo gets into the artifact at all — a string
+// `src={'/x.png'}` skips astro:assets entirely (see .agents/skills/astro/SKILL.md).
+const raster = liveFiles.filter(([, t]) => /import\s+[A-Za-z_$][\w$]*\s+from\s+['"][^'"]*\.(png|jpe?g|webp|avif|gif)['"]/.test(t)).map(([f]) => f);
+if (raster.length) fail(`${raster.length} live src file(s) import a raster image (${raster.join(', ')}) — the site is photo-free by construction (D94/D120); the drawn mark in src/lib/brand-mark.mjs is the graphic`);
+else ok('clean: no live src file imports a raster image — photo-free by construction (D94/D120) is gated, not remembered');
+
 // ---------------- 2. every utility DESIGN.md promises must resolve ----------------------------
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });
 const promised = [
@@ -179,6 +209,10 @@ const promised = [
   'rounded-control', 'rounded-card',
   'duration-150', 'duration-250', 'ease-out', 'ease-linear',
   'p-3', 'p-6', 'mt-6', 'gap-2', 'font-body',
+  // The hero's drawn mark (D120) paints through these, so a token role it asks for must resolve; if
+  // `stroke-rule` stopped existing the mark would paint nothing and only check:render would catch it, at
+  // the cost of a firefox run. Asserted here too because this gate takes a second.
+  'stroke-rule', 'stroke-ink', 'stroke-gold', 'stroke-none', 'fill-gold', 'fill-none', 'w-full', 'h-auto', 'block',
   // text-micro is the kickers' and the footer's small print. The nav's narrow tier is retired (D117),
   // and --breakpoint-nav-narrow is asserted ABSENT with the other retired tokens.
   // The share card is composed from @theme by scripts/make-social-share.mjs (D118) and ships as a JPEG, so
