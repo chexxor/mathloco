@@ -27,6 +27,7 @@ const flag = (name, def) => { const i = argv.indexOf(`--${name}`); return i === 
 const positional = argv.filter((a, i) => !a.startsWith('--') && argv[i - 1] !== '--crop' && argv[i - 1] !== '--zoom');
 const [shot, jsonFile, idxArg = '0'] = positional;
 const cropOut = argv.includes('--crop') ? flag('crop') : null;
+const JSONOUT = argv.includes('--json');
 const zoom = Math.max(1, Number(flag('zoom', 3)));
 if (!shot || !jsonFile) { console.error('usage: node design/mark-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]'); process.exit(2); }
 const j = JSON.parse(readFileSync(jsonFile, 'utf8'));
@@ -83,9 +84,14 @@ clusters.sort((a, b) => b.n - a.n);
 const total = (x1 - x0 + 1) * (y1 - y0 + 1);
 
 const strongest = clusters.reduce((a, b) => (contrast(b.c, ground) > contrast(a.c, ground) ? b : a), clusters[0]);
+// How much of the drawn ink clears the bars the gates are written against. A ~1px stroke straddles two
+// pixel rows, so its PIXELS never reach the pair the token promises (D119) — which is why the line-weight
+// question has to be argued on covered pixels, not on the pair. `at/over the graphic bar` counts the
+// pixels a viewer can actually resolve at this box size.
+const atBar = (bar) => inks.reduce((n, c) => n + (contrast(c, ground) >= bar ? 1 : 0), 0);
 const perStroke = m.shapes.map((s) => {
   const pair = s.strokeContrast ?? s.fillContrast;
-  return `${s.tag} ${s.sw}u=${s.swDevice}px pair ${pair}`;
+  return `${s.tag} ${s.sw}u=${s.swDevice}px${pair === null || pair === undefined ? '' : ` pair ${pair}`}`;
 });
 if (cropOut) {
   // written before any printing: a pipe closed by `| head` must not cost you the image
@@ -96,12 +102,22 @@ if (cropOut) {
     .png()
     .toFile(cropOut);
 }
-console.log(`mark "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${m.scale}) in a ${width}x${height} shot`);
-console.log(`ground sampled beside it: ${ground.join(',')} — ink threshold 24 RGB units, ${inks.length}/${total} pixels in the box are ink (${((inks.length / total) * 100).toFixed(1)}%)`);
+console.log(`mark "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${m.scale}) in a ${width}x${height} shot`);console.log(`ground sampled beside it: ${ground.join(',')} — ink threshold 24 RGB units, ${inks.length}/${total} pixels in the box are ink (${((inks.length / total) * 100).toFixed(1)}%)`);
 for (const cl of clusters.slice(0, 8)) {
   const c = cl.c.map(Math.round);
   console.log(`  ${String(cl.n).padStart(5)} px  ${c.join(',').padEnd(13)} contrast ${String(contrast(c, ground)).padStart(6)}  (token pair of its colour: see the per-shape line below)`);
 }
-console.log(`  per shape (pair, from author syntax via the browser's own paint): ${perStroke.join(' | ')}`);
+console.log(`  per shape (device px; pair only where the report carries it): ${perStroke.join(' | ')}`);
+console.log(`  covered pixels: ${atBar(1.5)} at/over 1.5 contrast, ${atBar(3.0)} at/over the 3.0 graphic bar (D101) — ${(100 * atBar(3.0) / inks.length).toFixed(1)}% of the ink in the box, ${(100 * atBar(3.0) / total).toFixed(2)}% of the box`);
 console.log(`  strongest painted cluster: ${strongest.c.map(Math.round).join(',')} at ${contrast(strongest.c, ground)} — the coverage ceiling for this box at this width.`);
 if (cropOut) console.log(`  crop written: ${cropOut} (${Math.round(m.w * zoom)}px wide, ${zoom}x nearest — name it .design/tmp-* so it stays scratch)`);
+// --json: one machine-readable record per mark, so a runner (design/round8.mjs) can put coverage numbers
+// into a report instead of parsing this human report back out of a text stream.
+if (JSONOUT) console.log(JSON.stringify({
+  name: m.name, set: m.set || '', box: { x: m.x, y: m.y, w: m.w, h: m.h, scale: m.scale },
+  ground, inkPixels: inks.length, boxPixels: total, inkPct: +(100 * inks.length / total).toFixed(2),
+  at15: atBar(1.5), at30: atBar(3.0),
+  strongest: { c: strongest.c.map(Math.round), contrast: contrast(strongest.c, ground) },
+  clusters: clusters.slice(0, 8).map((cl) => ({ n: cl.n, c: cl.c.map(Math.round), contrast: contrast(cl.c.map(Math.round), ground) })),
+  shapes: m.shapes.map((s) => ({ role: s.role || '', tag: s.tag, sw: s.sw, swDevice: s.swDevice, nonScaling: !!s.nonScaling })),
+}));

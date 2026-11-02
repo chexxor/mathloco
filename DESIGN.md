@@ -80,6 +80,19 @@ Leading is carried by the size token — never write a bare `leading-*` next to 
 reads at `leading-prose` (1.6). Display leading floor is 1.05; the four display line boxes land on the
 4px grid and each clears its measured ink box.
 
+**Measured line length (2026-11-02), the starting point for any size change: `npm run lines:measure`**
+(`design/line-length.mjs` + `design/grill/line-length-measure.js`, which read characters-per-line off the
+built page's own line boxes). Prose runs **29-38 characters per line at every shipped width** (median 30.1
+at 1240, 29.0 at 390, ~24 at 320) — *under* the 40-75 ch reading band, because the boxes are narrow
+(672/319 at 1240, 298 at 390, 228 at 320), not because the type is large. The one place lines run long is
+the two `text-lede` section intros at 1240: **69 and 76 ch** in an 1164px box. A size raise therefore moves
+the two ends in opposite directions and is not ruled until round 8 (`design/grill/round-8.html`).
+
+**The two faces are 4% apart in x-height** (PT Serif 0.50 em, Public Sans 0.52 em,
+`design/fonts/metrics.json`), so "the serif reads smaller" is not an x-height claim. What differs is the
+advance: the serif averages **0.533 em** per character against chrome's **0.612 em**, so a bump to a
+content step costs fewer characters per line than the same bump to a chrome step.
+
 **One display step per screen: the screen's primary locator.** That is the one element answering "which
 page is this, and when and where". Section `h2`s are `text-heading`, never a display step; a display
 step never goes on a punchline, and never on two elements in one screen. Where the locator lives is

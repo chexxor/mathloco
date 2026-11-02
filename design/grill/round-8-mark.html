@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 8 — mark line weights, for pixel measurement</title>
+<style>
+:root {
+  --color-paper: oklch(98.5% 0.006 85);
+  --color-panel: oklch(97% 0.008 85);
+  --color-tint: oklch(95% 0.03 152);
+  --color-ink: oklch(32% 0.045 152);
+  --color-ink-hover: oklch(40% 0.055 152);
+  --color-ink-2: oklch(45% 0.035 152);
+  --color-ink-3: oklch(52% 0.028 152);
+  --color-rule: oklch(65.5% 0.03 152);
+  --color-gold: oklch(55% 0.12 62);
+  --color-gold-on-ink: oklch(76% 0.06 84);
+  --color-band-text: oklch(93% 0.008 152);
+  --color-path-calendar: oklch(50% 0.11 205);
+  --color-path-meetup: oklch(47% 0.15 315);
+  --color-path-discord: oklch(50% 0.14 35);
+  --color-path-mobilizon: oklch(50% 0.10 105);
+  --color-path-calendar-tint: oklch(95% 0.03 205);
+  --color-path-meetup-tint: oklch(95% 0.03 315);
+  --color-path-discord-tint: oklch(95% 0.03 35);
+  --color-path-mobilizon-tint: oklch(95% 0.03 105);
+  --color-path-calendar-on-ink: oklch(70% 0.11 205);
+  --color-path-meetup-on-ink: oklch(72% 0.15 315);
+  --color-path-discord-on-ink: oklch(71% 0.14 35);
+  --color-path-mobilizon-on-ink: oklch(69% 0.10 105);
+  --color-book-gray: #1a1a1c;
+}
+
+@font-face { font-family: 'Public Sans Variable'; font-style: normal; font-display: block; font-weight: 100 900;
+  src: url('../../node_modules/@fontsource-variable/public-sans/files/public-sans-latin-wght-normal.woff2') format('woff2-variations'); }
+@font-face { font-family: 'PT Serif'; font-style: normal; font-display: block; font-weight: 400;
+  src: url('../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'PT Serif'; font-style: normal; font-display: block; font-weight: 700;
+  src: url('../../node_modules/@fontsource/pt-serif/files/pt-serif-latin-700-normal.woff2') format('woff2'); }
+* { box-sizing: border-box; }
+body { margin: 0; background: oklch(98.5% 0.006 85); color: var(--color-ink); font-family: 'PT Serif', Georgia, serif; }
+h1, h2, p { margin: 0 0 12px 0; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 24px 16px 96px; }
+h1.q { font-family: 'Public Sans Variable', sans-serif; font-weight: 800; font-size: 27.7px; line-height: 36px; }
+h2.q { font-family: 'Public Sans Variable', sans-serif; font-weight: 800; font-size: 23px; line-height: 28px; margin-top: 32px; }
+.note { font-family: 'Public Sans Variable', sans-serif; font-size: 13.3px; line-height: 16px; color: var(--color-ink-2); max-width: 70ch; }
+.cand, .caps, .notices { border: 0; padding: 16px 0; border-bottom: 1px solid var(--color-rule); }
+.cand-head { font-family: 'Public Sans Variable', sans-serif; font-size: 13.3px; line-height: 20px; margin-bottom: 12px; color: var(--color-ink-2); }
+.cand-head .sizes { display: block; color: var(--color-ink-3); font-size: 12px; }
+.pair { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start; }
+.wide { width: 100%; max-width: 672px; }
+.narrow { width: 228px; flex: 0 0 auto; }
+.ctrl { display: inline-flex; align-items: center; justify-content: center; border-radius: 6px; }
+.ctrl.primary { padding: 16px 32px; background: var(--color-ink); color: var(--color-band-text); }
+.ctrl.secondary { padding: 12px 32px; background: oklch(98.5% 0.006 85); color: var(--color-ink); box-shadow: inset 0 0 0 1px var(--color-rule); }
+.notice { box-shadow: inset 0 0 0 1px var(--color-rule); border-radius: 6px; padding: 12px 16px; min-height: 80px; max-width: 346px; margin-bottom: 16px; }
+.notice .word { text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+.notice .title { margin-bottom: 4px; }
+.caprow { display: flex; gap: 16px; margin-bottom: 8px; }
+.capbox { width: 276px; overflow: hidden; flex: 0 0 auto; }
+.capbox[data-capbox="346"] { width: 346px; }
+.capbox span { display: block; }
+table.m { border-collapse: collapse; font-family: 'Public Sans Variable', sans-serif; font-size: 13.3px; line-height: 18px; margin: 12px 0; }
+table.m th, table.m td { border: 1px solid var(--color-rule); padding: 6px 8px; text-align: left; vertical-align: top; }
+table.m th { font-weight: 600; }
+.marks { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+.markcell { font-family: 'Public Sans Variable', sans-serif; font-size: 12px; color: var(--color-ink-2); }
+
+.markcell { margin-bottom: 32px; padding-left: 28px; }
+.markcell svg { display: block; margin: 8px 0 0; }
+</style></head><body><div class="wrap">
+<h1 class="q">Mark line weights — measured, not looked at</h1>
+
+<div class="markcell" data-markcell="M-A">
+  <div>M-A — as shipped</div>
+  <svg data-mark="M-A-276" data-markset="M-A" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, M-A">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="0.9" data-role="sphere" data-sw="0.9"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+  <svg data-mark="M-A-372" data-markset="M-A" data-box="372" viewBox="0 0 240 150" width="372" height="232.5" role="img" aria-label="the club's mark, M-A">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="0.9" data-role="sphere" data-sw="0.9"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+</div>
+
+<div class="markcell" data-markcell="M-B">
+  <div>M-B — sphere 0.9 -&gt; 1.3 units: the phone-width sphere lands at 1.50px device instead of 1.03px</div>
+  <svg data-mark="M-B-276" data-markset="M-B" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, M-B">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-sw="1.3"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+  <svg data-mark="M-B-372" data-markset="M-B" data-box="372" viewBox="0 0 240 150" width="372" height="232.5" role="img" aria-label="the club's mark, M-B">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.3" data-role="sphere" data-sw="1.3"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.4" data-role="route" data-sw="1.4"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="1.6" data-role="accent" data-sw="1.6"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+</div>
+
+<div class="markcell" data-markcell="M-C">
+  <div>M-C — everything +25% in viewBox units: the whole mark gets a heavier line at every width</div>
+  <svg data-mark="M-C-276" data-markset="M-C" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, M-C">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.13" data-role="sphere" data-sw="1.13"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.75" data-role="route" data-sw="1.75"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.75" data-role="route" data-sw="1.75"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.75" data-role="route" data-sw="1.75"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" data-role="accent" data-sw="2"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" data-role="accent" data-sw="2"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+  <svg data-mark="M-C-372" data-markset="M-C" data-box="372" viewBox="0 0 240 150" width="372" height="232.5" role="img" aria-label="the club's mark, M-C">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.13" data-role="sphere" data-sw="1.13"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.75" data-role="route" data-sw="1.75"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.75" data-role="route" data-sw="1.75"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.75" data-role="route" data-sw="1.75"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" data-role="accent" data-sw="2"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" data-role="accent" data-sw="2"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+</div>
+
+<div class="markcell" data-markcell="M-D">
+  <div>M-D — device-px strokes (non-scaling): the mark weighs the same at 320, 1240 and on the card</div>
+  <svg data-mark="M-D-276" data-markset="M-D" data-box="276" viewBox="0 0 240 150" width="276" height="172.5" role="img" aria-label="the club's mark, M-D">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.4" vector-effect="non-scaling-stroke" data-role="sphere" data-sw="1.4"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.8" vector-effect="non-scaling-stroke" data-role="route" data-sw="1.8"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.8" vector-effect="non-scaling-stroke" data-role="route" data-sw="1.8"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.8" vector-effect="non-scaling-stroke" data-role="route" data-sw="1.8"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" vector-effect="non-scaling-stroke" data-role="accent" data-sw="2"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" vector-effect="non-scaling-stroke" data-role="accent" data-sw="2"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+  <svg data-mark="M-D-372" data-markset="M-D" data-box="372" viewBox="0 0 240 150" width="372" height="232.5" role="img" aria-label="the club's mark, M-D">
+    <circle cx="120" cy="78" r="58" fill="none" stroke="var(--color-rule)" stroke-width="1.4" vector-effect="non-scaling-stroke" data-role="sphere" data-sw="1.4"/>
+    <path d="M62 34 C 96 62, 118 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.8" vector-effect="non-scaling-stroke" data-role="route" data-sw="1.8"/>
+    <path d="M178 34 C 146 62, 124 96, 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.8" vector-effect="non-scaling-stroke" data-role="route" data-sw="1.8"/>
+    <path d="M120 20 L 120 128" fill="none" stroke="var(--color-ink)" stroke-width="1.8" vector-effect="non-scaling-stroke" data-role="route" data-sw="1.8"/>
+    <path d="M62 118 C 88 118, 104 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" vector-effect="non-scaling-stroke" data-role="accent" data-sw="2"/>
+    <path d="M178 118 C 152 118, 136 126, 120 128" fill="none" stroke="var(--color-gold)" stroke-width="2" vector-effect="non-scaling-stroke" data-role="accent" data-sw="2"/>
+    <circle cx="120" cy="128" r="4.5" fill="var(--color-gold)" stroke="none" data-role="accent" data-sw="0"/>
+  </svg>
+</div>
+</div></body></html>

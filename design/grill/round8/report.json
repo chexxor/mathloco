@@ -1,0 +1,3998 @@
+{
+ "measuredAt": "2026-11-02T05:41:12.817Z",
+ "shot": ".design/tmp-round8-mark.png",
+ "type": {
+  "done": true,
+  "kind": "round8",
+  "vw": 1240,
+  "runs": [
+   {
+    "name": "A",
+    "tag": "h1",
+    "role": "h1",
+    "col": "672",
+    "t": "Minneapolis Math Book Club",
+    "fs": "39.8px",
+    "lh": "44px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 21.12,
+    "fits": 32,
+    "lines": 1,
+    "lineChars": [
+     26
+    ],
+    "maxLineChars": 26,
+    "cpl": 26,
+    "widestLinePx": 549.1,
+    "maxWordPx": 234.6,
+    "broken": false
+   },
+   {
+    "name": "A",
+    "tag": "h2",
+    "role": "h2",
+    "col": "672",
+    "t": "Why Join Our Math Book Club?",
+    "fs": "27.7px",
+    "lh": "36px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 14.5,
+    "fits": 46,
+    "lines": 1,
+    "lineChars": [
+     28
+    ],
+    "maxLineChars": 28,
+    "cpl": 28,
+    "widestLinePx": 406,
+    "maxWordPx": 78,
+    "broken": false
+   },
+   {
+    "name": "A",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Join our passionate community of math en",
+    "fs": "19.2px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 8.78,
+    "fits": 77,
+    "lines": 2,
+    "lineChars": [
+     75,
+     14
+    ],
+    "maxLineChars": 75,
+    "cpl": 44.5,
+    "widestLinePx": 658.5,
+    "maxWordPx": 117.9,
+    "broken": false
+   },
+   {
+    "name": "A",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "16px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 7.5,
+    "fits": 90,
+    "lines": 1,
+    "lineChars": [
+     89
+    ],
+    "maxLineChars": 89,
+    "cpl": 89,
+    "widestLinePx": 667.4,
+    "maxWordPx": 114.7,
+    "broken": false
+   },
+   {
+    "name": "A",
+    "tag": "p",
+    "role": "p",
+    "col": "228",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "16px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 7.8,
+    "fits": 29,
+    "lines": 4,
+    "lineChars": [
+     22,
+     28,
+     28,
+     8
+    ],
+    "maxLineChars": 28,
+    "cpl": 21.5,
+    "widestLinePx": 218.4,
+    "maxWordPx": 114.7,
+    "broken": false
+   },
+   {
+    "name": "A",
+    "tag": "p",
+    "role": "focus",
+    "col": "228",
+    "t": "Join our passionate community of math en",
+    "fs": "19.2px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 8.7,
+    "fits": 26,
+    "lines": 5,
+    "lineChars": [
+     19,
+     17,
+     25,
+     24,
+     1
+    ],
+    "maxLineChars": 25,
+    "cpl": 17.2,
+    "widestLinePx": 217.4,
+    "maxWordPx": 117.9,
+    "broken": false
+   },
+   {
+    "name": "B",
+    "tag": "h1",
+    "role": "h1",
+    "col": "672",
+    "t": "Minneapolis Math Book Club",
+    "fs": "43.8px",
+    "lh": "56px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 23.24,
+    "fits": 29,
+    "lines": 1,
+    "lineChars": [
+     26
+    ],
+    "maxLineChars": 26,
+    "cpl": 26,
+    "widestLinePx": 604.3,
+    "maxWordPx": 258.1,
+    "broken": false
+   },
+   {
+    "name": "B",
+    "tag": "h2",
+    "role": "h2",
+    "col": "672",
+    "t": "Why Join Our Math Book Club?",
+    "fs": "30.4px",
+    "lh": "40px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 15.92,
+    "fits": 42,
+    "lines": 1,
+    "lineChars": [
+     28
+    ],
+    "maxLineChars": 28,
+    "cpl": 28,
+    "widestLinePx": 445.7,
+    "maxWordPx": 85.6,
+    "broken": false
+   },
+   {
+    "name": "B",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Join our passionate community of math en",
+    "fs": "21.1px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 9.75,
+    "fits": 69,
+    "lines": 2,
+    "lineChars": [
+     63,
+     26
+    ],
+    "maxLineChars": 63,
+    "cpl": 44.5,
+    "widestLinePx": 614.3,
+    "maxWordPx": 129.6,
+    "broken": false
+   },
+   {
+    "name": "B",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "17.6px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 8.26,
+    "fits": 81,
+    "lines": 2,
+    "lineChars": [
+     80,
+     8
+    ],
+    "maxLineChars": 80,
+    "cpl": 44,
+    "widestLinePx": 661,
+    "maxWordPx": 126.1,
+    "broken": false
+   },
+   {
+    "name": "B",
+    "tag": "p",
+    "role": "p",
+    "col": "228",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "17.6px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 8.01,
+    "fits": 28,
+    "lines": 4,
+    "lineChars": [
+     22,
+     18,
+     22,
+     24
+    ],
+    "maxLineChars": 24,
+    "cpl": 21.5,
+    "widestLinePx": 192.3,
+    "maxWordPx": 126.1,
+    "broken": false
+   },
+   {
+    "name": "B",
+    "tag": "p",
+    "role": "focus",
+    "col": "228",
+    "t": "Join our passionate community of math en",
+    "fs": "21.1px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 9.75,
+    "fits": 23,
+    "lines": 5,
+    "lineChars": [
+     19,
+     17,
+     17,
+     19,
+     14
+    ],
+    "maxLineChars": 19,
+    "cpl": 17.2,
+    "widestLinePx": 185.2,
+    "maxWordPx": 129.6,
+    "broken": false
+   },
+   {
+    "name": "C",
+    "tag": "h1",
+    "role": "h1",
+    "col": "672",
+    "t": "Minneapolis Math Book Club",
+    "fs": "44.8px",
+    "lh": "56px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 23.77,
+    "fits": 28,
+    "lines": 1,
+    "lineChars": [
+     26
+    ],
+    "maxLineChars": 26,
+    "cpl": 26,
+    "widestLinePx": 618.1,
+    "maxWordPx": 264,
+    "broken": false
+   },
+   {
+    "name": "C",
+    "tag": "h2",
+    "role": "h2",
+    "col": "672",
+    "t": "Why Join Our Math Book Club?",
+    "fs": "31.1px",
+    "lh": "40px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 16.28,
+    "fits": 41,
+    "lines": 1,
+    "lineChars": [
+     28
+    ],
+    "maxLineChars": 28,
+    "cpl": 28,
+    "widestLinePx": 455.8,
+    "maxWordPx": 87.6,
+    "broken": false
+   },
+   {
+    "name": "C",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Join our passionate community of math en",
+    "fs": "21.6px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 9.98,
+    "fits": 67,
+    "lines": 2,
+    "lineChars": [
+     63,
+     26
+    ],
+    "maxLineChars": 63,
+    "cpl": 44.5,
+    "widestLinePx": 628.8,
+    "maxWordPx": 132.6,
+    "broken": false
+   },
+   {
+    "name": "C",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "18px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 8.39,
+    "fits": 80,
+    "lines": 2,
+    "lineChars": [
+     72,
+     16
+    ],
+    "maxLineChars": 72,
+    "cpl": 44,
+    "widestLinePx": 604.4,
+    "maxWordPx": 129,
+    "broken": false
+   },
+   {
+    "name": "C",
+    "tag": "p",
+    "role": "p",
+    "col": "228",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "18px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 8.2,
+    "fits": 28,
+    "lines": 4,
+    "lineChars": [
+     22,
+     18,
+     22,
+     24
+    ],
+    "maxLineChars": 24,
+    "cpl": 21.5,
+    "widestLinePx": 196.7,
+    "maxWordPx": 129,
+    "broken": false
+   },
+   {
+    "name": "C",
+    "tag": "p",
+    "role": "focus",
+    "col": "228",
+    "t": "Join our passionate community of math en",
+    "fs": "21.6px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 9.97,
+    "fits": 23,
+    "lines": 5,
+    "lineChars": [
+     19,
+     17,
+     17,
+     19,
+     14
+    ],
+    "maxLineChars": 19,
+    "cpl": 17.2,
+    "widestLinePx": 189.5,
+    "maxWordPx": 132.6,
+    "broken": false
+   },
+   {
+    "name": "D",
+    "tag": "h1",
+    "role": "h1",
+    "col": "672",
+    "t": "Minneapolis Math Book Club",
+    "fs": "51.9px",
+    "lh": "64px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 27.92,
+    "fits": 24,
+    "lines": 2,
+    "lineChars": [
+     21,
+     4
+    ],
+    "maxLineChars": 21,
+    "cpl": 12.5,
+    "widestLinePx": 586.3,
+    "maxWordPx": 306,
+    "broken": false
+   },
+   {
+    "name": "D",
+    "tag": "h2",
+    "role": "h2",
+    "col": "672",
+    "t": "Why Join Our Math Book Club?",
+    "fs": "33.2px",
+    "lh": "40px",
+    "fw": "800",
+    "ff": "Public Sans Variable",
+    "box": 672,
+    "advance": 17.38,
+    "fits": 39,
+    "lines": 1,
+    "lineChars": [
+     28
+    ],
+    "maxLineChars": 28,
+    "cpl": 28,
+    "widestLinePx": 486.6,
+    "maxWordPx": 93.5,
+    "broken": false
+   },
+   {
+    "name": "D",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Join our passionate community of math en",
+    "fs": "21.3px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 9.84,
+    "fits": 68,
+    "lines": 2,
+    "lineChars": [
+     63,
+     26
+    ],
+    "maxLineChars": 63,
+    "cpl": 44.5,
+    "widestLinePx": 620.2,
+    "maxWordPx": 130.8,
+    "broken": false
+   },
+   {
+    "name": "D",
+    "tag": "p",
+    "role": "p",
+    "col": "672",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "17px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 672,
+    "advance": 7.98,
+    "fits": 84,
+    "lines": 2,
+    "lineChars": [
+     80,
+     8
+    ],
+    "maxLineChars": 80,
+    "cpl": 44,
+    "widestLinePx": 638.5,
+    "maxWordPx": 121.8,
+    "broken": false
+   },
+   {
+    "name": "D",
+    "tag": "p",
+    "role": "p",
+    "col": "228",
+    "t": "Learn from experienced mathematicians an",
+    "fs": "17px",
+    "lh": "24px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 7.74,
+    "fits": 29,
+    "lines": 4,
+    "lineChars": [
+     22,
+     18,
+     22,
+     24
+    ],
+    "maxLineChars": 24,
+    "cpl": 21.5,
+    "widestLinePx": 185.8,
+    "maxWordPx": 121.8,
+    "broken": false
+   },
+   {
+    "name": "D",
+    "tag": "p",
+    "role": "focus",
+    "col": "228",
+    "t": "Join our passionate community of math en",
+    "fs": "21.3px",
+    "lh": "28px",
+    "fw": "400",
+    "ff": "PT Serif",
+    "box": 228,
+    "advance": 9.84,
+    "fits": 23,
+    "lines": 5,
+    "lineChars": [
+     19,
+     17,
+     17,
+     19,
+     14
+    ],
+    "maxLineChars": 19,
+    "cpl": 17.2,
+    "widestLinePx": 187,
+    "maxWordPx": 130.8,
+    "broken": false
+   }
+  ],
+  "controls": [
+   {
+    "cand": "A",
+    "kind": "primary",
+    "h": 48,
+    "fs": "13.3px",
+    "lh": "16px",
+    "pad": "16px 32px",
+    "radius": "6px",
+    "shadow": "none"
+   },
+   {
+    "cand": "A",
+    "kind": "secondary",
+    "h": 40,
+    "fs": "13.3px",
+    "lh": "16px",
+    "pad": "12px 32px",
+    "radius": "6px",
+    "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset"
+   },
+   {
+    "cand": "B",
+    "kind": "primary",
+    "h": 48,
+    "fs": "13.3px",
+    "lh": "16px",
+    "pad": "16px 32px",
+    "radius": "6px",
+    "shadow": "none"
+   },
+   {
+    "cand": "B",
+    "kind": "secondary",
+    "h": 40,
+    "fs": "13.3px",
+    "lh": "16px",
+    "pad": "12px 32px",
+    "radius": "6px",
+    "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset"
+   },
+   {
+    "cand": "C",
+    "kind": "primary",
+    "h": 52,
+    "fs": "15px",
+    "lh": "20px",
+    "pad": "16px 32px",
+    "radius": "6px",
+    "shadow": "none"
+   },
+   {
+    "cand": "C",
+    "kind": "secondary",
+    "h": 44,
+    "fs": "15px",
+    "lh": "20px",
+    "pad": "12px 32px",
+    "radius": "6px",
+    "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset"
+   },
+   {
+    "cand": "D",
+    "kind": "primary",
+    "h": 52,
+    "fs": "15px",
+    "lh": "20px",
+    "pad": "16px 32px",
+    "radius": "6px",
+    "shadow": "none"
+   },
+   {
+    "cand": "D",
+    "kind": "secondary",
+    "h": 44,
+    "fs": "15px",
+    "lh": "20px",
+    "pad": "12px 32px",
+    "radius": "6px",
+    "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset"
+   }
+  ],
+  "notices": [
+   {
+    "cand": "A",
+    "h": 148,
+    "w": 346,
+    "minH": "80px",
+    "bodyLines": 3,
+    "bodyMaxCh": 39,
+    "bodyFs": "16px"
+   },
+   {
+    "cand": "B",
+    "h": 148,
+    "w": 346,
+    "minH": "80px",
+    "bodyLines": 3,
+    "bodyMaxCh": 35,
+    "bodyFs": "17.6px"
+   },
+   {
+    "cand": "C",
+    "h": 180,
+    "w": 346,
+    "minH": "80px",
+    "bodyLines": 3,
+    "bodyMaxCh": 35,
+    "bodyFs": "18px"
+   },
+   {
+    "cand": "D",
+    "h": 152,
+    "w": 346,
+    "minH": "80px",
+    "bodyLines": 3,
+    "bodyMaxCh": 39,
+    "bodyFs": "17px"
+   }
+  ],
+  "caps": [
+   {
+    "cand": "A",
+    "step": "display-1",
+    "boxW": "276",
+    "box": 276,
+    "lines": 2,
+    "maxWordPx": 195.7,
+    "fits": true,
+    "maxLineChars": 14,
+    "clipped": false
+   },
+   {
+    "cand": "A",
+    "step": "display-1",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 195.7,
+    "fits": true,
+    "maxLineChars": 16,
+    "clipped": false
+   },
+   {
+    "cand": "A",
+    "step": "display-2",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 234.6,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "A",
+    "step": "display-2",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 234.6,
+    "fits": true,
+    "maxLineChars": 16,
+    "clipped": false
+   },
+   {
+    "cand": "A",
+    "step": "display-3",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 281.7,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "A",
+    "step": "display-3",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 281.7,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "A",
+    "step": "display-4",
+    "boxW": "276",
+    "box": 276,
+    "lines": 4,
+    "maxWordPx": 337.7,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "A",
+    "step": "display-4",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 337.7,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "B",
+    "step": "display-1",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 215.1,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "B",
+    "step": "display-1",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 215.1,
+    "fits": true,
+    "maxLineChars": 16,
+    "clipped": false
+   },
+   {
+    "cand": "B",
+    "step": "display-2",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 258.1,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "B",
+    "step": "display-2",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 258.1,
+    "fits": true,
+    "maxLineChars": 14,
+    "clipped": false
+   },
+   {
+    "cand": "B",
+    "step": "display-3",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 310,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "B",
+    "step": "display-3",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 310,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "B",
+    "step": "display-4",
+    "boxW": "276",
+    "box": 276,
+    "lines": 4,
+    "maxWordPx": 371.9,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "B",
+    "step": "display-4",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 371.9,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "C",
+    "step": "display-1",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 219.9,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "C",
+    "step": "display-1",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 219.9,
+    "fits": true,
+    "maxLineChars": 16,
+    "clipped": false
+   },
+   {
+    "cand": "C",
+    "step": "display-2",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 264,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "C",
+    "step": "display-2",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 264,
+    "fits": true,
+    "maxLineChars": 14,
+    "clipped": false
+   },
+   {
+    "cand": "C",
+    "step": "display-3",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 316.5,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "C",
+    "step": "display-3",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 316.5,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "C",
+    "step": "display-4",
+    "boxW": "276",
+    "box": 276,
+    "lines": 4,
+    "maxWordPx": 380.2,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "C",
+    "step": "display-4",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 380.2,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "D",
+    "step": "display-1",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 244.6,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "D",
+    "step": "display-1",
+    "boxW": "346",
+    "box": 346,
+    "lines": 2,
+    "maxWordPx": 244.6,
+    "fits": true,
+    "maxLineChars": 14,
+    "clipped": false
+   },
+   {
+    "cand": "D",
+    "step": "display-2",
+    "boxW": "276",
+    "box": 276,
+    "lines": 3,
+    "maxWordPx": 306,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "D",
+    "step": "display-2",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 306,
+    "fits": true,
+    "maxLineChars": 11,
+    "clipped": false
+   },
+   {
+    "cand": "D",
+    "step": "display-3",
+    "boxW": "276",
+    "box": 276,
+    "lines": 4,
+    "maxWordPx": 381.9,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "D",
+    "step": "display-3",
+    "boxW": "346",
+    "box": 346,
+    "lines": 3,
+    "maxWordPx": 381.9,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "D",
+    "step": "display-4",
+    "boxW": "276",
+    "box": 276,
+    "lines": 4,
+    "maxWordPx": 478,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   },
+   {
+    "cand": "D",
+    "step": "display-4",
+    "boxW": "346",
+    "box": 346,
+    "lines": 4,
+    "maxWordPx": 478,
+    "fits": false,
+    "maxLineChars": 11,
+    "clipped": true
+   }
+  ],
+  "marks": [
+   {
+    "name": "preview-M-A-276",
+    "set": "M-A",
+    "x": 16,
+    "y": 558,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-A",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 0.9,
+      "swDevice": 1.03,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-A-372",
+    "set": "M-A",
+    "x": 294.9,
+    "y": 498,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-A",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 0.9,
+      "swDevice": 1.4,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-B-276",
+    "set": "M-B",
+    "x": 16,
+    "y": 839.5,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-B",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.3,
+      "swDevice": 1.49,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-B-372",
+    "set": "M-B",
+    "x": 294.9,
+    "y": 779.5,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-B",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.3,
+      "swDevice": 2.02,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-C-276",
+    "set": "M-C",
+    "x": 16,
+    "y": 1121,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-C",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.13,
+      "swDevice": 1.3,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.01,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.01,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.01,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2.3,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2.3,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-C-372",
+    "set": "M-C",
+    "x": 294.9,
+    "y": 1061,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-C",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.13,
+      "swDevice": 1.75,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.71,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.71,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.71,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 3.1,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 3.1,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-D-276",
+    "set": "M-D",
+    "x": 16,
+    "y": 1402.5,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-D",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.4,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "preview-M-D-372",
+    "set": "M-D",
+    "x": 294.9,
+    "y": 1342.5,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-D",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.4,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   }
+  ],
+  "errors": [],
+  "facesLoaded": true,
+  "fonts": [
+   "Public Sans Variable 100 900 normal loaded",
+   "PT Serif 400 normal loaded",
+   "PT Serif 700 normal loaded"
+  ]
+ },
+ "mark": {
+  "done": true,
+  "kind": "round8",
+  "vw": 1240,
+  "runs": [],
+  "controls": [],
+  "notices": [],
+  "caps": [],
+  "marks": [
+   {
+    "name": "M-A-276",
+    "set": "M-A",
+    "x": 44,
+    "y": 94,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-A",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 0.9,
+      "swDevice": 1.03,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-A-372",
+    "set": "M-A",
+    "x": 44,
+    "y": 274.5,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-A",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 0.9,
+      "swDevice": 1.4,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-B-276",
+    "set": "M-B",
+    "x": 44,
+    "y": 561,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-B",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.3,
+      "swDevice": 1.49,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.61,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 1.84,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-B-372",
+    "set": "M-B",
+    "x": 44,
+    "y": 741.5,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-B",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.3,
+      "swDevice": 2.02,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 2.17,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 1.6,
+      "swDevice": 2.48,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-C-276",
+    "set": "M-C",
+    "x": 44,
+    "y": 1028,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-C",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.13,
+      "swDevice": 1.3,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.01,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.01,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.01,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2.3,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2.3,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-C-372",
+    "set": "M-C",
+    "x": 44,
+    "y": 1208.5,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-C",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.13,
+      "swDevice": 1.75,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.71,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.71,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.75,
+      "swDevice": 2.71,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 3.1,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 3.1,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-D-276",
+    "set": "M-D",
+    "x": 44,
+    "y": 1495,
+    "w": 276,
+    "h": 172.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.15,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-D",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.4,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.15,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   },
+   {
+    "name": "M-D-372",
+    "set": "M-D",
+    "x": 44,
+    "y": 1675.5,
+    "w": 372,
+    "h": 232.5,
+    "vbW": 240,
+    "vbH": 150,
+    "scale": 1.55,
+    "ratio": 0.625,
+    "wantRatio": 0.625,
+    "role": "img",
+    "label": "the club's mark, M-D",
+    "hidden": false,
+    "cls": "",
+    "count": 7,
+    "shapes": [
+     {
+      "tag": "circle",
+      "role": "sphere",
+      "stroke": "oklch(0.655 0.03 152)",
+      "fill": "none",
+      "sw": 1.4,
+      "swDevice": 1.4,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "route",
+      "stroke": "oklch(0.32 0.045 152)",
+      "fill": "none",
+      "sw": 1.8,
+      "swDevice": 1.8,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "path",
+      "role": "accent",
+      "stroke": "oklch(0.55 0.12 62)",
+      "fill": "none",
+      "sw": 2,
+      "swDevice": 2,
+      "nonScaling": true,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     },
+     {
+      "tag": "circle",
+      "role": "accent",
+      "stroke": "none",
+      "fill": "oklch(0.55 0.12 62)",
+      "sw": 1,
+      "swDevice": 1.55,
+      "nonScaling": false,
+      "strokeContrast": null,
+      "fillContrast": null,
+      "cls": ""
+     }
+    ]
+   }
+  ],
+  "errors": [],
+  "facesLoaded": true,
+  "fonts": [
+   "Public Sans Variable 100 900 normal loaded",
+   "PT Serif 400 normal loaded",
+   "PT Serif 700 normal loaded"
+  ]
+ },
+ "coverage": [
+  {
+   "name": "M-A-276",
+   "set": "M-A",
+   "box": {
+    "x": 44,
+    "y": 94,
+    "w": 276,
+    "h": 172.5,
+    "scale": 1.15
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 1969,
+   "boxPixels": 48198,
+   "inkPct": 4.09,
+   "at15": 1597,
+   "at30": 890,
+   "strongest": {
+    "c": [
+     35,
+     60,
+     42
+    ],
+    "contrast": 11.51
+   },
+   "clusters": [
+    {
+     "n": 486,
+     "c": [
+      214,
+      217,
+      208
+     ],
+     "contrast": 1.37
+    },
+    {
+     "n": 450,
+     "c": [
+      156,
+      170,
+      158
+     ],
+     "contrast": 2.33
+    },
+    {
+     "n": 352,
+     "c": [
+      72,
+      91,
+      77
+     ],
+     "contrast": 7
+    },
+    {
+     "n": 232,
+     "c": [
+      164,
+      99,
+      24
+     ],
+     "contrast": 4.6
+    },
+    {
+     "n": 192,
+     "c": [
+      35,
+      60,
+      42
+     ],
+     "contrast": 11.5
+    },
+    {
+     "n": 84,
+     "c": [
+      191,
+      145,
+      92
+     ],
+     "contrast": 2.71
+    },
+    {
+     "n": 78,
+     "c": [
+      119,
+      134,
+      121
+     ],
+     "contrast": 3.68
+    },
+    {
+     "n": 38,
+     "c": [
+      209,
+      192,
+      168
+     ],
+     "contrast": 1.7
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 0.9,
+     "swDevice": 1.03,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 1.61,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 1.61,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 1.61,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 1.84,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 1.84,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.15,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-A-372",
+   "set": "M-A",
+   "box": {
+    "x": 44,
+    "y": 274.5,
+    "w": 372,
+    "h": 232.5,
+    "scale": 1.55
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 3525,
+   "boxPixels": 86909,
+   "inkPct": 4.06,
+   "at15": 2722,
+   "at30": 1722,
+   "strongest": {
+    "c": [
+     34,
+     59,
+     41
+    ],
+    "contrast": 11.74
+   },
+   "clusters": [
+    {
+     "n": 877,
+     "c": [
+      224,
+      225,
+      218
+     ],
+     "contrast": 1.26
+    },
+    {
+     "n": 795,
+     "c": [
+      34,
+      59,
+      41
+     ],
+     "contrast": 11.67
+    },
+    {
+     "n": 674,
+     "c": [
+      154,
+      167,
+      155
+     ],
+     "contrast": 2.41
+    },
+    {
+     "n": 442,
+     "c": [
+      163,
+      97,
+      21
+     ],
+     "contrast": 4.71
+    },
+    {
+     "n": 236,
+     "c": [
+      131,
+      147,
+      134
+     ],
+     "contrast": 3.11
+    },
+    {
+     "n": 175,
+     "c": [
+      200,
+      199,
+      184
+     ],
+     "contrast": 1.64
+    },
+    {
+     "n": 150,
+     "c": [
+      81,
+      100,
+      85
+     ],
+     "contrast": 6.1
+    },
+    {
+     "n": 110,
+     "c": [
+      188,
+      140,
+      85
+     ],
+     "contrast": 2.87
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 0.9,
+     "swDevice": 1.4,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 2.17,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 2.17,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 2.17,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 2.48,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 2.48,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.55,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-B-276",
+   "set": "M-B",
+   "box": {
+    "x": 44,
+    "y": 561,
+    "w": 276,
+    "h": 172.5,
+    "scale": 1.15
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 2182,
+   "boxPixels": 48198,
+   "inkPct": 4.53,
+   "at15": 1791,
+   "at30": 1070,
+   "strongest": {
+    "c": [
+     35,
+     60,
+     42
+    ],
+    "contrast": 11.5
+   },
+   "clusters": [
+    {
+     "n": 483,
+     "c": [
+      138,
+      154,
+      141
+     ],
+     "contrast": 2.84
+    },
+    {
+     "n": 409,
+     "c": [
+      185,
+      193,
+      183
+     ],
+     "contrast": 1.77
+    },
+    {
+     "n": 353,
+     "c": [
+      72,
+      92,
+      77
+     ],
+     "contrast": 6.91
+    },
+    {
+     "n": 335,
+     "c": [
+      226,
+      226,
+      219
+     ],
+     "contrast": 1.25
+    },
+    {
+     "n": 215,
+     "c": [
+      163,
+      97,
+      22
+     ],
+     "contrast": 4.71
+    },
+    {
+     "n": 193,
+     "c": [
+      35,
+      60,
+      42
+     ],
+     "contrast": 11.5
+    },
+    {
+     "n": 79,
+     "c": [
+      184,
+      134,
+      77
+     ],
+     "contrast": 3.07
+    },
+    {
+     "n": 60,
+     "c": [
+      209,
+      176,
+      136
+     ],
+     "contrast": 1.96
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 1.3,
+     "swDevice": 1.49,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 1.61,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 1.61,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 1.61,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 1.84,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 1.84,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.15,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-B-372",
+   "set": "M-B",
+   "box": {
+    "x": 44,
+    "y": 741.5,
+    "w": 372,
+    "h": 232.5,
+    "scale": 1.55
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 3837,
+   "boxPixels": 86909,
+   "inkPct": 4.41,
+   "at15": 3046,
+   "at30": 2038,
+   "strongest": {
+    "c": [
+     34,
+     59,
+     41
+    ],
+    "contrast": 11.74
+   },
+   "clusters": [
+    {
+     "n": 935,
+     "c": [
+      146,
+      161,
+      149
+     ],
+     "contrast": 2.6
+    },
+    {
+     "n": 824,
+     "c": [
+      225,
+      226,
+      219
+     ],
+     "contrast": 1.25
+    },
+    {
+     "n": 795,
+     "c": [
+      34,
+      59,
+      41
+     ],
+     "contrast": 11.67
+    },
+    {
+     "n": 442,
+     "c": [
+      163,
+      97,
+      21
+     ],
+     "contrast": 4.71
+    },
+    {
+     "n": 265,
+     "c": [
+      194,
+      196,
+      184
+     ],
+     "contrast": 1.7
+    },
+    {
+     "n": 246,
+     "c": [
+      130,
+      147,
+      133
+     ],
+     "contrast": 3.12
+    },
+    {
+     "n": 146,
+     "c": [
+      80,
+      99,
+      84
+     ],
+     "contrast": 6.19
+    },
+    {
+     "n": 96,
+     "c": [
+      186,
+      137,
+      80
+     ],
+     "contrast": 2.97
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 1.3,
+     "swDevice": 2.02,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 2.17,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 2.17,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.4,
+     "swDevice": 2.17,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 2.48,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 1.6,
+     "swDevice": 2.48,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.55,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-C-276",
+   "set": "M-C",
+   "box": {
+    "x": 44,
+    "y": 1028,
+    "w": 276,
+    "h": 172.5,
+    "scale": 1.15
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 2234,
+   "boxPixels": 48198,
+   "inkPct": 4.64,
+   "at15": 1864,
+   "at30": 1129,
+   "strongest": {
+    "c": [
+     34,
+     59,
+     41
+    ],
+    "contrast": 11.69
+   },
+   "clusters": [
+    {
+     "n": 565,
+     "c": [
+      34,
+      59,
+      41
+     ],
+     "contrast": 11.67
+    },
+    {
+     "n": 417,
+     "c": [
+      139,
+      155,
+      142
+     ],
+     "contrast": 2.81
+    },
+    {
+     "n": 372,
+     "c": [
+      183,
+      191,
+      182
+     ],
+     "contrast": 1.81
+    },
+    {
+     "n": 329,
+     "c": [
+      225,
+      225,
+      217
+     ],
+     "contrast": 1.26
+    },
+    {
+     "n": 277,
+     "c": [
+      163,
+      97,
+      20
+     ],
+     "contrast": 4.71
+    },
+    {
+     "n": 99,
+     "c": [
+      85,
+      104,
+      89
+     ],
+     "contrast": 5.74
+    },
+    {
+     "n": 65,
+     "c": [
+      184,
+      135,
+      77
+     ],
+     "contrast": 3.05
+    },
+    {
+     "n": 63,
+     "c": [
+      217,
+      190,
+      158
+     ],
+     "contrast": 1.71
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 1.13,
+     "swDevice": 1.3,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.75,
+     "swDevice": 2.01,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.75,
+     "swDevice": 2.01,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.75,
+     "swDevice": 2.01,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 2.3,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 2.3,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.15,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-C-372",
+   "set": "M-C",
+   "box": {
+    "x": 44,
+    "y": 1208.5,
+    "w": 372,
+    "h": 232.5,
+    "scale": 1.55
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 3975,
+   "boxPixels": 86909,
+   "inkPct": 4.57,
+   "at15": 3459,
+   "at30": 2185,
+   "strongest": {
+    "c": [
+     34,
+     58,
+     41
+    ],
+    "contrast": 11.76
+   },
+   "clusters": [
+    {
+     "n": 973,
+     "c": [
+      34,
+      58,
+      41
+     ],
+     "contrast": 11.81
+    },
+    {
+     "n": 781,
+     "c": [
+      169,
+      179,
+      168
+     ],
+     "contrast": 2.08
+    },
+    {
+     "n": 677,
+     "c": [
+      216,
+      218,
+      210
+     ],
+     "contrast": 1.35
+    },
+    {
+     "n": 592,
+     "c": [
+      133,
+      150,
+      137
+     ],
+     "contrast": 3
+    },
+    {
+     "n": 550,
+     "c": [
+      163,
+      96,
+      20
+     ],
+     "contrast": 4.75
+    },
+    {
+     "n": 170,
+     "c": [
+      81,
+      100,
+      85
+     ],
+     "contrast": 6.1
+    },
+    {
+     "n": 98,
+     "c": [
+      196,
+      155,
+      106
+     ],
+     "contrast": 2.44
+    },
+    {
+     "n": 63,
+     "c": [
+      217,
+      190,
+      157
+     ],
+     "contrast": 1.71
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 1.13,
+     "swDevice": 1.75,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.75,
+     "swDevice": 2.71,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.75,
+     "swDevice": 2.71,
+     "nonScaling": false
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.75,
+     "swDevice": 2.71,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 3.1,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 3.1,
+     "nonScaling": false
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.55,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-D-276",
+   "set": "M-D",
+   "box": {
+    "x": 44,
+    "y": 1495,
+    "w": 276,
+    "h": 172.5,
+    "scale": 1.15
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 2215,
+   "boxPixels": 48198,
+   "inkPct": 4.6,
+   "at15": 1807,
+   "at30": 1085,
+   "strongest": {
+    "c": [
+     46,
+     69,
+     52
+    ],
+    "contrast": 9.95
+   },
+   "clusters": [
+    {
+     "n": 539,
+     "c": [
+      46,
+      69,
+      52
+     ],
+     "contrast": 9.99
+    },
+    {
+     "n": 460,
+     "c": [
+      140,
+      156,
+      143
+     ],
+     "contrast": 2.77
+    },
+    {
+     "n": 367,
+     "c": [
+      183,
+      191,
+      182
+     ],
+     "contrast": 1.81
+    },
+    {
+     "n": 365,
+     "c": [
+      226,
+      226,
+      218
+     ],
+     "contrast": 1.25
+    },
+    {
+     "n": 235,
+     "c": [
+      162,
+      96,
+      20
+     ],
+     "contrast": 4.77
+    },
+    {
+     "n": 83,
+     "c": [
+      90,
+      108,
+      94
+     ],
+     "contrast": 5.38
+    },
+    {
+     "n": 73,
+     "c": [
+      178,
+      126,
+      64
+     ],
+     "contrast": 3.38
+    },
+    {
+     "n": 61,
+     "c": [
+      209,
+      176,
+      138
+     ],
+     "contrast": 1.96
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 1.4,
+     "swDevice": 1.4,
+     "nonScaling": true
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.8,
+     "swDevice": 1.8,
+     "nonScaling": true
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.8,
+     "swDevice": 1.8,
+     "nonScaling": true
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.8,
+     "swDevice": 1.8,
+     "nonScaling": true
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 2,
+     "nonScaling": true
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 2,
+     "nonScaling": true
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.15,
+     "nonScaling": false
+    }
+   ]
+  },
+  {
+   "name": "M-D-372",
+   "set": "M-D",
+   "box": {
+    "x": 44,
+    "y": 1675.5,
+    "w": 372,
+    "h": 232.5,
+    "scale": 1.55
+   },
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "inkPixels": 3070,
+   "boxPixels": 86909,
+   "inkPct": 3.53,
+   "at15": 2575,
+   "at30": 1559,
+   "strongest": {
+    "c": [
+     45,
+     69,
+     51
+    ],
+    "contrast": 10.06
+   },
+   "clusters": [
+    {
+     "n": 752,
+     "c": [
+      45,
+      69,
+      51
+     ],
+     "contrast": 10.02
+    },
+    {
+     "n": 735,
+     "c": [
+      146,
+      161,
+      148
+     ],
+     "contrast": 2.6
+    },
+    {
+     "n": 686,
+     "c": [
+      210,
+      213,
+      204
+     ],
+     "contrast": 1.43
+    },
+    {
+     "n": 305,
+     "c": [
+      162,
+      95,
+      18
+     ],
+     "contrast": 4.82
+    },
+    {
+     "n": 117,
+     "c": [
+      175,
+      118,
+      51
+     ],
+     "contrast": 3.69
+    },
+    {
+     "n": 100,
+     "c": [
+      124,
+      139,
+      125
+     ],
+     "contrast": 3.45
+    },
+    {
+     "n": 96,
+     "c": [
+      200,
+      162,
+      118
+     ],
+     "contrast": 2.27
+    },
+    {
+     "n": 84,
+     "c": [
+      87,
+      105,
+      91
+     ],
+     "contrast": 5.63
+    }
+   ],
+   "shapes": [
+    {
+     "role": "sphere",
+     "tag": "circle",
+     "sw": 1.4,
+     "swDevice": 1.4,
+     "nonScaling": true
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.8,
+     "swDevice": 1.8,
+     "nonScaling": true
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.8,
+     "swDevice": 1.8,
+     "nonScaling": true
+    },
+    {
+     "role": "route",
+     "tag": "path",
+     "sw": 1.8,
+     "swDevice": 1.8,
+     "nonScaling": true
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 2,
+     "nonScaling": true
+    },
+    {
+     "role": "accent",
+     "tag": "path",
+     "sw": 2,
+     "swDevice": 2,
+     "nonScaling": true
+    },
+    {
+     "role": "accent",
+     "tag": "circle",
+     "sw": 1,
+     "swDevice": 1.55,
+     "nonScaling": false
+    }
+   ]
+  }
+ ]
+}

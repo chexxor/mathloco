@@ -44,7 +44,9 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/list-writes.mjs` | every live type/space/shape class write, counted — pick a batch by coverage | no |
 | `node design/grill/dist-measure.mjs dist/client <page> <measure.js> <width…>` | measure one built page at given widths (the harness behind `check:render`) | yes |
 | `node design/grill/contrast-oracle.mjs <cfg.json>` | the renderer-side colour oracle over a config (`cd design/grill` first — it resolves config paths against its own directory) | yes |
-| `node design/mark-pixels.mjs <shot.png> <report.json>` | what a drawn mark actually painted inside its box, by colour cluster | no |
+| `node design/mark-pixels.mjs <shot.png> <report.json>` | what a drawn mark actually painted inside its box, by colour cluster, how many pixels clear the 1.5 and 3.0 bars, and what share of the ink is visible (`--json` for a machine-readable record) | no |
+| `npm run lines:measure` / `:dist` | characters per line, measured off the built page's own line boxes at the shipped widths (`--no-build` for the dist that exists). A diagnostic, not a gate: it exits 0 whatever it finds, it is browser-only so it is not in `verify` | yes |
+| `node design/round8.mjs [--crop]` | one design round in a command: generate the specimens, then measure characters-per-line per ramp, control heights, notice height, the display cap against the longest club name, and each mark candidate's painted coverage; saves `design/grill/round8/report.json` (`--crop` writes `zoom`-scaled PNG crops of each mark for eyeballing) | yes |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
 
 Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
@@ -69,6 +71,11 @@ them out of `verify` is needing Firefox in the runner, which is an operator call
   `round-4.html`, whose mark geometry `src/lib/brand-mark.mjs` copies: that specimen is where the club
   mark was ratified, so it is the mark's provenance. `grill/*/report.txt` and `grill/*/*.json` are what
   those specimens measured.
+- `grill/round-8.html` (the type ramp, and the mark's line weight side by side) and
+  `grill/round-8-mark.html` (the same marks laid out for `mark-pixels.mjs`) are **generated** — by
+  `grill/round8-build.mjs` from `grill/round8-ramps.mjs`, the `@theme` block as shipped, and the sentences
+  the built page actually rendered. Edit the builder or the candidate table, never the HTML; the specimen
+  embeds the last measured numbers, so re-run the builder after `node design/round8.mjs` to refresh them.
 - `grill/contrast/cfg-*.json` + `grill/contrast/out/` — the colour oracle's configs and outputs, including
   `cfg-ratify` (the palette as ratified).
 - `fonts/` — face-selection and ramp evidence: `metrics.json`, `bytes.json`, `display-fit*.json`,
