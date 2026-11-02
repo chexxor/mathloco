@@ -108,7 +108,19 @@ const run = (label, css) => {
 };
 
 const rows = [];
-for (const label of ['shipped', ...variants.map((v) => v.label)]) {
+// `RHYTHM_VARIANTS=slots,edges npm run check:rhythm` measures a subset. Six variants x two widths is ~6 minutes
+// of Firefox, and most questions are about one option, so the cheap run should be possible. It is NOT a partial
+// write to the durable table: a subset run writes its own report file, because a table missing three rows and
+// labelled like the full one is how a future session quotes an incomplete comparison.
+const only = (process.env.RHYTHM_VARIANTS || '').split(',').map((s) => s.trim()).filter(Boolean);
+const unknown = only.filter((l) => !variants.some((v) => v.label === l));
+if (unknown.length) {
+  console.error(`RHYTHM_VARIANTS: no such option(s): ${unknown.join(', ')}. Known: ${variants.map((v) => v.label).join(', ')}`);
+  process.exit(1);
+}
+const subset = only.length ? variants.filter((v) => only.includes(v.label)).map((v) => v.label) : null;
+if (subset) console.log(`measuring a subset: shipped + ${subset.join(', ')} (of ${variants.length} options)`);
+for (const label of ['shipped', ...(subset ?? variants.map((v) => v.label))]) {
   const have = Object.fromEntries(WIDTHS.map((w) => [String(w), load(label, '/', w)]));
   if (WIDTHS.every((w) => have[String(w)])) {
     rows.push({ label, what: label === 'shipped' ? 'as shipped' : variants.find((v) => v.label === label).what, by: have });
@@ -145,6 +157,10 @@ for (const w of WIDTHS) {
 }
 for (const r of rows) console.log(`\n  ${r.label}: ${r.what}`);
 
-writeFileSync('design/rhythm/report.json', `${JSON.stringify({ measuredAt: new Date().toISOString(), widths: WIDTHS, rows }, null, 1)}\n`);
-console.log('\nwrote design/rhythm/report.json — re-run npm run check:rhythm after any layout change.');
+// A subset run is a question, not evidence: its report goes to the gitignored tmp dir, so the only file in
+// design/rhythm/ stays the full table that `DESIGN.md` cites.
+const reportPath = subset ? `.design/tmp-rhythm/report-${subset.join('+')}.json` : 'design/rhythm/report.json';
+writeFileSync(reportPath, `${JSON.stringify({ measuredAt: new Date().toISOString(), widths: WIDTHS, subset, rows }, null, 1)}\n`);
+console.log(`\nwrote ${reportPath} — re-run npm run check:rhythm after any layout change.`);
+if (subset) console.log(`  subset run: ${rows.length} of ${variants.length + 1} rows, written to a gitignored path — design/rhythm/report.json (the table DESIGN.md cites) is untouched.`);
 console.log('Nothing here changed the site: each option was measured in a copy of dist/client.');
