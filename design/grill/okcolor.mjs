@@ -40,6 +40,15 @@ export function oklchFromRgb(r, g, b) {
   return { L, C, h };
 }
 
+// painted pixel (0..255) -> OKLab [L, a, b] in the SAME units as labTriple() above (L in 0..1), which is the
+// scale the 0.05 same-colour bar is stated in. Per-pixel work (a whole page's worth) wants the cartesian form:
+// no atan2, no polar round-trip. The selftest asserts this agrees with dist() on the token pair.
+export function oklabBytes(r, g, b) {
+  const c = oklchFromRgb(r, g, b), h = (c.h * Math.PI) / 180;
+  return [c.L, c.C * Math.cos(h), c.C * Math.sin(h)];
+}
+export const distLab = (x, y) => Math.hypot(x[0] - y[0], x[1] - y[1], x[2] - y[2]);
+
 const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
 
 // oklch triple -> {r,g,b} in 0..1 (and 0..255 on request), with the out-of-gamut flag set rather than hidden.
@@ -169,6 +178,13 @@ if (process.argv.includes('--selftest')) {
     ['gold distance to Target red (D88: 0.135)', dist(G, '#CC0000'), 0.135, 0.005],
     ['ink distance to Amazon navy (round 7: 0.063)', dist(I, '#232F3E'), 0.063, 0.005],
     ['gold to path-discord hue gap (round 3b)', hueGap(G, PD), 27, 1],
+    // the pixel-side helper must be the same metric as the token-side one, or a census and a contrast table
+    // are measuring different things while both calling it 0.05
+    // The tolerance is wider than the others on purpose: a rendered sRGB byte pair is not the authored
+    // triple (gamut mapping + 8-bit quantisation), which is the round-9 lesson, so the two metrics are
+    // allowed to differ by ~0.003 while still calling the same pair "the same colour" at 0.05.
+    ['paper<->ink pixel distance == token distance',
+     distLab(oklabBytes(...tripleToBytes(P)), oklabBytes(...tripleToBytes(I))), dist(P, I), 0.005],
   ];
   let bad = 0;
   for (const [what, got, want, tol] of rows) {

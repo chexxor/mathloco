@@ -25,6 +25,7 @@
     "lines:measure:dist": "node design/line-length.mjs --no-build",
     "round8": "node design/round8.mjs",
     "round9": "node design/round9.mjs",
+    "round10": "node design/round10.mjs",
     "check:render:dist": "node design/render-gate.mjs --no-build",
     "check:mark": "node design/mark-check.mjs",
     "check:color": "node design/color-survey.mjs",

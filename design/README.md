@@ -51,7 +51,9 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `npm run lines:measure` / `:dist` | characters per line, measured off the built page's own line boxes at the shipped widths (`--no-build` for the dist that exists). A diagnostic, not a gate: it exits 0 whatever it finds, it is browser-only so it is not in `verify` | yes |
 | `node design/round8.mjs [--crop]` | one design round in a command: generate the specimens, then measure characters-per-line per ramp, control heights, notice height, the display cap against the longest club name, and each mark candidate's painted coverage; saves `design/grill/round8/report.json` (`--crop` writes `zoom`-scaled PNG crops of each mark for eyeballing) | yes |
 | `npm run round9` (`node design/round9.mjs`) | the colour round in one command: build the three specimens, measure each panel's PAINTED pixels (chroma ≥ 0.04 as `check:color` counts it, plus ≥ 0.08 as the level a reader would call colour, and the 0.01–0.04 "faint" band where the shipped tints live), resolve every planted contrast pair off the bytes the browser paints, run `mark-pixels.mjs` over the four mark colourings on both grounds, and check every specimen token against its spec; saves `design/grill/round9/report.json` and re-embeds the numbers into `round-9.html`. Exits 1 if a planted pair misses its bar — a specimen option that breaks a rule is supposed to be loud | yes |
-| `node design/grill/okcolor.mjs --selftest` | the OKLab/OKLCH/contrast/hue-window/brand-distance maths one shared module, asserted against the numbers `DESIGN.md` and `.notes/DECISIONS.md` cite (paper–ink 12.02, gold 4.82, D88's 0.135, the 0.05 same-colour bar). `color-survey.mjs`, `round9-palette.mjs` and `round9.mjs` all import it, so the predictor and the survey cannot drift apart | no |
+| `npm run check:space` (`node design/whitespace-survey.mjs`) | how much of a built page paints anything, and how much of the vertical journey is empty: painted pixel share (delta-OKLab ≥ 0.05 against each pixel's own ground), empty runs ≥ 60px with the biggest ones, per-surface box + painted share + characters of copy, every drawing/photo-sized box at its COMPUTED size, the declared padding and inter-surface margin, and the document height before/after images load. Exits 0 whatever it finds — it is the before-number for a layout/content round. Records land in `.design/tmp-whitespace/` | yes |
+| `npm run round10` (`node design/round10.mjs`) | the photographs round in one command: build `grill/round-10-photos.html` from the `check:space` reports (slot boxes and page diagrams drawn at a stated scale), then measure the DRAWING back in Firefox and exit 1 if any box is more than 1px off the number printed in its own `data-w`/`data-h`. Adds no new site measurement — its risk is the diagram, so the diagram is what gets gated; saves `design/grill/round10/report.json` and re-embeds the check in the page | yes |
+| `node design/grill/okcolor.mjs --selftest` | the OKLab/OKLCH/contrast/hue-window/brand-distance maths one shared module, asserted against the numbers `DESIGN.md` and `.notes/DECISIONS.md` cite (paper–ink 12.02, gold 4.82, D88's 0.135, the 0.05 same-colour bar) **and** against the pixel-space form of the same distance (`oklabBytes`/`distLab`, so the survey's 0.05 pixel bar and the token drift bar are the same measurement). `color-survey.mjs`, `whitespace-survey.mjs`, `round9-palette.mjs`, `round9.mjs` and `round10-build.mjs` all import it, so a predictor and a survey cannot drift apart | no |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
 
 Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
@@ -61,7 +63,7 @@ posted cleanly; one serialized run of 9 needed a retry, which is why a cell gets
 harness's known flake is a firefox that starts and never posts. The browser gates are cheap; what keeps
 them out of `verify` is needing Firefox in the runner, which is an operator call (`.notes/NEXT.md`).
 
-## the harness contract — three rules every probe here has to keep
+## the harness contract — four rules every probe here has to keep
 
 1. **Measure the settled page.** `grill/render-measure.js` waits for the ratified faces to report `loaded`
    *before it reads a single rect*, not merely before it posts. It once did the latter, and the report was
@@ -69,12 +71,20 @@ them out of `verify` is needing Firefox in the runner, which is an operator call
    once PT Serif lands (108px of reflow at 320×1400), while firefox's screenshot always shows the settled page.
    Heights survived that bug — they come from px tokens — positions did not, and any probe that reads pixels at
    report coordinates was measuring empty paper. See `design/decisions.json` → `renderHarnessSettle`.
-2. **Post with `fetch(window.__MEASURE_ENDPOINT, …)` and include `done: true`.** A custom probe that never
-   posts gets the misleading `TIMEOUT: the page never posted - check the measure script calls __send()`.
+2. **Post with `fetch(window.__MEASURE_ENDPOINT, { method: 'POST', mode: 'no-cors', body })` and include
+   `done: true`.** Omitting `method: 'POST'` sends a body-less request and the run dies as
+   `TIMEOUT: the page never posted`; one post per run, with errors accumulated in the report. A custom probe that
+   never posts gets the same misleading timeout.
 3. **A pixel probe needs coordinates that match the shot.** `window.scrollTo(0, 0)` is called before measuring
    and again before posting, and the report carries `scroll`, `innerW`, `innerH` so a probe can tell whether the
    PNG it is reading is the page it was promised. A shot that does not contain the thing being measured must
    fail loudly, not report zero ink.
+4. **Read what the browser applies, not what the markup says.** A layout probe takes computed `width`/`height`/
+   `background-color`, never HTML attributes or class strings: Tailwind preflight's `img { height: auto }` made an
+   `<img width="200" height="80">` measure 2.5× smaller in area than it paints, and Astro leaves the source of a
+   conditional `class={…}` inside the attribute, so class matching must compare whole tokens. And
+   `position: fixed` rects are viewport-relative — exclude fixed content from any page-absolute walk and print how
+   many elements were excluded, because a silent filter is how a measurement starts lying.
 
 ## evidence — read these, they are dated
 

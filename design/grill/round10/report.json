@@ -1,0 +1,224 @@
+{
+  "measuredAt": "2026-11-02T17:53:23.882Z",
+  "tolPx": 1,
+  "slots": [
+    {
+      "id": "PS-1",
+      "scale": 0.5,
+      "wantW": 372,
+      "wantH": 564,
+      "gotW": 186,
+      "gotH": 282,
+      "ok": true,
+      "wantDrawW": 186,
+      "wantDrawH": 282
+    },
+    {
+      "id": "PS-1",
+      "scale": 0.5,
+      "wantW": 346,
+      "wantH": 216,
+      "gotW": 173,
+      "gotH": 108,
+      "ok": true,
+      "wantDrawW": 173,
+      "wantDrawH": 108
+    },
+    {
+      "id": "PS-2",
+      "scale": 0.5,
+      "wantW": 1228,
+      "wantH": 320,
+      "gotW": 614,
+      "gotH": 160,
+      "ok": true,
+      "wantDrawW": 614,
+      "wantDrawH": 160
+    },
+    {
+      "id": "PS-2",
+      "scale": 0.5,
+      "wantW": 378,
+      "wantH": 230,
+      "gotW": 189,
+      "gotH": 115,
+      "ok": true,
+      "wantDrawW": 189,
+      "wantDrawH": 115
+    },
+    {
+      "id": "PS-3",
+      "scale": 0.5,
+      "wantW": 200,
+      "wantH": 192,
+      "gotW": 100,
+      "gotH": 96,
+      "ok": true,
+      "wantDrawW": 100,
+      "wantDrawH": 96
+    },
+    {
+      "id": "PS-3",
+      "scale": 0.5,
+      "wantW": 200,
+      "wantH": 192,
+      "gotW": 100,
+      "gotH": 96,
+      "ok": true,
+      "wantDrawW": 100,
+      "wantDrawH": 96
+    },
+    {
+      "id": "PS-4",
+      "scale": 0.5,
+      "wantW": 367,
+      "wantH": 205,
+      "gotW": 184,
+      "gotH": 103,
+      "ok": true,
+      "wantDrawW": 183.5,
+      "wantDrawH": 102.5
+    },
+    {
+      "id": "PS-4",
+      "scale": 0.5,
+      "wantW": 346,
+      "wantH": 205,
+      "gotW": 173,
+      "gotH": 103,
+      "ok": true,
+      "wantDrawW": 173,
+      "wantDrawH": 102.5
+    }
+  ],
+  "pages": [
+    {
+      "w": 1240,
+      "wantH": 2495,
+      "scale": 0.5,
+      "gotW": 620,
+      "gotH": 1248,
+      "ok": true
+    },
+    {
+      "w": 390,
+      "wantH": 4078,
+      "scale": 0.5,
+      "gotW": 195,
+      "gotH": 2039,
+      "ok": true
+    }
+  ],
+  "gaps": [
+    {
+      "want": 160,
+      "got": 80,
+      "ok": true
+    },
+    {
+      "want": 217,
+      "got": 109,
+      "ok": true
+    },
+    {
+      "want": 103,
+      "got": 52,
+      "ok": true
+    },
+    {
+      "want": 94,
+      "got": 47,
+      "ok": true
+    },
+    {
+      "want": 79,
+      "got": 40,
+      "ok": true
+    },
+    {
+      "want": 138,
+      "got": 69,
+      "ok": true
+    },
+    {
+      "want": 126,
+      "got": 63,
+      "ok": true
+    },
+    {
+      "want": 132,
+      "got": 66,
+      "ok": true
+    },
+    {
+      "want": 80,
+      "got": 40,
+      "ok": true
+    },
+    {
+      "want": 77,
+      "got": 39,
+      "ok": true
+    },
+    {
+      "want": 125,
+      "got": 63,
+      "ok": true
+    },
+    {
+      "want": 105,
+      "got": 53,
+      "ok": true
+    },
+    {
+      "want": 95,
+      "got": 48,
+      "ok": true
+    },
+    {
+      "want": 95,
+      "got": 48,
+      "ok": true
+    },
+    {
+      "want": 95,
+      "got": 48,
+      "ok": true
+    },
+    {
+      "want": 96,
+      "got": 48,
+      "ok": true
+    },
+    {
+      "want": 95,
+      "got": 48,
+      "ok": true
+    },
+    {
+      "want": 79,
+      "got": 40,
+      "ok": true
+    },
+    {
+      "want": 137,
+      "got": 69,
+      "ok": true
+    },
+    {
+      "want": 96,
+      "got": 48,
+      "ok": true
+    },
+    {
+      "want": 66,
+      "got": 33,
+      "ok": true
+    },
+    {
+      "want": 141,
+      "got": 71,
+      "ok": true
+    }
+  ]
+}

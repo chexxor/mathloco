@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en-US"><head><meta charset="utf-8"><title>Round 10 - where photographs go</title>
+<link rel="stylesheet" href="../fonts/specimen.css">
+<style>
+ body { margin: 0; font: 15px/1.55 "Public Sans Variable", system-ui, sans-serif; color: #2b3330; background: #fbfbf9; }
+ main { max-width: 980px; margin: 0 auto; padding: 32px 20px 80px; }
+ h1 { font: 700 30px/1.2 "PT Serif", serif; margin: 0 0 6px; }
+ h2 { font: 700 21px/1.3 "PT Serif", serif; margin: 40px 0 10px; }
+ h3 { font: 700 17px/1.3 "PT Serif", serif; margin: 26px 0 8px; }
+ p, li, dd, dt { max-width: 74ch; }
+ .lede { font-size: 17px; max-width: 70ch; }
+ .num { background: #f2f2ee; border-left: 4px solid #8a8f86; padding: 10px 14px; margin: 14px 0; }
+ .page { position: relative; background: #fff; border: 1px solid #c9ccc4; margin: 10px 0 18px; box-sizing: border-box; }
+ .surf { position: absolute; border-bottom: 1px dashed #b9bdb4; box-sizing: border-box; }
+ .surf span { font-size: 11px; color: #5c615a; padding: 2px 4px; display: inline-block; white-space: nowrap; }
+ .gapband { position: absolute; box-sizing: border-box; background: repeating-linear-gradient(45deg, rgba(206,64,74,.16) 0 6px, rgba(206,64,74,0) 6px 12px); }
+ .slotrow { display: flex; gap: 22px; flex-wrap: wrap; }
+ .slotcell { flex: 1 1 320px; }
+ .slotbox { border: 2px dashed #2b3330; box-sizing: border-box; background: rgba(43,51,48,.04); position: relative; }
+ .slotlabel { position: absolute; top: 4px; left: 6px; font-size: 12px; }
+ .slotmeta { font-size: 12px; color: #5c615a; margin-top: 5px; max-width: 46ch; }
+ dl { display: grid; grid-template-columns: 210px 1fr; gap: 6px 14px; margin: 12px 0 0; }
+ dt { font-weight: 700; font-size: 13px; } dd { margin: 0; font-size: 14px; }
+ .measured { margin-top: 34px; border-top: 1px solid #c9ccc4; padding-top: 14px; font-size: 13px; }
+ code { font: 13px/1.4 ui-monospace, monospace; }
+ .scale { font-size: 12px; color: #5c615a; }
+ .caption { font-size: 12px; color: #5c615a; margin-top: 12px; }
+</style></head>
+<body><main>
+ <h1>Round 10 &mdash; where photographs go</h1>
+ <p class="lede">PH-B: reserve the places, so the shot list has sizes to aim at and an empty state has a
+ defined look. Every box below is the built page's own geometry, read in Firefox by
+ <code>npm run check:space</code>, drawn at 0.5&times;.</p>
+
+ <h2>The emptiness being answered</h2>
+ <div class="num"><ul><li><b>1240px</b>: page 2495px tall, painted <b>4.56%</b> of pixels differ from their own ground by the 0.05 same-colour bar; <b>42%</b> of the page height sits in 8 empty runs of at least 60px.</li><li><b>390px</b>: page 4078px tall, painted <b>11.24%</b> of pixels differ from their own ground by the 0.05 same-colour bar; <b>33.9%</b> of the page height sits in 14 empty runs of at least 60px.</li></ul></div>
+ <p class="scale">Read: about two fifths of the vertical journey at 1240 crosses rows that contain no painted
+ pixel at all. Colour (round 9's S-B) moves the reader-visible share from 0.0% to 0.4% &mdash; it does not
+ fill this. Area does: a photo, a strip, or real content.</p>
+
+ <h2>The page as measured, at 0.5&times;</h2>
+ <p class="scale">Hatched bands are empty runs of 60px or more. Labels are each surface's
+ measured box, the share of its own pixels it paints, and how many characters of copy it carries.</p>
+ <div class="caption">1240px page: captured height 2495px &middot; the document later measured 2607px, so it grew 112px when a lazy image decoded</div>
+  <div class="page" data-page="1240" data-w="1240" data-h="2495" data-scale="0.5" style="width:620px;height:1248px;">
+    <div class="surf" data-surf="header" style="top:0px;left:0;width:614px;height:36px;"><span>header 1228&times;72 &middot; paints 1% &middot; 18 chars</span></div>
+<div class="surf" data-surf="main" style="top:100px;left:0;width:614px;height:282px;"><span>main 1228&times;564 &middot; paints 6.4% &middot; 468 chars</span></div>
+<div class="surf" data-surf="section" style="top:430px;left:0;width:614px;height:426px;"><span>section 1228&times;853 &middot; paints 5.1% &middot; 866 chars</span></div>
+<div class="surf" data-surf="section" style="top:857px;left:0;width:614px;height:323px;"><span>section 1228&times;646 &middot; paints 5.2% &middot; 263 chars</span></div>
+<div class="surf" data-surf="footer" style="top:1179px;left:0;width:614px;height:124px;"><span>footer 1228&times;248 &middot; paints 0.7% &middot; 131 chars</span></div>
+<div class="gapband" data-gap="160" style="top:22px;left:0;width:620px;height:80px;"></div>
+<div class="gapband" data-gap="217" style="top:358px;left:0;width:620px;height:109px;"></div>
+<div class="gapband" data-gap="103" style="top:520px;left:0;width:620px;height:52px;"></div>
+<div class="gapband" data-gap="94" style="top:643px;left:0;width:620px;height:47px;"></div>
+<div class="gapband" data-gap="79" style="top:761px;left:0;width:620px;height:40px;"></div>
+<div class="gapband" data-gap="138" style="top:825px;left:0;width:620px;height:69px;"></div>
+<div class="gapband" data-gap="126" style="top:929px;left:0;width:620px;height:63px;"></div>
+<div class="gapband" data-gap="132" style="top:1136px;left:0;width:620px;height:66px;"></div>
+  </div>
+ <div class="caption">390px page: captured height 4078px</div>
+  <div class="page" data-page="390" data-w="390" data-h="4078" data-scale="0.5" style="width:195px;height:2039px;">
+    <div class="surf" data-surf="header" style="top:0px;left:0;width:195px;height:36px;"><span>header 390&times;72 &middot; paints 6.1% &middot; 18 chars</span></div>
+<div class="surf" data-surf="main" style="top:60px;left:0;width:195px;height:491px;"><span>main 390&times;983 &middot; paints 12.2% &middot; 468 chars</span></div>
+<div class="surf" data-surf="section" style="top:567px;left:0;width:195px;height:894px;"><span>section 390&times;1789 &middot; paints 10.6% &middot; 866 chars</span></div>
+<div class="surf" data-surf="section" style="top:1462px;left:0;width:195px;height:412px;"><span>section 390&times;824 &middot; paints 12.6% &middot; 263 chars</span></div>
+<div class="surf" data-surf="footer" style="top:1874px;left:0;width:195px;height:124px;"><span>footer 390&times;248 &middot; paints 12.6% &middot; 131 chars</span></div>
+<div class="gapband" data-gap="80" style="top:22px;left:0;width:195px;height:40px;"></div>
+<div class="gapband" data-gap="77" style="top:416px;left:0;width:195px;height:39px;"></div>
+<div class="gapband" data-gap="125" style="top:538px;left:0;width:195px;height:63px;"></div>
+<div class="gapband" data-gap="105" style="top:690px;left:0;width:195px;height:53px;"></div>
+<div class="gapband" data-gap="95" style="top:813px;left:0;width:195px;height:48px;"></div>
+<div class="gapband" data-gap="95" style="top:931px;left:0;width:195px;height:48px;"></div>
+<div class="gapband" data-gap="95" style="top:1036px;left:0;width:195px;height:48px;"></div>
+<div class="gapband" data-gap="96" style="top:1154px;left:0;width:195px;height:48px;"></div>
+<div class="gapband" data-gap="95" style="top:1258px;left:0;width:195px;height:48px;"></div>
+<div class="gapband" data-gap="79" style="top:1377px;left:0;width:195px;height:40px;"></div>
+<div class="gapband" data-gap="137" style="top:1440px;left:0;width:195px;height:69px;"></div>
+<div class="gapband" data-gap="96" style="top:1578px;left:0;width:195px;height:48px;"></div>
+<div class="gapband" data-gap="66" style="top:1732px;left:0;width:195px;height:33px;"></div>
+<div class="gapband" data-gap="141" style="top:1923px;left:0;width:195px;height:71px;"></div>
+  </div>
+
+ <h2>The slots</h2>
+ <p class="scale">"measured" = the box exists on the built page today. "PROPOSED" = it does not, and its size
+ comes from a measured neighbour (document content width, the existing card) rather than from taste.</p>
+ <section class="slot">
+    <h3>PS-1 Hero media column</h3>
+    <div class="slotrow"><div class="slotcell">
+      <div class="slotbox" data-slot="PS-1" data-w="372" data-h="564" data-scale="0.5"
+           style="width:186px;height:282px;">
+        <span class="slotlabel">372&times;564 &middot; measured</span>
+      </div>
+      <div class="slotmeta">1240px &mdash; 186&times;282 drawn at 0.5&times;; painted-area gain <b>6.78%</b> of that page</div>
+    </div><div class="slotcell">
+      <div class="slotbox" data-slot="PS-1" data-w="346" data-h="216" data-scale="0.5"
+           style="width:173px;height:108px;">
+        <span class="slotlabel">346&times;216 &middot; measured</span>
+      </div>
+      <div class="slotmeta">390px &mdash; 173&times;108 drawn at 0.5&times;; painted-area gain <b>4.70%</b> of that page</div>
+    </div></div>
+    <dl>
+      <dt>Aspect / crop</dt><dd>2:3 portrait at 1240 (the column is 372 wide and 564 tall); at 390 the same column is a 16:10 landscape</dd>
+      <dt>What fills it</dt><dd>Shot 2 (venue interior) or shot 3 (hands and materials). Today the column holds the drawn mark at 372x233, so 331px of a 564px column paints nothing.</dd>
+      <dt>Empty state (what paints today)</dt><dd>The drawn mark, exactly as shipped today — a slot with no photo is a state, not a grey rectangle (design/records/0010).</dd>
+      <dt>Rule it has to obey</dt><dd>The mark stays in this column when there is no photo: photo-free by construction is still the rule (D94), the slot only changes what CAN go there.</dd>
+    </dl>
+  </section>
+<section class="slot">
+    <h3>PS-2 Venue strip (proposed)</h3>
+    <div class="slotrow"><div class="slotcell">
+      <div class="slotbox" data-slot="PS-2" data-w="1228" data-h="320" data-scale="0.5"
+           style="width:614px;height:160px;">
+        <span class="slotlabel">1228&times;320 &middot; PROPOSED</span>
+      </div>
+      <div class="slotmeta">1240px &mdash; 614&times;160 drawn at 0.5&times;; painted-area gain <b>12.70%</b> of that page</div>
+    </div><div class="slotcell">
+      <div class="slotbox" data-slot="PS-2" data-w="378" data-h="230" data-scale="0.5"
+           style="width:189px;height:115px;">
+        <span class="slotlabel">378&times;230 &middot; PROPOSED</span>
+      </div>
+      <div class="slotmeta">390px &mdash; 189&times;115 drawn at 0.5&times;; painted-area gain <b>5.47%</b> of that page</div>
+    </div></div>
+    <dl>
+      <dt>Aspect / crop</dt><dd>1228x320 is 3.84:1 — a phone camera at 4:3 crops to this with ~250px of height lost, so shoot wide and level</dd>
+      <dt>What fills it</dt><dd>Shot 2 (venues): one strip per venue, the honest answer to "interesting venues" (Ambrosia Coffee is the venue node on the club's own group page).</dd>
+      <dt>Empty state (what paints today)</dt><dd>No strip at all. A proposed slot must not ship as an empty band.</dd>
+      <dt>Rule it has to obey</dt><dd>Width is not a taste call: 1228 is the document's own content width at 1240 (measured), 378 at 390.</dd>
+    </dl>
+  </section>
+<section class="slot">
+    <h3>PS-3 Join card media cell</h3>
+    <div class="slotrow"><div class="slotcell">
+      <div class="slotbox" data-slot="PS-3" data-w="200" data-h="192" data-scale="0.5"
+           style="width:100px;height:96px;">
+        <span class="slotlabel">200&times;192 &middot; re-sized</span>
+      </div>
+      <div class="slotmeta">1240px &mdash; 100&times;96 drawn at 0.5&times;; painted-area gain <b>1.24%</b> of that page</div>
+    </div><div class="slotcell">
+      <div class="slotbox" data-slot="PS-3" data-w="200" data-h="192" data-scale="0.5"
+           style="width:100px;height:96px;">
+        <span class="slotlabel">200&times;192 &middot; re-sized</span>
+      </div>
+      <div class="slotmeta">390px &mdash; 100&times;96 drawn at 0.5&times;; painted-area gain <b>2.41%</b> of that page</div>
+    </div></div>
+    <dl>
+      <dt>Aspect / crop</dt><dd>the card is 1164x268 at 1240 and 346x581 at 390; a 3:2 photo at 420x268 fills the cell without growing the card</dd>
+      <dt>What fills it</dt><dd>Shot 1 (the board after a meeting) or shot 3 (materials). This is the cell that today holds the Meetup png.</dd>
+      <dt>Empty state (what paints today)</dt><dd>Today: the Meetup logo at 200x192 (38,320 px², 1.24% of the desktop page) and the site's loudest colour, which belongs to Meetup.</dd>
+      <dt>Rule it has to obey</dt><dd>Whatever goes here must be a FIXED box: the current image asks for 200x80 while its file is 834x799, so the page shifts 112px when it decodes (measured: 2495 -> 2607).</dd>
+    </dl>
+  </section>
+<section class="slot">
+    <h3>PS-4 Event-card thumb (proposed)</h3>
+    <div class="slotrow"><div class="slotcell">
+      <div class="slotbox" data-slot="PS-4" data-w="367" data-h="205" data-scale="0.5"
+           style="width:184px;height:103px;">
+        <span class="slotlabel">367&times;205 &middot; re-sized</span>
+      </div>
+      <div class="slotmeta">1240px &mdash; 184&times;103 drawn at 0.5&times;; painted-area gain <b>2.43%</b> of that page</div>
+    </div><div class="slotcell">
+      <div class="slotbox" data-slot="PS-4" data-w="346" data-h="205" data-scale="0.5"
+           style="width:173px;height:103px;">
+        <span class="slotlabel">346&times;205 &middot; re-sized</span>
+      </div>
+      <div class="slotmeta">390px &mdash; 173&times;103 drawn at 0.5&times;; painted-area gain <b>4.46%</b> of that page</div>
+    </div></div>
+    <dl>
+      <dt>Aspect / crop</dt><dd>3:1 at 367x120 keeps the existing card height (205px) and puts the thumb above the title</dd>
+      <dt>What fills it</dt><dd>Shot 1 (board) or shot 4 (the sphere diagram artwork, which needs creator + licence, not just a file).</dd>
+      <dt>Empty state (what paints today)</dt><dd>No thumb: the card's type carries it (the share card already proves a drawn motif works).</dd>
+      <dt>Rule it has to obey</dt><dd>This slot waits on the schedule surface, not on photography: the two event sections are switched off in src/config.json because the dates do not live in this repo yet.</dd>
+    </dl>
+  </section>
+
+ <h2>Two numbers that make the rules concrete</h2>
+ <ul>
+  <li><b>Fixed boxes, or the page moves.</b> The one image on the landing page asks for 200&times;80 while its
+   file is 834&times;799, and Tailwind's preflight sets <code>img { height: auto }</code> &mdash; so the
+   rendered box is 200&times;192, and because it is lazy-loaded the page reflows by
+   <b>112px</b> when it decodes (measured: document height 2495 without it, 2607 with).
+   Every photo slot gets a declared aspect ratio for this reason.</li>
+  <li><b>The loudest colour on the site is not ours.</b> The Meetup png is <b>0.523%</b>
+   of the desktop page's pixels at hue 0-30&deg; and its mean chroma (0.226) is the highest in the system
+   (round 9's census). Dropping it takes the page's chromatic share from
+   <b>3.77%</b> to about
+   <b>3.25%</b>
+   &mdash; which is the honest cost of the operator's Q4 ruling, and the reason area (photos, content) has to
+   pay for the drabness instead.</li>
+ </ul>
+
+ <h2>Rules every slot inherits (already ruled, not new)</h2>
+ <ul>
+  <li>No stock people photography; no photo of this club exists, so strangers are a false statement about who
+   attends (D86/D94). Prefer the board, venues, hands and materials.</li>
+  <li>An identifiable face is personal data: opt-in, first name by default, withdrawable
+   (<code>.notes/consent-and-data-policy.md</code> rule 4).</li>
+  <li>Strip EXIF/GPS on commit &mdash; phone photos embed the location of a real gathering.</li>
+  <li>Never hot-link Meetup's CDN: their event images are theirs. Ask for source files
+   (<code>.notes/asset-sources.md</code>).</li>
+  <li>Text on a photo takes its colour from the photo, not from a rule: the club's own four images split both
+   ways (chalkboard mean luminance 0.014 takes light type; the parchment cover 0.791 takes dark).</li>
+  <li>Processing is already in the repo: <code>astro:assets</code> + <code>imageService: 'compile'</code> and
+   <code>sharp</code> with <code>gravity: 'attention'</code> for subject-aware crops.</li>
+ </ul>
+
+ <section class="measured">
+      <h2>Measured back off this specimen</h2>
+      <p>8 slot boxes drawn; <b>0 disagree</b> with the live page's own measured box by more than 1px (device-independent CSS px, read from the specimen in Firefox).</p>
+      <ul><li>PS-1: asked 372&times;564, painted box 186&times;282 ok</li><li>PS-1: asked 346&times;216, painted box 173&times;108 ok</li><li>PS-2: asked 1228&times;320, painted box 614&times;160 ok</li><li>PS-2: asked 378&times;230, painted box 189&times;115 ok</li><li>PS-3: asked 200&times;192, painted box 100&times;96 ok</li><li>PS-3: asked 200&times;192, painted box 100&times;96 ok</li><li>PS-4: asked 367&times;205, painted box 184&times;103 ok</li><li>PS-4: asked 346&times;205, painted box 173&times;103 ok</li></ul>
+    </section>
+</main></body></html>
