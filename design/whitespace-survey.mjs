@@ -57,6 +57,11 @@ if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first');
   process.exit(1);
 }
+// The slot boxes this writes become reserved sizes on the page, so they must be sizes of THIS tree's layout
+// (design/dist-fresh.mjs).
+import { distState, staleLine } from './dist-fresh.mjs';
+const STALE = distState();
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:space: ${staleLine(STALE)}`); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
 mkdirSync('.design/tmp-whitespace', { recursive: true });
 

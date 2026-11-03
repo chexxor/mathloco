@@ -35,6 +35,11 @@ if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first (this probe reads the artifact, not the source)');
   process.exit(1);
 }
+// The artifact also has to belong to this tree: a branch switch leaves dist/ from the previous branch, and a
+// mark measured off it is a mark that is not shipped (design/dist-fresh.mjs).
+import { distState, staleLine } from './dist-fresh.mjs';
+const STALE = distState();
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:mark: ${staleLine(STALE)}`); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
 
 const runs = [

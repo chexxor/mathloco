@@ -19,6 +19,7 @@
 import { execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { distState, staleLine } from './dist-fresh.mjs';
 
 const argv = process.argv.slice(2);
 const NO_BUILD = argv.includes('--no-build');
@@ -36,6 +37,8 @@ if (!NO_BUILD) {
   execFileSync(npm, ['run', 'build'], { stdio: ['ignore', 'ignore', 'inherit'] });
 } else {
   console.log('(measuring the dist that is already built — --no-build)');
+  const STALE = distState();
+  if (!STALE.fresh && !STALE.allowed) { console.error(`lines:measure: ${staleLine(STALE)}`); process.exit(1); }
 }
 mkdirSync('.design/render', { recursive: true });
 

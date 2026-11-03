@@ -43,6 +43,11 @@ if (!existsSync(PAGE)) {
   console.error('design/area-survey.mjs: dist/client/index.html missing — run npm run build first');
   process.exit(1);
 }
+// siteFp says which bytes were shot; it cannot say whether those bytes came from this tree. The mtime pair can
+// (design/dist-fresh.mjs), and a committed area report is quoted for weeks after it is written.
+import { distState, staleLine } from './dist-fresh.mjs';
+const STALE = distState();
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:area: ${staleLine(STALE)}`); process.exit(1); }
 const siteFp = createHash('sha1').update(readFileSync(PAGE)).digest('hex').slice(0, 10);
 
 // One label for both halves of the run, so the whitespace record for this pass is findable by name

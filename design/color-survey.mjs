@@ -41,6 +41,11 @@ if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first');
   process.exit(1);
 }
+// And the build has to be the one this tree would make — a chroma survey of the previous branch's page is a
+// palette claim about code that is gone (design/dist-fresh.mjs).
+import { distState, staleLine } from './dist-fresh.mjs';
+const STALE = distState();
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:color: ${staleLine(STALE)}`); process.exit(1); }
 // Every record carries the fingerprint of the build it measured (design/records/0015, and the same field
 // `design/rhythm.mjs` keys its cache on). A survey number without a build identity is how a stale crop got
 // compared to a fresh page once already; `design/area-survey.mjs` refuses the pair when these disagree.

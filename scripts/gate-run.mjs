@@ -49,6 +49,7 @@
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { resolve, join } from 'node:path';
+import { distState, staleLine } from '../design/dist-fresh.mjs';
 
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
@@ -132,6 +133,18 @@ const dist = resolve('dist/client/index.html');
 if (set === BROWSER && !existsSync(dist)) {
   console.error('gate-run --browser: dist/client/index.html missing — run npm run verify (or npm run build) first.');
   process.exit(1);
+}
+// The browser set does not build, so it stands or falls on `dist/` being the build of this tree. Checked here,
+// before the first 7s browser step, because the failure is silent otherwise: after a branch switch the gates
+// measure the page the previous branch built and report findings about code that is gone — measured 2026-11-03,
+// where a merged tree inherited the pre-merge dist and check:render went red on the very defect the branch
+// under review had fixed (design/dist-fresh.mjs, D156).
+if (set === BROWSER) {
+  const st = distState();
+  if (!st.fresh && !st.allowed) {
+    console.error('gate-run --browser: ' + staleLine(st));
+    process.exit(1);
+  }
 }
 
 // One directory per set, overwritten by the run, so `check:render:dist.txt` always means "the last render

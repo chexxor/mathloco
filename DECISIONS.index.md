@@ -162,5 +162,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D152** (2026-11-03) — Integrations live in `integrations/` with a boundary, not a manifest — and the website's `package.json` stays the site's (2026-11-03, operator's constraint; plan only, no code shipped)
 - **D153** (2026-11-03) — Mobilizon 5.2.4's ICS export is not conformant, and that decides the architecture (2026-11-03, measured)
 - **D154** (2026-11-03) — The straddle ruling is now enforced by two gates, and a `rule` ring cannot live in a tinted region at all (2026-11-03, delegate, closing D149-3c)
+- **D155** (2026-11-03) — The index gate caught its own staleness on the first day, and that fixed the merge order (2026-11-03, delegate)
+- **D156** (2026-11-03) — A probe may not measure a build that is not its own tree's (2026-11-03, delegate)
 
-Defined: 154 (D1-D154). Unused ids: none.
+Defined: 156 (D1-D156). Unused ids: none.

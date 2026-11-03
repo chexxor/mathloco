@@ -70,6 +70,11 @@ if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first');
   process.exit(1);
 }
+// ...and that build has to be this tree's. A branch switch leaves `dist/` holding the page the previous
+// branch built, and bytes measured off it describe code that is no longer here (design/dist-fresh.mjs).
+import { distState, staleLine } from './dist-fresh.mjs';
+const STALE = distState();
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:ground: ${staleLine(STALE)}`); process.exit(1); }
 mkdirSync('.design/tmp-ground', { recursive: true });
 const SITE_FP = createHash('sha1').update(readFileSync(resolve('dist/client/index.html'))).digest('hex').slice(0, 10);
 
