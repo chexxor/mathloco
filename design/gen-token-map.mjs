@@ -139,14 +139,13 @@ const AUTO = [
 
 // Files that are DORMANT — gated off by src/config.json, a stub, or never imported — and slated for
 // replacement rather than restyling. Restyling invented content launders fiction: the roadmap note
-// (.notes/roadmap-events.md) says flipping showUpcomingEvents on would "publish fiction about a real
-// club". The four icons/*.astro files are a different kind of dormant: no file in src/ imports them
-// (grep for `icons/` finds nothing), so they ship nothing, and choose-icons will replace them. Their
-// writes are reported in their own section so they stay a visible decision instead of being silently
-// counted as "applied".
+// (.notes/roadmap-events.md) said flipping showUpcomingEvents on would "publish fiction about a real
+// club", which is why those two components were REPLACED (src/components/Schedule.astro, 2026-11-03)
+// rather than restyled. The four icons/*.astro files are a different kind of dormant: no file in src/
+// imports them (grep for `icons/` finds nothing), so they ship nothing, and choose-icons will replace
+// them. Their writes are reported in their own section so they stay a visible decision instead of being
+// silently counted as "applied".
 const DORMANT = [
-  'src/components/UpcomingMeetups.astro',
-  'src/components/PastEvents.astro',
   'src/components/icons/Instagram.astro',
   'src/components/icons/Linkedin.astro',
   'src/components/icons/Medium.astro',
@@ -223,12 +222,11 @@ for (const b of BUCKETS) {
   out.push('');
 }
 out.push('## DORMANT files — deliberately NOT restyled', '',
-  'Gated off by `src/config.json` (`sections.showUpcomingEvents` / `showPastEvents` are both `false` in',
-  'the artifact and prod agrees — see `.notes/roadmap-events.md`), empty stubs, or never imported (the',
-  'four `icons/*.astro` files: no `icons/` import exists in `src/`, so they ship nothing). The event',
-  'components hold invented placeholder copy; restyling fiction makes it look ratified, so apply leaves',
-  'them alone — the roadmap says real schedule work REPLACES the component rather than enabling it, and',
-  'choose-icons replaces the icons wholesale. Either way their writes stay a visible decision here.', '',
+  'Never imported (the four `icons/*.astro` files: no `icons/` import exists in `src/`, so they ship',
+  'nothing). The event components that used to be listed here — invented copy behind a `false` flag, and',
+  'an empty stub — are gone: real schedule work REPLACED them with `src/components/Schedule.astro` on',
+  '2026-11-03 instead of enabling them, and its states are written in the ratified grammar. Either way',
+  'their writes stay a visible decision here.', '',
   '| written class | dormant uses | file |', '|---|---|---|');
 for (const r of dormantRows) out.push(`| \`${r.tok}\` | ${r.count} | ${r.files.join(', ')} |`);
 out.push('');

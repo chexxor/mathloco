@@ -107,7 +107,9 @@ const stripComments = (t) => t
   .replace(/^\s*\/\/.*$/gm, ' ')          /* js line */
   .replace(/<!--[\s\S]*?-->/g, ' ');       /* astro/html */
 const DORMANT = new Set([
-  'src/components/UpcomingMeetups.astro', 'src/components/PastEvents.astro',
+  // never imported; choose-icons will replace them wholesale. The two event components that used to be
+  // here are gone — real schedule work replaced them with src/components/Schedule.astro (2026-11-03),
+  // which is live and IS scanned, because its states are written in the ratified grammar.
   'src/components/icons/Instagram.astro', 'src/components/icons/Linkedin.astro',
   'src/components/icons/Medium.astro', 'src/components/icons/Twitter.astro',
 ]);

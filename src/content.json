@@ -1,0 +1,55 @@
+{
+  "_about": "The club's own facts, in one file a non-developer can edit from a phone. Everything the site asserts about the club is read from here (src/lib/content.ts); a fact that is not settled is a slot with `value: null` and the bracketed text that is waiting for a source, so the absence is explicit rather than invented. Rules this file answers to: DESIGN.md 'Copy' (state the fact, name where it came from, give a path out, carry the date; never state a frequency without a source; `[BRACKETS]` stay bracketed until a source exists), D92, D136 (no fabricated numbers), record 0010 (missing content is a designed state, never a blank and never a build failure).",
+  "_override": "For a preview or a review build, copy src/content.local.example.json to src/content.local.json (gitignored, like .dev.vars) - it deep-merges over this file. Nothing tracked can turn a placeholder on: `scripts/check-content.mjs` fails any build that contains one, so a review-only state cannot reach the apex.",
+
+  "cadence": {
+    "value": "Monthly",
+    "source": "operator ruling, 2026-10-31, recorded in .notes/roadmap-events.md: 'Monthly is more generally correct; actual rhythm is ~every other week, occasionally skipped'",
+    "asOf": "2026-10-31",
+    "note": "DESIGN.md forbids a frequency word with no source ('join us every week' survived two years). This one has a named source, which is what keeps it on the page. Set value to null and the copy falls back to naming the paths out instead of claiming a rhythm."
+  },
+
+  "focus": {
+    "value": "Number Theory and Abstract Algebra",
+    "source": null,
+    "asOf": null,
+    "placeholder": "[what the club is actually reading, and since when]",
+    "note": "Pre-existing site copy, kept while it is confirmed. check:content lists it as an unsourced claim until source + asOf are filled; scripts/make-social-share.mjs reads the same value, so the share card and the hero cannot name two different current books."
+  },
+
+  "schedule": {
+    "source": null,
+    "_source": "the source of truth is ruled to be Mobilizon or an ICS feed (D132) and the operator has to provision one; until then no date on this page is knowable, so `upcoming` stays empty and the section renders its designed empty state (round 7, option A).",
+    "upcoming": [],
+    "empty": {
+      "status": "Nothing scheduled",
+      "title": "No date is on the calendar yet.",
+      "body": "Dates are set in the club's Discord and posted on Meetup, where the calendar and the sign-up live. The discussion runs between meetings in the chat.",
+      "venueLine": {
+        "value": null,
+        "placeholder": "[venue blurb, one line - name, and what a first-timer should know about getting in]",
+        "source": null
+      }
+    }
+  },
+
+  "venue": {
+    "value": null,
+    "placeholder": "[place name + room]",
+    "source": null,
+    "note": "'Local Library - Study Room B' was invented in the retired UpcomingMeetups.astro (see .notes/roadmap-events.md: 'entirely invented placeholder content'). It is not on the site and does not come back without a source."
+  },
+
+  "membership": {
+    "value": null,
+    "placeholder": "[N]+ members",
+    "requires": "the figure, where it came from, and the day it was counted (D136)",
+    "source": null,
+    "note": "The site used to render Math.floor(Math.random()*100+150)+'+ members'. A number that changes per request is not a statistic. Fill value + source + asOf and it ships as static copy; until then nothing is said."
+  },
+
+  "photos": {
+    "placeholders": false,
+    "_note": "true draws measured shot-cards in the reserved photo places (PS-1, PS-3) so a preview shows the geometry a real photograph will take. It is only ever true in src/content.local.json: check:content fails a build whose HTML carries a placeholder fill."
+  }
+}

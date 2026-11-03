@@ -1,0 +1,42 @@
+{
+ "measuredAt": "2026-11-03T00:55:15.156Z",
+ "siteFp": "1c53037027",
+ "routes": [
+  "/"
+ ],
+ "widths": [
+  1240,
+  390
+ ],
+ "rows": [
+  {
+   "route": "/",
+   "width": 1240,
+   "height": 3140,
+   "chromaticPct": 10.29,
+   "strongPct": 0.019,
+   "faintPct": 2.27,
+   "hueFamilies": 3,
+   "paintedPct": 4.16,
+   "emptyRunPct": 37.3,
+   "emptyRuns": 9,
+   "biggestRun": 217,
+   "inside": null
+  },
+  {
+   "route": "/",
+   "width": 390,
+   "height": 4881,
+   "chromaticPct": 8.73,
+   "strongPct": 0.038,
+   "faintPct": 4.54,
+   "hueFamilies": 3,
+   "paintedPct": 8.03,
+   "emptyRunPct": 34.5,
+   "emptyRuns": 15,
+   "biggestRun": 154,
+   "inside": null
+  }
+ ],
+ "note": "written by design/area-survey.mjs; tracked so the next session re-quotes instead of re-measuring. If siteFp no longer matches dist/client/index.html, re-run `npm run check:area`."
+}

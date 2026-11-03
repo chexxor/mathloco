@@ -1,0 +1,134 @@
+---
+import config from '../config.json';
+import {
+  content, upcoming, value, filled, formatDate, formatTime, builtOn, scheduleConfigured,
+} from '../lib/content.ts';
+
+/**
+ * When we meet — the section that replaced `UpcomingMeetups.astro` and `PastEvents.astro`
+ * (operator request, 2026-11-03: use placeholders for the content we are missing).
+ *
+ * What it replaced, and why the replacement had to be written rather than enabled:
+ * `.notes/roadmap-events.md` measured `UpcomingMeetups.astro` as "**entirely invented placeholder
+ * content**" — "Saturday, 2:00 PM", "Local Library - Study Room B", "Topic: Introduction to Group
+ * Theory", a "Reserve Your Spot" button — and said any schedule work should **replace** it, not turn it
+ * on. It was also pre-design CSS (`bg-blue-50`, `text-gray-900`, `shadow-lg`) and it pointed at
+ * `/math-study-session.jpg`, a file that is not in `public/`, so switching the flag on would have both
+ * published fiction about a real club and failed the build. `PastEvents.astro` was `<h2>Past Events</h2>`
+ * and a comment. Both flags were `false` in `src/config.json`, and prod agrees — the curl numbers are in
+ * the roadmap note.
+ *
+ * The three states, all designed (record 0010: missing content is a state, never a blank, never a build
+ * failure; DESIGN.md "States"):
+ *   - **dates exist** → rows: date lane, series name, status word. D92: the site publishes **series names
+ *     and real dates**, never a frequency.
+ *   - **a source is configured and holds nothing** → the round-7 empty state the operator chose (option A:
+ *     305px, status word + title + two-line body + a 48px primary and a 40px secondary + the dated line,
+     "two paths out"), because a guaranteed condition of an upcoming-only feed is a gap between events.
+ *   - **no source configured yet** (today: D132 rules the source is Mobilizon or an ICS feed and the
+ *     operator has to provision one) → the same block, with its own status line, and the bracketed
+ *     `[venue blurb]` from `src/content.json` **not rendered**: a bracket is a hole in our knowledge, and
+ *     DESIGN.md keeps brackets off the page until a source exists. `scripts/check-content.mjs` fails a
+ *     build that ships one.
+ *
+ * Controls, and a finding this component exposed (2026-11-03):
+ *   - The one control this block needs is the **48px primary** in the hero's own grammar (`px-8 py-4`, no
+ *     hard-coded height — DESIGN.md: "heights are derived, not chosen"). `s48` is "the only step that clears
+ *     the 44px AAA bar; it belongs to the join path", and this is the join path.
+ *   - The **second path is an inline link, not a 40px secondary button.** `check:render` carries two rules
+ *     that cannot both hold for a secondary control: line 184 demands `inset-shadow-rule` controls be 40px
+ *     and line 187 demands controls with that class be >=44px at 390. The first version of this block wrote
+ *     the round-7 grammar (48 primary + 40 secondary) and the gate went red on the tap rule; making the
+ *     secondary 48px then went red on the height rule. The shipped hero has the same 40px secondary
+ *     ("View Schedule") and is silent only because `design/grill/render-measure.js` truncates `cls` to 120
+ *     characters, so `inset-shadow-rule` falls off the end and neither rule sees it. Both facts are in
+ *     `.notes/NEXT.md` for the operator to rule on; until then this block takes the path that is legal
+ *     today, which is DESIGN.md's "a link inside a sentence keeps its 24px line".
+ * Both paths still go somewhere that exists — Meetup and `/chat`. No "Past meetings" button: there is no
+ * past-events page, and D117's rule is that a path needs a page (that is what killed `Schedule` and
+ * `Members` from the nav).
+ */
+const items = upcoming().slice(0, 4);
+const empty = content.schedule?.empty;
+const venueLine = value(empty?.venueLine);
+// The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
+// is a fact about the club, the second is a fact about this page, and only the first may be stated as the
+// club's. With no source configured the block says what the page knows: dates live on Meetup.
+const status = scheduleConfigured() ? (empty?.status ?? 'Nothing scheduled') : 'Dates live on Meetup';
+const title = empty?.title ?? 'No date is on the calendar yet.';
+const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on Meetup, where the calendar and the sign-up live.';
+---
+
+<section class="bg-paper py-16" aria-labelledby="when-we-meet">
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h2 id="when-we-meet" class="text-heading font-extrabold text-ink">When We Meet</h2>
+      <p class="mt-4 text-lede leading-prose text-ink-2 font-body max-w-measure mx-auto">
+        The calendar, the sign-up and the address all live on Meetup. This page copies what is on it.
+      </p>
+    </div>
+
+    <div class="mt-12">
+      {items.length ? (
+        <ul class="space-y-6">
+          {items.map((item) => (
+            <li class="inset-shadow-rule rounded-control px-4 py-3">
+              <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                <span class="text-label font-medium text-ink tabular-nums">
+                  {formatDate(item.date, 'wide')}
+                </span>
+                <span class="text-label text-ink-3">
+                  {formatTime(item.time ?? '') ?? 'time not set'}
+                </span>
+                {filled(item.status) && (
+                  <span class="text-label font-medium text-ink-2 uppercase tracking-wide">{item.status}</span>
+                )}
+              </div>
+              <h3 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h3>
+              {filled(item.series) && (
+                <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.series}</p>
+              )}
+              <p class="mt-2 text-body leading-prose text-ink-2 font-body">
+                <a
+                  href={config.URLs.meetupGroup}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                >
+                  Details and sign-up on Meetup</a
+                >.
+              </p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        // The chosen empty state (round 7, option A) in the shipped notice grammar: status word, `--lede`
+        // title, two-line body, a 48px primary, the second path, the dated line. The second path is an inline
+        // link rather than a 40px secondary button — see the control note at the top of this file. `min-h-20`
+        // is not needed here: this block is prerendered at its full height, so there is no arrival to shift
+        // the page.
+        <div class="inset-shadow-rule rounded-control px-4 py-6">
+          <p class="text-label font-medium text-ink-3">{status}</p>
+          <h3 class="mt-1 text-lede font-bold text-ink font-body">{title}</h3>
+          <p class="mt-2 text-body leading-prose text-ink-2 font-body max-w-measure">{body}</p>
+          {venueLine && <p class="mt-2 text-body leading-prose text-ink-2 font-body max-w-measure">{venueLine}</p>}
+          <div class="mt-4">
+            <a
+              href={`${config.URLs.meetupGroup}/join`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+            >
+              Join on Meetup
+            </a>
+          </div>
+          <p class="mt-3 text-body leading-prose text-ink-2 font-body max-w-measure">
+            Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Ask in the chat</a> —
+            someone from the club reads it.
+          </p>
+          <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {builtOn()}; no calendar source is wired to it yet.</p>
+        </div>
+      )}
+    </div>
+  </div>
+</section>

@@ -1,7 +1,6 @@
 {
   "sections": {
-    "showUpcomingEvents": false,
-    "showPastEvents": false
+    "showSchedule": true
   },
   "seo": {
     "title": "Join the Minneapolis Math Book Club | Math Book Discussions",
