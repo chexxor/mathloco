@@ -103,6 +103,19 @@ const cases = [
   //     otherwise legal (1px inset ring, 4.5 text, 48px+ tall), so the failure can only come from the
   //     boundary rule.
   ['a block action inside a notice', (h) => h.replace('</body>', '<div role="alert" class="inset-shadow-rule rounded-control px-4 py-3 min-h-20"><p class="text-body text-ink">The channel summaries did not load.</p><button class="mt-3 inline-flex items-center justify-center px-4 py-4 rounded-control inset-shadow-rule bg-paper text-ink text-label font-medium">Try again</button></div>'), /notice contains a block action/],
+  // 7. inset rings (D149-3c + record 0018). The `keylines` rule above cannot see this system's own hairline at
+  //    all, because a ratified keyline is a 1px INSET box-shadow, not a border — so before these two cases the
+  //    ring grammar had no counterfactual: nothing in the gate could fail on it.
+  //    7a. the shipped defect, planted: the hero secondary's fill moved to `panel` while it stands on `paper`, so
+  //        its ring reads 2.88 on one side and 3.01 on the other. That is what JoinCommunity's "Join the chat"
+  //        measured before the placement fix — and the single number printed next to such a control looks legal.
+  //        The mutation swaps a real class for a real class (`bg-panel` is in the built CSS because the join band
+  //        asks for it), so nothing about the harness is doing the painting here.
+  ['ring straddling two grounds', (h) => h.replace(/(<a[^>]*data-control="secondary"[^>]*class="[^"]*?)bg-paper/, '$1bg-panel'), /may not straddle two grounds/],
+  // 7b. a ring that is one-ground but on the WRONG ground: the notice keeps its no-fill grammar and its 1px inset
+  //    ring, and only the strip behind it is tinted. Both sides then read 2.88 — under the bar `--color-rule`
+  //    was solved to clear (3.01 on paper). This is why the rule is a pair and not a token grep.
+  ['ring on a tint', (h) => h.replace('<div class="max-w-measure"><div role="status"', '<div class="max-w-measure bg-panel"><div role="status"'), /under the 3\.0 graphic bar/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;

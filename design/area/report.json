@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-03T05:36:03.671Z",
- "siteFp": "77d8dc87df",
+ "measuredAt": "2026-11-03T10:00:01.919Z",
+ "siteFp": "5bc95d7ba7",
  "routes": [
   "/"
  ],
@@ -13,28 +13,28 @@
   {
    "route": "/",
    "width": 1240,
-   "height": 4196,
-   "chromaticPct": 7.52,
+   "height": 4284,
+   "chromaticPct": 7.36,
    "strongPct": 0.014,
-   "faintPct": 2.99,
+   "faintPct": 2.93,
    "hueFamilies": 3,
-   "paintedPct": 4.48,
-   "emptyRunPct": 25.3,
-   "emptyRuns": 8,
+   "paintedPct": 4.39,
+   "emptyRunPct": 25.7,
+   "emptyRuns": 9,
    "biggestRun": 219,
    "inside": null
   },
   {
    "route": "/",
    "width": 390,
-   "height": 5919,
-   "chromaticPct": 6.8,
-   "strongPct": 0.031,
-   "faintPct": 6.74,
+   "height": 5859,
+   "chromaticPct": 6.86,
+   "strongPct": 0.032,
+   "faintPct": 6.81,
    "hueFamilies": 3,
-   "paintedPct": 9.68,
-   "emptyRunPct": 21.5,
-   "emptyRuns": 12,
+   "paintedPct": 9.77,
+   "emptyRunPct": 22.3,
+   "emptyRuns": 13,
    "biggestRun": 150,
    "inside": null
   },
@@ -47,8 +47,8 @@
    "faintPct": 6.92,
    "hueFamilies": 3,
    "paintedPct": 9.9,
-   "emptyRunPct": 21.4,
-   "emptyRuns": 12,
+   "emptyRunPct": 21.9,
+   "emptyRuns": 13,
    "biggestRun": 294,
    "inside": null
   }

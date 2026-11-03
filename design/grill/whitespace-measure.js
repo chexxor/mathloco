@@ -135,19 +135,26 @@
 
     // And the CHILDREN of those containers: a photo slot is a column, and the column's box is what a shot
     // list has to aim at (the hero's media column is 372x564 at 1240 while the drawing inside it is 372x233).
-    for (const el of document.querySelectorAll('main *, section *, header *, footer *')) {
+    for (const el of [...document.querySelectorAll('main *, section *, header *, footer *')]
+      .filter((e) => /^(inline-)?(grid|flex)$/.test(getComputedStyle(e).display))) {
       const cs = getComputedStyle(el);
-      if (!/^(inline-)?(grid|flex)$/.test(cs.display)) continue;
       for (const kid of el.children) {
         const b = box(kid);
-        if (b.w < 60 || b.h < 60) continue;
+        // The 60px floor keeps the list to boxes a photo could actually go into. A slot the page NAMED is a probe
+        // handle at any height: `<div data-slot="PS-3">` is 56px tall at 1240 once the join actions moved out of
+        // it, and a floor that hides the only box the site bothers to label makes every comment about that box
+        // unfalsifiable. Named slots pass the floor and say they did.
+        const named = kid.getAttribute('data-slot') || null;
+        const underFloor = b.w < 60 || b.h < 60;
+        if (underFloor && !named) continue;
         out.slots.push({
           tag: kid.tagName.toLowerCase(),
+          underFloor: underFloor || null,
           // The name the page gives its own photo place (`<div data-slot="PS-1">`). A consumer that matches on a
           // Tailwind class is matching on styling: `cls` is truncated, and `lg:col-span-4` falls off the end, so
           // a specimen that looks its slots up by class silently stops finding them. The page labels the slot,
           // the probe reports the label, the specimen matches on it.
-          dataSlot: kid.getAttribute('data-slot') || null,
+          dataSlot: named,
           cls: (kid.getAttribute('class') || '').slice(0, 120),
           parent: (el.getAttribute('class') || '').slice(0, 120),
           display: cs.display,

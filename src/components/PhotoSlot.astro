@@ -8,12 +8,22 @@ import { content } from '../lib/content.ts';
  * Why this exists (operator ruling, grill round 10, 2026-11-02): the club has no photographs yet, and
  * "no photos" has been used as a reason for empty columns. A slot that is *reserved* — measured geometry,
  * a declared aspect ratio, and a defined state when there is no picture — turns "get photos" into a shot
- * list instead of a mood. The two reserved now (PS-1 hero, PS-3 join) are area the page already pays for:
- * the hero media column is `376x564` and its mark paints `376x235` of it (329px of it paints nothing), and
- * the join media column is `532x128` — which is NOT spare air: its height is the call-to-action's height, so a
- * photo there is a growth of ~152px rather than a reclamation. Those numbers come from `npm run check:space` walking the built page's grid/flex children;
- * `design/grill/round10/report.json` is the record. They are NOT design tokens — they are what the layout
- * already is, so a filled slot cannot quietly change the page's geometry.
+ * list instead of a mood. What the two reserved places measure now, from `npm run check:space` walking the
+ * built page's grid/flex children (`design/grill/round10/report.json` is the older record):
+ *
+ * - PS-1, the hero media column: the column is **376x574** at 1240 and the mark inside it paints
+ *   **376x235**, so 339px of the column paints nothing — a plate there is a reclamation, not a growth.
+ *   @measured 2026-11-03 by check:space
+ * - PS-3, the join media column: **532x56** at 1240 (one paragraph) inside a grid row that is **326** tall;
+ *   **310x85** at 390, **240x113** at 320. It used to be 128px of call-to-action, and round 10 therefore
+ *   called a photo here "a growth of ~152px, not a reclamation". The two join actions now stand outside the
+ *   tinted card (D149-3c), so the row's height belongs to the copy column beside it and a plate at the
+ *   reserved 532x128 fits inside a row the page already pays for at 1240. At 390 it is still a growth
+ *   (~107px), because the grid is one column there.
+ *   @measured 2026-11-03 by check:space
+ *
+ * Those numbers are NOT design tokens — they are what the layout already is, so a filled slot cannot
+ * quietly change the page's geometry.
  *
  * The aspect ratio is declared in CSS, not left to the file. Tailwind's preflight sets `img { height:
  * auto }`, which makes an HTML `height` attribute inert: the Meetup png in this same column asked for
@@ -77,9 +87,23 @@ if (photo && !Astro.props.alt) {
       style={`aspect-ratio: ${ratio};`}
     />
   ) : placeholders ? (
+    /* One ground, one edge (D149-3c). This used to be `bg-tint inset-shadow-rule`, and the review build
+       measures what that actually paints: a 1px `rule` ring with the tint (224,245,229) on its inside and
+       the page's ground on its outside — 2.74 inside / 3.01 outside at PS-1, and 2.74 / 2.88 at PS-3, where
+       the join card is `bg-panel`. Two grounds, and both numbers sit at or under the 3.0 graphic bar
+       (`--color-rule` is solved for `paper`: 3.01 there, 2.74 on `tint`, 2.88 on `panel` — record 0018).
+       `check:render`'s ring rule now fails exactly this, and it is the only gate that ever saw it: this state
+       is unreachable in a shipped build (`check:content` fails any HTML containing `data-placeholder`), so no
+       browser gate looks at the real dist page. See design/records/0024-* for the review-build recipe.
+       The fill is the half that goes: a tint is 1.04-1.10 against its neighbours, so it was never doing the
+       separation the ring does. The edge is `inset-shadow-gold` rather than `rule` because a `rule` ring is
+       illegal inside a tinted region at ANY placement: inside the join card it reads 2.88 on both sides,
+       under the bar. Gold reads 4.82 on paper and 4.61 on panel, and either way the ring has ONE ground on
+       both sides. Gold is this system's caution grammar, and that is the honest claim here: the box says
+       "this page is missing content", which is a caution about the page rather than a decoration. */
     <div
       data-placeholder={Astro.props.slot}
-      class={`bg-tint inset-shadow-rule rounded-control flex items-end p-3 ${Astro.props.class ?? ''}`}
+      class={`inset-shadow-gold rounded-control flex items-end p-3 ${Astro.props.class ?? ''}`}
       style={`aspect-ratio: ${ratio};`}
     >
       <p class="text-micro uppercase tracking-wide text-ink-3">

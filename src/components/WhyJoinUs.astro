@@ -66,8 +66,18 @@ const feature = content.feature;
     {items.length === 0 && (
       // record 0010: a hole is a designed state, never a blank. If every thread slot is empty the section
       // says so and hands the reader the path where threads actually live.
-      <div class="mt-8 inset-shadow-rule rounded-control px-4 py-3 max-w-measure">
-        <p class="text-body text-ink">Nothing is on the list right now.</p>
+      //
+      // The edge is GOLD here, and that is a ground measurement rather than a colour preference. This section
+      // paints `bg-panel`, and `--color-rule` on a tint measures **2.88** - under the 3.0 graphic bar it is
+      // solved to clear on paper (3.01), and 2.74 on `tint` (design/records/0018-a-hairline-on-a-tint-is-under-
+      // its-own-bar.md). D149-3c ruled that a keyline may not straddle two grounds and that the fix is the
+      // placement, not the number; here there is no paper to move the box onto, because the whole section is a
+      // tint. So this is the state DESIGN.md's caution grammar exists for: `inset-shadow-gold` with a gold
+      // word, 4.61 on panel and 4.82 on paper, both over the 4.5 text bar. The state genuinely is a caution:
+      // an empty list is a fact about this page's wiring, not about the club, and the sentence says exactly
+      // that. `check:render` asserts every inset ring's pair, so if this branch ever renders it is measured.
+      <div class="mt-8 inset-shadow-gold rounded-control px-4 py-3 max-w-measure">
+        <p class="text-body font-medium text-gold">Nothing is on the list right now.</p>
         <p class="mt-1 text-body leading-prose text-ink-2">
           What the club is pulling on is decided in its chat, so an empty list here means the page has not
           been told yet, not that the club is quiet.

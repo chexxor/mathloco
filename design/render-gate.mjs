@@ -53,6 +53,7 @@ import { execFileSync, execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { BARS } from './grill/okcolor.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
@@ -254,6 +255,24 @@ for (const route of routes) {
       }
     }
 
+    // 4a. inset rings (D149-3c, record 0018). The rule above cannot see the system's own hairline at all:
+    //     the ratified keyline is a 1px INSET box-shadow, not a border, so `keylines` reports nothing for it.
+    //     A ring is drawn on a boundary and therefore has two neighbours - the fill inside it and the ground
+    //     it stands on - and the operator's ruling is that a keyline may not straddle two grounds. That is a
+    //     measurement, not a preference: `--color-rule` is 3.01 on paper, 2.88 on `panel` (under this same
+    //     graphic bar) and 4.00 on the ink band, so a ring that has a tint on one side is under bar on that
+    //     side even when the number printed beside it looks legal.
+    for (const g of j.rings || []) {
+      if (g.inside === null || g.outside === null || g.inset !== 1) continue;
+      const who = `${g.tag} ${JSON.stringify(g.cls.slice(0, 60))}`;
+      const pair = `ring (${g.isRule ? '--color-rule' : g.raw}) measures ${g.inside} inside / ${g.outside} outside`;
+      if (Math.abs(g.inside - g.outside) > 0.05) {
+        fails.push(`${at}: ${pair} against two different grounds (${JSON.stringify(g.innerBytes)} vs ${JSON.stringify(g.outerBytes)}) — a keyline may not straddle two grounds (D149-3c, record 0018): move the box onto one ground — ${who}`);
+      } else if (Math.min(g.inside, g.outside) < BARS.graphic) {
+        fails.push(`${at}: ${pair} — under the ${BARS.graphic.toFixed(1)} graphic bar on its own ground. --color-rule is solved for paper (3.01); on a tint it reads 2.88 (record 0018) — ${who}`);
+      }
+    }
+
     // 4b. notices and states (DESIGN.md "Notices" + "States"): word + inset hairline on the page's own
     //     ground, NO fill, one-line 48px (D98), text at or above the contrast bar.
     for (const n of j.notices || []) {
@@ -354,7 +373,7 @@ for (const route of routes) {
       }
     }
 
-    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | rings ${(j.rings || []).length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
     if (j.nav) console.log(`   nav   ${j.nav.links.map((l) => `${l.fs}/${l.h}px`).join(' ')}  wrap ${j.nav.containers.map((c) => c.wrap).join('/')} gap ${j.nav.containers.map((c) => c.gap).join('/')} needed ${j.nav.row?.needed} of ${j.nav.row?.available}`);
     for (const c of j.controls) {
       console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${(c.role || 'NO ROLE').padEnd(10)} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
@@ -363,6 +382,9 @@ for (const route of routes) {
       console.log(`   disp  ${t.fs.padEnd(6)} lh ${t.lh.padEnd(7)} ${String(t.contrast).padStart(6)}  ${t.ff.padEnd(11)} ${t.tag} ${JSON.stringify(t.t).slice(0, 34)}`);
     }
     for (const k of [...new Map(j.keylines.map((k) => [k.w + k.raw + k.keylineContrast, k])).values()]) console.log(`   key   ${String(k.w).padStart(3)}px contrast ${String(k.keylineContrast).padStart(5)}  ${k.raw.padEnd(26)} ${(k.cls || '').slice(0, 40)}`);
+    // A ring's number is a PAIR (DESIGN.md, Colour): inside and outside, each against the ring. Equal means
+    // one ground; unequal means the ring straddles, which D149-3c bans and record 0018 prices at 2.88.
+    for (const g of [...new Map((j.rings || []).map((g) => [g.raw + g.inside + g.outside + g.cls, g])).values()]) console.log(`   ring  ${String(g.inset).padStart(3)}px in ${String(g.inside).padStart(5)} out ${String(g.outside).padStart(5)}  ${g.isRule ? 'rule' : g.raw.padEnd(26)}  in ${JSON.stringify(g.innerBytes)} out ${JSON.stringify(g.outerBytes)}  ${(g.cls || '').slice(0, 34)}`);
     for (const n of j.notices || []) console.log(`   notc  ${String(n.h).padStart(5)}px x ${String(n.w).padStart(4)}px  inset ${n.inset}px contrast ${String(n.keylineContrast).padStart(5)}  text ${String(n.textContrast).padStart(5)}  ${n.role} ${JSON.stringify(n.text).slice(0, 34)}`);
     for (const b of j.bands) {
       console.log(`   band  ${String(b.h).padStart(5)}px  bg ${b.bg.padEnd(26)} fg ${b.fg.padEnd(24)} ${String(b.contrast).padStart(5)}  ${b.tag} ${(b.cls || '').slice(0, 40)}`);
