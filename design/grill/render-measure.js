@@ -285,6 +285,9 @@
     const sc = layer.match(/^\s*((?:oklch|oklab|lch|lab|rgb|rgba|hsl|hsla)\([^)]*\))/);
     return {
       role, h: +r.height.toFixed(1), w: +r.width.toFixed(1),
+      // Page-absolute, not viewport: a specimen that wants to photograph a notice needs WHERE it is, and the
+      // shot the harness takes is of the whole page (grill round 13's Q2 pair, D160). Size alone cannot crop.
+      x: +(r.x + scrollX).toFixed(1), y: +(r.y + scrollY).toFixed(1),
       cls: (el.getAttribute('class') || '').slice(0, 80),
       text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60),
       inset: thickness,
