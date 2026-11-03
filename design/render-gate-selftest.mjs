@@ -8,7 +8,8 @@
 //
 // D118's rule, applied to the gate that measures the mark: a pixel/layout gate needs a control that can
 // fail, because the failure mode of a gate is not a wrong number, it is a green line on a broken page.
-// `check:social` has `--selftest`; this is the same idea for the render gate's `marks` section.
+// `check:social` has `--selftest`; this is the same idea for the render gate's mark and control sections —
+// the control cases are the counterfactual for D139/D140 (see the notes on cases 6a-6c).
 //
 // How it mutates: it edits **dist/client/index.html**, the built page, because that is what the gate
 // measures — a specimen would prove the harness works but not that the gate reads the artifact. dist/ is
@@ -38,6 +39,10 @@ const only = process.argv.slice(2);
 // the honest outcome, but it red for "the harness rotted" rather than "the gate cannot fail". Deriving the
 // strings from src/lib/brand-mark.mjs means the cases move with the drawing they are breaking.
 const dEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+// Editing the padding step of the first anchor that declares a control role. Attribute order in the built HTML
+// follows the source, so `data-control` precedes `class`; `extra` appends inert classes for the length case.
+const shrinkRole = (h, role, from, to, extra = '') =>
+  h.replace(new RegExp(`(<a[^>]*data-control="${role}"[^>]*class=")([^"]*)(")`), (m, head, cls, tail) => head + cls.replace(from, to) + extra + tail);
 const pathEl = (s) => new RegExp(`<path d="${dEsc(s.d)}"[^>]*></path>`);
 const arcs = MARK.shapes.filter((s) => s.role === 'sphere' && s.tag === 'path');
 const dashed = MARK.shapes.find((s) => s.dash);
@@ -76,6 +81,22 @@ const cases = [
   // 5. a stroke under one device pixel: it paints *something*, and the colour pair still clears 3.0, but
   //    no pixel is fully covered so it has no measurable colour identity (D119, for line art).
   ['mark stroke under 1px on screen', (h) => h.replace(`stroke-width="${swStroke.sw}"`, 'stroke-width="0.05"'), /stroke lands at [\d.]+px on screen/],
+  // 6. controls, by the ROLE the markup declares (D140). These three are the counterfactual for the pair of
+  //    rules that used to match on class substrings: design/records/0016 measured three shipped 40px tap
+  //    targets the gate never saw, because the probe truncated `cls` at 120 characters and the class the rules
+  //    looked for sat past the cut. An attribute cannot be truncated out of existence.
+  //    The mutations edit the class of the first anchor carrying that role — height is padding-derived, so
+  //    changing the padding step changes the measured height without inventing markup the CSS would ignore
+  //    (D110: an injected class Tailwind never saw paints nothing; `py-2` and `py-3` exist in the built CSS
+  //    because real source asks for them).
+  ['primary control at the wrong height', (h) => shrinkRole(h, 'primary', 'py-4', 'py-2'), /primary control .* is 32px tall, not 48/],
+  // 6b. a button-shaped element that stopped naming its role: the height rules have nothing to match it to,
+  //     so the omission is the finding (this is the case that makes D140 enforceable rather than a convention).
+  ['control-shaped element with no role', (h) => h.replace(/(<a[^>]*?) data-control="primary"/, '$1'), /declares no data-control role/],
+  // 6c. the truncation case itself: a 40px secondary wearing a 200-character class list. The filler classes are
+  //     inert (Tailwind generated no CSS for them) — the point is that LENGTH can no longer hide a control from
+  //     its height rule.
+  ['secondary control behind a 200-character class', (h) => shrinkRole(h, 'secondary', 'py-4', 'py-3', ' ' + 'x-long-filler-class-'.repeat(14)), /secondary control .* is 40px tall, not 48/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;
@@ -118,7 +139,7 @@ try {
   writeFileSync(page, original);
 }
 
-console.log('\n== can check:render\'s mark checks fail? (mutated built page) ==');
+console.log('\n== can check:render\'s mark and control checks fail? (mutated built page) ==');
 console.log(lines.join('\n'));
 console.log(`\n  (the real page is restored; re-run \`npm run check:render\` to see it green)`);
 if (!ok) { console.error('RENDER GATE SELFTEST: FAIL'); process.exit(1); }

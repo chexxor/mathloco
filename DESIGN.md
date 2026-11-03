@@ -163,10 +163,10 @@ arithmetic. **Never** put a shadow on a card, or on a hovered card: cards are pa
 `height = ceil4(measured line box) + 2 × an S3 pad`. Pads come only from the spacing scale.
 
 Round 8 left these heights alone **because the chrome tier did not move**: `text-label` is still 13.3/16, so
-the primary is still 48 and the secondary still 40, re-measured by `check:render` at three widths after the
-ramp changed. That is the whole reason the reading ladder and the chrome tier are separate decisions — a
-label step of 15/20 would make them 52/44 and re-open the nav fit, the notice's 48px one-line figure and the
-card's bands (measured in `design/grill/round8/report.json`).
+the primary is still 48 (the secondary was 40 then — D139 retired that step the following round), re-measured by
+`check:render` at three widths after the ramp changed. That is the whole reason the reading ladder and the chrome
+tier are separate decisions — a label step of 15/20 would make them 52/44 and re-open the nav fit, the notice's
+48px one-line figure and the card's bands (measured in `design/grill/round8/report.json`).
 
 **D139 (2026-11-03) retired 40px for buttons.** `check:render` carried two rules that cannot both hold for a
 `inset-shadow-rule` control — the height rule demanded 40 and the tap rule demanded >=44 at 390 — and the
@@ -253,8 +253,9 @@ freshness.
 - **The pending sentence is also the JavaScript-off state.** It reads "The channel summaries have not
   loaded" and names the path out (Discord), so it is true whether or not the browser ever runs the fetch.
   That is how the error branch gets into the server-rendered HTML without the server calling the API.
-- **Failure is the notice above with a 40px retry**, and the error branch must exist in the server-rendered
-  HTML: a JavaScript-off visitor can otherwise never leave the loading branch.
+- **Failure is the notice above with a 48px retry** (D139 — the retry is a control, so it is the one height),
+  and the error branch must exist in the server-rendered HTML: a JavaScript-off visitor can otherwise never
+  leave the loading branch.
 - **Missing content is a designed state, never a build failure** (operator, 2026-11-01). A gate may fail a
   build when a feed is malformed; it must not fail one because the club has nothing scheduled. Empty
   sections get their own content instead.
@@ -538,7 +539,8 @@ npm run check:render            # build, then measure dist/client in Firefox: co
                                 # Builds first unless --no-build; 4 firefox at once, one retry per cell.
 npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
                                 # or whenever a rebuild would undo the thing being measured
-node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
+node design/render-gate-selftest.mjs   # mutate the built page eleven ways (8 mark, 3 control) and require
+                                # check:render to FAIL each one — D118, applied to a pixel gate
 node design/mark-check.mjs      # npm run check:mark - both mark probes, at the two widths that bracket the
                                 # box (320: 276px wide, scale 1.15; 1240: 372px, scale 1.55). Needs a built dist.
 node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints. Two-pass: it asks
@@ -735,12 +737,19 @@ word in event prose.
   apply 4c: the guard exists, `min-h-20` reserves, the pending block is the JS-off state, and both
   missing-summary branches now render a line.
 - **What is not measurable yet:** the failed and empty branches render only after a real fetch, and
-  `check:render` measures the server-rendered branch (there is no API on `file://`). They inherit the
-  grammar that IS measured; numbers for them land the first time the gate runs against a deploy where
-  `/api/discord-summary` answers.
-- `UpcomingMeetups.astro` is **dormant and fictional**: it hard-codes "Saturday, 2:00 PM", "Local Library -
-  Study Room B" and "Topic: Introduction to Group Theory" in palette classes, with no feed behind it at
-  all. No page renders it, so no gate sees it — and it becomes a lie the day the event pipeline lands
-  (queue item in `NEXT.md`). Per **D108**, when it does render, missing content is a state with designed
-  content — never a blank, and never a build failure. The batch order and the states to build are in
-  `design/token-plan.md`; the per-class worklist is `design/token-map.md`.
+  `check:render` measures the server-rendered branch (there is no API on `file://`). They inherit the grammar
+  that IS measured; numbers for them land the first time the gate runs against a deploy where
+  `/api/discord-summary` answers. **The cost of that blind spot is now concrete:** the island's two controls
+  (`Try again`, `Read Discord`) sat at 40px behind a hard-coded `h-10` while the control rules ran over `/chat`
+  and never saw them — the probe posted 4 clickable elements for that route, none of them the island's
+  (D139/D140, `design/records/0016-*`, `design/records/0017-*`). They are 48 and carry a role **by the rule, not
+  by a test.** Closing the gap means measuring a SERVED page — run the probe against `wrangler dev` or a preview
+  URL so the island hydrates. That is its own ruling, queued in `.notes/NEXT.md`.
+- `UpcomingMeetups.astro` and `PastEvents.astro` are **deleted** (2026-11-03). The first hard-coded "Saturday,
+  2:00 PM", "Local Library - Study Room B" and "Topic: Introduction to Group Theory" in palette classes with no
+  feed behind it, and no page rendered it, so no gate ever saw it. The schedule surface is now
+  `src/components/Schedule.astro`, whose three states are all designed — **D108**: missing content is a state with
+  designed content, never a blank and never a build failure. The retired strings themselves are now gated:
+  `check:content` (`scripts/check-content.mjs`) fails a build that ships any of them again, a cadence word with no
+  named source (D92), a request-time number from `Math.random()` (D136), or a bracketed placeholder. The batch
+  order and the states to build are in `design/token-plan.md`; the per-class worklist is `design/token-map.md`.

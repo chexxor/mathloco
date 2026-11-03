@@ -43,9 +43,12 @@ This is not a new idea in this repo, it is the same rule twice over:
 also removes a hard-coded height, which DESIGN.md forbids: "heights are derived, not chosen"); every pressable
 block on the three routes declares its role. The join card's secondary was already 48 and did not move.
 
-**The gate can still fail (D118).** `design/render-gate-selftest.mjs` gains two cases: a primary whose padding is
-cut to 32px must go red on the role rule, and a control whose `data-control` attribute is stripped must go red on
-the missing-role rule. A role table that nobody can violate is a comment, not a gate.
+**The gate can still fail (D118).** `design/render-gate-selftest.mjs` gains three cases: a primary whose padding
+is cut to 32px must go red on the role rule; a control whose `data-control` attribute is stripped must go red on
+the missing-role rule; and a **40px secondary wearing a 200-character class list** must go red — the counterfactual
+for the original bug, proving length can no longer hide a control from its own height rule. A role table that
+nobody can violate is a comment, not a gate. All three were run and fail as designed (11 cases total in that
+script, 11 as designed).
 
 **Left open on purpose, not fixed here:**
 - The two island buttons sit **inside a notice with their own keyline**, which DESIGN.md's one-boundary rule

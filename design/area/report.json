@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-03T00:55:15.156Z",
- "siteFp": "1c53037027",
+ "measuredAt": "2026-11-03T01:29:04.821Z",
+ "siteFp": "2f8eb4c280",
  "routes": [
   "/"
  ],
@@ -26,13 +26,13 @@
   {
    "route": "/",
    "width": 390,
-   "height": 4881,
-   "chromaticPct": 8.73,
+   "height": 4889,
+   "chromaticPct": 8.71,
    "strongPct": 0.038,
    "faintPct": 4.54,
    "hueFamilies": 3,
-   "paintedPct": 8.03,
-   "emptyRunPct": 34.5,
+   "paintedPct": 8.01,
+   "emptyRunPct": 34.4,
    "emptyRuns": 15,
    "biggestRun": 154,
    "inside": null

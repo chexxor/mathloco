@@ -27,13 +27,15 @@ export const prerender = true;
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
       <a
         href="/"
+        data-control="primary"
         class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
       >
         Back to the home page
       </a>
       <a
         href="/chat"
-        class="inline-flex items-center justify-center px-8 py-3 text-label font-medium rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint transition"
+        data-control="secondary"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-medium rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
       >
         Recent Discord summaries
       </a>

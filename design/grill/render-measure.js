@@ -153,6 +153,10 @@
   const controls = all.filter(isControl).map((el) => {
     const cs = getComputedStyle(el), r = el.getBoundingClientRect(), bg = painted(el);
     const fg = parse(cs.color) || { r: 0, g: 0, b: 0, a: 1, lin: false };
+    // Full length on purpose: a rule that reads a class must see all of it. Truncating here at 120 made three
+    // shipped 40px tap targets invisible to check:render (design/records/0016-*). Truncate for the PRINT, in
+    // the consumer — `clsLog` is for that.
+    const cls = el.getAttribute('class') || '';
     return {
       t: (el.textContent || el.value || '').trim().replace(/\s+/g, ' ').slice(0, 60),
       tag: el.tagName.toLowerCase(),
@@ -162,7 +166,11 @@
       bg: cs.backgroundColor, fg: cs.color, contrast: opaque(bg) ? ratio(fg, bg) : null,
       shadow: cs.boxShadow === 'none' ? '' : cs.boxShadow.slice(0, 60),
       outline: cs.outlineStyle + ' ' + cs.outlineWidth,
-      cls: (el.getAttribute('class') || '').slice(0, 120),
+      // The control's own name, published in its markup (D140): the gate asserts height per role instead of
+      // guessing the role from a class substring.
+      role: el.getAttribute('data-control') || null,
+      cls,
+      clsLog: cls.slice(0, 120),
     };
   });
 

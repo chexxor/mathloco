@@ -19,9 +19,11 @@
 // Tailwind. It cannot prove what that class BECAME. This gate measures the built page in Firefox and
 // enforces the numeric claims DESIGN.md makes:
 //
-//   - a primary control is 48px tall (16px label line box + py-4 16/16), a secondary 40px (py-3),
-//     so a control with no fill and a keyline cannot arrive at 42 — the border-the-height-arithmetic
-//     problem ratify refused
+//   - a control's HEIGHT comes from the role it declares in its own markup (`data-control="primary|secondary"`,
+//     D140). Both roles are **48px** and differ by FILL (D139): a 16px label line box + `py-4` 16/16. Having one
+//     height to assert is also what stops a keylined control arriving at 42 by border arithmetic — the ratified
+//     keyline is a 1px INSET ring, so padding decides the box and the box is 48. A control-shaped element that
+//     declares no role is a finding.
 //   - the contrast the oracle promised is the contrast that painted, on the page a visitor gets
 //   - one dark band per screen (a footer + a dark CTA is two bands, which is what the old book-theme
 //     ribbon produced), and that band must contain paths a visitor can press (D115)
@@ -108,6 +110,11 @@ const fails = [];
 const warns = [];
 const num = (v) => (typeof v === 'number' ? v : NaN);
 
+// The height each declared control role must measure, +/-1px. D139 (2026-11-03): primary and secondary are ONE
+// height and differ by FILL, because the pair of rules that used to live in the control loop demanded 40px and
+// >=44px of the same element and could not both be satisfied. The 40px step is a box height now.
+const CONTROL_ROLES = { primary: 48, secondary: 48 };
+
 // The nine measurements are independent, and each one is a cold firefox: 0.89 s of its own, ~8 s back to
 // back. They run JOBS at a time, and only the *measurement* is parallel — the assertions below still run
 // one route and width at a time, in a fixed order, so the report and the failure list stay diffable.
@@ -174,17 +181,25 @@ for (const route of routes) {
 
     if (j.overflowX) fails.push(`${at}: horizontal overflow by ${j.overflowX}px`);
 
-    // 1. control height grammar
+    // 1. control height grammar. The role is DECLARED by the markup (D140), not inferred from a class
+    // substring: measured at 390, the old substring rules applied to 7 controls and were blind to 3 — every
+    // one a 40px tap target on the join path — because the probe truncates `cls` and `inset-shadow-rule`
+    // fell off the end (design/records/0016-*). A class is whatever the layout is called this week.
     for (const c of j.controls) {
       const cls = c.cls || '';
-      if (/\bbg-ink\b/.test(cls) && !/\bbg-ink-2\b/.test(cls)) {
-        if (num(c.h) < 47 || num(c.h) > 49) fails.push(`${at}: primary control "${c.t}" is ${c.h}px tall, not 48 — ${cls.slice(0, 60)}`);
-      }
-      if (/inset-shadow-rule/.test(cls)) {
-        if (num(c.h) < 39 || num(c.h) > 41) fails.push(`${at}: secondary control "${c.t}" is ${c.h}px tall, not 40`);
+      const shaped = /\bbg-ink\b(?!-2)|inset-shadow-rule/.test(cls);   // it is painted like a button
+      if (c.role) {
+        const want = CONTROL_ROLES[c.role];
+        if (want === undefined) {
+          fails.push(`${at}: control "${c.t}" declares data-control="${c.role}" and the gate has no height for that role — add it to CONTROL_ROLES or fix the name`);
+        } else if (num(c.h) < want - 1 || num(c.h) > want + 1) {
+          fails.push(`${at}: ${c.role} control "${c.t}" is ${c.h}px tall, not ${want} (${cls.slice(0, 48)})`);
+        }
+        if (w === 390 && num(c.h) < 44) fails.push(`${at}: tap target "${c.t}" is ${c.h}px tall, under 44`);
+      } else if (shaped) {
+        fails.push(`${at}: control-shaped element "${c.t}" declares no data-control role — the height rules match the name the source publishes (D140): ${cls.slice(0, 60)}`);
       }
       if (c.contrast !== null && c.contrast < 4.5) fails.push(`${at}: control "${c.t}" contrast ${c.contrast} < 4.5 (${c.fg} on ${c.bg})`);
-      if (w === 390 && /\bbg-ink\b|inset-shadow-rule|menu/i.test(cls) && num(c.h) < 44) fails.push(`${at}: tap target "${c.t}" is ${c.h}px tall, under 44`);
     }
 
     // 2. text contrast, on the page rather than in a specimen
@@ -312,7 +327,7 @@ for (const route of routes) {
     console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
     if (j.nav) console.log(`   nav   ${j.nav.links.map((l) => `${l.fs}/${l.h}px`).join(' ')}  wrap ${j.nav.containers.map((c) => c.wrap).join('/')} gap ${j.nav.containers.map((c) => c.gap).join('/')} needed ${j.nav.row?.needed} of ${j.nav.row?.available}`);
     for (const c of j.controls) {
-      console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
+      console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${(c.role || 'NO ROLE').padEnd(10)} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
     }
     for (const t of j.text.filter((x) => parseFloat(x.fs) >= 30)) {
       console.log(`   disp  ${t.fs.padEnd(6)} lh ${t.lh.padEnd(7)} ${String(t.contrast).padStart(6)}  ${t.ff.padEnd(11)} ${t.tag} ${JSON.stringify(t.t).slice(0, 34)}`);
