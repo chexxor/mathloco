@@ -130,6 +130,14 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
   function that referenced variables that did not exist.
 - **A pipe swallows an exit code.** `npm run check:design | tail -30; echo $?` reported the exit of `tail`.
   Check the gate's own exit, or the manifest in `.design/tmp-gate-logs/`.
+- **A tracked file generated from a host-local source is regenerated in the same commit that changes the
+  source.** `DECISIONS.index.md` is generated from the gitignored `.notes/DECISIONS.md`, so writing a decision without
+  running `npm run decisions:index` turned the index gate red on a branch sitting under review (D155). The gate firing
+  is the mechanism working; the fix belongs to whoever wrote the id.
+- **Measure a merge before proposing a merge order.** `git merge-tree --write-tree --name-only A B` reports conflicts
+  with no worktree change and no build, and a chained run costs seconds. It found one conflict across three pending
+  branches - both adding an import at the same line - and moving that import to its use site deleted the conflict
+  rather than scheduling it (D156).
 
 ## Non-negotiables
 
