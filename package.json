@@ -31,6 +31,8 @@
     "round9": "node design/round9.mjs",
     "round10": "node design/round10.mjs",
     "check:space": "node design/whitespace-survey.mjs",
+    "check:ground": "node design/pixel-ground.mjs",
+    "check:ground:selftest": "node design/pixel-ground.mjs --selftest",
     "check:area": "node design/area-survey.mjs",
     "check:rhythm": "node design/rhythm.mjs",
     "check:render:dist": "node design/render-gate.mjs --no-build",

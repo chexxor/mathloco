@@ -1,0 +1,178 @@
+{
+ "measuredAt": "2026-11-03T05:22:54.495Z",
+ "siteFp": "77d8dc87df",
+ "widths": [
+  1240,
+  390
+ ],
+ "groundTol": 8,
+ "bars": {
+  "text": 4.5,
+  "body": 7,
+  "graphic": 3,
+  "layer": 1.35,
+  "displayText": 3
+ },
+ "rows": [
+  {
+   "route": "/",
+   "width": 1240,
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "groundExact": 2306762,
+   "groundPct": 88.54,
+   "span": 7.666666666666686,
+   "sd": 2.67,
+   "flat": {
+    "x": 208,
+    "y": 0,
+    "size": 64,
+    "span": 0,
+    "sd": 0
+   },
+   "surfaces": [
+    {
+     "rgb": [
+      252,
+      250,
+      246
+     ],
+     "pct": 44.3
+    },
+    {
+     "rgb": [
+      248,
+      245,
+      239
+     ],
+     "pct": 44.1
+    },
+    {
+     "rgb": [
+      32,
+      57,
+      39
+     ],
+     "pct": 7.4
+    },
+    {
+     "rgb": [
+      71,
+      91,
+      76
+     ],
+     "pct": 0.5
+    }
+   ],
+   "distinct": 2015,
+   "hairlines": 8,
+   "hairlineMin": 3.01,
+   "hairlineMedian": 3.01,
+   "hairlineMax": 4.99,
+   "weakest": {
+    "y": 524,
+    "x": 1002,
+    "len": 52,
+    "own": 3.01,
+    "other": 3.01,
+    "ownGround": "paper",
+    "otherGround": "paper"
+   },
+   "weakSides": [
+    "3.01 on paper / 2.88 against panel (y=3677 x=829 len=136)",
+    "3.01 on paper / 2.88 against panel (y=3724 x=829 len=136)"
+   ],
+   "headroom": {
+    "down": 0,
+    "clip": 3
+   },
+   "claimedKeylineContrast": [
+    3.01
+   ],
+   "bytesMinusCss": 0
+  },
+  {
+   "route": "/",
+   "width": 390,
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "groundExact": 897299,
+   "groundPct": 84.34,
+   "span": 7.666666666666686,
+   "sd": 2.66,
+   "flat": {
+    "x": 192,
+    "y": 0,
+    "size": 64,
+    "span": 0,
+    "sd": 0
+   },
+   "surfaces": [
+    {
+     "rgb": [
+      248,
+      245,
+      239
+     ],
+     "pct": 45.2
+    },
+    {
+     "rgb": [
+      252,
+      250,
+      246
+     ],
+     "pct": 38.9
+    },
+    {
+     "rgb": [
+      32,
+      57,
+      39
+     ],
+     "pct": 6.6
+    },
+    {
+     "rgb": [
+      71,
+      91,
+      76
+     ],
+     "pct": 1.1
+    }
+   ],
+   "distinct": 2015,
+   "hairlines": 8,
+   "hairlineMin": 3.01,
+   "hairlineMedian": 3.01,
+   "hairlineMax": 4.99,
+   "weakest": {
+    "y": 847,
+    "x": 19,
+    "len": 352,
+    "own": 3.01,
+    "other": 3.01,
+    "ownGround": "paper",
+    "otherGround": "paper"
+   },
+   "weakSides": [
+    "3.01 on paper / 2.88 against panel (y=5414 x=43 len=136)",
+    "3.01 on paper / 2.88 against panel (y=5461 x=43 len=136)"
+   ],
+   "headroom": {
+    "down": 0,
+    "clip": 3
+   },
+   "claimedKeylineContrast": [
+    3.01
+   ],
+   "bytesMinusCss": 0
+  }
+ ]
+}

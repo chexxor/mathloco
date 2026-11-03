@@ -25,6 +25,12 @@
 // accepted the artifact. If that ever stops being true on an upgrade, `--serial` is the fallback and this
 // file is the place to record the ordering.
 //
+// The browser set (`verify:browser`) is measured separately and runs only when asked: 44.7s wall for its 7
+// steps on this rig (2026-11-03, jobs=4, but wall == work because every step in it must be ALONE — each runs
+// its own Firefox pool, see the note in BROWSER). Its wall clock is one reason it is not in `verify`; the other
+// is that the runner needs Firefox, which is an operator call. The log capture below is what makes its output
+// survive a green run.
+//
 // What is deliberately NOT here: `check:discord` (needs a bot token), `check:ai` (needs Groq credentials
 // and spends a model call), and the browser gates as a deploy gate (the runner has no Firefox — D123).
 // Those exclusions are identical to the ones the old `npm run verify` chain had; only the schedule moved.
@@ -83,13 +89,18 @@ const BROWSER = [
   { name: 'check:mark', desc: 'the mark probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
   { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'], alone: true },
   { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'], alone: true },
+  // what the page PAINTS as its ground, and what a hairline measures off those bytes (D143). The rest of the
+  // render gate is colour-string arithmetic, so a background-image moves none of its numbers — this is the step
+  // that sees pixels, and the only one that can go red on a texture.
+  { name: 'check:ground', desc: 'the painted page ground and the painted hairlines, off screenshot bytes', needs: ['check:render:dist'], alone: true },
+  { name: 'check:ground:selftest', desc: 'four plantings the ground probe must tell apart (it copies dist, so it reads only)', needs: ['check:render:dist', 'check:ground'], alone: true },
   // last: it edits dist/client/index.html and restores it in a finally block
   // Runs LAST, and the needs list is why it is not just 'after check:render:dist': the selftest PLANTS
   // defects in dist/client/index.html to prove check:render can go red (D118). In the same wave as the
   // read-only probes, a mark or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'twelve mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space'] },
+  { name: 'check:render:selftest', desc: 'twelve mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
 ];
 
 const args = process.argv.slice(2);
