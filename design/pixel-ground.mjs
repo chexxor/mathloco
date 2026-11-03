@@ -25,10 +25,12 @@
 //   hairlines     - every horizontal 1px line of mid-tone pixels 40px+ long that has ground two rows above
 //                   and two below, and its contrast measured against the pixels on BOTH sides. A ring sits on
 //                   a boundary, so it has two neighbours — inside the box and outside it — and DESIGN.md's
-//                   ground definition says a contrast number is a PAIR. The bar is applied to the pair the line
-//                   is drawn ON (the stronger side); the weaker side is reported by name, because "a ring on a
-//                   paper fill with a panel tint behind the fill" is a real finding and silently failing it
-//                   would invent a ruling that was never made.
+//                   ground definition says a contrast number is a PAIR. The bar is applied to BOTH sides:
+//                   the operator ruled on 2026-11-03 that a keyline may not straddle two grounds and that the
+//                   fix is the placement, not the number (D149-3c), which is the ruling record 0018 was asking
+//                   for. A ring with a tint on one side is therefore a FAIL here, not a note: `--color-rule`
+//                   reads 3.01 on paper and 2.88 on `panel`, so the pair the ring is drawn across is already
+//                   under the 3.0 graphic bar on its weaker side.
 //   headroom      - from the measured hairline, how many levels the ground may move in each direction before
 //                   that hairline crosses BARS.graphic. This is the answer the texture ruling needs.
 //   token check   - the same pair computed in token space beside what the bytes say. The probe's first run
@@ -38,9 +40,9 @@
 //                   the bytes say, and the delta between them. A non-zero delta is the proof that the old
 //                   instrument was blind to something.
 //
-// It EXITS 1 only on the thing that is already a bar in this repo: a `rule` hairline measured off painted
-// bytes under BARS.graphic (3.0). It is not a new ruling — D143's ruling was that a background pattern is
-// *ground*, so what bounds it is everything painted on top of it.
+// It EXITS 1 on two things, both of them already bars in this repo: a `rule` hairline measured off painted
+// bytes under BARS.graphic (3.0, D101/D143), and a hairline whose two sides are different grounds with the
+// weaker side under that bar (D149-3c). Neither is a new ruling.
 //
 // Records land in .design/tmp-ground/ (scratch: screenshots, per-width detail). The tracked artifact is
 // design/ground/report.json, because a design record has to be able to cite a number that still exists.
@@ -98,6 +100,13 @@ const PANEL = tokenBytes('panel');
 const INK = tokenBytes('ink');
 const TOKENS = { paper: PAPER, panel: PANEL, tint: tokenBytes('tint'), ink: INK };
 const RULE_TOKEN = parseOklch(`oklch(${readFileSync(resolve('src/styles/global.css'), 'utf8').match(/--color-rule:\s*oklch\(([^)]+)\)/)[1]})`);
+// The `rule` colour in bytes, so a painted run can be asked whether it IS the keyline. It has to be asked:
+// the detector finds any 1px-tall, 40px-long run that is neither the ground nor near it, and that includes a
+// line of `ink-3` small print — at 1240 a 51px run at y=2307 whose core is flat [93,110,97] (= --color-ink-3)
+// with ground two rows above and below, because the paper->panel step is 4 levels and the neighbour tolerance
+// is 12. The bar this gate enforces belongs to the keyline token, so only a run carrying that token's bytes
+// carries the bar. Everything else is counted and named, never silently dropped.
+const RULE_BYTES = tripleToBytes(RULE_TOKEN);
 /** Which token a painted pixel sits on, so every measured number arrives already named. */
 const classify = (c) => {
   let best = 'unknown', d = Infinity;
@@ -110,16 +119,37 @@ const classify = (c) => {
 
 const name = (r) => (r === '/' ? '' : r.replace(/^\//, '_').replace(/\//g, '-'));
 
-/** One harness run: firefox's screenshot of the settled page, plus the page's own report. */
+/** One harness run: firefox's screenshot of the settled page, plus the page's own report.
+ *
+ * A firefox that starts and never posts is this harness's known flake (`design/README.md`: it was chased at
+ * `/404 @390` in `check:render`). `check:render` gives each cell two attempts for exactly that reason; this
+ * gate had one, and three cells in series meant one dead cell redded a run that had nothing to report.
+ * Three of the first six runs in the keyline round died that way, so the retry moves here. A retry is not a
+ * pass: the attempt count is printed, and a cell that only passes on the second attempt is still visible.
+ */
+const ATTEMPTS = Number(process.env.GROUND_ATTEMPTS ?? 2);
 const shoot = (distDir, route, w, h, shot) => {
-  const out = execFileSync(process.execPath, [
-    'design/grill/dist-measure.mjs', distDir, route, 'design/grill/render-measure.js',
-    String(w), String(h), ...(shot ? [shot] : []),
-  ], { stdio: ['ignore', 'pipe', 'pipe'] }).toString();
-  const lines = out.split('\n');
-  const start = lines.findIndex((l) => l.trim() === '{');
-  if (start < 0) return null;
-  try { return JSON.parse(lines.slice(start).join('\n')); } catch { return null; }
+  for (let attempt = 1; attempt <= ATTEMPTS; attempt++) {
+    let out;
+    try {
+      out = execFileSync(process.execPath, [
+        'design/grill/dist-measure.mjs', distDir, route, 'design/grill/render-measure.js',
+        String(w), String(h), ...(shot ? [shot] : []),
+      ], { stdio: ['ignore', 'pipe', 'pipe'] }).toString();
+    } catch (err) {
+      if (attempt === ATTEMPTS) throw err;
+      console.log(`  note: ${route} @ ${w} posted nothing on attempt ${attempt}/${ATTEMPTS} - retrying`);
+      continue;
+    }
+    const lines = out.split('\n');
+    const start = lines.findIndex((l) => l.trim() === '{');
+    if (start >= 0) {
+      try { return JSON.parse(lines.slice(start).join('\n')); } catch { /* fall through to the retry */ }
+    }
+    if (attempt === ATTEMPTS) return null;
+    console.log(`  note: ${route} @ ${w} posted no report on attempt ${attempt}/${ATTEMPTS} - retrying`);
+  }
+  return null;
 };
 
 /**
@@ -179,21 +209,31 @@ async function measureShot(shot, want = PAPER, windowHint = null) {
     // reported by name — failing it would invent a ruling that was never made.
     const own = Math.max(cUp, cDn), other = Math.min(cUp, cDn);
     const ownGround = cUp >= cDn ? above : below, otherGround = cUp >= cDn ? below : above;
-    recs.push({ y, x: x0, len, own: +own.toFixed(2), other: +other.toFixed(2), ownGround: classify(ownGround), otherGround: classify(otherGround) });
+    const distRule = Math.hypot(core[0] - RULE_BYTES[0], core[1] - RULE_BYTES[1], core[2] - RULE_BYTES[2]);
+    recs.push({
+      y, x: x0, len, core,
+      rule: distRule <= 14,
+      own: +own.toFixed(2), other: +other.toFixed(2), ownGround: classify(ownGround), otherGround: classify(otherGround),
+    });
     cs.push(own);
   }
+  // Only the runs that carry the keyline token are measured against the graphic bar. The rest are reported.
+  const ruleRecs = recs.filter((r) => r.rule);
+  const notKeyline = recs.filter((r) => !r.rule);
+  cs.length = 0;
+  for (const r of ruleRecs) cs.push(r.own);
   cs.sort((a, b) => a - b);
   // which hairline is the weakest one — the one every ground decision has to be argued against
   let weakest = 0;
-  for (let i = 1; i < recs.length; i++) if (recs[i].own < recs[weakest].own) weakest = i;
+  for (let i = 1; i < ruleRecs.length; i++) if (ruleRecs[i].own < ruleRecs[weakest].own) weakest = i;
   // How far the GROUND may move before the weakest hairline crosses the graphic bar. Solving the WCAG pair
   // for the ground's luminance: (gl + 0.05) / (hl + 0.05) = bar  ->  gl = bar * (hl + 0.05) - 0.05, then
   // convert that luminance back to an approximate 8-bit level. Both directions, because a grain can only go
   // up on this palette and the reader needs to see that the DOWN direction is already spent.
   const headroom = (bar) => {
-    if (!recs.length) return null;
-    const [hy, hx0, hlen] = lines[weakest];
-    const hl = lum(px(hx0 + Math.floor(hlen / 2), hy));
+    if (!ruleRecs.length) return null;
+    const w = ruleRecs[weakest];
+    const hl = lum(px(w.x + Math.floor(w.len / 2), w.y));
     const target = bar * (hl + 0.05) - 0.05;      // the ground luminance at which this hairline hits the bar
     const levelAt = (L) => { const v = 1.055 * Math.max(0, L) ** (1 / 2.4) - 0.055; return Math.round(Math.max(0, Math.min(1, v)) * 255); };
     // down = how many levels the ground may still DARKEN before the bar is crossed (record 0019 measured this
@@ -231,14 +271,27 @@ async function measureShot(shot, want = PAPER, windowHint = null) {
     width: W, height: H, ground, groundExact: hist.get(ground.join(',')) || 0,
     distinct: hist.size, groundPx: n, groundPct: +(100 * n / total).toFixed(2),
     spanLo: lo, spanHi: hi, span: hi - lo, sd: +sd.toFixed(2), flat,
-    hairlines: lines.length, hairlineMin: cs.length ? +cs[0].toFixed(2) : null,
+    hairlines: ruleRecs.length, runs: lines.length,
+    // Runs that are 1px tall and 40px long but are NOT the keyline token — small-print text, an underline.
+    // Named so the count above can be argued about, and so a future false failure is traceable to a line.
+    notKeyline: notKeyline.map((r) => `core ${r.core.join(',')} (${classify(r.core)}) ${r.own}/${r.other} at y=${r.y} x=${r.x} len=${r.len}`),
+    hairlineMin: cs.length ? +cs[0].toFixed(2) : null,
     hairlineMedian: cs.length ? +cs[Math.floor(cs.length / 2)].toFixed(2) : null,
     hairlineMax: cs.length ? +cs[cs.length - 1].toFixed(2) : null,
-    // every ring with a SECOND ground behind it whose weaker side is under the bar — record 0018's category,
-    // named rather than failed
-    weakSides: recs.filter((r) => r.other < BARS.graphic)
+    // every ring whose weaker side sits under the graphic bar — record 0018's category
+    weakSides: ruleRecs.filter((r) => r.other < BARS.graphic)
       .map((r) => `${r.own} on ${r.ownGround} / ${r.other} against ${r.otherGround} (y=${r.y} x=${r.x} len=${r.len})`),
-    weakest: recs.length ? recs[weakest] : null,
+    // ...and the subset of those that is a STRADDLE: the ring's two neighbours are different tokens, so the
+    // ring is drawn across a boundary. D149-3c bans this and render-gate.mjs asserts the same thing from
+    // computed CSS, which is the pair-of-pairs check (bytes catch what a stylesheet hides; CSS catches what
+    // a branch that never renders cannot show a screenshot).
+    straddles: ruleRecs.filter((r) => r.other < BARS.graphic && r.ownGround !== r.otherGround)
+      .map((r) => `${r.own} on ${r.ownGround} / ${r.other} against ${r.otherGround} (y=${r.y} x=${r.x} len=${r.len})`),
+    weakest: ruleRecs.length ? ruleRecs[weakest] : null,
+    // Every painted hairline with BOTH of its grounds, so a summary number never has to be argued about
+    // later. `hairlineMax 4.99` is meaningless on its own; the pair list says which edge that is and what
+    // it is drawn between.
+    pairs: ruleRecs,
     headroom: headroom(BARS.graphic),
     surfaces: [...hist.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)
       .map(([k, v]) => ({ rgb: k.split(',').map(Number), pct: +(100 * v / total).toFixed(1) })),
@@ -272,12 +325,17 @@ for (const route of routes) {
     if (m.flat) console.log(`  flat ${m.flat.size}x${m.flat.size} window at x=${m.flat.x} y=${m.flat.y}: span ${m.flat.span} levels, sd ${m.flat.sd} — record 0019 measured the grain the palette holds at span 0->3, sd 0.00->0.51`);
     console.log(`  surfaces: ${m.surfaces.map((s) => `${s.rgb.join(',')} ${s.pct}%`).join('  ')} | distinct colours ${m.distinct}`);
     if (m.hairlines) {
-      console.log(`  rule hairlines painted: ${m.hairlines} — against the ground each is drawn on: min ${m.hairlineMin} median ${m.hairlineMedian} max ${m.hairlineMax}`);
+      console.log(`  rule hairlines painted: ${m.hairlines} — against the ground each is drawn on: min ${m.hairlineMin} median ${m.hairlineMedian} max ${m.hairlineMax}${m.notKeyline.length ? ` (${m.notKeyline.length} other 1px runs at this width were rejected as not the keyline token)` : ''}`);
       console.log(`  weakest: ${m.weakest.own} at y=${m.weakest.y} x=${m.weakest.x} len=${m.weakest.len}, on ${m.weakest.ownGround} (other side: ${m.weakest.other} against ${m.weakest.otherGround})`);
       console.log(`  the page's own report says the same keyline is ${claimed.join(', ') || 'unreported'} (computed CSS) — bytes minus CSS: ${delta === null ? 'n/a' : delta}`);
       const tok = Object.entries(TOKENS).find(([, t]) => classify(t) === m.weakest.ownGround);
       if (tok) console.log(`  instrument check: rule-on-${m.weakest.ownGround} measures ${m.weakest.own} off bytes; token space predicts ${contrastBytes(tripleToBytes(RULE_TOKEN), tok[1])} (record 0018's table: 3.01 on paper, 2.88 on panel)`);
-      for (const ws of m.weakSides) console.log(`  NOTE a ring has a second ground behind it: ${ws} — record 0018's category. Named, not failed: no ruling says which side is the pair.`);
+      for (const ws of m.weakSides) {
+        const straddle = m.straddles.includes(ws);
+        console.log(`  ${straddle ? 'FAIL' : 'NOTE'} a ring has a second ground behind it: ${ws} — ${straddle ? 'a keyline may not straddle two grounds (D149-3c): the weaker side is already under the 3.0 bar (record 0018)' : 'record 0018\u2019s category: both sides clear the bar, so the pair is legal'}`);
+      }
+      for (const s of m.straddles) fails.push(`${route} @ ${w}: a rule hairline straddles two grounds — ${s} — the weaker side is under the ${BARS.graphic.toFixed(1)} graphic bar (D149-3c, record 0018): move the box onto one ground, or take the keyline off a tint`);
+      if (process.env.GROUND_VERBOSE) for (const nk of m.notKeyline) console.log(`  rejected run: ${nk}`);
       console.log(`  headroom before the hairline crosses ${BARS.graphic}: ${m.headroom.down > 0 ? `${m.headroom.down} more levels of ground darkening available` : 'NONE - the ground is already at or past the limit'}; lightening is bounded only by clipping, and this ground sits ${m.headroom.clip} levels under 255`);
       if (m.hairlineMin < BARS.graphic) fails.push(`${route} @ ${w}: a rule hairline measures ${m.hairlineMin} against the ground it is drawn on, under the ${BARS.graphic} graphic bar (D101, D143)`);
       if (delta !== null && Math.abs(delta) > 0.05) console.log(`  NOTE bytes and CSS disagree by ${delta}: something painted under that ring moved the pixels and not the stylesheet (record 0019's blind spot, now visible)`);
@@ -297,8 +355,10 @@ writeFileSync('design/ground/report.json', JSON.stringify({
   rows: records.map((r) => ({
     route: r.route, width: r.width, ground: r.ground, groundExact: r.groundExact, groundPct: r.groundPct,
     span: r.span, sd: r.sd, flat: r.flat, surfaces: r.surfaces, distinct: r.distinct,
-    hairlines: r.hairlines, hairlineMin: r.hairlineMin, hairlineMedian: r.hairlineMedian, hairlineMax: r.hairlineMax,
-    weakest: r.weakest, weakSides: r.weakSides, headroom: r.headroom,
+    hairlines: r.hairlines, runs: r.runs, notKeyline: r.notKeyline,
+    hairlineMin: r.hairlineMin, hairlineMedian: r.hairlineMedian, hairlineMax: r.hairlineMax,
+    weakest: r.weakest, weakSides: r.weakSides, straddles: r.straddles, headroom: r.headroom,
+    pairs: r.pairs,
     claimedKeylineContrast: r.claimed, bytesMinusCss: r.delta,
   })),
 }, null, 1));

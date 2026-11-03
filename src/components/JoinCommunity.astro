@@ -30,7 +30,7 @@ const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.l
     </div>
 
     <div class="mt-12 bg-panel rounded-card overflow-hidden">
-      <div class="px-6 py-8 sm:p-10 sm:pb-6">
+      <div class="px-6 py-8 sm:p-10">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <h3 class="text-subhead font-semibold text-ink mb-4">
@@ -57,50 +57,72 @@ const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.l
             </div>
           </div>
 
-          <!-- PS-3, the join media column (round 10 ruling: reserve it now). `check:space` measures this column
-               at 532x128 at 1240 and 310x245 at 390. Unlike the hero column this one is NOT spare air: its height
-               is the call-to-action's own height, so a photo here is a GROWTH, not a reclamation - at the column's
-               measured 532x128 it adds ~152px to the card (and `check:rhythm` says page height is not free). That
-               is worth paying once a real photograph of this club exists; it is not worth paying for a stock one
-               (D94). The call-to-action below stays whether or not the photo does: a photograph may add to the
-               join path here, never replace it. `data-slot` is a probe handle: `check:space` and `npm run
-               round10` re-measure the applied box instead of trusting this comment. -->
+          <!-- PS-3, the join media column (round 10 ruling: reserve it now). `npm run check:space` prints this
+               column by its `data-slot` name — the survey ranks slot boxes by area, and a named box now rides
+               along whatever its rank, because a floor that hides the only box the site labels makes every comment
+               about that box unfalsifiable. Its box is **532x56 at 1240** (one paragraph) inside a grid row that is
+               **326** tall; **310x85 at 390** and **240x113 at 320**, where the grid is one column.
+               @measured 2026-11-03 by check:space
+               What changed here on 2026-11-03: this column used to carry the two paths out, so its height WAS the
+               call-to-action's height (532x128 at 1240, 310x245 at 390) and round 10 could call a plate here "a
+               GROWTH of ~152px, not a reclamation". The actions now stand outside the card (see the note under the
+               card), so the row's height belongs to the copy column beside it: at the reserved 532x128 the column
+               becomes 128 + 32 + 56 = 216px against a 326px row, i.e. **0px of page height at 1240**. At 390 the
+               same plate lands 310x75 and the column goes 85 -> 192, so there it is a **~107px growth**. That is
+               arithmetic on measured parts, not a measured page delta — A3 re-measures it with `check:rhythm` once
+               the plates are in.
+               The call-to-action stays whether or not the plate does: art may add to the join path here, never
+               replace it (D149-1b, D94). `data-slot` is a probe handle: `check:space` and `npm run round10`
+               re-measure the applied box instead of trusting this comment. -->
           <div data-slot="PS-3">
           <PhotoSlot
             slot="join"
             ratio="532 / 128"
             caption="the club mid-session, wide crop (532x128)"
           />
-          <p class="text-body leading-prose text-ink-2 font-body mb-6">
+          <p class="text-body leading-prose text-ink-2 font-body">
             The calendar and the sign-up live on Meetup. The chat is where the club decides what it is
             pulling on.
           </p>
-          <div class="flex flex-wrap gap-3">
-            <a
-              href={config.URLs.meetupGroup}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-control="primary"
-              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
-            >
-              Join on Meetup
-              <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </a>
-            <a
-              href={config.URLs.discordInvite}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-control="secondary"
-              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
-            >
-              Join the chat
-            </a>
-          </div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- **The two paths out stand on the page's own ground, outside the tinted card.** Why here rather than in
+         the card, in numbers: the secondary is `bg-paper inset-shadow-rule`, so its 1px ring has the control's
+         own `paper` fill on one side and whatever the control stands on behind it on the other. Inside the card
+         it stood on `panel`, and `--color-rule` measures **3.01 against paper, 2.88 against panel** — under the
+         3.0 graphic bar on that side (design/records/0018-a-hairline-on-a-tint-is-under-its-own-bar.md). The
+         operator's ruling (D149-3c, 2026-11-03) is that a keyline may not straddle two grounds and that the fix
+         is the placement, not the number. `check:render` now measures both sides of every inset ring and fails
+         the straddle, so the arrangement is gated rather than remembered.
+         This is the same ruling as D141/D142 for a notice — an action belongs outside the boundary it is not a
+         part of — and it has a product consequence worth naming: a photograph in PS-3 can now never displace
+         the join path. The photo adds to the card; the paths out are the card's neighbours (DESIGN.md,
+         "photo-free by construction"). -->
+    <div class="mt-6 flex flex-wrap gap-3">
+      <a
+        href={config.URLs.meetupGroup}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-control="primary"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+      >
+        Join on Meetup
+        <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </a>
+      <a
+        href={config.URLs.discordInvite}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-control="secondary"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+      >
+        Join the chat
+      </a>
     </div>
   </div>
 </section>

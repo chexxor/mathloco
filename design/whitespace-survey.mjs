@@ -252,9 +252,19 @@ for (const route of routes) {
       console.log(`    ${r.tag}.${r.cls}`.padEnd(52) + `${Math.round(r.w)}x${Math.round(r.h)} @y${Math.round(r.y)} of ${r.parentTag}.${r.parent}`.slice(0, 96));
     }
     console.log(`  position:fixed elements excluded from the page-absolute walk: ${dom.fixed.length ? dom.fixed.join(', ') : 'none'}`);
-    console.log(`  columns inside grid/flex containers (the boxes a photo slot would take):`);
-    for (const r of (dom.slots || []).slice().sort((a, b) => b.area - a.area).slice(0, 8)) {
-      console.log(`    ${r.tag}.${r.cls}`.padEnd(46) + `${Math.round(r.w)}x${Math.round(r.h)} @y${Math.round(r.y)} in [${r.display}, gap ${r.gap}]`.slice(0, 78));
+    console.log(`  columns inside grid/flex containers (the boxes a photo slot would take; * = under the 60px floor, printed because the page names it):`);
+    // Ranked by area, but a slot the page NAMED is always printed: PS-3 is smaller than eight list items, so an
+    // area-sorted top-8 cut the one box the site labels out of the output — and a comment about that box then
+    // had no line to be checked against. Named slots ride along whatever their rank.
+    const slotRows = (dom.slots || []).slice().sort((a, b) => b.area - a.area);
+    const shown = slotRows.slice(0, 8);
+    for (const r of slotRows) if (r.dataSlot && !shown.includes(r)) shown.push(r);
+    for (const r of shown) {
+      // A slot the page NAMED is printed by its name, not by its class: `<div data-slot="PS-3">` has no class
+      // at all, so a class-only print renders the reserved photo places anonymous and a component comment
+      // citing "the join media column" cannot be checked against the line it came from.
+      const label = r.dataSlot ? `${r.tag}[${r.dataSlot}]${r.underFloor ? '*' : ''}` : `${r.tag}.${r.cls}`;
+      console.log(`    ${label}`.padEnd(46) + `${Math.round(r.w)}x${Math.round(r.h)} @y${Math.round(r.y)} in [${r.display}, gap ${r.gap}]`.slice(0, 78));
     }
     console.log(`  biggest gaps between blocks of copy: ${topGaps.map((g) => `${g.gap}px after ${g.after}`).join(' | ') || 'none'}`);
     console.log(`  structure: declared padding ${Math.round(padPx)}px; between surfaces ${between.map((b) => `${b.from}->${b.to} ${b.gap}px`).join(', ') || 'none'}`);
