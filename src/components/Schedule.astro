@@ -22,28 +22,26 @@ import {
  * failure; DESIGN.md "States"):
  *   - **dates exist** → rows: date lane, series name, status word. D92: the site publishes **series names
  *     and real dates**, never a frequency.
- *   - **a source is configured and holds nothing** → the round-7 empty state the operator chose (option A:
- *     305px, status word + title + two-line body + a 48px primary and a 40px secondary + the dated line,
-     "two paths out"), because a guaranteed condition of an upcoming-only feed is a gap between events.
+ *   - **a source is configured and holds nothing** → the round-7 empty state the operator chose (option A as
+ *     measured then: 305px, status word + title + two-line body + a 48px primary and a 40px secondary — D139
+ *     has since retired the 40px step for buttons — + the dated line, "two paths out"), because a guaranteed
+ *     condition of an upcoming-only feed is a gap between events.
  *   - **no source configured yet** (today: D132 rules the source is Mobilizon or an ICS feed and the
  *     operator has to provision one) → the same block, with its own status line, and the bracketed
  *     `[venue blurb]` from `src/content.json` **not rendered**: a bracket is a hole in our knowledge, and
  *     DESIGN.md keeps brackets off the page until a source exists. `scripts/check-content.mjs` fails a
  *     build that ships one.
  *
- * Controls, and a finding this component exposed (2026-11-03):
- *   - The one control this block needs is the **48px primary** in the hero's own grammar (`px-8 py-4`, no
- *     hard-coded height — DESIGN.md: "heights are derived, not chosen"). `s48` is "the only step that clears
- *     the 44px AAA bar; it belongs to the join path", and this is the join path.
- *   - The **second path is an inline link, not a 40px secondary button.** `check:render` carries two rules
- *     that cannot both hold for a secondary control: line 184 demands `inset-shadow-rule` controls be 40px
- *     and line 187 demands controls with that class be >=44px at 390. The first version of this block wrote
- *     the round-7 grammar (48 primary + 40 secondary) and the gate went red on the tap rule; making the
- *     secondary 48px then went red on the height rule. The shipped hero has the same 40px secondary
- *     ("View Schedule") and is silent only because `design/grill/render-measure.js` truncates `cls` to 120
- *     characters, so `inset-shadow-rule` falls off the end and neither rule sees it. Both facts are in
- *     `.notes/NEXT.md` for the operator to rule on; until then this block takes the path that is legal
- *     today, which is DESIGN.md's "a link inside a sentence keeps its 24px line".
+ * Controls, after the D139 ruling (2026-11-03):
+ *   - One control: the **48px primary** in the hero's own grammar (`px-8 py-4`, no hard-coded height —
+ *     DESIGN.md: "heights are derived, not chosen"), and it declares `data-control="primary"` because the
+ *     height rules now match the name the source publishes (D140).
+ *   - The **second path is an inline link, not a second button.** It was written while the gate still demanded
+ *     a 40px secondary and then forbade one (record 0016); the ruling retired 40px for buttons, so a second
+ *     button would now be legal at 48px. It stays a link anyway: DESIGN.md prices an in-sentence path at its
+ *     24px line, and a notice-shaped block reads better with one pressable block and one path in prose than
+ *     with two buttons of the same size. If a future round wants the button, `data-control="secondary"` is
+ *     the name it must carry.
  * Both paths still go somewhere that exists — Meetup and `/chat`. No "Past meetings" button: there is no
  * past-events page, and D117's rule is that a path needs a page (that is what killed `Schedule` and
  * `Members` from the nav).
@@ -117,6 +115,7 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
               href={`${config.URLs.meetupGroup}/join`}
               target="_blank"
               rel="noopener noreferrer"
+              data-control="primary"
               class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
             >
               Join on Meetup

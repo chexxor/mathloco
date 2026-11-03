@@ -82,9 +82,10 @@
       </p>
     </div>
   {:else if phase === 'failed'}
-    <!-- The same notice grammar, one 40px action (DESIGN.md: failure is the notice with a 40px
-         retry). The error branch is in the server-rendered HTML by construction: 'pending' says out
-         loud that nothing has loaded, so nobody is trapped in a spinner. -->
+    <!-- The same notice grammar, one 48px action (DESIGN.md: failure is the notice with a 48px retry — D139,
+         so the retry is the same height as every other control and differs from it only by fill). The error
+         branch is in the server-rendered HTML by construction: 'pending' says out loud that nothing has
+         loaded, so nobody is trapped in a spinner. -->
     <div class="inset-shadow-rule rounded-control px-4 py-3 min-h-20" role="alert">
       <p class="text-body text-ink">The channel summaries did not load.</p>
       <p class="text-body text-ink-2">
@@ -93,7 +94,8 @@
       </p>
       <div class="mt-3">
         <button
-          class="inline-flex items-center justify-center h-10 px-4 rounded-control inset-shadow-rule bg-paper text-ink text-label font-medium hover:bg-tint transition"
+          data-control="secondary"
+          class="inline-flex items-center justify-center px-4 py-4 rounded-control inset-shadow-rule bg-paper text-ink text-label font-medium hover:bg-tint transition"
           onclick={() => void fetchSummary()}
         >
           Try again
@@ -110,7 +112,8 @@
         file, so there is nothing here to read — the channels themselves are on Discord.
       </p>
       <a
-        class="mt-3 inline-flex items-center justify-center h-10 px-4 rounded-control inset-shadow-rule bg-paper text-ink text-label font-medium hover:bg-tint transition"
+        data-control="secondary"
+        class="mt-3 inline-flex items-center justify-center px-4 py-4 rounded-control inset-shadow-rule bg-paper text-ink text-label font-medium hover:bg-tint transition"
         href={discordUrl}
       >
         Read Discord

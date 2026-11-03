@@ -40,8 +40,8 @@ tints carry ink, gold carries paper. **Never** put a keylined control on a `pane
 fill measures 1.05–1.09 = flat).
 
 Bars, non-negotiable: **4.5** text (3.0 for text at/below the `display-2` step), **3.0** for a boundary
-or graphic, **1.35** for "this is a separate layer", **24px** minimum target, **44px** for the primary
-path.
+or graphic, **1.35** for "this is a separate layer", **24px** minimum target, **44px** for every pressable
+block at phone widths (D139: the bar belongs to the tap, not only to the primary).
 
 **A hover always goes lighter.** `ink` → `ink-hover`, `paper` → `tint`; a control that darkens on hover
 next to one that lightens is two grammars. On the layer bar this is not cosmetic: at `L` 38 the hover
@@ -163,27 +163,47 @@ arithmetic. **Never** put a shadow on a card, or on a hovered card: cards are pa
 `height = ceil4(measured line box) + 2 × an S3 pad`. Pads come only from the spacing scale.
 
 Round 8 left these heights alone **because the chrome tier did not move**: `text-label` is still 13.3/16, so
-the primary is still 48 and the secondary still 40, re-measured by `check:render` at three widths after the
-ramp changed. That is the whole reason the reading ladder and the chrome tier are separate decisions — a
-label step of 15/20 would make them 52/44 and re-open the nav fit, the notice's 48px one-line figure and the
-card's bands (measured in `design/grill/round8/report.json`).
+the primary is still 48 (the secondary was 40 then — D139 retired that step the following round), re-measured by
+`check:render` at three widths after the ramp changed. That is the whole reason the reading ladder and the chrome
+tier are separate decisions — a label step of 15/20 would make them 52/44 and re-open the nav fit, the notice's
+48px one-line figure and the card's bands (measured in `design/grill/round8/report.json`).
+
+**D139 (2026-11-03) retired 40px for buttons.** `check:render` carried two rules that cannot both hold for a
+`inset-shadow-rule` control — the height rule demanded 40 and the tap rule demanded >=44 at 390 — and the
+control that tripped neither was invisible only because the probe truncates a class string
+(`design/records/0016-*`). Ruled: the **44 bar wins**, so primary and secondary are the **same height** and
+differ by **fill**, not by size. `s40` survives as a **box** height (a notice, a schedule row's own padding) and
+is no longer a button step.
 
 | Step | Height | Use |
 |---|---|---|
 | chip | 24px | chip / inline status (spacing exception must hold) |
-| `s32` | 32px | quiet button, inline controls |
-| `s40` | 40px | secondary button, a notice's retry |
-| `s48` | 48px | primary button — the only step that clears the 44px AAA bar; it belongs to the join path |
+| `s32` | 32px | quiet button, inline controls — **not** a phone tap target: anything pressable at 390 must clear 44 |
+| `s40` | 40px | **boxes, not buttons** (D139): a notice's own height, a row's padding. No pressable block sits here |
+| `s48` | 48px | **every pressable block on the join path** — primary and secondary; the only step that clears the 44px AAA bar |
 
 **Never** let one component family render at three heights (the shipped CTA measured 50 / 58 / 62px
 across breakpoints) and **never** ship a control under 24px (the shipped 404 links measured 19px).
+
+### A control names its role in the markup (D140)
+
+Pressable blocks carry **`data-control="primary"`** or **`data-control="secondary"`**. `check:render` asserts
+the height **per declared role** (48 +/-1) and fails any control with a control's paint (`bg-ink` or
+`inset-shadow-rule`) that declares **no** role. The rules do not read a class string, because they cannot
+be trusted to: the probe truncates it, and a control's grammar changed when a utility class was added at the
+front (record 0016 measured 3 shipped 40px tap targets the gate was blind to for exactly that reason). This
+is D116's rule — the specimen and the built page must report the same thing — applied to a control, and
+`design/records/0009-*`'s rule for a slot: **the source publishes a name; a measurement matches the name.**
+
+An in-sentence path stays a **link**, not a control: "a link inside a sentence keeps its 24px line". That is
+how a block gets a second way out without a second button.
 
 ## Buttons and chips
 
 | Component | Construction | Measured |
 |---|---|---|
 | primary | `ink` fill, `band-text` label, 48px | 10.19, hover 7.33 |
-| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, 40px, hover fill `tint` | 12.02 / 10.96 |
+| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint` | 12.02 / 10.96 |
 | quiet | `gold` label, 32px standalone; **no keyline inside a notice** | 4.82 |
 | chip | its own component, not a button: `ink-2` label on `path-*-tint`, `inset-shadow-path-*`, 24px | 6.27 label, 5.28–7.09 edge |
 
@@ -217,9 +237,9 @@ freshness.
 ## States: empty, loading, failed
 
 - **Zero upcoming events converts.** It is not a sentence (104px, nothing to press) and it is never
-  hidden (47px): status word, `text-lede` title, two-line body, a 48px primary, a 40px secondary, the
-  dated line. The hero's "Next:" label changes to "Nothing scheduled" rather than disappearing, so an
-  empty calendar is distinguishable from a broken page.
+  hidden (47px): status word, `text-lede` title, two-line body, a 48px primary, a second path (a 48px
+  secondary or an inline link, D139), the dated line. The hero's "Next:" label changes to "Nothing
+  scheduled" rather than disappearing, so an empty calendar is distinguishable from a broken page.
 - **Loading is one 24px `role="status"` line, no motion.** No spinner, no skeleton (the shipped skeleton
   material measures 1.05 fill / 1.18 edge = a rectangle pretending to be content). Reserve the height so
   the page does not jump when content lands.
@@ -233,8 +253,9 @@ freshness.
 - **The pending sentence is also the JavaScript-off state.** It reads "The channel summaries have not
   loaded" and names the path out (Discord), so it is true whether or not the browser ever runs the fetch.
   That is how the error branch gets into the server-rendered HTML without the server calling the API.
-- **Failure is the notice above with a 40px retry**, and the error branch must exist in the server-rendered
-  HTML: a JavaScript-off visitor can otherwise never leave the loading branch.
+- **Failure is the notice above with a 48px retry** (D139 — the retry is a control, so it is the one height),
+  and the error branch must exist in the server-rendered HTML: a JavaScript-off visitor can otherwise never
+  leave the loading branch.
 - **Missing content is a designed state, never a build failure** (operator, 2026-11-01). A gate may fail a
   build when a feed is malformed; it must not fail one because the club has nothing scheduled. Empty
   sections get their own content instead.
@@ -518,7 +539,8 @@ npm run check:render            # build, then measure dist/client in Firefox: co
                                 # Builds first unless --no-build; 4 firefox at once, one retry per cell.
 npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
                                 # or whenever a rebuild would undo the thing being measured
-node design/render-gate-selftest.mjs   # mutate the built page five ways and require check:render to FAIL each
+node design/render-gate-selftest.mjs   # mutate the built page eleven ways (8 mark, 3 control) and require
+                                # check:render to FAIL each one — D118, applied to a pixel gate
 node design/mark-check.mjs      # npm run check:mark - both mark probes, at the two widths that bracket the
                                 # box (320: 276px wide, scale 1.15; 1240: 372px, scale 1.55). Needs a built dist.
 node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints. Two-pass: it asks
@@ -715,12 +737,19 @@ word in event prose.
   apply 4c: the guard exists, `min-h-20` reserves, the pending block is the JS-off state, and both
   missing-summary branches now render a line.
 - **What is not measurable yet:** the failed and empty branches render only after a real fetch, and
-  `check:render` measures the server-rendered branch (there is no API on `file://`). They inherit the
-  grammar that IS measured; numbers for them land the first time the gate runs against a deploy where
-  `/api/discord-summary` answers.
-- `UpcomingMeetups.astro` is **dormant and fictional**: it hard-codes "Saturday, 2:00 PM", "Local Library -
-  Study Room B" and "Topic: Introduction to Group Theory" in palette classes, with no feed behind it at
-  all. No page renders it, so no gate sees it — and it becomes a lie the day the event pipeline lands
-  (queue item in `NEXT.md`). Per **D108**, when it does render, missing content is a state with designed
-  content — never a blank, and never a build failure. The batch order and the states to build are in
-  `design/token-plan.md`; the per-class worklist is `design/token-map.md`.
+  `check:render` measures the server-rendered branch (there is no API on `file://`). They inherit the grammar
+  that IS measured; numbers for them land the first time the gate runs against a deploy where
+  `/api/discord-summary` answers. **The cost of that blind spot is now concrete:** the island's two controls
+  (`Try again`, `Read Discord`) sat at 40px behind a hard-coded `h-10` while the control rules ran over `/chat`
+  and never saw them — the probe posted 4 clickable elements for that route, none of them the island's
+  (D139/D140, `design/records/0016-*`, `design/records/0017-*`). They are 48 and carry a role **by the rule, not
+  by a test.** Closing the gap means measuring a SERVED page — run the probe against `wrangler dev` or a preview
+  URL so the island hydrates. That is its own ruling, queued in `.notes/NEXT.md`.
+- `UpcomingMeetups.astro` and `PastEvents.astro` are **deleted** (2026-11-03). The first hard-coded "Saturday,
+  2:00 PM", "Local Library - Study Room B" and "Topic: Introduction to Group Theory" in palette classes with no
+  feed behind it, and no page rendered it, so no gate ever saw it. The schedule surface is now
+  `src/components/Schedule.astro`, whose three states are all designed — **D108**: missing content is a state with
+  designed content, never a blank and never a build failure. The retired strings themselves are now gated:
+  `check:content` (`scripts/check-content.mjs`) fails a build that ships any of them again, a cadence word with no
+  named source (D92), a request-time number from `Math.random()` (D136), or a bracketed placeholder. The batch
+  order and the states to build are in `design/token-plan.md`; the per-class worklist is `design/token-map.md`.
