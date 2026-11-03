@@ -3,7 +3,11 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    # `staging` is the review branch (D124, .notes/runbooks/staging-branch-preview.md). It needs to be here
+    # because a direct merge push into it would otherwise run no CI at all — the runbook measured that this
+    # workflow triggered on `pull_request` and `push` to `main` only. CI has no Cloudflare credentials, so a
+    # staging run verifies and deploys nothing.
+    branches: [main, staging]
   workflow_dispatch:
 
 permissions:
