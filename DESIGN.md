@@ -564,6 +564,15 @@ and the screen can disagree.
   are siblings in one column and the mark is the flexible one. Either the mark carries a declared size or the
   plate and the mark stop competing.
   @measured 2026-11-03 by check:render (review build: `src/content.local/` with `{"photos":{"placeholders":true}}`)
+  A hatched placeholder and a real image are flex items with different intrinsic sizes, so the case A2 actually
+  ships splits differently again: with the Byrne leaf itself in the slot the mark lands at **188×118**
+  (`check:space`; `check:render` reports **186×116.3** — the two probes differ by the scrollbar's 10px of viewport
+  width, which shifts a centred column) and its thinnest stroke computes to **1.02px** — legal against D119's floor
+  by two hundredths — while the plate becomes a **188×125** window that keeps **46%** of a portrait leaf. So the
+  blocker is not a red gate; it is a column where every element lands at its own minimum. Across the seven
+  compositions in `npm run round13`: stacking the column costs the page **0px** and gives the plate **376×307**
+  (**56%** of the leaf); giving the plate its own shape costs **+151px**.
+  @measured 2026-11-03 by round13 (review build; record `design/grill/round13/report.json`)
   Join media column **532×56** at 1240 (one paragraph) inside a grid row that is **326** tall; **310×85** at 390,
   **240×113** at 320. It used to be **532×128** / **310×245** of call-to-action, which is what made round 10 call
   a photo there "a ~152px *growth*, not a reclamation"; the two join actions now stand outside the tinted card
