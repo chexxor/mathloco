@@ -40,7 +40,7 @@
 // interleaves. A step that fails prints its own output under its name; steps that needed it are reported
 // SKIPPED rather than run against an artifact that does not exist.
 //
-// Every step's full output is ALSO written to `.design/tmp-gate-logs/<set>/<step>.txt`, pass or fail
+// Every step's full output is ALSO written to `.design/tmp-gate-logs/{deploy,browser}/<step>.txt`, pass or fail
 // (D144). Why: a green run used to leave the word "ok" and throw the measurement away, and the output is
 // where the answer lives whenever a decision has to be taken from a gate — which controls measured what,
 // what a probe saw, what the preview will show. It got asked for four times in one session and each time
