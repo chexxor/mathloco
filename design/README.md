@@ -34,7 +34,7 @@ so both locations stay clean. They are still scratch — do not commit them.
 | command | what it does | browser? |
 | --- | --- | --- |
 | `npm run verify` | the CI gate set; browser-free | no |
-| `npm run check:render` | build, then measure `dist/client` in Firefox: control geometry, painted contrast, bands, keylines, notices, nav fit, one display step, faces loaded, the hero mark | yes |
+| `npm run check:render` | build, then measure `dist/client` in Firefox: control geometry, painted contrast, bands, keylines, notices, nav fit, one display step, faces loaded, the hero mark. **Default width matrix 1240, 640, 390, 320** — 320 is mandatory (D114's floor: the gate refuses a default set that drops it) and 640 is the `sm:` flip that lands inside the phone band; the gate prints which breakpoints `src/` uses and names any flip the set does not measure (record 0022) | yes |
 | `npm run check:render:dist` | the same measurement on the `dist` that is already there (`--no-build`) — right after `verify`, or when a rebuild would undo what you are testing | yes |
 | `node design/render-gate.mjs [route…]` | the gate itself; it builds unless `--no-build`, runs its route × width matrix 4 ff at once (`RENDER_JOBS=1` to serialize), and retries a firefox that posted nothing once (`RENDER_ATTEMPTS`) | yes |
 | `node design/render-gate-selftest.mjs` | mutate the built page five ways, require `check:render` to FAIL each — proves the mark checks can still fail | yes |
@@ -49,6 +49,8 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `npm run check:mark` | the two mark probes, at 320 and 1240, in one command (writes `.design/render/mark-<w>.png` and `_-<w>.json`). Needs a built dist; diagnostic, not in `verify` | yes |
 | `npm run check:color` (`node design/color-survey.mjs`) | how much colour a built page actually paints. **Two-pass: it asks the page its own settled height, then shoots the whole page** — a fixed 2400px frame of a 2495px document put the `bg-ink` footer out of frame and reported a different page (record 0015). Reports chroma ≥ 0.04, chroma ≥ 0.08 ("colour a reader would name": `--color-ink` is C 0.045, so the first bar counts every glyph and every dark band), the faint 0.012–0.04 band, and 30° hue families. Exits 0 whatever it finds — it is the before-number for a colour round. Records land in `.design/tmp-color/` | yes |
 | `npm run check:rhythm` (`node design/rhythm.mjs`) | the same page with each proposed vertical-rhythm option applied to a **copy** of `dist/client`, measured at 1240 and 390: `edges` (hero margins, section padding), `edges-rules` (same, with a 1px rule at each band boundary), `interior` (gaps inside surfaces), `slots` (PS-1/PS-3 filled at approved sizes), `all`. Reports doc height, empty-run px and %, run count, biggest run, painted share, and emptiness split at-edges vs in-surface. The shipped artifact is never mutated; variant reports are cached in `.design/tmp-whitespace/` and keyed to a fingerprint of the shipped page, so a rebuild invalidates them (record 0015). Saves `design/rhythm/report.json`. `RHYTHM_VARIANTS=slots` (or `slots,edges`) measures a subset in seconds when the cache still matches the build, and writes to a gitignored path so the cited full table is never half-filled; an unknown option name exits 1 with the known list | yes |
+| `npm run check:ground` (`node design/pixel-ground.mjs`) | what the built page **paints** as its ground, in 8-bit levels, and what each painted `rule` hairline measures **off those bytes** — the instrument D143 needs, because every other colour probe here reads computed colour *strings*, and a `background-image` (texture, gradient, photograph) appears in none of them. Two-pass like `check:color`: ask the page its settled height, then shoot the whole page. Finds hairlines by runs of 40+ pixels lying between two grounds (a hairline antialiases to a blend, so there is no selector for it), measures each against **both** neighbours, and fails only the stronger pair — the weaker side is named as a note, because which side is *the* pair is an operator call (record 0018). Prints the token-space number beside the byte number so the two spaces cannot be confused, plus the flat-window span/sd that a grain is authored in. Saves `design/ground/report.json` (tracked — record 0020 cites it); screenshots and per-width detail in `.design/tmp-ground/`. Exits 1 if a painted hairline is under `BARS.graphic`. Record 0020 | yes |
+| `npm run check:ground:selftest` | four plantings the ground probe must tell apart, on a **copy** of `dist`: the same flat 64x64 window must report an excursion it did not on the clean page (sd 2.29 vs 0.00); a ring with the grain behind it must move (3.06 vs 3.01); the page's own CSS-reported keyline must **not** move (3.01 both times — that is the blindness); and a grain planted on `body` alone must **not** move the ring, because anything that fills itself paints over the page ground. Removing the byte path fails the first two; blinding the sampler fails all four (D118) | yes |
 | `npm run lines:measure` / `:dist` | characters per line, measured off the built page's own line boxes at the shipped widths (`--no-build` for the dist that exists). A diagnostic, not a gate: it exits 0 whatever it finds, it is browser-only so it is not in `verify` | yes |
 | `node design/round8.mjs [--crop]` | one design round in a command: generate the specimens, then measure characters-per-line per ramp, control heights, notice height, the display cap against the longest club name, and each mark candidate's painted coverage; saves `design/grill/round8/report.json` (`--crop` writes `zoom`-scaled PNG crops of each mark for eyeballing) | yes |
 | `npm run round9` (`node design/round9.mjs`) | the colour round in one command: build the three specimens, measure each panel's PAINTED pixels (chroma ≥ 0.04 as `check:color` counts it, plus ≥ 0.08 as the level a reader would call colour, and the 0.01–0.04 "faint" band where the shipped tints live), resolve every planted contrast pair off the bytes the browser paints, run `mark-pixels.mjs` over the four mark colourings on both grounds, and check every specimen token against its spec; saves `design/grill/round9/report.json` and re-embeds the numbers into `round-9.html`. Exits 1 if a planted pair misses its bar — a specimen option that breaks a rule is supposed to be loud | yes |
@@ -61,11 +63,12 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/grill/okcolor.mjs --selftest` | the OKLab/OKLCH/contrast/hue-window/brand-distance maths one shared module, asserted against the numbers `DESIGN.md` and `.notes/DECISIONS.md` cite (paper–ink 12.02, gold 4.82, D88's 0.135, the 0.05 same-colour bar) **and** against the pixel-space form of the same distance (`oklabBytes`/`distLab`, so the survey's 0.05 pixel bar and the token drift bar are the same measurement). `color-survey.mjs`, `whitespace-survey.mjs`, `round9-palette.mjs`, `round9.mjs` and `round10-build.mjs` all import it, so a predictor and a survey cannot drift apart | no |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
 
-Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
-3 × 3 matrix serialized ≈ 7.8 s, at `RENDER_JOBS=4` ≈ 4.2 s; `check:render` with its build ≈ 8.3 s; the
-five-mutation render selftest ≈ 4.7 s; `check:social:live` ≈ 1.3 s. Four sequential 9-cell runs (36 cells)
+Measured cost on this rig (16 CPUs, Linux, Firefox 159.0, native, 2026-11-03): one page at one width ≈ 0.9–3 s;
+`check:render:dist` over its **12 cells** (4 widths × 3 routes) ≈ **35 s**; `verify:browser`, 7 steps each alone,
+≈ **86 s**; the twelve-mutation render selftest ≈ 12 s; `check:social:live` ≈ 1.4 s. Sequential runs of 9 cells
 posted cleanly; one serialized run of 9 needed a retry, which is why a cell gets two attempts — the
-harness's known flake is a firefox that starts and never posts. The browser gates are cheap; what keeps
+harness's known flake is a firefox that starts and never posts — seen again 2026-11-03 at `/404 @390`, where the
+cell passed standalone, so a red `check:render:dist` under load earns one solo re-run before anyone believes it. The browser gates are cheap; what keeps
 them out of `verify` is needing Firefox in the runner, which is an operator call (`.notes/NEXT.md`).
 
 ## the harness contract — four rules every probe here has to keep
@@ -90,6 +93,14 @@ them out of `verify` is needing Firefox in the runner, which is an operator call
    conditional `class={…}` inside the attribute, so class matching must compare whole tokens. And
    `position: fixed` rects are viewport-relative — exclude fixed content from any page-absolute walk and print how
    many elements were excluded, because a silent filter is how a measurement starts lying.
+5. **A shot has to contain the page, and a width set has to contain the breakpoints.** Take the height from the
+page's own settled report and use `grill/shot-height.mjs`'s `shotHeight()` — never an inline
+`Math.min(cap, scrollHeight)`. Three probes carried their own 6000px cap and the home page grew to **6978px at a 320
+viewport**, so every 320 number covered 6000px of a 6978px page while printing percentages of the frame: **815px of
+emptiness and two thirds of the reader-named colour were missing at the floor width** (record 0021).
+`shotHeight()` throws, naming the width, the real height and the cap. Same class at the horizontal axis:
+`render-gate.mjs` prints which Tailwind tiers `src/` uses and names any flip its width set does not measure, because
+320 → 390 → 1240 crossed none of them while `sm:` fired 23 times (record 0022).
 
 ## evidence — read these, they are dated
 

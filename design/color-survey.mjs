@@ -48,6 +48,7 @@ const SITE_FP = createHash('sha1').update(readFileSync(resolve('dist/client/inde
 mkdirSync('.design/render', { recursive: true });
 
 import { oklchFromRgb } from './grill/okcolor.mjs';
+import { shotHeight } from './grill/shot-height.mjs';
 
 const CHROMA_MIN = 0.04;                                     // below this a pixel is a neutral tint, not a colour
 // A second bar, because the first one lies on its own: `--color-ink` is C 0.045, so the ink ground — the
@@ -84,7 +85,7 @@ for (const route of routes) {
     // same page measured 3.8% with the band out of frame and 9.4% with it in. At 320 the crop showed about
     // a third of a ~4100px page. A crop is a claim about the page, so the crop is now the page.
     const probe1 = run(route, w, 1200, '');
-    const pageH = Math.min(6000, Number(probe1?.doc?.scrollHeight ?? 0) || (w <= 390 ? 1400 : 2400));
+    const pageH = shotHeight(Number(probe1?.doc?.scrollHeight ?? 0), `${route} @ ${w}`);
     run(route, w, pageH, shot);
     const h = pageH;
     const img = await sharp(shot).raw().toBuffer({ resolveWithObject: true });

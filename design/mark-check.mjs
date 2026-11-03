@@ -15,7 +15,12 @@
 // dash on the far half is 6px on / 4.8px off at phone size. So the widths here are the two that bracket it:
 //
 //   320  - the smallest hero box the mark ever gets (276px wide, scale 1.15): the tightest stroke and dash budget
-//   1240 - the largest (372px, scale 1.55): where a too-heavy mark turns into a poster
+//   640  - the LARGEST (512px wide, scale 2.133) — measured 2026-11-03, and it refuted this file's earlier claim
+//          that 1240 was the largest. The hero is single-column until `lg:` (1024), so between `sm:` (640) and 1024
+//          the mark fills the whole container width; at 1240 the hero is a 12-col grid and the mark gets one
+//          column. The mark is therefore 38% bigger at a phone in landscape than on a desktop, and the stroke
+//          budget that matters most is the one at 640.
+//   1240 - the widest container (372px, scale 1.55): where a too-heavy mark turns into a poster on the grid
 //
 // Window heights match the render gate's (1400 at phone widths, 2400 at desktop) so the shots and the gate's
 // reports are the same page. The mark sits at y ~1014 at 320px, so a shorter viewport would crop it.
@@ -34,6 +39,7 @@ mkdirSync('.design/render', { recursive: true });
 
 const runs = [
   { w: 320, h: 1400 },
+  { w: 640, h: 1400 },
   { w: 1240, h: 2400 },
 ];
 

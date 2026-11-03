@@ -28,6 +28,7 @@ import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
 import { oklabBytes, distLab } from './grill/okcolor.mjs';
+import { shotHeight } from './grill/shot-height.mjs';
 import { readFileSync as readSite } from 'node:fs';
 
 const args = process.argv.slice(2);
@@ -39,7 +40,7 @@ const argList = (flag, dflt) => {
   return out;
 };
 const routes = argList('--routes', ['/']);
-const widths = argList('--widths', ['1240', '390']).map(Number);
+const widths = argList('--widths', ['1240', '390', '320']).map(Number);
 // --css <file> measures a PROPOSED page rather than the shipped one: the CSS is injected into a COPY of
 // dist/client, so a rhythm or photo-slot proposal gets the same bars applied to the real page instead of a
 // prediction. dist/ is never mutated (dist/ is what gets deployed). --label names the variant so its records
@@ -111,7 +112,7 @@ for (const route of routes) {
     // Pass 1: learn the real page height (a shot taller than the page counts body ground as emptiness,
     // and a shot shorter than it hides the bottom of the page).
     const first = probe(route, w, 1200, '');
-    const pageH = Math.min(6000, first.doc.scrollHeight);
+    const pageH = shotHeight(first.doc.scrollHeight, `${route} @ ${w}`);
     const shot = `.design/render/space${tag}-${name(route)}-${w}.png`;
     const dom = probe(route, w, pageH, shot);
     if (dom.errors?.length) console.error(`  probe errors: ${dom.errors.join('; ')}`);

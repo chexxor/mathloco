@@ -21,7 +21,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
-const WIDTHS = [1240, 390];
+const WIDTHS = [1240, 390, 320];
 const ROUTES = ['/'];
 
 const variants = [

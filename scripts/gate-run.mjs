@@ -25,6 +25,13 @@
 // accepted the artifact. If that ever stops being true on an upgrade, `--serial` is the fallback and this
 // file is the place to record the ordering.
 //
+// The browser set (`verify:browser`) is measured separately and runs only when asked: **85.6s wall for its 7
+// steps** on this rig (2026-11-03, jobs=4, wall == work because every step must be ALONE — each runs its own
+// Firefox pool, see the note in BROWSER). It was 44.7s before the width sets grew to 1240/640/390/320 (record
+// 0022); that is the price of measuring the breakpoints the code actually uses. Its wall clock is one reason it is
+// not in `verify`; the other is that the runner needs Firefox, which is an operator call. The log capture below is
+// what makes its output survive a green run.
+//
 // What is deliberately NOT here: `check:discord` (needs a bot token), `check:ai` (needs Groq credentials
 // and spends a model call), and the browser gates as a deploy gate (the runner has no Firefox — D123).
 // Those exclusions are identical to the ones the old `npm run verify` chain had; only the schedule moved.
@@ -32,9 +39,16 @@
 // Output discipline: each step's stdout/stderr is captured and replayed as a block, so nothing
 // interleaves. A step that fails prints its own output under its name; steps that needed it are reported
 // SKIPPED rather than run against an artifact that does not exist.
+//
+// Every step's full output is ALSO written to `.design/tmp-gate-logs/{deploy,browser}/<step>.txt`, pass or fail
+// (D144). Why: a green run used to leave the word "ok" and throw the measurement away, and the output is
+// where the answer lives whenever a decision has to be taken from a gate — which controls measured what,
+// what a probe saw, what the preview will show. It got asked for four times in one session and each time
+// the answer cost a re-run of a 50-80s browser step. `.design/tmp-*` is gitignored by an existing rule, so
+// this adds no tracked noise, and a run overwrites its own set's directory: the logs are the *last* run.
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, mkdirSync, writeFileSync, readdirSync, unlinkSync } from 'node:fs';
+import { resolve, join } from 'node:path';
 
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
@@ -76,13 +90,18 @@ const BROWSER = [
   { name: 'check:mark', desc: 'the mark probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
   { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'], alone: true },
   { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'], alone: true },
+  // what the page PAINTS as its ground, and what a hairline measures off those bytes (D143). The rest of the
+  // render gate is colour-string arithmetic, so a background-image moves none of its numbers — this is the step
+  // that sees pixels, and the only one that can go red on a texture.
+  { name: 'check:ground', desc: 'the painted page ground and the painted hairlines, off screenshot bytes', needs: ['check:render:dist'], alone: true },
+  { name: 'check:ground:selftest', desc: 'four plantings the ground probe must tell apart (it copies dist, so it reads only)', needs: ['check:render:dist', 'check:ground'], alone: true },
   // last: it edits dist/client/index.html and restores it in a finally block
   // Runs LAST, and the needs list is why it is not just 'after check:render:dist': the selftest PLANTS
   // defects in dist/client/index.html to prove check:render can go red (D118). In the same wave as the
   // read-only probes, a mark or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'twelve mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space'] },
+  { name: 'check:render:selftest', desc: 'twelve mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
 ];
 
 const args = process.argv.slice(2);
@@ -112,6 +131,23 @@ if (set === BROWSER && !existsSync(dist)) {
   console.error('gate-run --browser: dist/client/index.html missing — run npm run verify (or npm run build) first.');
   process.exit(1);
 }
+
+// One directory per set, overwritten by the run, so `check:render:dist.txt` always means "the last render
+// measurement I ran". A log write must never be what breaks the gate set, so failures are reported loudly
+// and do not throw — a silent log failure is the same defect class as no logs at all.
+const LOG_DIR = resolve('.design', 'tmp-gate-logs', set === BROWSER ? 'browser' : 'deploy');
+let logBroken = null;
+try {
+  mkdirSync(LOG_DIR, { recursive: true });
+  for (const f of readdirSync(LOG_DIR)) if (f.endsWith('.txt')) unlinkSync(join(LOG_DIR, f));
+} catch (e) { logBroken = e.message; }
+const runStarted = new Date().toISOString();
+const writeLog = (name, { code, secs, out, note = '' }) => {
+  if (logBroken) return;
+  const head = `# gate-run: ${name}\n# set=${set === BROWSER ? 'browser' : 'deploy'} started=${runStarted} exit=${code} secs=${secs.toFixed(2)}\n# command: npm run --silent ${name}\n`;
+  try { writeFileSync(join(LOG_DIR, `${name}.txt`), `${head}${note}\n${out}\n`); }
+  catch (e) { logBroken = e.message; }
+};
 
 const run = (step) => new Promise((done) => {
   const t0 = process.hrtime.bigint();
@@ -146,7 +182,9 @@ while (remaining.length) {
     for (const step of remaining) {
       const missing = (step.needs ?? []).filter((n) => results.get(n)?.code !== 0);
       skipped++;
-      console.log(`SKIP ${step.name.padEnd(24)} needed: ${missing.map((m) => `${m} (${results.get(m) ? 'FAILED' : 'not run'})`).join(', ')}`);
+      const why = missing.map((m) => `${m} (${results.get(m) ? 'FAILED' : 'not run'})`).join(', ');
+      writeLog(step.name, { code: 'skipped', secs: 0, out: `SKIPPED — needed: ${why}`, note: '\n# The step never ran: an earlier step it needs did not succeed.' });
+      console.log(`SKIP ${step.name.padEnd(24)} needed: ${why}`);
     }
     break;
   }
@@ -162,6 +200,7 @@ while (remaining.length) {
   for (const r of waveResults) {
     results.set(r.step.name, r);
     const secs = r.secs.toFixed(2).padStart(6);
+    writeLog(r.step.name, r);
     if (r.code === 0) {
       console.log(`ok   ${r.step.name.padEnd(24)} ${secs}s`);
     } else {
@@ -175,7 +214,16 @@ while (remaining.length) {
 const wall = ((Date.now() - t0) / 1000).toFixed(1);
 const sum = [...results.values()].reduce((a, r) => a + r.secs, 0).toFixed(1);
 const ok = results.size - failed - 0;
+try {
+  const manifest = [...results.values()]
+    .map((r) => `${r.code === 0 ? 'ok  ' : 'FAIL'} ${r.step.name.padEnd(24)} ${r.secs.toFixed(2).padStart(7)}s  -> ${r.step.name}.txt`)
+    .join('\n');
+  writeFileSync(join(LOG_DIR, 'manifest.txt'), `# gate-run ${set === BROWSER ? 'browser' : 'deploy'} set, ${runStarted}\n# ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS})\n${manifest}\n`);
+} catch (e) { logBroken ||= e.message; }
 console.log(`\ngate-run: ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, set=${set === BROWSER ? 'browser' : 'deploy'})`);
+console.log(logBroken
+  ? `NOTE step output was NOT saved (${logBroken}) — every number above is unverified until you re-run with a writable .design/`
+  : `logs  ${LOG_DIR}/ — every step's full output, pass or fail, from this run (gitignored scratch; the last run wins)`);
 if (failed || skipped) {
   console.log('Nothing was deployed by this command. Fix the FAILs above; the SKIPs are steps that');
   console.log('would have measured an artifact their failed step never produced.');

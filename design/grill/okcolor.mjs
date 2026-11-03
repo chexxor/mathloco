@@ -162,7 +162,11 @@ export function hueWindows(reserved, minGap = 40) {
 }
 
 // ---------- selftest: the numbers the decisions quote, re-derived here ----------
-if (process.argv.includes('--selftest')) {
+// Guarded by entry module, not by argv alone: this file is imported by half the design tooling
+// (color-survey, whitespace-survey, round9, round10-build, pixel-ground), and an argv-only test meant
+// that any of those run with `--selftest` executed THIS suite first — and exited non-zero here, with a
+// failure message about the wrong tool, if a cited number had drifted. Node 22's `import.meta.main`.
+if (import.meta.main && process.argv.includes('--selftest')) {
   const css = (await import('node:fs')).readFileSync(new URL('../../src/styles/global.css', import.meta.url), 'utf8');
   const tok = (name) => { const m = new RegExp(`--color-${name}:\\s*([^;/]+);`).exec(css); if (!m) throw new Error(`no --color-${name}`); return parseOklch(m[1].trim()); };
   const P = tok('paper'), I = tok('ink'), R = tok('rule'), G = tok('gold'), GI = tok('gold-on-ink'), BT = tok('band-text');

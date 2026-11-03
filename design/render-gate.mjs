@@ -50,7 +50,7 @@
 // Each run also reports whether the webfonts had loaded. A serif line box measured while PT Serif is
 // still loading is a fallback metric, so this shows up as a warning rather than a pass.
 import { execFileSync, execFile } from 'node:child_process';
-import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 
@@ -64,7 +64,12 @@ import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 // They report the overflow instead of hiding it, and the gate refuses to run a default set that has
 // quietly dropped the floor.
 const FLOOR = 320;
-const widths = (process.env.RENDER_WIDTHS || "1240,390,320").split(",").map(Number);
+// 640 is in the default set because it is the only breakpoint that can fire inside the phone band: `src/`
+// uses Tailwind `sm:` (640) 22 times, `md:` (768) 16 and `lg:` (1024) 16, and until 2026-11-03 the matrix
+// jumped 320 -> 390 -> 1240, crossing none of them. A phone in landscape is 640-932 CSS px, so `sm:` is a
+// narrow-viewport event, not a tablet one. 768/1024 stay out: they are not narrow, and each width costs a
+// firefox per route. The boundary is reported, not remembered - see the breakpoint note the gate prints.
+const widths = (process.env.RENDER_WIDTHS || "1240,640,390,320").split(",").map(Number);
 const argv = process.argv.slice(2);
 const NO_BUILD = argv.includes('--no-build');
 const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 4));
@@ -79,6 +84,22 @@ const dist = resolve('dist/client');
 // --breakpoint-nav-narrow with a tier each side of it. The one shape it will not accept is an ad-hoc
 // `min-[412px]:` bracket, because a bracket writes nothing that any gate reads.
 const THEMED = readFileSync('src/styles/global.css', 'utf8');
+
+// Breakpoints get REPORTED, not remembered. Tailwind's defaults are rem-based (sm = 40rem), so a moved root
+// font size moves them; a `--breakpoint-x` in the token block adds one. Either way the gate says which tiers
+// `src/` actually uses and which of them the width matrix measures, because a flip with no measured width is
+// a layout nobody has looked at — that is exactly how 640 stayed unmeasured while `sm:` fired 22 times.
+const BP = { sm: 640, md: 768, lg: 1024, xl: 1280 };
+for (const m of THEMED.matchAll(/--breakpoint-([a-z-]+):\s*([0-9.]+)rem/g)) BP[m[1]] = Math.round(Number(m[2]) * 16);
+const walkSrc = (d, out = []) => { for (const e of readdirSync(d, { withFileTypes: true })) {
+  const p = `${d}/${e.name}`;
+  if (e.isDirectory()) walkSrc(p, out); else if (/\.(astro|svelte|css|ts|js)$/.test(e.name)) out.push(p);
+} return out; };
+const usedBP = {};
+for (const f of walkSrc('src')) for (const m of readFileSync(f, 'utf8').matchAll(/(?:[\s"'`({])(sm|md|lg|xl):[a-zA-Z0-9_\-\[\]#.]/g)) usedBP[m[1]] = (usedBP[m[1]] || 0) + 1;
+const bpList = Object.entries(usedBP).sort((a, b) => b[1] - a[1]).map(([k, n]) => `${k}(${BP[k] ?? '?'})x${n}`);
+const unmeasuredBP = Object.keys(usedBP).filter((k) => BP[k] && !widths.includes(BP[k])).map((k) => `${k}(${BP[k]})`);
+console.log(`breakpoints in use: ${bpList.join(' ') || 'none'} | widths measured: ${widths.join(', ')} | ${unmeasuredBP.length ? `FLIP WITH NO MEASURED WIDTH: ${unmeasuredBP.join(' ')}` : 'every used breakpoint is measured'}`);
 const navTier = THEMED.match(/--breakpoint-nav-narrow:\s*(\d+)px/);
 const NAV_NARROW = navTier ? Number(navTier[1]) : null;
 // The ramp, read out of the block instead of remembered. Round 8 (2026-11-02) raised body 16 -> 17.6 and
