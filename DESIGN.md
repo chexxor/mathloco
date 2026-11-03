@@ -15,6 +15,12 @@ not a design value.
 
 ## Colour — named roles only
 
+**Ground** is the plain word for the surface a colour sits on: the colour *behind* a word, a ring, a button or a
+fill. `paper` is the page's ground, `ink` is the ground inside the one dark band, `panel` is a card's ground.
+Every contrast number in this file is a **pair** — a role against the ground it is painted on — and a number
+quoted without its ground is not a fact. That is why the palette carries `-on-ink` twins (D116) and why a tint
+(`panel`, 1.04 against `paper`) is not a layer (the layer bar is 1.35).
+
 | Role | Value | Means | Measured |
 |---|---|---|---|
 | `paper` | `oklch(98.5% .006 85)` | the page ground | — |
@@ -620,6 +626,23 @@ exists, `border` keylines, `shadow-*` outside `e1/e2`, `duration-*` outside 150/
 word in event prose.
 
 ## Open threads that are not gates yet
+
+- **A background pattern is ground, not a graphic — operator ruling 2026-11-03, nothing built.** Asked whether a
+  barely-noticeable paper texture belongs under the page, the answer measured (record
+  `design/records/0019-a-ground-texture-has-zero-headroom.md`): the ceiling is the boundary role, not
+  legibility. The `rule` hairline sits at **3.01** against a 3.0 bar, so a ground that goes **one 8-bit level
+  darker** is already under its own bar (2.96), while body text survives ±40 levels; rendered paper is
+  `252,250,246`, three levels from clipping. Only a **light-only** grain (token ground as the floor, ≤3 levels
+  up, σ ≈ 0.5) fits, and it leaves the area metrics alone — painted **4.48 → 4.49%** at 1240, **9.68 → 9.84%** at
+  390, empty-run unchanged — because it sits under the survey's 0.05 same-colour bar. It may not go on `panel`
+  (`rule` there is 2.88) or on the ink band without its own specimen.
+  **Ruled:** it is *ground*, so the 3.0 graphic bar is not its bar; what bounds it is everything painted on top
+  of it. **Blocked on, in order:** (1) the pixel-ground probe — `design/grill/render-measure.js` `paintBytes()`
+  parses a computed colour *string*, so a `background-image` moves **no** contrast number `check:render` prints
+  (it said 3.01 on a page whose pixels measured 3.03–3.06), and the same blindness will cover the PS-1 hero
+  photograph; the card checks already sample real PNG bytes with `sharp().raw()`. (2) The photo decision: grain
+  under a chalkboard photograph is mud. (3) R6 rhythm. Note also `paper → panel` is a **4-level** step, so a
+  grain spanning 3–4 levels is the same size as the site's only tint step.
 
 - **The site is colour-sparse, and that is now measured rather than felt** (`design/color-survey.mjs`,
   2026-11-02, operator request). **The first version of these numbers was a crop, not a page** — the survey shot a
