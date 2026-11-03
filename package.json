@@ -31,6 +31,7 @@
     "cost:save": "node scripts/gate-cost.mjs --save",
     "check:render": "node design/render-gate.mjs",
     "check:render:selftest": "node design/render-gate-selftest.mjs",
+    "review:render": "node scripts/review-render.mjs",
     "lines:measure": "node design/line-length.mjs",
     "lines:measure:dist": "node design/line-length.mjs --no-build",
     "round8": "node design/round8.mjs",

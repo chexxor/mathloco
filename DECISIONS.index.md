@@ -164,5 +164,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D154** (2026-11-03) — The straddle ruling is now enforced by two gates, and a `rule` ring cannot live in a tinted region at all (2026-11-03, delegate, closing D149-3c)
 - **D155** (2026-11-03) — The index gate caught its own staleness on the first day, and that fixed the merge order (2026-11-03, delegate)
 - **D156** (2026-11-03) — A probe may not measure a build that is not its own tree's (2026-11-03, delegate)
+- **D157** (2026-11-03) — A review build is a build state, not a shell recipe — and it is the only way any gate sees the missing-content page (2026-11-03, delegate)
 
-Defined: 156 (D1-D156). Unused ids: none.
+Defined: 157 (D1-D157). Unused ids: none.

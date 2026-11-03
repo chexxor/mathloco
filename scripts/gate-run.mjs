@@ -150,7 +150,10 @@ if (set === BROWSER) {
 // One directory per set, overwritten by the run, so `check:render:dist.txt` always means "the last render
 // measurement I ran". A log write must never be what breaks the gate set, so failures are reported loudly
 // and do not throw — a silent log failure is the same defect class as no logs at all.
-const LOG_DIR = resolve('.design', 'tmp-gate-logs', set === BROWSER ? 'browser' : 'deploy');
+const LOG_DIR = process.env.GATE_LOG_DIR
+  // an override is always a gitignored scratch path (`.design/tmp-*`), so a review build's evidence does not
+  // overwrite the shipped run's — `tmp-gate-logs` is "the last run wins" and those two runs are not the same page
+  || resolve('.design', 'tmp-gate-logs', set === BROWSER ? 'browser' : 'deploy');
 let logBroken = null;
 try {
   mkdirSync(LOG_DIR, { recursive: true });

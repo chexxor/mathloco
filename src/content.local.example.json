@@ -1,5 +1,5 @@
 {
   "_about": "Copy this file into src/content.local/ (a gitignored directory) to get a REVIEW build: the reserved photo places draw their measured shot-cards, so a preview shows the geometry a real photograph will take. Nothing tracked may turn a placeholder on - `npm run check:content` fails any built page carrying a data-placeholder fill, so this cannot reach the apex. Files in that directory deep-merge over src/content.json in filename order (src/lib/content.ts).",
-  "_run": "mkdir -p src/content.local && cp src/content.local.example.json src/content.local/preview.json && npm run build && npm run verify:browser    then: rm -rf src/content.local",
+  "_run": "npm run review:render   # it plants this overlay, builds, ASSERTS the shot-cards are really in the page, runs the geometry gates with every tracked report redirected to .design/tmp-review/, then removes the overlay and rebuilds. By hand it is slower and easy to leave half-done; if you do it by hand, send check:ground/check:area their GROUND_OUT/AREA_OUT scratch paths so a tracked report never describes a review page, and finish with: rm -rf src/content.local && npm run build",
   "photos": { "placeholders": true }
 }
