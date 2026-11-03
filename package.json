@@ -37,6 +37,8 @@
     "round8": "node design/round8.mjs",
     "round9": "node design/round9.mjs",
     "round10": "node design/round10.mjs",
+    "round12": "node design/round12.mjs",
+    "round13": "node design/round13.mjs",
     "check:space": "node design/whitespace-survey.mjs",
     "check:ground": "node design/pixel-ground.mjs",
     "check:ground:selftest": "node design/pixel-ground.mjs --selftest",

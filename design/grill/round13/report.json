@@ -1,0 +1,1294 @@
+{
+ "measuredAt": "2026-11-03T21:21:11.819Z",
+ "notes": [
+  "row-shipped: the mark's ground, by census of its own box, is rgb(252,250,246) at 95% of the box",
+  "stack-3x2: the mark's ground, by census of its own box, is rgb(252,250,246) at 96% of the box",
+  "stack-fill: the mark's ground, by census of its own box, is rgb(252,250,246) at 96% of the box",
+  "plate-whole-mark-small: the mark's ground, by census of its own box, is rgb(252,250,246) at 95% of the box",
+  "plate-owns-slot: the mark's ground, by census of its own box, is rgb(252,250,246) at 95% of the box",
+  "row-non-scaling: the mark's ground, by census of its own box, is rgb(252,250,246) at 94% of the box",
+  "stack-fill-ps3-too: the mark's ground, by census of its own box, is rgb(252,250,246) at 96% of the box"
+ ],
+ "variants": [
+  {
+   "id": "row-shipped",
+   "name": "the plate as ruled, in the column exactly as built (this is what A2 ships today)",
+   "plate": "reserved",
+   "changed": "nothing but the plate arriving — one <Image> where the slot is empty",
+   "css": "",
+   "verdict": "the plate and the mark split the column's WIDTH: neither keeps its shape, the mark lands at the lightest stroke the rules allow, and the plate becomes a postage stamp on a portrait leaf",
+   "plateBox": {
+    "key": "reserved",
+    "w": 376,
+    "h": 250,
+    "label": "3:2, as the markup reserves it"
+   },
+   "at": {
+    "390": {
+     "pageH": 6193,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 943,
+      "w": 358,
+      "h": 238
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5516,
+      "w": 310,
+      "h": 75
+     },
+     "mark": {
+      "x": 16,
+      "y": 1213,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5516,
+      "w": 310,
+      "h": 159
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5017,
+      "w": 310,
+      "h": 657
+     },
+     "emptyRuns": 13,
+     "emptyPct": 20.5,
+     "paintedPct": 10.23
+    },
+    "1240": {
+     "pageH": 4284,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1192,
+      "h": 574
+     },
+     "col": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 574
+     },
+     "plate": {
+      "x": 840,
+      "y": 409,
+      "w": 188,
+      "h": 125
+     },
+     "plate3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 128
+     },
+     "mark": {
+      "x": 1028,
+      "y": 428,
+      "w": 188,
+      "h": 118,
+      "scale": 0.783
+     },
+     "ps3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 184
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3498,
+      "w": 1096,
+      "h": 326
+     },
+     "emptyRuns": 9,
+     "emptyPct": 25.7,
+     "paintedPct": 4.58
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 186x116.3 at 1018,428.9 (viewBox 240x150, scale 0.775, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 186,
+     "h": 116.3
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.089,
+    "chromaticPct": 7.47,
+    "faintPct": 3.27,
+    "hueFamilies": 6
+   },
+   "shot": ".design/tmp-round13/hero-row-shipped-1240.png",
+   "stroke": {
+    "paintedPx": 2,
+    "corePx": 2,
+    "reportedPx": 1.02,
+    "minSw": 1.3,
+    "scale": 0.783,
+    "scanX": 1102,
+    "scanY": 484,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 1.1,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.948,
+    "allRuns": "-1..0",
+    "peakInk": 0.606,
+    "ceiling": 0.667,
+    "coverage": 0.909
+   }
+  },
+  {
+   "id": "stack-3x2",
+   "name": "stack the column; plate keeps the 3:2 ratio in the markup",
+   "plate": "reserved",
+   "changed": "the column turns from a row into a column (one property)",
+   "css": "\n@media (min-width: 1024px) {\n  [data-slot=\"PS-1\"] { flex-direction: column; align-items: stretch; justify-content: center; }\n  \n}",
+   "verdict": "both graphics keep their declared shape; the plate is a 3:2 crop of a portrait leaf",
+   "plateBox": {
+    "key": "reserved",
+    "w": 376,
+    "h": 250,
+    "label": "3:2, as the markup reserves it"
+   },
+   "at": {
+    "390": {
+     "pageH": 6193,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 943,
+      "w": 358,
+      "h": 238
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5516,
+      "w": 310,
+      "h": 75
+     },
+     "mark": {
+      "x": 16,
+      "y": 1213,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5516,
+      "w": 310,
+      "h": 159
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5017,
+      "w": 310,
+      "h": 657
+     },
+     "emptyRuns": 13,
+     "emptyPct": 20.5,
+     "paintedPct": 10.23
+    },
+    "1240": {
+     "pageH": 4284,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1192,
+      "h": 574
+     },
+     "col": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 574
+     },
+     "plate": {
+      "x": 840,
+      "y": 229,
+      "w": 376,
+      "h": 250
+     },
+     "plate3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 128
+     },
+     "mark": {
+      "x": 840,
+      "y": 511,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "ps3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 184
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3498,
+      "w": 1096,
+      "h": 326
+     },
+     "emptyRuns": 9,
+     "emptyPct": 25.7,
+     "paintedPct": 5.19
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,510.5 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.254,
+    "chromaticPct": 7.76,
+    "faintPct": 4.35,
+    "hueFamilies": 7
+   },
+   "shot": ".design/tmp-round13/hero-stack-3x2-1240.png",
+   "stroke": {
+    "paintedPx": 3,
+    "corePx": 3,
+    "reportedPx": 2.04,
+    "minSw": 1.3,
+    "scale": 1.567,
+    "scanX": 987,
+    "scanY": 623,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 2.19,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.96,
+    "allRuns": "-1..1",
+    "peakInk": 0.669,
+    "ceiling": 0.667,
+    "coverage": 1.003
+   }
+  },
+  {
+   "id": "stack-fill",
+   "name": "stack the column; the plate takes everything the mark does not need",
+   "plate": "fill",
+   "changed": "one property, plus the plate box becomes the column minus the mark minus the gap",
+   "css": "\n@media (min-width: 1024px) {\n  [data-slot=\"PS-1\"] { flex-direction: column; align-items: stretch; justify-content: center; }\n  \n}",
+   "verdict": "the column is exactly full (plate + gap + mark = the 574px the row already costs)",
+   "plateBox": {
+    "key": "fill",
+    "w": 376,
+    "h": 307,
+    "label": "the column minus the mark minus the gap"
+   },
+   "at": {
+    "390": {
+     "pageH": 6245,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 943,
+      "w": 358,
+      "h": 292
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5570,
+      "w": 310,
+      "h": 75
+     },
+     "mark": {
+      "x": 16,
+      "y": 1267,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5570,
+      "w": 310,
+      "h": 159
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5071,
+      "w": 310,
+      "h": 657
+     },
+     "emptyRuns": 13,
+     "emptyPct": 20.3,
+     "paintedPct": 10.32
+    },
+    "1240": {
+     "pageH": 4284,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1192,
+      "h": 574
+     },
+     "col": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 574
+     },
+     "plate": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 307
+     },
+     "plate3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 128
+     },
+     "mark": {
+      "x": 840,
+      "y": 539,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "ps3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 184
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3498,
+      "w": 1096,
+      "h": 326
+     },
+     "emptyRuns": 9,
+     "emptyPct": 25.1,
+     "paintedPct": 5.37
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,538.7 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.297,
+    "chromaticPct": 7.85,
+    "faintPct": 4.66,
+    "hueFamilies": 7
+   },
+   "shot": ".design/tmp-round13/hero-stack-fill-1240.png",
+   "stroke": {
+    "paintedPx": 3,
+    "corePx": 3,
+    "reportedPx": 2.04,
+    "minSw": 1.3,
+    "scale": 1.567,
+    "scanX": 987,
+    "scanY": 651,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 2.19,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.96,
+    "allRuns": "-1..1",
+    "peakInk": 0.669,
+    "ceiling": 0.667,
+    "coverage": 1.003
+   }
+  },
+  {
+   "id": "plate-whole-mark-small",
+   "name": "the plate keeps its own shape at full width; the mark shrinks to the smallest legal size",
+   "plate": "whole",
+   "changed": "stack, plus the mark pinned at 240px wide — the width at which its thinnest stroke is 1 device px",
+   "css": "\n@media (min-width: 1024px) {\n  [data-slot=\"PS-1\"] { flex-direction: column; align-items: stretch; justify-content: center; }\n  \n  [data-slot=\"PS-1\"] > svg[data-mark] { width: 240px; align-self: center; margin-top: 32px; }\n  [data-slot=\"PS-1\"] > [data-plate] { margin-bottom: 0; }\n}",
+   "verdict": "the art loses nothing; the column grows by a plate-height, and the mark becomes the smallest drawing the rules allow",
+   "plateBox": {
+    "key": "whole",
+    "w": 376,
+    "h": 549,
+    "label": "the plate’s own shape at full column width"
+   },
+   "at": {
+    "390": {
+     "pageH": 6468,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 943,
+      "w": 358,
+      "h": 523
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5800,
+      "w": 310,
+      "h": 75
+     },
+     "mark": {
+      "x": 16,
+      "y": 1497,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5800,
+      "w": 310,
+      "h": 159
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5302,
+      "w": 310,
+      "h": 657
+     },
+     "emptyRuns": 13,
+     "emptyPct": 20.9,
+     "paintedPct": 10.38
+    },
+    "1240": {
+     "pageH": 4435,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1180,
+      "h": 725
+     },
+     "col": {
+      "x": 832,
+      "y": 200,
+      "w": 372,
+      "h": 725
+     },
+     "plate": {
+      "x": 832,
+      "y": 200,
+      "w": 372,
+      "h": 543
+     },
+     "plate3": {
+      "x": 630,
+      "y": 3721,
+      "w": 526,
+      "h": 127
+     },
+     "mark": {
+      "x": 898,
+      "y": 775,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "ps3": {
+      "x": 630,
+      "y": 3721,
+      "w": 526,
+      "h": 183
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3649,
+      "w": 1084,
+      "h": 326
+     },
+     "emptyRuns": 10,
+     "emptyPct": 27.8,
+     "paintedPct": 5.46
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 240x150 at 898,775.2 (viewBox 240x150, scale 1, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 240,
+     "h": 150
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.419,
+    "chromaticPct": 7.8,
+    "faintPct": 5.9,
+    "hueFamilies": 7
+   },
+   "shot": ".design/tmp-round13/hero-plate-whole-mark-small-1240.png",
+   "stroke": {
+    "paintedPx": 2,
+    "corePx": 2,
+    "reportedPx": 1.3,
+    "minSw": 1.3,
+    "scale": 1,
+    "scanX": 992,
+    "scanY": 847,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 1.4,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.954,
+    "allRuns": "-1..0",
+    "peakInk": 0.45,
+    "ceiling": 0.667,
+    "coverage": 0.675
+   }
+  },
+  {
+   "id": "plate-owns-slot",
+   "name": "the plate owns PS-1; the mark moves to the words",
+   "plate": "whole",
+   "changed": "the mark leaves the media column and sits above the h1 in the text column at 240px wide",
+   "css": "\n@media (min-width: 1024px) {\n  [data-slot=\"PS-1\"] { display: block; }\n  h1 { scroll-margin: 0; }\n}\nmain svg[data-mark=\"hero\"] { width: 240px; display: block; margin: 0 0 20px; }",
+   "moveMark": true,
+   "verdict": "the column becomes one plate at its own shape; the mark keeps its size next to the club name",
+   "plateBox": {
+    "key": "whole",
+    "w": 376,
+    "h": 549,
+    "label": "the plate’s own shape at full column width"
+   },
+   "at": {
+    "390": {
+     "pageH": 6390,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 1113,
+      "w": 358,
+      "h": 523
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5714,
+      "w": 310,
+      "h": 75
+     },
+     "mark": {
+      "x": 16,
+      "y": 152,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5714,
+      "w": 310,
+      "h": 159
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5216,
+      "w": 310,
+      "h": 657
+     },
+     "emptyRuns": 15,
+     "emptyPct": 23,
+     "paintedPct": 10.44
+    },
+    "1240": {
+     "pageH": 4454,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1192,
+      "h": 744
+     },
+     "col": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 744
+     },
+     "plate": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 549
+     },
+     "plate3": {
+      "x": 636,
+      "y": 3739,
+      "w": 532,
+      "h": 128
+     },
+     "mark": {
+      "x": 80,
+      "y": 232,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "ps3": {
+      "x": 636,
+      "y": 3739,
+      "w": 532,
+      "h": 184
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3668,
+      "w": 1096,
+      "h": 326
+     },
+     "emptyRuns": 9,
+     "emptyPct": 24.7,
+     "paintedPct": 5.46
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 240x150 at 76,232 (viewBox 240x150, scale 1, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 240,
+     "h": 150
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.422,
+    "chromaticPct": 7.77,
+    "faintPct": 5.88,
+    "hueFamilies": 7
+   },
+   "shot": ".design/tmp-round13/hero-plate-owns-slot-1240.png",
+   "stroke": {
+    "paintedPx": 2,
+    "corePx": 2,
+    "reportedPx": 1.3,
+    "minSw": 1.3,
+    "scale": 1,
+    "scanX": 174,
+    "scanY": 304,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 1.4,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.954,
+    "allRuns": "-1..0",
+    "peakInk": 0.45,
+    "ceiling": 0.667,
+    "coverage": 0.675
+   }
+  },
+  {
+   "id": "row-non-scaling",
+   "name": "leave the row, pin the mark’s stroke to device pixels",
+   "plate": "reserved",
+   "changed": "every mark shape gets vector-effect=\"non-scaling-stroke\", so stroke-width stops scaling with the box",
+   "css": "",
+   "attribute": "non-scaling-stroke",
+   "verdict": "the strokes stop scaling with the box, so the paint arrives thicker than the gate computes — the mark is still the same small drawing, and one rule now needs an exception",
+   "plateBox": {
+    "key": "reserved",
+    "w": 376,
+    "h": 250,
+    "label": "3:2, as the markup reserves it"
+   },
+   "at": {
+    "390": {
+     "pageH": 6193,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 943,
+      "w": 358,
+      "h": 238
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5516,
+      "w": 310,
+      "h": 75
+     },
+     "mark": {
+      "x": 16,
+      "y": 1213,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5516,
+      "w": 310,
+      "h": 159
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5017,
+      "w": 310,
+      "h": 657
+     },
+     "emptyRuns": 14,
+     "emptyPct": 22.3,
+     "paintedPct": 10.2
+    },
+    "1240": {
+     "pageH": 4284,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1192,
+      "h": 574
+     },
+     "col": {
+      "x": 840,
+      "y": 200,
+      "w": 376,
+      "h": 574
+     },
+     "plate": {
+      "x": 840,
+      "y": 409,
+      "w": 188,
+      "h": 125
+     },
+     "plate3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 128
+     },
+     "mark": {
+      "x": 1028,
+      "y": 428,
+      "w": 188,
+      "h": 118,
+      "scale": 0.783
+     },
+     "ps3": {
+      "x": 636,
+      "y": 3569,
+      "w": 532,
+      "h": 184
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3498,
+      "w": 1096,
+      "h": 326
+     },
+     "emptyRuns": 9,
+     "emptyPct": 25.7,
+     "paintedPct": 4.58
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 186x116.3 at 1018,428.9 (viewBox 240x150, scale 0.775, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 186,
+     "h": 116.3
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.089,
+    "chromaticPct": 7.47,
+    "faintPct": 3.27,
+    "hueFamilies": 6
+   },
+   "shot": ".design/tmp-round13/hero-row-non-scaling-1240.png",
+   "stroke": {
+    "paintedPx": 2,
+    "corePx": 2,
+    "reportedPx": 1.02,
+    "minSw": 1.3,
+    "scale": 0.783,
+    "scanX": 1102,
+    "scanY": 484,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 1.1,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.94,
+    "allRuns": "-1..0",
+    "peakInk": 0.669,
+    "ceiling": 0.667,
+    "coverage": 1.003
+   }
+  },
+  {
+   "id": "stack-fill-ps3-too",
+   "name": "the stacked column at its leftover size, plus the PS-3 plate exactly as D149-2b ruled it",
+   "plate": "fill",
+   "ps3": true,
+   "changed": "the join-section media column carries the 1910 geometry plate at 532x316",
+   "css": "\n@media (min-width: 1024px) {\n  [data-slot=\"PS-1\"] { flex-direction: column; align-items: stretch; justify-content: center; }\n  \n}",
+   "verdict": "the round-10 reservation for PS-3 tested against the row the join actions now stand in",
+   "plateBox": {
+    "key": "fill",
+    "w": 376,
+    "h": 307,
+    "label": "the column minus the mark minus the gap"
+   },
+   "at": {
+    "390": {
+     "pageH": 6350,
+     "grid": null,
+     "col": null,
+     "plate": {
+      "x": 16,
+      "y": 943,
+      "w": 358,
+      "h": 292
+     },
+     "plate3": {
+      "x": 40,
+      "y": 5570,
+      "w": 310,
+      "h": 184
+     },
+     "mark": {
+      "x": 16,
+      "y": 1267,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "ps3": {
+      "x": 40,
+      "y": 5570,
+      "w": 310,
+      "h": 269
+     },
+     "joinRow": {
+      "x": 40,
+      "y": 5071,
+      "w": 310,
+      "h": 767
+     },
+     "emptyRuns": 13,
+     "emptyPct": 20.1,
+     "paintedPct": 10.97
+    },
+    "1240": {
+     "pageH": 4327,
+     "grid": {
+      "x": 24,
+      "y": 200,
+      "w": 1180,
+      "h": 574
+     },
+     "col": {
+      "x": 832,
+      "y": 200,
+      "w": 372,
+      "h": 574
+     },
+     "plate": {
+      "x": 832,
+      "y": 203,
+      "w": 372,
+      "h": 304
+     },
+     "plate3": {
+      "x": 630,
+      "y": 3498,
+      "w": 526,
+      "h": 312
+     },
+     "mark": {
+      "x": 832,
+      "y": 539,
+      "w": 372,
+      "h": 233,
+      "scale": 1.55
+     },
+     "ps3": {
+      "x": 630,
+      "y": 3498,
+      "w": 526,
+      "h": 369
+     },
+     "joinRow": {
+      "x": 72,
+      "y": 3498,
+      "w": 1084,
+      "h": 369
+     },
+     "emptyRuns": 9,
+     "emptyPct": 25,
+     "paintedPct": 6.26
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,538.7 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ]
+   },
+   "color": {
+    "strongPct": 0.267,
+    "chromaticPct": 7.75,
+    "faintPct": 4.6,
+    "hueFamilies": 7
+   },
+   "shot": ".design/tmp-round13/hero-stack-fill-ps3-too-1240.png",
+   "stroke": {
+    "paintedPx": 3,
+    "corePx": 3,
+    "reportedPx": 2.02,
+    "minSw": 1.3,
+    "scale": 1.55,
+    "scanX": 978,
+    "scanY": 650,
+    "scanRole": "route",
+    "scanToken": "ink",
+    "scanSw": 1.4,
+    "scanPx": 2.17,
+    "ground": [
+     252,
+     250,
+     246
+    ],
+    "groundShare": 0.959,
+    "allRuns": "-2..0",
+    "peakInk": 0.669,
+    "ceiling": 0.667,
+    "coverage": 1.003
+   }
+  }
+ ],
+ "reviewSiteFp": "7cb0444724",
+ "reviewBaseline": {
+  "at": {
+   "pageH": 4284,
+   "grid": {
+    "x": 24,
+    "y": 200,
+    "w": 1192,
+    "h": 574
+   },
+   "col": {
+    "x": 840,
+    "y": 200,
+    "w": 376,
+    "h": 574
+   },
+   "plate": {
+    "x": 840,
+    "y": 397,
+    "w": 224,
+    "h": 149
+   },
+   "plate3": {
+    "x": 636,
+    "y": 3569,
+    "w": 532,
+    "h": 128
+   },
+   "mark": {
+    "x": 1064,
+    "y": 440,
+    "w": 152,
+    "h": 95,
+    "scale": 0.632
+   },
+   "ps3": {
+    "x": 636,
+    "y": 3569,
+    "w": 532,
+    "h": 184
+   },
+   "joinRow": {
+    "x": 72,
+    "y": 3498,
+    "w": 1096,
+    "h": 326
+   },
+   "emptyRuns": 9,
+   "emptyPct": 25.7,
+   "paintedPct": 4.44
+  },
+  "gate": {
+   "code": 1,
+   "fails": [
+    "FAIL  / @1240 mark \"hero\": <circle> stroke lands at 0.81px on screen (1.3 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)",
+    "FAIL  / @1240 mark \"hero\": <path> stroke lands at 0.81px on screen (1.3 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)",
+    "FAIL  / @1240 mark \"hero\": <path> stroke lands at 0.81px on screen (1.3 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)",
+    "FAIL  / @1240 mark \"hero\": <path> stroke lands at 0.87px on screen (1.4 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)",
+    "FAIL  / @1240 mark \"hero\": <path> stroke lands at 0.87px on screen (1.4 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)",
+    "FAIL  / @1240 mark \"hero\": <path> stroke lands at 0.87px on screen (1.4 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)",
+    "FAIL  / @1240 mark \"hero\": <path> stroke lands at 0.87px on screen (1.4 viewBox units at scale 0.621) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)"
+   ],
+   "gaps": [],
+   "markLine": "mark  hero 148.9x93.1 at 1055.1,440.5 (viewBox 240x150, scale 0.621, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+   "markBox": {
+    "w": 148.9,
+    "h": 93.1
+   },
+   "widths": [
+    1240,
+    640,
+    390,
+    320
+   ]
+  }
+ },
+ "geo": {
+  "colW": 376,
+  "colH": 574,
+  "colXY": [
+   840,
+   200
+  ],
+  "markH": 235,
+  "gapPx": 32,
+  "ps3W": 532,
+  "ps3RowH": 326,
+  "gridBox": {
+   "x": 24,
+   "y": 200,
+   "w": 1192,
+   "h": 574
+  },
+  "pageH": 4284,
+  "vbW": 240,
+  "vbH": 150,
+  "minStroke": 1.3
+ },
+ "plates": {
+  "PS1": {
+   "id": "ia-firstsixbooksofe00byrn-176-281",
+   "book": "The first six books of the elements of Euclid… with diagrams in colours (John Byrne, 1847)",
+   "page": "https://insideoutlibrary.com/p/ia-firstsixbooksofe00byrn-176-281",
+   "why": "D149-1b/2b: the operator's pick for PS-1 — Euclid in flat colour, drawn with the same lines, arcs and right angles as our own mark",
+   "srcW": 688,
+   "srcH": 1004,
+   "aspect": 0.685,
+   "boxes": {
+    "reserved": {
+     "w": 376,
+     "h": 250,
+     "label": "3:2, as the markup reserves it",
+     "keepPct": 46,
+     "crop": {
+      "w": 752,
+      "h": 500,
+      "namedPct": 12.16,
+      "inkPct": 1.02,
+      "meanL": 0.892,
+      "fam": null
+     },
+     "png": ".design/tmp-round13/plate-PS1-reserved-376x250.png"
+    },
+    "fill": {
+     "w": 376,
+     "h": 307,
+     "label": "the column minus the mark minus the gap",
+     "keepPct": 56,
+     "crop": {
+      "w": 752,
+      "h": 614,
+      "namedPct": 11.93,
+      "inkPct": 0.91,
+      "meanL": 0.895,
+      "fam": null
+     },
+     "png": ".design/tmp-round13/plate-PS1-fill-376x307.png"
+    },
+    "whole": {
+     "w": 376,
+     "h": 549,
+     "label": "the plate’s own shape at full column width",
+     "keepPct": 100,
+     "crop": {
+      "w": 752,
+      "h": 1098,
+      "namedPct": 10.36,
+      "inkPct": 0.52,
+      "meanL": 0.912,
+      "fam": null
+     },
+     "png": ".design/tmp-round13/plate-PS1-whole-376x549.png"
+    }
+   }
+  },
+  "PS3": {
+   "id": "ia-cu31924031236171-122-176",
+   "book": "Plane geometry, with problems and applications (Slaught & Lennes, 1910)",
+   "page": "https://insideoutlibrary.com/p/ia-cu31924031236171-122-176",
+   "why": "D149-2b: the Euler-problem diagram, colourless line work, for PS-3",
+   "boxes": {
+    "ruled": {
+     "w": 532,
+     "h": 316,
+     "label": "D149-2b: the PS-3 media column at its ruled height",
+     "keepPct": 84,
+     "crop": {
+      "w": 1064,
+      "h": 632,
+      "namedPct": 0,
+      "inkPct": 16.16,
+      "meanL": 0.805,
+      "fam": null
+     },
+     "png": ".design/tmp-round13/plate-PS3-ruled-532x316.png"
+    }
+   },
+   "srcW": 698,
+   "srcH": 350
+  }
+ },
+ "shipped": {
+  "pageH": 4284,
+  "grid": {
+   "x": 24,
+   "y": 200,
+   "w": 1192,
+   "h": 574
+  },
+  "col": {
+   "x": 840,
+   "y": 200,
+   "w": 376,
+   "h": 574
+  },
+  "plate": null,
+  "plate3": null,
+  "mark": {
+   "x": 840,
+   "y": 370,
+   "w": 376,
+   "h": 235,
+   "scale": 1.567
+  },
+  "ps3": {
+   "x": 636,
+   "y": 3633,
+   "w": 532,
+   "h": 56
+  },
+  "joinRow": {
+   "x": 72,
+   "y": 3498,
+   "w": 1096,
+   "h": 326
+  },
+  "emptyRuns": 9,
+  "emptyPct": 25.7,
+  "paintedPct": 4.39
+ },
+ "shippedColor": {
+  "strongPct": 0.014,
+  "chromaticPct": 7.36,
+  "faintPct": 2.93,
+  "hueFamilies": 3
+ },
+ "shippedSiteFp": "00adf2c64c"
+}
