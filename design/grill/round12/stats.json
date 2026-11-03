@@ -1,0 +1,619 @@
+{
+ "builtAt": "2026-11-03T06:33:10.680Z",
+ "pageAreaAt1240": 5203040,
+ "slots": {
+  "PS-1": {
+   "w": 372,
+   "h": 564,
+   "what": "hero media column (1024px and up)"
+  },
+  "PS-3": {
+   "w": 526,
+   "h": 316,
+   "what": "join-section media column"
+  },
+  "PS-4": {
+   "w": 319,
+   "h": 110,
+   "what": "event-card thumb"
+  },
+  "PS-2": {
+   "w": 1180,
+   "h": 320,
+   "what": "proposed venue strip"
+  }
+ },
+ "candidates": [
+  {
+   "id": "ia-firstsixbooksofe00byrn-176-281",
+   "slot": "PS-1",
+   "why": "operator pick: Byrne Euclid, sparse two-colour figure",
+   "book": "The first six books of the elements of Euclid… coloured diagrams instead of letters (1847)",
+   "srcW": 688,
+   "srcH": 1004,
+   "keep": 0.96,
+   "covers2x": false,
+   "crop": {
+    "w": 744,
+    "h": 1128,
+    "meanL": 0.912,
+    "ink": 0.54,
+    "c04": 17.31,
+    "c08": 9.94,
+    "fams": [
+     {
+      "px": 4.84,
+      "meanH": 81,
+      "meanC": 0.124,
+      "meanL": 0.83,
+      "role": "gold-on-ink 84 -3deg",
+      "brand": "0.046 UPS gold #FFB500",
+      "commerce": false
+     },
+     {
+      "px": 4.47,
+      "meanH": 38,
+      "meanC": 0.138,
+      "meanL": 0.71,
+      "role": "path-discord 35 -3deg",
+      "brand": "0.066 Caltech orange #FF6E00",
+      "commerce": false
+     },
+     {
+      "px": 0.31,
+      "meanH": 242,
+      "meanC": 0.095,
+      "meanL": 0.58,
+      "role": "path-calendar 205 -37deg",
+      "brand": "0.081 Walmart blue #0071CE",
+      "commerce": false
+     },
+     {
+      "px": 0.18,
+      "meanH": 238,
+      "meanC": 0.093,
+      "meanL": 0.59,
+      "role": "path-calendar 205 -33deg",
+      "brand": "0.093 Walmart blue #0071CE",
+      "commerce": false
+     },
+     {
+      "px": 0.07,
+      "meanH": 93,
+      "meanC": 0.092,
+      "meanL": 0.81,
+      "role": "paper 85 -8deg",
+      "brand": "0.083 Walmart yellow #FFC220",
+      "commerce": false
+     },
+     {
+      "px": 0.06,
+      "meanH": 26,
+      "meanC": 0.131,
+      "meanL": 0.65,
+      "role": "path-discord 35 -9deg",
+      "brand": "0.096 FedEx orange #FF6200",
+      "commerce": false
+     }
+    ]
+   },
+   "areaPct": 4.03,
+   "addNamed": 0.401
+  },
+  {
+   "id": "ia-firstsixbooksofe00byrn-99-147",
+   "slot": "PS-1",
+   "why": "Byrne, loud: full-bleed colour — shown as the control",
+   "book": "Byrne Euclid (1847)",
+   "srcW": 642,
+   "srcH": 1024,
+   "keep": 0.95,
+   "covers2x": false,
+   "crop": {
+    "w": 744,
+    "h": 1128,
+    "meanL": 0.534,
+    "ink": 45.67,
+    "c04": 79.65,
+    "c08": 65.25,
+    "fams": [
+     {
+      "px": 33.8,
+      "meanH": 76,
+      "meanC": 0.15,
+      "meanL": 0.73,
+      "role": "gold-on-ink 84 -8deg",
+      "brand": "0.055 Amazon orange #FF9900",
+      "commerce": false
+     },
+     {
+      "px": 30.52,
+      "meanH": 259,
+      "meanC": 0.086,
+      "meanL": 0.25,
+      "role": "path-calendar 205 -54deg",
+      "brand": "0.074 Amazon navy #232F3E",
+      "commerce": false
+     },
+     {
+      "px": 0.75,
+      "meanH": 40,
+      "meanC": 0.164,
+      "meanL": 0.58,
+      "role": "path-discord 35 -5deg",
+      "brand": "0.080 Target red #CC0000",
+      "commerce": true
+     },
+     {
+      "px": 0.15,
+      "meanH": 25,
+      "meanC": 0.112,
+      "meanL": 0.45,
+      "role": "path-discord 35 -10deg",
+      "brand": "0.134 Target red #CC0000",
+      "commerce": false
+     },
+     {
+      "px": 0.04,
+      "meanH": 92,
+      "meanC": 0.094,
+      "meanL": 0.78,
+      "role": "paper 85 -7deg",
+      "brand": "0.092 Amazon yellow #FFB300",
+      "commerce": false
+     }
+    ]
+   },
+   "areaPct": 4.03,
+   "addNamed": 2.631
+  },
+  {
+   "id": "ia-opusculumgeograp00myri-22-0",
+   "slot": "PS-1",
+   "why": "armillary sphere: the mark’s own subject, 1590",
+   "book": "Opusculum geographicum rarum (1590)",
+   "srcW": 674,
+   "srcH": 1024,
+   "keep": 1,
+   "covers2x": false,
+   "crop": {
+    "w": 744,
+    "h": 1128,
+    "meanL": 0.791,
+    "ink": 3.87,
+    "c04": 73.72,
+    "c08": 3.11,
+    "fams": [
+     {
+      "px": 1.57,
+      "meanH": 93,
+      "meanC": 0.091,
+      "meanL": 0.78,
+      "role": "paper 85 -8deg",
+      "brand": "0.093 Amazon yellow #FFB300",
+      "commerce": false
+     },
+     {
+      "px": 1.55,
+      "meanH": 86,
+      "meanC": 0.091,
+      "meanL": 0.61,
+      "role": "paper 85 -1deg",
+      "brand": "0.170 Caltech orange #FF6E00",
+      "commerce": false
+     }
+    ]
+   },
+   "areaPct": 4.03,
+   "addNamed": 0.125
+  },
+  {
+   "id": "ia-cu31924031236171-259-343",
+   "slot": "PS-1",
+   "why": "operator’s second book: geometry textbook construction, tall, colourless",
+   "book": "Plane geometry, with problems and applications (Slaught & Lennes, 1910)",
+   "srcW": 428,
+   "srcH": 704,
+   "keep": 0.92,
+   "covers2x": false,
+   "crop": {
+    "w": 744,
+    "h": 1128,
+    "meanL": 0.905,
+    "ink": 7.55,
+    "c04": 0,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 4.03,
+   "addNamed": 0
+  },
+  {
+   "id": "ia-principlesunderl00unit-514-212",
+   "slot": "PS-3",
+   "why": "operator pick: radio waveform, hand-drawn, colourless",
+   "book": "The principles underlying radio communication (1922)",
+   "srcW": 1024,
+   "srcH": 478,
+   "keep": 0.78,
+   "covers2x": false,
+   "crop": {
+    "w": 1052,
+    "h": 632,
+    "meanL": 0.805,
+    "ink": 1.58,
+    "c04": 77.86,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 3.19,
+   "addNamed": 0
+  },
+  {
+   "id": "ia-cu31924031236171-122-176",
+   "slot": "PS-3",
+   "why": "operator pick: the Euler-problem diagram, colourless line work",
+   "book": "Plane geometry, with problems and applications (1910)",
+   "srcW": 698,
+   "srcH": 350,
+   "keep": 0.83,
+   "covers2x": false,
+   "crop": {
+    "w": 1052,
+    "h": 632,
+    "meanL": 0.806,
+    "ink": 16.03,
+    "c04": 0,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 3.19,
+   "addNamed": 0
+  },
+  {
+   "id": "ia-cu31924031236171-121-174",
+   "slot": "PS-3",
+   "why": "same leaf spread, quieter: fewer strokes",
+   "book": "Plane geometry (1910)",
+   "srcW": 700,
+   "srcH": 364,
+   "keep": 0.87,
+   "covers2x": false,
+   "crop": {
+    "w": 1052,
+    "h": 632,
+    "meanL": 0.91,
+    "ink": 6.98,
+    "c04": 0,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 3.19,
+   "addNamed": 0
+  },
+  {
+   "id": "ia-firstsixbooksofe00byrn-37-26",
+   "slot": "PS-3",
+   "why": "Byrne: half-disc + wedge — the loud option, kept as the control",
+   "book": "Byrne Euclid (1847)",
+   "srcW": 1024,
+   "srcH": 627,
+   "keep": 0.98,
+   "covers2x": false,
+   "crop": {
+    "w": 1052,
+    "h": 632,
+    "meanL": 0.835,
+    "ink": 3.03,
+    "c04": 16.5,
+    "c08": 10.7,
+    "fams": [
+     {
+      "px": 6.4,
+      "meanH": 36,
+      "meanC": 0.179,
+      "meanL": 0.6,
+      "role": "path-discord 35 -1deg",
+      "brand": "0.076 Target red #CC0000",
+      "commerce": true
+     },
+     {
+      "px": 4.09,
+      "meanH": 82,
+      "meanC": 0.148,
+      "meanL": 0.74,
+      "role": "gold-on-ink 84 -2deg",
+      "brand": "0.063 Amazon orange #FF9900",
+      "commerce": false
+     },
+     {
+      "px": 0.19,
+      "meanH": 97,
+      "meanC": 0.107,
+      "meanL": 0.62,
+      "role": "path-mobilizon 105 -8deg",
+      "brand": "0.174 Caltech orange #FF6E00",
+      "commerce": false
+     },
+     {
+      "px": 0.02,
+      "meanH": 28,
+      "meanC": 0.114,
+      "meanL": 0.47,
+      "role": "path-discord 35 -7deg",
+      "brand": "0.119 Target red #CC0000",
+      "commerce": false
+     },
+     {
+      "px": 0,
+      "meanH": 124,
+      "meanC": 0.084,
+      "meanL": 0.48,
+      "role": "path-mobilizon 105 -19deg",
+      "brand": "0.212 Amazon navy #232F3E",
+      "commerce": false
+     }
+    ]
+   },
+   "areaPct": 3.19,
+   "addNamed": 0.342
+  },
+  {
+   "id": "ia-ioanniskepplerih00kepl-271-0",
+   "slot": "PS-3",
+   "why": "Kepler, Harmonices mundi: the polyhedra plate",
+   "book": "Ioannis Keppleri Harmonices mundi libri V (1619)",
+   "srcW": 1024,
+   "srcH": 614,
+   "keep": 1,
+   "covers2x": false,
+   "crop": {
+    "w": 1052,
+    "h": 632,
+    "meanL": 0.757,
+    "ink": 10.48,
+    "c04": 90.15,
+    "c08": 9.42,
+    "fams": [
+     {
+      "px": 7.54,
+      "meanH": 87,
+      "meanC": 0.082,
+      "meanL": 0.82,
+      "role": "paper 85 -2deg",
+      "brand": "0.090 Walmart yellow #FFC220",
+      "commerce": false
+     },
+     {
+      "px": 1.89,
+      "meanH": 92,
+      "meanC": 0.084,
+      "meanL": 0.83,
+      "role": "paper 85 -7deg",
+      "brand": "0.086 Walmart yellow #FFC220",
+      "commerce": false
+     }
+    ]
+   },
+   "areaPct": 3.19,
+   "addNamed": 0.301
+  },
+  {
+   "id": "ia-mathematicalrecr00ball_0-377-0",
+   "slot": "PS-3",
+   "why": "operator’s third book: Ball, Mathematical recreations (1911)",
+   "book": "Mathematical recreations and essays (Ball, 1911)",
+   "srcW": 1024,
+   "srcH": 663,
+   "keep": 0.93,
+   "covers2x": false,
+   "crop": {
+    "w": 1052,
+    "h": 632,
+    "meanL": 0.785,
+    "ink": 5.9,
+    "c04": 40.32,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 3.19,
+   "addNamed": 0
+  },
+  {
+   "id": "ia-firstsixbooksofe00byrn-123-184",
+   "slot": "PS-4",
+   "why": "Byrne: the only plate wide enough for a thumb",
+   "book": "Byrne Euclid (1847)",
+   "srcW": 1024,
+   "srcH": 381,
+   "keep": 0.93,
+   "covers2x": true,
+   "crop": {
+    "w": 638,
+    "h": 220,
+    "meanL": 0.815,
+    "ink": 4.38,
+    "c04": 18.44,
+    "c08": 4.81,
+    "fams": [
+     {
+      "px": 2.85,
+      "meanH": 76,
+      "meanC": 0.131,
+      "meanL": 0.76,
+      "role": "gold-on-ink 84 -8deg",
+      "brand": "0.052 Amazon orange #FF9900",
+      "commerce": false
+     },
+     {
+      "px": 1.37,
+      "meanH": 37,
+      "meanC": 0.15,
+      "meanL": 0.63,
+      "role": "path-discord 35 -2deg",
+      "brand": "0.085 FedEx orange #FF6200",
+      "commerce": true
+     },
+     {
+      "px": 0.57,
+      "meanH": 251,
+      "meanC": 0.086,
+      "meanL": 0.38,
+      "role": "path-calendar 205 -46deg",
+      "brand": "0.092 IKEA blue #0051A5",
+      "commerce": false
+     },
+     {
+      "px": 0.01,
+      "meanH": 92,
+      "meanC": 0.09,
+      "meanL": 0.84,
+      "role": "paper 85 -7deg",
+      "brand": "0.080 Walmart yellow #FFC220",
+      "commerce": false
+     },
+     {
+      "px": 0.01,
+      "meanH": 27,
+      "meanC": 0.127,
+      "meanL": 0.49,
+      "role": "path-discord 35 -8deg",
+      "brand": "0.101 Target red #CC0000",
+      "commerce": false
+     },
+     {
+      "px": 0,
+      "meanH": 239,
+      "meanC": 0.084,
+      "meanL": 0.44,
+      "role": "path-calendar 205 -34deg",
+      "brand": "0.076 IKEA blue #0051A5",
+      "commerce": false
+     }
+    ]
+   },
+   "areaPct": 0.67,
+   "addNamed": 0.032
+  },
+  {
+   "id": "ia-cu31924031236171-122-176",
+   "slot": "PS-4",
+   "why": "the same Euler diagram at thumb size, 1:1 pixels",
+   "book": "Plane geometry (1910)",
+   "srcW": 698,
+   "srcH": 350,
+   "keep": 0.69,
+   "covers2x": true,
+   "crop": {
+    "w": 638,
+    "h": 220,
+    "meanL": 0.767,
+    "ink": 18.13,
+    "c04": 0,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 0.67,
+   "addNamed": 0
+  },
+  {
+   "id": "ia-elementsofeuclid1903eucl-297-210",
+   "slot": "PS-4",
+   "why": "Euclid 1903: colourless construction, wide",
+   "book": "The elements of Euclid for the use of schools and colleges (1903)",
+   "srcW": 1024,
+   "srcH": 357,
+   "keep": 0.99,
+   "covers2x": true,
+   "crop": {
+    "w": 638,
+    "h": 220,
+    "meanL": 0.734,
+    "ink": 6.56,
+    "c04": 43.41,
+    "c08": 0,
+    "fams": []
+   },
+   "areaPct": 0.67,
+   "addNamed": 0
+  }
+ ],
+ "saturationLadder": [
+  {
+   "id": "ia-firstsixbooksofe00byrn-37-26",
+   "slot": "PS-3",
+   "sat": [
+    {
+     "sat": 100,
+     "c08": 10.7,
+     "ink": 3.03,
+     "meanL": 0.835,
+     "fam": "36deg C0.179 path-discord 35 -1deg COMMERCE",
+     "brand": "0.076 Target red #CC0000"
+    },
+    {
+     "sat": 75,
+     "c08": 10.16,
+     "ink": 2.98,
+     "meanL": 0.835,
+     "fam": "37deg C0.144 path-discord 35 -2deg",
+     "brand": "0.096 Target red #CC0000"
+    },
+    {
+     "sat": 50,
+     "c08": 9,
+     "ink": 3.01,
+     "meanL": 0.834,
+     "fam": "38deg C0.105 path-discord 35 -3deg",
+     "brand": "0.125 Target red #CC0000"
+    },
+    {
+     "sat": 25,
+     "c08": 0,
+     "ink": 2.93,
+     "meanL": 0.834,
+     "fam": "none",
+     "brand": "-"
+    }
+   ]
+  },
+  {
+   "id": "ia-firstsixbooksofe00byrn-176-281",
+   "slot": "PS-3",
+   "sat": [
+    {
+     "sat": 100,
+     "c08": 12.81,
+     "ink": 1.06,
+     "meanL": 0.891,
+     "fam": "81deg C0.121 gold-on-ink 84 -3deg",
+     "brand": "0.047 Walmart yellow #FFC220"
+    },
+    {
+     "sat": 75,
+     "c08": 9.28,
+     "ink": 1.06,
+     "meanL": 0.892,
+     "fam": "79deg C0.103 gold-on-ink 84 -5deg",
+     "brand": "0.067 UPS gold #FFB500"
+    },
+    {
+     "sat": 50,
+     "c08": 3.71,
+     "ink": 1.06,
+     "meanL": 0.891,
+     "fam": "35deg C0.096 path-discord 35 -0deg",
+     "brand": "0.118 Caltech orange #FF6E00"
+    },
+    {
+     "sat": 25,
+     "c08": 0,
+     "ink": 1.05,
+     "meanL": 0.891,
+     "fam": "none",
+     "brand": "-"
+    }
+   ]
+  }
+ ]
+}

@@ -101,3 +101,47 @@ Undersized by one instrument: this model **cannot view images** (`read` on a `.j
 does not support images", re-confirmed 2026-11-03), and the local vision endpoint
 (`design/vision-ask.py`, LM Studio on 127.0.0.1:1234) was not running. So no aesthetic claim is made here:
 every number above is a pixel measurement, and the pick is the operator's, from the specimen.
+
+## Addendum, same day: the operator supplied two more books, and they flip the sign
+
+`insideoutlibrary.com/b/mathematicalrecr00ball_0` (Ball, *Mathematical recreations and essays*, 1911 —
+17 pictures) and `insideoutlibrary.com/b/cu31924031236171` (Slaught & Lennes, *Plane geometry, with
+problems and applications*, 1910, Cornell via Internet Archive, **Public Domain Mark 1.0 — "Free to use
+for anything"** — 48 pictures). Both measured with the same instrument (`.design/tmp-ball/ball.mjs`, the
+method above), every plate in each book, cropped at the real slot sizes.
+
+| book | plates | at chroma ≥ 0.08 | at chroma ≥ 0.04 | ink |
+|---|---|---|---|---|
+| Ball 1911 | 17 | **0% in every plate** | 15-75% (aged paper, not pigment) | 2-8% |
+| Slaught & Lennes 1910 | 47 measured | **0% in every plate** | **0%** — pure black line work | 1.7-52% |
+
+So the two books the operator reached for are the **free** category: they add **0.000%** to the page's
+named-colour share, no hue family for the census to find, and no brand adjacency. They are also the most
+on-theme material found — a 1910 American high-school plane-geometry textbook is lettered constructions,
+inscribed circles and straightedge work, i.e. the same marks our own mark draws.
+
+Sizes decide what they can do (the archive's ladder tops out at 1024):
+
+- **PS-1 (372×564)**: `cu31924031236171-17-2` 580×1024 keep 86%; `-259-343` 428×704 keep 92%;
+  `-160-214` 424×726 keep 89%; `-200-271` 456×782 keep 88%.
+- **PS-3 (526×316)**: `-121-174` 700×364 keep 87%; the operator's **`-122-176`** (leaf 122, the
+  Euler-problem diagram) 698×350 keep 83% — the densest plate measured, ink 16.0%, mean L 0.806;
+  `-177-243` 636×344 keep 90%; Ball `-377-0` 1024×663 keep 93%.
+- **PS-4 (319×110)**: `-122-176` again, at 1:1 pixels (no upscale), ink 18.1%.
+- **PS-2 (1180×320) still cannot be filled from this archive.** The widest plate across four books is
+  `cu31924031236171-176-242` at 992×372 — 1.19× short of the strip. That slot stays a real photograph.
+
+Two limits worth recording:
+
+1. **Plates are not captioned.** A picture page gives the book, author, printer, year, **leaf number** and
+   the book's subject tags, but no per-plate subject line — so "which plate is the Euler belt" is only
+   knowable from the search that found it. The operator's context is part of the record; leaf numbers
+   without it are unlabelled.
+2. **Query URLs are not for agents.** `robots.txt` carries `Disallow: /*?q=`, so the `?q=euler` links the
+   operator pasted were **not** fetched; only the bare `/b/<id>` and `/p/<id>` paths were. The curated
+   `/s/<subject>` index and the site's own `data/chips.json` (227 subjects, each with a suggested phrasing
+   and 60 picture ids) do the discovery within the rules.
+
+Specimen now holds **13 crops** across the four slots (built, and verified in Firefox, at the sizes they
+claim). Machine stats: `design/grill/round12/stats.json` — so a later candidate compares against these
+numbers without refetching a 60-book archive.

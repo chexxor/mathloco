@@ -49,19 +49,22 @@ const BRANDS = {
 const ART = [
   // operator-supplied pages first
   { id: 'ia-firstsixbooksofe00byrn-176-281', slot: 'PS-1', why: 'operator pick: Byrne Euclid, sparse two-colour figure', book: 'The first six books of the elements of Euclid… coloured diagrams instead of letters (1847)' },
-  { id: 'ia-firstsixbooksofe00byrn-40-33', slot: 'PS-1', why: 'Byrne: tall figure, yellow wedge + blue arc', book: 'Byrne Euclid (1847)' },
   { id: 'ia-firstsixbooksofe00byrn-99-147', slot: 'PS-1', why: 'Byrne, loud: full-bleed colour — shown as the control', book: 'Byrne Euclid (1847)' },
-  { id: 'ia-opusculumgeograp00myri-22-0', slot: 'PS-1', why: 'armillary sphere: the mark’s own subject, 1590', book: 'Opusculum geographicum rarum (1590)' },
-  { id: 'ia-firstsixbooksofe00byrn-111-168', slot: 'PS-3', why: 'Byrne, quietest: mostly ink, one red element', book: 'Byrne Euclid (1847)' },
-  { id: 'ia-firstsixbooksofe00byrn-37-26', slot: 'PS-3', why: 'Byrne: half-disc + wedge, fills the column', book: 'Byrne Euclid (1847)' },
+  { id: 'ia-opusculumgeograp00myri-22-0', slot: 'PS-1', why: 'armillary sphere: the mark\u2019s own subject, 1590', book: 'Opusculum geographicum rarum (1590)' },
+  { id: 'ia-cu31924031236171-259-343', slot: 'PS-1', why: 'operator\u2019s second book: geometry textbook construction, tall, colourless', book: 'Plane geometry, with problems and applications (Slaught & Lennes, 1910)' },
   { id: 'ia-principlesunderl00unit-514-212', slot: 'PS-3', why: 'operator pick: radio waveform, hand-drawn, colourless', book: 'The principles underlying radio communication (1922)' },
+  { id: 'ia-cu31924031236171-122-176', slot: 'PS-3', why: 'operator pick: the Euler-problem diagram, colourless line work', book: 'Plane geometry, with problems and applications (1910)' },
+  { id: 'ia-cu31924031236171-121-174', slot: 'PS-3', why: 'same leaf spread, quieter: fewer strokes', book: 'Plane geometry (1910)' },
+  { id: 'ia-firstsixbooksofe00byrn-37-26', slot: 'PS-3', why: 'Byrne: half-disc + wedge — the loud option, kept as the control', book: 'Byrne Euclid (1847)' },
   { id: 'ia-ioanniskepplerih00kepl-271-0', slot: 'PS-3', why: 'Kepler, Harmonices mundi: the polyhedra plate', book: 'Ioannis Keppleri Harmonices mundi libri V (1619)' },
-  { id: 'ia-mathematicalrecr1920ball-210-32', slot: 'PS-3', why: 'labyrinth from Mathematical recreations', book: 'Mathematical recreations and essays (1920)' },
+  { id: 'ia-mathematicalrecr00ball_0-377-0', slot: 'PS-3', why: 'operator\u2019s third book: Ball, Mathematical recreations (1911)', book: 'Mathematical recreations and essays (Ball, 1911)' },
   { id: 'ia-firstsixbooksofe00byrn-123-184', slot: 'PS-4', why: 'Byrne: the only plate wide enough for a thumb', book: 'Byrne Euclid (1847)' },
+  { id: 'ia-cu31924031236171-122-176', slot: 'PS-4', why: 'the same Euler diagram at thumb size, 1:1 pixels', book: 'Plane geometry (1910)' },
   { id: 'ia-elementsofeuclid1903eucl-297-210', slot: 'PS-4', why: 'Euclid 1903: colourless construction, wide', book: 'The elements of Euclid for the use of schools and colleges (1903)' },
 ];
+
 // the desaturation ladder, measured — for the operator who likes Byrne but not what it does to the census
-const LADDER = ['ia-firstsixbooksofe00byrn-37-26', 'ia-firstsixbooksofe00byrn-176-281'];
+const LADDER = ['ia-firstsixbooksofe00byrn-37-26', 'ia-firstsixbooksofe00byrn-176-281']; // the two loudest picks get the saturation ladder
 const SATS = [100, 75, 50, 25];
 
 mkdirSync(IMG, { recursive: true });
@@ -159,7 +162,6 @@ for (const id of LADDER) {
       sat, c08: c.c08, ink: c.ink, meanL: c.meanL,
       fam: c.fams[0] ? `${c.fams[0].meanH}deg C${c.fams[0].meanC} ${c.fams[0].role}${c.fams[0].commerce ? ' COMMERCE' : ''}` : 'none',
       brand: c.fams[0] ? c.fams[0].brand : '-',
-      jpeg: (await sharp(buf).jpeg({ quality: 70 }).toBuffer()).toString('base64'),
     });
   }
   ladder.push(cell);
@@ -266,7 +268,16 @@ and PS-1/PS-2 are its slots. Strip EXIF/GPS on commit.</p>
 </main></body></html>`;
 
 writeFileSync('design/grill/round-12-art.html', html);
-console.log(`wrote design/grill/round-12-art.html (${(html.length / 1024).toFixed(0)} KB) — ${rows.length} crops, ${ladder.length} ladders`);
+// The colour numbers are the decision; the HTML carries them as prose. A machine copy means a later round can
+// compare a new candidate against these without refetching a 60-book archive. (No base64 in here.)
+writeFileSync('design/grill/round12/stats.json', JSON.stringify({
+  builtAt: new Date().toISOString(),
+  pageAreaAt1240: PAGE_AREA_1240,
+  slots: SLOT,
+  candidates: rows.map(({ jpeg, ...r }) => r),
+  saturationLadder: ladder.map((c) => ({ id: c.id, slot: 'PS-3', sat: c.sat.map(({ jpeg, ...x }) => x) })),
+}, null, 1));
+console.log(`wrote design/grill/round-12-art.html (${(html.length / 1024).toFixed(0)} KB) — ${rows.length} crops, ${ladder.length} ladders; stats to design/grill/round12/stats.json`);
 for (const c of ladder) for (const s of c.sat) console.log(`ladder ${c.id.slice(24).padEnd(12)} sat ${String(s.sat).padStart(3)}% named ${String(s.c08).padStart(5)}% ink ${String(s.ink).padStart(5)}% L ${s.meanL} | ${s.fam} | brand ${s.brand}`);
 for (const r of rows) {
   console.log(`${r.slot} ${r.id.slice(0, 44).padEnd(44)} keep ${Math.round(r.keep * 100)}% crop named ${String(r.crop.c08).padStart(5)}% ink ${String(r.crop.ink).padStart(5)}% add ${r.addNamed}% ${r.crop.fams[0] ? `| H${r.crop.fams[0].meanH} C${r.crop.fams[0].meanC} near ${r.crop.fams[0].role}${r.crop.fams[0].commerce ? ' COMMERCE' : ''}` : ''}`);
