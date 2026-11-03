@@ -161,5 +161,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D151** (2026-11-03) — The memory that travels: a tracked decision index, a tracked milestone file with exit criteria, and dated measured numbers (2026-11-03, operator: "Fix all the items you mentioned… Tracked Decisions and Milestones is good")
 - **D152** (2026-11-03) — Integrations live in `integrations/` with a boundary, not a manifest — and the website's `package.json` stays the site's (2026-11-03, operator's constraint; plan only, no code shipped)
 - **D153** (2026-11-03) — Mobilizon 5.2.4's ICS export is not conformant, and that decides the architecture (2026-11-03, measured)
+- **D154** (2026-11-03) — The straddle ruling is now enforced by two gates, and a `rule` ring cannot live in a tinted region at all (2026-11-03, delegate, closing D149-3c)
 
-Defined: 153 (D1-D153). Unused ids: none.
+Defined: 154 (D1-D154). Unused ids: none.
