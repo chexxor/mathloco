@@ -26,6 +26,7 @@
  * `prerender = true`).
  */
 import tracked from '../content.json';
+import { isObj, openSlots as openTree, unsourcedSlots as unsourcedTree } from './content-slots.mjs';
 
 export type Slot = {
   value: string | null;
@@ -53,6 +54,12 @@ export type UpcomingItem = {
 export type Content = {
   cadence: Slot;
   focus: Slot;
+  /** What the club is taking up, undated on purpose (see `threads._rule` in content.json). */
+  threads: { source: string | null; asOf?: string | null; items: { value: string; gloss?: string }[] };
+  /** Club editorial — one thread written for a newcomer. Makes no claim about the club's history. */
+  feature: { title: string; source: string; asOf: string; body: string[]; note?: string };
+  /** The character line the home page prints, and the pool of places a dated event draws from. */
+  venues: { value: string; source: string; asOf: string; names?: string[] };
   schedule: {
     source: string | null;
     upcoming: UpcomingItem[];
@@ -63,13 +70,10 @@ export type Content = {
   photos: { placeholders: boolean };
 };
 
-const isObj = (v: unknown): v is Record<string, unknown> =>
-  typeof v === 'object' && v !== null && !Array.isArray(v);
-
 const merge = (base: unknown, over: unknown): unknown => {
   if (!isObj(base) || !isObj(over)) return over === undefined ? base : over;
-  const out: Record<string, unknown> = { ...base };
-  for (const [k, v] of Object.entries(over)) out[k] = merge(base[k], v);
+  const out: Record<string, unknown> = { ...(base as object) };
+  for (const [k, v] of Object.entries(over as object)) out[k] = merge((base as Record<string, unknown>)[k], v);
   return out;
 };
 
@@ -103,6 +107,16 @@ export const value = (slot: Slot | null | undefined): string | null =>
 
 export const upcoming = (): UpcomingItem[] =>
   Array.isArray(content.schedule?.upcoming) ? content.schedule.upcoming : [];
+
+/**
+ * The open threads, as label + gloss. An item with no `value` is a hole and renders nothing rather than a
+ * bracket (record 0010). `gloss` is presentation, not a second claim: the source for the whole set sits on
+ * the parent (`threads.source`) and is inherited by the walk in src/lib/content-slots.mjs.
+ */
+export const threads = (): { label: string; gloss: string | null }[] =>
+  (Array.isArray(content.threads?.items) ? content.threads.items : [])
+    .filter((t) => typeof t?.value === 'string' && t.value !== '')
+    .map((t) => ({ label: t.value, gloss: typeof t.gloss === 'string' && t.gloss !== '' ? t.gloss : null }));
 
 /** True once a schedule source is configured, whether or not it currently holds a date (D132). */
 export const scheduleConfigured = (): boolean => filled(content.schedule?.source);
@@ -144,39 +158,23 @@ export const formatTime = (hhmm: string): string | null => {
   return `${hour}:${m[2]} ${suffix}`;
 };
 
+/** "Nov 3, 2026" from an ISO calendar date — the dated lane for a fact a human wrote down. Parsed as a
+ *  calendar date, never as an instant, so a build running in UTC cannot print the day before. */
+export const formatSince = (iso: string): string => {
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return iso;
+  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(y, m - 1, d)));
+};
+
 /** The build's own date, for the dated lane of a prerendered page. The only age a static page can compute (D103). */
-export const builtOn = (): string =>
-  new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date());
+export const builtOn = (): string => formatSince(new Date().toISOString().slice(0, 10));
 
 /**
- * Every slot in the tracked content that still needs a human. Used by the components' comments and by
- * `scripts/check-content.mjs`'s punch list — one walk, so a new slot cannot be forgotten by the gate.
+ * Every slot in the tracked content that still needs a human, and every slot that states a claim it cannot
+ * source. The walks themselves live in `src/lib/content-slots.mjs` so the gate and the site cannot drift
+ * apart — see the header there for why one walk, and for the source-inheritance rule.
  */
-export const openSlots = (c: unknown = content): { path: string; placeholder?: string; requires?: string }[] => {
-  const out: { path: string; placeholder?: string; requires?: string }[] = [];
-  const walk = (v: unknown, path: string) => {
-    if (isObj(v)) {
-      if ('value' in v && (v.value === null || v.value === '')) {
-        out.push({ path, placeholder: typeof v.placeholder === 'string' ? v.placeholder : undefined, requires: typeof v.requires === 'string' ? v.requires : undefined });
-      }
-      for (const [k, child] of Object.entries(v)) if (!k.startsWith('_')) walk(child, path ? `${path}.${k}` : k);
-    } else if (Array.isArray(v)) {
-      v.forEach((child, i) => walk(child, `${path}[${i}]`));
-    }
-  };
-  walk(c, '');
-  return out;
-};
+export const openSlots = (c: unknown = content) => openTree(c);
+export const unsourcedSlots = (c: unknown = content): string[] => unsourcedTree(c).map((u) => u.path);
 
-/** Slots that hold a claim but cannot name where it came from (D92's defect class, made visible). */
-export const unsourcedSlots = (c: unknown = content): string[] => {
-  const out: string[] = [];
-  const walk = (v: unknown, path: string) => {
-    if (isObj(v)) {
-      if (typeof v.value === 'string' && v.value !== '' && !v.source) out.push(path);
-      for (const [k, child] of Object.entries(v)) if (!k.startsWith('_')) walk(child, path ? `${path}.${k}` : k);
-    } else if (Array.isArray(v)) v.forEach((child, i) => walk(child, `${path}[${i}]`));
-  };
-  walk(c, '');
-  return out;
-};

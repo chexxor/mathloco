@@ -66,7 +66,7 @@ export const BANDS = [
   { name: 'kicker', y0: 76, y1: 100, min: 4.5 },
   { name: 'title', y0: 120, y1: 196, min: 4.5, washout: 'fail' },
   { name: 'lede', y0: 210, y1: 252, min: 4.5 },
-  { name: 'focus', y0: 262, y1: 282, min: 4.5 },
+  { name: 'invite', y0: 262, y1: 282, min: 4.5 },
   {
     // min 3.0 at band level because this row legitimately contains 1px hairline rules (`--color-rule`,
     // measured 4.00 on ink) whose bar is the graphic bar, not the text bar. Each word is held to 4.5

@@ -47,9 +47,11 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
 // so a visitor can tell an empty calendar from a broken page); and the ruled cadence while no calendar
 // source is wired up at all (D132).
 const label = heroLabel();
-// The one string the share card also prints — scripts/make-social-share.mjs reads the same slot, so the
-// card and the hero cannot name two different current books. `check:content` lists it as unsourced until
-// src/content.json gives it a source and a date.
+// The hero used to end with "Current Focus: Number Theory and Abstract Algebra". The slot behind it had no
+// source, `check:content` had it listed as an unsourced claim, and on 2026-11-03 the operator ruled it false:
+// "We no longer have that focus. We have no current focus at all right now." So `focus` here is whatever a
+// sourced slot says, and an empty slot renders no line — the section below (What we take up) is what carries
+// a subject on the page now, undated by design (src/content.json `threads._rule`).
 const focus = value(content.focus);
 ---
 
@@ -72,22 +74,24 @@ const focus = value(content.focus);
       <p
         class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
       >
-        Join our passionate community of math enthusiasts as we explore fascinating mathematical texts,
-        discuss complex concepts, and share our love for mathematical literature.
+        We meet around a table in a coffee shop or a brewery in the Twin Cities and work through
+        something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.
+        Dates go up on Meetup; most of the arguing happens in the chat between meetings.
       </p>
 
       <p
         class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
       >
-        Whether you're a student, professional, or hobbyist, our monthly book club meetings offer a supportive
-        environment to explore mathematical texts and engage in thoughtful discussions.
+        There is no syllabus, no reading list to keep up with, and no current focus. What the club is
+        pulling on is decided in its own chat, and some of the threads open there are further down
+        this page. Bring a question; you don't need a field.
       </p>
 
       {focus && (
         <p
           class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
         >
-          Current Focus: {focus}{content.focus.asOf ? ` · since ${content.focus.asOf}` : ''}
+          {focus}
         </p>
       )}
 

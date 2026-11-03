@@ -1,6 +1,7 @@
 {
   "_about": "The club's own facts, in one file a non-developer can edit from a phone. Everything the site asserts about the club is read from here (src/lib/content.ts); a fact that is not settled is a slot with `value: null` and the bracketed text that is waiting for a source, so the absence is explicit rather than invented. Rules this file answers to: DESIGN.md 'Copy' (state the fact, name where it came from, give a path out, carry the date; never state a frequency without a source; `[BRACKETS]` stay bracketed until a source exists), D92, D136 (no fabricated numbers), record 0010 (missing content is a designed state, never a blank and never a build failure).",
-  "_override": "For a preview or a review build, copy src/content.local.example.json to src/content.local.json (gitignored, like .dev.vars) - it deep-merges over this file. Nothing tracked can turn a placeholder on: `scripts/check-content.mjs` fails any build that contains one, so a review-only state cannot reach the apex.",
+  "_override": "For a preview or a review build, copy src/content.local.example.json to src/content.local/<name>.json (gitignored, like .dev.vars) - it deep-merges over this file. Nothing tracked can turn a placeholder on: `scripts/check-content.mjs` fails any build that contains one, so a review-only state cannot reach the apex.",
+  "_sources": "A claim may carry its source once, on the object that holds the group, and every claim under it inherits that source - `unsourcedSlots` in src/lib/content.ts and scripts/check-content.mjs walk ancestors, so 'the operator listed these on 2026-11-03' is written once rather than pasted nine times.",
 
   "cadence": {
     "value": "Monthly",
@@ -10,11 +11,64 @@
   },
 
   "focus": {
-    "value": "Number Theory and Abstract Algebra",
+    "value": null,
+    "placeholder": "[what the club is taking up right now, if it wants to name one]",
     "source": null,
     "asOf": null,
-    "placeholder": "[what the club is actually reading, and since when]",
-    "note": "Pre-existing site copy, kept while it is confirmed. check:content lists it as an unsourced claim until source + asOf are filled; scripts/make-social-share.mjs reads the same value, so the share card and the hero cannot name two different current books."
+    "note": "Emptied 2026-11-03 on the operator's word: 'We no longer have that focus. We have no current focus at all right now.' The value it held ('Number Theory and Abstract Algebra') was pre-existing site copy with no source - `check:content` had it listed as an unsourced claim - so there was nothing to correct it against. What the club is actually pulling on is in `threads`, which is deliberately undated (see `threads._rule`). The hero renders nothing when this slot is empty rather than inventing a subject; `heroLabel()` in src/lib/content.ts is what decides the label lane."
+  },
+
+  "threads": {
+    "source": "operator, 2026-11-03, describing what the club has been discussing in its Discord channel: 'IBM Qiskit quantum computing tools, theoretical quantum physics, proof assistant languages like Lean, news in the general math field, LLMs affects on the math field, favorite math-related Youtube content, foundations of mathematics, considering the implications of arithmetic with slight changes, math exercises/puzzles that don't require expertise in a field and have interesting solutions'",
+    "asOf": "2026-11-03",
+    "_rule": "Undated, untitled and not an archive, on purpose. Operator ruling, 2026-11-03: 'I don't want the home page to give anyone an idea that our groups interests are as narrow as what we have done historically, so I don't want to name enough specific things to give enough information to allow a pattern to emerge.' So this list carries no dates, no sequence, no book titles, no authors and no run of past topics a reader could extrapolate from. A thread that goes quiet is edited out rather than left as a record, and nothing here implies the club did something in the past or will do it in the future. Item strings are reworded for a newcomer (that is presentation, not a new claim); the operator's own words are the source above.",
+    "items": [
+      { "value": "Arithmetic with the rules nudged", "gloss": "what breaks, and what gets interesting, if you change how numbers combine" },
+      { "value": "Proofs a machine checks", "gloss": "Lean, and what it does to a proof when something verifies it line by line" },
+      { "value": "The mathematics under a quantum computer", "gloss": "Qiskit, and the linear algebra those gates are made of" },
+      { "value": "Steps you can undo", "gloss": "algorithms that lose nothing, drawn as wires and boxes - the thread written out below" },
+      { "value": "What mathematics sits on", "gloss": "foundations, and why the question keeps coming back" },
+      { "value": "What a language model changes", "gloss": "about doing mathematics, and about who gets to" },
+      { "value": "Puzzles that need no background", "gloss": "and have strange answers" },
+      { "value": "Whatever the field is arguing about", "gloss": "read carefully, rather than retweeted" },
+      { "value": "The mathematics videos we finish", "gloss": "and the ones we abandon, with reasons" }
+    ]
+  },
+
+  "feature": {
+    "title": "Steps you can undo",
+    "source": "operator request, 2026-11-03: 'You can add something related to creating a simple system that permits invertible algorithms in the context of complex numbers, and expressing such algorithms in a graph-like diagrammatic language. Please try to express this in a way that would be more interesting to a newcomer with a general interest in mathematics.' The mathematics itself is textbook, not the club's: the moves named are translations, rotations, reflections and inversion of the complex plane - the Möbius transformations, which are exactly the bijections of the Riemann sphere and map generalized circles to generalized circles. The 'wires and boxes' encoding is the usual graphical calculus for morphisms (string diagrams); reversible computing and quantum gates carry the same requirement that every step be invertible. Written 2026-11-03, checked against nothing but the maths.",
+    "asOf": "2026-11-03",
+    "body": [
+      "Take the complex plane rather than the number line, and look only at the moves that can be undone: slide the plane, spin it, reflect it, or send z to 1/z - and if you agree to one extra point out at infinity, that last one is a perfect shuffle of the plane onto itself. Compose a few of them and you have a computation that never loses anything: run the same recipe backwards, in reverse order, and it puts you exactly where you started.",
+      "Now draw it instead of writing it down. Inputs are wires, moves are boxes, and invertible means every diagram has a mirror image that is also a valid recipe. Circles stay circles-or-lines under these moves, so the picture keeps meaning something no matter how deeply you nest it. This is the same graphical bookkeeping behind reversible computing, and behind the gates a quantum computer is allowed to use, where losing information is precisely what is forbidden.",
+      "What the club keeps coming back to is the middle question: how much of an algorithm can live in the drawing rather than the algebra, and is there anything a diagram can say that the equation cannot? If you have a way to draw undo - or a reason to doubt this one - bring it to the chat."
+    ],
+    "note": "Club editorial, not a fact-slot: it makes no claim about the club's history, membership or schedule. It is here because a page with no subject on it reads as a placeholder for a club (round 7, operator: the site is 'too professional' and has 'no humanity'). It must stay true mathematics; if a sentence stops being defensible, delete the sentence."
+  },
+
+  "venues": {
+    "value": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",
+    "source": "operator, 2026-11-03, who named the venues the club has used (listed in `names` below)",
+    "asOf": "2026-11-03",
+    "_rule": "The character line is what the home page says. The names are the pool a date gets a place from, and they print next to a date, not instead of one - a visitor cannot use a list of fifteen venues, and 'meetings happen at Bauhaus Brew Labs' with no date on it is a claim about a meeting that is not scheduled (D92's defect class). Do not sort or curate this list into a pattern: it is the set of places, in the order the operator gave.",
+    "names": [
+      "Minneapolis Cider Company",
+      "UMN Alumni Center",
+      "Snuffies Malt Shop",
+      "Bauhaus Brew Labs",
+      "Wabasha Brewing",
+      "Angel Food Bakery & Coffee Bar",
+      "Blad Map Brewing",
+      "Five Watt Coffee",
+      "Curioso Coffee Bar",
+      "The Tea Time",
+      "Nine Mile Brewery",
+      "Blackwater Cafe",
+      "Makes Coffee",
+      "Cuzzies Grill and Bar",
+      "Torg Brewery"
+    ]
   },
 
   "schedule": {
@@ -26,26 +80,18 @@
       "title": "No date is on the calendar yet.",
       "body": "Dates are set in the club's Discord and posted on Meetup, where the calendar and the sign-up live. The discussion runs between meetings in the chat.",
       "venueLine": {
-        "value": null,
-        "placeholder": "[venue blurb, one line - name, and what a first-timer should know about getting in]",
-        "source": null
+        "value": "Wherever the last one was, it was a coffee shop or a brewery: the club has used fifteen places around the Twin Cities.",
+        "source": "operator, 2026-11-03 - the venues are in `venues.names`",
+        "asOf": "2026-11-03"
       }
     }
   },
 
-  "venue": {
-    "value": null,
-    "placeholder": "[place name + room]",
-    "source": null,
-    "note": "'Local Library - Study Room B' was invented in the retired UpcomingMeetups.astro (see .notes/roadmap-events.md: 'entirely invented placeholder content'). It is not on the site and does not come back without a source."
-  },
-
   "membership": {
-    "value": null,
-    "placeholder": "[N]+ members",
-    "requires": "the figure, where it came from, and the day it was counted (D136)",
-    "source": null,
-    "note": "The site used to render Math.floor(Math.random()*100+150)+'+ members'. A number that changes per request is not a statistic. Fill value + source + asOf and it ships as static copy; until then nothing is said."
+    "value": "280 on the Meetup list",
+    "source": "the club's own Meetup group page, fetched 2026-11-03, whose member-count link reads '280 members' (https://www.meetup.com/minneapolis-mathematics-book-club/members/); the operator confirmed the figure and added that about ten of them are regular attendees",
+    "asOf": "2026-11-03",
+    "note": "The site used to render Math.floor(Math.random()*100+150)+'+ members' - a different community size on every request (D136, deleted). What is said here is the roster, not the attendance: it is the count on the page that carries it, dated the day it was read, with no '+' and no rounding. Do NOT publish the regular-attendee figure: ten is a fact about who shows up, it reads as a discouragement on a join page, and the operator's plan is to grow it by formalising special interest groups. Re-read the number when the page is next edited - a dated figure that has gone stale is the failure this slot's asOf exists to make visible."
   },
 
   "photos": {

@@ -3,8 +3,10 @@
     "showSchedule": true
   },
   "seo": {
-    "title": "Join the Minneapolis Math Book Club | Math Book Discussions",
-    "description": "Connect with fellow math lovers in our vibrant reading community. Monthly meetups, engaging discussions, and diverse book selections in Minneapolis, MN.",
+    "title": "Minneapolis Math Book Club",
+    "_title": "Was 'Join the Minneapolis Math Book Club | Math Book Discussions' — an imperative and a keyword phrase, in the voice of a listing rather than the club. og:title and og:site_name both read this slot (src/layouts/Layout.astro), so it is the site's name, not a sales line (D112's locator rule, applied to metadata).",
+    "description": "A math club in the Twin Cities. We work through papers, proofs, proof assistants and puzzles together, around a table in a coffee shop or a brewery. Dates and sign-up on Meetup; the discussion runs in the chat.",
+    "_description": "Was 'Connect with fellow math lovers in our vibrant reading community. Monthly meetups, engaging discussions, and diverse book selections in Minneapolis, MN.' — 'vibrant', 'engaging' and 'diverse' are unsourced adjectives, and 'diverse book selections' describes a service the club does not run (2026-11-03). No cadence word here: the one cadence claim the site makes is the hero label, and it carries its source in src/content.json (D92). This sentence is also what a link unfurl shows, so it is written for a person. Re-read it when the venues or the paths change; `check:content` scans <meta content> for cadence words, so adding one means adding a source.",
     "canonical": "https://minneapolismathbookclub.com",
     "locale": "en_US",
     "image": "/book-club-social-share.jpg"
