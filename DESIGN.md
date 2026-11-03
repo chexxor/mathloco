@@ -312,7 +312,7 @@ freshness.
 - **The label set is the mark plus `Chat`.** `Schedule` and `Members` were dropped on 2026-11-02 (D117):
   the build emits `index.html`, `chat/index.html` and `404.html` only, and `public/` has no redirect rules,
   so those two labels were links to the 404 page — on `main` as well as here. A nav item requires a page.
-  Measured with the probe `check:render` runs at every width: the row **needs 176px** against a container
+  Measured with the probe `check:render` runs at every width @measured 2026-11-03 by check:render: the row **needs 176px** against a container
   that offers 276 at a 320 viewport and 256 at 300. (This line said **171px** from 2026-11-02 to 2026-11-03 while the
   probe reported 176 at every width — a doc figure a probe contradicts is a doc bug; quote the probe's line.) `--breakpoint-nav-narrow` (370px) and the narrow
   `text-micro` nav tier went with the dead labels — a tier that fits everywhere is not a tier. An
@@ -599,10 +599,10 @@ npm run verify                  # the browser-free CI gate set (everything above
 ```
 
 **These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
-assumed.** Measured on the dev rig (Linux, 16 CPU, Firefox 159.0, native, 2026-11-03): one page at one width
-**0.9–3s**, `check:render:dist` over its **12 cells** (4 widths × 3 routes) **35s**, `check:mark` **3.8s**,
-`check:space` **9.1s**, `check:ground` **8.5s** and `check:ground:selftest` **15.4s**, the render selftest **12.3s**,
-`check:social:live` **1.4s** — `npm run verify:browser` end to end is **85.6s** (it was 44.7s before the width sets
+assumed.** @measured 2026-11-03 by `npm run verify:browser` — re-run it to refresh these. Measured on the dev rig (Linux, 16 CPU, Firefox 159.0, native, 2026-11-03): one page at one width
+**0.9–3s**, `check:render:dist` over its **12 cells** (4 widths × 3 routes) **36.6s**, `check:mark` **3.8s**,
+`check:space` **9.3s**, `check:ground` **8.7s** and `check:ground:selftest` **15.7s**, the render selftest **12.3s**,
+`check:social:live` **1.5s** — `npm run verify:browser` end to end is **87.8s** (it was 44.7s before the width sets
 grew, D146). Every step's full output is written even when it passes, under `.design/tmp-gate-logs/` (**D144**), so a
 green run leaves the evidence rather than the word "ok". `verify` stays browser-free
 because the runner has no Firefox, which means `check:render`, `check:render:dist`,

@@ -47,7 +47,7 @@
 // the answer cost a re-run of a 50-80s browser step. `.design/tmp-*` is gitignored by an existing rule, so
 // this adds no tracked noise, and a run overwrites its own set's directory: the logs are the *last* run.
 import { spawn } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync, readdirSync, unlinkSync } from 'node:fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
@@ -61,6 +61,8 @@ const DEPLOY = [
   { name: 'check', desc: 'astro check: types in .astro/.svelte/.ts' },
   { name: 'check:classes', desc: 'every written class resolves to CSS' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
+  { name: 'check:decisions', desc: 'the tracked decision index matches the log, and no D-id citation dangles' },
+  { name: 'check:figures', desc: 'a measured number in DESIGN.md carries a date, and that date is not stale' },
   { name: 'check:social', desc: 'the committed share card against its painted report' },
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
@@ -224,6 +226,39 @@ console.log(`\ngate-run: ${ok} ok, ${failed} failed, ${skipped} skipped — ${wa
 console.log(logBroken
   ? `NOTE step output was NOT saved (${logBroken}) — every number above is unverified until you re-run with a writable .design/`
   : `logs  ${LOG_DIR}/ — every step's full output, pass or fail, from this run (gitignored scratch; the last run wins)`);
+
+// The cost of a gate set doubles without anyone deciding it: `verify:browser` went 44.7s -> 85.6s -> 87.8s
+// as the width sets grew (D146) and nobody compared two runs. A gate that takes twice as long is a gate
+// people stop running, so every green run compares itself against a tracked baseline. Only 2x fails: CPU
+// contention on a home rig is real, and a 40% wobble is not a regression.
+const COST_BASELINE = resolve('design', 'gate-cost.json');
+const costKey = set === BROWSER ? 'browser' : 'deploy';
+if (!failed && !skipped && existsSync(COST_BASELINE)) {
+  try {
+    const base = JSON.parse(readFileSync(COST_BASELINE, 'utf8'))[costKey];
+    if (base && base.wallSecs) {
+      const ratio = Number(wall) / base.wallSecs;
+      const pct = Math.round((ratio - 1) * 100);
+      console.log('cost: ' + costKey + ' ' + wall + 's vs baseline ' + base.wallSecs + 's (' + base.measuredAt + ') = ' + (pct >= 0 ? '+' : '') + pct + '%');
+      for (const r of results.values()) {
+        const b = base.steps && base.steps[r.step.name];
+        if (b && r.secs > b * 2) console.log('cost: one step doubled - ' + r.step.name + ' ' + b + 's -> ' + r.secs.toFixed(2) + 's');
+      }
+      if (ratio > 2) {
+        failed++;
+        console.log('cost: FAIL - over 2x the baseline. A slower gate is a gate people stop running: fix it, or');
+        console.log('      re-baseline on purpose with `npm run cost:save` and say why in the commit message.');
+      } else if (ratio > 1.4) {
+        console.log('cost: WARN - over 40% vs baseline. Not a failure; look at the manifest before the new cost is normal.');
+      }
+    }
+  } catch (e) {
+    console.log('cost: baseline unreadable (' + e.message + ') - comparison skipped.');
+  }
+} else if (!failed && !skipped) {
+  console.log('cost: no baseline for ' + costKey + ' (design/gate-cost.json) - `npm run cost:save` after a green run starts one.');
+}
+
 if (failed || skipped) {
   console.log('Nothing was deployed by this command. Fix the FAILs above; the SKIPs are steps that');
   console.log('would have measured an artifact their failed step never produced.');
