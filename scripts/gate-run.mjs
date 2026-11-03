@@ -32,9 +32,16 @@
 // Output discipline: each step's stdout/stderr is captured and replayed as a block, so nothing
 // interleaves. A step that fails prints its own output under its name; steps that needed it are reported
 // SKIPPED rather than run against an artifact that does not exist.
+//
+// Every step's full output is ALSO written to `.design/tmp-gate-logs/<set>/<step>.txt`, pass or fail
+// (D144). Why: a green run used to leave the word "ok" and throw the measurement away, and the output is
+// where the answer lives whenever a decision has to be taken from a gate — which controls measured what,
+// what a probe saw, what the preview will show. It got asked for four times in one session and each time
+// the answer cost a re-run of a 50-80s browser step. `.design/tmp-*` is gitignored by an existing rule, so
+// this adds no tracked noise, and a run overwrites its own set's directory: the logs are the *last* run.
 import { spawn } from 'node:child_process';
-import { existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, mkdirSync, writeFileSync, readdirSync, unlinkSync } from 'node:fs';
+import { resolve, join } from 'node:path';
 
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
@@ -113,6 +120,23 @@ if (set === BROWSER && !existsSync(dist)) {
   process.exit(1);
 }
 
+// One directory per set, overwritten by the run, so `check:render:dist.txt` always means "the last render
+// measurement I ran". A log write must never be what breaks the gate set, so failures are reported loudly
+// and do not throw — a silent log failure is the same defect class as no logs at all.
+const LOG_DIR = resolve('.design', 'tmp-gate-logs', set === BROWSER ? 'browser' : 'deploy');
+let logBroken = null;
+try {
+  mkdirSync(LOG_DIR, { recursive: true });
+  for (const f of readdirSync(LOG_DIR)) if (f.endsWith('.txt')) unlinkSync(join(LOG_DIR, f));
+} catch (e) { logBroken = e.message; }
+const runStarted = new Date().toISOString();
+const writeLog = (name, { code, secs, out, note = '' }) => {
+  if (logBroken) return;
+  const head = `# gate-run: ${name}\n# set=${set === BROWSER ? 'browser' : 'deploy'} started=${runStarted} exit=${code} secs=${secs.toFixed(2)}\n# command: npm run --silent ${name}\n`;
+  try { writeFileSync(join(LOG_DIR, `${name}.txt`), `${head}${note}\n${out}\n`); }
+  catch (e) { logBroken = e.message; }
+};
+
 const run = (step) => new Promise((done) => {
   const t0 = process.hrtime.bigint();
   const child = spawn(NPM, ['run', '--silent', step.name], { stdio: ['ignore', 'pipe', 'pipe'] });
@@ -146,7 +170,9 @@ while (remaining.length) {
     for (const step of remaining) {
       const missing = (step.needs ?? []).filter((n) => results.get(n)?.code !== 0);
       skipped++;
-      console.log(`SKIP ${step.name.padEnd(24)} needed: ${missing.map((m) => `${m} (${results.get(m) ? 'FAILED' : 'not run'})`).join(', ')}`);
+      const why = missing.map((m) => `${m} (${results.get(m) ? 'FAILED' : 'not run'})`).join(', ');
+      writeLog(step.name, { code: 'skipped', secs: 0, out: `SKIPPED — needed: ${why}`, note: '\n# The step never ran: an earlier step it needs did not succeed.' });
+      console.log(`SKIP ${step.name.padEnd(24)} needed: ${why}`);
     }
     break;
   }
@@ -162,6 +188,7 @@ while (remaining.length) {
   for (const r of waveResults) {
     results.set(r.step.name, r);
     const secs = r.secs.toFixed(2).padStart(6);
+    writeLog(r.step.name, r);
     if (r.code === 0) {
       console.log(`ok   ${r.step.name.padEnd(24)} ${secs}s`);
     } else {
@@ -175,7 +202,16 @@ while (remaining.length) {
 const wall = ((Date.now() - t0) / 1000).toFixed(1);
 const sum = [...results.values()].reduce((a, r) => a + r.secs, 0).toFixed(1);
 const ok = results.size - failed - 0;
+try {
+  const manifest = [...results.values()]
+    .map((r) => `${r.code === 0 ? 'ok  ' : 'FAIL'} ${r.step.name.padEnd(24)} ${r.secs.toFixed(2).padStart(7)}s  -> ${r.step.name}.txt`)
+    .join('\n');
+  writeFileSync(join(LOG_DIR, 'manifest.txt'), `# gate-run ${set === BROWSER ? 'browser' : 'deploy'} set, ${runStarted}\n# ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS})\n${manifest}\n`);
+} catch (e) { logBroken ||= e.message; }
 console.log(`\ngate-run: ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, set=${set === BROWSER ? 'browser' : 'deploy'})`);
+console.log(logBroken
+  ? `NOTE step output was NOT saved (${logBroken}) — every number above is unverified until you re-run with a writable .design/`
+  : `logs  ${LOG_DIR}/ — every step's full output, pass or fail, from this run (gitignored scratch; the last run wins)`);
 if (failed || skipped) {
   console.log('Nothing was deployed by this command. Fix the FAILs above; the SKIPs are steps that');
   console.log('would have measured an artifact their failed step never produced.');
