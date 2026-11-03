@@ -33,6 +33,7 @@
 // the operator has not filled yet is the "make the build fail so someone notices" answer they rejected
 // (record 0010).
 import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { openSlots, unsourcedSlots } from '../src/lib/content-slots.mjs';
 import { join, resolve } from 'node:path';
 
 const args = process.argv.slice(2);
@@ -61,10 +62,24 @@ const looksLikePlaceholder = (s) => /^[A-Z][A-Z0-9 '’\-]{1,}$/.test(s.trim()) 
 // D92's frequency words. Allowed only with a named `cadence.source` in src/content.json.
 const CADENCE = /\b(weeklyn?|weekly|monthly|daily|nightly|biweekly|bimonthly|fortnightly|every other week|every week|every month|each week|twice a month|most months)\b/gi;
 
-// Strings this repo measured as fabricated. If one comes back, someone pasted a placeholder into copy.
+// Strings this repo measured as fabricated, or that the operator says the club never claimed. If one comes
+// back, someone pasted a placeholder or a template's benefit grid back into copy.
 const RETIRED = [
+  // invented events and venues (the retired UpcomingMeetups.astro / PastEvents.astro, .notes/roadmap-events.md)
   'Local Library', 'Study Room B', 'Reserve Your Spot', 'Introduction to Group Theory',
   'Saturday, 2:00 PM', 'active community of', 'Math Study Group Session',
+  // the six-card benefit grid and the join band's checklist, deleted 2026-11-03. The operator on the same
+  // day: the page had "no humanity" and was "too professional", and on the club having written anything —
+  // "Our club has not written anything." Every one of these was an unsourced claim about a club nobody in
+  // the repo could describe; three of them ("Learn from experienced mathematicians…", "Access to curated
+  // learning materials…", "Monthly in-person study sessions") describe services the club does not offer.
+  'Why Join Our Math Book Club', 'Discover the benefits', 'Expert Guidance', 'Collaborative Learning',
+  'Learn from experienced mathematicians', 'Regular Meetups', 'Sessions most months', 'Study Resources',
+  'Access to curated learning materials', 'Diverse Community', 'Connect with students, professionals',
+  'Growth Mindset', 'Develop problem-solving skills', 'Join our passionate community',
+  'our monthly book club meetings', 'Why Join Our Meetup Group', 'Monthly in-person study sessions',
+  'Collaborative problem-solving', 'Network with math enthusiasts', 'Connect with fellow math enthusiasts',
+  'Join Our Next Session', 'Join Our Community',
 ];
 
 // D136's defect class: a number the page invents at request time.
@@ -158,33 +173,9 @@ function checkConfig(trackedJson, builtHtml) {
   return { fails, warns, cadenceHits };
 }
 
-/** The operator's punch list: which facts are still holes, and what each hole is waiting for. */
-function openSlots(c) {
-  const out = [];
-  const walk2 = (v, path) => {
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
-      if ('value' in v && (v.value === null || v.value === '')) {
-        out.push({ path, placeholder: v.placeholder ?? null, requires: v.requires ?? null, source: v.source ?? null });
-      }
-      for (const [k, child] of Object.entries(v)) if (!k.startsWith('_')) walk2(child, path ? `${path}.${k}` : k);
-    } else if (Array.isArray(v)) v.forEach((child, i) => walk2(child, `${path}[${i}]`));
-  };
-  walk2(c, '');
-  return out;
-}
-
-function unsourced(c) {
-  const out = [];
-  const walk2 = (v, path) => {
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
-      if (typeof v.value === 'string' && v.value !== '' && !v.source) out.push({ path, value: v.value });
-      for (const [k, child] of Object.entries(v)) if (!k.startsWith('_')) walk2(child, path ? `${path}.${k}` : k);
-    }
-  };
-  walk2(c, '');
-  return out;
-}
-
+/** The operator's punch list: which facts are still holes, and what each hole is waiting for. The walks
+ *  themselves are shared with the site (src/lib/content-slots.mjs) — they used to be copied here, and the
+ *  copy had no array branch, so every claim inside a list was invisible to this gate. */
 function run(distDir, srcDir, tracked) {
   const htmlFiles = walk(distDir, ['.html']);
   const built = htmlFiles.map((f) => [f, readFileSync(f, 'utf8')]);
@@ -208,6 +199,9 @@ if (selftest) {
     { name: 'bracket', html: clean.replace('</body>', '<p>at [VENUE NAME]</p></body>') },
     { name: 'placeholder-fill', html: clean.replace('</body>', '<div data-placeholder="PS-1"></div></body>') },
     { name: 'retired-fabrication', html: clean.replace('</body>', '<p>Local Library - Study Room B</p></body>') },
+    // the six-card grid the operator deleted on 2026-11-03: a pasted-back template heading has to be as
+    // catchable as an invented venue, or the retired list only remembers the last round's mistakes
+    { name: 'retired-marketing-grid', rule: 'retired-fabrication', html: clean.replace('</body>', '<h3>Expert Guidance</h3><p>Learn from experienced mathematicians and educators</p></body>') },
     { name: 'dead-path', html: clean.replace('</body>', '<a href="/schedule">Schedule</a></body>') },
     { name: 'unsourced-cadence', html: clean.replace('</body>', '<p>Monthly meetups</p></body>') },
     { name: 'invented-number', html: clean, src: 'Join our active community of ' + '${Math.random()}+ members.' },
@@ -222,7 +216,7 @@ if (selftest) {
     const html = [[`${dir}/index.html`, p.html]];
     let fails = [...scanPage(p.html, `${dir}/index.html`, ['/', '/chat'], dir), ...scanSource(p.src ? [`${dir}/src/Fake.astro`] : [])];
     if (p.name === 'unsourced-cadence') fails = [...fails, ...checkConfig(trackedNoSource, html).fails];
-    const caught = fails.some((f) => f.rule === p.name);
+    const caught = fails.some((f) => f.rule === (p.rule ?? p.name));
     console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(24)} ${fails.map((f) => f.rule).join(',') || 'nothing'}`);
     if (!caught) bad++;
   }
@@ -236,7 +230,22 @@ if (selftest) {
   const trackedOnCaught = trackedOn.some((f) => f.rule === 'tracked-placeholder-switch');
   console.log(`${trackedOnCaught ? 'ok   caught' : 'FAIL missed'}  tracked-placeholder-switch`);
   if (!trackedOnCaught) bad++;
-  console.log(`\ncheck:content selftest: ${plants.length + 2 - bad}/${plants.length + 2} planted defects caught`);
+
+  // The shared walks (src/lib/content-slots.mjs). The copy that used to live here had no array branch, so
+  // every claim inside a list — all nine `threads.items` — was invisible to it. D118: prove the walk sees
+  // the case it used to miss, and prove source inheritance does not turn the report off.
+  const inList = unsourcedSlots({ threads: { source: null, items: [{ value: 'A claim in a list' }] } });
+  const listOk = inList.length === 1 && inList[0].path === 'threads.items[0]';
+  console.log(`${listOk ? 'ok   caught' : 'FAIL missed'}  unsourced-claim-in-a-list  ${inList.map((u) => u.path).join(',') || 'nothing'}`);
+  if (!listOk) bad++;
+  const inheritOk = unsourcedSlots({ threads: { source: 'operator, 2026-11-03', items: [{ value: 'x' }, { value: 'y' }] } }).length === 0;
+  console.log(`${inheritOk ? 'ok   clean' : 'FAIL missed'}  inherited-source         a source on the group covers the items under it`);
+  if (!inheritOk) bad++;
+  const holesOk = openSlots({ focus: { value: null, placeholder: '[what we are reading]' } }).length === 1;
+  console.log(`${holesOk ? 'ok   caught' : 'FAIL missed'}  open-placeholder-walk`);
+  if (!holesOk) bad++;
+
+  console.log(`\ncheck:content selftest: ${plants.length + 5 - bad}/${plants.length + 5} planted defects caught`);
   process.exit(bad ? 1 : 0);
 }
 
@@ -269,7 +278,7 @@ console.log(`\n  open placeholders in src/content.json (${holes.length}) — the
 for (const h of holes) {
   console.log(`   · ${h.path}${h.placeholder ? `  waiting for ${h.placeholder}` : ''}${h.requires ? `  [${h.requires}]` : ''}`);
 }
-const uns = unsourced(tracked);
+const uns = unsourcedSlots(tracked);
 if (uns.length) {
   console.log(`\n  claims with no source beside them (${uns.length}) — the site states these today:`);
   for (const u of uns) console.log(`   ~ ${u.path}: "${u.value}" — add source + asOf in src/content.json (D92)`);

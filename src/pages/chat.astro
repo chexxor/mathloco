@@ -21,20 +21,22 @@ const DISCORD_URL = config.URLs.discordInvite;
     </div>
 
     <h1 class="text-display-1 font-extrabold text-ink mb-12">
-      Discord Chat Summary
+      Summaries from the chat
     </h1>
 
     <!-- `visible`, not `load`: the summary block is below the fold on phones, and this island
          drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the
-         server-rendered heading and the "Join Discord Server" CTA interactive immediately and skips
+         server-rendered heading and the "Join the chat" CTA interactive immediately and skips
          the API fetch entirely for visitors who never scroll to it. -->
     <DiscordSummary client:visible discordUrl={DISCORD_URL} />
 
     <div class="mt-16 bg-panel rounded-card p-8">
       <div class="text-center">
-        <h2 class="text-heading font-bold text-ink mb-4">Join Our Community</h2>
+        <h2 class="text-heading font-bold text-ink mb-4">The chat itself</h2>
         <p class="text-lede leading-prose text-ink-2 mb-6 max-w-measure mx-auto">
-          Connect with fellow math enthusiasts, participate in discussions, and be part of our growing community. Our Discord server is a friendly space for mathematical exploration and learning.
+          What is above is what our bot writes from the channel after the noise settles. The channel is
+          where the club actually talks — what it is pulling on, what it is arguing about, where and when
+          it is next meeting. The invite is the button below.
         </p>
         <a
           href={DISCORD_URL}
@@ -43,7 +45,7 @@ const DISCORD_URL = config.URLs.discordInvite;
           data-control="primary"
           class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
         >
-          Join Discord Server
+          Join the chat
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>

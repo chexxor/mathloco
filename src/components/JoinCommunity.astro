@@ -1,16 +1,31 @@
 ---
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
+import { content, value, formatSince } from '../lib/content.ts';
+
+// The join band used to sell: "Join Our Community / Connect with fellow math enthusiasts and join our
+// monthly discussions", then a checklist — "Monthly in-person study sessions", "Collaborative
+// problem-solving", "Network with math enthusiasts". Two of those were cadence claims in a section that had
+// no source beside them, and all three were the template's words rather than the club's (the operator,
+// 2026-11-03: "no humanity", "too professional"). They are on the retired list in
+// `scripts/check-content.mjs`. What is here instead is the mechanics a stranger can actually use, each one
+// read from `src/content.json` with its source: where meetings are held (`venues`), what the roster says and
+// when it was read (`membership` — D136: the count is dated and has no '+' on it, and the regular-attendee
+// figure is deliberately not published), and the two paths out.
+const venues = value(content.venues);
+const membership = value(content.membership);
+const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.length : null;
 ---
 
 <section class="bg-paper py-16">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
       <h2 class="text-heading font-extrabold text-ink">
-        Join Our Community
+        Come once
       </h2>
       <p class="mt-4 text-lede leading-prose text-ink-2 font-body max-w-measure mx-auto">
-        Connect with fellow math enthusiasts and join our monthly discussions
+        One place to say you are coming, one place to argue. Neither takes a commitment, and one evening is
+        enough to tell whether this is your kind of room.
       </p>
     </div>
 
@@ -19,34 +34,27 @@ import config from '../config.json';
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <h3 class="text-subhead font-semibold text-ink mb-4">
-              Why Join Our Meetup Group?
+              How it works
             </h3>
-            <ul class="space-y-4 text-body leading-prose text-ink-2 font-body">
-              <li class="flex items-start">
-                <span class="flex-shrink-0 h-6 w-6 text-ink">
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                </span>
-                <span class="ml-3">Monthly in-person study sessions</span>
-              </li>
-              <li class="flex items-start">
-                <span class="flex-shrink-0 h-6 w-6 text-ink">
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                </span>
-                <span class="ml-3">Collaborative problem-solving</span>
-              </li>
-              <li class="flex items-start">
-                <span class="flex-shrink-0 h-6 w-6 text-ink">
-                  <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                </span>
-                <span class="ml-3">Network with math enthusiasts</span>
-              </li>
-            </ul>
+            <div class="space-y-3 text-body leading-prose text-ink-2 font-body">
+              {venues && (
+                <p>
+                  {venues}
+                  {venueCount ? ` The club has used ${venueCount} of them.` : ''} A date and its place go up
+                  on Meetup; the discussion keeps running between meetings in the chat.
+                </p>
+              )}
+              <p>
+                Nobody hands you homework and there is no level to clear. If you would rather hear what is
+                being argued about before you go, the chat invite is below.
+              </p>
+              {membership && (
+                <p>
+                  {membership} — counted {content.membership.asOf ? formatSince(content.membership.asOf) : 'today'},
+                  and that is the list, not the room.
+                </p>
+              )}
+            </div>
           </div>
 
           <!-- PS-3, the join media column (round 10 ruling: reserve it now). `check:space` measures this column
@@ -64,8 +72,8 @@ import config from '../config.json';
             caption="the club mid-session, wide crop (532x128)"
           />
           <p class="text-body leading-prose text-ink-2 font-body mb-6">
-            Sessions are posted on Meetup, where the calendar and the sign-up live. The discussion keeps
-            going between meetings in the chat.
+            The calendar and the sign-up live on Meetup. The chat is where the club decides what it is
+            pulling on.
           </p>
           <div class="flex flex-wrap gap-3">
             <a

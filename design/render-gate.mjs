@@ -243,6 +243,15 @@ for (const route of routes) {
       }
       if (n.textContrast !== null && n.textContrast < 4.5) fails.push(`${at}: ${n.role} text at contrast ${n.textContrast} is under the 4.5 bar`);
       if (n.h < 48) fails.push(`${at}: ${n.role} block is ${n.h}px tall — D98 puts a one-line notice at 48px`);
+      // **A notice is one boundary** (operator ruling, 2026-11-03, on the Discord island: `Try again` and
+      // `Read Discord` were keylined, filled boxes sitting inside the notice's own keyline — two boxes, one
+      // of them drawn twice). Inside a notice an action is an inline link or a quiet label: no fill, no
+      // second ring, no declared control role. Height rules for block controls live in rule 1; this rule is
+      // about how many edges one component is allowed to have.
+      for (const a of n.actions || []) {
+        const why = [a.fill && `fill ${a.fill}`, a.ring && 'its own inset ring', a.role && `data-control="${a.role}"`].filter(Boolean).join(', ');
+        fails.push(`${at}: ${n.role} notice contains a block action "${a.t}" (${why}) — a notice is one boundary; inside it an action is an inline link or a quiet label (DESIGN.md, Notices)`);
+      }
     }
 
     // 4c. nav (D100): one row at every width, `flex-wrap: nowrap`, one type tier per viewport, and

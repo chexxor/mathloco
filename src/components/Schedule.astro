@@ -105,11 +105,19 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
         // link rather than a 40px secondary button — see the control note at the top of this file. `min-h-20`
         // is not needed here: this block is prerendered at its full height, so there is no arrival to shift
         // the page.
-        <div class="inset-shadow-rule rounded-control px-4 py-6">
-          <p class="text-label font-medium text-ink-3">{status}</p>
-          <h3 class="mt-1 text-lede font-bold text-ink font-body">{title}</h3>
-          <p class="mt-2 text-body leading-prose text-ink-2 font-body max-w-measure">{body}</p>
-          {venueLine && <p class="mt-2 text-body leading-prose text-ink-2 font-body max-w-measure">{venueLine}</p>}
+        <div class="max-w-measure">
+          <div role="status" class="inset-shadow-rule rounded-control px-4 py-6">
+            <p class="text-label font-medium text-ink-3">{status}</p>
+            <h3 class="mt-1 text-lede font-bold text-ink font-body">{title}</h3>
+            <p class="mt-2 text-body leading-prose text-ink-2 font-body">{body}</p>
+            {venueLine && <p class="mt-2 text-body leading-prose text-ink-2 font-body">{venueLine}</p>}
+            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {builtOn()}; no calendar source is wired to it yet.</p>
+          </div>
+          <!-- One boundary (operator ruling, 2026-11-03): the ring is the notice's edge and the only edge in
+               it, so the paths out sit BELOW the box rather than inside it. `role="status"` is what makes that
+               block measurable — `check:render` then holds it to the notice grammar (no fill, 1px ring at the
+               ratified contrast, 48px+) and fails any filled or ringed action that ever moves back inside.
+               Before this change the primary button sat inside the ring: one box, two edges. -->
           <div class="mt-4">
             <a
               href={`${config.URLs.meetupGroup}/join`}
@@ -121,11 +129,10 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
               Join on Meetup
             </a>
           </div>
-          <p class="mt-3 text-body leading-prose text-ink-2 font-body max-w-measure">
+          <p class="mt-3 text-body leading-prose text-ink-2 font-body">
             Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Ask in the chat</a> —
             someone from the club reads it.
           </p>
-          <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {builtOn()}; no calendar source is wired to it yet.</p>
         </div>
       )}
     </div>

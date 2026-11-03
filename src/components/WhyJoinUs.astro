@@ -1,94 +1,104 @@
 ---
 import config from '../config.json';
-import Checkmark from './icons/Checkmark.astro';
+import { content, threads, formatSince } from '../lib/content.ts';
+
+/*
+ * WHAT THIS SECTION REPLACED (2026-11-03). It used to be six cards with checkmarks — "Expert Guidance",
+ * "Collaborative Learning", "Regular Meetups", "Study Resources", "Diverse Community", "Growth Mindset" —
+ * under "Why Join Our Math Book Club? / Discover the benefits of collaborative learning and mathematical
+ * exploration". Not one of those sentences came from `src/content.json`, from a source, or from the club:
+ * "Learn from experienced mathematicians and educators", "Access to curated learning materials, problem
+ * sets, and recommended readings" and "Monthly in-person study sessions" describe services this club does
+ * not offer. The operator on the same day: the page has "no humanity", it is "too professional", and on
+ * whether the club has ever written anything — "Our club has not written anything." All of it is now on the
+ * retired list in `scripts/check-content.mjs`, so pasting a template's benefit grid back in fails the build.
+ *
+ * WHAT IS HERE INSTEAD, AND WHY IT IS UNDATED (operator ruling, 2026-11-03): "I don't want the home page to
+ * give anyone an idea that our groups interests are as narrow as what we have done historically, so I don't
+ * want to name enough specific things to give enough information to allow a pattern to emerge." A reading
+ * list is exactly such a pattern-maker: nine titles with dates on them let a stranger infer the shape of the
+ * club's past and predict its future. So this is a set of open threads, not an archive — no dates, no
+ * authors, no titles, no sequence, and no row of past topics. A thread that goes quiet gets edited out of
+ * `src/content.json` rather than kept as a record. `threads._rule` in that file is the authority; this
+ * comment is where the shape of it is visible to whoever edits the markup.
+ *
+ * The strings come from `src/content.json` (source: the operator's account of the club's Discord channel,
+ * 2026-11-03), so a non-developer can add or drop a thread from a phone without touching markup. An item
+ * with no `value` is a hole and renders nothing rather than a bracket (record 0010).
+ *
+ * The file name stays `WhyJoinUs.astro`: the section is still the answer to "why would I come", and the
+ * design tooling (`design/gen-token-map.mjs`, `design/ratify-check.mjs`, `design/audit-references.mjs`)
+ * names this path. Renaming it is a separate change with its own reference sweep.
+ */
+const items = threads();
+const feature = content.feature;
 ---
 
 <section class="bg-panel py-16">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="text-center">
+    <div class="max-w-measure">
       <h2 class="text-heading font-extrabold text-ink">
-        Why Join Our Math Book Club?
+        What we take up
       </h2>
-      <p class="mt-4 text-lede leading-prose text-ink-2 font-body max-w-measure mx-auto">
-        Discover the benefits of collaborative learning and mathematical exploration
+      <p class="mt-4 text-lede leading-prose text-ink-2 font-body">
+        Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up
+        with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of
+        them is a prerequisite for the others.
       </p>
     </div>
 
-    <div class="mt-16">
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {/* Benefit Cards */}
-        <div class="bg-paper rounded-card p-6">
-          <div class="flex items-center mb-4">
-            <Checkmark />
-            <h3 class="ml-3 text-lede font-semibold text-ink">Expert Guidance</h3>
-          </div>
-          <p class="text-body leading-prose text-ink-2 font-body">
-            Learn from experienced mathematicians and educators who can help clarify complex concepts and provide valuable insights.
-          </p>
-        </div>
+    {items.length > 0 && (
+      // No hairlines between the rows, on purpose, and that is a measurement rather than a taste: the render
+      // gate fails a painted 1px line that is a border/outline instead of the ratified inset ring
+      // (`inset-shadow-rule`), and on this section's `bg-panel` ground `--color-rule` measures 2.88 — under
+      // the 3.0 graphic bar it is solved to hit on paper (3.01). Rows sit on 12px padding (DESIGN.md,
+      // Spacing) and the label/gloss weight difference does the grouping the rule was going to do.
+      <ul class="mt-8 grid grid-cols-1 gap-x-12 md:grid-cols-2">
+        {items.map(({ label, gloss }) => (
+          <li class="py-3 text-body leading-prose font-body">
+            <span class="font-semibold text-ink">{label}</span>
+            {gloss && <span class="text-ink-2"> — {gloss}</span>}
+          </li>
+        ))}
+      </ul>
+    )}
 
-        <div class="bg-paper rounded-card p-6">
-          <div class="flex items-center mb-4">
-            <Checkmark />
-            <h3 class="ml-3 text-lede font-semibold text-ink">Collaborative Learning</h3>
-          </div>
-          <p class="text-body leading-prose text-ink-2 font-body">
-            Work together with fellow math enthusiasts to solve challenging problems and develop deeper understanding through discussion.
-          </p>
-        </div>
-
-        <div class="bg-paper rounded-card p-6">
-          <div class="flex items-center mb-4">
-            <Checkmark />
-            <h3 class="ml-3 text-lede font-semibold text-ink">Regular Meetups</h3>
-          </div>
-          <p class="text-body leading-prose text-ink-2 font-body">
-            Sessions most months, on different mathematical topics, from number theory to abstract algebra.
-          </p>
-        </div>
-
-        <div class="bg-paper rounded-card p-6">
-          <div class="flex items-center mb-4">
-            <Checkmark />
-            <h3 class="ml-3 text-lede font-semibold text-ink">Study Resources</h3>
-          </div>
-          <p class="text-body leading-prose text-ink-2 font-body">
-            Access to curated learning materials, problem sets, and recommended readings to support your mathematical journey.
-          </p>
-        </div>
-
-        <div class="bg-paper rounded-card p-6">
-          <div class="flex items-center mb-4">
-            <Checkmark />
-            <h3 class="ml-3 text-lede font-semibold text-ink">Diverse Community</h3>
-          </div>
-          <p class="text-body leading-prose text-ink-2 font-body">
-            Connect with students, professionals, and hobbyists who share your passion for mathematics.
-          </p>
-        </div>
-
-        <div class="bg-paper rounded-card p-6">
-          <div class="flex items-center mb-4">
-            <Checkmark />
-            <h3 class="ml-3 text-lede font-semibold text-ink">Growth Mindset</h3>
-          </div>
-          <p class="text-body leading-prose text-ink-2 font-body">
-            Develop problem-solving skills and mathematical thinking in a supportive, encouraging environment.
-          </p>
-        </div>
+    {items.length === 0 && (
+      // record 0010: a hole is a designed state, never a blank. If every thread slot is empty the section
+      // says so and hands the reader the path where threads actually live.
+      <div class="mt-8 inset-shadow-rule rounded-control px-4 py-3 max-w-measure">
+        <p class="text-body text-ink">Nothing is on the list right now.</p>
+        <p class="mt-1 text-body leading-prose text-ink-2">
+          What the club is pulling on is decided in its chat, so an empty list here means the page has not
+          been told yet, not that the club is quiet.
+        </p>
       </div>
-    </div>
+    )}
 
-    <div class="mt-12 text-center">
+    {feature && feature.body?.length > 0 && (
+      <div class="mt-12 max-w-measure">
+        <h3 class="text-lede font-bold text-ink font-body">{feature.title}</h3>
+          {feature.body.map((p, i) => (
+            <p class={`leading-prose text-ink-2 font-body ${i === 0 ? 'mt-2' : 'mt-3'} text-body`}>
+              {p}
+            </p>
+          ))}
+        <p class="mt-3 text-label text-ink-3">
+          {feature.asOf ? `Written ${formatSince(feature.asOf)}. ` : ''}It is one thread, not a claim about
+          what the club does — the rest of it lives in <a class="underline hover:text-gold"
+          href={config.URLs.discordInvite} target="_blank" rel="noopener noreferrer">the chat</a>.
+        </p>
+      </div>
+    )}
 
+    <p class="mt-12 max-w-measure text-body leading-prose text-ink-2 font-body">
+      Dates and places go up on{' '}
       <a
-        href={`${config.URLs.meetupGroup}/join`}
+        class="underline hover:text-gold"
+        href={config.URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
-        data-control="primary"
-        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
-        >Join Our Next Session</a
-      >
-    </div>
+      >Meetup</a>, where the sign-up is. One evening is enough to tell whether this is your kind of room.
+    </p>
   </div>
 </section>

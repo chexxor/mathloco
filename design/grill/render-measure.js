@@ -251,6 +251,22 @@
       keylineContrast: sc && opaque(ground) ? ratio(parse(sc[1]), ground) : null,
       fill: cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : cs.backgroundColor,
       textContrast: opaque(ground) && parse(cs.color) ? ratio(parse(cs.color), ground) : null,
+      // A notice is ONE boundary (operator ruling, 2026-11-03): the ring around this box is the only edge in
+      // it. Anything pressable inside that carries its own fill or its own ring is a second box inside the
+      // first, which is what the join-path notices looked like before the ruling. Reported here, asserted in
+      // design/render-gate.mjs, so "it looked fine in the specimen" is not the standard.
+      actions: [...el.querySelectorAll('a, button')].map((a) => {
+        const acs = getComputedStyle(a);
+        const ring = (acs.boxShadow === 'none' ? '' : acs.boxShadow).includes('inset');
+        const bg = acs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : acs.backgroundColor;
+        return {
+          t: (a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40),
+          tag: a.tagName.toLowerCase(),
+          ring,
+          fill: bg,
+          role: a.getAttribute('data-control') || null,
+        };
+      }).filter((a) => a.ring || a.fill || a.role),
     };
   }).filter(Boolean);
 
