@@ -66,17 +66,23 @@ const DEPLOY = [
 // The mutating selftest runs after the read-only gates so a crash cannot leave a mutated page under a
 // passing render gate.
 const BROWSER = [
-  { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the mark' },
-  { name: 'check:mark', desc: 'the mark probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'] },
-  { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'] },
-  { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'] },
+  // `alone: true` — a step that runs its OWN pool of browsers takes the whole machine. Measured on this rig
+  // (Linux, native): check:mark alone is 10s; in a wave beside check:space and check:social:live it took
+  // 152s and came back `exit 1 / firefox rc=?` (a timeout, twice in a row), while check:render:dist reports
+  // nine internal measurements it already runs JOBS-at-a-time by itself. Two browser pools in one wave buys
+  // nothing here — the browser steps are almost all downstream of check:render:dist anyway — and it buys a
+  // flake, which is the one thing a gate may not buy.
+  { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the mark', alone: true },
+  { name: 'check:mark', desc: 'the mark probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
+  { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'], alone: true },
+  { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'], alone: true },
   // last: it edits dist/client/index.html and restores it in a finally block
   // Runs LAST, and the needs list is why it is not just 'after check:render:dist': the selftest PLANTS
   // defects in dist/client/index.html to prove check:render can go red (D118). In the same wave as the
   // read-only probes, a mark or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'eight mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space'] },
+  { name: 'check:render:selftest', desc: 'twelve mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space'] },
 ];
 
 const args = process.argv.slice(2);
@@ -144,7 +150,13 @@ while (remaining.length) {
     }
     break;
   }
-  const wave = readySteps.slice(0, serial ? 1 : JOBS);
+  // An `alone` step gets a wave to itself, and no non-alone step is held back behind one: if the first
+  // ready step is alone, the wave is just it; otherwise the wave is the ready steps that are not alone.
+  let wave;
+  if (serial) wave = readySteps.slice(0, 1);
+  else if (readySteps[0].alone) wave = [readySteps[0]];
+  else wave = readySteps.filter((s) => !s.alone).slice(0, JOBS);
+  if (wave.length === 0) wave = [readySteps[0]];   // everything ready is alone; take the first
   for (const step of wave) remaining.splice(remaining.indexOf(step), 1);
   const waveResults = await Promise.all(wave.map(run));
   for (const r of waveResults) {
