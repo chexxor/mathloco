@@ -97,6 +97,12 @@ const cases = [
   //     inert (Tailwind generated no CSS for them) — the point is that LENGTH can no longer hide a control from
   //     its height rule.
   ['secondary control behind a 200-character class', (h) => shrinkRole(h, 'secondary', 'py-4', 'py-3', ' ' + 'x-long-filler-class-'.repeat(14)), /secondary control .* is 40px tall, not 48/],
+  // 6d. one boundary (operator ruling, 2026-11-03). This is the Discord island's real failed-branch markup with
+  //     the old `Try again` put back: a filled, ringed, 48px box sitting inside the notice's own ring. There is
+  //     no notice on `/` in the shipped page, so the case plants the whole block — and the planted block is
+  //     otherwise legal (1px inset ring, 4.5 text, 48px+ tall), so the failure can only come from the
+  //     boundary rule.
+  ['a block action inside a notice', (h) => h.replace('</body>', '<div role="alert" class="inset-shadow-rule rounded-control px-4 py-3 min-h-20"><p class="text-body text-ink">The channel summaries did not load.</p><button class="mt-3 inline-flex items-center justify-center px-4 py-4 rounded-control inset-shadow-rule bg-paper text-ink text-label font-medium">Try again</button></div>'), /notice contains a block action/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;

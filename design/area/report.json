@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-03T02:27:57.913Z",
- "siteFp": "7a0ca8e52a",
+ "measuredAt": "2026-11-03T03:00:37.539Z",
+ "siteFp": "77d8dc87df",
  "routes": [
   "/"
  ],
@@ -15,10 +15,10 @@
    "height": 4196,
    "chromaticPct": 7.52,
    "strongPct": 0.014,
-   "faintPct": 3.02,
+   "faintPct": 2.99,
    "hueFamilies": 3,
-   "paintedPct": 4.47,
-   "emptyRunPct": 25.1,
+   "paintedPct": 4.48,
+   "emptyRunPct": 25.3,
    "emptyRuns": 8,
    "biggestRun": 219,
    "inside": null
@@ -26,15 +26,15 @@
   {
    "route": "/",
    "width": 390,
-   "height": 5947,
-   "chromaticPct": 6.76,
+   "height": 5919,
+   "chromaticPct": 6.8,
    "strongPct": 0.031,
-   "faintPct": 6.72,
+   "faintPct": 6.74,
    "hueFamilies": 3,
-   "paintedPct": 9.64,
-   "emptyRunPct": 21.8,
+   "paintedPct": 9.68,
+   "emptyRunPct": 21.5,
    "emptyRuns": 12,
-   "biggestRun": 149,
+   "biggestRun": 150,
    "inside": null
   }
  ],

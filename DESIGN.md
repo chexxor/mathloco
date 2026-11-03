@@ -221,6 +221,15 @@ second colour.
   `check:render` measures every `role="status"` / `role="alert"` block in the built page and fails on a
   fill, on an inset other than 1px, on a keyline contrast that is not the rule (**3.01 in both the
   specimen and the built page** — D116), on text under the 4.5 bar, or on a block under 48px.
+- **A notice is one boundary** (operator ruling, 2026-11-03). The ring around a notice is the only edge in it,
+  so nothing inside a notice may carry its own fill or its own ring: an action in a notice is an **inline link**
+  (a sentence with a link in it) or a **quiet label** — `text-label font-medium text-ink`, underline at
+  `decoration-rule`, `min-h-8` (32px), visible focus ring, **no** fill, **no** keyline, **no** `data-control`.
+  A block control inside a notice is two boxes, one drawn twice: the Discord island shipped exactly that
+  (`Try again` and `Read Discord` were `bg-paper inset-shadow-rule` boxes inside the notice's `inset-shadow-rule`).
+  `check:render` fails a `role="status"`/`role="alert"` block containing any `a`/`button` that paints a fill, an
+  inset ring, or declares a control role (`design/grill/render-measure.js` reports `actions` per notice).
+  Outside a notice, the 48px block roles above still apply — this rule is about edges, not about size.
 - Status is a **word**: `Scheduled` / `Cancelled` / `Past` in the series lane when stacked, in its own
   24px chip column when wide (measured: a word reflows +0px, a chip costs +7px). Cancelled title goes to
   `ink-2`.
@@ -253,9 +262,11 @@ freshness.
 - **The pending sentence is also the JavaScript-off state.** It reads "The channel summaries have not
   loaded" and names the path out (Discord), so it is true whether or not the browser ever runs the fetch.
   That is how the error branch gets into the server-rendered HTML without the server calling the API.
-- **Failure is the notice above with a 48px retry** (D139 — the retry is a control, so it is the one height),
-  and the error branch must exist in the server-rendered HTML: a JavaScript-off visitor can otherwise never
-  leave the loading branch.
+- **Failure is the notice above with a retry**, and the retry inside a notice is a **quiet label**, not a block
+  control (one boundary, 2026-11-03, which supersedes the "48px retry" half of D139 — D139's ruling that the
+  two block roles are one height stands, and a retry outside a notice is still a 48px control). A quiet label
+  is 32px, underlined, no fill, no ring, focus-visible ring on. The error branch must exist in the
+  server-rendered HTML: a JavaScript-off visitor can otherwise never leave the loading branch.
 - **Missing content is a designed state, never a build failure** (operator, 2026-11-01). A gate may fail a
   build when a feed is malformed; it must not fail one because the club has nothing scheduled. Empty
   sections get their own content instead.
