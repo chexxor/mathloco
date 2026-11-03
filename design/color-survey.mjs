@@ -21,7 +21,8 @@
 // done here in node off the shot's raw bytes rather than in the page: the question is what the browser PAINTED,
 // not what the CSS asked for.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, existsSync, writeFileSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { mkdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
 
@@ -40,6 +41,10 @@ if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first');
   process.exit(1);
 }
+// Every record carries the fingerprint of the build it measured (design/records/0015, and the same field
+// `design/rhythm.mjs` keys its cache on). A survey number without a build identity is how a stale crop got
+// compared to a fresh page once already; `design/area-survey.mjs` refuses the pair when these disagree.
+const SITE_FP = createHash('sha1').update(readFileSync(resolve('dist/client/index.html'))).digest('hex').slice(0, 10);
 mkdirSync('.design/render', { recursive: true });
 
 import { oklchFromRgb } from './grill/okcolor.mjs';
@@ -114,7 +119,7 @@ for (const route of routes) {
     mkdirSync('.design/tmp-color', { recursive: true });
     const file = `.design/tmp-color/survey-${name(route) || 'root'}-${w}.json`;
     writeFileSync(file, JSON.stringify({
-      route, width: w, height: h, scrollHeight: probe1?.doc?.scrollHeight ?? null, shot, chromaBar: CHROMA_MIN, band: BAND,
+      route, siteFp: SITE_FP, width: w, height: h, scrollHeight: probe1?.doc?.scrollHeight ?? null, shot, chromaBar: CHROMA_MIN, band: BAND,
       paintedPx: total, chromaticPx: chromaN, chromaticPct: +(100 * chromaN / total).toFixed(2),
       strongPct: +(100 * strongN / total).toFixed(3), strongBar: STRONG_MIN, faintBar: FAINT_MIN,
       meanChroma: +(chromaSum / Math.max(1, chromaN)).toFixed(4), faintPct: +(100 * faint / total).toFixed(2),

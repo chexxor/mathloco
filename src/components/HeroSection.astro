@@ -2,6 +2,7 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
+import { content, heroLabel, value } from '../lib/content.ts';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
 // 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
@@ -38,6 +39,18 @@ for (const s of MARK.shapes) {
   if (!STROKE_CLASS[s.role]) throw new Error(`brand-mark role "${s.role}" has no stroke class in HeroSection.astro — add it to STROKE_CLASS`);
 }
 if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot.role}" has no fill class in HeroSection.astro — add it to FILL_CLASS`);
+
+// The label lane is data, not prose. D92: the site publishes series names and real dates, and a frequency
+// word is only allowed with a named source (the one it has is recorded beside the word in
+// src/content.json). Three states, one lane: a real date when the calendar has one; "Nothing scheduled"
+// when a configured calendar holds nothing (round 7's ruling — the label changes rather than disappearing,
+// so a visitor can tell an empty calendar from a broken page); and the ruled cadence while no calendar
+// source is wired up at all (D132).
+const label = heroLabel();
+// The one string the share card also prints — scripts/make-social-share.mjs reads the same slot, so the
+// card and the hero cannot name two different current books. `check:content` lists it as unsourced until
+// src/content.json gives it a source and a date.
+const focus = value(content.focus);
 ---
 
 <main
@@ -46,7 +59,7 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
   <div class='lg:grid lg:grid-cols-12 lg:gap-8'>
     <div class='mb-12 md:max-w-2xl md:mx-auto lg:col-span-8'>
       <div class='text-label uppercase tracking-wide mb-4'>
-        <span class="text-ink-3">Monthly Meetups</span>
+        <span class="text-ink-3">{label.text}</span>
       </div>
 
       <h1
@@ -70,11 +83,13 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
         environment to explore mathematical texts and engage in thoughtful discussions.
       </p>
 
-      <p
-        class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
-      >
-        Current Focus: Number Theory and Abstract Algebra
-      </p>
+      {focus && (
+        <p
+          class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
+        >
+          Current Focus: {focus}{content.focus.asOf ? ` · since ${content.focus.asOf}` : ''}
+        </p>
+      )}
 
       <div>
         <div class='mt-6 sm:mt-8 sm:flex sm:justify-center lg:justify-start'>
@@ -114,6 +129,7 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
       <PhotoSlot
         slot="hero"
         ratio="376 / 250"
+        caption="a real meeting: the table, the books, the room (376x250 crop)"
         class="mb-8"
       />
       <!-- No frame, no fill, no keyline around the mark. The `rounded-card overflow-hidden` wrapper here

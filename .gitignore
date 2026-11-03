@@ -36,6 +36,14 @@ pnpm-debug.log*
 !.env.example
 .dev.vars
 
+# Content placeholders. `src/content.local/` holds build-time overlays of `src/content.json` used to make a
+# REVIEW build (measured shot-cards in the reserved photo places). Only `src/content.local.example.json` is
+# tracked: nothing tracked may switch a placeholder on, and scripts/check-content.mjs fails any built page
+# carrying a `data-placeholder` fill, so a review-only state cannot reach the apex the way .dev.vars cannot
+# leak a secret. A DIRECTORY, deliberately: `import.meta.glob('../content.local.json')` was measured to also
+# match `content.local.example.json`, which would have made the tracked example the override.
+src/content.local/
+
 # Local database files
 *.sqlite
 *.sqlite3

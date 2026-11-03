@@ -67,6 +67,8 @@ const KNOWN_GONE = {
   'src/consts.ts': 'named in dated evidence (records/0010, token-plan.md); the section flags now live in src/config.json',
   'design/grill/round6/round-6_html-375.json': 'design/decisions.json recorded this before the harness named outputs grill_round_6_html-375.json',
   'design/grill/navfit/D100.md': 'a specimen note that went missing mid-session; DECISIONS names it while recording that it is gone',
+  'src/components/UpcomingMeetups.astro': 'deleted 2026-11-03 — invented events behind a false flag; real schedule work wrote src/components/Schedule.astro instead of enabling it. Cited by dated evidence (design/drift.json, the phase-1 measurement) and one-shot history (design/apply-batch1.mjs), which are records, not live tooling',
+  'src/components/PastEvents.astro': 'deleted 2026-11-03 — the empty stub (records/0010 named it as the original justification for the empty-state grammar, which now has a live component to apply it). Same dated-evidence citations as above',
 };
 
 // Paths a run does not need yet, and shapes a skill names before it writes: exempt with a reason.

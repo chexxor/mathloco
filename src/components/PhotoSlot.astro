@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { content } from '../lib/content.ts';
 
 /**
  * A reserved photograph place, with its size declared rather than discovered.
@@ -32,6 +33,8 @@ type Props = {
   alt?: string;
   /** CSS `aspect-ratio`, e.g. `376 / 250`. Must match the crop in the shot list. */
   ratio: string;
+  /** What the shot has to be, in the shot list's words. Only ever drawn in placeholder mode. */
+  caption?: string;
   class?: string;
 };
 
@@ -44,6 +47,14 @@ const found = Object.keys(PHOTOS)
 const photo = found ? (PHOTOS[found] as { default?: unknown }).default : undefined;
 
 const { ratio } = Astro.props;
+// Placeholder mode (operator, 2026-11-03: "use placeholders for the content you are missing"). It is a
+// REVIEW state, not a visitor state: DESIGN.md and this component's own comment say a grey box labelled
+// "photo coming" is a production note wearing a visitor's clothes. So it is reachable only from
+// src/content.local.json, which is gitignored — and `npm run check:content` fails any build whose HTML
+// contains a `data-placeholder` fill, so the state cannot reach the apex even by accident. What it draws
+// is the measured box plus what has to be in it, which makes the preview tell the operator what to shoot
+// instead of hiding the geometry behind an empty column.
+const placeholders = content.photos?.placeholders === true;
 // An invented or placeholder alt is the same defect as an invented photograph, and it is the kind that
 // ships silently because nothing renders it visually. So the build refuses instead: when a photo lands in
 // src/assets/photos/, the call site has to say what it shows.
@@ -65,6 +76,16 @@ if (photo && !Astro.props.alt) {
       class={`w-full block object-cover ${Astro.props.class ?? ''}`}
       style={`aspect-ratio: ${ratio};`}
     />
+  ) : placeholders ? (
+    <div
+      data-placeholder={Astro.props.slot}
+      class={`bg-tint inset-shadow-rule rounded-control flex items-end p-3 ${Astro.props.class ?? ''}`}
+      style={`aspect-ratio: ${ratio};`}
+    >
+      <p class="text-micro uppercase tracking-wide text-ink-3">
+        {Astro.props.slot} · {ratio.replace(/\s*\/\s*/, ' / ')} · {Astro.props.caption ?? 'a photograph of this club goes here'}
+      </p>
+    </div>
   ) : (
     <slot />
   )

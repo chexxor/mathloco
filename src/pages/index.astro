@@ -1,25 +1,24 @@
 ---
 import HeroSection from '../components/HeroSection.astro';
 import Layout from '../layouts/Layout.astro';
-import UpcomingMeetups from '../components/UpcomingMeetups.astro';
+import Schedule from '../components/Schedule.astro';
 import WhyJoinUs from '../components/WhyJoinUs.astro';
-import PastEvents from '../components/PastEvents.astro';
 import JoinCommunity from '../components/JoinCommunity.astro';
 import Footer from '../components/Footer.astro';
 import { sections } from '../config.json';
 
-// Nothing on this page is per-request: every section comes from src/config.json, and the live
-// Discord data is fetched by /chat's island. Prerendering makes the landing page a static asset
-// (no worker CPU, no cold start) and lets the image service emit the hero's resized variants at
-// build time instead of on first request.
+// Nothing on this page is per-request: the technical flags are in src/config.json and the club's own
+// facts - cadence, focus, dates, venue, member count - are in src/content.json (src/lib/content.ts says
+// what to say when one is missing). The live Discord data is fetched by /chat's island. Prerendering
+// makes the landing page a static asset (no worker CPU, no cold start) and lets the image service emit
+// the hero's resized variants at build time instead of on first request.
 export const prerender = true;
 ---
 
 <Layout title='Math Enthusiasts Meetup'>
   <HeroSection />
   <WhyJoinUs />
-  {sections.showUpcomingEvents && <UpcomingMeetups />}
-  {sections.showPastEvents && <PastEvents />}
+  {sections.showSchedule && <Schedule />}
   <JoinCommunity />
   <Footer />
 </Layout>
