@@ -44,7 +44,8 @@ import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync,
 import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { oklchFromRgb, oklabBytes, distLab } from './grill/okcolor.mjs';
-import { PS1_PLATE, PS3_PLATE, VARIANTS, plateBoxes } from './grill/round13-variants.mjs';
+import { PS1_PLATE, PS3_PLATE, PS4_PLATE, VARIANTS, plateBoxes } from './grill/round13-variants.mjs';
+import { shotHeight } from './grill/shot-height.mjs';
 import { MARK, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
 
 const SCRATCH = '.design/tmp-round13';
@@ -235,11 +236,14 @@ try {
     const at = {};
     for (const w of SPACE_WIDTHS) at[w] = summarize(read(`${SCRATCH}/space-${w}.json`));
     const shot = await cropHero(v, at[1240]);
+    // The column on its own, at the same scale as every other option, so the seven can be set side by side
+    // and compared by eye rather than by table (the operator's standing rule for look questions, D160).
+    const colShot = await cropBox(`${SCRATCH}/page-1240.png`, at[1240]?.col, `${SCRATCH}/col-${v.id}-1240.png`, 10, `${v.id}: the PS-1 column`);
     const stroke = await paintedStroke(v.id, at[1240]?.mark);
     const d = (at[1240].pageH ?? 0) - (geoRef.pageH ?? 0);
     report.variants.push({
       ...v, plateBox: v.plate ? { key: v.plate, ...boxes[v.plate] } : null,
-      at, gate, color, shot, stroke,
+      at, gate, color, shot, colShot, stroke,
     });
     say(`  mark ${at[1240].mark?.w}x${at[1240].mark?.h} (scale ${at[1240].mark?.scale}) | plate ${at[1240].plate?.w}x${at[1240].plate?.h} | column ${at[1240].col.w}x${at[1240].col.h} | page ${at[1240].pageH} (${d >= 0 ? '+' : ''}${d})`);
     say(`  gate ${gate.fails.length ? `${gate.fails.length} FAIL(s)` : 'green'}${gate.gaps?.length ? ` +${gate.gaps.length} unmeasured` : ''} | meridian ink ${stroke.paintedPx ?? '?'}px for ${stroke.scanPx ?? '?'}px computed, pixel coverage ${stroke.coverage ?? '?'} | named colour ${color?.strongPct ?? '?'}% of the page`);
@@ -267,15 +271,129 @@ runSpace(SPACE_WIDTHS);
 report.shipped = summarize(read(`${SCRATCH}/space-${SPACE_WIDTHS[0]}.json`));
 report.shippedColor = runColor();
 report.shippedSiteFp = sha(readFileSync(PAGE, 'utf8'));
+
+// --- [6] the other question in this round, both ways ---------------------------------------------------
+// The operator's standing rule (D160): a question about looks arrives as pictures of every option, side by
+// side at the same scale, never as prose about one of them. PS-4 — the event-card thumb — has no built
+// surface: the schedule section renders its no-source state, so the only card-shaped thing it has is the
+// status notice. So both states are measured on the real shipped page: that card as it stands, and the same
+// card with the plate at the thumb size the photo round defined (323x110, record 0023). Built page, real
+// CSS, real fonts, no hand-drawn card.
+say('\n[6] the PS-4 question: the schedule card with the plate at its defined thumb, and without it');
+// A subset run (`npm run round13 -- stack-fill`) is for iterating on one composition, and Q2 costs about 2 of the
+// round's 5.5 minutes. It is skipped there — with a note the specimen prints — rather than silently left out or
+// faked from a remembered run. `--ps4` asks for it explicitly.
+if (only.length && !argv.includes('--ps4')) {
+  report.notes.push('ps4: skipped, because this run asked for a subset of the PS-1 options — Q2 is a whole-page question, so it waits for a full run');
+  say('  skipped: subset run — pass --ps4 to measure Q2 anyway');
+} else {
+  const shippedHtml = readFileSync(PAGE, 'utf8');
+  try {
+    report.ps4 = await ps4Compare(shippedHtml);
+    for (const [state, r] of Object.entries(report.ps4.states)) {
+      const a = r.at[1240];
+      say(`  ${state}: card ${a.card?.w}x${a.card?.h} (content box ${a.innerW}), ring ${a.ring?.keylineContrast}, page ${a.pageH}, named colour ${r.color?.strongPct}%, gate ${r.gate.fails.length ? `${r.gate.fails.length} FAIL` : 'green'}`);
+    }
+  } catch (e) {
+    report.notes.push(`ps4: ${e.message} — Q2 prints no pictures rather than invented ones`);
+    say(`  skipped: ${e.message}`);
+  } finally {
+    writeFileSync(PAGE, shippedHtml);
+  }
+}
 writeFileSync(`${OUT}/report.json`, JSON.stringify(report, null, 1) + '\n');
 say(`json      ${OUT}/report.json (tracked — commit it with the round that cites it)`);
 say(`evidence  ${SCRATCH}/ (gitignored: crops, hero shots, per-variant survey records)`);
 sh(process.execPath, ['design/grill/round13-build.mjs'], { stdio: 'inherit' });
 say(`round13: ${(Date.now() - started) / 1000}s`);
 
-// --------------------------------------------------------------------- the instruments
+// --------------------------------------------------------------------- the PS-4 comparison
+// The card's box and its photograph come from ONE load of the shipped page. check:render's own probe
+// (grill/render-measure.js) reports every `role=status` notice with its page-absolute box and the document
+// height, and dist-measure hands back firefox's screenshot of that same load. That probe is the one the gate
+// runs twelve times a pass, so its load is the one whose numbers settle. A bespoke probe written for this
+// round did not survive: it waited for fonts and image decode, and firefox's `--screenshot` pass ends the
+// page when it paints, so the post lost the race on about half the loads (posted, TIMEOUT, posted, TIMEOUT
+// across four runs at three widths). Reusing the gate's probe also means the Q2 pictures are measured by the
+// same instrument that rules on the card's ring, which is the rule a planted image inside that card could
+// break (rule 4a).
+function probeCard(w, shotOut = null, h = 1200) {
+  const args = ['design/grill/dist-measure.mjs', 'dist/client', '/', 'design/grill/render-measure.js', String(w), String(h)];
+  if (shotOut) args.push(shotOut);
+  const dom = JSON.parse(probeRetry(args, `schedule card probe @${w}`));   // retried: see probeRetry
+  // The schedule notice, found by the classes it is built with. Any other count means the page changed
+  // shape and a crop would be guessing at which box to cut.
+  const notes = (dom.notices || []).filter((n) => /px-4 py-6/.test(n.cls || ''));
+  if (notes.length !== 1) throw new Error(`@${w}: ${notes.length} notices carry the schedule card's classes (expected exactly one) — refusing to crop a box the page did not name`);
+  return { dom, notice: notes[0], card: { x: notes[0].x, y: notes[0].y, w: notes[0].w, h: notes[0].h } };
+}
+
+// The thumb, planted in the built page the way the hero plate is: a data: URI in dist, never a file under src/.
+function injectThumb(html, png, box) {
+  const OPEN = /<div role="status" class="inset-shadow-rule rounded-control px-4 py-6">/;
+  if (!OPEN.test(html)) throw new Error('no schedule status card in the built page — the card this question is about is not there to plant into');
+  const img = `<img data-plate="PS4" alt="Euclid Book I figure, from Byrne's 1847 coloured diagrams (public domain, insideoutlibrary.com)" ` +
+    `width="${box.w}" height="${box.h}" style="display:block;margin:0 0 12px;width:${box.w}px;max-width:100%;height:auto;object-fit:cover" ` +
+    `src="data:image/png;base64,${readFileSync(png).toString('base64')}">`;
+  return html.replace(OPEN, (m) => m + img);
+}
+
+async function ps4Compare(shippedHtml) {
+  const src = await source(PS4_PLATE.id);
+  const meta = await sharp(src).metadata();
+  const box = { w: PS4_PLATE.w, h: PS4_PLATE.h };
+  const buf = await cropFor(src, box.w, box.h);
+  const png = `${SCRATCH}/plate-PS4-${box.w}x${box.h}.png`;
+  writeFileSync(png, buf);
+  const res = {
+    plate: { ...PS4_PLATE, srcW: meta.width, srcH: meta.height },
+    box: { ...box, keepPct: keepPct(meta.width / meta.height, box.w, box.h) },
+    crop: await cropStats(buf), png, states: {},
+  };
+  for (const state of ['no-art', 'art']) {
+    writeFileSync(PAGE, state === 'no-art' ? shippedHtml : injectThumb(shippedHtml, png, box));
+    const at = {};
+    for (const w of [1240, 390]) {
+      const first = probeCard(w);
+      const h = shotHeight(first.dom.doc?.scrollHeight, `ps4 ${state} @${w}`);
+      const shot = `${SCRATCH}/ps4-${state}-${w}.png`;
+      const p = probeCard(w, shot, h);
+      // The content box, from the padding the probe reported in the card's own class list (`px-4` = 16px
+      // each side). Not a remembered number: the cls string is in the report next to the width.
+      const padX = /(^|\s)px-(\d)(\s|$)/.exec(p.notice.cls)?.[2];
+      const padPx = padX ? [0, 4, 8, 12, 16, 20, 24][+padX] ?? null : null;
+      const crop = await cropBox(shot, p.card, `${SCRATCH}/ps4-${state}-${w}-crop.png`, 24, `ps4 ${state} @${w}`);
+      at[w] = {
+        pageH: p.dom.doc?.scrollHeight, card: p.card, notice: p.notice, crop,
+        innerW: padPx == null ? null : +(p.card.w - padPx * 2).toFixed(1), padPx,
+        ring: { inset: p.notice.inset, keylineContrast: p.notice.keylineContrast, textContrast: p.notice.textContrast },
+      };
+    }
+    res.states[state] = { at, color: runColor(), gate: runGate() };
+  }
+  return res;
+}
+
 // check:space on the mutated dist. Its scratch paths are fixed, so copy the record and the shot out before the
 // next variant overwrites them, and never let a review-state number near design/area/report.json (tracked).
+// --------------------------------------------------------------------- the instruments
+// One firefox probe, retried. This harness has a known flake where firefox paints and never posts, and the
+// surveys that survive it (whitespace-survey, check:render) all retry it — a bare call used to take the round
+// down with a stack trace instead of a note (D160's Q2 pair hit it on the height pass).
+function probeRetry(args, label, attempts = Number(process.env.PROBE_ATTEMPTS ?? 3)) {
+  let last = '';
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try { return sh(process.execPath, args, { stdio: ['ignore', 'pipe', 'pipe'] }); }
+    catch (e) {
+      const err = String(e.stderr || e.message);
+      const named = err.match(/TIMEOUT[^\n]*|no page for route[^\n]*|ENOENT[^\n]*|Expected [^\n]*/g) || [];
+      last = named.join(' | ') || err.split('\n').filter(Boolean).slice(-2).join(' | ');
+      if (attempt === attempts) throw new Error(`${label}: ${last}`);
+    }
+  }
+  throw new Error(`${label}: unreachable`);
+}
+
 function runSpace(widths) {
   sh('node', ['design/whitespace-survey.mjs', '--routes', '/', '--widths', ...widths.map(String)], { stdio: 'pipe' });
   for (const w of widths) {
@@ -284,8 +402,9 @@ function runSpace(widths) {
     if (existsSync(png)) copyFileSync(png, `${SCRATCH}/page-${w}.png`);
   }
 }
-// check:render — the gate that produced the eight FAILs, run as CI runs it, so the specimen's verdict and the
-// gate's cannot drift apart. execFileSync throws on exit 1; the FAILs are in the captured output either way.
+// check:render — the gate that produced seven painted-stroke FAILs on the placeholder state (D158 corrected
+// the eighth), run as CI runs it, so the specimen's verdict and the gate's cannot drift apart. execFileSync
+// throws on exit 1; the FAILs are in the captured output either way.
 function runGate() {
   let out = '', code = 0;
   // A firefox that posts nothing is this harness's known flake, and a round that runs the gate eight times will
@@ -346,16 +465,20 @@ function summarize(dom) {
 // The hero region, cropped out of the screenshot the survey took on the same load the numbers came from
 // (harness contract rule 3: a shot that does not contain what was measured has to fail loudly).
 async function cropHero(v, at) {
-  const png = `${SCRATCH}/page-1240.png`;
-  const box = at?.grid || at?.col;
-  if (!existsSync(png) || !box) { report.notes.push(`${v.id}: no hero box or no shot — no picture for this variant`); return null; }
+  return cropBox(`${SCRATCH}/page-1240.png`, at?.grid || at?.col, `${SCRATCH}/hero-${v.id}-1240.png`, 12, `${v.id}: the hero`);
+}
+
+// One box out of one screenshot, at 1:1 device pixels. Every picture in the specimen goes through here, so
+// "this image is the box the probe reported" is a property of the code, not of the caption.
+async function cropBox(png, box, file, pad, where) {
+  if (!existsSync(png) || !box) { report.notes.push(`${where}: no shot or no measured box — no picture for this one`); return null; }
   const meta = await sharp(png).metadata();
-  const pad = 12;
-  const left = Math.max(0, box.x - pad), top = Math.max(0, box.y - pad);
-  const width = Math.min(meta.width - left, box.w + pad * 2);
-  const height = Math.min(meta.height - top, box.h + pad * 2);
-  if (width < 50 || height < 50) { report.notes.push(`${v.id}: hero box ${width}x${height} inside a ${meta.width}x${meta.height} shot — refusing to crop a box the shot does not hold`); return null; }
-  const file = `${SCRATCH}/hero-${v.id}-1240.png`;
+  // sharp's extract wants integers and the probe posts fractional boxes; rounding outward keeps the whole box
+  // inside the crop rather than shaving a pixel off the edge it is measuring.
+  const left = Math.max(0, Math.floor(box.x - pad)), top = Math.max(0, Math.floor(box.y - pad));
+  const width = Math.min(meta.width - left, Math.ceil(box.x + box.w + pad) - left);
+  const height = Math.min(meta.height - top, Math.ceil(box.y + box.h + pad) - top);
+  if (width < 50 || height < 50) { report.notes.push(`${where}: box ${width}x${height} inside a ${meta.width}x${meta.height} shot — refusing to crop a box the shot does not hold`); return null; }
   await sharp(png).extract({ left, top, width, height }).png({ effort: 8 }).toFile(file);
   return file;
 }

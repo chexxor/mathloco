@@ -77,6 +77,60 @@ const colorStack = pct(maybe(RECOMMEND)?.color?.strongPct ?? maybe(IDS[IDS.lengt
 const gateVerdict = (g) => g.fails.length ? `${g.fails.length} FAIL` : (g.gaps?.length ? `unmeasured ×${g.gaps.length}` : 'green');
 const gateCell = (g) => g.fails.length ? 'bad' : (g.gaps?.length ? 'warn' : 'ok');
 
+// Side by side at one scale — the operator's standing rule for look questions (D160): a choice never arrives as
+// prose about one option. Every crop below is 1:1 device pixels out of the same screenshot the numbers came
+// from, and every one in a row is drawn at the same fraction of its measured width, so the heights compare
+// directly rather than by caption.
+const STRIP = 0.46;
+const stripFigs = VS.map((v) => {
+  const at = v.at?.[1240];
+  const img = b64(v.colShot);
+  if (!img || !at?.col) return `<figure class="shape"><figcaption>${letter(v.id)} — no column crop: ${R.notes.find((n) => n.startsWith(`${v.id}: the PS-1 column`)) || 'the crop was refused'}</figcaption></figure>`;
+  return `<figure class="shape">
+    <img src="data:image/png;base64,${img}" width="${Math.round(at.col.w * STRIP)}" height="${Math.round(at.col.h * STRIP)}" alt="the hero media column under option ${letter(v.id)}">
+    <figcaption><b>${letter(v.id)}</b> ${v.name}<br>plate ${box(at.plate)} · mark ${box(at.mark)} · column ${box(at.col)} · page ${delta(at.pageH, geo.pageH)}</figcaption>
+  </figure>`;
+});
+const strip = `<h2>The options, side by side at one scale</h2>
+<p class="dim">Every column below is the same 376px-wide slice of the real page at 1240, drawn at ${Math.round(STRIP * 100)}% of its
+measured size — so a taller picture is a taller column, not a zoomed one. The plate in each is the real Byrne leaf at
+the box that option gives it.</p>
+<div class="shapes">${stripFigs.join('')}</div>`;
+
+// Q2's pair: the same card, with the plate and without it, from two loads of the shipped build. The box comes
+// from check:render's own probe, which is also what rules on the card's ring — so the picture and the rule
+// that a planted image inside that card could break come from the same instrument.
+const PS4 = R.ps4 || null;
+const PS4_W = [1240, 390];
+const ps4Fit = PS4 ? PS4_W.map((w) => {
+  const s = PS4.states['no-art'].at[w];
+  const inner = s.innerW;
+  if (inner == null) return `${w}: card ${box(s.card)} — the probe did not report a padding I can read, so no fit number`;
+  return `${w}: card ${box(s.card)}, ${s.padPx}px padding, content box ${inner}px — a ${PS4.box.w}px thumb ${inner >= PS4.box.w ? `fits with ${(inner - PS4.box.w).toFixed(1)}px spare` : `is ${Math.round(PS4.box.w - inner)}px wider than the box, so it scales down to ${(inner / PS4.box.w * 100).toFixed(0)}%`}`;
+}).join(' · ') : '';
+const ps4Block = PS4 ? `<h2>Q2, side by side: the schedule card with the thumb and without it</h2>
+<p class="dim">PS-4 is a slot definition, not a built surface: the schedule section renders its no-source state, so the
+only card it has is this notice. Both pictures are the shipped page — real CSS, real fonts — with the plate planted as
+a data: URI in the built page and removed again. The thumb is the size the photo round defined for the slot:
+${PS4.box.w}×${PS4.box.h}, keeping <b>${PS4.box.keepPct}%</b> of a ${PS4.plate.srcW}×${PS4.plate.srcH} leaf (${PS4.plate.book}).</p>
+<div class="pair">${PS4_W.map((w) => ['no-art', 'art'].map((state) => {
+  const a = PS4.states[state].at[w];
+  const img = b64(a.crop);
+  if (!img) return `<figure class="shape"><figcaption>${state} @${w}: no picture — the crop was refused</figcaption></figure>`;
+  return `<figure class="shape">
+    <img src="data:image/png;base64,${img}" width="${Math.round(a.card.w * 0.5)}" height="${Math.round(a.card.h * 0.5)}" alt="the schedule card at ${w}px, ${state === 'art' ? 'with' : 'without'} the thumb">
+    <figcaption><b>${state === 'art' ? 'with the thumb' : 'as it stands'}</b> @${w} — card ${box(a.card)} · ring ${a.ring?.keylineContrast ?? '—'} on ${a.ring?.inset ?? '?'}px inset · page ${a.pageH}px · named colour ${pct(PS4.states[state].color?.strongPct)} · gate ${gateVerdict(PS4.states[state].gate)}</figcaption>
+  </figure>`;
+}).join('')).join('')}</div>
+<p class="dim">${ps4Fit}. Measured cost of the thumb: card grows ${delta(PS4.states.art.at[1240].card.h, PS4.states['no-art'].at[1240].card.h)} at
+1240 and ${delta(PS4.states.art.at[390].card.h, PS4.states['no-art'].at[390].card.h)} at 390; the page grows
+${delta(PS4.states.art.at[1240].pageH, PS4.states['no-art'].at[1240].pageH)} and
+${delta(PS4.states.art.at[390].pageH, PS4.states['no-art'].at[390].pageH)}; page colour
+${pct(PS4.states['no-art'].color?.strongPct)} → ${pct(PS4.states.art.color?.strongPct)} at chroma ≥ 0.08. The ring's contrast
+against its own ground stays ${PS4.states.art.at[1240].ring?.keylineContrast ?? '—'} with the image inside the card, and
+<code>check:render</code> is ${gateVerdict(PS4.states.art.gate)} on that state.</p>` :
+  `<h2>Q2, side by side</h2><p class="note">Not measured in this run: ${R.notes.find((n) => n.startsWith('ps4')) || 'no PS-4 record'} — so Q2 prints its prose only.</p>`;
+
 const rows = VS.map((v) => {
   const at = need(v.at?.[1240], `${v.id} @1240`);
   const atPhone = v.at?.[390];
@@ -139,6 +193,32 @@ const rec = maybe(RECOMMEND);
 const other = maybe('stack-3x2');
 const artFirst = maybe('plate-owns-slot');
 const pinned = maybe('row-non-scaling');
+
+// The Q1 prose compares the shipped row with the recommendation; both come from this run, and a subset run that
+// omitted one makes the sentence say less rather than remember.
+const recRun = maybe(RECOMMEND);
+const thin = (v) => v?.stroke?.reportedPx ?? null;          // the gate's computed device px for the thinnest stroke
+const pageDelta = (v) => { const d = (v?.at?.[1240]?.pageH ?? 0) - geo.pageH; return `${d >= 0 ? '+' : ''}${d}px`; };
+// Paint, not arithmetic: what the mark's one vertical meridian actually covers, against what fully covering its
+// own token colour would read. Each clause names the option it is quoting, so a subset run says less rather than
+// quoting a picture nobody took.
+const paintNote = (() => {
+  const a = shippedWithPlate ?? pinned ?? recRun;
+  if (!a?.stroke?.coverage) return 'The painted-ink scan is not in this run, so the paint question — how dark the stroke lands, not how wide the gate computes it — goes unquoted.';
+  const parts = [
+    `The mark's ${a.stroke.scanToken ?? 'token'} colour sits ${ceilNote} of the way from the paper to its own token at ` +
+    `most, and ${letter(a.id)} covers ${cov(a.stroke.coverage)} of that distance (a ${a.stroke.paintedPx}px ink run for ` +
+    `${thin(a)}px computed by the gate)`,
+  ];
+  if (recRun?.stroke?.coverage && recRun !== a)
+    parts.push(`${letter(recRun.id)}, at ${thin(recRun)}px computed, covers ${cov(recRun.stroke.coverage)}`);
+  if (pinned?.stroke?.coverage && pinned !== a)
+    parts.push(`${letter(pinned.id)} pins the stroke to device pixels at the same ${thin(pinned)}px and covers ` +
+      `${cov(pinned.stroke.coverage)} — the ink run is ${pinned.stroke.paintedPx}px against ${a.stroke.paintedPx}px, so ` +
+      `what pinning buys is darkness, not width`);
+  return parts.join('; ') + '. The token is the same token either way: the ceiling is the colour\'s, not the art\'s. Measured, not asserted.';
+})();
+
 const recPara = rec ? `<p><b>Recommendation: ${letter(rec.id)}.</b> ${rec.verdict}. check:render on it:
   ${rec.gate.fails.length ? `<code>${rec.gate.fails[0]}</code>` : `${gateVerdict(rec.gate)} at ${rec.gate.widths.join(', ')} (mark
   ${box(rec.at[1240].mark)}, thinnest stroke ${rec.stroke.reportedPx} computed / ${rec.stroke.corePx}px of solid ink, floor 1px)`}.
@@ -188,7 +268,11 @@ const html = `<!doctype html>
  .rec { color: ${C.ink}; background: ${C.panel}; }
  em.rec { font-style: normal; border: 1px solid ${C.gold}; padding: 1px 6px; font-size: 12px; }
  .shapes { display: flex; gap: 24px; flex-wrap: wrap; margin: 16px 0; }
+.pair { display: flex; gap: 20px; flex-wrap: wrap; margin: 16px 0; }
+.pair .shape { flex: 1 1 46%; min-width: 340px; }
  .shape { margin: 0; }
+ /* A 1192px-wide crop must not force a sideways scroll on a phone (the grill rule: a specimen fits 375px). */
+ .shape img { max-width: 100%; height: auto; }
  .shape img, .box { display: block; background: ${C.panel}; border: 1px solid ${C.rule}; box-sizing: border-box; }
  figcaption { font-size: 13px; color: ${C.ink2}; max-width: 420px; margin-top: 6px; }
  table { border-collapse: collapse; font-size: 13.5px; margin: 16px 0; width: 100%; }
@@ -283,8 +367,7 @@ like any line. The FAILs quoted above are painted strokes, one each.</p>
 column at the plate's own shape keeps all of it. Cropping is a claim about the page, so it is drawn at true size:</p>
 <div class="shapes">${plateShapes}</div>
 
-<h2>The options, measured</h2>
-<table><thead><tr><th>option</th><th class="n">mark box</th><th class="n">stroke (ink run / set)</th><th class="n">plate</th><th class="n">PS-1</th><th class="n">page Δ</th><th class="n">page colour</th><th class="n">check:render</th><th class="n">@390 mark/plate</th></tr></thead>
+<h2>The options, measured</h2><table><thead><tr><th>option</th><th class="n">mark box</th><th class="n">stroke (ink run / set)</th><th class="n">plate</th><th class="n">PS-1</th><th class="n">page Δ</th><th class="n">page colour</th><th class="n">check:render</th><th class="n">@390 mark/plate</th></tr></thead>
 <tbody>${rows.join('')}</tbody></table>
 <p class="dim">The screenshots below are <b>1:1 at 1240</b>. The plate column is what the crop keeps of the
 ${P1.srcW}×${P1.srcH} leaf and how much of the crop is chromatic enough to name. The mark column is measured three ways,
@@ -296,6 +379,8 @@ token it is painted with, measured against the ground the mark actually sits on 
 and this is the only one of the three that tests it. <b>check:render</b> is the real gate run on that variant.</p>
 
 ${colorPara}
+
+${strip}
 
 ${panels.join('')}
 
@@ -313,19 +398,47 @@ ${delta(ps3Run.at[1240].pageH, geo.pageH)} of height` : ' — this run did not m
   <p class="ask">Answer with the letter. ${VS.map((v) => `${letter(v.id)} = ${v.name}`).join(' · ')}</p>
   ${recPara}
   ${pinnedPara}
+  <p><b>What the measurements say.</b></p>
+  <ul>
+    <li>Art costs no space: ${IDS.map((id) => `${letter(id)} ${pageDelta(maybe(id))}`).join(', ')}. The column is fixed
+      at ${geo.colH}px in the grid, so the question is only how the plate and the mark share it — and what the
+      mark's strokes land as.</li>
+    <li>The choice is between a plate that keeps its proportions and a mark whose lines survive. The shipped row keeps
+      <b>${P1.boxes.reserved.keepPct}%</b> of the Byrne leaf and puts its thinnest stroke at
+      <b>${thin(shippedWithPlate) ?? '—'}px</b>${thin(shippedWithPlate) == null ? '' : ` — legal against the 1px floor, with ${(thin(shippedWithPlate) - 1).toFixed(2)}px to spare`}.${
+      recRun ? ` ${letter(recRun.id)} puts the same stroke at <b>${thin(recRun)}px</b> and the plate at
+      <b>${P1.boxes.fill.keepPct}%</b> of the leaf.` : ''}</li>
+    <li>${paintNote}</li>
+    <li>Colour is the second axis: the row costs ${colorRow} of the page at chroma ≥ 0.08, the stacked column
+      ${colorStack} (the page's own count is ${pct(shippedColor.strongPct)} with no art at all). The art section below
+      has the per-option numbers.</li>
+  </ul>
+</ul>
 </div>
+
+${ps4Block}
+
 <div class="q">
   <h3>Q2 — PS-4, the event-card thumb: art or no art?</h3>
-  <p>The slot is defined but not built (src/assets/photos/README.md: 323×110 inside the measured card; the event
-  sections are switched off until A6 gives them real dates). Record 0023 measured the only plate wide enough for a
-  thumb: Byrne 123-184 keeps 93% of itself in the box and would add <b>+0.032%</b> to the whole page at chroma ≥ 0.08
-  — an order of magnitude below what PS-1 costs. So a thumb is cheap and a void is avoidable.</p>
+  <p>The slot is defined but not built — see src/assets/photos/README.md for the 323×110 definition; the event sections
+  are switched off until A6 gives them real dates. ${PS4 ? 'The pair above shows the only card the section has today.' :
+  'This run did not measure it.'} Record 0023 measured the only plate wide enough for a thumb:
+  ${PS4 ? PS4.plate.book : 'Byrne 123-184'} keeps ${PS4 ? PS4.box.keepPct : 93}% of itself in the box${
+  PS4 ? `; this run measures the page at chroma ≥ 0.08 going from <b>${pct(PS4.states['no-art'].color?.strongPct)}</b> to
+  <b>${pct(PS4.states.art.color?.strongPct)}</b> once it is in — an order of magnitude below what PS-1 costs.` :
+  ', and would add +0.032% to the page at chroma ≥ 0.08 — an order of magnitude below what PS-1 costs.'} So a thumb is
+  cheap and a void is avoidable.${PS4 ? ` What the pair adds is that the fit is tighter than the definition sounds: the
+  card this section has today has a content box of ${PS4.states['no-art'].at[390].innerW}px at 390, so the thumb fits
+  with ${PS4.states['no-art'].at[390].innerW - PS4.box.w}px to spare — a different padding in a future card, or a thumb
+  a few px wider, and it is scaling down rather than fitting. The width is also declared two ways in this repo: the
+  photo README says 323, and round 12 planted 319 (record 0023's 93% is against 319). The pair here uses the README's
+  323.` : ''}</p>
   <p class="ask">Answer: (a) art in the thumb when a plate fits it, (b) no art in PS-4 — text-only cards.</p>
 </div>
 
-<p class="note">How to read the pictures: they are screenshots of the built page at 1240, cropped from the top of the
-hero grid to its bottom, so the geometry in the picture is the geometry the probe reported. On a narrow screen the
-browser scales the picture down; compare the boxes and the numbers, not the pixels. Answer in letter form (e.g. “1c, 2a”).</p>
+<p class="note">How to read the pictures: they are screenshots of the built page at 1240 (the Q2 pair at 1240 and 390),
+cropped to the box the probe reported for that region, at 1:1 device pixels, then drawn at one scale across each row —
+so compare shapes and heights, not pixels. Answer in letter form (e.g. “1c, 2a”).</p>
 
 ${R.notes.length ? `<p class="note">Instrument notes: ${R.notes.join(' · ')}</p>` : ''}
 </main></body></html>`;

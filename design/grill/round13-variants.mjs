@@ -3,8 +3,10 @@
 // The question (from .notes/NEXT.md question 5, blocking A2): the hero media column PS-1 has just been
 // promised a plate (D149-1b/2b: Byrne `ia-firstsixbooksofe00byrn-176-281`), and the club's mark lives in that
 // same column. In the built page the column is `lg:flex lg:items-center` — a ROW — so a plate and the mark
-// compete for WIDTH: at 1240 the plate lands 224x149 and the mark 152x95 (scale 0.63), and every stroke of
-// the mark falls under 1 device px, which D119 forbids. Eight FAILs from `check:render`, on a real page.
+// compete for WIDTH. Measured on the placeholder state: the plate lands 224x149 and the mark 148.9x93.1
+// (scale 0.621), and **7** strokes of the mark fall under 1 device px, which D119 forbids — the eighth FAIL
+// earlier sessions quoted was an instrument phantom, a `stroke-none` disc measured against the floor (D158).
+// With the real leaf in the row instead, the state is green and the mark lands at 1.02px — legal by 0.02px.
 //
 // So the decision is: what does each of the two graphics get, and which one is fixed?
 //
@@ -29,6 +31,19 @@ export const PS3_PLATE = {
   book: 'Plane geometry, with problems and applications (Slaught & Lennes, 1910)',
   page: 'https://insideoutlibrary.com/p/ia-cu31924031236171-122-176',
   why: 'D149-2b: the Euler-problem diagram, colourless line work, for PS-3',
+};
+
+// PS-4 — the event-card thumb (Q2 of this round). The slot is a *definition*, not a built surface: the
+// schedule section renders its no-source state today, so there is no event row to put a thumb in until A6.
+// What exists is the slot's shape, from `src/assets/photos/README.md` and record 0023: a 323x110 thumb inside
+// the card the photo round measured. This round therefore shows the question where a card does exist — the
+// schedule notice — with the thumb at its defined size and without it, and says so in the caption.
+export const PS4_PLATE = {
+  id: 'ia-firstsixbooksofe00byrn-123-184',
+  book: PS1_PLATE.book,
+  page: 'https://insideoutlibrary.com/p/ia-firstsixbooksofe00byrn-123-184',
+  why: 'record 0023: the only plate measured wide enough for the thumb — 93% of itself in the 319x110 box that round planted, 92% in the 323x110 the photo README declares (round 13 measures the second)',
+  w: 323, h: 110,
 };
 
 // The hero column, as measured by check:space on the shipped page at 1240: 376 wide, 574 tall (the row's

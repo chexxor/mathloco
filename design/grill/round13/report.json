@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-03T21:21:11.819Z",
+ "measuredAt": "2026-11-03T23:29:31.731Z",
  "notes": [
   "row-shipped: the mark's ground, by census of its own box, is rgb(252,250,246) at 95% of the box",
   "stack-3x2: the mark's ground, by census of its own box, is rgb(252,250,246) at 96% of the box",
@@ -136,6 +136,7 @@
     "hueFamilies": 6
    },
    "shot": ".design/tmp-round13/hero-row-shipped-1240.png",
+   "colShot": ".design/tmp-round13/col-row-shipped-1240.png",
    "stroke": {
     "paintedPx": 2,
     "corePx": 2,
@@ -286,6 +287,7 @@
     "hueFamilies": 7
    },
    "shot": ".design/tmp-round13/hero-stack-3x2-1240.png",
+   "colShot": ".design/tmp-round13/col-stack-3x2-1240.png",
    "stroke": {
     "paintedPx": 3,
     "corePx": 3,
@@ -436,6 +438,7 @@
     "hueFamilies": 7
    },
    "shot": ".design/tmp-round13/hero-stack-fill-1240.png",
+   "colShot": ".design/tmp-round13/col-stack-fill-1240.png",
    "stroke": {
     "paintedPx": 3,
     "corePx": 3,
@@ -586,6 +589,7 @@
     "hueFamilies": 7
    },
    "shot": ".design/tmp-round13/hero-plate-whole-mark-small-1240.png",
+   "colShot": ".design/tmp-round13/col-plate-whole-mark-small-1240.png",
    "stroke": {
     "paintedPx": 2,
     "corePx": 2,
@@ -737,6 +741,7 @@
     "hueFamilies": 7
    },
    "shot": ".design/tmp-round13/hero-plate-owns-slot-1240.png",
+   "colShot": ".design/tmp-round13/col-plate-owns-slot-1240.png",
    "stroke": {
     "paintedPx": 2,
     "corePx": 2,
@@ -888,6 +893,7 @@
     "hueFamilies": 6
    },
    "shot": ".design/tmp-round13/hero-row-non-scaling-1240.png",
+   "colShot": ".design/tmp-round13/col-row-non-scaling-1240.png",
    "stroke": {
     "paintedPx": 2,
     "corePx": 2,
@@ -1039,6 +1045,7 @@
     "hueFamilies": 7
    },
    "shot": ".design/tmp-round13/hero-stack-fill-ps3-too-1240.png",
+   "colShot": ".design/tmp-round13/col-stack-fill-ps3-too-1240.png",
    "stroke": {
     "paintedPx": 3,
     "corePx": 3,
@@ -1290,5 +1297,209 @@
   "faintPct": 2.93,
   "hueFamilies": 3
  },
- "shippedSiteFp": "00adf2c64c"
+ "shippedSiteFp": "00adf2c64c",
+ "ps4": {
+  "plate": {
+   "id": "ia-firstsixbooksofe00byrn-123-184",
+   "book": "The first six books of the elements of Euclid… with diagrams in colours (John Byrne, 1847)",
+   "page": "https://insideoutlibrary.com/p/ia-firstsixbooksofe00byrn-123-184",
+   "why": "record 0023: the only plate measured wide enough for the thumb — 93% of itself in the 319x110 box that round planted, 92% in the 323x110 the photo README declares (round 13 measures the second)",
+   "w": 323,
+   "h": 110,
+   "srcW": 1024,
+   "srcH": 381
+  },
+  "box": {
+   "w": 323,
+   "h": 110,
+   "keepPct": 92
+  },
+  "crop": {
+   "w": 646,
+   "h": 220,
+   "namedPct": 4.77,
+   "inkPct": 4.5,
+   "meanL": 0.816,
+   "fam": null
+  },
+  "png": ".design/tmp-round13/plate-PS4-323x110.png",
+  "states": {
+   "no-art": {
+    "at": {
+     "390": {
+      "pageH": 5859,
+      "card": {
+       "x": 16,
+       "y": 3828.8,
+       "w": 358,
+       "h": 353.2
+      },
+      "notice": {
+       "role": "status",
+       "h": 353.2,
+       "w": 358,
+       "x": 16,
+       "y": 3828.8,
+       "cls": "inset-shadow-rule rounded-control px-4 py-6",
+       "text": "Dates live on MeetupNo date is on the calendar yet.Dates are",
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "fill": "",
+       "textContrast": 12.02,
+       "actions": []
+      },
+      "crop": ".design/tmp-round13/ps4-no-art-390-crop.png",
+      "innerW": 326,
+      "padPx": 16,
+      "ring": {
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "textContrast": 12.02
+      }
+     },
+     "1240": {
+      "pageH": 4284,
+      "card": {
+       "x": 32,
+       "y": 2711.8,
+       "w": 512,
+       "h": 280.8
+      },
+      "notice": {
+       "role": "status",
+       "h": 280.8,
+       "w": 512,
+       "x": 32,
+       "y": 2711.8,
+       "cls": "inset-shadow-rule rounded-control px-4 py-6",
+       "text": "Dates live on MeetupNo date is on the calendar yet.Dates are",
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "fill": "",
+       "textContrast": 12.02,
+       "actions": []
+      },
+      "crop": ".design/tmp-round13/ps4-no-art-1240-crop.png",
+      "innerW": 480,
+      "padPx": 16,
+      "ring": {
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "textContrast": 12.02
+      }
+     }
+    },
+    "color": {
+     "strongPct": 0.014,
+     "chromaticPct": 7.36,
+     "faintPct": 2.93,
+     "hueFamilies": 3
+    },
+    "gate": {
+     "code": 0,
+     "fails": [],
+     "gaps": [],
+     "markLine": "mark  hero 372x232.5 at 832,370.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+     "markBox": {
+      "w": 372,
+      "h": 232.5
+     },
+     "widths": [
+      1240,
+      640,
+      390,
+      320
+     ]
+    }
+   },
+   "art": {
+    "at": {
+     "390": {
+      "pageH": 5978,
+      "card": {
+       "x": 16,
+       "y": 3828.8,
+       "w": 358,
+       "h": 475.2
+      },
+      "notice": {
+       "role": "status",
+       "h": 475.2,
+       "w": 358,
+       "x": 16,
+       "y": 3828.8,
+       "cls": "inset-shadow-rule rounded-control px-4 py-6",
+       "text": "Dates live on MeetupNo date is on the calendar yet.Dates are",
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "fill": "",
+       "textContrast": 12.02,
+       "actions": []
+      },
+      "crop": ".design/tmp-round13/ps4-art-390-crop.png",
+      "innerW": 326,
+      "padPx": 16,
+      "ring": {
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "textContrast": 12.02
+      }
+     },
+     "1240": {
+      "pageH": 4406,
+      "card": {
+       "x": 32,
+       "y": 2711.8,
+       "w": 512,
+       "h": 402.8
+      },
+      "notice": {
+       "role": "status",
+       "h": 402.8,
+       "w": 512,
+       "x": 32,
+       "y": 2711.8,
+       "cls": "inset-shadow-rule rounded-control px-4 py-6",
+       "text": "Dates live on MeetupNo date is on the calendar yet.Dates are",
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "fill": "",
+       "textContrast": 12.02,
+       "actions": []
+      },
+      "crop": ".design/tmp-round13/ps4-art-1240-crop.png",
+      "innerW": 480,
+      "padPx": 16,
+      "ring": {
+       "inset": 1,
+       "keylineContrast": 3.01,
+       "textContrast": 12.02
+      }
+     }
+    },
+    "color": {
+     "strongPct": 0.044,
+     "chromaticPct": 7.27,
+     "faintPct": 3.38,
+     "hueFamilies": 6
+    },
+    "gate": {
+     "code": 0,
+     "fails": [],
+     "gaps": [],
+     "markLine": "mark  hero 372x232.5 at 832,370.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+     "markBox": {
+      "w": 372,
+      "h": 232.5
+     },
+     "widths": [
+      1240,
+      640,
+      390,
+      320
+     ]
+    }
+   }
+  }
+ }
 }
