@@ -16,7 +16,10 @@ three actors straight is the whole job:
 
 ## Clock in (run this at the start of every session)
 
-1. Read **`.notes/NEXT.md`** - the current priority, its queue id, and the exact next command.
+1. Read **`.notes/NEXT.md`** - the current priority, its queue id, and the exact next command - and
+   **`MILESTONES.md`** (tracked), which states the current milestone and, for every item, the command or
+   ruling that closes it. An item without an exit criterion is a topic; if you are about to start one and
+   cannot name its gate, write the gate first.
 2. **Load the project skills before writing framework or UI code.** They live in `.agents/skills/` and
    each is repo-specific, so its text beats what you remember - and appearing in the available-skills
    list is **not** loading it; open the file. Which to open:
@@ -52,11 +55,14 @@ three actors straight is the whole job:
 3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
    once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
-   (check, check:classes, check:design, check:social, check:social:selftest, db:check, check:sanitize,
+   (check, check:classes, check:design, check:decisions, check:figures, check:social, check:social:selftest,
+   db:check, check:sanitize,
    check:cache, audit:gate, build, check:deploy). It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
-   a chain hides which step broke, run the steps separately. `npm run check:discord` and
+   a chain hides which step broke, run the steps separately - and read
+   `.design/tmp-gate-logs/<set>/<step>.txt`: every step's full output is kept from the last run, pass or
+   fail (D144). `npm run check:discord` and
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
    not in `verify`.
 4. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
@@ -66,7 +72,8 @@ three actors straight is the whole job:
    `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
    which is gitignored - they are host-local, so a fresh clone will not have them.
 5. Resume from `NEXT.md`. Do not re-derive the priority from the roadmap - the roadmap is not in
-   this repo (`AGENTS.md` and `README.md` are the only tracked .md files), so `NEXT.md` is the only
+   this repo (the tracked prose at the root is `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and
+   `DECISIONS.index.md`), so `NEXT.md` is the only
    queue view a session gets. Durable plans that are not queue items live beside it: `roadmap-events.md`
    (surfacing and syncing the meetup schedule), `roadmap-brand.md` (the mark's surface identity, the colour
    expansion, and what either re-measures) and `asset-sources.md` (which image sources are
@@ -88,16 +95,41 @@ Then execute on that resulting promp.
 
 1. Update **`.notes/NEXT.md`**: the current item, its queue id, the exact next command, and any
    blocker. Leave it truer than you found it, because the next session has only this file.
-2. Record a durable decision's *why* in `.notes/DECISIONS.md`, not just its *what*.
-3. Report status - done / blocked / unverified, with evidence.
-4. Take notes in appropriate about trouble or pitfalls you encountered as well as propose solutions to ensure future efforts can shortcut the trouble.
-5. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
-6. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
-7. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
+2. Record a durable decision's *why* in `.notes/DECISIONS.md`, not just its *what*, then run
+   **`npm run decisions:index`** so the tracked `DECISIONS.index.md` gains its one line. Ids are append-only:
+   never renumber one, because 600-odd citations in tracked code would silently re-point at a different
+   decision. `check:decisions` fails on a `D###` citation with no entry - it caught one the day it landed.
+3. If the milestone moved, update **`MILESTONES.md`** (tracked): the item, its exit criterion, its state.
+4. Report status - done / blocked / unverified, with evidence.
+5. Take notes in appropriate about trouble or pitfalls you encountered as well as propose solutions to ensure future efforts can shortcut the trouble.
+6. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
+7. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
+8. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
    push it, and report the preview URL (`npm run preview:deploy` - it runs `verify` first, then deploys a
    Worker Preview). `staging` is a review environment, not the site: it gets the preview D1 and preview KV,
    and it never touches the apex triggers. Protocol and gotchas: `.notes/runbooks/staging-branch-preview.md`
    (D124). `staging` -> `main`, and any production deploy, stay the operator's.
+
+## How we work (practices that earned their place)
+
+Each of these paid for itself in a real session; each has a cost attached in `.notes/PITFALLS.md`.
+
+- **A doc or note line that a measurement contradicts is corrected or deleted in the same commit that
+  contradicts it.** No exception for host-local files - host-local files are exactly what the next session
+  trusts. `DESIGN.md` quoted a nav width its own probe contradicted for a day; `design/state.json` told a
+  session to do work that was already done.
+- **A measured number in tracked prose carries its date and its probe**: `@measured 2026-11-03 by
+  check:space`. `check:figures` fails a stamp older than 60 days and counts unstamped measurement claims
+  against a baseline. A decision gets a source; a measurement gets a date.
+- **A deferral names its target, always.** "Defer whatever you like" produced a deferral list nobody could
+  reconstruct. If it is not written with a trigger that un-parks it, it is not parked - it is lost (D148).
+- **Rulings come back in answer form** (`1b, 2b, 3c`). Seven decisions in one line, none ambiguous. Ask
+  numbered questions; answer numbered answers.
+- **Blocking questions go into `NEXT.md`'s Operator ToDo before the session starts**, not discovered mid-run.
+- **Read the file before you edit it.** A blind append to `scripts/gate-run.mjs` nearly shipped a dead
+  function that referenced variables that did not exist.
+- **A pipe swallows an exit code.** `npm run check:design | tail -30; echo $?` reported the exit of `tail`.
+  Check the gate's own exit, or the manifest in `.design/tmp-gate-logs/`.
 
 ## Non-negotiables
 
