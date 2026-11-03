@@ -53,7 +53,6 @@ import { execFileSync, execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
-import { distState, staleLine } from './dist-fresh.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
@@ -126,7 +125,11 @@ if (!NO_BUILD) {
 } else {
   console.log('(measuring the dist that is already built — --no-build)');
   // --no-build is the fast path, and its whole risk is measuring a build this tree did not make — the case
-  // that cost 4 phantom keyline FAILs on a branch switch (design/dist-fresh.mjs).
+  // that cost 4 phantom keyline FAILs on a branch switch (design/dist-fresh.mjs, D156).
+  // Imported here, not at the top: only the `--no-build` path needs it, and this file's import list is a spot
+  // two branches edit at once (it is the one conflict the pending branches had), so the check lives beside the
+  // line that runs it. Same pattern as line-length.mjs below.
+  const { distState, staleLine } = await import('./dist-fresh.mjs');
   const STALE = distState();
   if (!STALE.fresh && !STALE.allowed) { console.error(`check:render: ${staleLine(STALE)}`); process.exit(1); }
 }
