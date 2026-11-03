@@ -4,8 +4,8 @@
  "round": 12,
  "awaiting": [
   "round 9 still needs: surface policy S-A/S-B/S-C (recommend S-B: 2 -> 5 hue families, reader-visible share 0.0% -> 0.4%, every pair clears); is shipped gold <-> path-discord 27deg a recorded exception or a defect; and do the leading (1.306 at micro) / body (1.36) line-spacing misses ride this round or take their own",
-  "round 10 (AREA): the four photo slots are drawn and measured - operator to say which slots to reserve now (PS-1 hero 372x564, PS-2 venue strip 1228x320, PS-3 join cell, PS-4 event thumb 367x120) and to decide the two non-code levers: who takes the shots, and where the schedule's dates come from (a human-maintained list vs an event feed, D69)",
-  "third-party marks: ruled in principle; the application is queued - drop or shrink public/Meetup_Logo.png in JoinCommunity.astro (1.24% of the page, the site's most saturated colour, and it reflows 112px) and add the one-line footer attribution",
+  "round 10 (AREA) ruled 2026-11-02 (PH-B): PS-1 hero and PS-3 join cell are RESERVED at the measured sizes (372x564 and 526x316 at 1240); PS-4 event thumb (319x110) and PS-2 venue strip (1180x320) are drawn and measured but NOT reserved. The two non-code levers remain: who takes the shots, and where the schedule dates come from (human list vs event feed, D69). Sizes come from the check:space reports - note 1180, not 1228: 1228 is documentElement width including the scrollbar (record 0014).",
+  "third-party marks: DONE, not queued - public/Meetup_Logo.png is deleted, no built page references it, and Footer.astro carries the one-line attribution in our own type (design/decisions.json records the removal; design/records/0013-* is the rule). Nothing to apply.",
   "body line spacing 1.36 vs a published 1.5 floor / 1.6 comfort - DESIGN.md open thread, moves D98's 80px one-line notice",
   "mark SURFACE identity (Minnesota outline / Cherry Bridge cherry / other) - operator ruled it LOW PRIORITY, on the roadmap: .notes/roadmap-brand.md"
  ],
