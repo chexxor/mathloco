@@ -40,8 +40,8 @@ tints carry ink, gold carries paper. **Never** put a keylined control on a `pane
 fill measures 1.05–1.09 = flat).
 
 Bars, non-negotiable: **4.5** text (3.0 for text at/below the `display-2` step), **3.0** for a boundary
-or graphic, **1.35** for "this is a separate layer", **24px** minimum target, **44px** for the primary
-path.
+or graphic, **1.35** for "this is a separate layer", **24px** minimum target, **44px** for every pressable
+block at phone widths (D139: the bar belongs to the tap, not only to the primary).
 
 **A hover always goes lighter.** `ink` → `ink-hover`, `paper` → `tint`; a control that darkens on hover
 next to one that lightens is two grammars. On the layer bar this is not cosmetic: at `L` 38 the hover
@@ -168,22 +168,42 @@ ramp changed. That is the whole reason the reading ladder and the chrome tier ar
 label step of 15/20 would make them 52/44 and re-open the nav fit, the notice's 48px one-line figure and the
 card's bands (measured in `design/grill/round8/report.json`).
 
+**D139 (2026-11-03) retired 40px for buttons.** `check:render` carried two rules that cannot both hold for a
+`inset-shadow-rule` control — the height rule demanded 40 and the tap rule demanded >=44 at 390 — and the
+control that tripped neither was invisible only because the probe truncates a class string
+(`design/records/0016-*`). Ruled: the **44 bar wins**, so primary and secondary are the **same height** and
+differ by **fill**, not by size. `s40` survives as a **box** height (a notice, a schedule row's own padding) and
+is no longer a button step.
+
 | Step | Height | Use |
 |---|---|---|
 | chip | 24px | chip / inline status (spacing exception must hold) |
-| `s32` | 32px | quiet button, inline controls |
-| `s40` | 40px | secondary button, a notice's retry |
-| `s48` | 48px | primary button — the only step that clears the 44px AAA bar; it belongs to the join path |
+| `s32` | 32px | quiet button, inline controls — **not** a phone tap target: anything pressable at 390 must clear 44 |
+| `s40` | 40px | **boxes, not buttons** (D139): a notice's own height, a row's padding. No pressable block sits here |
+| `s48` | 48px | **every pressable block on the join path** — primary and secondary; the only step that clears the 44px AAA bar |
 
 **Never** let one component family render at three heights (the shipped CTA measured 50 / 58 / 62px
 across breakpoints) and **never** ship a control under 24px (the shipped 404 links measured 19px).
+
+### A control names its role in the markup (D140)
+
+Pressable blocks carry **`data-control="primary"`** or **`data-control="secondary"`**. `check:render` asserts
+the height **per declared role** (48 +/-1) and fails any control with a control's paint (`bg-ink` or
+`inset-shadow-rule`) that declares **no** role. The rules do not read a class string, because they cannot
+be trusted to: the probe truncates it, and a control's grammar changed when a utility class was added at the
+front (record 0016 measured 3 shipped 40px tap targets the gate was blind to for exactly that reason). This
+is D116's rule — the specimen and the built page must report the same thing — applied to a control, and
+`design/records/0009-*`'s rule for a slot: **the source publishes a name; a measurement matches the name.**
+
+An in-sentence path stays a **link**, not a control: "a link inside a sentence keeps its 24px line". That is
+how a block gets a second way out without a second button.
 
 ## Buttons and chips
 
 | Component | Construction | Measured |
 |---|---|---|
 | primary | `ink` fill, `band-text` label, 48px | 10.19, hover 7.33 |
-| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, 40px, hover fill `tint` | 12.02 / 10.96 |
+| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint` | 12.02 / 10.96 |
 | quiet | `gold` label, 32px standalone; **no keyline inside a notice** | 4.82 |
 | chip | its own component, not a button: `ink-2` label on `path-*-tint`, `inset-shadow-path-*`, 24px | 6.27 label, 5.28–7.09 edge |
 
@@ -217,9 +237,9 @@ freshness.
 ## States: empty, loading, failed
 
 - **Zero upcoming events converts.** It is not a sentence (104px, nothing to press) and it is never
-  hidden (47px): status word, `text-lede` title, two-line body, a 48px primary, a 40px secondary, the
-  dated line. The hero's "Next:" label changes to "Nothing scheduled" rather than disappearing, so an
-  empty calendar is distinguishable from a broken page.
+  hidden (47px): status word, `text-lede` title, two-line body, a 48px primary, a second path (a 48px
+  secondary or an inline link, D139), the dated line. The hero's "Next:" label changes to "Nothing
+  scheduled" rather than disappearing, so an empty calendar is distinguishable from a broken page.
 - **Loading is one 24px `role="status"` line, no motion.** No spinner, no skeleton (the shipped skeleton
   material measures 1.05 fill / 1.18 edge = a rectangle pretending to be content). Reserve the height so
   the page does not jump when content lands.

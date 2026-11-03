@@ -56,7 +56,9 @@ the empty state is an **inline link**, which DESIGN.md already prices ("a link i
 line"), and the per-row Meetup action in the dates-exist state is an inline link too. No gate was edited to make
 this component pass.
 
-**Open for the operator (do not settle it in a component):**
+**Open for the operator (do not settle it in a component):** — **RULED 2026-11-03**, see
+`design/records/0017-*`: the 44px bar wins, primary and secondary are both 48px and differ by fill, `s40` is
+retired for buttons, and the height rules stop reading a class substring in favour of `data-control`.
 
 1. Which is authoritative — the 44px tap bar or the 40px secondary? If the bar wins, the secondary step becomes 48px
    and the hero's "View Schedule" must move with it (one component family, one height). If 40px stays, line 187 must

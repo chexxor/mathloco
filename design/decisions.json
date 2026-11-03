@@ -155,20 +155,32 @@
     "also": "add prefers-reduced-motion: reduce - grep finds no occurrence anywhere in src/ today."
   },
   "controlHeights": {
-    "value": "32 / 40 / 48 px, and nothing painted outside that set",
-    "rule": "height = ceil4(measured line box) + 2 x an S3 pad. Pads only from 4,8,12,16,24,32,48,64. 32 = chip/inline/quiet, 40 = secondary, 48 = primary/join path (the only step that clears the 44px WCAG 2.2 AAA target).",
+    "value": "32 / 40 / 48 px, and nothing painted outside that set — but 40px is now a BOX height, not a button step (D139)",
+    "rule": "height = ceil4(measured line box) + 2 x an S3 pad. Pads only from 4,8,12,16,24,32,48,64. 32 = chip/inline/quiet (never a phone tap target), 40 = boxes only (a notice, a row pad), 48 = every pressable block on the join path.",
     "reachable_set": "chrome text 13.3px: 24,28,32,36,40,44,48,52,56,64 - 16px body controls: 28..60",
     "source": "round 6 Q1, operator took A (2026-10-31)",
-    "operator_ruling": "A",
+    "operator_ruling": "A (2026-10-31), amended by the operator 2026-11-03: the 44px tap bar wins over the 40px secondary, so primary and secondary are both 48 and differ by fill",
     "evidence": "35 specimen controls: arithmetic exact on 35 of 35 measured in Firefox (design/grill/round6/); 35/35 >= 24px AA, 5/35 >= 44px AAA; design/round6-math.mjs derives the set from the ratified 4px grid + S3",
     "why_not_picked_by_eye": "the shipped artifact has one component family at three heights (50/58/62px across breakpoints) and two 19px-high links on the 404 page, because utility padding and font-size accumulate with no height rule",
     "corollaries": [
       "keylines are inset box-shadows, never borders - a border adds 2px and silently breaks the arithmetic",
       "no control below 24px except a chip, and a chip must then satisfy the WCAG 2.2 SC 2.5.8 spacing exception (probe computes it per axis)"
-    ]
+    ],
+    "ruling_2026_11_03": {
+      "asked": "check:render demands an inset-shadow-rule control be 40px (line 184) and >=44px at 390 (line 187). No height satisfies both. Which is authoritative?",
+      "options": {
+        "44 wins": "every pressable block lands at 48; the 40 step retires for buttons; 3 shipped controls move (hero View Schedule, 404 Recent Discord summaries, DiscordSummary Try again / Read Discord)",
+        "40 wins": "the tap rule stops matching inset-shadow-rule and the repo keeps a 40px phone tap target on its join path, under the bar DESIGN.md itself cites for s48",
+        "both stay": "not implementable: no value satisfies the pair"
+      },
+      "operator_ruling": "44 wins (2026-11-03: \"I agree with your proposals, please take action on them\")",
+      "measured_why": "at 390 the pair saw 7 controls, all 48 and all passing, and was blind to 3: View Schedule (/), Join the chat (/) and Recent Discord summaries (/404) - all 40px, all on the join path, all invisible because render-measure.js truncates cls at 120 chars mid-token",
+      "cost": "+8px on two measured controls (hero CTA row, 404) and two island buttons; the join media column keeps 48 as it already had it",
+      "evidence": "/tmp probe pass over the three routes (2026-11-03), design/records/0016-*, design/records/0017-*"
+    }
   },
   "buttonVariants": {
-    "value": "three buttons - primary, secondary, quiet - plus chips as their own component (labels/tags), not a button variant",
+    "value": "three buttons - primary, secondary, quiet - plus chips as their own component (labels/tags), not a button variant. Primary and secondary are the SAME height (48) and differ by fill (D139).",
     "operator_ruling": "A (2026-10-31)",
     "source": "round 6 Q2",
     "measured": {
@@ -541,5 +553,13 @@
     "reading": "fill PS-1 first (free), then decide about air. Do not spend the 160px before the photographs exist.",
     "status": "measured, awaiting operator ruling on which to apply",
     "date": "2026-11-02"
+  },
+  "controlRoles": {
+    "value": "a pressable block declares data-control=\"primary|secondary\" in the markup; check:render asserts height per declared role and fails a control-shaped element that declares none",
+    "operator_ruling": "approved 2026-11-03 (\"I agree with your proposals\")",
+    "why": "the height rules used to read a substring of the class attribute, which the probe truncates (120 chars) and which shifts when anyone adds a utility class: measured 3 shipped 40px join-path tap targets the gate could not see. A class is whatever the layout happens to be called this week.",
+    "rule": "D116 (specimen and built page report the same thing) + record 0009 (the source publishes a name; a measurement matches the name). The probe still truncates for PRINT, never for a rule.",
+    "enforcement": "design/render-gate.mjs role table {primary:48, secondary:48}; design/render-gate-selftest.mjs plants a 32px primary and a stripped role so the gate must go red (D118)",
+    "open": "a chip (24px) and a quiet (32px) control declare no role and stay outside it - if one ever appears at phone widths as a tap target, that is its own ruling"
   }
 }
