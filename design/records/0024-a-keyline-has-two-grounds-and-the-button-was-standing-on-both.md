@@ -112,6 +112,14 @@ at **0.81px** (and one at 0.62px) — under the 1px floor D119, i.e. the mark st
 where the layout has the most room. Eight mark failures, all at 1240 only. A2 must decide which of the two is the
 hero's fixed size before a plate goes in. @measured 2026-11-03 by check:render:dist, review build
 
+**Corrected the same day, by D158: seven failures, not eight.** The 0.62px one was the mark's **meeting point** — a
+*filled* disc drawn `class="stroke-none fill-gold"`, so it has no stroke, while `getComputedStyle().strokeWidth`
+still returns the SVG initial **1**. The probe reported that 1 as a stroke width and the gate asserted its floor on
+paint that is never laid down. `strokePaints` now comes from the same computed style and the floor keys on it, with a
+selftest counterfactual (give that disc a real `stroke-width="0.3"` and it fails at 0.46px). The composition finding
+stands — the strokes that do paint land at **0.81 / 0.87px** — and with the **real plate** rather than the
+placeholder box the row is **green** at 1.01/1.09px, which is why A2's question is composition, not a red gate.
+
 ## instrument notes, so the next round does not re-learn them
 
 - **A "1px run between two grounds" is not necessarily a keyline.** The old detector counted 8 runs at every width

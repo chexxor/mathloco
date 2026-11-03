@@ -81,6 +81,13 @@ const cases = [
   // 5. a stroke under one device pixel: it paints *something*, and the colour pair still clears 3.0, but
   //    no pixel is fully covered so it has no measurable colour identity (D119, for line art).
   ['mark stroke under 1px on screen', (h) => h.replace(`stroke-width="${swStroke.sw}"`, 'stroke-width="0.05"'), /stroke lands at [\d.]+px on screen/],
+  // 5b. the same floor on the shape the floor is NOT supposed to look at: the meeting point is a filled disc
+  //     (`stroke-none`), so the cascade's `stroke-width` is the SVG initial 1 and nothing strokes. The gate now
+  //     skips it — and this case is what stops that skip from being a hole: give the disc a REAL stroke under 1px
+  //     and it must fail exactly like a line does. A presentation attribute, not a class (case 2's lesson).
+  ['meeting point given a real stroke under 1px', (h) => h.replace(
+    new RegExp(`(<circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}") class="stroke-none `),
+    (m, el) => `${el} stroke="#101014" stroke-width="0.3" class="`), /stroke lands at [\d.]+px on screen/],
   // 6. controls, by the ROLE the markup declares (D140). These three are the counterfactual for the pair of
   //    rules that used to match on class substrings: design/records/0016 measured three shipped 40px tap
   //    targets the gate never saw, because the probe truncated `cls` at 120 characters and the class the rules

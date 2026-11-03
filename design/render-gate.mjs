@@ -365,7 +365,12 @@ for (const route of routes) {
           const best = Math.max(...cands);
           if (best < 3.0) fails.push(`${at2}: <${s.tag}> reads ${best} against its ground, under the 3.0 graphic bar (D101) — stroke ${s.stroke} / fill ${s.fill}`);
         }
-        if (s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
+        // D119's floor, for line art: a stroke under one device pixel has no fully-covered pixel, so it has no
+        // measurable colour identity. It applies to a stroke that PAINTS. The probe reports the cascade's
+        // `stroke-width` even where `stroke: none` means nothing strokes (the SVG initial value is 1), and the
+        // mark's meeting point is a filled disc — so keying on the cascade number alone failed a shape that has
+        // no stroke to measure. `strokePaints` comes from the same computed style, in the same record.
+        if ((s.strokePaints ?? s.stroke !== 'none') && s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
         // A declared dash has to ARRIVE. On this mark the far half of the equator is dashed and the near half is
         // solid, and that difference is the occlusion cue that makes the ring read as a sphere rather than a disc
         // (src/lib/brand-mark.mjs, operator ruling 2026-11-02). Two silent failures are possible: a renderer that
@@ -402,7 +407,7 @@ for (const route of routes) {
     for (const m of j.marks || []) {
       console.log(`   mark  ${m.name} ${m.w}x${m.h} at ${m.x},${m.y} (viewBox ${m.vbW}x${m.vbH}, scale ${m.scale}, shapes ${m.count}/${MARK_SHAPE_COUNT}, ratio ${m.ratio} vs ${m.wantRatio}) role="${m.role}" ${JSON.stringify(m.label)}`);
       for (const s of m.shapes.filter((x) => x.dash && x.dash !== 'none')) console.log(`         dashed: <${s.tag}> declared "${s.dash}" units -> ${s.dashDevice} px on screen`);
-      for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} sw ${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
+      for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} ${s.strokePaints === false ? 'no stroke  (fill only)'.padEnd(21) : `${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px`.padEnd(21)}  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
     }
   }
 }

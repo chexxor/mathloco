@@ -362,12 +362,17 @@
     const scale = vb[2] ? r.width / vb[2] : NaN;
     const shapes = [...svg.querySelectorAll('circle,path,rect,line,polygon,polyline,ellipse')].map((el) => {
       const cs = getComputedStyle(el);
+      // `stroke-width` computes even when nothing strokes: the SVG initial value is 1, and a filled shape styled
+      // `stroke: none` still carries it. Measuring that 1 as a stroke is how the mark's meeting point — a filled
+      // disc, no stroke at all — failed the 1px legibility floor at every drawn size under 1.0 scale. So the
+      // cascade number and the paint number are reported separately, and the floor is asserted on the paint.
       const sw = parseFloat(cs.strokeWidth) || 0;
       const sc = cs.stroke && cs.stroke !== 'none' ? parse(cs.stroke) : null;
       const fc = cs.fill && cs.fill !== 'none' ? parse(cs.fill) : null;
       return {
         tag: el.tagName.toLowerCase(),
         stroke: cs.stroke, fill: cs.fill,
+        strokePaints: cs.stroke !== 'none',   // is there a stroke at all — opacity and contrast are measured separately
         sw, swDevice: +(sw * (scale || 0)).toFixed(2),
         // computed, so it is in device px: a dash declared in viewBox units is only a depth cue if it still
         // arrives at the size the mark is actually drawn at (the hero on a 320px viewport scales the 240-unit
