@@ -44,6 +44,9 @@
 //
 // Records land in .design/tmp-ground/ (scratch: screenshots, per-width detail). The tracked artifact is
 // design/ground/report.json, because a design record has to be able to cite a number that still exists.
+// Both paths move by env var (`GROUND_OUT`, `GROUND_SCRATCH`): a REVIEW build — one with placeholders planted —
+// must never overwrite the tracked report, because that report is the evidence for a page that is allowed to
+// ship, and a review page is not (the harness that does this is `npm run review:render`).
 import { execFileSync } from 'node:child_process';
 import { shotHeight } from './grill/shot-height.mjs';
 import { createHash } from 'node:crypto';
@@ -65,6 +68,10 @@ const argList = (flag, dflt) => {
 const routes = argList('--routes', ['/']);
 const widths = argList('--widths', ['1240', '390', '320']).map(Number);
 const JSONOUT = args.includes('--json');
+// Tracked by default; an override is always a gitignored scratch path (`AGENTS.md`: a `.design/` file must
+// match an ignore pattern, and `tmp-*` does). Printed loudly at the end so an override cannot be forgotten.
+const OUT = process.env.GROUND_OUT || 'design/ground';
+const SCRATCH = process.env.GROUND_SCRATCH || '.design/tmp-ground';
 
 if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first');
@@ -75,7 +82,7 @@ if (!existsSync(resolve('dist/client/index.html'))) {
 import { distState, staleLine } from './dist-fresh.mjs';
 const STALE = distState();
 if (!STALE.fresh && !STALE.allowed) { console.error(`check:ground: ${staleLine(STALE)}`); process.exit(1); }
-mkdirSync('.design/tmp-ground', { recursive: true });
+mkdirSync(SCRATCH, { recursive: true });
 const SITE_FP = createHash('sha1').update(readFileSync(resolve('dist/client/index.html'))).digest('hex').slice(0, 10);
 
 // How far a pixel may sit from the ground and still be called ground. The scratch probe used 8 RGB levels and
@@ -254,7 +261,7 @@ const fails = [];
 const records = [];
 for (const route of routes) {
   for (const w of widths) {
-    const shot = `.design/tmp-ground/ground-${name(route) || 'root'}-${w}.png`;
+    const shot = `${SCRATCH}/ground-${name(route) || 'root'}-${w}.png`;
     const probe1 = shoot('dist/client', route, w, 1200, '');
     const pageH = shotHeight(Number(probe1?.doc?.scrollHeight ?? 0), `${route} @ ${w}`);
     const report = shoot('dist/client', route, w, pageH, shot);
@@ -262,7 +269,7 @@ for (const route of routes) {
     const m = await measureShot(shot, PAPER);
     const claimed = claimedKeylines(report);
     const delta = (m.hairlineMin !== null && claimed.length) ? +(m.hairlineMin - claimed[0]).toFixed(2) : null;
-    const file = `.design/tmp-ground/${name(route) || 'root'}-${w}.json`;
+    const file = `${SCRATCH}/${name(route) || 'root'}-${w}.json`;
     writeFileSync(file, JSON.stringify({ route, siteFp: SITE_FP, width: w, pageH, shot, groundTol: GROUND_TOL, ...m, claimedKeylineContrast: claimed, bytesMinusCss: delta }, null, 1));
     records.push({ route, width: w, ...m, claimed, delta });
 
@@ -291,8 +298,8 @@ for (const route of routes) {
 
 // The tracked artifact: every width's headline numbers in one file, in the shape design/area and design/rhythm
 // use. Records cite these numbers, so the numbers have to exist after the scratch directory goes (D100).
-mkdirSync('design/ground', { recursive: true });
-writeFileSync('design/ground/report.json', JSON.stringify({
+mkdirSync(OUT, { recursive: true });
+writeFileSync(`${OUT}/report.json`, JSON.stringify({
   measuredAt: new Date().toISOString(), siteFp: SITE_FP, widths, groundTol: GROUND_TOL, bars: BARS,
   rows: records.map((r) => ({
     route: r.route, width: r.width, ground: r.ground, groundExact: r.groundExact, groundPct: r.groundPct,
@@ -302,7 +309,8 @@ writeFileSync('design/ground/report.json', JSON.stringify({
     claimedKeylineContrast: r.claimed, bytesMinusCss: r.delta,
   })),
 }, null, 1));
-console.log('wrote design/ground/report.json — re-run npm run check:ground after any change to a ground or a keyline.');
+console.log(`wrote ${OUT}/report.json — re-run npm run check:ground after any change to a ground or a keyline.`
+  + (process.env.GROUND_OUT ? ` NOTE GROUND_OUT=${process.env.GROUND_OUT} is set: the TRACKED report was not updated.` : ''));
 
 // ---------------------------------------------------------------------------
 // --selftest: prove the instrument can see a background-image at all (D118).
@@ -317,7 +325,7 @@ console.log('wrote design/ground/report.json — re-run npm run check:ground aft
 const m2 = (r) => (r.hairlineMedian === null || r.hairlineMedian === undefined ? null : r.hairlineMedian);
 
 if (SELFTEST) {
-  const copy = '.design/tmp-ground/selftest-dist';
+  const copy = `${SCRATCH}/selftest-dist`;
   rmSync(copy, { recursive: true, force: true });
   execFileSync('cp', ['-r', 'dist/client', copy]);
   const page = `${copy}/index.html`;
@@ -340,8 +348,8 @@ if (SELFTEST) {
     writeFileSync(page, clean.replace('</head>', `<style>${css}</style></head>`));
     const probe1 = shoot(copy, route, w, 1200, '');
     const pageH = shotHeight(Number(probe1?.doc?.scrollHeight ?? 0), `${route} @ ${w} (selftest)`);
-    const report = shoot(copy, route, w, pageH, '.design/tmp-ground/selftest.png');
-    return { report, m: await measureShot('.design/tmp-ground/selftest.png', PAPER, base.flat) };
+    const report = shoot(copy, route, w, pageH, `${SCRATCH}/selftest.png`);
+    return { report, m: await measureShot(`${SCRATCH}/selftest.png`, PAPER, base.flat) };
   };
   // planted ON EVERY PAINTED SURFACE (the page ground plus anything that fills itself): the grain sits behind
   // the ring, so the ring's local contrast must move. A narrower selector was tried first and correctly
@@ -380,4 +388,4 @@ if (fails.length) {
   console.log('check:render printed came from computed CSS, so it cannot see what moved it (record 0019).');
   process.exit(1);
 }
-console.log(`No hairline is under ${BARS.graphic} off bytes. Records: .design/tmp-ground/ — re-run after anything paints behind the page.`);
+console.log(`No hairline is under ${BARS.graphic} off bytes. Records: ${SCRATCH}/ — re-run after anything paints behind the page.`);

@@ -39,6 +39,9 @@ const widths = argList('--widths', ['1240', '390', '320']).map(Number);
 const name = (r) => (r === '/' ? 'root' : r.replace(/^\//, '_').replace(/\//g, '-'));
 
 const PAGE = 'dist/client/index.html';
+// Tracked by default. `AREA_OUT` moves it to a gitignored scratch path for a REVIEW build, so a report that
+// records cite can never end up describing a page with placeholders in it (`npm run review:render`).
+const OUT = process.env.AREA_OUT || 'design/area';
 if (!existsSync(PAGE)) {
   console.error('design/area-survey.mjs: dist/client/index.html missing — run npm run build first');
   process.exit(1);
@@ -113,9 +116,9 @@ console.log('  >=.04 column counts every glyph), and `painted` / `empty-run%` sa
 console.log('  anything at all. A round that moves the first column and not the second has changed the paint,');
 console.log('  not the page. Both bars are reporting thresholds, not rulings — nothing here exits non-zero.');
 
-mkdirSync('design/area', { recursive: true });
-writeFileSync('design/area/report.json', JSON.stringify({
+mkdirSync(OUT, { recursive: true });
+writeFileSync(`${OUT}/report.json`, JSON.stringify({
   measuredAt: new Date().toISOString(), siteFp, routes, widths, rows,
   note: 'written by design/area-survey.mjs; tracked so the next session re-quotes instead of re-measuring. If siteFp no longer matches dist/client/index.html, re-run `npm run check:area`.',
 }, null, 1));
-console.log('\njson: design/area/report.json (tracked — commit it with the round that cites it)');
+console.log(`\njson: ${OUT}/report.json` + (process.env.AREA_OUT ? ' (AREA_OUT set — the TRACKED report was not updated)' : ' (tracked — commit it with the round that cites it)'));

@@ -79,6 +79,7 @@ const PENDING = [
   [/^src\/lib\/components\/ui$/, 'no shadcn/ui in this repo; the enforce reference probes for it with `|| ls components/ui`'],
   [/(NNNN|round-N\.|00[0-9]{2}$|-0009$)/, 'a skill template or shorthand for a set of records, not one path'],
   [/^\.design\/tmp-/, 'scratch: producing it is the point of the tool that names it'],
+  [/^src\/content\.local$/, 'a gitignored directory that exists only while a REVIEW build is planted: scripts/review-render.mjs creates and removes it, and src/lib/content.ts globs the directory (never a filename) precisely because it may not exist'],
 ];
 const pending = (p) => PENDING.find(([re]) => re.test(p));
 
