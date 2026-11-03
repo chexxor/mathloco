@@ -167,5 +167,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D157** (2026-11-03) — A review build is a build state, not a shell recipe — and it is the only way any gate sees the missing-content page (2026-11-03, delegate)
 - **D158** (2026-11-03) — A legibility floor is asserted on a stroke that paints, not on a cascade number — and one of A2's eight FAILs was a stroke that does not exist (2026-11-03, delegate)
 - **D159** (2026-11-03) — A base64 payload is not a citation, and a gate that reads its own source cannot contain the ids it hunts (2026-11-03, delegate)
+- **D160** (2026-11-03) — A question answered by looking gets pictures of every option, at one scale, from the load that made its numbers (2026-11-03, operator ruling)
 
-Defined: 159 (D1-D159). Unused ids: none.
+Defined: 160 (D1-D160). Unused ids: none.

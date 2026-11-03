@@ -45,6 +45,11 @@ The preview must:
 
 - Use the project's own fonts and colors, read from the codebase.
 - Show the options side by side, labelled A, B, C.
+- Show **every** option as a picture when the answer depends on looking (D160): crops of the real page at one display
+  scale, so the eye compares composition rather than size, each taken from the same load that produced its numbers.
+  Prose about an option nobody can see is an incomplete round. In this harness firefox's `--screenshot` pass ends the
+  page at paint, so a probe that waits after load loses its POST — measure at load, and retry the load rather than
+  trusting one.
 - Use real text from the app. No lorem ipsum, because placeholder text hides problems like lines that run too long.
 - Mark the recommended option and show how many current values it fits.
 - Show light and dark versions if the project has both.

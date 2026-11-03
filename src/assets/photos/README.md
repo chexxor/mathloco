@@ -20,6 +20,12 @@ computed `display`), not chosen. They are in CSS px at a 1240 viewport; the reco
 PS-2 and PS-4 are definitions only: they need a venue photograph and a real schedule to hang on, and
 shipping either empty would be a 320px void.
 
+Round 13 measured the only card the schedule section renders today - its no-source notice, not the future event
+card - and photographed it with and without a thumb: the card is **512x280.8** at 1240 with a **480px** content box,
+and **358x353.2** at 390 with **326px**, so the 323px thumb fits at phone width with **3px** to spare; planting it
+costs **+122px** of card and page at both widths and leaves `check:render` green. `@measured 2026-11-03 by
+round13` (`design/grill/round13/report.json`; the before/after pictures are in `design/grill/round-13-hero.html`, D160).
+
 Rules that come with a shot (all ruled, see `design/records/0013`):
 - **No stock people.** Only photographs of this club, its venue, and its materials.
 - A slot's aspect ratio is declared in CSS. Tailwind's preflight (`img { height: auto }`) makes an HTML
