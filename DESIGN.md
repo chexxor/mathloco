@@ -312,20 +312,23 @@ freshness.
 - **The label set is the mark plus `Chat`.** `Schedule` and `Members` were dropped on 2026-11-02 (D117):
   the build emits `index.html`, `chat/index.html` and `404.html` only, and `public/` has no redirect rules,
   so those two labels were links to the 404 page — on `main` as well as here. A nav item requires a page.
-  Measured with the probe `check:render` runs at every width: the row **needs 171px** against a container
-  that offers 276 at a 320 viewport and 256 at 300. `--breakpoint-nav-narrow` (370px) and the narrow
+  Measured with the probe `check:render` runs at every width: the row **needs 176px** against a container
+  that offers 276 at a 320 viewport and 256 at 300. (This line said **171px** from 2026-11-02 to 2026-11-03 while the
+  probe reported 176 at every width — a doc figure a probe contradicts is a doc bug; quote the probe's line.) `--breakpoint-nav-narrow` (370px) and the narrow
   `text-micro` nav tier went with the dead labels — a tier that fits everywhere is not a tier. An
   arbitrary `min-[…]:` / `max-[…]:` bracket in live markup is banned outright, because the gates read
   tokens and a bracket writes nothing to any token.
 - **Headroom for the schedule page, measured:** `Schedule` is 57.6px at this tier, so adding it back puts
-  the row at 245 — inside 276. A third path would not fit at the floor. One more path, not two, and the
-  probe says so the moment it stops fitting.
+  the row at **~250** (176 + 57.6 + a 16px gap) — inside 276 by ~26px. A third path would not fit at the floor. One
+  more path, not two, and the probe says so the moment it stops fitting.
 - **The site's floor is 320px** (D114, operator ruling 2026-11-02), and `check:render` refuses to run a
   default width set that has dropped 320. What sets the floor changed with D117: it used to be the nav
-  (3px of margin at 320); the nav now clears the floor by 105px, and the binding constraint is the hero
+  (3px of margin at 320); the nav now clears the floor by 100px (needs 176, offered 276), and the binding constraint is the hero
   primary control, which measures 48px at 310 and wraps to 64px at 300 — breaking the control grammar.
   Below the floor the gate says so rather than hiding it. Ask for the sub-floor widths any time with
-  `RENDER_WIDTHS=1240,390,375,360,320,310,300 node design/render-gate.mjs /`.
+  `RENDER_WIDTHS=1240,640,390,375,360,320,310,300 node design/render-gate.mjs /`. The **default** set is
+  `1240, 640, 390, 320` (D146): 320 is mandatory, and 640 is the `sm:` flip that lands inside the phone-landscape
+  band. The gate prints which breakpoints `src/` uses and names any flip the set does not measure.
 
 ## Copy
 
@@ -572,8 +575,19 @@ npm run check:space             # where emptiness is: per-surface painted share,
                                 # would take (matched by computed display, so a lg:grid that only exists at 1024px
                                 # is not missed). position:fixed elements are excluded and the count is printed.
 npm run check:rhythm            # the same page with each proposed spacing option applied to a COPY of dist, measured
-                                # at both widths: edges / edges+rules / interior / slots / all. Writes
+                                # at 1240, 390 and 320: edges / edges+rules / interior / slots / all. Writes
                                 # design/rhythm/report.json. Nothing here mutates the shipped artifact.
+npm run check:ground            # what the page PAINTS as its ground (largest region near --color-paper) in 8-bit
+                                # levels, a flat 64x64 window's span/sd, and what each painted `rule` hairline measures
+                                # off screenshot bytes - the only gate that can see a background-image, since every
+                                # other colour number here is parsed from a computed colour STRING and a texture or
+                                # photograph appears in none of them (D143, record 0020). Fails a hairline under 3.0
+                                # against the ground it is drawn on; a ring with a weaker second ground is a NOTE, not
+                                # a FAIL, until which side is the pair gets ruled. Writes design/ground/report.json.
+npm run check:ground:selftest   # four plantings the ground probe must tell apart, on a COPY of dist: the same flat
+                                # window must move, a ring behind a grain must move, the page's own CSS number must
+                                # NOT move (the blindness), and a body-only grain must NOT move the ring - fills
+                                # paint over the page ground, so a page texture reads only in the gaps (record 0020).
 node design/mark-pixels.mjs <shot> <report> [--crop out.png]   # what the mark actually painted in its box, by
                                 # colour cluster; --crop writes the box up 3x so you can look at what was clustered
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
@@ -584,12 +598,16 @@ npm run check:social:selftest   # prove the share-card checks can still fail (se
 npm run verify                  # the browser-free CI gate set (everything above except the pixel gates)
 ```
 
-**These pixel gates are cheap, and they are the ones CI does not run.** Measured on the dev rig (Linux, 16 CPU,
-Firefox 158.0.1, native): one page at one width **0.83–0.89s**, the 3x3 matrix **4.2s** at `RENDER_JOBS=4`
-(7.6s serialized), `check:render` with its build **8.3s**, the render selftest **4.7s**,
-`check:social:live` **1.3s** — the whole browser ritual is **~14s** (**D123**). `verify` stays browser-free
+**These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
+assumed.** Measured on the dev rig (Linux, 16 CPU, Firefox 159.0, native, 2026-11-03): one page at one width
+**0.9–3s**, `check:render:dist` over its **12 cells** (4 widths × 3 routes) **35s**, `check:mark` **3.8s**,
+`check:space` **9.1s**, `check:ground` **8.5s** and `check:ground:selftest` **15.4s**, the render selftest **12.3s**,
+`check:social:live` **1.4s** — `npm run verify:browser` end to end is **85.6s** (it was 44.7s before the width sets
+grew, D146). Every step's full output is written even when it passes, under `.design/tmp-gate-logs/` (**D144**), so a
+green run leaves the evidence rather than the word "ok". `verify` stays browser-free
 because the runner has no Firefox, which means `check:render`, `check:render:dist`,
-`design/render-gate-selftest.mjs` and `check:social:live` currently run on human ritual before a deploy, not on
+`check:mark`, `check:space`, `check:ground`, `check:ground:selftest`, `design/render-gate-selftest.mjs` and
+`check:social:live` currently run on human ritual before a deploy, not on
 every PR. The recommendation is to install Firefox in CI and add a `verify:browser` chain — `check:render:dist`
 after `verify`'s build, plus the selftests and the live card. Until someone does that, run them yourself before
 suggesting a merge.
