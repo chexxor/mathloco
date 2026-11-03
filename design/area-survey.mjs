@@ -32,7 +32,7 @@ const argList = (flag, dflt) => {
   return out;
 };
 const routes = argList('--routes', ['/']);
-const widths = argList('--widths', ['1240', '390']).map(Number);
+const widths = argList('--widths', ['1240', '390', '320']).map(Number);
 // `root` for "/" is the two surveys' own convention (design/color-survey.mjs and
 // design/whitespace-survey.mjs both name the record that way); matching it is not cosmetic — a wrong guess
 // here reads a file that does not exist and the pair is lost.

@@ -45,6 +45,7 @@
 // Records land in .design/tmp-ground/ (scratch: screenshots, per-width detail). The tracked artifact is
 // design/ground/report.json, because a design record has to be able to cite a number that still exists.
 import { execFileSync } from 'node:child_process';
+import { shotHeight } from './grill/shot-height.mjs';
 import { createHash } from 'node:crypto';
 import { mkdirSync, existsSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -62,7 +63,7 @@ const argList = (flag, dflt) => {
   return out;
 };
 const routes = argList('--routes', ['/']);
-const widths = argList('--widths', ['1240', '390']).map(Number);
+const widths = argList('--widths', ['1240', '390', '320']).map(Number);
 const JSONOUT = args.includes('--json');
 
 if (!existsSync(resolve('dist/client/index.html'))) {
@@ -250,7 +251,7 @@ for (const route of routes) {
   for (const w of widths) {
     const shot = `.design/tmp-ground/ground-${name(route) || 'root'}-${w}.png`;
     const probe1 = shoot('dist/client', route, w, 1200, '');
-    const pageH = Math.min(6000, Number(probe1?.doc?.scrollHeight ?? 0) || (w <= 390 ? 1400 : 2400));
+    const pageH = shotHeight(Number(probe1?.doc?.scrollHeight ?? 0), `${route} @ ${w}`);
     const report = shoot('dist/client', route, w, pageH, shot);
     if (!report) { console.error(`${route} @ ${w}: the page never posted — no measurement`); process.exit(1); }
     const m = await measureShot(shot, PAPER);
@@ -333,7 +334,7 @@ if (SELFTEST) {
   const shotFor = async (css) => {
     writeFileSync(page, clean.replace('</head>', `<style>${css}</style></head>`));
     const probe1 = shoot(copy, route, w, 1200, '');
-    const pageH = Math.min(6000, Number(probe1?.doc?.scrollHeight ?? 0) || 2400);
+    const pageH = shotHeight(Number(probe1?.doc?.scrollHeight ?? 0), `${route} @ ${w} (selftest)`);
     const report = shoot(copy, route, w, pageH, '.design/tmp-ground/selftest.png');
     return { report, m: await measureShot('.design/tmp-ground/selftest.png', PAPER, base.flat) };
   };

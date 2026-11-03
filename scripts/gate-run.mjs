@@ -25,11 +25,12 @@
 // accepted the artifact. If that ever stops being true on an upgrade, `--serial` is the fallback and this
 // file is the place to record the ordering.
 //
-// The browser set (`verify:browser`) is measured separately and runs only when asked: 44.7s wall for its 7
-// steps on this rig (2026-11-03, jobs=4, but wall == work because every step in it must be ALONE — each runs
-// its own Firefox pool, see the note in BROWSER). Its wall clock is one reason it is not in `verify`; the other
-// is that the runner needs Firefox, which is an operator call. The log capture below is what makes its output
-// survive a green run.
+// The browser set (`verify:browser`) is measured separately and runs only when asked: **85.6s wall for its 7
+// steps** on this rig (2026-11-03, jobs=4, wall == work because every step must be ALONE — each runs its own
+// Firefox pool, see the note in BROWSER). It was 44.7s before the width sets grew to 1240/640/390/320 (record
+// 0022); that is the price of measuring the breakpoints the code actually uses. Its wall clock is one reason it is
+// not in `verify`; the other is that the runner needs Firefox, which is an operator call. The log capture below is
+// what makes its output survive a green run.
 //
 // What is deliberately NOT here: `check:discord` (needs a bot token), `check:ai` (needs Groq credentials
 // and spends a model call), and the browser gates as a deploy gate (the runner has no Firefox — D123).

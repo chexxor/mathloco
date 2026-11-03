@@ -1,9 +1,10 @@
 {
- "measuredAt": "2026-11-03T05:22:54.495Z",
+ "measuredAt": "2026-11-03T05:41:53.193Z",
  "siteFp": "77d8dc87df",
  "widths": [
   1240,
-  390
+  390,
+  320
  ],
  "groundTol": 8,
  "bars": {
@@ -164,6 +165,86 @@
    "weakSides": [
     "3.01 on paper / 2.88 against panel (y=5414 x=43 len=136)",
     "3.01 on paper / 2.88 against panel (y=5461 x=43 len=136)"
+   ],
+   "headroom": {
+    "down": 0,
+    "clip": 3
+   },
+   "claimedKeylineContrast": [
+    3.01
+   ],
+   "bytesMinusCss": 0
+  },
+  {
+   "route": "/",
+   "width": 320,
+   "ground": [
+    252,
+    250,
+    246
+   ],
+   "groundExact": 856258,
+   "groundPct": 84.1,
+   "span": 7.666666666666686,
+   "sd": 2.66,
+   "flat": {
+    "x": 192,
+    "y": 0,
+    "size": 64,
+    "span": 0,
+    "sd": 0
+   },
+   "surfaces": [
+    {
+     "rgb": [
+      248,
+      245,
+      239
+     ],
+     "pct": 45.5
+    },
+    {
+     "rgb": [
+      252,
+      250,
+      246
+     ],
+     "pct": 38.3
+    },
+    {
+     "rgb": [
+      32,
+      57,
+      39
+     ],
+     "pct": 6.6
+    },
+    {
+     "rgb": [
+      71,
+      91,
+      76
+     ],
+     "pct": 1.2
+    }
+   ],
+   "distinct": 2000,
+   "hairlines": 8,
+   "hairlineMin": 3.01,
+   "hairlineMedian": 3.01,
+   "hairlineMax": 4.99,
+   "weakest": {
+    "y": 948,
+    "x": 19,
+    "len": 282,
+    "own": 3.01,
+    "other": 3.01,
+    "ownGround": "paper",
+    "otherGround": "paper"
+   },
+   "weakSides": [
+    "3.01 on paper / 2.88 against panel (y=6259 x=43 len=136)",
+    "3.01 on paper / 2.88 against panel (y=6306 x=43 len=136)"
    ],
    "headroom": {
     "down": 0,

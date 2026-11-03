@@ -34,7 +34,7 @@ so both locations stay clean. They are still scratch — do not commit them.
 | command | what it does | browser? |
 | --- | --- | --- |
 | `npm run verify` | the CI gate set; browser-free | no |
-| `npm run check:render` | build, then measure `dist/client` in Firefox: control geometry, painted contrast, bands, keylines, notices, nav fit, one display step, faces loaded, the hero mark | yes |
+| `npm run check:render` | build, then measure `dist/client` in Firefox: control geometry, painted contrast, bands, keylines, notices, nav fit, one display step, faces loaded, the hero mark. **Default width matrix 1240, 640, 390, 320** — 320 is mandatory (D114's floor: the gate refuses a default set that drops it) and 640 is the `sm:` flip that lands inside the phone band; the gate prints which breakpoints `src/` uses and names any flip the set does not measure (record 0022) | yes |
 | `npm run check:render:dist` | the same measurement on the `dist` that is already there (`--no-build`) — right after `verify`, or when a rebuild would undo what you are testing | yes |
 | `node design/render-gate.mjs [route…]` | the gate itself; it builds unless `--no-build`, runs its route × width matrix 4 ff at once (`RENDER_JOBS=1` to serialize), and retries a firefox that posted nothing once (`RENDER_ATTEMPTS`) | yes |
 | `node design/render-gate-selftest.mjs` | mutate the built page five ways, require `check:render` to FAIL each — proves the mark checks can still fail | yes |
@@ -63,11 +63,12 @@ so both locations stay clean. They are still scratch — do not commit them.
 | `node design/grill/okcolor.mjs --selftest` | the OKLab/OKLCH/contrast/hue-window/brand-distance maths one shared module, asserted against the numbers `DESIGN.md` and `.notes/DECISIONS.md` cite (paper–ink 12.02, gold 4.82, D88's 0.135, the 0.05 same-colour bar) **and** against the pixel-space form of the same distance (`oklabBytes`/`distLab`, so the survey's 0.05 pixel bar and the token drift bar are the same measurement). `color-survey.mjs`, `whitespace-survey.mjs`, `round9-palette.mjs`, `round9.mjs` and `round10-build.mjs` all import it, so a predictor and a survey cannot drift apart | no |
 | `node design/audit-references.mjs --stale` | exits 1 if any doc or script cites a design path that does not exist — scratch files never count as citable sources, so a temp log cannot turn the gate red (`--scratch` opts them back in) | no |
 
-Measured cost on this rig (16 CPUs, Linux, Firefox 158.0.1, native): one page at one width ≈ 0.9 s; the
-3 × 3 matrix serialized ≈ 7.8 s, at `RENDER_JOBS=4` ≈ 4.2 s; `check:render` with its build ≈ 8.3 s; the
-five-mutation render selftest ≈ 4.7 s; `check:social:live` ≈ 1.3 s. Four sequential 9-cell runs (36 cells)
+Measured cost on this rig (16 CPUs, Linux, Firefox 159.0, native, 2026-11-03): one page at one width ≈ 0.9–3 s;
+`check:render:dist` over its **12 cells** (4 widths × 3 routes) ≈ **35 s**; `verify:browser`, 7 steps each alone,
+≈ **86 s**; the twelve-mutation render selftest ≈ 12 s; `check:social:live` ≈ 1.4 s. Sequential runs of 9 cells
 posted cleanly; one serialized run of 9 needed a retry, which is why a cell gets two attempts — the
-harness's known flake is a firefox that starts and never posts. The browser gates are cheap; what keeps
+harness's known flake is a firefox that starts and never posts — seen again 2026-11-03 at `/404 @390`, where the
+cell passed standalone, so a red `check:render:dist` under load earns one solo re-run before anyone believes it. The browser gates are cheap; what keeps
 them out of `verify` is needing Firefox in the runner, which is an operator call (`.notes/NEXT.md`).
 
 ## the harness contract — four rules every probe here has to keep
@@ -92,6 +93,14 @@ them out of `verify` is needing Firefox in the runner, which is an operator call
    conditional `class={…}` inside the attribute, so class matching must compare whole tokens. And
    `position: fixed` rects are viewport-relative — exclude fixed content from any page-absolute walk and print how
    many elements were excluded, because a silent filter is how a measurement starts lying.
+5. **A shot has to contain the page, and a width set has to contain the breakpoints.** Take the height from the
+page's own settled report and use `grill/shot-height.mjs`'s `shotHeight()` — never an inline
+`Math.min(cap, scrollHeight)`. Three probes carried their own 6000px cap and the home page grew to **6978px at a 320
+viewport**, so every 320 number covered 6000px of a 6978px page while printing percentages of the frame: **815px of
+emptiness and two thirds of the reader-named colour were missing at the floor width** (record 0021).
+`shotHeight()` throws, naming the width, the real height and the cap. Same class at the horizontal axis:
+`render-gate.mjs` prints which Tailwind tiers `src/` uses and names any flip its width set does not measure, because
+320 → 390 → 1240 crossed none of them while `sm:` fired 23 times (record 0022).
 
 ## evidence — read these, they are dated
 
