@@ -104,6 +104,14 @@ function render() {
 // Honest limitation: `D1`..`D9` also occur as the Cloudflare product name ("the D1 binding"). Those count
 // as candidate citations. It costs an inflated count, not a wrong verdict: the gate fires on an id with no
 // entry, and every small id in this repo is defined.
+//
+// An encoded payload is not a citation, though. The generated specimens (`design/grill/round-12-art.html`,
+// `round-13-hero.html`) embed screenshots as base64, and a 3 MB blob contains the letter D followed by
+// digits by chance — one-, two- and three-digit ids that fire the gate on a file citing nothing. So data
+// URIs and any long base64 run are removed before matching. Cheap, and it keeps the D-one-vs-binding
+// trade the comment above accepts.
+const B64 = /data:[a-z0-9.+-]+\/?[a-z0-9.+-]*;base64,[A-Za-z0-9+/=]+/gi;
+const B64RUN = /"[A-Za-z0-9+/=]{80,}"|'[A-Za-z0-9+/=]{80,}'|[A-Za-z0-9+/]{200,}={0,2}/g;
 function citations() {
   const files = execFileSync('git', ['ls-files'], { cwd: root, encoding: 'utf8' }).split('\n').filter(Boolean);
   const by = new Map(); // id -> [file, ...]
@@ -115,7 +123,7 @@ function citations() {
     } catch {
       continue; // deleted-but-listed, or a symlink; not worth failing the gate over
     }
-    for (const m of text.matchAll(/\bD(\d{1,3})\b/g)) {
+    for (const m of text.replace(B64, ' ').replace(B64RUN, ' ').matchAll(/\bD(\d{1,3})\b/g)) {
       const id = Number(m[1]);
       if (!by.has(id)) by.set(id, []);
       const list = by.get(id);

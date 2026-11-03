@@ -166,5 +166,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D156** (2026-11-03) — A probe may not measure a build that is not its own tree's (2026-11-03, delegate)
 - **D157** (2026-11-03) — A review build is a build state, not a shell recipe — and it is the only way any gate sees the missing-content page (2026-11-03, delegate)
 - **D158** (2026-11-03) — A legibility floor is asserted on a stroke that paints, not on a cascade number — and one of A2's eight FAILs was a stroke that does not exist (2026-11-03, delegate)
+- **D159** (2026-11-03) — A base64 payload is not a citation, and a gate that reads its own source cannot contain the ids it hunts (2026-11-03, delegate)
 
-Defined: 158 (D1-D158). Unused ids: none.
+Defined: 159 (D1-D159). Unused ids: none.
