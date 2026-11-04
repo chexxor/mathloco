@@ -151,7 +151,7 @@ thing to enforce. **Never** use `rounded-lg`/`rounded-md` (Tailwind's ramp) on a
 | Token | Value | Use |
 |---|---|---|
 | `inset-shadow-rule` | `inset 0 0 0 1px` `rule` | every boundary on paper and on the band |
-| `inset-shadow-gold` | `inset 0 0 0 1px` `gold` | the caution variant of a notice |
+| `inset-shadow-gold` | `inset 0 0 0 1px` `gold` | the caution variant of a notice, and the only edge that is legal on a tint |
 | `inset-shadow-path-*` | 1px of the path hue | chip and tag keylines |
 | `shadow-e1` | `0 1px 2px rgba(32,57,39,.165)` | something that floats: a menu |
 | `shadow-e2` | `0 2px 5px -1px …,.22 + 0 12px 28px -6px …,.30` | something that floats over content |
@@ -159,6 +159,34 @@ thing to enforce. **Never** use `rounded-lg`/`rounded-md` (Tailwind's ramp) on a
 Level 1 measures **1.35** at the contact edge, level 2 **1.51** — both at or over the layer bar. The
 stops are ink-tinted on purpose: a black stop wide enough to read at a wide blur paints a 2.10 grey
 band.
+
+**A keyline is a PAIR, and `rule` is solved for two grounds, not for all of them.** `--color-rule`
+measures **3.01** on `paper`, **4.00** on the `ink` band, **2.88** on `panel` and **2.74** on `tint` — so
+on a tint it sits under the 3.0 graphic bar it was solved to clear. That is a measurement, not a
+taste call, and it is why the table says "on paper and on the band" rather than "everywhere".
+@measured 2026-11-03 by check:ground and check:render
+
+A ring is drawn ON A BOUNDARY, so it has two neighbours: the fill inside it (its own background, or
+whatever shows through an unfilled box) and the ground it stands on. The operator's ruling
+(D149-3c, 2026-11-03) is **a keyline may not straddle two grounds, and the fix is the placement, not
+the number**. What that means when choosing a token:
+
+- a `rule`-ringed box sits on `paper` or inside the band — never inside a `bg-panel` or `bg-tint`
+  region, and never carrying a `panel` or `tint` fill of its own;
+- a control that paints its own fill is ringed only where that fill **equals the ground it stands on**.
+  `bg-paper inset-shadow-rule` is the shipped secondary for exactly that reason, and it was a defect
+  the moment it moved inside the tinted join card;
+- a box on a tint carries **no** `rule` ring. If it needs an edge, the edge is the caution variant
+  (`inset-shadow-gold`: 4.61 on `panel`, 4.82 on `paper`, both over the 4.5 text bar) and the state has
+  to actually be a caution — that is what the grammar means, and using gold to rescue a `rule` ring
+  would be colour as decoration;
+- `panel` is 1.04 against `paper` (a tint, not a layer: the layer bar is 1.35), so a tint was never
+  doing the separation a ring does. Taking the ring off a tinted box costs no readable edge.
+
+`check:render` measures both sides of every inset ring on all three routes and fails a straddle or a
+ring under the bar; `check:ground` fails the same pair off painted bytes, where a background image
+could move the pixels and not the stylesheet. `design/records/0018-a-hairline-on-a-tint-is-under-its-
+own-bar.md` is the finding; `design/records/0024-*` is the fix.
 
 **Never** use a `border` for a keyline — it adds 2px and silently breaks the control-height
 arithmetic. **Never** put a shadow on a card, or on a hovered card: cards are part of the page.
@@ -209,7 +237,7 @@ how a block gets a second way out without a second button.
 | Component | Construction | Measured |
 |---|---|---|
 | primary | `ink` fill, `band-text` label, 48px | 10.19, hover 7.33 |
-| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint` | 12.02 / 10.96 |
+| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint`, and **on `paper` only** — a ringed control inside a tinted card straddles two grounds (D149-3c) | 12.02 / 10.96 |
 | quiet | `gold` label, 32px standalone; **no keyline inside a notice** | 4.82 |
 | chip | its own component, not a button: `ink-2` label on `path-*-tint`, `inset-shadow-path-*`, 24px | 6.27 label, 5.28–7.09 edge |
 
@@ -223,7 +251,14 @@ second colour.
 
 - A notice = **word + keyline** on the page's own ground: edge `inset-shadow-rule` (3.01 paper / 4.00
   band), word `ink`, body `ink-2`, meta `ink-3`, padding 12/16. One-line notice **48px**, two-line body
-  **64px**. Caution variant: `gold` keyline and word (4.82); on the band, `gold-on-ink` (5.80). No fill.
+  **64px**. Caution variant: `gold` keyline and word (4.82 on paper, 4.61 on a tint); on the band,
+  `gold-on-ink` (5.80). No fill.
+  **A notice's ground is `paper` or the band.** On a tint the `rule` edge reads 2.88, under the graphic
+  bar, so a notice is not drawn on `panel` at all: either the block moves to a paper ground, or the
+  state is the caution variant, which is a real claim (the gold grammar means "something is off") and
+  not a way to buy an edge. `WhyJoinUs.astro`'s empty-thread list is that case: the whole section is a
+  tint, there is no paper to move it onto, and an empty list is a fact about the page's wiring rather
+  than about the club.
   `check:render` measures every `role="status"` / `role="alert"` block in the built page and fails on a
   fill, on an inset other than 1px, on a keyline contrast that is not the rule (**3.01 in both the
   specimen and the built page** — D116), on text under the 4.5 bar, or on a block under 48px.
@@ -312,7 +347,7 @@ freshness.
 - **The label set is the mark plus `Chat`.** `Schedule` and `Members` were dropped on 2026-11-02 (D117):
   the build emits `index.html`, `chat/index.html` and `404.html` only, and `public/` has no redirect rules,
   so those two labels were links to the 404 page — on `main` as well as here. A nav item requires a page.
-  Measured with the probe `check:render` runs at every width: the row **needs 176px** against a container
+  Measured with the probe `check:render` runs at every width @measured 2026-11-03 by check:render: the row **needs 176px** against a container
   that offers 276 at a 320 viewport and 256 at 300. (This line said **171px** from 2026-11-02 to 2026-11-03 while the
   probe reported 176 at every width — a doc figure a probe contradicts is a doc bug; quote the probe's line.) `--breakpoint-nav-narrow` (370px) and the narrow
   `text-micro` nav tier went with the dead labels — a tier that fits everywhere is not a tier. An
@@ -506,6 +541,12 @@ and the screen can disagree.
   labelled "photo coming" is a production note wearing a visitor's clothes (`design/records/0010-missing-content-is-a-state.md`).
   A photo that exists **requires an `alt` describing what it shows**, or the build throws: an invented alt is the
   same defect as an invented photograph, and nothing renders it visually.
+  The **review** state (placeholder mode, reachable only from `src/content.local/`) draws the measured box with
+  `inset-shadow-gold` and **no fill**: a `rule` ring over a `tint` fill measures 2.74 inside / 3.01 or 2.88 outside,
+  which is a keyline straddling two grounds (D149-3c, record 0024), and inside a `bg-panel` region a `rule` ring is
+  illegal at any placement (2.88 on both sides). Gold reads 4.82 on paper, 4.61 on panel, one ground each side.
+  No browser gate can see this state on the shipped page, so it has to be right by construction; the review-build
+  recipe (`src/content.local/` + `check:render:dist`) is in record 0024.
 - **The aspect ratio is declared in CSS, never left to the file.** Tailwind preflight's `img { height: auto }`
   makes an HTML height attribute inert — the png this page shipped asked for `200x80` and rendered **200×192** —
   and a lazy image whose box is undeclared reflows the page: measured **2495px → 2607px, 112px**, which is also
@@ -514,11 +555,31 @@ and the screen can disagree.
   remembering them** (`npm run round10` fails if a matcher finds no such slot on the built page, and measures the
   drawing back to within 1px; the numbers come from `npm run check:space`, which walks grid/flex children by
   computed `display`, and the page labels its own places with `data-slot` so a specimen is not matching a slot to
-  a Tailwind class). At 1240 today: hero media column **376×564** with a **376×235** mark in it, so **329px of a
-  column the page already pays for paints nothing** — the reserved place is **376×250** above the mark, which costs
-  **no page height at all**. Join media column **532×128** at 1240 / **310×245** at 390: unlike the hero this is
-  **not spare air** — its height is the call-to-action's own height, so a photo there is a ~152px *growth*, worth
-  paying for a real photograph and not for a stock one; the call-to-action renders whether the photo does or not.
+  a Tailwind class). At 1240 the hero media column (`data-slot="PS-1"`) is **376x574** and it is **full**: the column stacks —
+  plate above, mark below, one property, `lg:flex-col` — and the plate's box is subtraction rather than a chosen
+  ratio, so the column is exactly used: **307 = 574 − 235 (mark at full column width) − 32 (`mb-8`)**. The mark
+  therefore keeps its full width (**372x232.5** as `check:render` sees it, 376x235 as `check:space` does) and its
+  thinnest stroke lands at **2.02–2.17px** against D119's 1px floor. @measured 2026-11-03 by check:space / check:render Filling the column the other way — plate and
+  mark as siblings competing for one column — put the mark at **188x118** and its stroke at **1.02px**, legal by
+  two hundredths and invisible as a plate (188x125 keeps 46% of a portrait leaf); that is why the round ruled the
+  stack. Cost, measured: the page does not grow at desktop (**4284 → 4284**) but grows **+314px at 390**, where the
+  hero is not a grid and the plate adds its own height; the page's chroma >= 0.08 share goes **0.014% → 0.274%**
+  at 1240, against **+2.63%** for the loud Byrne leaf record 0023 priced. The plate shipped is **56% of the Byrne
+  1847 Euclid IV.15 leaf** at **752x614** (2x, because a 3px hairline at 1x lands on half-pixels), built by
+  `npm run plates` from the same crop `npm run round13` measured (sha1 `308193c78a` both — the recipe is one
+  module, `design/grill/plate-crop.mjs`, so a review crop and a shipped asset cannot drift).
+  @measured 2026-11-03 by check:space / check:render / check:color / round13 (record 0025)
+  A side-effect worth knowing before anything else moves down the page: `check:mark` photographed a **fixed**
+  1400px window, and the plate pushed the mark to **y=1421 at 320** and to a box bottom of **1449.9 at 640**, so
+  the gate reported "no ink in the measured box" for a correctly painted mark. It now asks the page its settled
+  height (`grill/shot-height.mjs`) and shoots at that; `check:mark` costs 3.8s → **7.92s** for the pair of widths.
+  @measured 2026-11-03 by check:mark
+  Join media column **532×56** at 1240 (one paragraph) inside a grid row that is **326** tall; **310×85** at 390,
+  **240×113** at 320. It used to be **532×128** / **310×245** of call-to-action, which is what made round 10 call
+  a photo there "a ~152px *growth*, not a reclamation"; the two join actions now stand outside the tinted card
+  (D149-3c), so at 1240 a plate at the reserved ratio fits inside a row the copy column already sets, while at
+  390 the grid is one column and a plate is still a growth (~107px). The call-to-action renders whether the photo
+  does or not.
   *Proposed*: a venue strip **1192×320** at 1240 / **358×230** at 390, where 1192 and 358 are the widest containers
   the page reports, and an event-card thumb **323×110** inside the measured **371×205** card whose `p-6` leaves a
   **323×157** interior. The px figures move by ~4px depending on whether the document fits the window (a scrollbar
@@ -553,14 +614,16 @@ npm run check:design            # every design path a doc or script cites must r
 node design/ratify-check.mjs   # token block → Tailwind resolver + renderer contrast (exit 0 = all bars hold)
 npm run check:classes           # every written class resolves to CSS — catches a token used as a class that does not exist
 npm run check:render            # build, then measure dist/client in Firefox: control heights, measured contrast,
-                                # one dark band and the paths inside it, keyline grammar, notice grammar,
+                                # one dark band and the paths inside it, keyline grammar, the PAIR of every inset
+                                # ring (inside and outside, which is how a straddle is caught), notice grammar,
                                 # the nav's width probe, one display step, faces actually loaded, and the hero
                                 # mark (shape count, box ratio vs viewBox, per-shape contrast, device stroke).
                                 # Builds first unless --no-build; 4 firefox at once, one retry per cell.
 npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
                                 # or whenever a rebuild would undo the thing being measured
-node design/render-gate-selftest.mjs   # mutate the built page eleven ways (8 mark, 3 control) and require
-                                # check:render to FAIL each one — D118, applied to a pixel gate
+node design/render-gate-selftest.mjs   # mutate the built page fourteen ways (8 mark, 3 control, 1 notice
+                                # boundary, 2 inset ring) and require check:render to FAIL each one — D118,
+                                # applied to a pixel gate
 node design/mark-check.mjs      # npm run check:mark - both mark probes, at the two widths that bracket the
                                 # box (320: 276px wide, scale 1.15; 1240: 372px, scale 1.55). Needs a built dist.
 node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints. Two-pass: it asks
@@ -582,8 +645,15 @@ npm run check:ground            # what the page PAINTS as its ground (largest re
                                 # off screenshot bytes - the only gate that can see a background-image, since every
                                 # other colour number here is parsed from a computed colour STRING and a texture or
                                 # photograph appears in none of them (D143, record 0020). Fails a hairline under 3.0
-                                # against the ground it is drawn on; a ring with a weaker second ground is a NOTE, not
-                                # a FAIL, until which side is the pair gets ruled. Writes design/ground/report.json.
+                                # against the ground it is drawn on, AND a hairline whose two sides are different
+                                # grounds with the weaker side under the bar — a keyline may not straddle two
+                                # grounds (D149-3c, record 0018); the placement is the fix, not the number.
+                                # A run counts as a keyline only if its core carries the --color-rule bytes (within
+                                # 14 levels): the detector otherwise matches a line of ink-3 small print, and a bar
+                                # that can fire on typography is not a gate (record 0024). Rejected runs are named
+                                # in the report, and GROUND_VERBOSE=1 prints them. Two attempts per cell, like
+                                # check:render, because the harness's firefox-that-never-posts flake reddened a run
+                                # that had nothing to report. Writes design/ground/report.json.
 npm run check:ground:selftest   # four plantings the ground probe must tell apart, on a COPY of dist: the same flat
                                 # window must move, a ring behind a grain must move, the page's own CSS number must
                                 # NOT move (the blindness), and a body-only grain must NOT move the ring - fills
@@ -599,10 +669,10 @@ npm run verify                  # the browser-free CI gate set (everything above
 ```
 
 **These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
-assumed.** Measured on the dev rig (Linux, 16 CPU, Firefox 159.0, native, 2026-11-03): one page at one width
-**0.9–3s**, `check:render:dist` over its **12 cells** (4 widths × 3 routes) **35s**, `check:mark` **3.8s**,
-`check:space` **9.1s**, `check:ground` **8.5s** and `check:ground:selftest` **15.4s**, the render selftest **12.3s**,
-`check:social:live` **1.4s** — `npm run verify:browser` end to end is **85.6s** (it was 44.7s before the width sets
+assumed.** @measured 2026-11-03 by `npm run verify:browser` — re-run it to refresh these. Measured on the dev rig (Linux, 16 CPU, Firefox 159.0, native, 2026-11-03): one page at one width
+**0.9–3s**, `check:render:dist` over its **12 cells** (4 widths × 3 routes) **36.6s**, `check:mark` **3.8s**,
+`check:space` **9.3s**, `check:ground` **8.7s** and `check:ground:selftest` **15.7s**, the render selftest **12.3s**,
+`check:social:live` **1.5s** — `npm run verify:browser` end to end is **87.8s** (it was 44.7s before the width sets
 grew, D146). Every step's full output is written even when it passes, under `.design/tmp-gate-logs/` (**D144**), so a
 green run leaves the evidence rather than the word "ok". `verify` stays browser-free
 because the runner has no Firefox, which means `check:render`, `check:render:dist`,

@@ -141,7 +141,15 @@
       {/if}
       {#each data?.channels ?? [] as channel (channel.id)}
         {@const summary = summaries.get(channel.id)}
-        <div class="bg-panel rounded-card overflow-hidden inset-shadow-rule">
+        <!-- One ground, one edge (D149-3c, record 0018): this card used to carry BOTH a `panel` fill and an
+             `inset-shadow-rule` ring, which puts 2.88 (`rule` on panel) on the inside of the ring and 3.01
+             (`rule` on paper) on the outside - a keyline straddling two grounds. `check:render` now measures
+             both sides of every inset ring, and this branch is exactly what it cannot see: the channel cards
+             only exist once the Discord fetch succeeds, so the gate's dist page never renders them. The fill
+             is the half that goes, because the ring is this component's own grammar - the pending and failed
+             states above are ring-and-no-fill notices measured at 3.01 - and a tint that is not a layer (panel
+             is 1.04 against paper) was never doing the separation. -->
+        <div class="rounded-card overflow-hidden inset-shadow-rule">
           <div class="px-4 py-3">
             <span class="text-label font-medium text-ink">#{channel.name}</span>
           </div>

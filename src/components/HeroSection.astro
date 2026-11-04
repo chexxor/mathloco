@@ -123,19 +123,27 @@ const focus = value(content.focus);
     </div>
     <div
       data-slot="PS-1"
-      class='mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-4 lg:flex lg:items-center'
+      class='mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-4 lg:flex lg:flex-col lg:justify-center'
     >
-      <!-- PS-1, the hero media column, reserved for a real photograph (round 10 ruling). `check:space`
-           measures this column at 376x564 at 1240, and the mark below paints 376x235 of it — so 329px of
-           a column the page is already paying for paints nothing. The reserved place is 376x250 (3:2), which
-           sits above the mark and lands the column at ~517 of its 564 without moving the row's geometry. It
-           renders nothing until `src/assets/photos/hero.<ext>` exists: the mark is this slot's empty state,
-           not a grey box. Below 1024 the hero stops being a grid, which is why the mobile figure is the mark
-           alone at 346x216 rather than a scaled version of these numbers. -->
+      <!-- PS-1, the hero media column. `check:space` measures it at **376x574** at 1240, and it held only the
+           mark (376x235), so 339px of a column the page already pays for painted nothing. Round 13 measured
+           seven ways to fill it and the operator ruled **option C** (2026-11-03): the column stacks — plate above,
+           mark below, which is one property, `flex-col` — and the plate takes what the mark does not need:
+           **307 = 574 − 235 (mark) − 32 (`mb-8`)**. So the column is exactly full and the desktop page is **+
+           0px** at 1240. The plate is `src/assets/photos/hero.png` — Byrne 1847 Euclid IV.15, 56% of the leaf,
+           built by `npm run plates` from the same crop `npm run round13` measured (sha1 `308193c78a` both).
+           What the composition buys, measured: the mark keeps its full column width (376x235), so its thinnest
+           stroke lands at **2.04px** against the 1px floor (D119) instead of 1.02px, and the plate is a plate
+           rather than a postage stamp. What it costs, measured: the page's chroma >= 0.08 share goes **0.014% ->
+           0.297%** (one coloured slot is D149-2b's ruling, and record 0023 priced the loud alternative at
+           +2.63%), and below 1024 the hero is not a grid, so the plate adds its own height to the scroll:
+           page **5859 -> 6245 (+386px)** at 390, where the plate renders 358x292 and the mark 358x224.
+           @measured 2026-11-03 by check:space / check:render (round 13: design/grill/round13/report.json) -->
       <PhotoSlot
         slot="hero"
-        ratio="376 / 250"
-        caption="a real meeting: the table, the books, the room (376x250 crop)"
+        ratio="376 / 307"
+        alt="Detail of a coloured engraving after John Byrne's 1847 Euclid: a circle with an equilateral hexagon inscribed in it and the diameters drawn through its centre (Book IV, proposition XV)"
+        caption="a real meeting: the table, the books, the room (376x307 crop)"
         class="mb-8"
       />
       <!-- No frame, no fill, no keyline around the mark. The `rounded-card overflow-hidden` wrapper here

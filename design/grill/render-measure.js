@@ -17,7 +17,7 @@
 //     measured while PT Serif is still loading is a fallback metric, so this ships in the output.
 (() => {
   const T0 = Date.now();
-  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], notices: [], nav: null, marks: [], shadows: [], text: [], fonts: [] };
+  const out = { done: false, errors: [], vw: innerWidth, vh: innerHeight, controls: [], bands: [], keylines: [], rings: [], notices: [], nav: null, marks: [], shadows: [], text: [], fonts: [] };
   const send = (payload) => {
     out.done = true;
     Object.assign(out, payload);
@@ -226,6 +226,46 @@
     };
   }).filter(Boolean);
 
+  // Inset rings: the ratified hairline in this system is a 1px INSET box-shadow (`--inset-shadow-rule`,
+  // DESIGN.md "Elevation"), which the `keylines` probe above cannot see at all — box-shadow is not a border.
+  // A ring is drawn ON A BOUNDARY, so it has two neighbours: the fill inside it (its own background, or
+  // whatever shows through an unfilled box) and the ground it stands on behind it. DESIGN.md's ground
+  // definition says a contrast number is a PAIR, and the operator's ruling of 2026-11-03 (D149-3c) is that a
+  // keyline may not straddle two grounds — which is a measurement, not a taste: record 0018 measured
+  // `--color-rule` at 3.01 on paper, 2.88 on `panel` (UNDER the 3.0 graphic bar) and 4.00 on the ink band.
+  // So both sides get measured here, and design/render-gate.mjs asserts they are one pair and that the pair
+  // clears the bar. `isRule` names whether the ring carries the `rule` token, because that is the token with
+  // the known ground dependence.
+  const ringToken = (() => {
+    const v = getComputedStyle(document.documentElement).getPropertyValue('--color-rule').trim();
+    return v ? paintBytes(v) : null;
+  })();
+  const sameBytes = (a, b) => !!a && !!b && Math.abs(a.r - b.r) <= 2 && Math.abs(a.g - b.g) <= 2 && Math.abs(a.b - b.b) <= 2;
+  const rings = all.map((el) => {
+    const cs = getComputedStyle(el);
+    if (cs.boxShadow === 'none') return null;
+    const layer = cs.boxShadow.split(/,(?![^(]*\))/).find((s) => /\binset\b/.test(s));
+    if (!layer) return null;
+    const cm = layer.match(/^\s*((?:oklch|oklab|lch|lab|rgb|rgba|hsl|hsla|color)\([^)]*\))/);
+    if (!cm) return null;
+    const thickness = Math.max(...(layer.match(/-?[\d.]+px/g) ?? []).map((x) => Math.abs(parseFloat(x))));
+    const rb = paintBytes(cm[1]);
+    if (!rb) return null;
+    const inner = painted(el);                      // the element's own fill, or whatever shows through it
+    const outer = painted(el.parentElement || el);  // the ground the element stands on
+    const r = el.getBoundingClientRect();
+    return {
+      cls: (el.getAttribute('class') || '').slice(0, 100), tag: el.tagName.toLowerCase(),
+      raw: cm[1], inset: thickness, isRule: sameBytes(rb, ringToken),
+      fill: cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : cs.backgroundColor,
+      w: +r.width.toFixed(1), h: +r.height.toFixed(1),
+      inside: opaque(inner) ? ratio(rb, inner) : null,
+      outside: opaque(outer) ? ratio(rb, outer) : null,
+      innerBytes: inner ? [inner.r ?? inner.lr, inner.g ?? inner.lg, inner.b ?? inner.lb] : null,
+      outerBytes: outer ? [outer.r ?? outer.lr, outer.g ?? outer.lg, outer.b ?? outer.lb] : null,
+    };
+  }).filter(Boolean);
+
   // Notices and states (DESIGN.md "Notices, status words, freshness" + "States"): a word plus an
   // INSET keyline on the page's own ground, no fill, heights by arithmetic (D98: one-line 48px,
   // two-line body 64px). Measured so a height reservation (min-h-*) is a number rather than a guess.
@@ -245,6 +285,9 @@
     const sc = layer.match(/^\s*((?:oklch|oklab|lch|lab|rgb|rgba|hsl|hsla)\([^)]*\))/);
     return {
       role, h: +r.height.toFixed(1), w: +r.width.toFixed(1),
+      // Page-absolute, not viewport: a specimen that wants to photograph a notice needs WHERE it is, and the
+      // shot the harness takes is of the whole page (grill round 13's Q2 pair, D160). Size alone cannot crop.
+      x: +(r.x + scrollX).toFixed(1), y: +(r.y + scrollY).toFixed(1),
       cls: (el.getAttribute('class') || '').slice(0, 80),
       text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60),
       inset: thickness,
@@ -322,12 +365,17 @@
     const scale = vb[2] ? r.width / vb[2] : NaN;
     const shapes = [...svg.querySelectorAll('circle,path,rect,line,polygon,polyline,ellipse')].map((el) => {
       const cs = getComputedStyle(el);
+      // `stroke-width` computes even when nothing strokes: the SVG initial value is 1, and a filled shape styled
+      // `stroke: none` still carries it. Measuring that 1 as a stroke is how the mark's meeting point — a filled
+      // disc, no stroke at all — failed the 1px legibility floor at every drawn size under 1.0 scale. So the
+      // cascade number and the paint number are reported separately, and the floor is asserted on the paint.
       const sw = parseFloat(cs.strokeWidth) || 0;
       const sc = cs.stroke && cs.stroke !== 'none' ? parse(cs.stroke) : null;
       const fc = cs.fill && cs.fill !== 'none' ? parse(cs.fill) : null;
       return {
         tag: el.tagName.toLowerCase(),
         stroke: cs.stroke, fill: cs.fill,
+        strokePaints: cs.stroke !== 'none',   // is there a stroke at all — opacity and contrast are measured separately
         sw, swDevice: +(sw * (scale || 0)).toFixed(2),
         // computed, so it is in device px: a dash declared in viewBox units is only a depth cue if it still
         // arrives at the size the mark is actually drawn at (the hero on a 320px viewport scales the 240-unit
@@ -403,7 +451,7 @@
     },
     overflowX: document.documentElement.scrollWidth > innerWidth + 1
       ? document.documentElement.scrollWidth - innerWidth : 0,
-    controls, bands, keylines, shadows, text,
+    controls, bands, keylines, rings, shadows, text,
     fonts: (() => { const a = []; document.fonts.forEach((f) => a.push(`${f.family} ${f.weight} ${f.style} ${f.status}`)); return a; })(),
     notices,
     nav,

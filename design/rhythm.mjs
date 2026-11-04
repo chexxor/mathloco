@@ -70,6 +70,11 @@ if (!existsSync('dist/client/index.html')) {
   console.error('dist/client/index.html missing — run npm run build first');
   process.exit(1);
 }
+// A rhythm table measured off the previous branch's build is a table about line boxes that no longer exist
+// (design/dist-fresh.mjs) — which is the one thing an R6 ruling cannot afford.
+import { distState, staleLine } from './dist-fresh.mjs';
+const STALE = distState();
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:rhythm: ${staleLine(STALE)}`); process.exit(1); }
 mkdirSync('.design/tmp-rhythm', { recursive: true });
 mkdirSync('design/rhythm', { recursive: true });
 

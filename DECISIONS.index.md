@@ -1,0 +1,174 @@
+# Decision index - generated, do not edit
+
+One line per durable decision. The **reasoning** lives in `.notes/DECISIONS.md`, which is
+gitignored (host-local): this file is the part that travels, so that a citation in tracked
+code resolves to something on a fresh clone. Regenerate with `node scripts/decision-index.mjs`;
+`npm run check:decisions` keeps it honest and fails on a citation with no entry.
+
+**Ids are append-only. Never renumber one** - the citations are baked into tracked code comments,
+and a renumber silently re-points every one of them at a different decision.
+
+- **D1** — npm is the only package manager; one lockfile
+- **D2** — Tailwind 4 via `@tailwindcss/vite`, theme in CSS, no JS config
+- **D3** — Summaries render as escaped text blocks, never `{@html}`
+- **D4** — Clients get a generic 502; the cause goes to server logs only
+- **D5** — Raw Discord messages and usernames are no longer cached or served
+- **D6** — The KV summary cache is *optional in code* and *commented in wrangler.toml*
+- **D7** — Serve stale summaries for up to 7 days when Discord/Claude fail
+- **D8** — Tolerate the three `deepmerge` lows behind an explicit allowlist gate
+- **D9** — Two `overrides` in package.json
+- **D10** — Install scripts are allowlisted per exact version
+- **D11** — Cloudflare bindings via `import { env } from 'cloudflare:workers'`
+- **D12** — Claude: `claude-haiku-5-5` default, no sampling parameters, 30 s timeout, 2 retries
+- **D13** — `.gitignore`: `.drizzle.env/` → `.drizzle.env`
+- **D14** — Skills: lock-managed vs local-only split
+- **D15** — Discord access pre-flight as a committed script (`npm run check:discord`)
+- **D16** — Cache rules get tested against a fake KV namespace, offline by default
+- **D17** — Model output is HTML on purpose; the parser is load-bearing, not defensive
+- **D18** — Skills stay narrowly scoped
+- **D19** — The class gate asks two oracles, and reports which one answered
+- **D20** — Keep the data layer: SQLite locally, D1 in production (operator ruling, reverses my recommendation)
+- **D21** — Database target is an argument, never an inference
+- **D22** — `drizzle-kit check` in CI, via a credentials-free config
+- **D23** — Images are compiled at build time; the landing page is prerendered
+- **D24** — The social share card is a committed generator, not a committed picture
+- **D25** — Do not change `site`/canonical without the operator, even though it currently points at a dead host
+- **D26** — Cadence copy: "Monthly", and never hardcoded again
+- **D27** — Events/syndication: our DB is the source of truth, ICS is the primitive, Meta is unresearched
+- **D28** — Clock-in loads skills; stale skill text is fixed in the commit that makes it stale
+- **D29** — Defer the SUMMARY_CACHE KV namespace: it is not warranted at this traffic, and cost was never the reason
+- **D30** — Branch scope: this branch stays "simple"; caching/abuse/consent/events go to a follow-up
+- **D31** — One pinned Node (22.23.4) for local, CI and Pages; `.nvmrc` is the lever, `engines` is not
+- **D32** — Cloudflare spend is capped at $1/month, which means: stay on Workers Free and never flip the plan — _amended in place_
+- **D33** — Workers AI vs Claude for the summaries: cost is not the argument, username leakage is
+- **D34** — Pages→Workers: plan it in a runbook, treat Cloudflare's generic prompt as a starting point, and skip
+- **D35** (2026-10-30) — Hero-photo consent: granted by the operator (2026-10-30). Provenance still not recorded.
+- **D36** — Canonical host is the apex. `www` gets a record + one zone redirect, not a config change.
+- **D37** — Deploy target is Workers. Pages is legacy: it cannot run this artifact's server side.
+- **D38** — The apex is attached by a **route**, not a Custom Domain. Forced, and cheaper.
+- **D39** — Pages stays as a rollback for now; only its production auto-deploy is urgent to switch off.
+- **D40** — `check:deploy` is the last step of `verify`, because trigger loss is a silent prod outage.
+- **D41** — The API response contract is `{channelId, summary, timeRange}`; the raw-message exposure is already gone.
+- **D42** — A production `wrangler deploy` is the operator's, unless they explicitly delegate it; `git push` never is.
+- **D43** — The free plan's 10 ms/request CPU ceiling is a design constraint, so `src/` does its own `fetch` instead of importing service SDKs.
+- **D44** — `SUMMARY_CACHE` KV is bound now; the free cap is per-day, not per-month, and per-isolate caching was the wrong shape.
+- **D45** — Previews get their own KV namespace, and `check:deploy` pins the ids so a copy-paste cannot aim a branch at prod's cache.
+- **D46** — `check:deploy` also budgets artifact bytes, because bundle size is a CPU measurement you can take before deploying.
+- **D47** — CI is a Cloudflare repo hook (Workers Builds), not GitHub Actions.
+- **D48** — Do not add a Cloudflare Cron Trigger to this Worker; the entrypoint has no `scheduled` handler.
+- **D49** — KV + the 7-day stale grace turn an upstream failure into a slow degradation, which changes how urgent a watchdog is.
+- **D50** — Per-request CPU is measured on a throwaway probe Worker, because a Preview cannot be tailed.
+- **D51** — `check:deploy` also proves Astro's manifest was injected, because a build can be green and the artifact still undeployable.
+- **D52** — The unsubstituted-manifest artifact is caused by an interrupted build, not an Astro bug
+- **D53** — Repo-hook field values are settled; `verify` stays credential-free and is the build command
+- **D54** — The apex is claimed by a **Custom Domain declared in `wrangler.toml`**, with the old route kept as a bridge
+- **D55** — The leftover `@ CNAME → mathloco.pages.dev` gets **deleted**, never repointed, with `AAAA @ → 100::` proxied as the rollback
+- **D56** — The deploy pipeline is the repo hook, proven; rollback is a **Worker version**, not Pages
+- **D57** — `www` comes back as a dummy proxied record + one edge Redirect Rule; the canonical stays the apex
+- **D58** — Rotate `CLAUDE_API_KEY`; the Pages project stored it as `plain_text`
+- **D59** — `www` is one proxied `CNAME www → apex`; the zone supplies a path-preserving 301 for free
+- **D60** — Credentials live in exactly two Cloudflare places, and `.dev.vars` is a third that can go stale silently
+- **D61** — Tailwind's automatic content scan compiles skill docs into the production stylesheet
+- **D62** — The site has two accents and no ruling; contrast arithmetic, not taste, decides the ink
+- **D63** — Two links in the primary nav 404 on production today, and the 404 page repeats them
+- **D64** — The declared type stack does not ship: `"Inter var"` is a phantom, PT Serif does
+- **D65** — The design critique was delivered as notes, not as edits
+- **D66** — The watchdog is deferred, and GitHub must not become load-bearing; self-hosting stays open
+- **D67** — Design provenance: the visual surface is an adopted starter, and git authorship hides that
+- **D68** (2026-10-31) — two jobs, three planes — and nothing upstream of your own data
+- **D69** — do not automate the Meetup RSS feed
+- **D70** — fix the interface, defer the writer
+- **D71** — outbound email is not inside the $1 ceiling — so own the list, outsource the send
+- **D72** — the .ics contract, grounded in RFC 5545 (rfc5545.txt, 344,950 B)
+- **D73** (2026-10-31) — Mobilizon is the club of record; mathloco publishes, it does not author
+- **D74** — a Mobilizon contract gate is mandatory, because upstream says the API moves
+- **D75** — the D1 layer's justification is gone — reversal needs an explicit yes
+- **D76** — Meetup consent policy is not retrievable with curl — a browser pass is required
+- **D77** (2026-10-31) — consent policy modelled on Meetup's — and the organizer, not the platform, is the controller
+- **D78** — Meetup's ToS bans *commercial* extraction, and names the API License Terms as the sanctioned path
+- **D79** (2026-10-31) — the design revamp outranks the events rearchitecture, and it designs *for* the end-state surfaces
+- **D80** — the visual pass works with native Firefox + the local vision model — and its findings are hypotheses
+- **D81** — The character is playful, on purpose, and "playful" has a definition
+- **D82** — Today's palette has no rationale (measured), and gold needs two values to be usable
+- **D83** — Content the operator wants, and the one item that turns private data into public content
+- **D84** — Interests: the unit of consent is the unit of announcement, and Discord holds the membership
+- **D85** — Member-voice content: three fixed questions, verbatim, first name by default
+- **D86** — The site's graphic language comes from the club's own diagram, not from stock people photos
+- **D87** — the "highest rated" item goes in as a dated number, not a superlative and not a star badge
+- **D88** — the commerce read is carried by bright high-chroma warm fill: the shipped amber *is* Amazon orange
+- **D89** (2026-10-31) — The light theme is the theme; the dark is ink, not a surface. Ink = chalkboard green-black (2026-10-31)
+- **D90** (2026-10-31) — A specimen's facts are bracketed, never invented - and a feed defect is a design requirement (2026-10-31)
+- **D91** (2026-10-31) — Layout defects are measured in the browser and read off one pixel; the vision model only transcribes (2026-10-31)
+- **D92** (2026-10-31) — Cadence is three things, not one - so the site publishes series, never a frequency (operator, 2026-10-31)
+- **D93** (2026-10-31) — The club already pays Meetup "hundreds of dollars per year" - which re-opens the money premise (operator, 2026-10-31)
+- **D94** (2026-10-31) — The sphere diagram is the operator's own work, and no other club photos exist (2026-10-31)
+- **D95** (2026-10-31) — The web type and numeric scales are settled: serif content + one variable chrome face, S3 spacing, T3 ramp, 150/250ms (operator, 2026-10-31)
+- **D96** (2026-10-31) — A bundle byte count is not a download - measure what the browser fetches before spending a token on it (2026-10-31)
+- **D97** (2026-10-31) — A `file://` page can POST to `127.0.0.1`, so browser measurements come back as text (2026-10-31)
+- **D98** (2026-10-31) — A control's height is arithmetic, not decoration - so the height ladder is derived, and keylines are inset shadows (2026-10-31, round 6)
+- **D99** (2026-10-31) — One boundary role serves both grounds; it is the *fills* that need a dark set, not the rules (2026-10-31, round 6)
+- **D100** (2026-10-31) — The nav shape is chosen by width arithmetic, and "one row on mobile" costs one breakpoint (operator, 2026-10-31)
+- **D101** (2026-10-31) — Contrast decisions are computed by the renderer, and the pairs are typed (text / keyline / layer / over) (2026-10-31)
+- **D102** (2026-11-01) — A state is a word plus a keyline, never a fill — and this system is forbidden a signal hue (2026-11-01 UTC, round 7 answered: Q1 A)
+- **D103** (2026-11-01) — Every state has to convert: empty, stale, loading, failed — and the site may not claim an age it cannot compute (2026-11-01 UTC, round 7 answered: Q2 A, Q3 A, Q4 A)
+- **D104** (2026-11-01) — Status is a word, because a chip costs a line and a strike becomes the only cue (2026-11-01 UTC, round 7 answered: Q5 A)
+- **D105** (2026-11-01) — A shadow either clears 1.35 or it is decoration — so hairlines mean "on the page" and shadows mean "above it" (2026-11-01 UTC, round 7 answered: Q6 A)
+- **D106** (2026-11-01) — The path hue is the date colour — the calendar row carries its own colour, no dot (2026-11-01, round 8 answered: A)
+- **D107** (2026-11-01) — Ratify is complete: the token block is the vocabulary, and names carry roles not appearances (2026-11-01, operator blanket delegation; full text in `design/records/0001-0009`)
+- **D108** (2026-11-01) — Missing content is a state with designed content — never a blank, and never a build failure (operator ruling, 2026-11-01; `design/records/0010`)
+- **D109** (2026-11-01) — A past or cancelled event is never inside the upcoming section; whether it shows at all is deferred (operator ruling, 2026-11-01; `design/records/0011`)
+- **D110** (2026-11-01) — A design gate has to measure the built page, not the source: `npm run check:render` (2026-11-01, apply batch 3)
+- **D111** (2026-11-01) — The chrome face is declared against the vendor file, not imported, because the package has no latin-only entry point (2026-11-01, apply batch 4a)
+- **D112** (2026-11-01) — The display step belongs to the screen's primary locator — and the locator can move (operator ruling, 2026-11-01; apply batch 4b)
+- **D113** — The nav tier is a token, and D100's fit numbers were scrollbar-free (apply batch 4d)
+- **D114** — The site's floor is 320px, and the floor is a gated claim (operator ruling, apply 4d/4e)
+- **D115** — The footer band is the site's exit, not a slogan — and the infinite pulse is retired
+- **D116** — Contrast is measured on painted bytes: the harness's own OKLab arithmetic was 0.1–0.3 low
+- **D117** (2026-11-02) — A nav item is a promise about a page — and two of ours promised nothing (operator ruling, apply 4f, 2026-11-02)
+- **D118** (2026-11-01) — The share card is composed by the browser from `@theme`, and its gate reads the JPEG's painted bytes (2026-11-01, apply 4g)
+- **D119** (2026-11-01) — Below ~24px a glyph never reaches full coverage, so colour identity is a byte claim only above it (2026-11-01)
+- **D120** — The landing hero's
+- **D121** — The mark now
+- **D122** — 
+- **D123** — (browser gates are cheap: parallel measurement, port 0, and a retry — the "~4 minutes" in the queue
+- **D124** (2026-11-03) — (**proposed, pending the operator's ruling on who performs the merge** — staging as a branch that — _amended in place_
+- **D125** — (**a type-size change is decided against measured characters-per-line and measured control height, not
+- **D126** — (**the mark's geometry was a misreading of the operator's own figure, and the fix is a *sphere* you can
+- **D127** — 
+- **D128** — (**"the site is drab" is a measurable claim, and the loudest colour on our landing page is Meetup's
+- **D129** (2026-11-02) — (**a colour round's questions are arithmetic before they are taste** — grill round 9, 2026-11-02,
+- **D130** — (**"mostly whitespace" is an area problem, not a colour problem — and the loudest thing on the page was
+- **D131** (2026-11-02) — 
+- **D132** — 
+- **D133** (2026-11-03) — . Round 10: a third party's mark is not our brand colour, and platforms are named in our type
+- **D134** (2026-11-02) — A measurement instrument is part of the measurement: whole-page settled crops, and cached runs fingerprint the build (2026-11-02, delegate; fixes to D132's evidence)
+- **D135** (2026-11-02) — Photo slots are a component with a name on the page, not a size in a doc (2026-11-02, executing D132)
+- **D136** (2026-11-02) — A `Math.random()` member count is removed from the join card; a real number needs the operator (2026-11-02, delegate — flagging a change I made while executing D132)
+- **D137** (2026-11-03) — `verify` runs as a staged runner; colour and emptiness are issued as one measurement; a round's report JSON is tracked (2026-11-03, delegate — the three accepted wall-clock proposals)
+- **D138** (2026-11-03) — One content layer with a source beside every claim; placeholders are review-only and gated (2026-11-03, operator: "use placeholders for missing content")
+- **D139** (2026-11-03) — The 44px tap bar beats the 40px secondary: primary and secondary are one height (2026-11-03, operator ruling on a finding)
+- **D140** (2026-11-03) — A control names its role in the markup; the height rules read the name, never a class substring (2026-11-03, operator approved)
+- **D141** (2026-11-03) — A notice is one boundary: its actions stand outside the ring, and inside one an action is a quiet label (2026-11-03, operator ruling, implemented)
+- **D142** (2026-11-03) — A gate step that runs its own browser pool gets a wave to itself (2026-11-03, delegate — found as a red `verify:browser`)
+- **D143** (2026-11-03) — A ground texture has zero headroom in this palette — measured, unruled (2026-11-03, operator question) — _amended in place_
+- **D144** (2026-11-03) — A green gate run has to leave its evidence behind (2026-11-03, delegate call; operator accepted the proposal in principle)
+- **D145** (2026-11-03) — A gate that reads colour strings cannot see a ground — so one gate now reads pixels (2026-11-03, delegate build under D143)
+- **D146** (2026-11-03) — Gates measure the breakpoints the code uses, and a probe may not measure less than the page (2026-11-03, delegate build; the width question is the operator's)
+- **D147** (2026-11-03) — Public-domain book art is a colour decision, priced before it is chosen (2026-11-03)
+- **D148** (2026-11-03) — Deferrals the delegate chose, on the operator's delegation (2026-11-03)
+- **D149** (2026-11-03) — Operator rulings, 2026-11-03 (the art/rhythm round): line art is the identity, one coloured slot, no code-only rhythm round, ICS feed
+- **D150** (2026-11-03) — The next milestone is set; and the ICS is ours to *publish*, which unblocks it (2026-11-03, operator)
+- **D151** (2026-11-03) — The memory that travels: a tracked decision index, a tracked milestone file with exit criteria, and dated measured numbers (2026-11-03, operator: "Fix all the items you mentioned… Tracked Decisions and Milestones is good")
+- **D152** (2026-11-03) — Integrations live in `integrations/` with a boundary, not a manifest — and the website's `package.json` stays the site's (2026-11-03, operator's constraint; plan only, no code shipped)
+- **D153** (2026-11-03) — Mobilizon 5.2.4's ICS export is not conformant, and that decides the architecture (2026-11-03, measured)
+- **D154** (2026-11-03) — The straddle ruling is now enforced by two gates, and a `rule` ring cannot live in a tinted region at all (2026-11-03, delegate, closing D149-3c)
+- **D155** (2026-11-03) — The index gate caught its own staleness on the first day, and that fixed the merge order (2026-11-03, delegate)
+- **D156** (2026-11-03) — A probe may not measure a build that is not its own tree's (2026-11-03, delegate)
+- **D157** (2026-11-03) — A review build is a build state, not a shell recipe — and it is the only way any gate sees the missing-content page (2026-11-03, delegate)
+- **D158** (2026-11-03) — A legibility floor is asserted on a stroke that paints, not on a cascade number — and one of A2's eight FAILs was a stroke that does not exist (2026-11-03, delegate)
+- **D159** (2026-11-03) — A base64 payload is not a citation, and a gate that reads its own source cannot contain the ids it hunts (2026-11-03, delegate)
+- **D160** (2026-11-03) — A question answered by looking gets pictures of every option, at one scale, from the load that made its numbers (2026-11-03, operator ruling)
+- **D161** (2026-11-03) — The hero column stacks: the plate's box is subtraction, not a ratio (2026-11-03, operator ruling + delegate execution)
+- **D162** (2026-11-03) — A gate that photographs a fixed-height window loses anything that moves down the page (2026-11-03, delegate; measured)
+
+Defined: 162 (D1-D162). Unused ids: none.

@@ -53,6 +53,7 @@ import { execFileSync, execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { BARS } from './grill/okcolor.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
@@ -124,6 +125,14 @@ if (!NO_BUILD) {
   execFileSync(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'build'], { stdio: ['ignore', 'ignore', 'inherit'] });
 } else {
   console.log('(measuring the dist that is already built — --no-build)');
+  // --no-build is the fast path, and its whole risk is measuring a build this tree did not make — the case
+  // that cost 4 phantom keyline FAILs on a branch switch (design/dist-fresh.mjs, D156).
+  // Imported here, not at the top: only the `--no-build` path needs it, and this file's import list is a spot
+  // two branches edit at once (it is the one conflict the pending branches had), so the check lives beside the
+  // line that runs it. Same pattern as line-length.mjs below.
+  const { distState, staleLine } = await import('./dist-fresh.mjs');
+  const STALE = distState();
+  if (!STALE.fresh && !STALE.allowed) { console.error(`check:render: ${staleLine(STALE)}`); process.exit(1); }
 }
 mkdirSync('.design/render', { recursive: true });
 
@@ -254,6 +263,24 @@ for (const route of routes) {
       }
     }
 
+    // 4a. inset rings (D149-3c, record 0018). The rule above cannot see the system's own hairline at all:
+    //     the ratified keyline is a 1px INSET box-shadow, not a border, so `keylines` reports nothing for it.
+    //     A ring is drawn on a boundary and therefore has two neighbours - the fill inside it and the ground
+    //     it stands on - and the operator's ruling is that a keyline may not straddle two grounds. That is a
+    //     measurement, not a preference: `--color-rule` is 3.01 on paper, 2.88 on `panel` (under this same
+    //     graphic bar) and 4.00 on the ink band, so a ring that has a tint on one side is under bar on that
+    //     side even when the number printed beside it looks legal.
+    for (const g of j.rings || []) {
+      if (g.inside === null || g.outside === null || g.inset !== 1) continue;
+      const who = `${g.tag} ${JSON.stringify(g.cls.slice(0, 60))}`;
+      const pair = `ring (${g.isRule ? '--color-rule' : g.raw}) measures ${g.inside} inside / ${g.outside} outside`;
+      if (Math.abs(g.inside - g.outside) > 0.05) {
+        fails.push(`${at}: ${pair} against two different grounds (${JSON.stringify(g.innerBytes)} vs ${JSON.stringify(g.outerBytes)}) — a keyline may not straddle two grounds (D149-3c, record 0018): move the box onto one ground — ${who}`);
+      } else if (Math.min(g.inside, g.outside) < BARS.graphic) {
+        fails.push(`${at}: ${pair} — under the ${BARS.graphic.toFixed(1)} graphic bar on its own ground. --color-rule is solved for paper (3.01); on a tint it reads 2.88 (record 0018) — ${who}`);
+      }
+    }
+
     // 4b. notices and states (DESIGN.md "Notices" + "States"): word + inset hairline on the page's own
     //     ground, NO fill, one-line 48px (D98), text at or above the contrast bar.
     for (const n of j.notices || []) {
@@ -338,7 +365,12 @@ for (const route of routes) {
           const best = Math.max(...cands);
           if (best < 3.0) fails.push(`${at2}: <${s.tag}> reads ${best} against its ground, under the 3.0 graphic bar (D101) — stroke ${s.stroke} / fill ${s.fill}`);
         }
-        if (s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
+        // D119's floor, for line art: a stroke under one device pixel has no fully-covered pixel, so it has no
+        // measurable colour identity. It applies to a stroke that PAINTS. The probe reports the cascade's
+        // `stroke-width` even where `stroke: none` means nothing strokes (the SVG initial value is 1), and the
+        // mark's meeting point is a filled disc — so keying on the cascade number alone failed a shape that has
+        // no stroke to measure. `strokePaints` comes from the same computed style, in the same record.
+        if ((s.strokePaints ?? s.stroke !== 'none') && s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
         // A declared dash has to ARRIVE. On this mark the far half of the equator is dashed and the near half is
         // solid, and that difference is the occlusion cue that makes the ring read as a sphere rather than a disc
         // (src/lib/brand-mark.mjs, operator ruling 2026-11-02). Two silent failures are possible: a renderer that
@@ -354,7 +386,7 @@ for (const route of routes) {
       }
     }
 
-    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | rings ${(j.rings || []).length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
     if (j.nav) console.log(`   nav   ${j.nav.links.map((l) => `${l.fs}/${l.h}px`).join(' ')}  wrap ${j.nav.containers.map((c) => c.wrap).join('/')} gap ${j.nav.containers.map((c) => c.gap).join('/')} needed ${j.nav.row?.needed} of ${j.nav.row?.available}`);
     for (const c of j.controls) {
       console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${(c.role || 'NO ROLE').padEnd(10)} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
@@ -363,6 +395,9 @@ for (const route of routes) {
       console.log(`   disp  ${t.fs.padEnd(6)} lh ${t.lh.padEnd(7)} ${String(t.contrast).padStart(6)}  ${t.ff.padEnd(11)} ${t.tag} ${JSON.stringify(t.t).slice(0, 34)}`);
     }
     for (const k of [...new Map(j.keylines.map((k) => [k.w + k.raw + k.keylineContrast, k])).values()]) console.log(`   key   ${String(k.w).padStart(3)}px contrast ${String(k.keylineContrast).padStart(5)}  ${k.raw.padEnd(26)} ${(k.cls || '').slice(0, 40)}`);
+    // A ring's number is a PAIR (DESIGN.md, Colour): inside and outside, each against the ring. Equal means
+    // one ground; unequal means the ring straddles, which D149-3c bans and record 0018 prices at 2.88.
+    for (const g of [...new Map((j.rings || []).map((g) => [g.raw + g.inside + g.outside + g.cls, g])).values()]) console.log(`   ring  ${String(g.inset).padStart(3)}px in ${String(g.inside).padStart(5)} out ${String(g.outside).padStart(5)}  ${g.isRule ? 'rule' : g.raw.padEnd(26)}  in ${JSON.stringify(g.innerBytes)} out ${JSON.stringify(g.outerBytes)}  ${(g.cls || '').slice(0, 34)}`);
     for (const n of j.notices || []) console.log(`   notc  ${String(n.h).padStart(5)}px x ${String(n.w).padStart(4)}px  inset ${n.inset}px contrast ${String(n.keylineContrast).padStart(5)}  text ${String(n.textContrast).padStart(5)}  ${n.role} ${JSON.stringify(n.text).slice(0, 34)}`);
     for (const b of j.bands) {
       console.log(`   band  ${String(b.h).padStart(5)}px  bg ${b.bg.padEnd(26)} fg ${b.fg.padEnd(24)} ${String(b.contrast).padStart(5)}  ${b.tag} ${(b.cls || '').slice(0, 40)}`);
@@ -372,7 +407,7 @@ for (const route of routes) {
     for (const m of j.marks || []) {
       console.log(`   mark  ${m.name} ${m.w}x${m.h} at ${m.x},${m.y} (viewBox ${m.vbW}x${m.vbH}, scale ${m.scale}, shapes ${m.count}/${MARK_SHAPE_COUNT}, ratio ${m.ratio} vs ${m.wantRatio}) role="${m.role}" ${JSON.stringify(m.label)}`);
       for (const s of m.shapes.filter((x) => x.dash && x.dash !== 'none')) console.log(`         dashed: <${s.tag}> declared "${s.dash}" units -> ${s.dashDevice} px on screen`);
-      for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} sw ${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
+      for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} ${s.strokePaints === false ? 'no stroke  (fill only)'.padEnd(21) : `${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px`.padEnd(21)}  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
     }
   }
 }
