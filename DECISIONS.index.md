@@ -177,5 +177,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D167** — no shipped plate asset contains more columns than the scan has: the crop caps at the source width
 - **D168** — the horizon ships as PS-5: three whole leaves at their own aspects, desktop-only, and the page got shorter, not just prettier
 - **D169** — the group feed is harvested: two instances, no recurrence, and its instants have no zone on them
+- **D170** — alt text and provenance are quoted from the picture's own page; a title plus an id number is not evidence
 
-Defined: 169 (D1-D169). Unused ids: none.
+Defined: 170 (D1-D170). Unused ids: none.

@@ -26,9 +26,9 @@ next session ends up inferring a limit from a name again:
 | leaf | native delivered | aspect |
 |---|---|---|
 | Byrne Euclid IV.15 (1847) | **688x1004** | 0.69 |
-| Euclid for schools (1903), p. 210 | 1024x357 | 2.87 |
-| Slaught & Lennes plane geometry (1910), p. 176 | **698x350** | 2.00 |
-| radio text (1922), p. 212 | 1024x478 | 2.14 |
+| Euclid for schools (1903), leaf 297 | 1024x357 | 2.87 |
+| Slaught & Lennes plane geometry (1910), leaf 122 | **698x350** | 2.00 |
+| radio text (1922), leaf 514 | 1024x478 | 2.14 |
 | NBS bulletin (1922), p. 105 | 578x747 | 0.77 |
 | Whiting arithmetic (1909), p. 223 | 686x354 | 1.94 |
 
@@ -75,10 +75,15 @@ longer be the number.
   the repo where the box is derived from the picture rather than the picture from the box, and that is deliberate:
   every other slot crops, and the two times a wrong crop was caught, it was caught by *looking* at the specimen
   (the Byrne band dropping Book I's construction, record 0023; the 1910 leaf's four circles, this round).
-- Leaves and provenance (from each picture's own page, no invented alt — D92): Euclid for schools 1903 p. 210
-  (Book VI figures on a right triangle); Slaught & Lennes 1910 p. 176 (the 60-degree construction — four circles, one
-  equilateral triangle, the colourless Euler diagram D149-2b asked for); *The principles underlying radio
-  communication* 1922 p. 212 (three-electrode audion as an oscillation generator).
+- Leaves, and the mistake that had to be corrected in this same record: the first provenance sentences — "p. 210:
+  Book VI figures on a right triangle", "p. 176: the 60-degree construction, four circles and an equilateral triangle",
+  "p. 212: a three-electrode audion as an oscillation generator" — were **inferred** from the book titles and the second
+  number in each id. Reading the picture pages: the ids are **leaf 297 / leaf 122 / leaf 514**, and what the leaves show
+  is the octahedron-dodecahedron-icosahedron, an arc construction with "center O tangent to the four arcs", and "Antenna
+  Current in radiotelephony … Modulates a radio-frequency Wave which can be received with Simple Detector". All three
+  pages say **Public Domain Mark 1.0, "Free to use for anything"** (Internet Archive; the 1910 scan is Cornell). The
+  invented sentences were live in `alt` attributes for about an hour. Fix: alt and provenance are **quoted** from the
+  picture page, and a book title is not evidence about a drawing (D92).
 - The card cut: the `feature` object out of `src/content.json`, its type out of `src/lib/content.ts` (with a note so
   nobody re-adds it as a slot), its render branch out of `WhyJoinUs.astro`, and the threads-list gloss that told
   readers the thread was "written out below" lost its pointer.

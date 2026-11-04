@@ -27,8 +27,10 @@ schedule — **1180x192 @y1825 at 1240**, **976x158 at 1024**, 0x0 from 640 down
 aspect so **no plate is cropped**. Why three: the archive's `/img/1024/` **rung** returns each scan's own width —
 **688** (Byrne), **698** (the 1910 Euler leaf), **1024** (Euclid 1903, the 1922 radio leaf) — so a single leaf across
 1176 CSS px is a **1.68x** upscale keeping a third of the drawing, not the 1.15x record 0026 claimed from the rung
-name (D167; the corrected numbers are in record 0027). Leaves: Euclid 1903 p. 210, Slaught & Lennes 1910 p. 176 (the
-colourless Euler diagram D149-2b asked for), and a 1922 audion oscillation generator. Also shipped: **phone stays (b)**,
+name (D167; the corrected numbers are in record 0027). Leaves (each description quoted from the picture's own page, not
+inferred): Euclid 1903 **leaf 297** (the solids — octahedron, dodecahedron, icosahedron), Slaught & Lennes 1910 **leaf
+122** (arcs from two centres and a circle tangent to the four arcs; the colourless construction D149-2b asked for),
+and the 1922 NBS radio text **leaf 514** (antenna current in radiotelephony). Also shipped: **phone stays (b)**,
 and the **`feature` card is cut** (D149-6c) with its `content.ts` type, its `WhyJoinUs.astro` branch, and the gloss
 that pointed readers at "the thread written out below". Measured at the shipped tree: page **4284 → 3889 at 1240**,
 **6173 → 5176 at 390** (the card was ~1000px of phone scroll), painted **5.33% → 7.7%**, named colour **0.30%**
