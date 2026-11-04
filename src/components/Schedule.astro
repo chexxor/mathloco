@@ -1,5 +1,6 @@
 ---
 import config from '../config.json';
+import PhotoSlot from '../components/PhotoSlot.astro';
 import {
   content, upcoming, value, filled, formatDate, formatTime, builtOn, scheduleConfigured,
 } from '../lib/content.ts';
@@ -47,6 +48,30 @@ import {
  * `Members` from the nav).
  */
 const items = upcoming().slice(0, 4);
+
+/**
+ * PS-4 — the event-card thumb, filled for the one row that has art (operator ruling 10(a), 2026-11-04, D190).
+ *
+ * Keyed by slug, because the file in `src/assets/photos/` is named after the row (`event-<slug>.png`) and
+ * `PhotoSlot` resolves it by filename prefix. The `ratio` is **the art's own** (954x460), not the 323x110 the
+ * slot was first defined at: D168 ruled that a plate is not cropped to fit a box, and the club's own event
+ * image is a plate — 323x110 would have cut 30% of its height.
+ *
+ * The `alt` states only what the file's role proves. It does **not** describe the frame: this session's model
+ * takes no images, and D170's rule ("alt text and provenance are quoted from the picture page, not inferred")
+ * is exactly the rule that forbids writing what nobody read. The organizer's own sentence for the image is
+ * asked for in `.notes/NEXT.md`; when it arrives it replaces this string verbatim.
+ *
+ * A row with no entry renders NO box at all: `PhotoSlot`'s fallback is its own `<slot />`, which is empty
+ * here. That is a designed absence, not a hole — DESIGN.md's states rule bars a "photo coming" box, and the
+ * hatched stand-in belongs in review rounds (`npm run round10`), not on the page.
+ */
+const SLOT_ART: Record<string, { ratio: string; alt: string }> = {
+  '2026-11-07-club-social': {
+    ratio: '954 / 460',
+    alt: 'The club\u2019s own event image for this social',
+  },
+};
 const empty = content.schedule?.empty;
 const venueLine = value(empty?.venueLine);
 // The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
@@ -68,9 +93,9 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
 
     <div class="mt-12">
       {items.length ? (
-        <ul class="space-y-6">
+        <ul class="space-y-6" data-art-cap="323">
           {items.map((item) => (
-            <li class="inset-shadow-rule rounded-control px-4 py-3">
+            <li class="inset-shadow-rule rounded-control px-4 py-3 flex flex-col">
               <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                 <span class="text-label font-medium text-ink tabular-nums">
                   {formatDate(item.date, 'wide')}
@@ -99,6 +124,25 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
                 // `LOCATION` string — street, postcode, state, country — is what the feed publishes; the
                 // page shows the navigable line.
                 <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
+              )}
+              {/* PS-4 (D190): the club's own event art, mirrored into src/assets/photos/ and resolved by
+                  filename, so adding art to a row is a file drop rather than an edit.
+                  `data-slot="PS-4"` is a probe handle (check:space ranks slot boxes by it), and the row is
+                  `flex flex-col` for the same reason: the survey records a data-slot box only for a child of a
+                  grid or flex container, so without it PS-4 is invisible to every design round that reads it
+                  (measured 2026-11-03 for PS-5, same mechanism).
+                  The wrapper renders ONLY for a row with art, so a row without art keeps the geometry it had
+                  before this change byte for byte — a designed absence is the absence of a box, not an empty
+                  one (DESIGN.md "States"). */}
+              {SLOT_ART[item.slug ?? ''] && (
+                <div data-slot="PS-4" class="event-slot">
+                  <PhotoSlot
+                    slot={`event-${item.slug}`}
+                    ratio={SLOT_ART[item.slug ?? '']?.ratio ?? '954 / 460'}
+                    alt={SLOT_ART[item.slug ?? '']?.alt}
+                    class="rounded-control event-art"
+                  />
+                </div>
               )}
               <p class="mt-2 text-body leading-prose text-ink-2 font-body">
                 <a
@@ -161,3 +205,23 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
     </div>
   </div>
 </section>
+
+<style>
+  /* PS-4 is capped at its declared slot width — **323 CSS px**, the card interior round 13 measured — because
+     these rows are full-width strips, not cards. Measured on the first build of this change with no cap: the
+     954px art rendered **1132x546** at 1240, which is a 1.19x upscale of the file, one image painting 11.28%
+     of the page, and **+558px** of document. Capped, the box is 323x156 at 1240 (the art's own 954/460 aspect,
+     uncropped per D168) and 326x157 -> 256x123 down the phone widths, every one a downscale.
+     The width lives here rather than in a `w-[323px]` class because 323px is a measured slot, not a spacing
+     step, and `check:classes` is right to treat a one-off bracket value as a smell. */
+  .event-slot {
+    margin-top: 0.75rem;
+    width: 100%;
+    max-width: 323px;
+  }
+  .event-art {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>

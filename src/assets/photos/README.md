@@ -18,16 +18,17 @@ computed `display`), not chosen. They are in CSS px at a 1240 viewport; the reco
 | `horizon-radio1922.png` (**shipped 2026-11-04**) | PS-5 | last leaf | same band | nothing: **768x358** from a 1024x478 scan |
 | `join.<ext>` | PS-3 | join card media column, above the buttons | 532x128 at 1240 / 310x245 at 390 | 532x128 (4.15:1 - a wide band; a taller photo grows the card by the difference) |
 | `venue.<ext>` | PS-2 | *proposed* full-width strip, not built | would be 1192x320 at 1240, 358x230 at 390 | 1192x320 (3.73:1, hard crop from 4:3) |
-| `event-<slug>.<ext>` | PS-4 | *proposed* event-card thumb, not built | card is 371x205, interior after `p-6` is 323x157 | 323x110 |
+| `event-<slug>.<ext>` (**one shipped 2026-11-04**: `event-2026-11-07-club-social.png`, the club's own event art - D190) | PS-4 | event-card thumb, inside the schedule row; the row is `flex flex-col` so the survey can see the box | **323x156 @y2421 at 1240**, **323x156 @y3317 at 390**, **256x123** at 320 — capped at 323 CSS px in `.event-slot` because these rows are full-width strips: uncapped, the 954px file rendered **1132x546** at 1240 (+558px of page, 11.28% of its pixels in one img) | nothing: the box is the file's **own 954/460 aspect**, uncropped (D168). The old 323x110 definition would have cut 30% of its height |
 
 **How a plate gets here**: `npm run plates` (`scripts/plate-asset.mjs`) re-crops a quarantined plate from
 `design/assets/photos/<key>.png` through `design/grill/plate-crop.mjs` — the one recipe the review rounds measure
 their specimens with — and writes the file the page imports. Nothing is copied by hand, so the page and the specimen
 cannot show different crops. Today: hero `47518a39c1` (**377kB**, was 493kB before the crop learned to cap at the
-scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB). That is **1.33MB** of
-tracked binary, and `src/assets/` is gitignored apart from this directory, so these four files are the binaries this
-repo tracks and the size the design gates' numbers depend on; `check:space` re-reads them at every run (the hero
-paints **372x304**, 2.34% of the page's pixels).
+scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB), and the event art
+(127kB, the only file here that is not ours). That is **1.46MB** of tracked binary (was 1.33MB before D190), and
+`src/assets/` is gitignored apart from this directory, so these five files are the binaries this repo tracks and
+the size the design gates' numbers depend on; `check:space` re-reads them at every run (the hero paints
+**372x304**, 2.06% of the page's pixels).
 
 **The three band leaves, and where they come from.** Provenance below is **quoted** from each picture's own page
 (`insideoutlibrary.com/p/<id>`), which is the only form of it this file accepts - D92.
@@ -57,8 +58,24 @@ file that carried them.
   leaf because the club reads for pleasure as well as for credentialing, and record 0023 measured this leaf at 0%
   named colour, native 1024x478. https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212
 
-PS-2 and PS-4 are definitions only: they need a venue photograph and a real schedule to hang on, and
-shipping either empty would be a 320px void.
+PS-2 is a definition only: it needs a venue photograph, and the archive is books, not rooms.
+PS-4 is filled for the one row that has art. A row with no art renders **no box at all** - the wrapper is
+conditional, so the un-photographed row keeps the geometry it had, and a designed absence is the absence of a
+box rather than an empty one (DESIGN.md "States").
+
+**The event art (PS-4), and what we may say about it.** `event-2026-11-07-club-social.png` is
+**the club's own image**, mirrored from the organizer's event page
+(`.../media/1f54c290…png?name=bimonthly_social.png`; curl 200, `image/png`, **954x460**, **127,098 bytes**,
+fetched 2026-11-04) rather than linked, so the site cannot 404 on a visitor over a file it does not serve
+(ruling 10(a), D190).
+
+- **Rights line - PROPOSED, not ratified:** "the club's own event art, used with the organizer's permission."
+  The ruling chose the mirror; the terms are the operator's to state, so this line is marked as a proposal in the
+  file that ships it. Do not let it read as settled until the operator says the words.
+- **The `alt` states only the file's role** ("The club's own event image for this social") because nobody here
+  read the frame - the session's model takes no images - and D170 forbids an alt inferred from a picture nobody
+  saw. The organizer's own sentence, when it arrives, replaces it verbatim. It is the only `alt` on this site that
+  describes a file rather than a picture, and that is deliberate rather than lazy.
 
 Round 13 measured the only card the schedule section renders today - its no-source notice, not the future event
 card - and photographed it with and without a thumb: the card is **512x280.8** at 1240 with a **480px** content box,
