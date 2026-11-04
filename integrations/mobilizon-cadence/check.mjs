@@ -20,6 +20,10 @@
  *   4. a live, credential-free read against the instance, then the same plan `simulate.mjs` would print -
  *      so a Mobilizon upgrade that breaks a query, or a renamed event, fails here rather than at 09:00 on a
  *      day with nobody watching.
+ *   5. `probe-schema.mjs` - the **negatives**. The design rests on two absences (D175 no recurrence object,
+ *      D186 no server-side importer), and a gate that only checks the positives stays silent the day a
+ *      premise dies. One anonymous introspection POST; it fails only on those two premises (the Mobilizon
+ *      workspace asked for this signal, 2026-11-04, so both workspaces hear it from one place).
  *
  * Step 3 is skipped with `--offline` (CI has no route to the LAN; see `.notes/integrations-subproject.md`
  * rule 4). Nothing here writes to the instance: the only write path in this directory is the n8n workflow,
@@ -40,7 +44,10 @@ const steps = [
   [`tests (${testFiles.length} files)`, process.execPath, ["--test", ...testFiles]],
   ["import check (round trip + planted defects)", process.execPath, [here + "verify-import.mjs", "--selftest"]],
 ];
-if (!OFFLINE) steps.push(["live read + plan", process.execPath, [here + "simulate.mjs"]]);
+if (!OFFLINE) steps.push(
+  ["live read + plan", process.execPath, [here + "simulate.mjs"]],
+  ["schema premises (D175 no recurrence, D186 no importer)", process.execPath, [here + "probe-schema.mjs"]],
+);
 
 let failed = null;
 for (const [label, cmd, args] of steps) {

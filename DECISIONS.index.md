@@ -194,5 +194,10 @@ and a renumber silently re-points every one of them at a different decision.
 - **D184** — "what runs in n8n" is verified by exporting it back and comparing it to the artifact; the comparator is gated by planted defects
 - **D185** — Mobilizon's OAuth surface is on the apex, not under `/api/v1`: D177's "no client-registration route" was a path artifact, and the probe now asks the question from inside n8n's network
 - **D186** — the ICS-feed-import alternative is measured and parked: Mobilizon ships no importer, and the third-party ones use the same login and the same `createEvent`, with more powers
+- **D187** — the pending queue lands on `staging` and `staging` goes to origin for the first time: the push grant is per-item, not a standing rule
+- **D188** — a published calendar gets a runway gate: 21 days, an escape hatch that expires on its own date, and no env var
+- **D189** — the page prints the club's own series name; the organizer's title with the frequency word stays in the feed, where it is a quotation
+- **D190** — PS-4 gets the club's own event art, mirrored rather than linked, capped at its measured slot width, with an alt that claims only the file's role
+- **D191** — the two premises this integration rests on are gated as negatives, and a group feed is about to carry other people's events
 
-Defined: 186 (D1-D186). Unused ids: none.
+Defined: 191 (D1-D191). Unused ids: none.
