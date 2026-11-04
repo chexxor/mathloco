@@ -22,8 +22,13 @@
 //          budget that matters most is the one at 640.
 //   1240 - the widest container (372px, scale 1.55): where a too-heavy mark turns into a poster on the grid
 //
-// Window heights match the render gate's (1400 at phone widths, 2400 at desktop) so the shots and the gate's
-// reports are the same page. The mark sits at y ~1014 at 320px, so a shorter viewport would crop it.
+// Window heights come from the page, not from a constant (`grill/shot-height.mjs`, the repo's one rule for how
+// tall a shot may be). They used to be the render gate's 1400/2400, which was fine while the mark sat at
+// y ~1014 at 320px; when the PS-1 plate landed (round 13 option C) the mark moved down to **y=1421 at 320** and
+// **y=1129.9+320=1449.9 at 640**, both outside a 1400px window, and the gate reported "no ink in the measured
+// box" and "gold pixels near the pole: 0" for a mark that was painted correctly. A fixed frame around a taller
+// document is record 0015's failure class again, so the height is asked of the page and the cap only ever
+// refuses to measure, never truncates silently.
 //
 // Writes .design/render/mark-<w>.png and .design/render/_-<w>.json (gitignored scratch), prints both probes,
 // and exits 1 if either fails — this is a diagnostic, deliberately not in `npm run verify`.
@@ -38,18 +43,27 @@ if (!existsSync(resolve('dist/client/index.html'))) {
 // The artifact also has to belong to this tree: a branch switch leaves dist/ from the previous branch, and a
 // mark measured off it is a mark that is not shipped (design/dist-fresh.mjs).
 import { distState, staleLine } from './dist-fresh.mjs';
+import { shotHeight } from './grill/shot-height.mjs';
 const STALE = distState();
 if (!STALE.fresh && !STALE.allowed) { console.error(`check:mark: ${staleLine(STALE)}`); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
 
-const runs = [
-  { w: 320, h: 1400 },
-  { w: 640, h: 1400 },
-  { w: 1240, h: 2400 },
-];
+const WIDTHS = [320, 640, 1240];
+
+// Ask the page how tall it is at this width, then shoot at that height. One extra probe per width, ~1s each;
+// the alternative is a constant that a layout change walks past without anyone deciding it.
+function pageHeightAt(w) {
+  const json = execFileSync(process.execPath, [
+    'design/grill/dist-measure.mjs', 'dist/client', '/', 'design/grill/render-measure.js',
+    String(w), '1200',
+  ], { encoding: 'utf8' });
+  const h = JSON.parse(json)?.doc?.scrollHeight;
+  return shotHeight(h, `mark check: / @ ${w}`);
+}
 
 const failed = [];
-for (const { w, h } of runs) {
+for (const w of WIDTHS) {
+  const h = pageHeightAt(w);
   const shot = `.design/render/mark-${w}.png`;
   const rep = `.design/render/_-${w}.json`;
   const json = execFileSync(process.execPath, [
