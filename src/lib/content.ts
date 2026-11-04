@@ -27,6 +27,7 @@
  */
 import tracked from '../content.json';
 import { isObj, openSlots as openTree, unsourcedSlots as unsourcedTree } from './content-slots.mjs';
+import { asUpcomingItems, snapshot } from './events.mjs';
 
 export type Slot = {
   value: string | null;
@@ -43,12 +44,21 @@ export type Slot = {
 export type UpcomingItem = {
   /** ISO date, `YYYY-MM-DD`. Parsed as a calendar date, never as an instant, so the page cannot shift a day by running in UTC. */
   date: string;
-  /** 24h `HH:MM`, or null to say "time not set" in the date lane (DESIGN.md: never default to 12:00 am). */
+  /**
+   * 24h `HH:MM`, or null to say "time not set" in the date lane (DESIGN.md: never default to 12:00 am).
+   * null now has a real cause: a row whose hour the organizer has not confirmed is published as a DATE
+   * (D169), so the page says the hour is unknown instead of inventing one.
+   */
   time?: string | null;
   title: string;
+  /** An optional second line. The row's own name is not repeated there — see `asUpcomingItems`. */
   series?: string | null;
   /** `Scheduled` | `Cancelled` | `Past` — status is a word, never colour or strikethrough alone. */
   status?: string | null;
+  /** One navigable line: name, street, city. The organizer's own full string stays in the feed. */
+  venue?: string | null;
+  /** The organizer's page for this event, when the source has one. */
+  url?: string | null;
 };
 
 export type Content = {
@@ -107,8 +117,13 @@ export const filled = (v: unknown): boolean =>
 export const value = (slot: Slot | null | undefined): string | null =>
   slot && typeof slot.value === 'string' && slot.value !== '' ? slot.value : null;
 
-export const upcoming = (): UpcomingItem[] =>
-  Array.isArray(content.schedule?.upcoming) ? content.schedule.upcoming : [];
+/**
+ * The dates the site publishes. They come from `data/events.json` — the club's own calendar, harvested and
+ * committed (D70's contract, D73's topology) — not from `src/content.json`, whose `schedule.upcoming` is
+ * retired in favour of that file so the landing page and `/events.ics` can never disagree about a date.
+ * `src/content.json` keeps the words around them (the empty state, the source note).
+ */
+export const upcoming = (): UpcomingItem[] => asUpcomingItems() as UpcomingItem[];
 
 /**
  * The open threads, as label + gloss. An item with no `value` is a hole and renders nothing rather than a
@@ -120,8 +135,12 @@ export const threads = (): { label: string; gloss: string | null }[] =>
     .filter((t) => typeof t?.value === 'string' && t.value !== '')
     .map((t) => ({ label: t.value, gloss: typeof t.gloss === 'string' && t.gloss !== '' ? t.gloss : null }));
 
-/** True once a schedule source is configured, whether or not it currently holds a date (D132). */
-export const scheduleConfigured = (): boolean => filled(content.schedule?.source);
+/**
+ * True once a schedule source is configured, whether or not it currently holds a date (D132). Since
+ * 2026-11-04 the source is the committed snapshot in `data/events.json` (its `source.kind`), so this is no
+ * longer a "has the operator provisioned a calendar yet?" flag — it is a fact about the build.
+ */
+export const scheduleConfigured = (): boolean => filled(content.schedule?.source) || Boolean(snapshot.source?.kind);
 
 /**
  * What the hero's label lane says. Round 7's ruling: an empty calendar is a *state*, so when a source is
