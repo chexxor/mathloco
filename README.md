@@ -290,16 +290,17 @@ deployed):
    `"result": []`.
 3. ✅ The leftover Pages-era DNS record is deleted — **and it was not the record its target suggested.** It
    was the record `www` resolved *through*, so deleting it sent `www` to `NXDOMAIN` while the apex carried on
-   untouched, because the apex's records are the ones Cloudflare created for the Custom Domain. Fixing
-   `www` is two Free-plan steps, written out under *Which host is canonical* below. The lesson for the next
-   teardown: read a record's **name** before deleting it, not just its target.
-4. ⚠️ **Remaining: delete Pages.** Nothing about the apex depends on it now, and two things argue for
-   finishing rather than leaving it "harmless": the project still stores `CLAUDE_API_KEY` as a
-   **`plain_text`** env var, and the deployments API returns those values in the clear to any token with
-   Pages read access (that is how it surfaced while checking the skip reason) — so **rotate that key** and
-   delete the project; and its GitHub connection keeps creating skipped deployment records on every push.
-   Rollback is not Pages anyway: `npx wrangler deployments list` shows Worker version ids and
-   `npx wrangler rollback [version-id]` restores one (both in the pinned 4.155.0).
+   untouched, because the apex's records are the ones Cloudflare created for the Custom Domain. `www` is back
+   with a single record — see *Which host is canonical* below. The lesson for the next teardown: read a
+   record's **name** before deleting it, not just its target.
+4. ✅ Pages is **deleted**, and `CLAUDE_API_KEY` was revoked and reissued. Both copies are `secret_text`:
+   `npx wrangler secret list` (production) and `npx wrangler preview base-config secret list` each show
+   `CLAUDE_API_KEY` + `DISCORD_TOKEN`. Why it mattered: the Pages project stored that key as **`plain_text`**,
+   and the deployments API returns those values inline to any token with Pages read scope. **One loose end:**
+   `.dev.vars` on this machine still held the revoked key, so `npm run check:ai` exits 1 with
+   `401 authentication_error "invalid x-api-key"` — that tripwire doing exactly its job. Paste the new key in;
+   `verify` stays green without it, because `check:cache` substitutes fake credentials and probes
+   `/guilds/0000000000000000000/`, so no gate depends on a live key.
 5. Retire the route entry from `wrangler.toml` — a Custom Domain covers every path — and change
    `check:deploy`'s expected trigger count from 2 to 1 **in the same commit**, so the gate matches the
    declared contract rather than lagging it. Keep both until that can be probed right after a deploy: this
@@ -327,31 +328,35 @@ exactly two files, and they must match:
 
 **Do not set these to `www` unless `www` actually resolves.** A canonical pointing at a host with no DNS
 record tells every crawler that the working pages are duplicates of pages that do not exist — it is worse
-than no canonical at all. The apex is the safe canonical. **`www` does not resolve right now**: measured
-2026-10-30 at 22:1x UTC, `dig www.minneapolismathbookclub.com @1.1.1.1` → `NXDOMAIN` and `curl` → `Could not
-resolve host`, because the record `www` was resolving through got deleted during the Pages teardown (see the
-teardown order above). Nothing in the build points at `www` — grepping `dist/client` for it returns 0 files —
-so `www` is insurance for hand-typed addresses and old shares, not a dependency.
+than no canonical at all. The canonical is the apex, and `www` redirects to it. Nothing in the build points
+at `www` (grepping `dist/client` for it returns 0 files), so `www` is insurance for hand-typed addresses and
+old shares, not a dependency.
 
-To give `www` back, do it in the Cloudflare zone, not here. Two steps, both available on Free:
+**The end state is one DNS record** (measured 2026-10-31 at 00:34 UTC): a **proxied `CNAME www →
+minneapolismathbookclub.com`**. The zone holds nothing else for `www` — no Redirect Rule, no Bulk Redirect
+list — and Cloudflare answers at the edge with a **301 that preserves the path**:
 
-1. **DNS → add a record**: type `A`, Name `www`, IPv4 `192.0.2.1`, **Proxied**. That address is a documented
-   dummy — Cloudflare answers the redirect at the edge, so nothing reaches an origin. It is the recipe in
-   `pages/how-to/www-redirect`.
-2. **Rules → Redirect Rules (Single Redirects)**: one rule, expression `http.host eq
-   "www.minneapolismathbookclub.com"`, dynamic target `concat("https://minneapolismathbookclub.com",
-   http.request.uri.path)`, status **301**, preserve query string. Quotas are per plan
-   (`rules/url-forwarding/#availability`): **Single Redirects 10 rules per zone on Free**; Bulk Redirects are
-   also on Free (15 rules / 5 lists / 10,000 URLs) if a list reads better to you.
+| Request | Response |
+| :-- | :-- |
+| `https://www.…/` | `301`, `location: https://minneapolismathbookclub.com/` |
+| `https://www.…/chat/` | `301`, `location: https://minneapolismathbookclub.com/chat/` |
+| `https://www.…/book-club-social-share.jpg` | `301`, `location: …/book-club-social-share.jpg` |
 
-Prefer the zone rule over a `_redirects` file — Pages docs state that `_redirects` entries *"are not applied
-to requests served by Pages Functions"*, so a host-level redirect there is not guaranteed to cover
-`/api/*` — and an edge redirect never reaches the Worker, so it costs no CPU and none of the 100,000
-requests/day.
+Following the chain lands on `200` at the apex. The redirect answers in **0.07 s** with a 167-byte body and
+`server: cloudflare`, and **the Worker is never invoked** — no CPU, none of the 100,000 requests/day. A
+`dig www … CNAME` returns nothing, because Cloudflare flattens proxied records — which is exactly why hostname
+state gets verified by **fetching**, never by querying: a proxied record answers `A`/`AAAA` for Cloudflare no
+matter what you created, so the record type tells you nothing about what the edge will do.
 
-Verify by **fetching**, not by querying: a proxied record answers `A`/`AAAA` for Cloudflare no matter what
-you created, so the record type tells you nothing. `curl -I https://www.minneapolismathbookclub.com/` should
-show `301` with a `location` on the apex.
+If you ever need something the automatic redirect does not give you (a `308`, per-path targets, conditional
+targets), zone-level alternatives and their quotas are in `rules/url-forwarding/#availability`: **Redirect
+Rules** — one rule, `http.host eq "www.minneapolismathbookclub.com"` → dynamic
+`concat("https://minneapolismathbookclub.com", http.request.uri.path)`, 301, preserve query string, 10 rules
+per zone on Free — or **Bulk Redirects**, 15 rules / 5 lists / 10,000 URLs on Free, which is the recipe
+`pages/how-to/www-redirect` prescribes (it also wants a proxied dummy `A www → 192.0.2.1`). Either beats a
+`_redirects` file, because Pages docs state that `_redirects` entries *"are not applied to requests served by
+Pages Functions"*, and both beat a host check inside the app, which would spend Worker CPU and request quota
+on every mistyped URL.
 
 ## 🔐 Environment
 
