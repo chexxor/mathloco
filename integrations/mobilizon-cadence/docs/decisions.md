@@ -110,11 +110,19 @@ everything else:
 ## 10. Authentication: sign in per run, from environment variables
 
 Rejections, all measured: n8n's Basic Auth (the endpoint does not honour HTTP Basic), an n8n OAuth2 credential
-(the OAuth provider demands a `client_id` and there is no client-registration route), a personal access token
-(no such mutation on 5.2.4), a stored long-lived session token (it expires, and silently). Adopted:
+(the grants this instance implements are `authorization_code`, device code and `refresh_token` — no
+`password`, no `client_credentials`), a personal access token (no such mutation on 5.2.4), a stored long-lived
+session token (it expires, and silently). Adopted:
 `login(email, password) { accessToken … }` in exactly one node, values read as `$env.NAME`, token used by two
 nodes and dropped with the execution. The `refreshToken` Mobilizon offers is deliberately not selected — a
 long-lived secret to save one round trip a day.
+
+Corrected 2026-11-04 (D185): this section originally said "there is no client-registration route". That was
+`/api/v1/apps` falling through to the GraphQL router. The route is on the apex — `POST /apps`, `POST
+/oauth/token` and `POST /login/device/code` all answer, and the scope vocabulary is granular
+(`write:event:create`, `read:group:events`, …). An OAuth service account is therefore *available*: it removes
+the password from n8n at the cost of a registered client, one human authorisation, and a rotating refresh
+token that still has to live on that host. Not adopted for A9; the operator's account ruling decides.
 
 Consequence stated plainly in [`security.md`](security.md): the password travels on every run, and the
 sign-in node's execution data contains it. Mitigations, and the alternative posture, are there.
@@ -184,6 +192,29 @@ dependencies — Node builtins (`fetch`, `node:test`, `node:fs`) — and its sch
 home server. The triggers that would earn a manifest are named there, and the site's `package.json` stays
 what the operator asked for.
 
+## 19. The ICS-feed route: measured, and parked with a trigger
+
+The Mobilizon delegate opened a read-only question (ruling 3(c)): instead of calling `createEvent` itself,
+could cadence publish an ICS feed that **Mobilizon imports** — removing the login, the credential, the
+duplicate-write risk and the audit-after-write? Answered 2026-11-04 in
+[`../records/2026-11-04-oauth-surface-and-ics-import-probe.md`](../records/2026-11-04-oauth-surface-and-ics-import-probe.md):
+
+- **Mobilizon has no importer.** On the live 5.2.4 schema (91 mutations, 42 queries) nothing matches
+  `import`/`ics`/`ical`; `createFeedToken`/`deleteFeedToken` mint **export** tokens. In the upstream clone at
+  `f2590486f` (5.2.5-RC1) there is no import route in `lib/web/router.ex`, no `def import` in `lib`, no import
+  string in `src/i18n/en_US.json`, and `ical.js` is a dependency imported nowhere in `src/`. The "import tool"
+  in the upstream thread is not a Mobilizon feature.
+- **The third-party importers use the same door.** `vranki/mobilizon-importer` (the one with the `ical_calendar`
+  module) keeps `email`/`password` in plaintext in its own `config.json`, authenticates with the same
+  `login`/`refreshToken` mutations, and writes with the same `createEvent` — *plus* `updateEvent`,
+  `updateEvent(status: CANCELLED)` and `DeleteEvent`, the three things this workflow never does.
+
+So the route moves the credential and the write into an unreviewed process on another port with a wider blast
+radius, and adds a service to run. **Option 1 stands.** Parked with its un-parking trigger (D148): re-open if
+Mobilizon **core** gains a server-side importer — detection is one command,
+`curl --json '{"query":"{ __schema { mutationType { fields { name } } } }"}' $M/api/v1 | grep -oiE
+'"name":"[a-z]*(import|ics|ical)[a-z]*"'`, which today prints nothing.
+
 ## Deliberately not built
 
 - **RRULE in the site's own ICS output.** The site emits one VEVENT per real occurrence (D73's shape). Adding
@@ -191,7 +222,9 @@ what the operator asked for.
 - **Copying participants, comments or RSVPs.** A new meeting starts empty.
 - **Drafts by default.** `draft: false` — a parked draft nobody publishes is worse than a published event.
   It is one config field for a club that prefers to review.
-- **A n8n credential for the Mobilizon account.** Not possible with this API's body-based credential;
-  recommended upgrade path is an OAuth client on the instance, after which `03 Sign in` is the only node that
-  changes.
+- **A n8n credential for the Mobilizon account.** Not with this API's body-based credential, and not with
+  n8n's OAuth2 credential either (this instance implements no `password` and no `client_credentials` grant,
+  D185). A scoped OAuth client registered on the apex *is* available — one human authorisation, then a
+  rotating refresh token that still has to live on the n8n host — and if the operator chooses it, `03 Sign in`
+  is the only node that changes.
 - **Auto-repair.** Detection reports; deletion is executed by a person through `repair.mjs`.

@@ -10,7 +10,7 @@
  *      `$('name')` resolves, every Code node parses, no URL off the configured host, no literal credential,
  *      the gate compares against `create`, every series has the fields `lib/core.mjs` needs) and, for the
  *      probe, its read-only argument (no write node, no login call, no credential value on any output).
- *   2. `node --test <every file in test/>` - 59 tests, discovered from the directory so a new layer cannot
+ *   2. `node --test <every file in test/>` - 61 tests, discovered from the directory so a new layer cannot
  *      be forgotten. `test/core.test.mjs` runs the rules against the club's real calendar snapshot in
  *      `fixtures/`; `test/workflow.test.mjs` executes the *generated* Code nodes with a fake n8n sandbox,
  *      which is what catches a build that injects the wrong text; `test/import.test.mjs` plants defects in a

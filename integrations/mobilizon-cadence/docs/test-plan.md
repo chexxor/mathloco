@@ -1,7 +1,7 @@
 # Test plan — what is proven, and from where
 
 ```bash
-node integrations/mobilizon-cadence/check.mjs             # build + probe + 59 tests + import self-check + live read-only plan
+node integrations/mobilizon-cadence/check.mjs             # build + probe + 61 tests + import self-check + live read-only plan
 node integrations/mobilizon-cadence/check.mjs --offline    # the same without the live read
 node integrations/mobilizon-cadence/verify-import.mjs --selftest   # Layer 3 alone
 ```
@@ -48,7 +48,7 @@ renamed node that leaves an expression pointing at nothing, an accidental creden
 | a night where every series skipped is a normal night, not an error | 10 |
 | the alert reporter and the error reporter: the failure shape a notification can use, and `failedAt` naming the stage that broke (and refusing to pretend when none did) | 11–12 |
 
-## Layer 3 — the transport (`test/import.test.mjs`, 23 tests + `verify-import.mjs`)
+## Layer 3 — the transport (`test/import.test.mjs`, 25 tests + `verify-import.mjs`)
 
 Layers 1 and 2 prove things about **a file in this repo**. Neither says anything about the workflow that is
 running inside n8n, and the distance between those two is where an integration quietly dies: an import that
@@ -78,6 +78,8 @@ it — and by requiring it to **stay quiet** about what n8n legitimately changes
 | **the export, executed rather than compared**: a noise-laden copy run through `lib/sandbox.mjs` emits the same two instants `simulate.mjs` prints from the live read (`would_create` on 2026-11-21T18:00Z and 2026-11-26T00:00Z), reports `0 event(s) written`, and leaves only `21 Report error path` outside the chain | 20 |
 | the same copy with `dryRun` flipped emits `create` for both series — the moment the checker calls fatal. Stated limit: the harness stops at HTTP nodes, so `06` never ran and `08` had no audit to check; the write leg and the audit-after-write live in Layer 2 | 21 |
 | the probe document satisfies its own read-only argument, and that argument fires when the probe is broken: a schedule trigger added, a credential attached, a `mutation` in the body, or `$env[…]` appearing in what a node returns | 22–23 |
+| the **committed** probe equals what `build-probe.mjs` builds today (fingerprints), so the file the guide names cannot drift from the document `checkProbe()` vouches for | 24 |
+| the probe cannot register an OAuth application: `P5` may not send `scope`/`redirect_uri`/`client_id`/`client_secret`/`grant_type`, it must keep the form body, it must keep `neverError` (its 400 **is** the answer), and the request count stays at three | 25 |
 
 **What Layer 3 cannot prove.** It compares JSON, and it **executes the Code nodes** of the exported copy (so a
 mangled or edited rule is caught by behaviour as well as by bytes) — but it cannot execute an `httpRequest`

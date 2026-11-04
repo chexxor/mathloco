@@ -29,19 +29,21 @@ You need:
 
 **Probe that n8n can actually see them** (this depends on the host's `N8N_BLOCK_ENV_ACCESS_IN_NODE`, which
 nothing in this repo can read from here). Import the second artifact — `n8n/env-probe.json` — and press
-**Execute workflow**. Five nodes, in a line: `P0 Run me (there is no schedule here)` → `P1 What this host can
+**Execute workflow**. Six nodes, in a line: `P0 Run me (there is no schedule here)` → `P1 What this host can
 see` (`$env`) → `P2 Mobilizon on the apex` (GET `/.well-known/nodeinfo/2.0`) → `P3 Mobilizon on the GraphQL
-path` (POST `{ __typename }` to `/api/v1`) → `P4 Report what I found`. The report node puts the whole answer in
+path` (POST `{ __typename }` to `/api/v1`) → `P5 Mobilizon on the OAuth app route` (POST `/apps` with a body
+that is incomplete **on purpose**) → `P4 Report what I found`. The report node puts the whole answer in
 one string so you do not have to interpret the UI:
 
 ```json
 { "ok": true, "verdicts": [],
-  "summary": "cadence environment probe - read only, nothing was written\nasked at   2026-11-04T15:00:00.000Z (…)\ntarget     https://mobilizon.labradorius.com/api/v1\nnodeinfo   Mobilizon 5.2.4 at /.well-known/nodeinfo/2.0\ngraphql    answers, root type RootQueryType\nenv        visible, 41 keys; wanted: MOBILIZON_EMAIL, MOBILIZON_PASSWORD",
+  "summary": "cadence environment probe - read only, nothing was written\nasked at   2026-11-04T15:00:00.000Z (…)\ntarget     https://mobilizon.labradorius.com/api/v1\nnodeinfo   Mobilizon 5.2.4 at /.well-known/nodeinfo/2.0\ngraphql    answers, root type RootQueryType\noauth      POST /apps answered invalid_request - the route is live (asked with an incomplete body: nothing was registered)\nenv        visible, 41 keys; wanted: MOBILIZON_EMAIL, MOBILIZON_PASSWORD",
   "host": { "envVisible": true, "envKeyCount": 41,
             "wantedNames": ["MOBILIZON_EMAIL", "MOBILIZON_PASSWORD"],
             "wantedPresent": ["MOBILIZON_EMAIL", "MOBILIZON_PASSWORD"],
             "wantedMissing": [], "valuesPrinted": false },
-  "software": { "name": "Mobilizon", "version": "5.2.4" } }
+  "software": { "name": "Mobilizon", "version": "5.2.4" },
+  "oauth": { "answer": "invalid_request", "live": true } }
 ```
 
 `ok: true` with an empty `verdicts` array is the pass. Each verdict names the layer it belongs to, and what to
@@ -54,12 +56,15 @@ do about it:
 | `HOST: … gave no nodeinfo software field` | this host cannot reach the apex — DNS/routing/TLS, not credentials. Split DNS is real on this network (`mobilizon.labradorius.com` resolves to a LAN address from inside and a public address from outside), so which view n8n has depends on where n8n runs |
 | `HOST: something answered as "…", not Mobilizon` | a proxy is intercepting the request |
 | `HOST: /api/v1 did not answer { __typename }` | the cadence's own endpoint is unreachable from n8n's network — this is the 09:00 failure the probe exists to catch |
+| `HOST: POST /apps did not answer invalid_request` | the OAuth application route is not reachable from n8n's network (YunoHost's SSO front door can swallow it). Nothing to fix for A9 — the cadence does not use OAuth — but until this line is clean, plan no OAuth path (D185). It is asked with a body the instance refuses by name, so **no application is registered** by running the probe |
 | a `version` line that is not 5.2.4 | the instance moved. Run `node integrations/mobilizon-cadence/check.mjs` before trusting any field name in these docs |
 
 It prints **presence, never values**: the only strings it can emit are variable *names* (`valuesPrinted: false`
 says so in the output), it attaches no credential, and it has no write path — `build-probe.mjs` refuses to
-generate one, and `check.mjs` re-checks that argument on every run. It has no schedule trigger, so it cannot
-fire on its own: import it, run it once, read the summary, delete the workflow.
+generate one, and `check.mjs` re-checks that argument on every run. It also cannot register an OAuth client:
+`P5` sends a `name` and nothing else, and the builder refuses a probe that ever sends `scope`, `redirect_uri`,
+`client_id`, `client_secret` or `grant_type` (D185). It has no schedule trigger, so it cannot fire on its own:
+import it, run it once, read the summary, delete the workflow.
 
 If you would rather not import a second workflow, the one-line equivalent is a temporary **Code** node in any
 workflow:

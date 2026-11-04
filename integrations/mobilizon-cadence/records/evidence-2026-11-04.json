@@ -217,6 +217,184 @@
  },
  "oauth": {
   "token_status": 400,
-  "apps_body": "{\"errors\":[{\"message\":\"No query document supplied\"}]}"
+  "apps_body": "{\"errors\":[{\"message\":\"No query document supplied\"}]}",
+  "note": "apps_body is POST /api/v1/apps, which falls through to the GraphQL router. It does NOT show the route is missing - see oauth_apex, measured later the same day (D185)."
+ },
+ "oauth_apex": {
+  "measured": "2026-11-04, from the mathloco worktree (Linux), instance nodeinfo 5.2.4",
+  "apps_incomplete": {
+   "method": "POST",
+   "path": "/apps",
+   "body": "name only",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_request",
+    "error_description": "All of name, scope and redirect_uri parameters are required to create an application"
+   },
+   "creates": "nothing - the catch-all clause runs before Applications.create (clone f2590486f, lib/web/controllers/application_controller.ex:82)"
+  },
+  "apps_bad_scope": {
+   "method": "POST",
+   "path": "/apps",
+   "body": "name + redirect_uri + scope=write:everything",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_scope",
+    "error_description": "The scope parameter is not a space separated list of valid scopes"
+   },
+   "creates": "nothing"
+  },
+  "device_code_no_client": {
+   "method": "POST",
+   "path": "/login/device/code",
+   "body": "client_id=nonexistent",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_request",
+    "error_description": "You need to pass both client_id and scope as parameters to obtain a device code"
+   }
+  },
+  "token_bogus_refresh": {
+   "method": "POST",
+   "path": "/oauth/token",
+   "body": "grant_type=refresh_token + garbage triples",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_grant",
+    "error_description": "Invalid refresh token provided"
+   }
+  },
+  "token_client_credentials": {
+   "method": "POST",
+   "path": "/oauth/token",
+   "body": "grant_type=client_credentials + garbage",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_request",
+    "error_description": "Incorrect parameters sent. You need to provide at least the grant_type and client_id parameters, depending on the grant type being used."
+   },
+   "note": "this is the catch-all clause, so it is consistent with - but does not prove - client_credentials being unimplemented. The grants implemented are read from source instead."
+  },
+  "grants_in_source": {
+   "clone": "f2590486f (5.2.5-RC1, 2026-09-30)",
+   "grant_types": [
+    "authorization_code",
+    "urn:ietf:params:oauth:grant-type:device_code",
+    "refresh_token"
+   ],
+   "absent": [
+    "password",
+    "client_credentials"
+   ],
+   "file": "lib/web/controllers/application_controller.ex"
+  },
+  "rate_limit": {
+   "route": "POST /apps",
+   "limit": "10 per 60s per IP",
+   "source": "Rajska.RateLimit.hit(\"create_application:<ip>\", 60_000, 10)"
+  },
+  "scope_vocabulary_source": "lib/graphql/authorization/app_scope.ex @ f2590486f",
+  "scope_examples": [
+   "write:event:create",
+   "write:event:update",
+   "write:event:delete",
+   "read:group:events",
+   "read:profile:organized_events"
+  ],
+  "token_types": {
+   "__type(ApplicationToken)": null,
+   "query_matches": [
+    "authApplication"
+   ],
+   "mutation_matches": [
+    "authorizeApplication",
+    "authorizeDeviceApplication",
+    "revokeApplicationToken",
+    "createFeedToken",
+    "deleteFeedToken",
+    "refreshToken"
+   ]
+  },
+  "bearer_at_graphql_endpoint": {
+   "request": "POST /api/v1 { loggedPerson } with 'authorization: Bearer not-a-real-token'",
+   "body": {
+    "message": "invalid_token",
+    "details": ":invalid_token"
+   },
+   "control_empty_bearer": {
+    "data": {
+     "loggedPerson": null
+    },
+    "errors_code": "unauthenticated"
+   },
+   "means": "the endpoint honours bearer tokens (unlike Basic, which is ignored byte-identically): a scoped OAuth access token could authenticate the write, and n8n's Header Auth credential could hold it"
+  }
+ },
+ "ics_import_route": {
+  "measured": "2026-11-04, live instance 5.2.4 + upstream clone f2590486f (5.2.5-RC1)",
+  "live_schema_mutation_matches_import": [],
+  "live_schema_mutation_count": 91,
+  "live_schema_query_count": 42,
+  "live_schema_feed_mutations": [
+   "createFeedToken",
+   "deleteFeedToken"
+  ],
+  "live_schema_note": "the only feed tokens are EXPORT tokens; `__type(name: \"ApplicationToken\")` -> null; no import*/ics* field appears in __schema",
+  "clone_backend": {
+   "import_routes_in_lib_web_router_ex": [],
+   "def_import_in_lib": [],
+   "ics_in_router": "plug(:accepts, [\"atom\", \"ics\", \"html\", \"xml\"]) - export formats only"
+  },
+  "clone_frontend": {
+   "import_ui_strings_in_src_i18n_en_US_json": [],
+   "icaljs_in_package_json": "^2.2.1",
+   "icaljs_imports_in_src": 0
+  },
+  "third_party_importers": [
+   {
+    "repo": "vranki/mobilizon-importer",
+    "pushed": "2025-02-17",
+    "stars": 5,
+    "language": "python",
+    "config_keys": [
+     "email",
+     "password",
+     "endpoint",
+     "identity",
+     "dry_run",
+     "modules[].ics_url"
+    ],
+    "writes_with": [
+     "createEvent",
+     "updateEvent",
+     "updateEvent(status: CANCELLED)",
+     "DeleteEvent"
+    ],
+    "auth_with": "login(email, password) + refreshToken mutations",
+    "ics_module": "modules[] module=ical_calendar with ics_url (the example pulls a Nextcloud public calendar)"
+   },
+   {
+    "repo": "dindy/mobilizon-event-importer",
+    "pushed": "2026-05-26",
+    "stars": 2,
+    "language": "vite/js browser app",
+    "README": "An app to import event on a Mobilizon instance.",
+    "auth": "OAuth browser flow: registers a client on the instance (clientId/clientSecret fields, registerApp(), scope='read write' - app_scope.ex expands read/write to every granular scope), authorizeApp(code, clientId), grant kept in localStorage, registration routed through a hosted proxy (getProxyApiUrl('auth/register?instance=...&redirect_uri=...'))",
+    "writes": "createEvent, uploadMedia, createGroup (src/api/mobilizon.js); no ICS parser in package.json; src/api/scrapper.js scrapes pages; src/api/geo.js is where upstream issue !2088 lives"
+   },
+   {
+    "repo": "kaihuri/mobilizon-event-importer (framagit)",
+    "shape": "TypeScript/Node service: Dockerfile, migrations/, its own DB; README: 'crawl and import events from 3rd-party platforms and post them on Mobilizon or call webhooks ... new events are periodically checked and automatically published'; sources include ICS feeds",
+    "auth": "OAuth, not password: src/controllers/MobilizonOAuthController.ts + src/models/mobilizon_oauth_application.model.ts (a registered client stored per instance in its own database); src/services/mobilizon/graphql/auth.ts carries only the RefreshToken mutation",
+    "writes": "createEvent and updateEvent documents in src/services/mobilizon/graphql/events.ts; no deleteEvent document there",
+    "read_via": "GitLab API repository/tree + files/raw, ref main, 2026-11-04"
+   }
+  ],
+  "conclusion": "no importer ships with Mobilizon; the ICS route means running a third-party app that authenticates with email+password and writes with the same createEvent, plus update/cancel/delete powers cadence does not take",
+  "bot_actors": {
+   "schema": "lib/mobilizon/actors/bot.ex - schema \"bots\": source (string), type (string, default \"ics\"), actor_id, user_id; table added by priv/repo/migrations/20180522133844_add_bots_table.exs",
+   "registration": "mix mobilizon.create_bot EMAIL NAME SUMMARY TYPE URL (lib/mix/tasks/mobilizon/create_bot.ex) -> Actors.register_bot + Actors.create_bot",
+   "ingestion": "none found in the 5.2.5-RC1 clone: grep -l Bot lib -> actors.ex, bot.ex and the mix task only; no lib/mobilizon/fetchers; lib/mobilizon/cron.ex has no bot job; no GraphQL mutation reads a bot source. So a bot is an IDENTITY an external writer can act as, not an importer"
+  }
  }
 }

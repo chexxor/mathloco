@@ -36,8 +36,11 @@ export const INSTANCE = {
  * repo, in the workflow JSON, or in the config item that every node can see. The build refuses this field if
  * it is ever given a value instead of a NAME.
  *
- * Mobilizon 5.2.4 offers no long-lived API token and no OAuth client registration on this instance (probes
- * recorded in lib/queries.mjs), so the workflow signs in per run with this account.
+ * Mobilizon 5.2.4 offers no long-lived API token, and this workflow signs in per run with this account. OAuth
+ * does exist on the instance - but on the apex (`POST /apps`), not under `/api/v1`, and its grants need a
+ * one-time human authorisation plus a rotating refresh token (measured and read in lib/queries.mjs; D185), so
+ * it moves the secret rather than removing it. If the operator chooses a scoped service account, `03 Sign in`
+ * is the only node that changes.
  */
 export const CREDENTIALS = {
   emailEnv: "MOBILIZON_EMAIL",

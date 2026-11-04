@@ -12,10 +12,16 @@
  *   - a GraphQL-level error comes back as **HTTP 200** with an `errors` array, so every caller must
  *     check for `errors` instead of trusting the status code;
  *   - the credential document is `login(email, password) -> { accessToken refreshToken user }`. There is no
- *     `sessionToken` field on this version, HTTP Basic is not honoured at this endpoint (a bogus
- *     `Authorization: Basic` answers the same `unauthenticated` error as no header at all), and there is no
- *     client-registration route (`/api/v1/apps` falls through to the GraphQL router and answers "No query
- *     document supplied"), so a per-execution sign-in is the only auth this instance offers out of the box.
+ *     `sessionToken` field on this version, and HTTP Basic is not honoured at this endpoint (a bogus
+ *     `Authorization: Basic` answers the same `unauthenticated` error as no header at all);
+ *   - OAuth exists on this instance, but **not under `/api/v1`**: `POST /apps`, `POST /oauth/token` and
+ *     `POST /login/device/code` are on the apex (measured 2026-11-04: `POST /apps` with an incomplete body
+ *     answers 400 `invalid_request` "All of name, scope and redirect_uri parameters are required to create an
+ *     application", and `/api/v1/apps` falls through to the GraphQL router - which is why the first probe in
+ *     D177 concluded there was no client-registration route). The cadence still signs in per run: the grants
+ *     this instance implements are `authorization_code`, `urn:ietf:params:oauth:grant-type:device_code` and
+ *     `refresh_token` - read in the upstream clone at f2590486f - so an OAuth token needs a one-time human
+ *     authorisation and a rotating refresh token, which is a different secret to store, not no secret (D185).
  */
 
 /**
@@ -89,8 +95,11 @@ query CadenceRead($preferredUsername: String!, $after: DateTime, $before: DateTi
 /**
  * The only credentialed request in the workflow, and the only place a password is ever sent.
  *
- * What comes back is a **session** token scoped to this execution, not a long-lived API key: 5.2.4 exposes
- * no long-lived token and no OAuth client registration (see the header above). Two consequences worth knowing:
+ * What comes back is a **session** token scoped to this execution, not a long-lived API key. Mobilizon does
+ * offer OAuth apps on the apex (see the header: D185), but taking that route means registering a client, doing
+ * a one-time browser or device-flow authorisation, and then carrying a rotating refresh token - a second
+ * secret with its own failure modes, for a job that signs in once per run anyway. Two consequences of the
+ * per-run sign-in worth knowing:
  *   - the refresh token is deliberately **not** selected. Keeping it would put a long-lived secret in the
  *     execution data for no benefit, since the next run signs in again in one round trip;
  *   - `user.actors` is selected because the write needs Mobilizon's internal actor ids, and hard-coding them

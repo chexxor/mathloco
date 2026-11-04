@@ -27,8 +27,10 @@ Measured against `mobilizon.labradorius.com` on 2026-11-04 (full output in
 | option | probe result | verdict |
 |---|---|---|
 | n8n's built-in **Basic Auth** on the HTTP node | a bogus `Authorization: Basic …` produces the byte-identical `unauthenticated` error as no header at all | **not supported** by Mobilizon's GraphQL endpoint |
-| n8n's **OAuth2 credential** (password or client-credentials grant) | `POST /oauth/token` → 400 *"you need to provide at least the grant_type and client_id parameters"*; `POST /api/v1/apps` falls through to the GraphQL router ("No query document supplied") — there is no dynamic client registration | **not available** without registering a client in the instance config; that is an instance-admin change, and a long-lived secret |
-| a **personal access token** in a Header Auth credential | no such mutation in the schema (`login, refreshToken, revokeApplicationToken, authorizeApplication, authorizeDeviceApplication, createFeedToken, deleteFeedToken` are all that exist) | **does not exist** on 5.2.4 |
+| n8n's **OAuth2 credential** (password or client-credentials grant) | `POST /oauth/token` with `grant_type=client_credentials` → 400 *"Incorrect parameters sent…"*; the upstream clone at `f2590486f` implements exactly three grants — `authorization_code`, `urn:ietf:params:oauth:grant-type:device_code`, `refresh_token` (no `password`, no `client_credentials`) | **not usable as n8n's OAuth2 credential** — that form needs a grant this instance does not implement |
+| an **OAuth app + bearer token**, driven by a Code node (register at apex `POST /apps`, authorise once, refresh in-band) | `POST /apps` on the apex with an incomplete body → 400 `invalid_request` *"All of name, scope and redirect_uri parameters are required to create an application"*; `POST /login/device/code` → 400 *"You need to pass both client_id and scope…"*; `POST /oauth/token` with a bogus refresh token → 400 `invalid_grant`. `/api/v1/apps` falls through to the GraphQL router, which is where D177's "no client-registration route" came from | **available, not adopted (D185)**: it removes the password from n8n but costs a client registration (a `client_id`/`client_secret` pair on the instance, rate-limited 10/min/IP), one human authorisation step, and a rotating refresh token that still has to live on that host. Scopes are granular (`write:event:create`, `read:group:events`, …) so a service account can be narrow |
+| a **personal access token** in a Header Auth credential | no such mutation in the schema (`login, refreshToken, revokeApplicationToken, authorizeApplication, authorizeDeviceApplication, createFeedToken, deleteFeedToken` are all that exist; `__type(name: "ApplicationToken")` → `null`, and the only token-ish query is `authApplication`) | **does not exist** on 5.2.4 |
+| an **OAuth access token in n8n's Header Auth credential** | `POST /api/v1` with `authorization: Bearer not-a-real-token` → `{"message":"invalid_token","details":":invalid_token"}`, which is an OAuth-layer refusal and **not** the `unauthenticated` GraphQL error an empty bearer gives — so bearer tokens are honoured at this endpoint (Basic is not) | **works at the HTTP layer, not adopted (D185)**: the token has to be obtained through a consent/device step and then refreshed, so the workflow needs the refresh logic anyway; if the operator chooses a service account, this is where the token would live — `03 Sign in` becomes a refresh call |
 | a **long-lived session token** stored as a credential | it expires, and when it does the failure looks like a broken integration | rejected: a secret that expires silently is worse than a sign-in |
 | **`login(email, password)` per run**, in one node, from environment variables | validated against the live schema; the bogus-credential probe returns a credential error, not a validation error | **adopted** |
 
@@ -61,9 +63,14 @@ The build refuses this field if it is ever given a value instead of an environme
 Why not an n8n **credential** (the encrypted store)? Because Mobilizon's credential is a *body* payload, and
 n8n's credential types that can attach to an HTTP request attach headers or query parameters. Header Auth
 would work — `Authorization: Bearer <token>` — if there were a long-lived token to put in it, and there is
-not (row above). If the instance is ever configured with an OAuth client, moving to an OAuth2 credential
-becomes the better answer and the sign-in node is the only thing that changes. That is the recommended
-upgrade path.
+not (row above). Corrected 2026-11-04 (D185): an OAuth client **can** be registered on this instance, at the
+apex `POST /apps` — the earlier "no client-registration route" note was `/api/v1/apps` falling through to the
+GraphQL router. But it does not make the OAuth2 *credential* type work, because the grants this instance
+implements (`authorization_code`, device code, `refresh_token`) all need a human authorisation once and then a
+**rotating** refresh token; n8n's OAuth2 credential cannot complete the consent step, and a `client_secret`
+alone buys nothing. So the upgrade path, if the operator wants a scoped service account rather than a password,
+is: register a client with narrow scopes, do the device/consent step once by hand, store the refresh token on
+the host, and let a Code node exchange it — `03 Sign in` is still the only node that changes.
 
 ### Verify that n8n will read them (one-minute probe)
 
@@ -71,9 +78,13 @@ Whether expressions can see `$env` depends on the n8n host's `N8N_BLOCK_ENV_ACCE
 this integration cannot read from here. So the operator guide asks for a probe rather than assuming — and the
 probe is a **generated artifact** (`n8n/env-probe.json`, from `build-probe.mjs`), not a snippet to type, so
 that its read-only-ness is checked rather than promised (D183). It reports which of the two wanted names are
-**present**, never their values, and it also answers the other half of a 09:00 failure: whether that host can
-reach `/api/v1` at all. Its fallback is the one-line Code node in the guide; the reason the variables must be in
-the *service* environment is that n8n reads its environment at process start.
+**present**, never their values, and it also answers the other halves of a 09:00 failure: whether that host can
+reach `/api/v1` at all, and whether the apex OAuth route answers from that network (D185). That last question
+is asked with an **intentionally incomplete** `POST /apps` — the instance refuses it by name (`invalid_request`),
+which proves the route without registering anything, and `checkProbe()` refuses a probe that ever sends a
+`scope`, `redirect_uri`, `client_id`, `client_secret` or `grant_type` parameter, so the instrument cannot mint
+a credential. Its fallback is the one-line Code node in the guide; the reason the variables must be in the
+*service* environment is that n8n reads its environment at process start.
 
 ## The exposure nobody should discover by accident
 

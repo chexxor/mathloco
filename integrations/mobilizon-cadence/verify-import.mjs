@@ -362,8 +362,15 @@ export function verifyDocument(got, expected = CADENCE) {
   // compared byte for byte above. It is the answer to a different question: "what would the copy that is
   // actually installed do?", printed in the same words `simulate.mjs` prints, so the operator compares two
   // sentences rather than two JSON files. Seeded from the saved calendar, so it needs no network.
-  const runExp = planOf(expected), runGot = planOf(got);
-  if (runExp.error) {
+  // Only the cadence has a reasoning chain to execute: the probe's HTTP nodes are its whole payload, and
+  // running nothing would report a warning that means "this is a probe" (D183).
+  const runsAChain = expected.name === CADENCE.name;
+  const runExp = runsAChain ? planOf(expected) : { plan: [], skipped: [], report: null };
+  const runGot = runsAChain ? planOf(got) : { plan: [], skipped: [], report: null };
+  if (!runsAChain) {
+    add("note", "execution", "this workflow has no reasoning chain to execute here",
+      "its read-only argument is checked by build-probe.mjs' checkProbe, not by a rehearsal");
+  } else if (runExp.error) {
     add("warn", "execution", `the reviewed artifact did not run in this harness: ${runExp.error}`,
       "that is the artifact or the harness, not your import - re-run build-workflow.mjs and check.mjs before reading anything else here");
   } else if (runGot.error) {

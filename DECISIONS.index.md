@@ -192,5 +192,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D182** — the Mobilizon instance is reachable from outside the LAN: measured, not inferred; that makes a scheduled harvest a *choice*, and it puts the login endpoint on the open internet
 - **D183** — the credential/reachability probe is a generated workflow artifact with a machine-checked read-only argument, not a snippet in a doc
 - **D184** — "what runs in n8n" is verified by exporting it back and comparing it to the artifact; the comparator is gated by planted defects
+- **D185** — Mobilizon's OAuth surface is on the apex, not under `/api/v1`: D177's "no client-registration route" was a path artifact, and the probe now asks the question from inside n8n's network
+- **D186** — the ICS-feed-import alternative is measured and parked: Mobilizon ships no importer, and the third-party ones use the same login and the same `createEvent`, with more powers
 
-Defined: 184 (D1-D184). Unused ids: none.
+Defined: 186 (D1-D186). Unused ids: none.

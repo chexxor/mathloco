@@ -17,7 +17,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { verifyDocument, CADENCE, readGate } from "../verify-import.mjs";
+import { verifyDocument, CADENCE, PROBE, readGate, fingerprint } from "../verify-import.mjs";
 import { checkProbe, buildProbe } from "../build-probe.mjs";
 import { runCodeChain } from "../lib/sandbox.mjs";
 
@@ -268,6 +268,36 @@ test("flip dryRun in the export and execute it: the plan node emits `create`, so
 
 test("the probe artifact is a probe", () => {
   assert.deepEqual(checkProbe(buildProbe()), []);
+});
+
+test("the committed probe file is the probe build-probe.mjs builds today", () => {
+  // The guide tells the operator to import this file by name, so a stale copy on disk is a different
+  // instrument than the one checkProbe vouches for. check.mjs rebuilds with --check; this pins it here too.
+  assert.equal(fingerprint(PROBE), fingerprint(buildProbe()),
+    "n8n/env-probe.json is stale - run node integrations/mobilizon-cadence/build-probe.mjs");
+});
+
+test("the probe cannot register an OAuth application", () => {
+  // Asking whether the route is live is read-only only while the request stays incomplete. A probe that
+  // sends a registration parameter would mint a client_id/client_secret on the instance.
+  const scoped = buildProbe();
+  const apps = scoped.nodes.find((n) => n.name === "P5 Mobilizon on the OAuth app route");
+  apps.parameters.bodyParameters.parameters.entries.push({ name: "scope", value: "write:event:create" });
+  assert.match(JSON.stringify(checkProbe(scoped)), /can register an OAuth client/);
+
+  const jsonBody = buildProbe();
+  jsonBody.nodes.find((n) => n.name === "P5 Mobilizon on the OAuth app route").parameters.specifyBody = "json";
+  assert.match(JSON.stringify(checkProbe(jsonBody)), /url-encoded\/form body/);
+
+  // The route answers 400 by design, so a probe that lets that become a failed execution reports nothing.
+  const loud = buildProbe();
+  loud.nodes.find((n) => n.name === "P5 Mobilizon on the OAuth app route").parameters.options.response.response.neverError = false;
+  assert.match(JSON.stringify(checkProbe(loud)), /neverError must be on/);
+
+  // A fourth request is no longer the three this file argues about.
+  const extra = buildProbe();
+  extra.nodes.push(structuredClone(extra.nodes.find((n) => n.name === "P2 Mobilizon on the apex")));
+  assert.match(JSON.stringify(checkProbe(extra)), /exactly three requests/);
 });
 
 test("the probe's read-only argument fires when it is broken", () => {
