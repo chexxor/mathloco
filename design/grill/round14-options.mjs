@@ -1,5 +1,11 @@
 // round14-options.mjs — the whole-page compositions on the table for grill round 14. Edit THIS, never the HTML.
 //
+// FROZEN 2026-11-04: the operator ruled 1c = the three-leaf horizon (built here as `shelf-lg`, option F), 2b
+// (phone stays on the shipped hero), and 3a (feature card cut) — all three shipped: PS-5 now lives in
+// src/components/HorizonBand.astro and the card is gone from src/content.json. So this table is the RECORD of how
+// the composition was decided, not a live menu: the runner refuses any option that would insert a second band
+// (D168, record 0027). A new composition question gets a new round measured against the page as it is now.
+//
 // The question (the operator asked it directly, 2026-11-03): *"Why two graphics in one place? Can they go
 // elsewhere? I want to see more full-page sweeping-change ideas that make the landing page more interesting."*
 // Round 13 settled one column (D161). Round 14 proposes the page: five whole-page compositions, each measured by
@@ -29,6 +35,26 @@ import { PS1_PLATE, PS3_PLATE, PS4_PLATE } from './round13-variants.mjs';
 // The Byrne leaf, again — it is the coloured one and the page is allowed one coloured slot (D149-1b/2b), which
 // is exactly the ruling these options stress. Options that widen it are asking the operator to spend more of
 // that budget, and the colour gate prints the bill.
+// Record 0023's standing instruction, which round 14 rediscovered the hard way: **"if a strip is ever wanted
+// from the archive, compose it from several plates rather than upscale one."** A single-leaf band is priced in
+// the report as upscale and keep — the 1910 leaf at 1176 CSS px is a **1.68x** upscale that keeps **34%** of the
+// drawing — while these three leaves are native **1024x357 / 698x350 / 1024x478**, so a 384 CSS px cell is a
+// downscale of a whole leaf. Probes 2026-11-03: `/img/1600/`, `/img/2048/`, `/img/full/` all 404; `/img/1024/`
+// returns the leaf's own scan width, which for the two 1910 leaves is ~700, not 1024.
+export const SHELF_PLATES = [
+  { key: 'shelf-euclid1903', where: 'the horizon, left', w: 384, h: 134, plate: {
+      id: 'ia-elementsofeuclid1903eucl-297-210',
+      book: 'The elements of Euclid, with corrections and a proposition on the anharmonic ratio (1903)',
+      page: 'https://insideoutlibrary.com/p/ia-elementsofeuclid1903eucl-297-210',
+      why: 'record 0023: the colourless Euclid plate — 0% named colour, native 1024x357' } },
+  { key: 'shelf-1910', where: 'the horizon, centre', w: 384, h: 193, plate: PS3_PLATE },
+  { key: 'shelf-nbs1922', where: 'the horizon, right', w: 384, h: 179, plate: {
+      id: 'ia-principlesunderl00unit-514-212',
+      book: 'Principles underlying radio and wire and wireless communication (1922)',
+      page: 'https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212',
+      why: 'record 0023: 0% named colour, keeps 78% of itself in PS-3, native 1024x478' } },
+];
+
 export const BAND_PLATE = PS1_PLATE;      // the coloured engraving, for full-width bands
 export const LINE_PLATE = PS3_PLATE;      // 1910 line work, colourless: a band that costs almost no colour
 export const THUMB_PLATE = PS4_PLATE;     // 323x110 event thumb, ruled (a) 2026-11-03, awaiting a dated event
@@ -38,6 +64,17 @@ export const THUMB_PLATE = PS4_PLATE;     // 323x110 event thumb, ruled (a) 2026
 // needing the escaped-class CSS the scanner may or may not have emitted.
 const GRID = '[class~="lg:grid-cols-12"]';
 const SCHEDULE_SECTION = 'section[aria-labelledby="when-we-meet"]';
+
+// The literal opener of the schedule section in the built page — the anchor two options insert before. It is a
+// string match against dist, so if the markup changes this throws rather than silently measuring an unchanged page.
+const SCHEDULE_SECTION_OPEN = '<section class="bg-paper py-16" aria-labelledby="when-we-meet">';
+
+function SHELF_SECTION(html, ctx) {
+  const i = html.indexOf(SCHEDULE_SECTION_OPEN);
+  if (i < 0) throw new Error(`no schedule section (${SCHEDULE_SECTION}) to put the horizon before`);
+  const figs = SHELF_PLATES.map((p, n) => `<img data-plate="BAND-${n + 1}" alt="${ctx.alt(p.key)}" width="${p.w}" height="${p.h}" src="${ctx.uri(p.key)}">`).join('');
+  return html.slice(0, i) + `<section data-plate="BAND">${figs}</section>` + html.slice(i);
+}
 
 export const OPTIONS = [
   {
@@ -170,6 +207,54 @@ footer [data-mark="hero"] [class~="fill-gold"] { fill: var(--color-gold-on-ink);
       const img = /<img src="\/_astro\/hero\.[^"]*"[^>]*>/;
       if (!img.test(html)) throw new Error('no shipped hero img — E plants its plate on the ink band');
       return html.replace(img, `<img data-plate="PS1-spine" alt="${ctx.alt('spine')}" width="376" height="574" style="width:100%;height:auto" src="${ctx.uri('spine')}">`);
+    },
+  },
+  {
+    id: 'shelf-lg',
+    name: 'F — a horizon of three plates, desktop only',
+    claim: 'Record 0023\u2019s own instruction: a wide strip from this archive is composed from several plates, not ' +
+      'upscaled from one. Three colourless leaves — Euclid 1903, the 1910 Euler diagram, the 1922 radio principles — ' +
+      'stand on a common baseline in the empty mid-page stretch, each at a third of the column, each a downscale of ' +
+      'its whole native leaf. Below lg the band is display:none, so the phone pays nothing it did not pay before.',
+    plates: SHELF_PLATES,
+    css: () => `
+[data-plate="BAND"] { display: flex; gap: 16px; align-items: flex-end; padding: 64px 24px; background: var(--color-paper); }
+[data-plate="BAND"] img { display: block; }
+@media (max-width: 1023px) { [data-plate="BAND"] { display: none; } }`,
+    apply: (html, ctx) => SHELF_SECTION(html, ctx),
+  },
+  {
+    id: 'shelf-all',
+    name: 'G — the same horizon, at every width',
+    claim: 'F, but the band rides down to the phone as a frieze instead of disappearing: three leaves, equal cells, ' +
+      'a common baseline. It prices the phone scroll, which is where the last ruling was made on the wrong column ' +
+      '(D161), so the phone gets a photograph of its own rather than an assumption.',
+    plates: SHELF_PLATES,
+    css: () => `
+[data-plate="BAND"] { display: flex; gap: 16px; align-items: flex-end; padding: 64px 24px; background: var(--color-paper); }
+[data-plate="BAND"] img { display: block; }
+@media (max-width: 1023px) {
+  [data-plate="BAND"] { gap: 12px; padding: 40px 24px; }
+  [data-plate="BAND"] img { width: auto; flex: 1 1 0; min-width: 0; height: auto; }
+}`,
+    apply: (html, ctx) => SHELF_SECTION(html, ctx),
+  },
+  {
+    id: 'leaf-native',
+    name: 'H — one leaf, at its native size',
+    claim: 'The single-leaf alternative that costs no upscale: the 1910 Euler diagram whole, 698 CSS px wide — its ' +
+      'own scan width — centred in the same stretch. Nothing is cropped, nothing is enlarged; what it buys is one ' +
+      'readable drawing instead of a frieze of three, and what it costs is a band that stops short of the column.',
+    plates: [{ key: 'leaf-native', plate: PS3_PLATE, w: 698, h: 350, where: 'the whole leaf, native size' }],
+    css: () => `
+[data-plate="BAND"] { display: block; padding: 64px 24px; background: var(--color-paper); text-align: center; }
+[data-plate="BAND"] img { display: inline-block; max-width: 100%; height: auto; }`,
+    apply: (html, ctx) => {
+      const i = html.indexOf(SCHEDULE_SECTION_OPEN);
+      if (i < 0) throw new Error(`no schedule section (${SCHEDULE_SECTION}) to put the leaf before`);
+      const p = SHELF_PLATES[1];
+      const band = `<section data-plate="BAND"><img data-plate="BAND" alt="${ctx.alt('leaf-native')}" width="698" height="350" src="${ctx.uri('leaf-native')}"></section>`;
+      return html.slice(0, i) + band + html.slice(i);
     },
   },
 ];
