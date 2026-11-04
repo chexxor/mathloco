@@ -39,6 +39,7 @@
     "round10": "node design/round10.mjs",
     "round12": "node design/round12.mjs",
     "round13": "node design/round13.mjs",
+    "round14": "node design/round14.mjs",
     "plates": "node scripts/plate-asset.mjs",
     "check:space": "node design/whitespace-survey.mjs",
     "check:ground": "node design/pixel-ground.mjs",
