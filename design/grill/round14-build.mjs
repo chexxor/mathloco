@@ -32,8 +32,15 @@ const need = (v, what) => {
 const OPTS = need(R.options, 'options');
 if (!OPTS.length) throw new Error('round14-build: the report has no options');
 const BASE = need(R.baseline, 'baseline');
-const WIDTHS = Object.keys(BASE.at).map(Number);
+// The report's own width order, not Object.keys order: integer-like keys iterate ASCENDING, so keys(BASE.at) put
+// 390 first and the "first width" of this specimen silently became the phone (which mislabelled every detail crop
+// caption as "at 390" while the runner had cut them at 1240). A specimen's column order is a claim.
+const WIDTHS = (R.widths && R.widths.length ? R.widths : Object.keys(BASE.at).map(Number));
 if (!WIDTHS.length) throw new Error('round14-build: the baseline records no widths');
+// The photographs a ruling actually needs: the widest column (the composition, as the eye reads it) and the phone
+// (where the stacking changes it). D161 is the reason the phone row is not optional.
+const PHONE_W = Math.min(...WIDTHS);
+const STRIP = [...new Set([WIDTHS[0], PHONE_W])];
 const b64 = (p) => (p && existsSync(p) ? readFileSync(p).toString('base64') : null);
 const box = (b) => (b ? `${b.w}×${b.h}` : '—');
 const gateVerdict = (g) => g.fails.length ? `${g.fails.length} FAIL` : (g.gaps?.length ? `unmeasured ×${g.gaps.length}` : 'green');
@@ -52,17 +59,17 @@ const plateRows = Object.values(R.plates || {}).map((p) => `<tr>
   <td class="n">${num(p.crop?.namedPct)}%</td></tr>`).join('\n');
 
 // The strip: every whole page at one factor, so the eye compares composition rather than size.
-const strip = OPTS.map((o, i) => {
-  const s = o.shots?.[WIDTHS[0]];
+const strip = OPTS.map((o, i) => STRIP.map((w) => {
+  const s = o.shots?.[w];
   const img = s && b64(s.file);
-  if (!img) throw new Error(`round14-build: ${o.id} has no whole-page photograph at ${WIDTHS[0]} — D160 says a look question arrives as pictures, so this run is incomplete`);
-  return `<figure class="pg"><figcaption><b>${letter(i)}</b> ${o.name.replace(/^[A-E] — /, '')}<br><span class="dim">${s.to} from ${s.from}</span></figcaption><img src="data:image/png;base64,${img}" alt="the whole landing page under option ${letter(i)}"></figure>`;
-}).join('\n');
+  if (!img) throw new Error(`round14-build: ${o.id} has no whole-page photograph at ${w} — D160 says a look question arrives as pictures, and D161 says the phone is one of them, so this run is incomplete`);
+  return `<figure class="pg"><figcaption><b>${letter(i)}</b> ${o.name.replace(/^[A-E] — /, '')}<br><span class="dim">whole page at ${w} wide · ${s.to} from ${s.from}</span></figcaption><img src="data:image/png;base64,${img}" alt="the whole landing page under option ${letter(i)} at ${w} wide"></figure>`;
+}).join('')).join('\n');
 
 const detail = OPTS.map((o, i) => {
   const s = o.detail;
   if (!s || !b64(s.file)) return '';
-  return `<figure class="pg"><figcaption>${letter(i)} · ${o.cropOf || 'hero'} at ${WIDTHS[0]}, ${s.factor}× of the measured box</figcaption><img src="data:image/png;base64,${b64(s.file)}" alt="the hero region under option ${letter(i)}"></figure>`;
+  return `<figure class="pg"><figcaption>${letter(i)} · ${s.cropOf || o.cropOf || 'hero'} at ${s.at || WIDTHS[0]}, ${s.factor}× of the measured box</figcaption><img src="data:image/png;base64,${b64(s.file)}" alt="the hero region under option ${letter(i)}"></figure>`;
 }).join('\n');
 
 const rows = OPTS.map((o, i) => `<tr>
@@ -198,4 +205,10 @@ gate: it runs in no CI. Measured at ${new Date(R.measuredAt).toISOString().slice
 </main></body></html>`;
 
 writeFileSync(OUT, html);
-console.log(`round14-build: wrote ${OUT} (${(html.length / 1024) | 0} kB) from ${OPTS.length} options and ${WIDTHS.length} widths`);
+// A specimen that quietly loses its photographs is exactly the failure D160 exists to prevent: the prose stays, the
+// evidence goes, and the operator rules on words. Count what is embedded against what the report holds.
+const PHONE_STATES = (R.phone && R.phone.states) || [];
+const want = OPTS.length * (1 + STRIP.length) + PHONE_STATES.length;
+const got = (html.match(/data:image\/png;base64/g) || []).length;
+if (got !== want) throw new Error(`round14-build: the specimen embedded ${got} photographs; the report holds ${want} (${OPTS.length} options x (1 hero crop + ${STRIP.length} whole-page widths) + ${PHONE_STATES.length} phone states)`);
+console.log(`round14-build: wrote ${OUT} (${(html.length / 1024) | 0} kB) — ${got} photographs: ${OPTS.length} options x (1 crop + ${STRIP.length} widths: ${STRIP.join(', ')}) + ${PHONE_STATES.length} phone states`);

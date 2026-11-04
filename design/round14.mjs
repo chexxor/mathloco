@@ -77,7 +77,7 @@ mkdirSync(SCRATCH, { recursive: true });
 mkdirSync(OUT, { recursive: true });
 mkdirSync(`${ART}/img`, { recursive: true });
 
-const report = { measuredAt: new Date().toISOString(), notes: [], options: [] };
+const report = { measuredAt: new Date().toISOString(), widths: SPACE_WIDTHS, notes: [], options: [] };
 const { runSpace, runGate, runColor } = makeInstruments({ scratch: SCRATCH, gateWidths: GATE_WIDTHS, colorWidths: [1240, 390], notes: report.notes });
 mkdirSync(`${SCRATCH}/phone`, { recursive: true });
 const phone = makeInstruments({ scratch: `${SCRATCH}/phone`, gateWidths: [390, 320], colorWidths: [390], notes: report.notes });
@@ -191,7 +191,10 @@ try {
     const heroBox = a0.grid || a0.col || a0.bands.find((b) => b.tag === 'main');
     const cropOf = a0.grid ? 'the hero grid' : a0.col ? 'the media column' : heroBox ? 'the main surface (this option is not a grid)' : null;
     const detail = await cropBox(`${SCRATCH}/page-${SPACE_WIDTHS[0]}.png`, heroBox, `${SCRATCH}/hero-${o.id}.png`, { pad: 8, where: `${o.id}: the hero`, notes: report.notes });
-    const detailScaled = detail ? await scaleTo(detail, `${SCRATCH}/hero-${o.id}-scaled.png`, DETAIL_SCALE) : null;
+    // A crop that does not carry the width it was cut at is a picture whose caption the builder has to guess, and
+    // the builder guessed wrong once (it read WIDTHS[0] off Object keys, which sort ascending, and labelled a 1240
+    // crop "at 390"). The width travels with the crop from here.
+    const detailScaled = detail ? { ...(await scaleTo(detail, `${SCRATCH}/hero-${o.id}-scaled.png`, DETAIL_SCALE)), at: SPACE_WIDTHS[0], cropOf } : null;
     const art = at[SPACE_WIDTHS[0]].imgs.filter((m) => /png|webp/.test(m.src || '')).length;
     report.options.push({ ...o, plates: o.plates.map((p) => p.key), at, gate, color, shots, detail: detailScaled, cropOf, delta: Object.fromEntries(SPACE_WIDTHS.map((w) => [w, d(at[w])])) });
     for (const w of SPACE_WIDTHS) say(`  @${String(w).padEnd(5)} page ${String(at[w].pageH).padEnd(5)} (${d(at[w], w)}) · painted ${at[w].paintedPct}% · empty ${at[w].emptyPct}% · imgs ${at[w].imgs.length} · mark ${at[w].mark?.w ?? '—'}`);

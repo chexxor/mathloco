@@ -1,5 +1,11 @@
 {
- "measuredAt": "2026-11-04T04:06:19.418Z",
+ "measuredAt": "2026-11-04T04:54:56.257Z",
+ "widths": [
+  1240,
+  1024,
+  640,
+  390
+ ],
  "notes": [],
  "options": [
   {
@@ -447,7 +453,9 @@
     "file": ".design/tmp-round14/hero-as-shipped-scaled.png",
     "from": "1208x590",
     "to": "604x295",
-    "factor": 0.5
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
    },
    "cropOf": "the hero grid",
    "delta": {
@@ -883,7 +891,9 @@
     "file": ".design/tmp-round14/hero-art-owns-the-top-scaled.png",
     "from": "1236x1726",
     "to": "618x863",
-    "factor": 0.5
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the main surface (this option is not a grid)"
    },
    "cropOf": "the main surface (this option is not a grid)",
    "delta": {
@@ -1411,7 +1421,9 @@
     "file": ".design/tmp-round14/hero-two-horizons-scaled.png",
     "from": "1196x590",
     "to": "598x295",
-    "factor": 0.5
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
    },
    "cropOf": "the hero grid",
    "delta": {
@@ -1941,7 +1953,9 @@
     "file": ".design/tmp-round14/hero-one-graphic-per-place-scaled.png",
     "from": "1208x590",
     "to": "604x295",
-    "factor": 0.5
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
    },
    "cropOf": "the hero grid",
    "delta": {
@@ -2397,7 +2411,9 @@
     "file": ".design/tmp-round14/hero-ink-spine-scaled.png",
     "from": "1196x829",
     "to": "598x415",
-    "factor": 0.5
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
    },
    "cropOf": "the hero grid",
    "delta": {

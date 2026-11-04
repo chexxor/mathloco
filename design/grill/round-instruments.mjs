@@ -118,7 +118,7 @@ export function makeInstruments({ scratch, renderDir = '.design/render', gateWid
       try { return fn(); }
       catch (e) {
         const err = `${(e.stderr && Buffer.isBuffer(e.stderr) ? e.stderr.toString() : (e.stderr || ''))}${e.message || ''}`;
-        const flaky = /TIMEOUT|never posted|measurement failed/i.test(err);
+        const flaky = /TIMEOUT|never posted|measurement failed|posted no verdict|no summary/i.test(err);
         last = e;
         const tail = err.split(String.fromCharCode(10)).filter(Boolean).slice(-2).join(' | ');
         if (!flaky || i === attempts) throw new Error(`${label}${flaky ? ` (firefox posted nothing after ${attempts} attempts)` : ''}: ${tail}`);
@@ -144,8 +144,18 @@ export function makeInstruments({ scratch, renderDir = '.design/render', gateWid
     let out = '', code = 0;
     const env = { ...process.env, RENDER_WIDTHS: gateWidths.join(','), RENDER_ATTEMPTS: process.env.RENDER_ATTEMPTS || '3' };
     // The gate already retries its own cells (RENDER_ATTEMPTS); this catches the whole-step failure mode where it
-    // exits 1 without producing a report at all.
-    try { out = step('check:render', () => sh('node', ['design/render-gate.mjs', '--no-build', '/'], { env, stdio: 'pipe' })); }
+    // exits without printing a summary at all - measured 2026-11-03, when option C's page lost the @390 cell three
+    // times in one run and passed the next run untouched. The shape check lives inside the retried step so a
+    // header-less run is retried rather than ending a 4-minute round.
+    try {
+      out = step('check:render', () => {
+        const r = sh('node', ['design/render-gate.mjs', '--no-build', '/'], { env, stdio: 'pipe' });
+        if (!/breakpoints in use:/.test(r)) {
+          throw Object.assign(new Error('the gate printed no summary: the browser posted no verdict for the page'), { stdout: r });
+        }
+        return r;
+      });
+    }
     catch (e) { out = (e.stdout || '') + (e.stderr || '') + (e.message || ''); code = e.status ?? 1; }
     if (!/breakpoints in use:/.test(out)) throw new Error(`check:render produced no report: ${out.slice(0, 400)}`);
     const all = out.split('\n').filter((l) => /^\s*FAIL\b/.test(l)).map((l) => l.trim());

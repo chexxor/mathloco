@@ -1,8 +1,8 @@
 # 0026 — the page got five compositions, and a price list for each
 
 Measured 2026-11-03 on `pixels/page-composition-r14`, from `npm run round14`
-(`design/grill/round14/report.json`, specimen `design/grill/round-14-page.html`, 225.5s for five options at four
-widths plus the phone question).
+(`design/grill/round14/report.json`, specimen `design/grill/round-14-page.html` — 287.2s for five options at four
+widths plus the phone question, and the final run carried 18 embedded photographs, counted by the builder).
 
 ## Why this round exists
 
@@ -85,6 +85,17 @@ they are photographed whole at one scale rather than argued.
 4. **Round 13's base is gone, and it now says so at once.** `PhotoSlot` prefers a real file over placeholder mode, so
    PS-1 has no placeholder for round 13's variants to mutate. Rather than fail four minutes into a run with a
    message about a missing div, it stops at step [1] and points at round 14.
-5. **The instruments are shared now.** `design/grill/round-instruments.mjs` holds `probeRetry`, `cropBox`,
+5. **The specimen was quietly missing its photographs, and only a count caught it.** The first build embedded **13**
+   images where the report held **18**: the strip shot one width, and the widths came from `Object.keys(BASE.at)`,
+   which iterate integer-like keys **ascending** — so `WIDTHS[0]` was **390**, not 1240, and every detail crop caption
+   read "at 390" over a crop the runner had cut at 1240. The prose and the table looked complete; the evidence was
+   a third of what it should be. The builder now takes the width order from `report.widths`, a crop carries the width
+   it was cut at, the strip shoots **1240 and 390** for every option (D161: the phone is not optional), and the build
+   **throws unless the embedded count equals `options × (1 crop + 2 widths) + phone states`** — 18 here.
+6. **A gate that prints no summary is a flake, not a design result — and the retry has to wrap the shape check.**
+   Option C's `check:render` lost its **@390** cell three times in one run and passed untouched in the next. The
+   instruments now retry the whole gate step when the output lacks its summary line, instead of ending a 4-minute
+   round at option 3 of 5.
+7. **The instruments are shared now.** `design/grill/round-instruments.mjs` holds `probeRetry`, `cropBox`,
    `scaleTo`, `cropStats`, and the gate/colour/space runners both rounds call, so a round's verdict cannot drift
    from CI's.
