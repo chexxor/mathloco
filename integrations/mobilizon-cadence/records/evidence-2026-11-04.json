@@ -1,0 +1,400 @@
+{
+ "nodeinfo": {
+  "version": "2.0",
+  "protocols": [
+   "activitypub"
+  ],
+  "metadata": {
+   "nodeDescription": "Change this to a proper description of your instance",
+   "nodeName": "Mobilizon"
+  },
+  "usage": {
+   "users": {
+    "total": 1
+   },
+   "localComments": 0,
+   "localPosts": 5
+  },
+  "services": {
+   "outbound": [
+    "atom1.0"
+   ],
+   "inbound": []
+  },
+  "software": {
+   "name": "Mobilizon",
+   "version": "5.2.4"
+  },
+  "moderationRegistrations": false,
+  "openRegistrations": false
+ },
+ "graphql_404": {
+  "status": 404
+ },
+ "events": {
+  "status": 200,
+  "body": {
+   "data": {
+    "group": {
+     "id": "4",
+     "organizedEvents": {
+      "elements": [
+       {
+        "beginsOn": "2026-11-11T18:00:00Z",
+        "draft": false,
+        "endsOn": "2026-11-11T20:00:00Z",
+        "id": "5",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": "Etc/UTC"
+        },
+        "picture": null,
+        "status": "CONFIRMED",
+        "title": "Parallel Learning for Mathematical Minds",
+        "uuid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0"
+       },
+       {
+        "beginsOn": "2026-11-07T12:00:00Z",
+        "draft": false,
+        "endsOn": "2026-11-07T14:00:00Z",
+        "id": "4",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": "Etc/UTC"
+        },
+        "picture": {
+         "uuid": "c9110656-24d2-435e-b1c1-99a59d77690b"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "649bf59a-1989-43c2-b336-46f79ce403b1"
+       },
+       {
+        "beginsOn": "2026-06-05T17:00:00Z",
+        "draft": false,
+        "endsOn": "2026-06-05T18:00:00Z",
+        "id": "3",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": null
+        },
+        "picture": {
+         "uuid": "6660cbd4-b45c-4a7e-986b-0b19eed51241"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "31394d75-94c6-4ad0-96d8-4dc6ffda5e57"
+       },
+       {
+        "beginsOn": "2026-05-22T17:00:00Z",
+        "draft": false,
+        "endsOn": "2026-05-22T18:00:00Z",
+        "id": "2",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": null
+        },
+        "picture": {
+         "uuid": "09bdfc5f-cdae-4fb0-bf8c-21a01a223310"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "cfef784f-1717-4832-a34e-d8ee6641d756"
+       },
+       {
+        "beginsOn": "2026-05-08T17:00:00Z",
+        "draft": false,
+        "endsOn": "2026-05-08T18:00:00Z",
+        "id": "1",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": null
+        },
+        "picture": {
+         "uuid": "e9cd0edd-1051-4740-b947-4c81dd0370bd"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "ecfcb21b-01e6-4c93-8ce6-b574ebae6b79"
+       }
+      ],
+      "total": 5
+     },
+     "preferredUsername": "minneapolis_math_book_group"
+    }
+   }
+  }
+ },
+ "ics": {
+  "bytes": 2578,
+  "crlf": false,
+  "rrule": false,
+  "tzid": false,
+  "vtimezone": false,
+  "dtstart": [
+   "DTSTART:20261107T120000Z\nGEO:44.9498412;-93.3824443\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\nORGANIZER:Minneapolis Math Book Group\nSTATUS:CONFIRMED\nSUMMARY:MPLS Math Club - Bimonthly Social\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\nEND:VEVENT\nBEGIN:VEVENT\nDESCRIPTION:Join us for a welcoming space where math lovers come together to study independently\\, side by side. Whether you are working through a textbook\\, researching a new concept\\, or progressing a personal project\\, this is a time and space to allow you to prioritize your learning of the mathematics that's currently interesting you.\\n\\nWe gather twice a month on weekday evenings to work in parallel. We are each on our own path but let's help each other to continue our studies and learning.\\n\\nWhether you are a seasoned mathematician or simply mathematically minded\\, you are welcome here. Bring your books or notes and your curiosity.\\n\\nWe look forward to learning alongside you!\\n\\n\nDTEND:20261111T200000Z\nDTSTAMP:20261104T101434Z\nDTSTART:20261111T180000Z\nGEO:44.9057455;-93.2878163\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\nORGANIZER:Minneapolis Math Book Group\nSTATUS:CONFIRMED\nSUMMARY:Parallel Learning for Mathematical Minds\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\nEND:VEVENT\nEND:VCALENDAR"
+  ],
+  "uid": [
+   "UID:649bf59a-1989-43c2-b336-46f79ce403b1\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\nEND:VEVENT\nBEGIN:VEVENT\nDESCRIPTION:Join us for a welcoming space where math lovers come together to study independently\\, side by side. Whether you are working through a textbook\\, researching a new concept\\, or progressing a personal project\\, this is a time and space to allow you to prioritize your learning of the mathematics that's currently interesting you.\\n\\nWe gather twice a month on weekday evenings to work in parallel. We are each on our own path but let's help each other to continue our studies and learning.\\n\\nWhether you are a seasoned mathematician or simply mathematically minded\\, you are welcome here. Bring your books or notes and your curiosity.\\n\\nWe look forward to learning alongside you!\\n\\n\nDTEND:20261111T200000Z\nDTSTAMP:20261104T101434Z\nDTSTART:20261111T180000Z\nGEO:44.9057455;-93.2878163\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\nORGANIZER:Minneapolis Math Book Group\nSTATUS:CONFIRMED\nSUMMARY:Parallel Learning for Mathematical Minds\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\nEND:VEVENT\nEND:VCALENDAR"
+  ]
+ },
+ "auth": {
+  "no_header": {
+   "status": 200,
+   "body": {
+    "data": {
+     "loggedPerson": null
+    },
+    "errors": [
+     {
+      "code": "unauthenticated",
+      "message": "You need to be logged in",
+      "path": [
+       "loggedPerson"
+      ],
+      "field": null,
+      "locations": [
+       {
+        "line": 1,
+        "column": 2
+       }
+      ],
+      "status_code": 401
+     }
+    ]
+   }
+  },
+  "bogus_basic": {
+   "status": 200,
+   "body": {
+    "data": {
+     "loggedPerson": null
+    },
+    "errors": [
+     {
+      "code": "unauthenticated",
+      "message": "You need to be logged in",
+      "path": [
+       "loggedPerson"
+      ],
+      "field": null,
+      "locations": [
+       {
+        "line": 1,
+        "column": 2
+       }
+      ],
+      "status_code": 401
+     }
+    ]
+   }
+  },
+  "bogus_login": {
+   "status": 200,
+   "body": {
+    "data": {
+     "login": null
+    },
+    "errors": [
+     {
+      "code": "unknown_error",
+      "message": "Impossible to authenticate, either your email or password are invalid.",
+      "path": [
+       "login"
+      ],
+      "field": null,
+      "locations": [
+       {
+        "line": 1,
+        "column": 34
+       }
+      ],
+      "status_code": 500
+     }
+    ]
+   }
+  }
+ },
+ "oauth": {
+  "token_status": 400,
+  "apps_body": "{\"errors\":[{\"message\":\"No query document supplied\"}]}",
+  "note": "apps_body is POST /api/v1/apps, which falls through to the GraphQL router. It does NOT show the route is missing - see oauth_apex, measured later the same day (D185)."
+ },
+ "oauth_apex": {
+  "measured": "2026-11-04, from the mathloco worktree (Linux), instance nodeinfo 5.2.4",
+  "apps_incomplete": {
+   "method": "POST",
+   "path": "/apps",
+   "body": "name only",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_request",
+    "error_description": "All of name, scope and redirect_uri parameters are required to create an application"
+   },
+   "creates": "nothing - the catch-all clause runs before Applications.create (clone f2590486f, lib/web/controllers/application_controller.ex:82)"
+  },
+  "apps_bad_scope": {
+   "method": "POST",
+   "path": "/apps",
+   "body": "name + redirect_uri + scope=write:everything",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_scope",
+    "error_description": "The scope parameter is not a space separated list of valid scopes"
+   },
+   "creates": "nothing"
+  },
+  "device_code_no_client": {
+   "method": "POST",
+   "path": "/login/device/code",
+   "body": "client_id=nonexistent",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_request",
+    "error_description": "You need to pass both client_id and scope as parameters to obtain a device code"
+   }
+  },
+  "token_bogus_refresh": {
+   "method": "POST",
+   "path": "/oauth/token",
+   "body": "grant_type=refresh_token + garbage triples",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_grant",
+    "error_description": "Invalid refresh token provided"
+   }
+  },
+  "token_client_credentials": {
+   "method": "POST",
+   "path": "/oauth/token",
+   "body": "grant_type=client_credentials + garbage",
+   "status": 400,
+   "body_json": {
+    "error": "invalid_request",
+    "error_description": "Incorrect parameters sent. You need to provide at least the grant_type and client_id parameters, depending on the grant type being used."
+   },
+   "note": "this is the catch-all clause, so it is consistent with - but does not prove - client_credentials being unimplemented. The grants implemented are read from source instead."
+  },
+  "grants_in_source": {
+   "clone": "f2590486f (5.2.5-RC1, 2026-09-30)",
+   "grant_types": [
+    "authorization_code",
+    "urn:ietf:params:oauth:grant-type:device_code",
+    "refresh_token"
+   ],
+   "absent": [
+    "password",
+    "client_credentials"
+   ],
+   "file": "lib/web/controllers/application_controller.ex"
+  },
+  "rate_limit": {
+   "route": "POST /apps",
+   "limit": "10 per 60s per IP",
+   "source": "Rajska.RateLimit.hit(\"create_application:<ip>\", 60_000, 10)"
+  },
+  "scope_vocabulary_source": "lib/graphql/authorization/app_scope.ex @ f2590486f",
+  "scope_examples": [
+   "write:event:create",
+   "write:event:update",
+   "write:event:delete",
+   "read:group:events",
+   "read:profile:organized_events"
+  ],
+  "token_types": {
+   "__type(ApplicationToken)": null,
+   "query_matches": [
+    "authApplication"
+   ],
+   "mutation_matches": [
+    "authorizeApplication",
+    "authorizeDeviceApplication",
+    "revokeApplicationToken",
+    "createFeedToken",
+    "deleteFeedToken",
+    "refreshToken"
+   ]
+  },
+  "bearer_at_graphql_endpoint": {
+   "request": "POST /api/v1 { loggedPerson } with 'authorization: Bearer not-a-real-token'",
+   "body": {
+    "message": "invalid_token",
+    "details": ":invalid_token"
+   },
+   "control_empty_bearer": {
+    "data": {
+     "loggedPerson": null
+    },
+    "errors_code": "unauthenticated"
+   },
+   "means": "the endpoint honours bearer tokens (unlike Basic, which is ignored byte-identically): a scoped OAuth access token could authenticate the write, and n8n's Header Auth credential could hold it"
+  }
+ },
+ "ics_import_route": {
+  "measured": "2026-11-04, live instance 5.2.4 + upstream clone f2590486f (5.2.5-RC1)",
+  "live_schema_mutation_matches_import": [],
+  "live_schema_mutation_count": 91,
+  "live_schema_query_count": 42,
+  "live_schema_feed_mutations": [
+   "createFeedToken",
+   "deleteFeedToken"
+  ],
+  "live_schema_note": "the only feed tokens are EXPORT tokens; `__type(name: \"ApplicationToken\")` -> null; no import*/ics* field appears in __schema",
+  "clone_backend": {
+   "import_routes_in_lib_web_router_ex": [],
+   "def_import_in_lib": [],
+   "ics_in_router": "plug(:accepts, [\"atom\", \"ics\", \"html\", \"xml\"]) - export formats only"
+  },
+  "clone_frontend": {
+   "import_ui_strings_in_src_i18n_en_US_json": [],
+   "icaljs_in_package_json": "^2.2.1",
+   "icaljs_imports_in_src": 0
+  },
+  "third_party_importers": [
+   {
+    "repo": "vranki/mobilizon-importer",
+    "pushed": "2025-02-17",
+    "stars": 5,
+    "language": "python",
+    "config_keys": [
+     "email",
+     "password",
+     "endpoint",
+     "identity",
+     "dry_run",
+     "modules[].ics_url"
+    ],
+    "writes_with": [
+     "createEvent",
+     "updateEvent",
+     "updateEvent(status: CANCELLED)",
+     "DeleteEvent"
+    ],
+    "auth_with": "login(email, password) + refreshToken mutations",
+    "ics_module": "modules[] module=ical_calendar with ics_url (the example pulls a Nextcloud public calendar)"
+   },
+   {
+    "repo": "dindy/mobilizon-event-importer",
+    "pushed": "2026-05-26",
+    "stars": 2,
+    "language": "vite/js browser app",
+    "README": "An app to import event on a Mobilizon instance.",
+    "auth": "OAuth browser flow: registers a client on the instance (clientId/clientSecret fields, registerApp(), scope='read write' - app_scope.ex expands read/write to every granular scope), authorizeApp(code, clientId), grant kept in localStorage, registration routed through a hosted proxy (getProxyApiUrl('auth/register?instance=...&redirect_uri=...'))",
+    "writes": "createEvent, uploadMedia, createGroup (src/api/mobilizon.js); no ICS parser in package.json; src/api/scrapper.js scrapes pages; src/api/geo.js is where upstream issue !2088 lives"
+   },
+   {
+    "repo": "kaihuri/mobilizon-event-importer (framagit)",
+    "shape": "TypeScript/Node service: Dockerfile, migrations/, its own DB; README: 'crawl and import events from 3rd-party platforms and post them on Mobilizon or call webhooks ... new events are periodically checked and automatically published'; sources include ICS feeds",
+    "auth": "OAuth, not password: src/controllers/MobilizonOAuthController.ts + src/models/mobilizon_oauth_application.model.ts (a registered client stored per instance in its own database); src/services/mobilizon/graphql/auth.ts carries only the RefreshToken mutation",
+    "writes": "createEvent and updateEvent documents in src/services/mobilizon/graphql/events.ts; no deleteEvent document there",
+    "read_via": "GitLab API repository/tree + files/raw, ref main, 2026-11-04"
+   }
+  ],
+  "conclusion": "no importer ships with Mobilizon; the ICS route means running a third-party app that authenticates with email+password and writes with the same createEvent, plus update/cancel/delete powers cadence does not take",
+  "bot_actors": {
+   "schema": "lib/mobilizon/actors/bot.ex - schema \"bots\": source (string), type (string, default \"ics\"), actor_id, user_id; table added by priv/repo/migrations/20180522133844_add_bots_table.exs",
+   "registration": "mix mobilizon.create_bot EMAIL NAME SUMMARY TYPE URL (lib/mix/tasks/mobilizon/create_bot.ex) -> Actors.register_bot + Actors.create_bot",
+   "ingestion": "none found in the 5.2.5-RC1 clone: grep -l Bot lib -> actors.ex, bot.ex and the mix task only; no lib/mobilizon/fetchers; lib/mobilizon/cron.ex has no bot job; no GraphQL mutation reads a bot source. So a bot is an IDENTITY an external writer can act as, not an importer"
+  }
+ }
+}

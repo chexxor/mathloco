@@ -2,14 +2,12 @@
   "_about": "The club's own facts, in one file a non-developer can edit from a phone. Everything the site asserts about the club is read from here (src/lib/content.ts); a fact that is not settled is a slot with `value: null` and the bracketed text that is waiting for a source, so the absence is explicit rather than invented. Rules this file answers to: DESIGN.md 'Copy' (state the fact, name where it came from, give a path out, carry the date; never state a frequency without a source; `[BRACKETS]` stay bracketed until a source exists), D92, D136 (no fabricated numbers), record 0010 (missing content is a designed state, never a blank and never a build failure).",
   "_override": "For a preview or a review build, copy src/content.local.example.json to src/content.local/<name>.json (gitignored, like .dev.vars) - it deep-merges over this file. Nothing tracked can turn a placeholder on: `scripts/check-content.mjs` fails any build that contains one, so a review-only state cannot reach the apex.",
   "_sources": "A claim may carry its source once, on the object that holds the group, and every claim under it inherits that source - `unsourcedSlots` in src/lib/content.ts and scripts/check-content.mjs walk ancestors, so 'the operator listed these on 2026-11-03' is written once rather than pasted nine times.",
-
   "cadence": {
     "value": "Monthly",
     "source": "operator ruling, 2026-10-31, recorded in .notes/roadmap-events.md: 'Monthly is more generally correct; actual rhythm is ~every other week, occasionally skipped'",
     "asOf": "2026-10-31",
     "note": "DESIGN.md forbids a frequency word with no source ('join us every week' survived two years). This one has a named source, which is what keeps it on the page. Set value to null and the copy falls back to naming the paths out instead of claiming a rhythm."
   },
-
   "focus": {
     "value": null,
     "placeholder": "[what the club is taking up right now, if it wants to name one]",
@@ -17,25 +15,49 @@
     "asOf": null,
     "note": "Emptied 2026-11-03 on the operator's word: 'We no longer have that focus. We have no current focus at all right now.' The value it held ('Number Theory and Abstract Algebra') was pre-existing site copy with no source - `check:content` had it listed as an unsourced claim - so there was nothing to correct it against. What the club is actually pulling on is in `threads`, which is deliberately undated (see `threads._rule`). The hero renders nothing when this slot is empty rather than inventing a subject; `heroLabel()` in src/lib/content.ts is what decides the label lane."
   },
-
   "threads": {
     "source": "operator, 2026-11-03, describing what the club has been discussing in its Discord channel: 'IBM Qiskit quantum computing tools, theoretical quantum physics, proof assistant languages like Lean, news in the general math field, LLMs affects on the math field, favorite math-related Youtube content, foundations of mathematics, considering the implications of arithmetic with slight changes, math exercises/puzzles that don't require expertise in a field and have interesting solutions'",
     "asOf": "2026-11-03",
     "_rule": "Undated, untitled and not an archive, on purpose. Operator ruling, 2026-11-03: 'I don't want the home page to give anyone an idea that our groups interests are as narrow as what we have done historically, so I don't want to name enough specific things to give enough information to allow a pattern to emerge.' So this list carries no dates, no sequence, no book titles, no authors and no run of past topics a reader could extrapolate from. A thread that goes quiet is edited out rather than left as a record, and nothing here implies the club did something in the past or will do it in the future. Item strings are reworded for a newcomer (that is presentation, not a new claim); the operator's own words are the source above.",
     "items": [
-      { "value": "Arithmetic with the rules nudged", "gloss": "what breaks, and what gets interesting, if you change how numbers combine" },
-      { "value": "Proofs a machine checks", "gloss": "Lean, and what it does to a proof when something verifies it line by line" },
-      { "value": "The mathematics under a quantum computer", "gloss": "Qiskit, and the linear algebra those gates are made of" },
-      { "value": "Steps you can undo", "gloss": "algorithms that lose nothing, drawn as wires and boxes" },
-      { "value": "What mathematics sits on", "gloss": "foundations, and why the question keeps coming back" },
-      { "value": "What a language model changes", "gloss": "about doing mathematics, and about who gets to" },
-      { "value": "Puzzles that need no background", "gloss": "and have strange answers" },
-      { "value": "Whatever the field is arguing about", "gloss": "read carefully, rather than retweeted" },
-      { "value": "The mathematics videos we finish", "gloss": "and the ones we abandon, with reasons" }
+      {
+        "value": "Arithmetic with the rules nudged",
+        "gloss": "what breaks, and what gets interesting, if you change how numbers combine"
+      },
+      {
+        "value": "Proofs a machine checks",
+        "gloss": "Lean, and what it does to a proof when something verifies it line by line"
+      },
+      {
+        "value": "The mathematics under a quantum computer",
+        "gloss": "Qiskit, and the linear algebra those gates are made of"
+      },
+      {
+        "value": "Steps you can undo",
+        "gloss": "algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+        "value": "What mathematics sits on",
+        "gloss": "foundations, and why the question keeps coming back"
+      },
+      {
+        "value": "What a language model changes",
+        "gloss": "about doing mathematics, and about who gets to"
+      },
+      {
+        "value": "Puzzles that need no background",
+        "gloss": "and have strange answers"
+      },
+      {
+        "value": "Whatever the field is arguing about",
+        "gloss": "read carefully, rather than retweeted"
+      },
+      {
+        "value": "The mathematics videos we finish",
+        "gloss": "and the ones we abandon, with reasons"
+      }
     ]
   },
-
-
   "venues": {
     "value": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",
     "source": "operator, 2026-11-03, who named the venues the club has used (listed in `names` below)",
@@ -59,11 +81,11 @@
       "Torg Brewery"
     ]
   },
-
   "schedule": {
-    "source": null,
-    "_source": "the source of truth is ruled to be Mobilizon or an ICS feed (D132) and the operator has to provision one; until then no date on this page is knowable, so `upcoming` stays empty and the section renders its designed empty state (round 7, option A).",
+    "source": "the club's own calendar: Mobilizon (self-hosted), harvested by npm run events:harvest into data/events.json and published as /events.ics (D70, D73)",
+    "_source": "Corrected 2026-11-04: the earlier line here said the operator still had to provision a calendar and so 'no date on this page is knowable'. That stopped being true the day the group feed was harvested (D169) \u2014 the rows now live in data/events.json, which `src/lib/events.mjs` reads, and `upcoming` below is retired in favour of it. `src/content.json` keeps the words around the dates (the empty state), not the dates.",
     "upcoming": [],
+    "_upcoming": "Retired: the rows moved to data/events.json so the page and /events.ics cannot disagree about a date. This stays an empty array on purpose \u2014 if anything ever reads it again, the gate would then be auditing a second source of truth.",
     "empty": {
       "status": "Nothing scheduled",
       "title": "No date is on the calendar yet.",
@@ -75,14 +97,12 @@
       }
     }
   },
-
   "membership": {
     "value": "280 on the Meetup list",
     "source": "the club's own Meetup group page, fetched 2026-11-03, whose member-count link reads '280 members' (https://www.meetup.com/minneapolis-mathematics-book-club/members/); the operator confirmed the figure and added that about ten of them are regular attendees",
     "asOf": "2026-11-03",
     "note": "The site used to render Math.floor(Math.random()*100+150)+'+ members' - a different community size on every request (D136, deleted). What is said here is the roster, not the attendance: it is the count on the page that carries it, dated the day it was read, with no '+' and no rounding. Do NOT publish the regular-attendee figure: ten is a fact about who shows up, it reads as a discouragement on a join page, and the operator's plan is to grow it by formalising special interest groups. Re-read the number when the page is next edited - a dated figure that has gone stale is the failure this slot's asOf exists to make visible."
   },
-
   "photos": {
     "placeholders": false,
     "_note": "true draws measured shot-cards in the reserved photo places (PS-1, PS-3) so a preview shows the geometry a real photograph will take. It is only ever true in src/content.local.json: check:content fails a build whose HTML carries a placeholder fill."

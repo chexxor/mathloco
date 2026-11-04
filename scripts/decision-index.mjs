@@ -42,13 +42,36 @@ if (existsSync(root + LOG)) log = readFileSync(root + LOG, 'utf8');
 // is marked in the index, because a decision that was amended twice is not a different decision.
 function parse(text) {
   const out = new Map();
+  const headings = new Map(); // id -> [heading text, ...] — the collision detector below
   for (const line of text.split('\n')) {
-    let m = /^#{2,6}\s+D(\d+)\b(.*)$/.exec(line) || /^[-*]\s+\*{0,2}D(\d+)\b\*{0,2}\s*[:\u2014\u2013]?\s*(.*)$/.exec(line);
+    const heading = /^#{2,6}\s+D(\d+)\b(.*)$/.exec(line);
+    let m = heading || /^[-*]\s+\*{0,2}D(\d+)\b\*{0,2}\s*[:\u2014\u2013]?\s*(.*)$/.exec(line);
     if (!m) continue;
+    // An amendment heading (`### D143 amendment. …`) is the log's own convention and belongs to the same
+    // decision; a second plain heading for an id is a collision. D143 has a real amendment written this way,
+    // which is why the detector asks rather than counting every repeated id.
+    if (heading && !/\bamendment\b/i.test(m[2])) {
+      const h = headings.get(Number(m[1])) ?? [];
+      h.push(line.trim());
+      headings.set(Number(m[1]), h);
+    }
     const e = splitTitle(Number(m[1]), m[2]);
     merge(out, e.id, e.title, e.when);
   }
+  out.duplicateHeadings = [...headings.entries()].filter(([, hs]) => hs.length > 1);
   return out;
+}
+
+// Two plain `### D175` headings in one log is not an amendment, it is two delegates appending the next id at the
+// same hour. Measured 2026-11-04: two sessions each wrote "D175" within minutes, and `merge()` folded the
+// second into the first as "_amended in place_" — so the index published one line for two unrelated
+// decisions, and `check:decisions` (which only catches a citation with no entry) stayed green. An id is
+// append-only and single: if you need an id, take the highest defined one plus one, and if the number is
+// already gone by the time you write it, re-read the tail of the log and take the next.
+function dupeReport(entries) {
+  const dupes = entries?.duplicateHeadings ?? [];
+  if (!dupes.length) return [];
+  return dupes.map(([id, hs]) => `  D${id} is defined ${hs.length} times:\n` + hs.map((h) => `    ${h}`).join('\n'));
 }
 function splitTitle(id, rest) {
   let title = rest.replace(/^\s*(amendment)?[.\u2014\u2013:\s-]+/i, '').trim();
@@ -148,6 +171,14 @@ if (!check) {
     console.error(`decision-index: the index on disk stays as it is; \`--check\` still validates citations against it.`);
     process.exit(2);
   }
+  const dupes = dupeReport(entries);
+  if (dupes.length) {
+    console.error(`decision-index: ${dupes.length} id(s) defined twice in ${LOG} — the index cannot be written,`);
+    console.error('decision-index: because one of the two would silently disappear into the other. Renumber the');
+    console.error('decision-index: later one to the next free id and fix its citations (the log is a shared journal).');
+    console.error(dupes.join('\n'));
+    process.exit(1);
+  }
   const out = render();
   const prev = existsSync(root + INDEX) ? readFileSync(root + INDEX, 'utf8') : null;
   if (out === prev) {
@@ -162,6 +193,12 @@ if (!check) {
 // --check
 let bad = 0;
 if (entries) {
+  const dupes = dupeReport(entries);
+  if (dupes.length) {
+    console.error(`decision-index: ${dupes.length} id(s) defined twice in ${LOG}:`);
+    console.error(dupes.join('\n'));
+    bad++;
+  }
   const want = render();
   const have = existsSync(root + INDEX) ? readFileSync(root + INDEX, 'utf8') : null;
   if (have !== want) {

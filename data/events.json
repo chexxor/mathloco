@@ -1,0 +1,80 @@
+{
+  "_rule": "The event snapshot the site publishes from — D70's contract (`/events.ics` plus this row shape, the writer deliberately deferred) and D73's topology (Mobilizon is the club of record; mathloco keeps a DERIVED snapshot and never fetches Mobilizon at request time, so Mobilizon being down costs editing, not serving). Nothing here is invented: every row is a field the organizer typed into Mobilizon, harvested from the group feed by `npm run events:harvest`, and each row carries the URL and the fetch that put it here. D92's copy rule still binds the *page*: real dates and series names, never a frequency inferred from the rows. `npm run check:ics` fails the build on the spec traps (D72) and on any instant published without a confirmed wall clock (D169).",
+  "calendar": {
+    "prodid": "-//Minneapolis Math Book Club//Events 1.0//EN",
+    "name": "Minneapolis Math Book Club",
+    "timezone": "America/Chicago",
+    "_timezone": "The club meets in the Twin Cities, so the published instants carry this TZID with a VTIMEZONE (D72). `check:ics` asserts the offsets against the runtime's tz database rather than trusting this string."
+  },
+  "source": {
+    "kind": "mobilizon",
+    "url": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
+    "software": "Mobilizon 5.2.4",
+    "fetchedAt": "2026-11-04T07:15:30Z",
+    "_fetchedAt": "The stamp every VEVENT's DTSTAMP derives from (RFC 5545 3.8.7: the moment the information was put in the calendar object). Deliberately a committed value, not `new Date()`: a build-time DTSTAMP would make every deploy a change to every subscriber's calendar, and would make D72's byte-identity assertion unmeasurable.",
+    "_rule": "Read as served 2026-11-04 (curl, 200, `text/calendar`, 2578 bytes, 2 VEVENTs, no RRULE, no TZID, no VTIMEZONE, LF-only lines, longest content line 721 chars). Mobilizon 5.2.4's exporter writes wall-clock numbers wearing a `Z` and no zone (D169, and the same finding in `.notes/roadmap-events.md` after the operator set the instance timezone to Chicago) — so the harvest treats them as candidates, never as instants, until the organizer states the wall clock. The instance's own past rows sit at 17:00Z (12:00 CDT), which is consistent with a *correct* conversion, so the exporter cannot be assumed to behave one way for every row."
+  },
+  "events": [
+    {
+      "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
+      "slug": "2026-11-07-club-social",
+      "summary": "MPLS Math Club - Bimonthly Social",
+      "_summary": "Verbatim from the organizer's calendar (`SUMMARY`). The word \"Bimonthly\" is D92's defect class and MILESTONES A6 input 1 asks whether our published name drops it; until that is ruled the name is quoted, not rewritten, because inventing a series name is a new claim.",
+      "series": "MPLS Math Club social",
+      "_series": "The series this instance belongs to, minus the frequency word D92 keeps off the page. Presentation of the string above, not a second claim.",
+      "start": "2026-11-07T12:00",
+      "end": "2026-11-07T14:00",
+      "_times": "Feed says `DTSTART:20261107T120000Z` / `DTEND:...T140000Z` with no zone (D169), so the `Z` is not read as an instant. Confirmed as a wall clock on 2026-11-04 from two sources, not inferred: `.notes/roadmap-events.md` records the organizer typing **12:00** for this event on 2026-11-03 and the export answering `120000Z`, and the event page's own meta description as served today reads \"Nov 7, 2026, 12:00:00 PM - GMT\" — the club publishes 12:00 on its own page, mislabelled GMT by 5.2.4's exporter. So the club's hour is 12:00-14:00 in its own zone. Operator confirmation is asked for in `.notes/NEXT.md`; `timeConfirmed` is one boolean per row and the UID does not change when it flips, so a correction updates the subscriber's entry rather than orphaning it (D172).",
+      "timeConfirmed": true,
+      "venue": {
+        "name": "Angel Food Bakery",
+        "street": "8100 Minnetonka Boulevard",
+        "city": "Saint Louis Park, Minnesota",
+        "raw": "Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States"
+      },
+      "geo": "44.9498412;-93.3824443",
+      "blurb": "We are interested in discussing algorithms of most any kind. If you have an algorithm or related topic you want to discuss, come and hang out with us!\n\nThe topics we have discussed: artificial intelligence, automata, category theory, and math & computer science olympiad exercises.\n\nIdeally, attendees would post a comment before the date of the event with a topic they can discuss. Potential attendees might want to know what people at this event are interested in, and they want to see that the event is alive and well.\n\nIf no topics are posted, then we can generate topics to discuss at the next meetup.\n\nDiscord server for the group, if you're interested: https://discord.gg/wx5S7YJSkU",
+      "_blurb": "Verbatim `DESCRIPTION` as served by the feed (the feed escapes `\\,` and `\\n`; unescaped here, and `ics.mjs` re-escapes on the way out).",
+      "url": "https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1",
+      "image": "https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png",
+      "_image": "The organizer's own event art, 954x460 PNG, 127,098 bytes as fetched 2026-11-04. The candidate for PS-4 (the parked event thumb, MILESTONES); it stays a link until the operator rules whether the club's art gets mirrored into this repo.",
+      "sequence": 0,
+      "status": "CONFIRMED",
+      "source": {
+        "feed": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
+        "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
+        "fetchedAt": "2026-11-04T07:15:30Z",
+        "dtstamp": "20261104T062524Z"
+      }
+    },
+    {
+      "uid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0",
+      "slug": "2026-11-11-parallel-learning",
+      "summary": "Parallel Learning for Mathematical Minds",
+      "_summary": "Verbatim from the organizer's calendar (`SUMMARY`).",
+      "series": "Parallel Learning for Mathematical Minds",
+      "start": "2026-11-11T18:00",
+      "end": "2026-11-11T20:00",
+      "_times": "Feed says `20261111T180000Z`/`20261111T200000Z`, no zone — see the row above for why the `Z` is not believed and what confirmed it: the organizer entered **18:00** (`.notes/roadmap-events.md`, 2026-11-03) and the event page's meta description reads \"Nov 11, 2026, 6:00:00 PM - GMT\" as served 2026-11-04.",
+      "timeConfirmed": true,
+      "venue": {
+        "name": "Kowalski's Market",
+        "street": "5327 Lyndale Avenue South",
+        "city": "Minneapolis, Minnesota",
+        "raw": "Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States"
+      },
+      "geo": "44.9057455;-93.2878163",
+      "blurb": "Join us for a welcoming space where math lovers come together to study independently, side by side. Whether you are working through a textbook, researching a new concept, or progressing a personal project, this is a time and space to allow you to prioritize your learning of the mathematics that's currently interesting you.\n\nWe gather twice a month on weekday evenings to work in parallel. We are each on our own path but let's help each other to continue our studies and learning.\n\nWhether you are a seasoned mathematician or simply mathematically minded, you are welcome here. Bring your books or notes and your curiosity.\n\nWe look forward to learning alongside you!",
+      "url": "https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0",
+      "sequence": 0,
+      "status": "CONFIRMED",
+      "source": {
+        "feed": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
+        "uid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0",
+        "fetchedAt": "2026-11-04T07:15:30Z",
+        "dtstamp": "20261104T062524Z"
+      }
+    }
+  ],
+  "_dropped": "The instance feed (GET /feed/instance/ics, 6,584 bytes, 5 VEVENTs as fetched 2026-11-04) also carries three past `Bimonthly Social` rows — 2026-05-08, 2026-05-22, 2026-06-05, each at 17:00Z, each its own UID. They are not published: there is no past-events page (D117: a path needs a page) and the group feed the harvest reads does not return them (it lists upcoming only, per D74's reading of the source). If a `Past meetings` page is ever ruled, they are in the harvest, not lost."
+}

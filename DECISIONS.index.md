@@ -178,5 +178,21 @@ and a renumber silently re-points every one of them at a different decision.
 - **D168** — the horizon ships as PS-5: three whole leaves at their own aspects, desktop-only, and the page got shorter, not just prettier
 - **D169** — the group feed is harvested: two instances, no recurrence, and its instants have no zone on them
 - **D170** — alt text and provenance are quoted from the picture's own page; a title plus an id number is not evidence
+- **D171** — the site publishes its own event snapshot; Mobilizon is the club's authoring surface, not a runtime dependency
+- **D172** — an unconfirmed clock time publishes as a DATE, never as an instant; Mobilizon's `Z` is not evidence
+- **D173** — a browser-gate fixture that targets markup the build stopped making is a lost probe; retarget it and name where the state went
+- **D174** — the two November hours are confirmed from the organizer's own entry and the club's own page, not from the feed's `Z`
+- **D175** — Mobilizon has no recurrence, so cadence is an n8n workflow that writes the *next occurrence* through GraphQL
+- **D176** — cadence carries the *wall clock*, never the instant, and reports a zone mismatch instead of obeying it
+- **D177** — the integration signs in per run with GraphQL `login`, from n8n environment variables, and holds no token between runs
+- **D178** — `options.maximumAttendeeCapacity: 0` is never copied into a new event
+- **D179** — the n8n workflow JSON is a generated artifact; the rules live in `lib/core.mjs` and the tests execute the generated text
+- **D180** — dry run is the shipped default and the only kill switch; deleting an event is a human tool, never the workflow
+- **D181** — a `//` between JSX children is not a comment, it is copy; the render gate now fails any text node that begins like source-comment syntax
+- **D182** — the Mobilizon instance is reachable from outside the LAN: measured, not inferred; that makes a scheduled harvest a *choice*, and it puts the login endpoint on the open internet
+- **D183** — the credential/reachability probe is a generated workflow artifact with a machine-checked read-only argument, not a snippet in a doc
+- **D184** — "what runs in n8n" is verified by exporting it back and comparing it to the artifact; the comparator is gated by planted defects
+- **D185** — Mobilizon's OAuth surface is on the apex, not under `/api/v1`: D177's "no client-registration route" was a path artifact, and the probe now asks the question from inside n8n's network
+- **D186** — the ICS-feed-import alternative is measured and parked: Mobilizon ships no importer, and the third-party ones use the same login and the same `createEvent`, with more powers
 
-Defined: 170 (D1-D170). Unused ids: none.
+Defined: 186 (D1-D186). Unused ids: none.

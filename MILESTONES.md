@@ -42,25 +42,39 @@ the new cap rule: **752x614/493kB → 688x562/377kB**, sha `47518a39c1`, layout 
 | **A3** | Re-measure rhythm on the page the art makes, then the operator rules **R6** | `npm run check:rhythm` re-run at 1240/640/390/320 against the A2 page — **it now has two specific targets** (D168): the **283px** hole left inside the reasons section by the `feature`-card cut, and the **128px** of `py-16` the horizon band brings with it (empty runs went 9/1075px -> 10/1215px at 1240 even as painted share rose 5.33% -> 7.7%); a record shows the table; **the operator's ruling recorded as a D-id** | not started — needs A2 |
 | **A4** | **Round 11 — body line-spacing**: shipped `body 17.6/24` = 1.36 against DESIGN.md's published 1.5 floor, measured in the renderer, one round covering the same line-box geometry R6 touches | a round specimen the operator chooses from; the token change; `check:rhythm` re-run after it; ruling as a D-id | not started — deliberately after A3 |
 | **A5** | D149-3c: move the notice-button keyline so it sits on **one** ground instead of straddling `paper` and `panel` — fix the placement, not the number | `npm run check:ground` reports no two-ground side for that hairline, and `check:ground:selftest` still passes | **done, merged into local `staging` 2026-11-03** with the queue (unpushed). 7 keylines, 3.01 on `paper` on both sides at all three widths, 0 straddles; `check:render` rule 4a + 2 new plantings (14 total, all caught). Record 0024, **D154** (now in `DECISIONS.index.md`) |
-| **A6** | Events: publish `/events.ics` from data we author (D70 contract, D150 framing) — data file, build-time render, `check:ics` traps, `TZID=America/Chicago` + `VTIMEZONE`, `STATUS:CANCELLED`, staleness gate | `npm run check:ics` exists and **can fail** (a selftest plants each trap); the served `.ics` is byte-identical across two builds except `DTSTAMP`/`X-WR-…`; a real `curl` of the preview URL returns the two November events with the right wall-clock | **partly unblocked 2026-11-04:** the operator gave the group feed URL and it is harvested (D169) — **two VEVENTs, no RRULE, no TZID/VTIMEZONE**: Social `20261107T120000Z` at Angel Food Bakery (Saint Louis Park, `GEO` present) and `Parallel Learning for Mathematical Minds` `20261111T180000Z` at Kowalski's Market, 5327 Lyndale Ave S. Read as instants they are 06:00 and 12:00 CST, which is implausible, so the *wall clock* is the open input, not the URL. Still needs inputs 1, 2, 4, 5, 6 below |
+| **A6** | Events: publish `/events.ics` from data we author (D70 contract, D150 framing) — data file, build-time render, `check:ics` traps, `TZID=America/Chicago` + `VTIMEZONE`, `STATUS:CANCELLED`, staleness gate | `npm run check:ics` exists and **can fail** (a selftest plants each trap); the served `.ics` is byte-identical across two builds except `DTSTAMP`/`X-WR-…`; a real `curl` of the preview URL returns the two November events with the right wall-clock | **partly unblocked 2026-11-04:** the operator gave the group feed URL and it is harvested (D169) — **two VEVENTs, no RRULE, no TZID/VTIMEZONE**: Social `20261107T120000Z` at Angel Food Bakery (Saint Louis Park, `GEO` present) and `Parallel Learning for Mathematical Minds` `20261111T180000Z` at Kowalski's Market, 5327 Lyndale Ave S. Read as instants they are 06:00 and 12:00 CST, which is implausible, so the *wall clock* is the open input, not the URL. **Built on `events/publish-ics-feed`, 2026-11-04 (unmerged, D171-D174).** Exits met on this tree: `npm run check:ics` **can fail** — 13 rules, and `check:ics:selftest` plants 24 defects and catches 24 (both D72 traps, Mobilizon's `Z`-with-no-zone pattern, UID stability, DATE spans, VTIMEZONE offsets, artifact drift); `/events.ics` is prerendered from `data/events.json` (`dist/client/events.ics`, 3136 octets, 77 content lines) and both `check:ics` steps are in the deploy set; two builds in a row produce a byte-identical feed **including** `DTSTAMP`, because it derives from the committed `source.fetchedAt` and only moves when the harvest runs — stronger than the exit asked for; the two rows publish `TZID=America/Chicago` instants with a VTIMEZONE whose offsets the gate checks against the runtime tz database (D172/D174). Still needs inputs **1, 4, 5, 6** below, plus the preview-`curl` half of this exit, which needs the operator's grant to push `staging` (D124). |
 | **A7** | The memory that travels: tracked `DECISIONS.index.md` + dangling-citation gate, tracked `MILESTONES.md` (this file), `check:figures` for measured numbers in `DESIGN.md`, gate-cost guard | `npm run check:decisions` and `check:figures` green inside `verify`; this file exists; cost guard prints against a baseline | **done, merged into local `staging` 2026-11-03** (unpushed) — the queue carried the review harness (D157) and D155–D164 with it |
+| **A8** | Keeping a published calendar from going stale — M6's failure mode, **a silently stale schedule**: the harvest ritual, and a rule that says out loud when the snapshot holds nothing near | a ruling on **N** (how far ahead a date must exist) and on where the rule runs; then `npm run check:ics` FAILs below N with a message naming the command that fixes it (`node scripts/events-harvest.mjs`), plus an escape hatch for the gap between series | **open, parked 2026-11-04 with its trigger named.** The harvester exists and is dry-run by default; `check:ics` already *prints* the distance ("next is 2026-11-07 (3 day(s) away)") — prints are not gates. It un-parks itself: when both November rows pass (2026-11-12) the snapshot holds nothing upcoming and the landing schedule shows its empty state, which is the state this item exists to catch |
+| **A9** | Mobilizon has no repeating events, so something has to make the next one: `integrations/mobilizon-cadence/` — an n8n workflow that reads the group's history, decides the next date for each of the two series, writes one `createEvent`, then re-reads the date to prove what it wrote (D175) | `node integrations/mobilizon-cadence/check.mjs` green (the artifact builds under its own invariants, 61 tests pass, the probe artifact builds and satisfies its read-only argument, the import checker catches every planted defect, and the live read-only plan agrees with the instance); **an n8n dry run prints the same two dates as `simulate.mjs`** (2026-11-21 and 2026-11-25 as measured 2026-11-04, Linux), **and the copy exported back out of n8n verifies — `verify-import.mjs` reporting 0 fatal / 0 drift** (D184); the operator's ruling on the dedicated Mobilizon account, and `RUN.dryRun: false` + rebuild + re-import, close it | **built 2026-11-04 on `events/mobilizon-cadence-n8n`, unmerged, `dryRun: true` as shipped (D175–D180).** Nothing imported into n8n, no credential set, and cadence has never written an event. Four operator actions stand between here and a real write: set `MOBILIZON_EMAIL`/`MOBILIZON_PASSWORD` on the n8n host, import `n8n/cadence-workflow.json`, wire alerting to `21`/`22`, grant writes. The two instruments those steps run on are now built and gated: `n8n/env-probe.json` (D183 — on the n8n host, whether `$env` is visible and whether `/api/v1` answers from that network; presence of the names, never their values) and `verify-import.mjs` (D184 — proves the workflow inside n8n is the workflow this repo reviewed: it reads the exported copy's own `dryRun`, and **runs** its reasoning nodes against the saved calendar to print the two dates that copy would plan). Mobilizon is reachable from outside the LAN (D182), so reachability is not the open question; every open one is host-side, behind the YunoHost SSO. The account question now has a measured menu: OAuth apps **are** available on this instance, on the apex `POST /apps` — D177's "no client-registration route" was `/api/v1/apps` falling through to the GraphQL router, corrected by D185 — but the grants implemented are `authorization_code`, device code and `refresh_token` (no `password`, no `client_credentials`), so OAuth trades the password for a one-time consent plus a rotating refresh token on the same host, with granular scopes (`write:event:create`) as the gain. The ICS-feed-import alternative was investigated and parked with its trigger (D186): Mobilizon ships no importer, and the third-party ones authenticate with the same email+password and write with the same `createEvent`, plus update/cancel/delete. Guide: `integrations/mobilizon-cadence/docs/operator-guide.md` |
 
 ### What A6 still needs from the operator (six inputs, as of 2026-11-03)
 
 1. The series name: "MPLS Math Club - **Bimonthly** Social" carries the word D92 ruled out of our titles, and
    the pattern in the data says every two weeks. Proposed: `MPLS Math Club Social`, rhythm carried by the data.
-2. Which November dates and **wall-clock times** are real. The feed now answers the dates — **Sat 7** (Angel Food
-   Bakery) and **Wed 11** (Kowalski's Market) — and both are plausible against D92's list of 7, 12, 21, 26 minus the
-   ones it invented. What it cannot answer is the time: `120000Z`/`180000Z` with no zone reads as 06:00 and 12:00 CST.
-   A wrong date is the costliest defect on this roadmap; a wrong *hour* is a close second, because a pub-night event
+   **Interim, on the branch:** the verbatim `SUMMARY` stays verbatim in the feed (a quotation, not our claim) and
+   the page prints the row's own `series` field (`MPLS Math Club social`). The ruling still decides the published name.
+2. ~~Which November dates and **wall-clock times** are real~~ — **answered 2026-11-04 (D174), veto still open.**
+   The dates come from the feed; the hours come from the organizer's own entry (`.notes/roadmap-events.md`: 12:00 and
+   18:00 typed, `120000Z`/`180000Z` answered) plus the event pages' meta descriptions as served 2026-11-04 ("Nov 7,
+   2026, 12:00:00 PM - GMT"). Both rows now carry `timeConfirmed: true` and publish `-0600` instants; one boolean per
+   row returns the honest all-day form if the operator says an hour is wrong.
+   Kept, because it is the reason D172 exists: a wrong date is the costliest defect on this roadmap and a wrong *hour*
+   is a close second — a pub-night event written as a UTC instant crosses midnight, and `upcoming()` then picks the
+   wrong instance for "next".cond, because a pub-night event
    written as a UTC instant crosses midnight and the "next upcoming" comparison then picks the wrong instance.
 3. ~~Harvest source~~ — **answered by fact, 2026-11-04**: the **group** feed
    (`/@minneapolis_math_book_group/feed/ics`) now returns the **same two `UID`s** the instance feed does (200, 2578
    bytes, `DTSTAMP:20261104T052417Z`), so there is no group-vs-instance choice to make. The earlier "0 VEVENTs" line
    in this table is stale and is corrected here (D169). What the feed does *not* give: a zone, or a recurrence rule.
-4. Is the instance reachable from outside the LAN? A TLS handshake to the public address from inside the network
-   does not prove it (NAT loopback). A phone on cellular settles it, and it decides whether a scheduled harvest
-   can live in GitHub Actions or must live on the home server.
+4. ~~Is the instance reachable from outside the LAN?~~ — **answered 2026-11-04 (D182)**: the operator loaded
+   `https://mobilizon.labradorius.com/` **on a phone on cellular**, and the public view was re-measured the same day
+   (DoH → CNAME `labradorius.com` → **75.73.33.126**, while this seat still resolves `192.168.1.120`). So a scheduled
+   harvest **may** live on an internet host (GitHub Actions: a `schedule:` that fetches the group ICS and opens a
+   data-only PR against `data/events.json`) **or** on the home server (a cron running `npm run events:harvest --
+   --write`; the push stays the operator's, D66). Which one is the operator's ruling, and it pairs with A8's
+   "where does the staleness rule run" question — nothing is scheduled today, and `npm run events:harvest` is still
+   dry-run by default. Unproven sub-case: reachability from a GitHub runner's own DNS and egress; re-run the harvest
+   dry run on whatever host gets the job.
 5. Whether `/schedule` returns as a page (its nav link is a dead fossil from D63), and whether RSVP back-flow
    stays out of scope.
 6. When convenient: **cancel** an event and check whether the feed drops it or emits `STATUS:CANCELLED` — D72
@@ -68,14 +82,25 @@ the new cap rule: **752x614/493kB → 688x562/377kB**, sha `47518a39c1`, layout 
 
 ### Merge order for the branches awaiting a grant
 
-`process/gates-that-remember` (A7) first: it is what puts `MILESTONES.md` and `DECISIONS.index.md` under the repo
-at all, so every other branch's clock-in ritual currently fails on a fresh clone. `pixels/one-ground-keylines`
-(A5) is independent of A1 and of A7's files. `design/round12-art` (A1) touches no site markup. A2 needs A1 merged.
-`pixels/hero-composition-r13` (round 13, D158/D160) is stacked on all four, so one merge of it lands the whole queue; measured
-2026-11-03 with `git merge-tree --write-tree --name-only staging pixels/hero-composition-r13` (a tree hash, no conflict),
-and that tree ran `verify` 15 ok / 18.3s and `verify:browser` 7 ok / 72.2s. Re-run after D160's three commits (branch 24
-ahead): still no conflict, tree `b9aed084`. Those gate figures belong to the 21-commit tree; the current head is green on
-its own (`verify` 15 ok / 16.6s, `verify:browser` 7 ok / 102.8s).
+**Re-measured 2026-11-04 — the previous version of this section was stale** (it listed `process/gates-that-remember`,
+`pixels/one-ground-keylines`, `design/round12-art`, `pixels/hero-composition-r13` and round 14 as pending; all of them
+are merged into local `staging`, which is itself still unpushed). Measured with
+`git branch --no-merged staging` and `git merge-tree --write-tree --name-only staging <branch>` (D156: measure the
+merge before proposing an order — a tree hash and no conflicts, no worktree change, no build):
+
+**Re-measured 2026-11-04 at `events/mobilizon-cadence-n8n` `f0b9f01`.** The previous version of this table listed
+`events/publish-ics-feed` as a separate decision; it is no longer one — that branch is an **ancestor** of the cadence
+branch (`git merge-base --is-ancestor` exits 0), because A9 cites D174 and `DECISIONS.index.md` does not exist on
+`staging`. One merge now lands both items.
+
+| branch | item | merge into `staging` | what it costs |
+|---|---|---|---|
+| `events/mobilizon-cadence-n8n` (10 commits, tip `f0b9f01`) | **A9** (the n8n cadence, D175–D181) **and all of A6** — the snapshot, `/events.ics`, `check:ics` + selftest, the harvester, the `--no-events` review mode, D171–D174 | **clean** (`git merge-tree --write-tree --name-only staging HEAD` → exit 0, tree `bc51ef53`) | two steps added to the deploy set (`check:ics`, `check:ics:selftest`). Measured at this tip: `verify` **17 ok / 0 failed / 14.3s** (−16% against the 17.1s baseline) |
+| `events/publish-ics-feed` | A6 alone — **superseded**: the merge above lands it | (an ancestor of the row above; tree `44361ee8` if taken alone) | nothing extra |
+| `docs/www-redirect-endstate` | docs/endstate notes | **clean** (tree `67ea36e0`, no conflict list) | prose only |
+
+Order is free — the docs branch shares no file with the events branch. If both land, `verify` runs once on the result.
+Nothing is pushed (D66), and `staging` has never been pushed; merging and any push stay the operator's (D66, D124).
 
 ## Parked, with the trigger that un-parks it (D148)
 

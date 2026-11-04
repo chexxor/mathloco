@@ -68,6 +68,8 @@ const DEPLOY = [
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
+  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
   { name: 'check:cache', desc: 'summary-cache rules against a fake KV namespace' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
   { name: 'build', desc: 'astro build -> dist/' },

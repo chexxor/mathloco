@@ -62,7 +62,7 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
     <div class="text-center">
       <h2 id="when-we-meet" class="text-heading font-extrabold text-ink">When We Meet</h2>
       <p class="mt-4 text-lede leading-prose text-ink-2 font-body max-w-measure mx-auto">
-        The calendar, the sign-up and the address all live on Meetup. This page copies what is on it.
+        These dates are copied from the club's own calendar. The sign-up is on Meetup.
       </p>
     </div>
 
@@ -75,8 +75,15 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
                 <span class="text-label font-medium text-ink tabular-nums">
                   {formatDate(item.date, 'wide')}
                 </span>
+                {/* A JSX comment, not `//`: inside `{items.map()}` the template body is JSX children, where a
+                    `//` line is not a comment at all — it shipped as visible text in every card (2026-11-04).
+                    One text node, so the render gate sees one measurement. An unconfirmed hour prints
+                    "time not set" rather than a guessed one (D172); a confirmed one prints the span the
+                    organizer set, in the club's own zone. */}
                 <span class="text-label text-ink-3">
-                  {formatTime(item.time ?? '') ?? 'time not set'}
+                  {item.time
+                    ? `${formatTime(item.time)}${item.endTime ? ` – ${formatTime(item.endTime)}` : ''}`
+                    : 'time not set'}
                 </span>
                 {filled(item.status) && (
                   <span class="text-label font-medium text-ink-2 uppercase tracking-wide">{item.status}</span>
@@ -85,6 +92,13 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
               <h3 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h3>
               {filled(item.series) && (
                 <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.series}</p>
+              )}
+              {filled(item.venue) && (
+                // The address is a fact the organizer typed, with a source (data/events.json carries the
+                // feed it came from), so D92's bracket rule does not apply to it. The organizer's full
+                // `LOCATION` string — street, postcode, state, country — is what the feed publishes; the
+                // page shows the navigable line.
+                <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
               )}
               <p class="mt-2 text-body leading-prose text-ink-2 font-body">
                 <a
@@ -99,6 +113,15 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
             </li>
           ))}
         </ul>
+        // One path out, in prose rather than a second button (the D139 ruling prices an in-sentence path at
+        // its 24px line). The link is the feed itself: a person pastes that URL into Google Calendar, Apple
+        // Calendar or Outlook and the dates follow the club from then on. Deliberately not a `webcal://`
+        // shortcut — an https link either opens a client or downloads a file a client opens, and a scheme
+        // that some browsers refuse would be a promise this page cannot keep.
+        <p class="mt-6 text-body leading-prose text-ink-2 font-body">
+          Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Add the club calendar</a> —
+          Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
+        </p>
       ) : (
         // The chosen empty state (round 7, option A) in the shipped notice grammar: status word, `--lede`
         // title, two-line body, a 48px primary, the second path, the dated line. The second path is an inline

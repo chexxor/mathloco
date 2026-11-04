@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-04T07:02:38.996Z",
- "siteFp": "45345e70cb",
+ "measuredAt": "2026-11-04T09:21:38.056Z",
+ "siteFp": "0b5ebbf5cc",
  "widths": [
   1240,
   390,
@@ -23,10 +23,10 @@
     250,
     246
    ],
-   "groundExact": 2445272,
-   "groundPct": 81.85,
+   "groundExact": 2569559,
+   "groundPct": 82,
    "span": 12.666666666666686,
-   "sd": 2.6,
+   "sd": 2.59,
    "flat": {
     "x": 208,
     "y": 0,
@@ -41,7 +41,7 @@
       250,
       246
      ],
-     "pct": 50.7
+     "pct": 51.7
     },
     {
      "rgb": [
@@ -49,7 +49,7 @@
       245,
       239
      ],
-     "pct": 30.7
+     "pct": 29.9
     },
     {
      "rgb": [
@@ -57,7 +57,7 @@
       57,
       39
      ],
-     "pct": 7.9
+     "pct": 7.6
     },
     {
      "rgb": [
@@ -68,9 +68,9 @@
      "pct": 1
     }
    ],
-   "distinct": 48614,
-   "hairlines": 6,
-   "runs": 7,
+   "distinct": 48611,
+   "hairlines": 8,
+   "runs": 9,
    "notKeyline": [
     "core 119,118,119 (off-palette(119,118,119)) 4.44/4.26 at y=2000 x=436 len=54"
    ],
@@ -132,7 +132,7 @@
     {
      "y": 2317,
      "x": 35,
-     "len": 506,
+     "len": 1158,
      "core": [
       132,
       150,
@@ -145,9 +145,9 @@
      "otherGround": "paper"
     },
     {
-     "y": 2597,
+     "y": 2528,
      "x": 35,
-     "len": 506,
+     "len": 1158,
      "core": [
       132,
       150,
@@ -160,7 +160,37 @@
      "otherGround": "paper"
     },
     {
-     "y": 3493,
+     "y": 2553,
+     "x": 35,
+     "len": 1158,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 2765,
+     "x": 35,
+     "len": 1158,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 3609,
      "x": 225,
      "len": 136,
      "core": [
@@ -175,7 +205,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3540,
+     "y": 3656,
      "x": 225,
      "len": 136,
      "core": [
@@ -191,6 +221,9 @@
     }
    ],
    "claimedKeylineContrast": [
+    3.01,
+    3.01,
+    3.01,
     3.01
    ],
    "bytesMinusCss": 0
@@ -203,10 +236,10 @@
     250,
     246
    ],
-   "groundExact": 913239,
-   "groundPct": 79.66,
+   "groundExact": 1032889,
+   "groundPct": 80.26,
    "span": 7.666666666666686,
-   "sd": 2.64,
+   "sd": 2.62,
    "flat": {
     "x": 192,
     "y": 0,
@@ -221,7 +254,7 @@
       250,
       246
      ],
-     "pct": 45.2
+     "pct": 47.9
     },
     {
      "rgb": [
@@ -229,7 +262,7 @@
       245,
       239
      ],
-     "pct": 34.2
+     "pct": 32
     },
     {
      "rgb": [
@@ -237,7 +270,7 @@
       57,
       39
      ],
-     "pct": 7.5
+     "pct": 6.9
     },
     {
      "rgb": [
@@ -245,12 +278,12 @@
       91,
       76
      ],
-     "pct": 1
+     "pct": 0.9
     }
    ],
-   "distinct": 30921,
-   "hairlines": 7,
-   "runs": 7,
+   "distinct": 30914,
+   "hairlines": 9,
+   "runs": 9,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -338,7 +371,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3536,
+     "y": 3520,
      "x": 19,
      "len": 352,
      "core": [
@@ -353,7 +386,37 @@
      "otherGround": "paper"
     },
     {
-     "y": 4741,
+     "y": 3545,
+     "x": 19,
+     "len": 352,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 3908,
+     "x": 19,
+     "len": 352,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 5118,
      "x": 209,
      "len": 136,
      "core": [
@@ -368,7 +431,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4788,
+     "y": 5165,
      "x": 209,
      "len": 136,
      "core": [
@@ -384,6 +447,9 @@
     }
    ],
    "claimedKeylineContrast": [
+    3.01,
+    3.01,
+    3.01,
     3.01
    ],
    "bytesMinusCss": 0
@@ -396,10 +462,10 @@
     250,
     246
    ],
-   "groundExact": 866321,
-   "groundPct": 80.76,
+   "groundExact": 975817,
+   "groundPct": 81.23,
    "span": 7.666666666666686,
-   "sd": 2.65,
+   "sd": 2.62,
    "flat": {
     "x": 192,
     "y": 0,
@@ -414,7 +480,7 @@
       250,
       246
      ],
-     "pct": 45.4
+     "pct": 48
     },
     {
      "rgb": [
@@ -422,7 +488,7 @@
       245,
       239
      ],
-     "pct": 35.1
+     "pct": 33
     },
     {
      "rgb": [
@@ -430,7 +496,7 @@
       57,
       39
      ],
-     "pct": 7.6
+     "pct": 7
     },
     {
      "rgb": [
@@ -438,12 +504,12 @@
       91,
       76
      ],
-     "pct": 1
+     "pct": 0.9
     }
    ],
-   "distinct": 22509,
-   "hairlines": 7,
-   "runs": 7,
+   "distinct": 22506,
+   "hairlines": 9,
+   "runs": 9,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -531,7 +597,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3908,
+     "y": 3831,
      "x": 19,
      "len": 282,
      "core": [
@@ -546,7 +612,37 @@
      "otherGround": "paper"
     },
     {
-     "y": 5376,
+     "y": 3856,
+     "x": 19,
+     "len": 282,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 4272,
+     "x": 19,
+     "len": 282,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 5744,
      "x": 19,
      "len": 136,
      "core": [
@@ -561,7 +657,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 5423,
+     "y": 5791,
      "x": 19,
      "len": 136,
      "core": [
@@ -577,6 +673,9 @@
     }
    ],
    "claimedKeylineContrast": [
+    3.01,
+    3.01,
+    3.01,
     3.01
    ],
    "bytesMinusCss": 0
