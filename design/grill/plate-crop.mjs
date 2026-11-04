@@ -41,6 +41,17 @@ export async function plateSource(id, { log = () => {} } = {}) {
 /** The slot box, in CSS px, out of the source's own aspect — what record 0023 printed as "keeps". */
 export const keepPct = (aspect, w, h) => +(100 * Math.min(aspect, w / h) / Math.max(aspect, w / h)).toFixed(0);
 
-/** Cover fit at the slot aspect, delivered at 2x. The one crop recipe in the repo. */
-export const cropFor = (buf, w, h) =>
-  sharp(buf).resize({ width: w * 2, height: h * 2, fit: 'cover', position: 'attention' }).png().toBuffer();
+/**
+ * Cover fit at the slot aspect, delivered at 2x — the one crop recipe in the repo.
+ *
+ * `capWidth` exists because the archive's widest rung (`/img/1024/`) returns each leaf's own scan width, which
+ * for several plates is ~700px: asking for 2x of a 384px box from a 698px source would write 768px of
+ * interpolated pixels into the shipped file. Capping at the source width keeps the file honest — displayed at
+ * 384 CSS px it is still a downscale — and it says so in the bytes rather than in a comment. Measured
+ * 2026-11-03: the 1910 Euler leaf is 698x350, the 1903 Euclid leaf 1024x357, the 1922 radio leaf 1024x478.
+ */
+export const cropFor = (buf, w, h, { scale = 2, capWidth } = {}) => {
+  let width = Math.round(w * scale), height = Math.round(h * scale);
+  if (capWidth && width > capWidth) { height = Math.max(1, Math.round((height * capWidth) / width)); width = capWidth; }
+  return sharp(buf).resize({ width, height, fit: 'cover', position: 'attention' }).png().toBuffer();
+};

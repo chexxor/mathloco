@@ -57,7 +57,9 @@ export type Content = {
   /** What the club is taking up, undated on purpose (see `threads._rule` in content.json). */
   threads: { source: string | null; asOf?: string | null; items: { value: string; gloss?: string }[] };
   /** Club editorial — one thread written for a newcomer. Makes no claim about the club's history. */
-  feature: { title: string; source: string; asOf: string; body: string[]; note?: string };
+  // (the `feature` card — "Steps you can undo" — was cut on the operator's ruling, D149-6c: its mathematics was
+  // textbook-correct but its source note ended "checked against nothing but the maths", which is D92's defect class.
+  // Do not re-add it as a slot; if the club ever writes about a thread itself, that is a sourced slot of its own.)
   /** The character line the home page prints, and the pool of places a dated event draws from. */
   venues: { value: string; source: string; asOf: string; names?: string[] };
   schedule: {

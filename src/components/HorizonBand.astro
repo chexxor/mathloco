@@ -1,0 +1,78 @@
+---
+import { Image } from 'astro:assets';
+import euclid1903 from '../assets/photos/horizon-euclid1903.png';
+import euler1910 from '../assets/photos/horizon-euler1910.png';
+import radio1922 from '../assets/photos/horizon-radio1922.png';
+
+/**
+ * PS-5 — the horizon: three public-domain plates standing on one baseline between the club's reasons and
+ * the schedule, where the page is emptiest by measurement.
+ *
+ * Why three and not one (this is the ruling the composition arrived at, 2026-11-03, round 14 option C -> F):
+ * the archive serves a widest rung of `/img/1024/`, but that rung returns each leaf's *own* scan width — the
+ * 1910 Euler leaf is 698x350 and the Byrne leaf 688x1004 (probed 2026-11-03; `/img/1600/`, `/img/2048/` and
+ * `/img/full/` all return 404). A single-leaf band across the 1192px column is therefore a **1.68x upscale
+ * that keeps 34% of the drawing** (`design/grill/round14/report.json`, `plates["band-mid"]`). Record 0023
+ * answered that in advance: *"if a strip is ever wanted from the archive, compose it from several plates
+ * rather than upscale one."* These three are each a whole leaf at **0.38–0.55x** of its native scan.
+ *
+ * What it costs, measured on the built page at the box this component ships (`npm run round14`, option
+ * `shelf-lg`, 2026-11-03): page **+321px at 1240** and **+321 at 1024**, **+0 at 640 and 390** (the band is
+ * `hidden` below `lg`, and the phone keeps the composition the operator ruled in round 14's phone question),
+ * painted area **5.33% -> 7.47%** at 1240, and page chroma >= 0.08 **0.274% -> 0.255%** — three more plates
+ * and the page gets *less* loud, because all three are colourless line work (0% at chroma >= 0.08 each).
+ * @measured 2026-11-03 by npm run round14
+ *
+ * The alt text comes from the source's own picture page (`insideoutlibrary.com/p/<id>`, which carries book,
+ * year and leaf), plus the one thing measured about the drawing itself: it is line work, ink at 21.1% of
+ * pixels and 0% named colour (`design/grill/round14/report.json`). Nothing here describes a drawing nobody
+ * has checked — an alt invented from a slot's mood is the D92 defect class in a `alt` attribute.
+ */
+const plates = [
+  {
+    src: euclid1903,
+    alt: 'An illustration from The elements of Euclid for the use of schools and colleges, 1903, leaf 297 — a geometry figure in line work',
+  },
+  {
+    src: euler1910,
+    alt: 'An illustration from Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122 — the Euler diagram in line work',
+  },
+  {
+    src: radio1922,
+    alt: 'An illustration from The principles underlying radio communication, 1922, leaf 514 — a diagram in line work',
+  },
+];
+---
+
+{/* `lg:px-6` rather than the usual `lg:px-8`: the measured band box is 384 CSS px per plate inside 24px side
+    padding at 1240, and a different padding would make this markup a different page from the one the round
+    measured. `data-slot="PS-5"` is a probe handle — check:space ranks slot boxes by it. */}
+<section class="bg-paper py-16 hidden lg:block" aria-label="Plates from public-domain mathematics books">
+  {/* `flex` on the wrapper is not styling: check:space records a `data-slot` box only for a child of a grid or
+      flex container, so a PS box inside a plain block is invisible to the survey and to every design round that
+      reads it. Measured 2026-11-03: PS-5 was absent from the slot list until its parent became a flex container. */}
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-6 flex">
+    <div class="horizon" data-slot="PS-5">
+      {plates.map((p) => (
+        <Image src={p.src} alt={p.alt} class="horizon__plate" loading="lazy" decoding="async" />
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  /* A shelf, not a grid: the plates share a baseline and keep their own heights, because each box is a whole
+     leaf at its own aspect (2.87 / 1.99 / 2.14) and cropping them to one cell aspect is how a diagram loses
+     its labels. gap 1rem = the 16px the round measured. */
+  .horizon {
+    display: flex;
+    flex: 1 1 auto;
+    gap: 1rem;
+    align-items: flex-end;
+  }
+  .horizon__plate {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
