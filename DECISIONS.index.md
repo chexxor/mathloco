@@ -174,5 +174,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D164** (2026-11-03) — The cost baseline was re-saved on purpose after the hero plate, with the reason (2026-11-03)
 - **D165** (2026-11-03) — Round 14: a page-scale question goes to the operator as photographed compositions of one built page (2026-11-03, operator request)
 - **D166** (2026-11-03) — A design round must prove its mutation did something, and retry its survey steps (2026-11-03)
+- **D167** — no shipped plate asset contains more columns than the scan has: the crop caps at the source width
+- **D168** — the horizon ships as PS-5: three whole leaves at their own aspects, desktop-only, and the page got shorter, not just prettier
+- **D169** — the group feed is harvested: two instances, no recurrence, and its instants have no zone on them
 
-Defined: 166 (D1-D166). Unused ids: none.
+Defined: 169 (D1-D169). Unused ids: none.

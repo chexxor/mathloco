@@ -533,6 +533,30 @@ and the screen can disagree.
   R−B ≥ 25). Guessing them from luminance classified the sphere ring as route ink and produced confident
   nonsense ("0 crossings", "0 gold pixels near the pole").
 
+### The horizon band: PS-5, and why it is three plates rather than one wide one (ruled 2026-11-04, shipped)
+- The operator's ruling on the round-14 specimen was **1c** — not the Byrne band, not the single 1910 horizon, but
+  the third new option: a full-width plate band lower on the page (D168). It ships as `HorizonBand.astro` between the
+  reasons section and the schedule: `data-slot="PS-5"`, three plates on `bg-paper`, `hidden lg:block` until the phone
+  band is ruled (D161), plates 16px apart sharing a baseline. **Measured: 1180x192 @y1825 at 1240, 976x158 at 1024,
+  0x0 from 640 down** (`check:space` records it as a flex child, which is why the wrapper carries `flex` — the survey
+  only records a `data-slot` box that is a grid or flex child).
+- **Each cell is one leaf at the leaf's own aspect (2.87 / 1.99 / 2.14), so no plate in this slot is cropped.** That
+  is deliberate and it is the whole reason the slot is three pictures: the archive's widest rung returns each scan's
+  **own** width — 688 for the Byrne leaf, 698 for the 1910 Euler leaf, 1024 for the two others (D167) — so a single
+  leaf across a 1176 CSS px band is a **1.68x** upscale that keeps about a third of the drawing. Record 0023's
+  instruction, executed: compose the strip from several plates rather than stretch one.
+- The three leaves are Euclid 1903 (Book VI figures on a right triangle), Slaught & Lennes 1910 (the 60-degree
+  construction: four circles, one equilateral triangle — the colourless Euler diagram D149-2b asked for) and a 1922
+  radio text (the three-electrode audion as an oscillation generator). All colourless (0% named colour), all public
+  domain per record 0023; provenance and alt text per picture page (D92).
+- **What it cost, measured 2026-11-04 (`check:space`, `check:color`):** painted **5.33% → 7.7%** and page
+  **4284 → 3889 at 1240**; phone page **6173 → 5176 at 390** — but the shrink is mostly the "Steps you can undo" card
+  coming out on the same ruling (D149-6c), not the band. Named colour is **0.30% at 1240 / 0.65% at 390** (was
+  0.274% / 0.550%): in absolute pixels that is ~14.5k either way, so the band added no colour and the *share* rose
+  only because the denominator shrank. And the honest bad half: empty runs went **9 runs / 1075px → 10 runs /
+  1215px** at 1240 — the band brings 128px of its own `py-16` and the cut left a **283px** hole inside the reasons
+  section, so the emptiness moved rather than closed. That hole is A3's rhythm question, now with a number on it.
+
 ### Photograph slots and third-party marks (ruled 2026-11-02, applied)
 
 - **A reserved place is a component: `src/components/PhotoSlot.astro`.** Drop
@@ -565,10 +589,12 @@ and the screen can disagree.
   stack. Cost, measured: the page does not grow at desktop (**4284 → 4284**) but grows **+314px at 390**, where the
   hero is not a grid and the plate adds its own height; the page's chroma >= 0.08 share goes **0.014% → 0.274%**
   at 1240, against **+2.63%** for the loud Byrne leaf record 0023 priced. The plate shipped is **56% of the Byrne
-  1847 Euclid IV.15 leaf** at **752x614** (2x, because a 3px hairline at 1x lands on half-pixels), built by
-  `npm run plates` from the same crop `npm run round13` measured (sha1 `308193c78a` both — the recipe is one
-  module, `design/grill/plate-crop.mjs`, so a review crop and a shipped asset cannot drift).
-  @measured 2026-11-03 by check:space / check:render / check:color / round13 (record 0025)
+  1847 Euclid IV.15 leaf** at **688x562** for a **376x307** CSS box — 2x where the scan allows it and capped at the
+  scan's own width where it does not (the Byrne scan is 688 wide, so a 752px file would have been interpolated
+  pixels: D167). Built by `npm run plates` from the same crop the rounds measured (sha1 `47518a39c1`), because the
+  recipe is one module, `design/grill/plate-crop.mjs`, so a review crop and a shipped asset cannot drift.
+  @measured 2026-11-03 by check:space / check:render / check:color / round13 (record 0025); asset bytes and sha
+  @measured 2026-11-04 by npm run plates (record 0027)
   A side-effect worth knowing before anything else moves down the page: `check:mark` photographed a **fixed**
   1400px window, and the plate pushed the mark to **y=1421 at 320** and to a box bottom of **1449.9 at 640**, so
   the gate reported "no ink in the measured box" for a correctly painted mark. It now asks the page its settled

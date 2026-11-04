@@ -1,0 +1,44 @@
+{
+  "measuredAt": "2026-11-04",
+  "rung": "/img/1024/",
+  "missing": [
+    "/img/1600/",
+    "/img/2048/",
+    "/img/full/"
+  ],
+  "widest": 1024,
+  "plates": [
+    {
+      "id": "ia-firstsixbooksofe00byrn-176-281",
+      "width": 688,
+      "height": 1004,
+      "aspect": 0.685
+    },
+    {
+      "id": "ia-cu31924031236171-122-176",
+      "width": 698,
+      "height": 350,
+      "aspect": 1.994
+    },
+    {
+      "id": "ia-elementsofeuclid1903eucl-297-210",
+      "width": 1024,
+      "height": 357,
+      "aspect": 2.868
+    },
+    {
+      "id": "ia-principlesunderl00unit-514-212",
+      "width": 1024,
+      "height": 478,
+      "aspect": 2.142
+    },
+    {
+      "id": "ia-bulletinburea0012nati-105-175",
+      "error": "fetch ia-bulletinburea0012nati-105-175: HTTP 404"
+    },
+    {
+      "id": "ia-elementsofari00whit-223-155",
+      "error": "fetch ia-elementsofari00whit-223-155: HTTP 404"
+    }
+  ]
+}

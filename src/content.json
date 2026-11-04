@@ -26,7 +26,7 @@
       { "value": "Arithmetic with the rules nudged", "gloss": "what breaks, and what gets interesting, if you change how numbers combine" },
       { "value": "Proofs a machine checks", "gloss": "Lean, and what it does to a proof when something verifies it line by line" },
       { "value": "The mathematics under a quantum computer", "gloss": "Qiskit, and the linear algebra those gates are made of" },
-      { "value": "Steps you can undo", "gloss": "algorithms that lose nothing, drawn as wires and boxes - the thread written out below" },
+      { "value": "Steps you can undo", "gloss": "algorithms that lose nothing, drawn as wires and boxes" },
       { "value": "What mathematics sits on", "gloss": "foundations, and why the question keeps coming back" },
       { "value": "What a language model changes", "gloss": "about doing mathematics, and about who gets to" },
       { "value": "Puzzles that need no background", "gloss": "and have strange answers" },
@@ -35,17 +35,6 @@
     ]
   },
 
-  "feature": {
-    "title": "Steps you can undo",
-    "source": "operator request, 2026-11-03: 'You can add something related to creating a simple system that permits invertible algorithms in the context of complex numbers, and expressing such algorithms in a graph-like diagrammatic language. Please try to express this in a way that would be more interesting to a newcomer with a general interest in mathematics.' The mathematics itself is textbook, not the club's: the moves named are translations, rotations, reflections and inversion of the complex plane - the Möbius transformations, which are exactly the bijections of the Riemann sphere and map generalized circles to generalized circles. The 'wires and boxes' encoding is the usual graphical calculus for morphisms (string diagrams); reversible computing and quantum gates carry the same requirement that every step be invertible. Written 2026-11-03, checked against nothing but the maths.",
-    "asOf": "2026-11-03",
-    "body": [
-      "Take the complex plane rather than the number line, and look only at the moves that can be undone: slide the plane, spin it, reflect it, or send z to 1/z - and if you agree to one extra point out at infinity, that last one is a perfect shuffle of the plane onto itself. Compose a few of them and you have a computation that never loses anything: run the same recipe backwards, in reverse order, and it puts you exactly where you started.",
-      "Now draw it instead of writing it down. Inputs are wires, moves are boxes, and invertible means every diagram has a mirror image that is also a valid recipe. Circles stay circles-or-lines under these moves, so the picture keeps meaning something no matter how deeply you nest it. This is the same graphical bookkeeping behind reversible computing, and behind the gates a quantum computer is allowed to use, where losing information is precisely what is forbidden.",
-      "What the club keeps coming back to is the middle question: how much of an algorithm can live in the drawing rather than the algebra, and is there anything a diagram can say that the equation cannot? If you have a way to draw undo - or a reason to doubt this one - bring it to the chat."
-    ],
-    "note": "Club editorial, not a fact-slot: it makes no claim about the club's history, membership or schedule. It is here because a page with no subject on it reads as a placeholder for a club (round 7, operator: the site is 'too professional' and has 'no humanity'). It must stay true mathematics; if a sentence stops being defensible, delete the sentence."
-  },
 
   "venues": {
     "value": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",

@@ -119,14 +119,25 @@ try {
   say(`  bands: ${base.bands.map((s) => `${s.tag} ${s.h}@${s.y}`).join(' · ')}`);
 
   // [2] every plate this round needs, at its option's box, with the honest resolution number.
+  const shippedHtml = readFileSync(new URL('../dist/client/index.html', import.meta.url), 'utf8');
+  const shippedBand = /data-slot="PS-5"/.test(shippedHtml);
   say('\n[2] crop the licensed plates at each option\u2019s box (grill/plate-crop.mjs, the shipped recipe)');
+  for (const o of options) {
+    // Fail fast on a proposal already on the page (same rule as round 13): option F shipped as PS-5, so inserting
+    // another band would price a page that does not exist and the table would silently stop meaning what it says.
+    if (shippedBand && ['band-mid', 'shelf-lg', 'shelf-all', 'leaf-native', 'band-hero'].includes(o.id)) {
+      throw new Error(`the shipped page already carries PS-5 (record 0027), so "${o.id}" is not a proposal any more. ` +
+        `The composition ruling is the specimen and the record; re-running it would price a double band. ` +
+        `The phone question (--phone) still runs, and a new composition question gets a new round against this page.`);
+    }
+  }
   const uriFor = new Map(), altFor = new Map();
   report.plates = {};
   for (const o of options) {
     for (const p of o.plates) {
       const src = await plateSource(p.plate.id);
       const meta = await sharp(src).metadata();
-      const buf = await cropFor(src, p.w, p.h);
+      const buf = await cropFor(src, p.w, p.h, { capWidth: Math.min(p.w * 2, meta.width) });
       const file = `${SCRATCH}/plate-${p.key}-${p.w}x${p.h}.png`;
       writeFileSync(file, buf);
       const stats = await cropStats(buf, NAMED_CHROMA);
@@ -176,7 +187,16 @@ try {
     for (const w of SPACE_WIDTHS) at[w] = boxes(JSON.parse(readFileSync(`${SCRATCH}/space-${w}.json`, 'utf8')));
     // A delta is always against the shipped page AT THE SAME WIDTH: round 13 printed one width's delta and the
     // ruling travelled with it (+0 at 1240 hid +314 at 390, D161).
-    const d = (a, w) => { const x = (a.pageH ?? 0) - (report.baseline.at[w]?.pageH ?? 0); return `${x >= 0 ? '+' : ''}${x}`; };
+    // `w` is a parameter, not a lookup the caller can forget: a one-argument call here silently subtracted 0 and
+    // the tracked report recorded each option's page height as its delta (+4605 instead of +321) while the console,
+    // which passed both arguments, stayed right. The baseline width must exist or the delta is not measurable.
+    const d = (a, w) => {
+      const b = report.baseline.at[w]?.pageH;
+      if (!(b > 0)) throw new Error(`no shipped page height at ${w} - cannot state a delta for ${a.id ?? 'an option'}`);
+      if (a?.pageH == null) throw new Error(`no measured page height at ${w} - cannot state a delta`);
+      const x = a.pageH - b;
+      return `${x >= 0 ? '+' : ''}${x}`;
+    };
     const shots = {};
     for (const w of SPACE_WIDTHS) {
       const full = `${SCRATCH}/page-${w}.png`;
@@ -196,7 +216,7 @@ try {
     // crop "at 390"). The width travels with the crop from here.
     const detailScaled = detail ? { ...(await scaleTo(detail, `${SCRATCH}/hero-${o.id}-scaled.png`, DETAIL_SCALE)), at: SPACE_WIDTHS[0], cropOf } : null;
     const art = at[SPACE_WIDTHS[0]].imgs.filter((m) => /png|webp/.test(m.src || '')).length;
-    report.options.push({ ...o, plates: o.plates.map((p) => p.key), at, gate, color, shots, detail: detailScaled, cropOf, delta: Object.fromEntries(SPACE_WIDTHS.map((w) => [w, d(at[w])])) });
+    report.options.push({ ...o, plates: o.plates.map((p) => p.key), at, gate, color, shots, detail: detailScaled, cropOf, delta: Object.fromEntries(SPACE_WIDTHS.map((w) => [w, d(at[w], w)])) });
     for (const w of SPACE_WIDTHS) say(`  @${String(w).padEnd(5)} page ${String(at[w].pageH).padEnd(5)} (${d(at[w], w)}) · painted ${at[w].paintedPct}% · empty ${at[w].emptyPct}% · imgs ${at[w].imgs.length} · mark ${at[w].mark?.w ?? '—'}`);
     say(`  gate ${gate.fails.length ? `${gate.fails.length} FAIL: ${gate.fails.slice(0, 2).join(' | ')}` : 'green'}${gate.gaps?.length ? ` (+${gate.gaps.length} unmeasured)` : ''} · colour >=${NAMED_CHROMA} ${color[1240]?.strongPct}% @1240, ${color[390]?.strongPct}% @390 · mark min stroke ${gate.minStrokePx ?? '?'}px`);
     writeFileSync(PAGE, original);

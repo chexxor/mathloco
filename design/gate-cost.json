@@ -1,36 +1,36 @@
 {
   "deploy": {
     "measuredAt": "2026-11-04",
-    "wallSecs": 19.5,
+    "wallSecs": 13.9,
     "steps": {
-      "check": 10.83,
-      "check:classes": 0.6,
-      "check:design": 0.21,
-      "check:decisions": 0.35,
-      "check:figures": 0.16,
-      "check:social": 0.65,
-      "check:social:selftest": 2.65,
-      "db:check": 0.48,
-      "check:sanitize": 0.37,
-      "check:cache": 1.25,
-      "audit:gate": 0.85,
-      "build": 5.75,
-      "check:deploy": 0.24,
-      "check:content": 0.13,
+      "check": 7.89,
+      "check:classes": 0.46,
+      "check:design": 0.16,
+      "check:decisions": 0.26,
+      "check:figures": 0.11,
+      "check:social": 0.48,
+      "check:social:selftest": 1.8,
+      "db:check": 0.38,
+      "check:sanitize": 0.27,
+      "check:cache": 1.02,
+      "audit:gate": 0.65,
+      "build": 3.92,
+      "check:deploy": 0.25,
+      "check:content": 0.12,
       "check:content:selftest": 0.12
     }
   },
   "browser": {
     "measuredAt": "2026-11-04",
-    "wallSecs": 75,
+    "wallSecs": 93.4,
     "steps": {
-      "check:render:dist": 6,
-      "check:mark": 8.31,
-      "check:social:live": 1.71,
-      "check:space": 11.12,
-      "check:ground": 11.13,
-      "check:ground:selftest": 19.01,
-      "check:render:selftest": 17.69
+      "check:render:dist": 5.81,
+      "check:mark": 6.66,
+      "check:social:live": 1.39,
+      "check:space": 8.82,
+      "check:ground": 39.62,
+      "check:ground:selftest": 15.52,
+      "check:render:selftest": 15.53
     }
   },
   "note": "tracked baseline for the cost guard in scripts/gate-run.mjs. Re-baseline on purpose, in a commit that says why."
