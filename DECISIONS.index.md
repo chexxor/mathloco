@@ -172,5 +172,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D162** (2026-11-03) — A gate that photographs a fixed-height window loses anything that moves down the page (2026-11-03, delegate; measured)
 - **D163** (2026-11-03) — A tracked binary is not prose — the decision scanner skips files carrying a NUL byte (2026-11-03, delegate; measured)
 - **D164** (2026-11-03) — The cost baseline was re-saved on purpose after the hero plate, with the reason (2026-11-03)
+- **D165** (2026-11-03) — Round 14: a page-scale question goes to the operator as photographed compositions of one built page (2026-11-03, operator request)
+- **D166** (2026-11-03) — A design round must prove its mutation did something, and retry its survey steps (2026-11-03)
 
-Defined: 164 (D1-D164). Unused ids: none.
+Defined: 166 (D1-D166). Unused ids: none.
