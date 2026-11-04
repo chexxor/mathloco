@@ -182,5 +182,11 @@ and a renumber silently re-points every one of them at a different decision.
 - **D172** — an unconfirmed clock time publishes as a DATE, never as an instant; Mobilizon's `Z` is not evidence
 - **D173** — a browser-gate fixture that targets markup the build stopped making is a lost probe; retarget it and name where the state went
 - **D174** — the two November hours are confirmed from the organizer's own entry and the club's own page, not from the feed's `Z`
+- **D175** — Mobilizon has no recurrence, so cadence is an n8n workflow that writes the *next occurrence* through GraphQL
+- **D176** — cadence carries the *wall clock*, never the instant, and reports a zone mismatch instead of obeying it
+- **D177** — the integration signs in per run with GraphQL `login`, from n8n environment variables, and holds no token between runs
+- **D178** — `options.maximumAttendeeCapacity: 0` is never copied into a new event
+- **D179** — the n8n workflow JSON is a generated artifact; the rules live in `lib/core.mjs` and the tests execute the generated text
+- **D180** — dry run is the shipped default and the only kill switch; deleting an event is a human tool, never the workflow
 
-Defined: 174 (D1-D174). Unused ids: none.
+Defined: 180 (D1-D180). Unused ids: none.

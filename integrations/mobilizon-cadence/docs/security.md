@@ -1,0 +1,168 @@
+# Security and credential handling
+
+Written for the person who has to hand this to a delegate, or come back to it in a year and decide whether
+it is still safe.
+
+## What is actually being protected
+
+| thing | why it matters | the main risk |
+|---|---|---|
+| the Mobilizon account | it can publish, edit and delete the club's public calendar | a password copied into the repo, an execution, or a screenshot |
+| the calendar itself | members show up; a duplicate or a wrong-hour event is a real-world harm | an automation nobody can explain afterwards |
+| the rest of the rig | n8n on this host can reach other services | over-privileged credentials, and the workflow JSON as a portable attack surface |
+
+The workflow JSON is the interesting one: an n8n export is a single portable file that people paste into
+chat windows, agent sessions and issue trackers. So the rule is:
+
+> **`n8n/cadence-workflow.json` must be safe to publish.** No credential value may appear in it — only the
+> *names* of environment variables. `build-workflow.mjs` fails the build if anything credential-shaped
+> appears (`"password"`, `"accessToken":`, `"Basic `, `"Bearer ey`, `eyJ`), and
+> `test/workflow.test.mjs` asserts the same thing against the generated artifact.
+
+## The auth decision, and what was ruled out
+
+Measured against `mobilizon.labradorius.com` on 2026-11-04 (full output in
+[`../records/2026-11-04-mobilizon-api-probe.md`](../records/2026-11-04-mobilizon-api-probe.md)):
+
+| option | probe result | verdict |
+|---|---|---|
+| n8n's built-in **Basic Auth** on the HTTP node | a bogus `Authorization: Basic …` produces the byte-identical `unauthenticated` error as no header at all | **not supported** by Mobilizon's GraphQL endpoint |
+| n8n's **OAuth2 credential** (password or client-credentials grant) | `POST /oauth/token` → 400 *"you need to provide at least the grant_type and client_id parameters"*; `POST /api/v1/apps` falls through to the GraphQL router ("No query document supplied") — there is no dynamic client registration | **not available** without registering a client in the instance config; that is an instance-admin change, and a long-lived secret |
+| a **personal access token** in a Header Auth credential | no such mutation in the schema (`login, refreshToken, revokeApplicationToken, authorizeApplication, authorizeDeviceApplication, createFeedToken, deleteFeedToken` are all that exist) | **does not exist** on 5.2.4 |
+| a **long-lived session token** stored as a credential | it expires, and when it does the failure looks like a broken integration | rejected: a secret that expires silently is worse than a sign-in |
+| **`login(email, password)` per run**, in one node, from environment variables | validated against the live schema; the bogus-credential probe returns a credential error, not a validation error | **adopted** |
+
+The consequence is honest and worth stating: **the password is sent on every run.** That is the price of an
+API whose only credential is a password. Two things keep the price low — the value lives in one node's body
+expression rather than in the workflow document, and the session token it buys is used by exactly two nodes
+and then dropped by the end of the execution.
+
+`login` also returns a `refreshToken`. The document deliberately does not select it: a refresh token is a
+long-lived secret that would buy one fewer round trip a day.
+
+## Where the secret lives
+
+`series.config.mjs` carries **names only**:
+
+```js
+export const CREDENTIALS = { emailEnv: "MOBILIZON_EMAIL", passwordEnv: "MOBILIZON_PASSWORD" };
+```
+
+The build refuses this field if it is ever given a value instead of an environment-variable name
+(`/^[A-Z][A-Z0-9_]*$/`), so "just paste the password here while testing" fails the gate rather than shipping.
+
+`03 Sign in` reads them in its body expression:
+
+```
+={{ JSON.stringify({ query: $('01 Config').item.json.query.signIn,
+                     variables: { email: $env.MOBILIZON_EMAIL, password: $env.MOBILIZON_PASSWORD } }) }}
+```
+
+Why not an n8n **credential** (the encrypted store)? Because Mobilizon's credential is a *body* payload, and
+n8n's credential types that can attach to an HTTP request attach headers or query parameters. Header Auth
+would work — `Authorization: Bearer <token>` — if there were a long-lived token to put in it, and there is
+not (row above). If the instance is ever configured with an OAuth client, moving to an OAuth2 credential
+becomes the better answer and the sign-in node is the only thing that changes. That is the recommended
+upgrade path.
+
+### Verify that n8n will read them (one-minute probe)
+
+Whether expressions can see `$env` depends on the n8n host's `N8N_BLOCK_ENV_ACCESS_IN_NODE` setting, which
+this integration cannot read from here. So the operator guide asks for a probe rather than assuming: a
+three-line Code node that prints `Object.keys($env ?? {}).filter(k => k.startsWith("MOBILIZON"))`. If that
+prints nothing, the guide's fallback is to set the variables in the service environment and restart n8n, and
+the reason it must be the *service* environment is that n8n reads its environment at process start.
+
+## The exposure nobody should discover by accident
+
+The sign-in node's request body — and therefore that node's **input/output data in the execution log** —
+contains the password in plaintext. n8n's default is to save data for successful and failed executions.
+
+This workflow keeps that default (`saveDataSuccessExecution: "all"`, `saveDataErrorExecution: "all"`, set
+explicitly in the artifact so the choice is visible), because the ledger in `08 Report` is the point of a
+scheduled run and there is nowhere else this integration writes its findings. The mitigations that come with
+that choice, in the operator guide:
+
+1. **Prune on the host**: `EXECUTIONS_DATA_PRUNE=true`, `EXECUTIONS_DATA_MAX_AGE=168` (hours). A stored
+   password should not outlive the week it was used in.
+2. **Treat execution screenshots and JSON exports as secrets.** Before pasting an execution into a chat, a
+   bug report or an agent session, expand nothing under `03 Sign in`; the safe object to share is the
+   `08 Report` output.
+3. If you would rather have no stored data at all for this workflow, set **Settings → Save Execution Data →
+   None** for it. The cost: a scheduled run you did not watch becomes unreadable, and `08 Report`'s ledger is
+   gone. This integration is designed so that cost is survivable (the calendar is the state, and the next run
+   re-derives everything) — but the alerting story has to be in place first.
+4. Use a **dedicated account** (next section), so the value in an execution log is a scoped credential that
+   can be rotated without touching the organizer's own login.
+
+## Least privilege: the account this should run as
+
+The instance reports `users.total: 1` and `openRegistrations: false` — today the workflow would sign in as
+the organizer, who is also the instance's only account. That is the wrong credential to spend daily. The
+operator's offer of a dedicated user is the right fix, with these specifics:
+
+- an account whose **only** relationship to the club is membership/organizer of `@minneapolis_math_book_group`;
+- **not** an instance admin — nothing this workflow does needs admin, and an admin credential in an n8n
+  environment is a much bigger blast radius;
+- created by the instance admin (the Mobilizon admin UI, or `mix mobilizon.users.create …` on the host, since
+  registrations are closed);
+- given a **strong, unique password it will never be typed by a human** — it exists to be pasted once into
+  the environment;
+- if it is ever retired, delete/disable it and the workflow stops loudly (the sign-in node fails →
+  `21 Report error path` names `sign in`). A credential that stops working visibly is safer than one that
+  stops working quietly.
+
+`04 Plan & decide` adds one more guard that is a security property as much as a correctness one: it refuses to
+write when the signed-in account owns more than one local actor, rather than picking one and possibly
+attributing the club's event to the wrong identity.
+
+## What reaches where
+
+| place | what it contains | note |
+|---|---|---|
+| this repo | config, rules, queries, the workflow JSON with env **names** | no credential, no personal data beyond the club's own published event text |
+| n8n workflow JSON (export) | as above | safe to publish, and asserted so |
+| n8n execution data | the sign-in body (password), the GraphQL bodies, the report ledger | prune it; treat screenshots as secrets |
+| n8n / server logs | request URLs (one host, `/api/v1`) — assume bodies may appear | another reason the endpoint is HTTPS and the host is one |
+| the Mobilizon instance | the events it creates, which are public | the club's own description/address/venue text is copied verbatim |
+| the mathloco site | nothing | the site reads `data/events.json` from `events-harvest` (D73) |
+
+Note the last row is a real privacy consideration: the description text copied into a new event is
+Mobilizon's own HTML for the club's meeting, and it will be published on the club's public calendar. Nothing
+private is carried: contacts are copied as `{ id }` references, participant lists and
+`remainingAttendeeCapacity` are explicitly never copied.
+
+## If a secret leaks
+
+1. Change the dedicated account's password in Mobilizon (or disable the account).
+2. Update the environment variable on the n8n host and restart n8n (the environment is read at process start).
+3. Prune execution history (`Settings → Executions → Delete`, or lower `EXECUTIONS_DATA_MAX_AGE`).
+4. Re-run `node integrations/mobilizon-cadence/check.mjs --offline` and then a dry run, to confirm the
+   workflow is the only thing that changed.
+
+The workflow itself needs no edit in that sequence — which is the point of keeping the value out of it.
+
+## The n8n platform account
+
+Nothing in this integration uses the n8n REST API or its API key: the workflow is imported by hand and run by
+its own trigger. The n8n instance sits behind the host's SSO (a probe of `n8n.labradorius.com/healthz` and of
+the API returned a `302` to the login wall rather than a JSON answer), which is the right posture — the
+boundary that matters for "who can run this workflow" is n8n access, not the workflow file.
+
+If the operator keeps an n8n public API token around for other work, note two things: the one shared for this
+task decodes to an expiry of **2026-12-04**, and this integration has no reason for it to exist. Delete or
+scope it once the review is done.
+
+## Audit trail — who did what to the calendar
+
+Three independent records, none of which depends on the others:
+
+1. **the n8n execution** — `08 Report` prints, per series, the action, the reason, the anchor row it learned
+   from, the candidate date, the audit verdict and the payload it sent (or would have sent);
+2. **the Mobilizon instance** — the event exists, with the uuid the create returned, and the group's feed
+   reflects it;
+3. **this repository** — the rules that produced it, the config that parameterised them, and the tests that
+   pin the behaviour.
+
+That is deliberate: the workflow has no database of its own, so the question "why is this event on the
+calendar" must be answerable from the execution log and the calendar alone.

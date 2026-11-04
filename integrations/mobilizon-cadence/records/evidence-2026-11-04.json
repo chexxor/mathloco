@@ -1,0 +1,222 @@
+{
+ "nodeinfo": {
+  "version": "2.0",
+  "protocols": [
+   "activitypub"
+  ],
+  "metadata": {
+   "nodeDescription": "Change this to a proper description of your instance",
+   "nodeName": "Mobilizon"
+  },
+  "usage": {
+   "users": {
+    "total": 1
+   },
+   "localComments": 0,
+   "localPosts": 5
+  },
+  "services": {
+   "outbound": [
+    "atom1.0"
+   ],
+   "inbound": []
+  },
+  "software": {
+   "name": "Mobilizon",
+   "version": "5.2.4"
+  },
+  "moderationRegistrations": false,
+  "openRegistrations": false
+ },
+ "graphql_404": {
+  "status": 404
+ },
+ "events": {
+  "status": 200,
+  "body": {
+   "data": {
+    "group": {
+     "id": "4",
+     "organizedEvents": {
+      "elements": [
+       {
+        "beginsOn": "2026-11-11T18:00:00Z",
+        "draft": false,
+        "endsOn": "2026-11-11T20:00:00Z",
+        "id": "5",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": "Etc/UTC"
+        },
+        "picture": null,
+        "status": "CONFIRMED",
+        "title": "Parallel Learning for Mathematical Minds",
+        "uuid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0"
+       },
+       {
+        "beginsOn": "2026-11-07T12:00:00Z",
+        "draft": false,
+        "endsOn": "2026-11-07T14:00:00Z",
+        "id": "4",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": "Etc/UTC"
+        },
+        "picture": {
+         "uuid": "c9110656-24d2-435e-b1c1-99a59d77690b"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "649bf59a-1989-43c2-b336-46f79ce403b1"
+       },
+       {
+        "beginsOn": "2026-06-05T17:00:00Z",
+        "draft": false,
+        "endsOn": "2026-06-05T18:00:00Z",
+        "id": "3",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": null
+        },
+        "picture": {
+         "uuid": "6660cbd4-b45c-4a7e-986b-0b19eed51241"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "31394d75-94c6-4ad0-96d8-4dc6ffda5e57"
+       },
+       {
+        "beginsOn": "2026-05-22T17:00:00Z",
+        "draft": false,
+        "endsOn": "2026-05-22T18:00:00Z",
+        "id": "2",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": null
+        },
+        "picture": {
+         "uuid": "09bdfc5f-cdae-4fb0-bf8c-21a01a223310"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "cfef784f-1717-4832-a34e-d8ee6641d756"
+       },
+       {
+        "beginsOn": "2026-05-08T17:00:00Z",
+        "draft": false,
+        "endsOn": "2026-05-08T18:00:00Z",
+        "id": "1",
+        "options": {
+         "maximumAttendeeCapacity": 0,
+         "timezone": null
+        },
+        "picture": {
+         "uuid": "e9cd0edd-1051-4740-b947-4c81dd0370bd"
+        },
+        "status": "CONFIRMED",
+        "title": "MPLS Math Club - Bimonthly Social",
+        "uuid": "ecfcb21b-01e6-4c93-8ce6-b574ebae6b79"
+       }
+      ],
+      "total": 5
+     },
+     "preferredUsername": "minneapolis_math_book_group"
+    }
+   }
+  }
+ },
+ "ics": {
+  "bytes": 2578,
+  "crlf": false,
+  "rrule": false,
+  "tzid": false,
+  "vtimezone": false,
+  "dtstart": [
+   "DTSTART:20261107T120000Z\nGEO:44.9498412;-93.3824443\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\nORGANIZER:Minneapolis Math Book Group\nSTATUS:CONFIRMED\nSUMMARY:MPLS Math Club - Bimonthly Social\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\nEND:VEVENT\nBEGIN:VEVENT\nDESCRIPTION:Join us for a welcoming space where math lovers come together to study independently\\, side by side. Whether you are working through a textbook\\, researching a new concept\\, or progressing a personal project\\, this is a time and space to allow you to prioritize your learning of the mathematics that's currently interesting you.\\n\\nWe gather twice a month on weekday evenings to work in parallel. We are each on our own path but let's help each other to continue our studies and learning.\\n\\nWhether you are a seasoned mathematician or simply mathematically minded\\, you are welcome here. Bring your books or notes and your curiosity.\\n\\nWe look forward to learning alongside you!\\n\\n\nDTEND:20261111T200000Z\nDTSTAMP:20261104T101434Z\nDTSTART:20261111T180000Z\nGEO:44.9057455;-93.2878163\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\nORGANIZER:Minneapolis Math Book Group\nSTATUS:CONFIRMED\nSUMMARY:Parallel Learning for Mathematical Minds\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\nEND:VEVENT\nEND:VCALENDAR"
+  ],
+  "uid": [
+   "UID:649bf59a-1989-43c2-b336-46f79ce403b1\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\nEND:VEVENT\nBEGIN:VEVENT\nDESCRIPTION:Join us for a welcoming space where math lovers come together to study independently\\, side by side. Whether you are working through a textbook\\, researching a new concept\\, or progressing a personal project\\, this is a time and space to allow you to prioritize your learning of the mathematics that's currently interesting you.\\n\\nWe gather twice a month on weekday evenings to work in parallel. We are each on our own path but let's help each other to continue our studies and learning.\\n\\nWhether you are a seasoned mathematician or simply mathematically minded\\, you are welcome here. Bring your books or notes and your curiosity.\\n\\nWe look forward to learning alongside you!\\n\\n\nDTEND:20261111T200000Z\nDTSTAMP:20261104T101434Z\nDTSTART:20261111T180000Z\nGEO:44.9057455;-93.2878163\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\nORGANIZER:Minneapolis Math Book Group\nSTATUS:CONFIRMED\nSUMMARY:Parallel Learning for Mathematical Minds\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\nEND:VEVENT\nEND:VCALENDAR"
+  ]
+ },
+ "auth": {
+  "no_header": {
+   "status": 200,
+   "body": {
+    "data": {
+     "loggedPerson": null
+    },
+    "errors": [
+     {
+      "code": "unauthenticated",
+      "message": "You need to be logged in",
+      "path": [
+       "loggedPerson"
+      ],
+      "field": null,
+      "locations": [
+       {
+        "line": 1,
+        "column": 2
+       }
+      ],
+      "status_code": 401
+     }
+    ]
+   }
+  },
+  "bogus_basic": {
+   "status": 200,
+   "body": {
+    "data": {
+     "loggedPerson": null
+    },
+    "errors": [
+     {
+      "code": "unauthenticated",
+      "message": "You need to be logged in",
+      "path": [
+       "loggedPerson"
+      ],
+      "field": null,
+      "locations": [
+       {
+        "line": 1,
+        "column": 2
+       }
+      ],
+      "status_code": 401
+     }
+    ]
+   }
+  },
+  "bogus_login": {
+   "status": 200,
+   "body": {
+    "data": {
+     "login": null
+    },
+    "errors": [
+     {
+      "code": "unknown_error",
+      "message": "Impossible to authenticate, either your email or password are invalid.",
+      "path": [
+       "login"
+      ],
+      "field": null,
+      "locations": [
+       {
+        "line": 1,
+        "column": 34
+       }
+      ],
+      "status_code": 500
+     }
+    ]
+   }
+  }
+ },
+ "oauth": {
+  "token_status": 400,
+  "apps_body": "{\"errors\":[{\"message\":\"No query document supplied\"}]}"
+ }
+}
