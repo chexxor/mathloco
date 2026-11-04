@@ -7,6 +7,8 @@
 //   npm run review:render -- --gates check:render:dist check:ground
 //   npm run review:render -- --keep                    leave the review build in place to poke at (prints the restore)
 //   npm run review:render -- --force                   plant beside an overlay that is already there
+//   npm run review:render -- --no-events               the schedule's EMPTY state instead of a placeholder:
+//                                                      dates hidden, notice standing (see below)
 //
 // Why this exists (measured 2026-11-03). The shot-card / missing-content state is invisible to every browser
 // gate: `check:content` fails any built page carrying `data-placeholder`, and tracked `src/content.json` keeps
@@ -47,6 +49,11 @@ const argv = process.argv.slice(2);
 const flag = (f) => argv.includes(f);
 const KEEP = flag('--keep');
 const ALL = flag('--all');
+// Which state to stand in. `--no-events` hides the calendar snapshot instead of swapping an image, because the
+// schedule section is empty for most of the year and its design has to stay measurable: data/events.json holds
+// two dates now, so the built page has no notice in it, and a fixture that targets markup the build stopped
+// making stops measuring anything. The empty state is a real product state, not a placeholder.
+const NO_EVENTS = flag('--no-events');
 const gi = argv.indexOf('--gates');
 const named = gi >= 0 ? argv.slice(gi + 1).filter((a) => !a.startsWith('--')) : [];
 // The geometry three by default: the placeholder question is always about boxes and edges — control geometry
@@ -57,6 +64,7 @@ const GATES = ALL ? [] : (named.length ? named : ['check:render:dist', 'check:sp
 
 const OVERLAY_DIR = 'src/content.local';
 const OVERLAY = `${OVERLAY_DIR}/tmp-review.json`;
+const EVENTS_OVERLAY = `${OVERLAY_DIR}/events-tmp-review.json`;
 const SCRATCH = '.design/tmp-review';
 const PLACEHOLDER_MARK = 'data-placeholder';
 
@@ -89,12 +97,19 @@ if (already.length && !flag('--force')) {
 
 let gateCode = 0;
 let failedEarly = null;
+let planted = null;   // whichever overlay this run owns; the finally removes exactly this file
 
 try {
   phase('plant', () => {
     mkdirSync(OVERLAY_DIR, { recursive: true });
-    writeFileSync(OVERLAY, JSON.stringify({ _about: 'planted by scripts/review-render.mjs — review-only, gitignored, removed on exit', photos: { placeholders: true } }, null, 1) + '\n');
-    return OVERLAY;
+    if (NO_EVENTS) {
+      planted = EVENTS_OVERLAY;
+      writeFileSync(planted, JSON.stringify({ _about: 'planted by scripts/review-render.mjs — review-only, gitignored, removed on exit', events: [] }, null, 1) + '\n');
+    } else {
+      planted = OVERLAY;
+      writeFileSync(planted, JSON.stringify({ _about: 'planted by scripts/review-render.mjs — review-only, gitignored, removed on exit', photos: { placeholders: true } }, null, 1) + '\n');
+    }
+    return planted;
   });
 
   const build = phase('build (review)', () => run(NPM, ['run', '--silent', 'build']).status);
@@ -103,6 +118,22 @@ try {
   // The assertion. Without it, "we measured the placeholder state" is a claim about an intent, not an artifact.
   phase('assert', () => {
     const html = readFileSync(resolve('dist/client/index.html'), 'utf8');
+    if (NO_EVENTS) {
+      const marks = html.split('role="status"').length - 1;
+      if (marks === 0) {
+        failedEarly = 'the built page contains no role="status" notice — the events overlay did not apply';
+        throw new Error('review state absent');
+      }
+      const rows = html.split('data-event-row').length - 1;
+      if (rows > 0) {
+        failedEarly = `the built page still renders ${rows} event rows — data/events.json is being read somewhere the overlay cannot reach`;
+        throw new Error('review state absent');
+      }
+      console.log(`  ${marks} notices, no event rows — the schedule's empty state is really there`);
+      console.log('  note: this build also publishes /events.ics with no VEVENT in it, which is why `check:ics`');
+      console.log('  is not in the review gate set and why its artifact rule would fail this artifact in `verify`.');
+      return marks;
+    }
     const hits = html.split(PLACEHOLDER_MARK).length - 1;
     if (hits === 0) {
       failedEarly = `the built page contains no ${PLACEHOLDER_MARK} — the overlay did not apply`;
@@ -130,13 +161,13 @@ try {
 } finally {
   if (KEEP) {
     // The one exit path that leaves the state standing, and it says so with the command that undoes it.
-    console.log(`\n--keep: ${OVERLAY} is still planted and dist/ is still the REVIEW build.`);
-    console.log('  Restore with:  rm ' + OVERLAY + (madeDir ? ' && rmdir ' + OVERLAY_DIR : '') + ' && npm run build');
+    console.log(`\n--keep: ${planted} is still planted and dist/ is still the REVIEW build.`);
+    console.log('  Restore with:  rm ' + planted + (madeDir ? ' && rmdir ' + OVERLAY_DIR : '') + ' && npm run build');
     console.log('  Safe to leave while you work: `npm run deploy` / `preview:deploy` run `verify` first, which rebuilds,');
     console.log('  and `check:content` fails any build that carries a placeholder. Nothing here can reach the apex.');
   } else {
     phase('restore', () => {
-      rmSync(OVERLAY, { force: true });
+      rmSync(planted, { force: true });
       if (madeDir && existsSync(OVERLAY_DIR) && readdirSync(OVERLAY_DIR).length === 0) rmSync(OVERLAY_DIR, { recursive: true, force: true });
       return true;
     });
@@ -156,8 +187,9 @@ if (failedEarly) {
   process.exit(1);
 }
 if (gateCode) {
-  console.error(`review:render: the gates failed (exit ${gateCode}) — the FAILs are above, and they are about the`);
-  console.error('  placeholder state, which no shipped-page gate would ever have seen.');
+  console.error(`review:render: the gates failed (exit ${gateCode}) — the FAILs are above, and they are about`);
+  console.error(`  the state this run planted (${NO_EVENTS ? 'the schedule with no events in it' : 'planted placeholders'}),`);
+  console.error('  which no shipped-page gate would ever have seen.');
   process.exit(gateCode);
 }
 console.log('review:render: PASS — the review state built, the state was asserted present, and the gates above are green for it.');
