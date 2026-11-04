@@ -24,8 +24,8 @@
       "_series": "The series this instance belongs to, minus the frequency word D92 keeps off the page. Presentation of the string above, not a second claim.",
       "start": "2026-11-07T12:00",
       "end": "2026-11-07T14:00",
-      "_times": "The feed says `DTSTART:20261107T120000Z` / `DTEND:...T140000Z` with no zone. Read as instants that is 06:00 CST at a bakery, which is not a meeting anyone is holding. Recorded as a candidate wall clock, and `timeConfirmed: false` keeps it out of the published feed as an instant (D169): the feed publishes the DATE, the page says \"time not set\".",
-      "timeConfirmed": false,
+      "_times": "Feed says `DTSTART:20261107T120000Z` / `DTEND:...T140000Z` with no zone (D169), so the `Z` is not read as an instant. Confirmed as a wall clock on 2026-11-04 from two sources, not inferred: `.notes/roadmap-events.md` records the organizer typing **12:00** for this event on 2026-11-03 and the export answering `120000Z`, and the event page's own meta description as served today reads \"Nov 7, 2026, 12:00:00 PM - GMT\" — the club publishes 12:00 on its own page, mislabelled GMT by 5.2.4's exporter. So the club's hour is 12:00-14:00 in its own zone. Operator confirmation is asked for in `.notes/NEXT.md`; `timeConfirmed` is one boolean per row and the UID does not change when it flips, so a correction updates the subscriber's entry rather than orphaning it (D172).",
+      "timeConfirmed": true,
       "venue": {
         "name": "Angel Food Bakery",
         "street": "8100 Minnetonka Boulevard",
@@ -55,8 +55,8 @@
       "series": "Parallel Learning for Mathematical Minds",
       "start": "2026-11-11T18:00",
       "end": "2026-11-11T20:00",
-      "_times": "Feed says `20261111T180000Z`/`20261111T200000Z`, no zone — see the row above for why the `Z` is not believed.",
-      "timeConfirmed": false,
+      "_times": "Feed says `20261111T180000Z`/`20261111T200000Z`, no zone — see the row above for why the `Z` is not believed and what confirmed it: the organizer entered **18:00** (`.notes/roadmap-events.md`, 2026-11-03) and the event page's meta description reads \"Nov 11, 2026, 6:00:00 PM - GMT\" as served 2026-11-04.",
+      "timeConfirmed": true,
       "venue": {
         "name": "Kowalski's Market",
         "street": "5327 Lyndale Avenue South",

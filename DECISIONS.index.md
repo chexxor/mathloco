@@ -181,5 +181,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D171** — the site publishes its own event snapshot; Mobilizon is the club's authoring surface, not a runtime dependency
 - **D172** — an unconfirmed clock time publishes as a DATE, never as an instant; Mobilizon's `Z` is not evidence
 - **D173** — a browser-gate fixture that targets markup the build stopped making is a lost probe; retarget it and name where the state went
+- **D174** — the two November hours are confirmed from the organizer's own entry and the club's own page, not from the feed's `Z`
 
-Defined: 173 (D1-D173). Unused ids: none.
+Defined: 174 (D1-D174). Unused ids: none.

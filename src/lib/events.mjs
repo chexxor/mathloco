@@ -66,6 +66,9 @@ export const hasConfirmedTime = (row) => row.timeConfirmed === true;
 /** The hour for a page, or null — an unconfirmed hour is stated as unknown, never defaulted (DESIGN.md). */
 export const displayTime = (row) => (hasConfirmedTime(row) ? String(row.start).slice(11, 16) : null);
 
+/** The other end of the span, or null. Same rule as `displayTime`: never a defaulted hour (DESIGN.md). */
+export const displayEndTime = (row) => (hasConfirmedTime(row) && row.end ? String(row.end).slice(11, 16) : null);
+
 /** The one-line venue a visitor can navigate to. `raw` is the organizer's string, kept verbatim in the feed. */
 export const venueLine = (row) => {
   const v = row.venue;
@@ -81,6 +84,7 @@ export const asUpcomingItems = (rows = upcomingEvents()) =>
   rows.map((row) => ({
     date: startDate(row),
     time: displayTime(row),
+    endTime: displayEndTime(row),
     // The page shows the human-labelled series name when the snapshot has one, because D92 keeps a frequency
     // word off the page ("Bimonthly" is the organizer's own title and stays verbatim in the feed, where it is
     // a quotation rather than the club's claim). `seriesNote` is the only second line a row may print.

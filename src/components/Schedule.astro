@@ -75,8 +75,13 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
                 <span class="text-label font-medium text-ink tabular-nums">
                   {formatDate(item.date, 'wide')}
                 </span>
+                // One text node, so the render gate sees one measurement. An unconfirmed hour prints
+                // "time not set" rather than a guessed one (D172); a confirmed one prints the span the
+                // organizer set, in the club's own zone.
                 <span class="text-label text-ink-3">
-                  {formatTime(item.time ?? '') ?? 'time not set'}
+                  {item.time
+                    ? `${formatTime(item.time)}${item.endTime ? ` – ${formatTime(item.endTime)}` : ''}`
+                    : 'time not set'}
                 </span>
                 {filled(item.status) && (
                   <span class="text-label font-medium text-ink-2 uppercase tracking-wide">{item.status}</span>
