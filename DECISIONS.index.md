@@ -188,5 +188,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D178** — `options.maximumAttendeeCapacity: 0` is never copied into a new event
 - **D179** — the n8n workflow JSON is a generated artifact; the rules live in `lib/core.mjs` and the tests execute the generated text
 - **D180** — dry run is the shipped default and the only kill switch; deleting an event is a human tool, never the workflow
+- **D181** — a `//` between JSX children is not a comment, it is copy; the render gate now fails any text node that begins like source-comment syntax
 
-Defined: 180 (D1-D180). Unused ids: none.
+Defined: 181 (D1-D181). Unused ids: none.

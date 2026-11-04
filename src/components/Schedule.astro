@@ -75,9 +75,11 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
                 <span class="text-label font-medium text-ink tabular-nums">
                   {formatDate(item.date, 'wide')}
                 </span>
-                // One text node, so the render gate sees one measurement. An unconfirmed hour prints
-                // "time not set" rather than a guessed one (D172); a confirmed one prints the span the
-                // organizer set, in the club's own zone.
+                {/* A JSX comment, not `//`: inside `{items.map()}` the template body is JSX children, where a
+                    `//` line is not a comment at all — it shipped as visible text in every card (2026-11-04).
+                    One text node, so the render gate sees one measurement. An unconfirmed hour prints
+                    "time not set" rather than a guessed one (D172); a confirmed one prints the span the
+                    organizer set, in the club's own zone. */}
                 <span class="text-label text-ink-3">
                   {item.time
                     ? `${formatTime(item.time)}${item.endTime ? ` – ${formatTime(item.endTime)}` : ''}`

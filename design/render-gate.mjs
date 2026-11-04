@@ -241,6 +241,14 @@ for (const route of routes) {
       const fs = parseFloat(t.fs);
       const bar = fs >= 24 ? 3.0 : 4.5;
       if (t.contrast !== null && t.contrast < bar) fails.push(`${at}: ${t.tag} "${t.t}" at ${t.fs} is ${t.contrast} on its ground (bar ${bar})`);
+      // 2b. a text node that *begins* like source-comment syntax is a leaked comment, not copy (D181). Measured
+      // 2026-11-04: a `//` comment written between JSX children inside `{items.map()}` in `Schedule.astro` is not a
+      // comment to the template compiler — it is text, and three lines of agent prose shipped in every event card,
+      // where a screen reader reads them aloud. Astro strips `//` in the template body and inside JS expressions;
+      // the position that ships it is JSX children, which is exactly where a note next to a tag wants to go.
+      if (/^\s*(\/\/|\/\*|\*\/)/.test(String(t.t ?? ''))) {
+        fails.push(`${at}: ${t.tag} text begins like source-comment syntax — "${String(t.t).slice(0, 72)}" is visible prose to a visitor, not a comment (D181: in JSX-children position a double-slash is text)`);
+      }
     }
 
     // 3. one dark band per screen — and the band has to be an EXIT, not a poster. A band with no link

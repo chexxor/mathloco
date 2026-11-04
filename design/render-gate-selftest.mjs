@@ -129,6 +129,9 @@ const cases = [
   // ring with no fill of its own, so both sides of that ring become `panel`, where record 0018's table says
   // the token reads 2.88 — under the 3.0 bar the token was solved to clear on paper. Same rule, real markup.
   ['ring on a tint', (h) => h.replace('<ul class="space-y-6">', '<ul class="space-y-6 bg-panel">'), /under the 3\.0 graphic bar/],
+  // The leak this rule exists for (D181): the exact bytes a `//` comment produced in the built card on 2026-11-04,
+  // re-inserted at the same place. Without this planting, "comments never ship" is a hope, not a check.
+  ['leaked // comment in a card', (h) => h.replace('<span class="text-label text-ink-3">', '<span class="text-label text-ink-3">// One text node, so the render gate sees one measurement'), /begins like source-comment syntax/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;
