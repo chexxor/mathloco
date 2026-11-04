@@ -31,15 +31,24 @@ import radio1922 from '../assets/photos/horizon-radio1922.png';
 const plates = [
   {
     src: euclid1903,
-    alt: 'An illustration from The elements of Euclid for the use of schools and colleges, 1903, leaf 297 — a geometry figure in line work',
+    // Copied from the picture page's own words (`insideoutlibrary.com/p/<id>`), which labels this leaf and carries
+    // its surrounding text: "Octahedron. Dodecahedron. Icosahedron. 30. A parallelepiped is a solid figure…".
+    // What the drawing is was **guessed wrong here for an hour** (a "Book VI figure on a right triangle", inferred
+    // from the book's title and the id's numbers) — an invented alt is the D92 defect class in an attribute.
+    alt: 'A figure from The elements of Euclid for the use of schools and colleges (1903), leaf 297 — the octahedron, the dodecahedron and the icosahedron, drawn as solids in line work',
   },
   {
     src: euler1910,
-    alt: 'An illustration from Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122 — the Euler diagram in line work',
+    // "euler1910" is our **slot key** from D149-2b (the line-work diagram that decision asked for), not a claim
+    // about who drew it — the book is Slaught & Lennes 1910. The page's own text: "with center O tangent to the four
+    // arcs as shown. Suggestion. Take X so that DX = XB. With centers A and B and radius AX draw arcs meeting at O."
+    alt: 'A construction from Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122 — arcs cut from two centres, and a circle tangent to the four arcs',
   },
   {
     src: radio1922,
-    alt: 'An illustration from The principles underlying radio communication, 1922, leaf 514 — a diagram in line work',
+    // The page's own caption text: "Antenna Current in radiotelephony Transmitting the Sound of a as in father.
+    // Modulates a radio-frequency Wave which can be received with Simple Detector … Beat Reception is Required."
+    alt: 'A diagram from The principles underlying radio communication (National Bureau of Standards, 1922), leaf 514 — antenna current in radiotelephony: a radio-frequency wave modulated by a spoken sound, received with a simple detector',
   },
 ];
 ---

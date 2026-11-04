@@ -73,7 +73,11 @@ const FLOOR = 320;
 const widths = (process.env.RENDER_WIDTHS || "1240,640,390,320").split(",").map(Number);
 const argv = process.argv.slice(2);
 const NO_BUILD = argv.includes('--no-build');
-const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 4));
+// Three firefoxes, not four. Measured 2026-11-04 (Linux, native): at JOBS=4 the @390 cell - the tallest page on the
+// site, 5176px with four raster images - failed to post twice in a row and the gate exited 1, while the same command
+// on its own passed. Under `verify:browser` this is the flake that would make CI red on a green page, so the pool is
+// one firefox smaller and the retry one longer: wall cost measured in design/gate-cost.json.
+const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 3));
 const pages = argv.filter((a) => a.startsWith('/'));
 const routes = pages.length ? pages : ['/', '/404', '/chat'];
 const dist = resolve('dist/client');
@@ -161,7 +165,7 @@ const run = (route, width) => new Promise((done) => {
 // calling __send()). One in nine showed up while timing this. A gate that flakes is a gate people learn
 // to re-run instead of trust, so a cell gets a second attempt; two failures in a row is a real FAIL and
 // the report says which it was.
-const ATTEMPTS = Number(process.env.RENDER_ATTEMPTS || 2);
+const ATTEMPTS = Number(process.env.RENDER_ATTEMPTS || 3);
 async function measureCell(route, width) {
   let last = null;
   for (let n = 1; n <= ATTEMPTS; n++) {

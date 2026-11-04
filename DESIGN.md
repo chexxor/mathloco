@@ -545,10 +545,13 @@ and the screen can disagree.
   **own** width — 688 for the Byrne leaf, 698 for the 1910 Euler leaf, 1024 for the two others (D167) — so a single
   leaf across a 1176 CSS px band is a **1.68x** upscale that keeps about a third of the drawing. Record 0023's
   instruction, executed: compose the strip from several plates rather than stretch one.
-- The three leaves are Euclid 1903 (Book VI figures on a right triangle), Slaught & Lennes 1910 (the 60-degree
-  construction: four circles, one equilateral triangle — the colourless Euler diagram D149-2b asked for) and a 1922
-  radio text (the three-electrode audion as an oscillation generator). All colourless (0% named colour), all public
-  domain per record 0023; provenance and alt text per picture page (D92).
+- The three leaves are Euclid 1903 **leaf 297** (the octahedron, dodecahedron and icosahedron drawn as solids),
+  Slaught & Lennes 1910 **leaf 122** (arcs cut from two centres with a circle tangent to the four arcs — the colourless
+  construction D149-2b asked for; `euler1910` is our slot key, not a claim about Euler) and the 1922 National Bureau of
+  Standards radio text **leaf 514** (antenna current in radiotelephony, a modulated radio-frequency wave received with
+  a simple detector). All colourless (0% named colour), all Public Domain Mark 1.0 per each picture's own page, and
+  **every description above is quoted from that page**: the first versions of these three sentences were inferred from
+  book titles and id numbers, and they shipped into `alt` attributes before the pages were read (D92).
 - **What it cost, measured 2026-11-04 (`check:space`, `check:color`):** painted **5.33% → 7.7%** and page
   **4284 → 3889 at 1240**; phone page **6173 → 5176 at 390** — but the shrink is mostly the "Steps you can undo" card
   coming out on the same ruling (D149-6c), not the band. Named colour is **0.30% at 1240 / 0.65% at 390** (was

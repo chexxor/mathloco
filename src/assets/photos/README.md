@@ -29,21 +29,33 @@ tracked binary, and `src/assets/` is gitignored apart from this directory, so th
 repo tracks and the size the design gates' numbers depend on; `check:space` re-reads them at every run (the hero
 paints **372x304**, 2.34% of the page's pixels).
 
-**The three band leaves, and where they come from** (provenance read from each picture's own page, record 0023;
-public domain, no attribution required, and none of it invented - D92):
-- `horizon-euclid1903.png` - *The elements of Euclid for the use of schools and colleges, edited for use in the
-  public schools* (1903), p. 210: Euclid Book VI props. 20 and 22, similar rectilinear figures described on the sides
-  of a right triangle, and the circle about the right triangle.
-  https://insideoutlibrary.com/p/ia-elementsofeuclid1903eucl-297-210
-- `horizon-euler1910.png` - Slaught & Lennes, *Plane geometry, with problems and applications* (1910), p. 176:
-  the construction of a 60-degree angle with arcs - four circles and the equilateral triangle they produce. This is
-  the colourless Euler diagram D149-2b asked for, shown at full leaf rather than in a 532x128 band.
-  https://insideoutlibrary.com/p/ia-cu31924031236171-122-176
-- `horizon-radio1922.png` - *The principles underlying radio communication* (1922), p. 212: the three-electrode
-  audion connected as an oscillation generator, two coupled circuits and a grid. Chosen as the third leaf because the
-  club reads for pleasure as well as for credentialing, and a 1922 transmitter diagram is a page of exactly that
-  (record 0023 measured it at 0% named colour, native 1024x478).
-  https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212
+**The three band leaves, and where they come from.** Provenance below is **quoted** from each picture's own page
+(`insideoutlibrary.com/p/<id>`), which is the only form of it this file accepts - D92.
+
+**How an id's two numbers read:** `ia-<book>-297-210` is **leaf 297**, picture 210 of that scan. Quote the page's own
+"leaf N" label. Every "p. 210 / p. 176 / p. 212" claim this file carried an hour earlier was read off the *second*
+number, and the three figure descriptions written from those guesses plus the book titles were **inferred, not read** -
+they shipped into `alt` attributes, where a screen reader would have read them aloud as fact. Corrected here, in the
+file that carried them.
+
+- `horizon-euclid1903.png` - *The elements of Euclid for the use of schools and colleges; comprising the first six
+  books and portions of the eleventh and twelfth books* (Euclid, ed. Todhunter & Simson; London; New York, Macmillan,
+  1903), **leaf 297**. The page's text beside the picture: "Octahedron. Dodecahedron. Icosahedron. 30. A parallelepiped
+  is a solid figure contained by six quadrilateral figures, of which every opposite two are parallel." So this is near
+  the end of the book - the solid figures - and not a plane figure at all. Internet Archive, Public Domain Mark 1.0,
+  "Free to use for anything". https://insideoutlibrary.com/p/ia-elementsofeuclid1903eucl-297-210
+- `horizon-euler1910.png` - Slaught & Lennes, *Plane geometry, with problems and applications* (Boston, Allyn and
+  Bacon, 1910), **leaf 122**, Cornell University Library scan, Public Domain Mark 1.0. Page text: "with center O
+  tangent to the four arcs as shown. Suggestion. Take X so that DX = XB. With centers A and B and radius AX draw arcs
+  meeting at O. Complete the construction and prove that the figure has the required properties."
+  **`horizon-euler1910` is our slot key** from D149-2b (the colourless construction that ruling asked for); it is not
+  a claim that Euler drew anything. https://insideoutlibrary.com/p/ia-cu31924031236171-122-176
+- `horizon-radio1922.png` - *The principles underlying radio communication* (United States. National Bureau of
+  Standards; Ould, R. S.; U.S. Army Signal Corps; Washington, Govt. Print. Off., 1922), **leaf 514**, Public Domain
+  Mark 1.0. Page text: "Antenna Current in radiotelephony Transmitting the Sound of a as in father. Modulates a
+  radio-frequency Wave which can be received with Simple Detector ... Beat Reception is Required." Chosen as the third
+  leaf because the club reads for pleasure as well as for credentialing, and record 0023 measured this leaf at 0%
+  named colour, native 1024x478. https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212
 
 PS-2 and PS-4 are definitions only: they need a venue photograph and a real schedule to hang on, and
 shipping either empty would be a 320px void.
