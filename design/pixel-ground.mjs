@@ -306,9 +306,19 @@ async function measureShot(shot, want = PAPER, windowHint = null) {
   };
 }
 
-/** The page's own claim about its hairlines, straight from the DOM report (the CSS-string number). */
-const claimedKeylines = (report) => (report?.notices ?? [])
-  .map((nt) => nt.keylineContrast).filter((c) => typeof c === 'number').sort((a, b) => a - b);
+/**
+ * The page's own claim about its hairlines, straight from the DOM report (the CSS-string number).
+ * Two sources, in this order: a notice's `keylineContrast`, and failing that any `isRule` ring's `inside`.
+ * The second is not a loosening — it is what a page with a schedule in it actually has. The notice grammar
+ * appears on the landing page only when the calendar holds no upcoming date (the section's empty state), so
+ * a probe that insisted on a notice went blind on exactly the builds that carry events; the `li` rings the
+ * schedule rows draw are the same `--color-rule` keyline, measured the same way.
+ */
+const claimedKeylines = (report) => {
+  const fromNotices = (report?.notices ?? []).map((nt) => nt.keylineContrast);
+  const fromRings = (report?.rings ?? []).filter((r) => r.isRule).map((r) => r.inside);
+  return [...fromNotices, ...fromRings].filter((c) => typeof c === 'number').sort((a, b) => a - b);
+};
 
 const fails = [];
 const records = [];

@@ -122,7 +122,13 @@ const cases = [
   // 7b. a ring that is one-ground but on the WRONG ground: the notice keeps its no-fill grammar and its 1px inset
   //    ring, and only the strip behind it is tinted. Both sides then read 2.88 — under the bar `--color-rule`
   //    was solved to clear (3.01 on paper). This is why the rule is a pair and not a token grep.
-  ['ring on a tint', (h) => h.replace('<div class="max-w-measure"><div role="status"', '<div class="max-w-measure bg-panel"><div role="status"'), /under the 3\.0 graphic bar/],
+  // Re-pointed 2026-11-04: this used to tint the strip behind the schedule section's empty-state notice, and
+  // the notice is only in the built page when the calendar holds no upcoming date (data/events.json now holds
+  // two, so the markup the mutation targeted stopped existing and the case proved nothing — the gate's own
+  // message says so). It now tints the list the schedule rows sit on: each row is a 1px `--color-rule` inset
+  // ring with no fill of its own, so both sides of that ring become `panel`, where record 0018's table says
+  // the token reads 2.88 — under the 3.0 bar the token was solved to clear on paper. Same rule, real markup.
+  ['ring on a tint', (h) => h.replace('<ul class="space-y-6">', '<ul class="space-y-6 bg-panel">'), /under the 3\.0 graphic bar/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;
