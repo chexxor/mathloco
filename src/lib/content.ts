@@ -50,6 +50,11 @@ export type UpcomingItem = {
    * (D169), so the page says the hour is unknown instead of inventing one.
    */
   time?: string | null;
+  /**
+   * The other end of the span, same rule as `time`: present only when the organizer confirmed the hour (D172), so a
+   * row can print "12:00 pm - 2:00 pm" without ever printing a defaulted hour.
+   */
+  endTime?: string | null;
   title: string;
   /** An optional second line. The row's own name is not repeated there — see `asUpcomingItems`. */
   series?: string | null;

@@ -329,6 +329,9 @@ const run = (data, text) => RULES.flatMap((rule) => rule(data, text));
 
 if (selftest) {
   const clone = () => JSON.parse(JSON.stringify(snapshot));
+  // A row put back into the unconfirmed state: what the snapshot looks like whenever the club adds a date and
+  // nobody has settled the hour yet (D172).
+  const unconfirmed = (d) => { d.events[0].timeConfirmed = false; return d; };
   const plantings = [
     // snapshot-level: a field a harvester or a human got wrong
     { name: 'no-PRODID', data: (d) => { delete d.calendar.prodid; return d; }, rule: 'envelope' },
@@ -350,12 +353,21 @@ if (selftest) {
     { name: 'long-unfolded-line', text: (t) => t.replace('DESCRIPTION:', `DESCRIPTION:${'x'.repeat(200)}`), rule: 'folding' },
     { name: 'lf-only-line-endings', text: (t) => t.replace(/\r\n/g, '\n'), rule: 'folding' },
     { name: 'unescaped-comma', text: (t) => t.replace(/^SUMMARY:.*$/m, 'SUMMARY:Math Club, Minneapolis'), rule: 'escaping' },
-    { name: 'proxied-mobilizon-Z', text: (t) => t.replace('DTSTART;VALUE=DATE:20261107', 'DTSTART:20261107T120000Z'), rule: 'zone-on-instants' },
-    { name: 'floating-time', text: (t) => t.replace('DTSTART;VALUE=DATE:20261107', 'DTSTART:20261107T120000'), rule: 'zone-on-instants' },
-    { name: 'zero-length-date-span', text: (t) => t.replace('DTEND;VALUE=DATE:20261108', 'DTEND;VALUE=DATE:20261107'), rule: 'date-span' },
+    // Four of the traps below only exist on a row published as a DATE, and the shipped rows are now confirmed
+    // instants (D174) - so the planting flips the row first. That is not a cheat: "unconfirmed" is a state the
+    // snapshot is routinely in again the moment the club adds a date, and a gate that can only plant on the
+    // shape today's data happens to hold stops measuring the day the data changes (D173).
+    { name: 'proxied-mobilizon-Z', data: unconfirmed, text: (t) => t.replace('DTSTART;VALUE=DATE:20261107', 'DTSTART:20261107T120000Z'), rule: 'zone-on-instants' },
+    { name: 'floating-time', data: unconfirmed, text: (t) => t.replace('DTSTART;VALUE=DATE:20261107', 'DTSTART:20261107T120000'), rule: 'zone-on-instants' },
+    { name: 'zero-length-date-span', data: unconfirmed, text: (t) => t.replace('DTEND;VALUE=DATE:20261108', 'DTEND;VALUE=DATE:20261107'), rule: 'date-span' },
     { name: 'wrong-DST-offset', text: (t) => t.replace('TZOFFSETTO:-0500', 'TZOFFSETTO:-0700'), rule: 'vtimezone' },
     { name: 'no-VTIMEZONE', text: (t) => t.replace(/BEGIN:VTIMEZONE[\s\S]*?END:VTIMEZONE\r\n/, ''), rule: 'vtimezone' },
-    { name: 'dropped-DTEND', text: (t) => t.replace(/^DTEND;VALUE=DATE:20261108\r\n/m, ''), rule: 'vevent-required' },
+    { name: 'dropped-DTEND', data: unconfirmed, text: (t) => t.replace(/^DTEND;VALUE=DATE:20261108\r\n/m, ''), rule: 'vevent-required' },
+    // The same three traps on the shape the live rows actually publish (confirmed instants, D174), so the
+    // plantings track the shipped artifact rather than a stale copy of it.
+    { name: 'Z-on-a-confirmed-instant', text: (t) => t.replace('DTSTART;TZID=America/Chicago:20261107T120000', 'DTSTART:20261107T120000Z'), rule: 'zone-on-instants' },
+    { name: 'floating-confirmed-instant', text: (t) => t.replace('DTSTART;TZID=America/Chicago:20261107T120000', 'DTSTART:20261107T120000'), rule: 'zone-on-instants' },
+    { name: 'zero-length-instant-span', text: (t) => t.replace('DTEND;TZID=America/Chicago:20261107T140000', 'DTEND;TZID=America/Chicago:20261107T120000'), rule: 'date-span' },
     { name: 'artifact-drift', text: (t) => `${t}BEGIN:VEVENT\r\nUID:ghost\r\nEND:VEVENT\r\n`, rule: 'envelope' },
   ];
 
