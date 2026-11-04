@@ -28,17 +28,48 @@ You need:
   ```
 
 **Probe that n8n can actually see them** (this depends on the host's `N8N_BLOCK_ENV_ACCESS_IN_NODE`, which
-nothing in this repo can read from here). Add a temporary Code node to any workflow, Run it, and confirm it
-prints both names:
+nothing in this repo can read from here). Import the second artifact — `n8n/env-probe.json` — and press
+**Execute workflow**. Five nodes, in a line: `P0 Run me (there is no schedule here)` → `P1 What this host can
+see` (`$env`) → `P2 Mobilizon on the apex` (GET `/.well-known/nodeinfo/2.0`) → `P3 Mobilizon on the GraphQL
+path` (POST `{ __typename }` to `/api/v1`) → `P4 Report what I found`. The report node puts the whole answer in
+one string so you do not have to interpret the UI:
+
+```json
+{ "ok": true, "verdicts": [],
+  "summary": "cadence environment probe - read only, nothing was written\nasked at   2026-11-04T15:00:00.000Z (…)\ntarget     https://mobilizon.labradorius.com/api/v1\nnodeinfo   Mobilizon 5.2.4 at /.well-known/nodeinfo/2.0\ngraphql    answers, root type RootQueryType\nenv        visible, 41 keys; wanted: MOBILIZON_EMAIL, MOBILIZON_PASSWORD",
+  "host": { "envVisible": true, "envKeyCount": 41,
+            "wantedNames": ["MOBILIZON_EMAIL", "MOBILIZON_PASSWORD"],
+            "wantedPresent": ["MOBILIZON_EMAIL", "MOBILIZON_PASSWORD"],
+            "wantedMissing": [], "valuesPrinted": false },
+  "software": { "name": "Mobilizon", "version": "5.2.4" } }
+```
+
+`ok: true` with an empty `verdicts` array is the pass. Each verdict names the layer it belongs to, and what to
+do about it:
+
+| verdict / field | what it means |
+|---|---|
+| `CODE: env access is blocked in Code nodes` | `N8N_BLOCK_ENV_ACCESS_IN_NODE` is set. The cadence reads the password in `03`'s HTTP expression, which that same setting governs — so the fix is host-level: unset it, or restart n8n with the variables present |
+| `CODE: MOBILIZON_PASSWORD is not in the environment n8n started with` | the name is absent from the **process** environment. Different installs put env files in different places; set it where the n8n process reads it, then **restart n8n** — it reads its environment at process start |
+| `HOST: … gave no nodeinfo software field` | this host cannot reach the apex — DNS/routing/TLS, not credentials. Split DNS is real on this network (`mobilizon.labradorius.com` resolves to a LAN address from inside and a public address from outside), so which view n8n has depends on where n8n runs |
+| `HOST: something answered as "…", not Mobilizon` | a proxy is intercepting the request |
+| `HOST: /api/v1 did not answer { __typename }` | the cadence's own endpoint is unreachable from n8n's network — this is the 09:00 failure the probe exists to catch |
+| a `version` line that is not 5.2.4 | the instance moved. Run `node integrations/mobilizon-cadence/check.mjs` before trusting any field name in these docs |
+
+It prints **presence, never values**: the only strings it can emit are variable *names* (`valuesPrinted: false`
+says so in the output), it attaches no credential, and it has no write path — `build-probe.mjs` refuses to
+generate one, and `check.mjs` re-checks that argument on every run. It has no schedule trigger, so it cannot
+fire on its own: import it, run it once, read the summary, delete the workflow.
+
+If you would rather not import a second workflow, the one-line equivalent is a temporary **Code** node in any
+workflow:
 
 ```js
 return [{ json: { seen: Object.keys($env ?? {}).filter((k) => k.startsWith("MOBILIZON")) } }];
 ```
 
-If `seen` is empty, n8n is blocking environment access in Code nodes. The workflow reads them in an HTTP node's
-expression rather than a Code node, which is governed by the same setting — so the fix is host-level:
-unset `N8N_BLOCK_ENV_ACCESS_IN_NODE` (its default is permissive) or restart n8n with the variables present.
-Delete the probe node afterwards.
+That answers only the env question — it will not tell you whether n8n can reach the GraphQL endpoint, which is
+the other half of what a 09:00 failure looks like.
 
 ## 1. Import
 
@@ -59,6 +90,41 @@ internal shape varies between n8n versions. You should see exactly one rule:
 and **Fallback Output / branch mode** set so that non-matching items go to the *false* branch (the report).
 Opening the node lets n8n rewrite the block into the shape your version prefers, which is what you want
 before a scheduled run depends on it.
+
+**Then export the copy back out and verify it.** Workflow menu → **Download**, and from the repo:
+
+```bash
+node integrations/mobilizon-cadence/verify-import.mjs ~/Downloads/cadence-workflow.json
+```
+
+This is the step that makes "the workflow in n8n is the workflow that was reviewed" a checked fact instead of
+an assumption. Nothing else records what an import did: the copy inside n8n can differ because the instance
+runs a different n8n version and rewrote a node, because the import partially failed, or because someone
+pressed something. The checker compares the edges, the gate's rule, every URL and host, the injected config
+(it *runs* both copies and reports where they disagree), `settings.timezone`, `executionOrder`, pinned data,
+and the exact text of each Code node — and it prints whether the **exported** copy would write, read from the
+export's own `dryRun`. It is read-only: it never talks to n8n and never touches the instance.
+
+The same run answers the question you actually have, in words:
+
+```text
+executed here against fixtures/group-history-2026-11-04.json (no credential, no network, no write):
+  04 Plan & decide -> would_create  mpls-social  2026-11-21T18:00:00Z .. 2026-11-21T20:00:00Z  (dry_run)
+  04 Plan & decide -> would_create  parallel-learning  2026-11-26T00:00:00Z .. 2026-11-26T02:00:00Z  (dry_run)
+  08 Report: cadence: 2 series, 0 event(s) written, at 2026-11-04
+compare that with: node integrations/mobilizon-cadence/simulate.mjs  (the same rules, live calendar)
+```
+
+Those dates come out of the copy **installed in n8n**, run against the saved calendar; `simulate.mjs` runs the
+same rules against the live one. Two different calendars, or two different copies of the rules — that line is
+how you tell which you have.
+
+What is normal in a real export: ids, version ids, timestamps, tags and node **positions** differing (n8n
+rewrites all of them; the checker ignores them), and one `note` per alerting node you added after `21`/`22`.
+What is not: any `fatal` or `drift` line. If you get one, fix it in the repo, `build-workflow.mjs`, re-import,
+export again, re-run this. Do **not** fix it by editing in the n8n editor — that is how the two-configs
+problem in step 5 starts. Re-run this checker after any edit made in the editor, and once more before you
+enable writes (step 5). To see the checker prove itself first: `verify-import.mjs --selftest`.
 
 ## 2. Rehearse away from n8n first (optional, 30 seconds, zero risk)
 
@@ -141,6 +207,18 @@ then rebuild, re-check, and re-import:
 node integrations/mobilizon-cadence/build-workflow.mjs
 node integrations/mobilizon-cadence/check.mjs
 ```
+
+Before activating, two commands and two eyes:
+
+```bash
+node integrations/mobilizon-cadence/verify-import.mjs <the export you just downloaded>
+```
+
+1. it reports **0 fatal, 0 drift**, and its own line says `as exported, this copy WOULD WRITE` — that sentence
+   is the checker reading the dry-run switch out of the copy that will actually run, not out of the repo;
+2. `05 Stop if nothing to write` still routes only `action == create` into `06`, and everything else to its
+   false branch. That node is the whole safety story in one condition, and "nobody edited it" is not something
+   the artifact can prove — the export check above is what can.
 
 On import, n8n may create a second workflow with the same name rather than replacing the first (which it does
 depends on the version and on whether you import from file or paste JSON — check the workflow list after

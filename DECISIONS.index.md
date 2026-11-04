@@ -189,5 +189,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D179** — the n8n workflow JSON is a generated artifact; the rules live in `lib/core.mjs` and the tests execute the generated text
 - **D180** — dry run is the shipped default and the only kill switch; deleting an event is a human tool, never the workflow
 - **D181** — a `//` between JSX children is not a comment, it is copy; the render gate now fails any text node that begins like source-comment syntax
+- **D182** — the Mobilizon instance is reachable from outside the LAN: measured, not inferred; that makes a scheduled harvest a *choice*, and it puts the login endpoint on the open internet
+- **D183** — the credential/reachability probe is a generated workflow artifact with a machine-checked read-only argument, not a snippet in a doc
+- **D184** — "what runs in n8n" is verified by exporting it back and comparing it to the artifact; the comparator is gated by planted defects
 
-Defined: 181 (D1-D181). Unused ids: none.
+Defined: 184 (D1-D184). Unused ids: none.

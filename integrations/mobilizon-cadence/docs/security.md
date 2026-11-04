@@ -68,10 +68,12 @@ upgrade path.
 ### Verify that n8n will read them (one-minute probe)
 
 Whether expressions can see `$env` depends on the n8n host's `N8N_BLOCK_ENV_ACCESS_IN_NODE` setting, which
-this integration cannot read from here. So the operator guide asks for a probe rather than assuming: a
-three-line Code node that prints `Object.keys($env ?? {}).filter(k => k.startsWith("MOBILIZON"))`. If that
-prints nothing, the guide's fallback is to set the variables in the service environment and restart n8n, and
-the reason it must be the *service* environment is that n8n reads its environment at process start.
+this integration cannot read from here. So the operator guide asks for a probe rather than assuming — and the
+probe is a **generated artifact** (`n8n/env-probe.json`, from `build-probe.mjs`), not a snippet to type, so
+that its read-only-ness is checked rather than promised (D183). It reports which of the two wanted names are
+**present**, never their values, and it also answers the other half of a 09:00 failure: whether that host can
+reach `/api/v1` at all. Its fallback is the one-line Code node in the guide; the reason the variables must be in
+the *service* environment is that n8n reads its environment at process start.
 
 ## The exposure nobody should discover by accident
 

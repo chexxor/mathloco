@@ -14,6 +14,7 @@
  */
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
+import { runCodeNode } from "../lib/sandbox.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -40,16 +41,10 @@ const codeOf = (name) => {
   return n.parameters.jsCode;
 };
 
-/** Run a Code node's body with just enough of the n8n sandbox to exercise it. */
-function runCode(name, itemsByName) {
-  const map = new Map(Object.entries(itemsByName ?? {}));
-  const $ = (n) => {
-    if (!map.has(n)) throw new Error(`node "${n}" did not run`);
-    const items = map.get(n);
-    return { all: () => items, item: items[0] };
-  };
-  return new Function("$", codeOf(name))($);
-}
+/** Run a Code node's body. The harness itself lives in `lib/sandbox.mjs`, because two callers must agree on
+ *  it: this file (the generated artifact) and `verify-import.mjs` (a workflow exported back out of n8n). A
+ *  harness bug cannot make both of them agree if there is only one harness. */
+const runCode = (name, itemsByName) => runCodeNode(codeOf(name), itemsByName);
 
 const FIXTURE = JSON.parse(readFileSync(root + "fixtures/group-history-2026-11-04.json", "utf8"));
 const historyItem = () => [{ json: { data: { group: FIXTURE.data.group } } }];

@@ -37,12 +37,14 @@ The three rules worth arguing about are all in `lib/core.mjs`, each with its rea
 ## Commands
 
 ```bash
-node integrations/mobilizon-cadence/check.mjs            # build --check + 36 tests + live read-only plan
+node integrations/mobilizon-cadence/check.mjs            # build --check + probe + 59 tests + import self-check + live read-only plan
 node integrations/mobilizon-cadence/check.mjs --offline  # same, without the live read (CI / no route)
 node integrations/mobilizon-cadence/simulate.mjs         # what it would do today, credentials, no writes
 node integrations/mobilizon-cadence/simulate.mjs --now 2026-12-01T14:00:00Z --fixture fixtures/group-history-2026-11-04.json
 node integrations/mobilizon-cadence/simulate.mjs --save fixtures/group-history-$(date +%F).json   # live read, saved
 node integrations/mobilizon-cadence/build-workflow.mjs   # regenerate n8n/cadence-workflow.json
+node integrations/mobilizon-cadence/build-probe.mjs      # regenerate n8n/env-probe.json (the read-only credential probe)
+node integrations/mobilizon-cadence/verify-import.mjs <file n8n exported>   # is the running copy the reviewed copy?
 node integrations/mobilizon-cadence/repair.mjs --list    # the group's upcoming rows, with uuid and internal id
 node --test integrations/mobilizon-cadence/test/*.test.mjs
 ```
@@ -66,10 +68,13 @@ authoring system, this only writes into Mobilizon.
 | `nodes/01-config.js` `nodes/04-plan.js` `nodes/08-report.js` | the three n8n Code nodes, as reviewable source |
 | `build-workflow.mjs` | generates the importable workflow and refuses to generate a broken one |
 | `n8n/cadence-workflow.json` | **the artifact** — what you import into n8n. Generated: never edit it. `check.mjs` fails if the file on disk is not byte-identical to what `nodes/` + `lib/` + `series.config.mjs` produce |
+| `n8n/env-probe.json` | a second, five-node workflow for step 0 of the guide: it answers "can n8n see `MOBILIZON_EMAIL`/`MOBILIZON_PASSWORD` at all?", and whether **that host** can reach `/api/v1` — and prints **presence, never values**. It holds no credential, attaches none, has no schedule trigger and no write path (D183) |
+| `build-probe.mjs` | generates that probe and refuses to write it unless the read-only argument holds; `--check` also fails if the committed copy is stale |
+| `verify-import.mjs` | the transport check (D184). You export the workflow back out of n8n and run it against this file: edges, the gate's rule, every URL, the injected config, `settings.timezone`/`executionOrder` and each Code node's exact text are compared; then the exported copy's own `01 Config` and `04 Plan & decide` are **executed here** (no credential, no network, no possible write) and it prints the two dates that copy would plan, next to `simulate.mjs`'s. `--selftest` plants defects and proves the checker notices them |
 | `simulate.mjs` | the same rules, from a terminal, with no credentials and no writes |
 | `repair.mjs` | the undo: list / show / delete one row by uuid, with a `--yes` gate. The workflow itself never deletes |
-| `check.mjs` | build check + tests + live read-only plan, in one command |
-| `test/` | 36 tests: the rules against the club's real calendar, and the *generated* Code nodes executed under a fake n8n sandbox |
+| `check.mjs` | build check + probe build + tests + import self-check + live read-only plan, in one command |
+| `test/` | 59 tests, three files: the rules against the club's real calendar; the *generated* Code nodes executed under a fake n8n sandbox (`lib/sandbox.mjs`); and the transport — defects planted in a copy of the artifact that the import checker must catch, the n8n export noise it must ignore, and an export **executed** to show it plans the same two dates |
 | `fixtures/group-history-2026-11-04.json` | the club's calendar as the instance returned it, so tests are about real rows |
 | `records/` | the probe log and its machine-readable output — where every number in these docs comes from |
 | `docs/` | [`architecture.md`](docs/architecture.md) (node by node, and the build's invariants) · [`security.md`](docs/security.md) (the auth surface, and where the password is) · [`operator-guide.md`](docs/operator-guide.md) (import → dry run → enable → repair) · [`decisions.md`](docs/decisions.md) (what was rejected, and why) · [`test-plan.md`](docs/test-plan.md) (what is proven, and from where) |
