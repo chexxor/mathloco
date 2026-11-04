@@ -555,24 +555,25 @@ and the screen can disagree.
   remembering them** (`npm run round10` fails if a matcher finds no such slot on the built page, and measures the
   drawing back to within 1px; the numbers come from `npm run check:space`, which walks grid/flex children by
   computed `display`, and the page labels its own places with `data-slot` so a specimen is not matching a slot to
-  a Tailwind class). At 1240 today: hero media column **376×574** with a **376×235** mark in it, so **339px of a
-  column the page already pays for paints nothing** — the reserved place is **376×250** above the mark.
-  @measured 2026-11-03 by check:space
-  Filling it is not free, and this is the one thing A2 has to settle first: in a review build with PS-1 filled at
-  its reserved ratio, the hero mark's box falls from **372×232.5** (scale 1.55) to **148.9×93.1** (scale 0.621)
-  and its 1.3-unit strokes land at **0.81px** — under the 1px floor D119, because the mark and the reserved place
-  are siblings in one column and the mark is the flexible one. Either the mark carries a declared size or the
-  plate and the mark stop competing.
-  @measured 2026-11-03 by check:render (review build: `src/content.local/` with `{"photos":{"placeholders":true}}`)
-  A hatched placeholder and a real image are flex items with different intrinsic sizes, so the case A2 actually
-  ships splits differently again: with the Byrne leaf itself in the slot the mark lands at **188×118**
-  (`check:space`; `check:render` reports **186×116.3** — the two probes differ by the scrollbar's 10px of viewport
-  width, which shifts a centred column) and its thinnest stroke computes to **1.02px** — legal against D119's floor
-  by two hundredths — while the plate becomes a **188×125** window that keeps **46%** of a portrait leaf. So the
-  blocker is not a red gate; it is a column where every element lands at its own minimum. Across the seven
-  compositions in `npm run round13`: stacking the column costs the page **0px** and gives the plate **376×307**
-  (**56%** of the leaf); giving the plate its own shape costs **+151px**.
-  @measured 2026-11-03 by round13 (review build; record `design/grill/round13/report.json`)
+  a Tailwind class). At 1240 the hero media column (`data-slot="PS-1"`) is **376x574** and it is **full**: the column stacks —
+  plate above, mark below, one property, `lg:flex-col` — and the plate's box is subtraction rather than a chosen
+  ratio, so the column is exactly used: **307 = 574 − 235 (mark at full column width) − 32 (`mb-8`)**. The mark
+  therefore keeps its full width (**372x232.5** as `check:render` sees it, 376x235 as `check:space` does) and its
+  thinnest stroke lands at **2.02–2.17px** against D119's 1px floor. @measured 2026-11-03 by check:space / check:render Filling the column the other way — plate and
+  mark as siblings competing for one column — put the mark at **188x118** and its stroke at **1.02px**, legal by
+  two hundredths and invisible as a plate (188x125 keeps 46% of a portrait leaf); that is why the round ruled the
+  stack. Cost, measured: the page does not grow at desktop (**4284 → 4284**) but grows **+314px at 390**, where the
+  hero is not a grid and the plate adds its own height; the page's chroma >= 0.08 share goes **0.014% → 0.274%**
+  at 1240, against **+2.63%** for the loud Byrne leaf record 0023 priced. The plate shipped is **56% of the Byrne
+  1847 Euclid IV.15 leaf** at **752x614** (2x, because a 3px hairline at 1x lands on half-pixels), built by
+  `npm run plates` from the same crop `npm run round13` measured (sha1 `308193c78a` both — the recipe is one
+  module, `design/grill/plate-crop.mjs`, so a review crop and a shipped asset cannot drift).
+  @measured 2026-11-03 by check:space / check:render / check:color / round13 (record 0025)
+  A side-effect worth knowing before anything else moves down the page: `check:mark` photographed a **fixed**
+  1400px window, and the plate pushed the mark to **y=1421 at 320** and to a box bottom of **1449.9 at 640**, so
+  the gate reported "no ink in the measured box" for a correctly painted mark. It now asks the page its settled
+  height (`grill/shot-height.mjs`) and shoots at that; `check:mark` costs 3.8s → **7.92s** for the pair of widths.
+  @measured 2026-11-03 by check:mark
   Join media column **532×56** at 1240 (one paragraph) inside a grid row that is **326** tall; **310×85** at 390,
   **240×113** at 320. It used to be **532×128** / **310×245** of call-to-action, which is what made round 10 call
   a photo there "a ~152px *growth*, not a reclamation"; the two join actions now stand outside the tinted card

@@ -155,6 +155,15 @@ emptiness and two thirds of the reader-named colour were missing at the floor wi
   the PS-1 column cropped from every option at one display scale (`STRIP`), and the schedule card with the thumb and
   without it at both widths — every question the round asks is photographed, because a choice made from prose alone is
   a choice made blind (D160).
+- **Round 13's variant table mutates a page where PS-1 is a row.** Option C shipped on 2026-11-03 (record 0025),
+  so `row-shipped` no longer describes the shipped page — the round still runs and still measures, but re-anchor it
+  on the stacked column before reading its table as the current tree.
+- `grill/plate-crop.mjs` is the **one crop recipe**: `cropFor(key, w, h, {maxKeep})` decides which region of a
+  quarantined plate a slot gets and how much of the leaf survives. `scripts/plate-asset.mjs` (`npm run plates`)
+  builds the shipped `src/assets/photos/hero.png` with it, and `design/round13.mjs` grows its review crops with
+  it, so an asset and the specimen that claims to show it cannot drift (both sha1 `308193c78a` today). It replaced
+  a private copy inside `round13.mjs` that had already diverged: the review crop and the built asset were two
+  recipes for one plate, which is how a review ends up showing something the build does not ship.
 - `grill/contrast/cfg-*.json` + `grill/contrast/out/` — the colour oracle's configs and outputs, including
   `cfg-ratify` (the palette as ratified).
 - `fonts/` — face-selection and ramp evidence: `metrics.json`, `bytes.json`, `display-fit*.json`,

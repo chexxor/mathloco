@@ -12,10 +12,17 @@ computed `display`), not chosen. They are in CSS px at a 1240 viewport; the reco
 
 | File | Slot | Place | Rendered box | Shoot at (3:2) |
 |---|---|---|---|---|
-| `hero.<ext>` | PS-1 | hero media column, above the mark | column is 376x564; the mark paints 376x235 of it, leaving 329px empty | **376x250** (3:2, 1128x750 @3x) - costs no page height |
+| `hero.png` (**shipped 2026-11-03**: a Byrne 1847 plate, built by `npm run plates`) | PS-1 | hero media column, stacked plate-over-mark | column is **376x574**; the mark paints **376x235**, the plate takes what is left: **376x307** (574 − 235 − 32 of `mb-8`) | a real meeting photo replaces it at **376x307** - **752x614** at least (2x, so a 3px hairline does not land on half-pixels), landscape, and it costs **+0px** of page at 1240 and **+314px** at 390 |
 | `join.<ext>` | PS-3 | join card media column, above the buttons | 532x128 at 1240 / 310x245 at 390 | 532x128 (4.15:1 - a wide band; a taller photo grows the card by the difference) |
 | `venue.<ext>` | PS-2 | *proposed* full-width strip, not built | would be 1192x320 at 1240, 358x230 at 390 | 1192x320 (3.73:1, hard crop from 4:3) |
 | `event-<slug>.<ext>` | PS-4 | *proposed* event-card thumb, not built | card is 371x205, interior after `p-6` is 323x157 | 323x110 |
+
+**How a plate gets here**: `npm run plates` (`scripts/plate-asset.mjs`) re-crops a quarantined plate from
+`design/assets/photos/<key>.png` through `design/grill/plate-crop.mjs` — the same recipe `npm run round13`
+measured for its review specimens — and writes `src/assets/photos/hero.png`. Nothing is copied by hand, so the
+page and the specimen cannot show different crops: both are sha1 `308193c78a` today. A 493kB png in the repo is
+a cost worth naming: `src/assets/` is gitignored apart from this directory, so this file is the one binary this
+repo tracks, and it is the size the design gate's numbers depend on.
 
 PS-2 and PS-4 are definitions only: they need a venue photograph and a real schedule to hang on, and
 shipping either empty would be a 320px void.
