@@ -178,5 +178,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D168** — the horizon ships as PS-5: three whole leaves at their own aspects, desktop-only, and the page got shorter, not just prettier
 - **D169** — the group feed is harvested: two instances, no recurrence, and its instants have no zone on them
 - **D170** — alt text and provenance are quoted from the picture's own page; a title plus an id number is not evidence
+- **D171** — the site publishes its own event snapshot; Mobilizon is the club's authoring surface, not a runtime dependency
+- **D172** — an unconfirmed clock time publishes as a DATE, never as an instant; Mobilizon's `Z` is not evidence
+- **D173** — a browser-gate fixture that targets markup the build stopped making is a lost probe; retarget it and name where the state went
 
-Defined: 170 (D1-D170). Unused ids: none.
+Defined: 173 (D1-D173). Unused ids: none.
