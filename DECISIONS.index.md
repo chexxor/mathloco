@@ -170,5 +170,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D160** (2026-11-03) — A question answered by looking gets pictures of every option, at one scale, from the load that made its numbers (2026-11-03, operator ruling)
 - **D161** (2026-11-03) — The hero column stacks: the plate's box is subtraction, not a ratio (2026-11-03, operator ruling + delegate execution)
 - **D162** (2026-11-03) — A gate that photographs a fixed-height window loses anything that moves down the page (2026-11-03, delegate; measured)
+- **D163** (2026-11-03) — A tracked binary is not prose — the decision scanner skips files carrying a NUL byte (2026-11-03, delegate; measured)
+- **D164** (2026-11-03) — The cost baseline was re-saved on purpose after the hero plate, with the reason (2026-11-03)
 
-Defined: 162 (D1-D162). Unused ids: none.
+Defined: 164 (D1-D164). Unused ids: none.

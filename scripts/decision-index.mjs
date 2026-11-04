@@ -123,6 +123,12 @@ function citations() {
     } catch {
       continue; // deleted-but-listed, or a symlink; not worth failing the gate over
     }
+    if (text.includes('\u0000')) continue;   // a tracked binary is not prose (D163): `src/assets/photos/hero.png`
+      // became tracked when the hero plate landed, and a png chunk named `IDAT` plus a stray byte pair spelled a
+      // one-digit id with no entry (D163 records the event; the id itself is not typed here, because this scanner
+      // reads its own source — a literal nonexistent id in a comment becomes a gate failure). The base64
+      // stripper above cannot help, because this is not an encoded payload inside a text file —
+      // the whole file is bytes. A NUL in the first read is the cheapest honest binary test.
     for (const m of text.replace(B64, ' ').replace(B64RUN, ' ').matchAll(/\bD(\d{1,3})\b/g)) {
       const id = Number(m[1]);
       if (!by.has(id)) by.set(id, []);
