@@ -42,17 +42,24 @@ the new cap rule: **752x614/493kB → 688x562/377kB**, sha `47518a39c1`, layout 
 | **A3** | Re-measure rhythm on the page the art makes, then the operator rules **R6** | `npm run check:rhythm` re-run at 1240/640/390/320 against the A2 page — **it now has two specific targets** (D168): the **283px** hole left inside the reasons section by the `feature`-card cut, and the **128px** of `py-16` the horizon band brings with it (empty runs went 9/1075px -> 10/1215px at 1240 even as painted share rose 5.33% -> 7.7%); a record shows the table; **the operator's ruling recorded as a D-id** | not started — needs A2 |
 | **A4** | **Round 11 — body line-spacing**: shipped `body 17.6/24` = 1.36 against DESIGN.md's published 1.5 floor, measured in the renderer, one round covering the same line-box geometry R6 touches | a round specimen the operator chooses from; the token change; `check:rhythm` re-run after it; ruling as a D-id | not started — deliberately after A3 |
 | **A5** | D149-3c: move the notice-button keyline so it sits on **one** ground instead of straddling `paper` and `panel` — fix the placement, not the number | `npm run check:ground` reports no two-ground side for that hairline, and `check:ground:selftest` still passes | **done, merged into local `staging` 2026-11-03** with the queue (unpushed). 7 keylines, 3.01 on `paper` on both sides at all three widths, 0 straddles; `check:render` rule 4a + 2 new plantings (14 total, all caught). Record 0024, **D154** (now in `DECISIONS.index.md`) |
-| **A6** | Events: publish `/events.ics` from data we author (D70 contract, D150 framing) — data file, build-time render, `check:ics` traps, `TZID=America/Chicago` + `VTIMEZONE`, `STATUS:CANCELLED`, staleness gate | `npm run check:ics` exists and **can fail** (a selftest plants each trap); the served `.ics` is byte-identical across two builds except `DTSTAMP`/`X-WR-…`; a real `curl` of the preview URL returns the two November events with the right wall-clock | **partly unblocked 2026-11-04:** the operator gave the group feed URL and it is harvested (D169) — **two VEVENTs, no RRULE, no TZID/VTIMEZONE**: Social `20261107T120000Z` at Angel Food Bakery (Saint Louis Park, `GEO` present) and `Parallel Learning for Mathematical Minds` `20261111T180000Z` at Kowalski's Market, 5327 Lyndale Ave S. Read as instants they are 06:00 and 12:00 CST, which is implausible, so the *wall clock* is the open input, not the URL. Still needs inputs 1, 2, 4, 5, 6 below |
+| **A6** | Events: publish `/events.ics` from data we author (D70 contract, D150 framing) — data file, build-time render, `check:ics` traps, `TZID=America/Chicago` + `VTIMEZONE`, `STATUS:CANCELLED`, staleness gate | `npm run check:ics` exists and **can fail** (a selftest plants each trap); the served `.ics` is byte-identical across two builds except `DTSTAMP`/`X-WR-…`; a real `curl` of the preview URL returns the two November events with the right wall-clock | **partly unblocked 2026-11-04:** the operator gave the group feed URL and it is harvested (D169) — **two VEVENTs, no RRULE, no TZID/VTIMEZONE**: Social `20261107T120000Z` at Angel Food Bakery (Saint Louis Park, `GEO` present) and `Parallel Learning for Mathematical Minds` `20261111T180000Z` at Kowalski's Market, 5327 Lyndale Ave S. Read as instants they are 06:00 and 12:00 CST, which is implausible, so the *wall clock* is the open input, not the URL. **Built on `events/publish-ics-feed`, 2026-11-04 (unmerged, D171-D174).** Exits met on this tree: `npm run check:ics` **can fail** — 13 rules, and `check:ics:selftest` plants 21 defects and catches 21 (both D72 traps, Mobilizon's `Z`-with-no-zone pattern, UID stability, DATE spans, VTIMEZONE offsets, artifact drift); `/events.ics` is prerendered from `data/events.json` (`dist/client/events.ics`, 3136 octets, 77 content lines) and both `check:ics` steps are in the deploy set; two builds in a row produce a byte-identical feed **including** `DTSTAMP`, because it derives from the committed `source.fetchedAt` and only moves when the harvest runs — stronger than the exit asked for; the two rows publish `TZID=America/Chicago` instants with a VTIMEZONE whose offsets the gate checks against the runtime tz database (D172/D174). Still needs inputs **1, 4, 5, 6** below, plus the preview-`curl` half of this exit, which needs the operator's grant to push `staging` (D124). |
 | **A7** | The memory that travels: tracked `DECISIONS.index.md` + dangling-citation gate, tracked `MILESTONES.md` (this file), `check:figures` for measured numbers in `DESIGN.md`, gate-cost guard | `npm run check:decisions` and `check:figures` green inside `verify`; this file exists; cost guard prints against a baseline | **done, merged into local `staging` 2026-11-03** (unpushed) — the queue carried the review harness (D157) and D155–D164 with it |
+| **A8** | Keeping a published calendar from going stale — M6's failure mode, **a silently stale schedule**: the harvest ritual, and a rule that says out loud when the snapshot holds nothing near | a ruling on **N** (how far ahead a date must exist) and on where the rule runs; then `npm run check:ics` FAILs below N with a message naming the command that fixes it (`node scripts/events-harvest.mjs`), plus an escape hatch for the gap between series | **open, parked 2026-11-04 with its trigger named.** The harvester exists and is dry-run by default; `check:ics` already *prints* the distance ("next is 2026-11-07 (3 day(s) away)") — prints are not gates. It un-parks itself: when both November rows pass (2026-11-12) the snapshot holds nothing upcoming and the landing schedule shows its empty state, which is the state this item exists to catch |
 
 ### What A6 still needs from the operator (six inputs, as of 2026-11-03)
 
 1. The series name: "MPLS Math Club - **Bimonthly** Social" carries the word D92 ruled out of our titles, and
    the pattern in the data says every two weeks. Proposed: `MPLS Math Club Social`, rhythm carried by the data.
-2. Which November dates and **wall-clock times** are real. The feed now answers the dates — **Sat 7** (Angel Food
-   Bakery) and **Wed 11** (Kowalski's Market) — and both are plausible against D92's list of 7, 12, 21, 26 minus the
-   ones it invented. What it cannot answer is the time: `120000Z`/`180000Z` with no zone reads as 06:00 and 12:00 CST.
-   A wrong date is the costliest defect on this roadmap; a wrong *hour* is a close second, because a pub-night event
+   **Interim, on the branch:** the verbatim `SUMMARY` stays verbatim in the feed (a quotation, not our claim) and
+   the page prints the row's own `series` field (`MPLS Math Club social`). The ruling still decides the published name.
+2. ~~Which November dates and **wall-clock times** are real~~ — **answered 2026-11-04 (D174), veto still open.**
+   The dates come from the feed; the hours come from the organizer's own entry (`.notes/roadmap-events.md`: 12:00 and
+   18:00 typed, `120000Z`/`180000Z` answered) plus the event pages' meta descriptions as served 2026-11-04 ("Nov 7,
+   2026, 12:00:00 PM - GMT"). Both rows now carry `timeConfirmed: true` and publish `-0600` instants; one boolean per
+   row returns the honest all-day form if the operator says an hour is wrong.
+   Kept, because it is the reason D172 exists: a wrong date is the costliest defect on this roadmap and a wrong *hour*
+   is a close second — a pub-night event written as a UTC instant crosses midnight, and `upcoming()` then picks the
+   wrong instance for "next".cond, because a pub-night event
    written as a UTC instant crosses midnight and the "next upcoming" comparison then picks the wrong instance.
 3. ~~Harvest source~~ — **answered by fact, 2026-11-04**: the **group** feed
    (`/@minneapolis_math_book_group/feed/ics`) now returns the **same two `UID`s** the instance feed does (200, 2578
@@ -68,14 +75,20 @@ the new cap rule: **752x614/493kB → 688x562/377kB**, sha `47518a39c1`, layout 
 
 ### Merge order for the branches awaiting a grant
 
-`process/gates-that-remember` (A7) first: it is what puts `MILESTONES.md` and `DECISIONS.index.md` under the repo
-at all, so every other branch's clock-in ritual currently fails on a fresh clone. `pixels/one-ground-keylines`
-(A5) is independent of A1 and of A7's files. `design/round12-art` (A1) touches no site markup. A2 needs A1 merged.
-`pixels/hero-composition-r13` (round 13, D158/D160) is stacked on all four, so one merge of it lands the whole queue; measured
-2026-11-03 with `git merge-tree --write-tree --name-only staging pixels/hero-composition-r13` (a tree hash, no conflict),
-and that tree ran `verify` 15 ok / 18.3s and `verify:browser` 7 ok / 72.2s. Re-run after D160's three commits (branch 24
-ahead): still no conflict, tree `b9aed084`. Those gate figures belong to the 21-commit tree; the current head is green on
-its own (`verify` 15 ok / 16.6s, `verify:browser` 7 ok / 102.8s).
+**Re-measured 2026-11-04 — the previous version of this section was stale** (it listed `process/gates-that-remember`,
+`pixels/one-ground-keylines`, `design/round12-art`, `pixels/hero-composition-r13` and round 14 as pending; all of them
+are merged into local `staging`, which is itself still unpushed). Measured with
+`git branch --no-merged staging` and `git merge-tree --write-tree --name-only staging <branch>` (D156: measure the
+merge before proposing an order — a tree hash and no conflicts, no worktree change, no build):
+
+| branch | item | merge into `staging` | what it costs |
+|---|---|---|---|
+| `events/publish-ics-feed` (6 commits) | **A6** — the event snapshot, `/events.ics`, `check:ics` + selftest, the harvester, the review `--no-events` mode, D171–D174 | **clean** (tree `44361ee8`) | two steps added to the deploy set (`check:ics` 0.15s, `check:ics:selftest` 0.26s) — deploy 13.9s → 17.1s (+23%), browser unchanged at 7 ok / 100.6s (+8%) |
+| `docs/www-redirect-endstate` | docs/endstate notes | **clean** (tree `67ea36e0`, no conflict list) | prose only |
+
+Order is therefore free: neither touches a file the other does. If both land, `verify` runs once on the result —
+`events/publish-ics-feed` already ran green on its own head (`verify` 17 ok / 17.1s, `verify:browser` 7 ok / 100.6s).
+Merging and any push stay the operator's (D66, D124).
 
 ## Parked, with the trigger that un-parks it (D148)
 
