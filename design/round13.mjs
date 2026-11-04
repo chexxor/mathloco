@@ -45,6 +45,7 @@ import { createHash } from 'node:crypto';
 import sharp from 'sharp';
 import { oklchFromRgb, oklabBytes, distLab } from './grill/okcolor.mjs';
 import { PS1_PLATE, PS3_PLATE, PS4_PLATE, VARIANTS, plateBoxes } from './grill/round13-variants.mjs';
+import { plateSource, cropFor, keepPct } from './grill/plate-crop.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 import { MARK, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
 
@@ -119,19 +120,9 @@ mkdirSync(OUT, { recursive: true });
 mkdirSync(`${ART}/img`, { recursive: true });
 
 // --- the plate, at its true shape --------------------------------------------------------------------
-async function source(id) {
-  const f = `${ART}/img/${id}.webp`;
-  if (!existsSync(f)) {
-    // The art round's cache first. The archive's image ladder is 200/400/1024 (record 0023, measured) and its
-    // robots.txt allows /img/ while disallowing ?q= search and /api/ — which is why no search is used here either.
-    say(`  fetch ${id} (cache miss)`);
-    const r = await fetch(`https://img.insideoutlibrary.com/img/1024/${id}.webp`, { headers: { 'user-agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:159.0) Gecko/20100101 Firefox/159.0' } });
-    if (!r.ok) throw new Error(`fetch ${id}: HTTP ${r.status}`);
-    writeFileSync(f, Buffer.from(await r.arrayBuffer()));
-    await new Promise((r) => setTimeout(r, 250));
-  }
-  return readFileSync(f);
-}
+// `source()` is imported as `plateSource` (grill/plate-crop.mjs) — the asset build and this round must
+// crop the same bytes, or the colour numbers here describe a picture the page never shows.
+
 // Byte census of a crop: what share of it is colour a reader would name, and which hue family carries it.
 async function cropStats(buf) {
   const { data, info } = await sharp(buf).raw().toBuffer({ resolveWithObject: true });
@@ -155,11 +146,7 @@ async function cropStats(buf) {
     fam: top ? { share: +(100 * top[1].n / n).toFixed(2), hue: Math.round(top[1].hs / top[1].n), chroma: +(top[1].cs / top[1].n).toFixed(3) } : null,
   };
 }
-// The same cover-fit crop the art round used, so the plate in this round IS the plate in that record.
-const cropFor = (buf, w, h) =>
-  sharp(buf).resize({ width: w * 2, height: h * 2, fit: 'cover', position: 'attention' }).png().toBuffer();
-// How much of the plate survives a box: the ratio of aspects, which is what record 0023 printed as "keeps".
-const keepPct = (aspect, w, h) => +(100 * Math.min(aspect, w / h) / Math.max(aspect, w / h)).toFixed(0);
+
 
 // --- state that has to survive the finally ------------------------------------------------------------
 let overlayPlanted = false, original = null, fatal = null;
@@ -201,7 +188,7 @@ try {
 
   // [3] the plates at every candidate box.
   say('\n[3] crop the ruled plates at each candidate box (sharp, attention cover fit at 2x)');
-  const p1src = await source(PS1_PLATE.id);
+  const p1src = await plateSource(PS1_PLATE.id);
   const p1meta = await sharp(p1src).metadata();
   geoRef.aspect = p1meta.width / p1meta.height;
   const boxes = plateBoxes(geoRef);
@@ -217,7 +204,7 @@ try {
     const c = report.plates.PS1.boxes[key].crop;
     say(`  PS-1 ${key.padEnd(8)} ${b.w}x${b.h} — keeps ${report.plates.PS1.boxes[key].keepPct}% of the leaf · paints ${c.namedPct}% at chroma >=${NAMED_CHROMA}${c.fam ? ` (hue ${c.fam.hue}deg C ${c.fam.chroma})` : ''}`);
   }
-  const p3src = await source(PS3_PLATE.id);
+  const p3src = await plateSource(PS3_PLATE.id);
   const p3meta = await sharp(p3src).metadata();
   const p3box = { w: geoRef.ps3W, h: 316, label: 'D149-2b: the PS-3 media column at its ruled height' };
   const p3file = `${SCRATCH}/plate-PS3-ruled-${p3box.w}x${p3box.h}.png`;
@@ -339,7 +326,7 @@ function injectThumb(html, png, box) {
 }
 
 async function ps4Compare(shippedHtml) {
-  const src = await source(PS4_PLATE.id);
+  const src = await plateSource(PS4_PLATE.id);
   const meta = await sharp(src).metadata();
   const box = { w: PS4_PLATE.w, h: PS4_PLATE.h };
   const buf = await cropFor(src, box.w, box.h);
