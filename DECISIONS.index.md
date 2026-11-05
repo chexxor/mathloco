@@ -200,5 +200,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D190** — PS-4 gets the club's own event art, mirrored rather than linked, capped at its measured slot width, with an alt that claims only the file's role
 - **D191** — the two premises this integration rests on are gated as negatives, and a group feed is about to carry other people's events
 - **D192** — a planting is the only proof a rule exists: date-derived plantings use the rule's own clock, and every rule branch gets its own case
+- **D193** — the rhythm options are measured against the page that ships, the two that measured a retired structure are deleted, and the option list has one home
 
-Defined: 192 (D1-D192). Unused ids: none.
+Defined: 193 (D1-D193). Unused ids: none.

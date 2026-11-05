@@ -1,0 +1,1117 @@
+{
+ "measuredAt": "2026-11-05T03:34:57.782Z",
+ "widths": [
+  1440,
+  1240,
+  1024,
+  640,
+  390,
+  320
+ ],
+ "scale": 0.22,
+ "notes": [
+  "band-sm @1440: identical to shipped — this option cannot reach this width",
+  "band-sm @1240: identical to shipped — this option cannot reach this width",
+  "band-sm @1024: identical to shipped — this option cannot reach this width",
+  "band-sm @390: identical to shipped — this option cannot reach this width",
+  "band-sm @320: identical to shipped — this option cannot reach this width",
+  "band-up @640: identical to shipped — this option cannot reach this width",
+  "band-up @390: identical to shipped — this option cannot reach this width",
+  "band-up @320: identical to shipped — this option cannot reach this width",
+  "band-any @1440: identical to shipped — this option cannot reach this width",
+  "band-any @1240: identical to shipped — this option cannot reach this width",
+  "band-any @1024: identical to shipped — this option cannot reach this width",
+  "band-bleed @1240: identical to shipped — this option cannot reach this width",
+  "band-bleed @1024: identical to shipped — this option cannot reach this width",
+  "band-bleed @640: identical to shipped — this option cannot reach this width",
+  "band-bleed @390: identical to shipped — this option cannot reach this width",
+  "band-bleed @320: identical to shipped — this option cannot reach this width"
+ ],
+ "baseline": {
+  "label": "shipped",
+  "at": {
+   "320": {
+    "height": 6125,
+    "paintedPct": 10.91,
+    "emptyRunPx": 1381,
+    "emptyRunPct": 22.5,
+    "emptyRuns": 12,
+    "biggestRun": 237,
+    "declaredPaddingPx": 384,
+    "inside": 1381,
+    "edges": 664
+   },
+   "390": {
+    "height": 5352,
+    "paintedPct": 11.45,
+    "emptyRunPx": 1114,
+    "emptyRunPct": 20.8,
+    "emptyRuns": 11,
+    "biggestRun": 151,
+    "declaredPaddingPx": 384,
+    "inside": 1114,
+    "edges": 613
+   },
+   "640": {
+    "height": 4802,
+    "paintedPct": 9.92,
+    "emptyRunPx": 1271,
+    "emptyRunPct": 26.5,
+    "emptyRuns": 13,
+    "biggestRun": 179,
+    "declaredPaddingPx": 384,
+    "inside": 1271,
+    "edges": 648
+   },
+   "1024": {
+    "height": 4082,
+    "paintedPct": 8.56,
+    "emptyRunPx": 1314,
+    "emptyRunPct": 32.2,
+    "emptyRuns": 11,
+    "biggestRun": 219,
+    "declaredPaddingPx": 512,
+    "inside": 1314,
+    "edges": 777
+   },
+   "1240": {
+    "height": 4028,
+    "paintedPct": 8.41,
+    "emptyRunPx": 1242,
+    "emptyRunPct": 30.8,
+    "emptyRuns": 10,
+    "biggestRun": 196,
+    "declaredPaddingPx": 512,
+    "inside": 1242,
+    "edges": 779
+   },
+   "1440": {
+    "height": 4028,
+    "paintedPct": 7.66,
+    "emptyRunPx": 1210,
+    "emptyRunPct": 30,
+    "emptyRuns": 10,
+    "biggestRun": 194,
+    "declaredPaddingPx": 512,
+    "inside": 1210,
+    "edges": 746
+   }
+  },
+  "shots": {
+   "320": {
+    "file": ".design/tmp-round15/page-shipped-320.png",
+    "from": "320x6125",
+    "to": "70x1348",
+    "factor": 0.22
+   },
+   "390": {
+    "file": ".design/tmp-round15/page-shipped-390.png",
+    "from": "390x5352",
+    "to": "86x1177",
+    "factor": 0.22
+   },
+   "640": {
+    "file": ".design/tmp-round15/page-shipped-640.png",
+    "from": "640x4802",
+    "to": "141x1056",
+    "factor": 0.22
+   },
+   "1024": {
+    "file": ".design/tmp-round15/page-shipped-1024.png",
+    "from": "1024x4082",
+    "to": "225x898",
+    "factor": 0.22
+   },
+   "1240": {
+    "file": ".design/tmp-round15/page-shipped-1240.png",
+    "from": "1240x4028",
+    "to": "273x886",
+    "factor": 0.22
+   },
+   "1440": {
+    "file": ".design/tmp-round15/page-shipped-1440.png",
+    "from": "1440x4028",
+    "to": "317x886",
+    "factor": 0.22
+   }
+  }
+ },
+ "options": [
+  {
+   "label": "edges",
+   "what": "declared edges only: hero margins 128/96 -> 64/64, every band py-16 (64) -> 48",
+   "at": {
+    "320": {
+     "height": 6077,
+     "paintedPct": 11,
+     "emptyRunPx": 1333,
+     "emptyRunPct": 21.9,
+     "emptyRuns": 12,
+     "biggestRun": 237,
+     "declaredPaddingPx": 288,
+     "inside": 1333,
+     "edges": 568,
+     "dead": false,
+     "delta": "-48"
+    },
+    "390": {
+     "height": 5304,
+     "paintedPct": 11.56,
+     "emptyRunPx": 1066,
+     "emptyRunPct": 20.1,
+     "emptyRuns": 11,
+     "biggestRun": 145,
+     "declaredPaddingPx": 288,
+     "inside": 1066,
+     "edges": 517,
+     "dead": false,
+     "delta": "-48"
+    },
+    "640": {
+     "height": 4738,
+     "paintedPct": 10.06,
+     "emptyRunPx": 1207,
+     "emptyRunPct": 25.5,
+     "emptyRuns": 13,
+     "biggestRun": 153,
+     "declaredPaddingPx": 288,
+     "inside": 1207,
+     "edges": 552,
+     "dead": false,
+     "delta": "-64"
+    },
+    "1024": {
+     "height": 3858,
+     "paintedPct": 9.06,
+     "emptyRunPx": 1090,
+     "emptyRunPct": 28.3,
+     "emptyRuns": 11,
+     "biggestRun": 171,
+     "declaredPaddingPx": 384,
+     "inside": 1090,
+     "edges": 649,
+     "dead": false,
+     "delta": "-224"
+    },
+    "1240": {
+     "height": 3804,
+     "paintedPct": 8.9,
+     "emptyRunPx": 1018,
+     "emptyRunPct": 26.8,
+     "emptyRuns": 10,
+     "biggestRun": 148,
+     "declaredPaddingPx": 384,
+     "inside": 1018,
+     "edges": 651,
+     "dead": false,
+     "delta": "-224"
+    },
+    "1440": {
+     "height": 3804,
+     "paintedPct": 8.11,
+     "emptyRunPx": 986,
+     "emptyRunPct": 25.9,
+     "emptyRuns": 10,
+     "biggestRun": 146,
+     "declaredPaddingPx": 384,
+     "inside": 986,
+     "edges": 618,
+     "dead": false,
+     "delta": "-224"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-edges-320.png",
+     "from": "320x6077",
+     "to": "70x1337",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-edges-390.png",
+     "from": "390x5304",
+     "to": "86x1167",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-edges-640.png",
+     "from": "640x4738",
+     "to": "141x1042",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-edges-1024.png",
+     "from": "1024x3858",
+     "to": "225x849",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-edges-1240.png",
+     "from": "1240x3804",
+     "to": "273x837",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-edges-1440.png",
+     "from": "1440x3804",
+     "to": "317x837",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "edges-rules",
+   "what": "the same trims, with a 1px rule at each band boundary instead of the lost air",
+   "at": {
+    "320": {
+     "height": 6080,
+     "paintedPct": 10.99,
+     "emptyRunPx": 1336,
+     "emptyRunPct": 22,
+     "emptyRuns": 12,
+     "biggestRun": 237,
+     "declaredPaddingPx": 288,
+     "inside": 1336,
+     "edges": 571,
+     "dead": false,
+     "delta": "-45"
+    },
+    "390": {
+     "height": 5307,
+     "paintedPct": 11.55,
+     "emptyRunPx": 1069,
+     "emptyRunPct": 20.1,
+     "emptyRuns": 11,
+     "biggestRun": 146,
+     "declaredPaddingPx": 288,
+     "inside": 1069,
+     "edges": 520,
+     "dead": false,
+     "delta": "-45"
+    },
+    "640": {
+     "height": 4741,
+     "paintedPct": 10.05,
+     "emptyRunPx": 1210,
+     "emptyRunPct": 25.5,
+     "emptyRuns": 13,
+     "biggestRun": 154,
+     "declaredPaddingPx": 288,
+     "inside": 1210,
+     "edges": 555,
+     "dead": false,
+     "delta": "-61"
+    },
+    "1024": {
+     "height": 3862,
+     "paintedPct": 9.05,
+     "emptyRunPx": 1094,
+     "emptyRunPct": 28.3,
+     "emptyRuns": 11,
+     "biggestRun": 172,
+     "declaredPaddingPx": 384,
+     "inside": 1094,
+     "edges": 653,
+     "dead": false,
+     "delta": "-220"
+    },
+    "1240": {
+     "height": 3808,
+     "paintedPct": 8.89,
+     "emptyRunPx": 1022,
+     "emptyRunPct": 26.8,
+     "emptyRuns": 10,
+     "biggestRun": 149,
+     "declaredPaddingPx": 384,
+     "inside": 1022,
+     "edges": 655,
+     "dead": false,
+     "delta": "-220"
+    },
+    "1440": {
+     "height": 3808,
+     "paintedPct": 8.1,
+     "emptyRunPx": 990,
+     "emptyRunPct": 26,
+     "emptyRuns": 10,
+     "biggestRun": 147,
+     "declaredPaddingPx": 384,
+     "inside": 990,
+     "edges": 622,
+     "dead": false,
+     "delta": "-220"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-edges-rules-320.png",
+     "from": "320x6080",
+     "to": "70x1338",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-edges-rules-390.png",
+     "from": "390x5307",
+     "to": "86x1168",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-edges-rules-640.png",
+     "from": "640x4741",
+     "to": "141x1043",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-edges-rules-1024.png",
+     "from": "1024x3862",
+     "to": "225x850",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-edges-rules-1240.png",
+     "from": "1240x3808",
+     "to": "273x838",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-edges-rules-1440.png",
+     "from": "1440x3808",
+     "to": "317x838",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "rows",
+   "what": "inside surfaces only: reasons grid mt-8/gap-x-12/li.py-3 -> 24/32/py-2, schedule space-y-6/li.py-3 -> 16/py-2, section mt-12 -> 24",
+   "at": {
+    "320": {
+     "height": 6005,
+     "paintedPct": 11.13,
+     "emptyRunPx": 1315,
+     "emptyRunPct": 21.9,
+     "emptyRuns": 11,
+     "biggestRun": 237,
+     "declaredPaddingPx": 384,
+     "inside": 1315,
+     "edges": 664,
+     "dead": false,
+     "delta": "-120"
+    },
+    "390": {
+     "height": 5232,
+     "paintedPct": 11.72,
+     "emptyRunPx": 1049,
+     "emptyRunPct": 20,
+     "emptyRuns": 10,
+     "biggestRun": 151,
+     "declaredPaddingPx": 384,
+     "inside": 1049,
+     "edges": 613,
+     "dead": false,
+     "delta": "-120"
+    },
+    "640": {
+     "height": 4682,
+     "paintedPct": 10.18,
+     "emptyRunPx": 1198,
+     "emptyRunPct": 25.6,
+     "emptyRuns": 12,
+     "biggestRun": 179,
+     "declaredPaddingPx": 384,
+     "inside": 1198,
+     "edges": 648,
+     "dead": false,
+     "delta": "-120"
+    },
+    "1024": {
+     "height": 3994,
+     "paintedPct": 8.75,
+     "emptyRunPx": 1278,
+     "emptyRunPct": 32,
+     "emptyRuns": 10,
+     "biggestRun": 219,
+     "declaredPaddingPx": 512,
+     "inside": 1278,
+     "edges": 777,
+     "dead": false,
+     "delta": "-88"
+    },
+    "1240": {
+     "height": 3940,
+     "paintedPct": 8.6,
+     "emptyRunPx": 1177,
+     "emptyRunPct": 29.9,
+     "emptyRuns": 9,
+     "biggestRun": 196,
+     "declaredPaddingPx": 512,
+     "inside": 1177,
+     "edges": 779,
+     "dead": false,
+     "delta": "-88"
+    },
+    "1440": {
+     "height": 3940,
+     "paintedPct": 7.83,
+     "emptyRunPx": 1145,
+     "emptyRunPct": 29.1,
+     "emptyRuns": 9,
+     "biggestRun": 194,
+     "declaredPaddingPx": 512,
+     "inside": 1145,
+     "edges": 746,
+     "dead": false,
+     "delta": "-88"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-rows-320.png",
+     "from": "320x6005",
+     "to": "70x1321",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-rows-390.png",
+     "from": "390x5232",
+     "to": "86x1151",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-rows-640.png",
+     "from": "640x4682",
+     "to": "141x1030",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-rows-1024.png",
+     "from": "1024x3994",
+     "to": "225x879",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-rows-1240.png",
+     "from": "1240x3940",
+     "to": "273x867",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-rows-1440.png",
+     "from": "1440x3940",
+     "to": "317x867",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "band-sm",
+   "what": "the horizon shelf shows from 640px instead of 1024px (640/390/320 currently show no plates at all)",
+   "at": {
+    "320": {
+     "height": 6125,
+     "paintedPct": 10.91,
+     "emptyRunPx": 1381,
+     "emptyRunPct": 22.5,
+     "emptyRuns": 12,
+     "biggestRun": 237,
+     "declaredPaddingPx": 384,
+     "inside": 1381,
+     "edges": 664,
+     "dead": true,
+     "delta": "+0"
+    },
+    "390": {
+     "height": 5352,
+     "paintedPct": 11.45,
+     "emptyRunPx": 1114,
+     "emptyRunPct": 20.8,
+     "emptyRuns": 11,
+     "biggestRun": 151,
+     "declaredPaddingPx": 384,
+     "inside": 1114,
+     "edges": 613,
+     "dead": true,
+     "delta": "+0"
+    },
+    "640": {
+     "height": 5022,
+     "paintedPct": 10.46,
+     "emptyRunPx": 1378,
+     "emptyRunPct": 27.4,
+     "emptyRuns": 14,
+     "biggestRun": 153,
+     "declaredPaddingPx": 512,
+     "inside": 1378,
+     "edges": 756,
+     "dead": false,
+     "delta": "+220"
+    },
+    "1024": {
+     "height": 4082,
+     "paintedPct": 8.56,
+     "emptyRunPx": 1314,
+     "emptyRunPct": 32.2,
+     "emptyRuns": 11,
+     "biggestRun": 219,
+     "declaredPaddingPx": 512,
+     "inside": 1314,
+     "edges": 777,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1240": {
+     "height": 4028,
+     "paintedPct": 8.41,
+     "emptyRunPx": 1242,
+     "emptyRunPct": 30.8,
+     "emptyRuns": 10,
+     "biggestRun": 196,
+     "declaredPaddingPx": 512,
+     "inside": 1242,
+     "edges": 779,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1440": {
+     "height": 4028,
+     "paintedPct": 7.66,
+     "emptyRunPx": 1210,
+     "emptyRunPct": 30,
+     "emptyRuns": 10,
+     "biggestRun": 194,
+     "declaredPaddingPx": 512,
+     "inside": 1210,
+     "edges": 746,
+     "dead": true,
+     "delta": "+0"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-band-sm-320.png",
+     "from": "320x6125",
+     "to": "70x1348",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-band-sm-390.png",
+     "from": "390x5352",
+     "to": "86x1177",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-band-sm-640.png",
+     "from": "640x5022",
+     "to": "141x1105",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-band-sm-1024.png",
+     "from": "1024x4082",
+     "to": "225x898",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-band-sm-1240.png",
+     "from": "1240x4028",
+     "to": "273x886",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-band-sm-1440.png",
+     "from": "1440x4028",
+     "to": "317x886",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "band-up",
+   "what": "same shelf, same size, moved up: it sits under the hero instead of between the reasons and the schedule, where the measured emptiness is (160px + 196px at 1240)",
+   "at": {
+    "320": {
+     "height": 6125,
+     "paintedPct": 10.91,
+     "emptyRunPx": 1381,
+     "emptyRunPct": 22.5,
+     "emptyRuns": 12,
+     "biggestRun": 237,
+     "declaredPaddingPx": 384,
+     "inside": 1381,
+     "edges": 664,
+     "dead": true,
+     "delta": "+0"
+    },
+    "390": {
+     "height": 5352,
+     "paintedPct": 11.45,
+     "emptyRunPx": 1114,
+     "emptyRunPct": 20.8,
+     "emptyRuns": 11,
+     "biggestRun": 151,
+     "declaredPaddingPx": 384,
+     "inside": 1114,
+     "edges": 613,
+     "dead": true,
+     "delta": "+0"
+    },
+    "640": {
+     "height": 4802,
+     "paintedPct": 9.92,
+     "emptyRunPx": 1271,
+     "emptyRunPct": 26.5,
+     "emptyRuns": 13,
+     "biggestRun": 179,
+     "declaredPaddingPx": 384,
+     "inside": 1271,
+     "edges": 648,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1024": {
+     "height": 4082,
+     "paintedPct": 8.57,
+     "emptyRunPx": 1346,
+     "emptyRunPct": 33,
+     "emptyRuns": 12,
+     "biggestRun": 219,
+     "declaredPaddingPx": 512,
+     "inside": 1346,
+     "edges": 778,
+     "dead": false,
+     "delta": "+0"
+    },
+    "1240": {
+     "height": 4028,
+     "paintedPct": 8.41,
+     "emptyRunPx": 1274,
+     "emptyRunPct": 31.6,
+     "emptyRuns": 11,
+     "biggestRun": 197,
+     "declaredPaddingPx": 512,
+     "inside": 1274,
+     "edges": 781,
+     "dead": false,
+     "delta": "+0"
+    },
+    "1440": {
+     "height": 4028,
+     "paintedPct": 7.66,
+     "emptyRunPx": 1240,
+     "emptyRunPct": 30.8,
+     "emptyRuns": 11,
+     "biggestRun": 194,
+     "declaredPaddingPx": 512,
+     "inside": 1240,
+     "edges": 747,
+     "dead": false,
+     "delta": "+0"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-band-up-320.png",
+     "from": "320x6125",
+     "to": "70x1348",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-band-up-390.png",
+     "from": "390x5352",
+     "to": "86x1177",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-band-up-640.png",
+     "from": "640x4802",
+     "to": "141x1056",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-band-up-1024.png",
+     "from": "1024x4082",
+     "to": "225x898",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-band-up-1240.png",
+     "from": "1240x4028",
+     "to": "273x886",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-band-up-1440.png",
+     "from": "1440x4028",
+     "to": "317x886",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "band-any",
+   "what": "the shelf shows at every width, wrapping so a phone gets plates wider than 140px",
+   "at": {
+    "320": {
+     "height": 6648,
+     "paintedPct": 11.94,
+     "emptyRunPx": 1557,
+     "emptyRunPct": 23.4,
+     "emptyRuns": 14,
+     "biggestRun": 220,
+     "declaredPaddingPx": 512,
+     "inside": 1557,
+     "edges": 796,
+     "dead": false,
+     "delta": "+523"
+    },
+    "390": {
+     "height": 5740,
+     "paintedPct": 12.02,
+     "emptyRunPx": 1173,
+     "emptyRunPct": 20.4,
+     "emptyRuns": 11,
+     "biggestRun": 150,
+     "declaredPaddingPx": 512,
+     "inside": 1173,
+     "edges": 752,
+     "dead": false,
+     "delta": "+388"
+    },
+    "640": {
+     "height": 5358,
+     "paintedPct": 11.38,
+     "emptyRunPx": 1385,
+     "emptyRunPct": 25.8,
+     "emptyRuns": 14,
+     "biggestRun": 153,
+     "declaredPaddingPx": 512,
+     "inside": 1385,
+     "edges": 761,
+     "dead": false,
+     "delta": "+556"
+    },
+    "1024": {
+     "height": 4082,
+     "paintedPct": 8.56,
+     "emptyRunPx": 1314,
+     "emptyRunPct": 32.2,
+     "emptyRuns": 11,
+     "biggestRun": 219,
+     "declaredPaddingPx": 512,
+     "inside": 1314,
+     "edges": 777,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1240": {
+     "height": 4028,
+     "paintedPct": 8.41,
+     "emptyRunPx": 1242,
+     "emptyRunPct": 30.8,
+     "emptyRuns": 10,
+     "biggestRun": 196,
+     "declaredPaddingPx": 512,
+     "inside": 1242,
+     "edges": 779,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1440": {
+     "height": 4028,
+     "paintedPct": 7.66,
+     "emptyRunPx": 1210,
+     "emptyRunPct": 30,
+     "emptyRuns": 10,
+     "biggestRun": 194,
+     "declaredPaddingPx": 512,
+     "inside": 1210,
+     "edges": 746,
+     "dead": true,
+     "delta": "+0"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-band-any-320.png",
+     "from": "320x6648",
+     "to": "70x1463",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-band-any-390.png",
+     "from": "390x5740",
+     "to": "86x1263",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-band-any-640.png",
+     "from": "640x5358",
+     "to": "141x1179",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-band-any-1024.png",
+     "from": "1024x4082",
+     "to": "225x898",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-band-any-1240.png",
+     "from": "1240x4028",
+     "to": "273x886",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-band-any-1440.png",
+     "from": "1440x4028",
+     "to": "317x886",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "band-bleed",
+   "what": "the shelf keeps its height but spans the viewport instead of the 1280px container — only visible above 1280, which is why 1440 is in the width set",
+   "at": {
+    "320": {
+     "height": 6125,
+     "paintedPct": 10.91,
+     "emptyRunPx": 1381,
+     "emptyRunPct": 22.5,
+     "emptyRuns": 12,
+     "biggestRun": 237,
+     "declaredPaddingPx": 384,
+     "inside": 1381,
+     "edges": 664,
+     "dead": true,
+     "delta": "+0"
+    },
+    "390": {
+     "height": 5352,
+     "paintedPct": 11.45,
+     "emptyRunPx": 1114,
+     "emptyRunPct": 20.8,
+     "emptyRuns": 11,
+     "biggestRun": 151,
+     "declaredPaddingPx": 384,
+     "inside": 1114,
+     "edges": 613,
+     "dead": true,
+     "delta": "+0"
+    },
+    "640": {
+     "height": 4802,
+     "paintedPct": 9.92,
+     "emptyRunPx": 1271,
+     "emptyRunPct": 26.5,
+     "emptyRuns": 13,
+     "biggestRun": 179,
+     "declaredPaddingPx": 384,
+     "inside": 1271,
+     "edges": 648,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1024": {
+     "height": 4082,
+     "paintedPct": 8.56,
+     "emptyRunPx": 1314,
+     "emptyRunPct": 32.2,
+     "emptyRuns": 11,
+     "biggestRun": 219,
+     "declaredPaddingPx": 512,
+     "inside": 1314,
+     "edges": 777,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1240": {
+     "height": 4028,
+     "paintedPct": 8.41,
+     "emptyRunPx": 1242,
+     "emptyRunPct": 30.8,
+     "emptyRuns": 10,
+     "biggestRun": 196,
+     "declaredPaddingPx": 512,
+     "inside": 1242,
+     "edges": 779,
+     "dead": true,
+     "delta": "+0"
+    },
+    "1440": {
+     "height": 4053,
+     "paintedPct": 8.03,
+     "emptyRunPx": 1209,
+     "emptyRunPct": 29.8,
+     "emptyRuns": 10,
+     "biggestRun": 194,
+     "declaredPaddingPx": 512,
+     "inside": 1209,
+     "edges": 746,
+     "dead": false,
+     "delta": "+25"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-band-bleed-320.png",
+     "from": "320x6125",
+     "to": "70x1348",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-band-bleed-390.png",
+     "from": "390x5352",
+     "to": "86x1177",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-band-bleed-640.png",
+     "from": "640x4802",
+     "to": "141x1056",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-band-bleed-1024.png",
+     "from": "1024x4082",
+     "to": "225x898",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-band-bleed-1240.png",
+     "from": "1240x4028",
+     "to": "273x886",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-band-bleed-1440.png",
+     "from": "1440x4053",
+     "to": "317x892",
+     "factor": 0.22
+    }
+   }
+  },
+  {
+   "label": "all",
+   "what": "edges + rows + band-sm together, to see the ceiling of the code-only option",
+   "at": {
+    "320": {
+     "height": 5957,
+     "paintedPct": 11.22,
+     "emptyRunPx": 1267,
+     "emptyRunPct": 21.3,
+     "emptyRuns": 11,
+     "biggestRun": 237,
+     "declaredPaddingPx": 288,
+     "inside": 1267,
+     "edges": 568,
+     "dead": false,
+     "delta": "-168"
+    },
+    "390": {
+     "height": 5184,
+     "paintedPct": 11.82,
+     "emptyRunPx": 1001,
+     "emptyRunPct": 19.3,
+     "emptyRuns": 10,
+     "biggestRun": 145,
+     "declaredPaddingPx": 288,
+     "inside": 1001,
+     "edges": 517,
+     "dead": false,
+     "delta": "-168"
+    },
+    "640": {
+     "height": 4806,
+     "paintedPct": 10.93,
+     "emptyRunPx": 1209,
+     "emptyRunPct": 25.2,
+     "emptyRuns": 13,
+     "biggestRun": 153,
+     "declaredPaddingPx": 384,
+     "inside": 1209,
+     "edges": 628,
+     "dead": false,
+     "delta": "+4"
+    },
+    "1024": {
+     "height": 3770,
+     "paintedPct": 9.27,
+     "emptyRunPx": 1054,
+     "emptyRunPct": 28,
+     "emptyRuns": 10,
+     "biggestRun": 171,
+     "declaredPaddingPx": 384,
+     "inside": 1054,
+     "edges": 649,
+     "dead": false,
+     "delta": "-312"
+    },
+    "1240": {
+     "height": 3716,
+     "paintedPct": 9.11,
+     "emptyRunPx": 953,
+     "emptyRunPct": 25.6,
+     "emptyRuns": 9,
+     "biggestRun": 148,
+     "declaredPaddingPx": 384,
+     "inside": 953,
+     "edges": 651,
+     "dead": false,
+     "delta": "-312"
+    },
+    "1440": {
+     "height": 3716,
+     "paintedPct": 8.3,
+     "emptyRunPx": 921,
+     "emptyRunPct": 24.8,
+     "emptyRuns": 9,
+     "biggestRun": 146,
+     "declaredPaddingPx": 384,
+     "inside": 921,
+     "edges": 618,
+     "dead": false,
+     "delta": "-312"
+    }
+   },
+   "shots": {
+    "320": {
+     "file": ".design/tmp-round15/page-all-320.png",
+     "from": "320x5957",
+     "to": "70x1311",
+     "factor": 0.22
+    },
+    "390": {
+     "file": ".design/tmp-round15/page-all-390.png",
+     "from": "390x5184",
+     "to": "86x1140",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round15/page-all-640.png",
+     "from": "640x4806",
+     "to": "141x1057",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round15/page-all-1024.png",
+     "from": "1024x3770",
+     "to": "225x829",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round15/page-all-1240.png",
+     "from": "1240x3716",
+     "to": "273x818",
+     "factor": 0.22
+    },
+    "1440": {
+     "file": ".design/tmp-round15/page-all-1440.png",
+     "from": "1440x3716",
+     "to": "317x818",
+     "factor": 0.22
+    }
+   }
+  }
+ ]
+}
