@@ -46,6 +46,8 @@ const testFiles = readdirSync(here + "test").filter((f) => f.endsWith(".test.mjs
 const steps = [
   ["build --check", process.execPath, [here + "build-workflow.mjs", "--check"]],
   ["probe build --check", process.execPath, [here + "build-probe.mjs", "--check"]],
+  ["error watcher build --check (D206)", process.execPath, [here + "build-alerter.mjs", "--check"]],
+  ["heartbeat build --check (D205)", process.execPath, [here + "build-heartbeat.mjs", "--check"]],
   [`tests (${testFiles.length} files)`, process.execPath, ["--test", ...testFiles]],
   ["import check (round trip + planted defects)", process.execPath, [here + "verify-import.mjs", "--selftest"]],
 ];

@@ -26,43 +26,18 @@ const here = fileURLToPath(new URL(".", import.meta.url));
 const OUT = new URL("./n8n/cadence-workflow.json", import.meta.url);
 const CHECK = process.argv.includes("--check");
 
+import { expand } from "./lib/inject.mjs";
+
 const READ = (rel) => readFileSync(new URL(rel, import.meta.url), "utf8");
 
-/** The Code-node sources are ordinary `.js` with injection markers; the imports they would need in Node are
- *  exactly the files being injected, so `export` is the only word that has to go. */
-const STRIP = (src) =>
-  src.replace(/^export (const|function|class|let|var)\s/gm, "$1 ")
-     .replace(/^export\s*\{[^}]*\}\s*$/gm, "")
-     .trim();
-
+/** The Code-node sources are ordinary `.js` with injection markers; the guards (a body that does not parse,
+ *  two injections declaring one name, ESM syntax left in an injected file) are shared with the other two
+ *  generators, so all three artifacts are expanded by the same code (D206). */
 const INJECTABLE = {
   config: "./series.config.mjs",
   core: "./lib/core.mjs",
   queries: "./lib/queries.mjs",
 };
-
-/** Replace each `// @inject <name>` line with the named file's body, rejecting a body that would not parse,
- *  that collides with another injection, or that still contains ESM syntax the sandbox has no use for. */
-function expand(nodeSource, nodeLabel) {
-  const injectedNames = [];
-  const body = nodeSource.replace(/^\/\/ @inject (\w+)\s*$/gm, (_m, what) => {
-    const file = INJECTABLE[what];
-    if (!file) throw new Error(`${nodeLabel}: unknown @inject "${what}" (known: ${Object.keys(INJECTABLE).join(", ")})`);
-    const src = STRIP(READ(file));
-    if (/^\s*(import|export)\s/m.test(src)) throw new Error(`${nodeLabel}: injected ${file} still has ESM syntax`);
-    for (const m of src.matchAll(/^(?:const|let|var|function|class)\s+([A-Za-z0-9_$]+)/gm)) injectedNames.push([m[1], file]);
-    return src;
-  });
-  const seen = new Set();
-  for (const [name, file] of injectedNames) {
-    if (seen.has(name)) throw new Error(`${nodeLabel}: "${name}" declared by two injections - a Code node would throw "already declared"`);
-    seen.add(name);
-  }
-  try { new Function("$", body); } catch (e) {
-    throw new Error(`${nodeLabel}: the generated Code node does not parse: ${e.message}`);
-  }
-  return body;
-}
 
 // ------------------------------------------------------------------ the graph
 // `n8nTarget` is the one place to change when the instance updates. typeVersions older than the instance are
@@ -138,7 +113,14 @@ const nodes = [
     // 09:00 in the workflow's own timezone (settings.timezone below), not the instance default - so the hour
     // means what a person reading this line thinks it means. The trigger is the only start; "Execute workflow"
     // in the editor runs the same path, which is how a dry run is tested.
-    parameters: { rule: { interval: [{ field: "days", triggerAt: "09:00", daysInterval: 1 }] } },
+    // 09:00 in the workflow's own timezone (settings.timezone below), not the instance default - so the hour
+    // means what a person reading this line thinks it means. The parameter names are measured, not remembered:
+    // Schedule Trigger v1 reads triggerAtHour/triggerAtMinute, and there is no `triggerAt` string on this
+    // instance (D207 - the artifact carried one from its first commit, which meant the trigger was firing at
+    // the default, midnight, while every comment in this repo said 09:00).
+    parameters: {
+      rule: { interval: [{ field: "days", daysInterval: 1, triggerAtHour: 9, triggerAtMinute: 0 }] },
+    },
   },
   {
     // Head of the chain. It emits ONE item with the config and the documents, so the plan is deterministic,
@@ -146,7 +128,7 @@ const nodes = [
     // editing session.
     id: "cadence-config", name: NAMES.cfg, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [-580, -160],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/01-config.js"), NAMES.cfg) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/01-config.js"), NAMES.cfg, INJECTABLE, import.meta.url) },
     onError: "continueErrorOutput",
   },
   {
@@ -194,7 +176,7 @@ const nodes = [
     // variables it will send - so "what did it decide" and "what will it send" are one reviewable object.
     id: "cadence-plan", name: NAMES.plan, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [-40, -160],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/04-plan.js"), NAMES.plan) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/04-plan.js"), NAMES.plan, INJECTABLE, import.meta.url) },
     onError: "continueErrorOutput",
   },
   {
@@ -255,7 +237,7 @@ const nodes = [
   {
     id: "cadence-report", name: NAMES.report, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [760, -160],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/08-report.js"), NAMES.report) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/08-report.js"), NAMES.report, INJECTABLE, import.meta.url) },
     onError: "continueErrorOutput",
   },
   {
@@ -266,14 +248,14 @@ const nodes = [
     // learn to read.
     id: "cadence-err-path", name: NAMES.errPath, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [60, 180],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/21-report-error.js"), NAMES.errPath) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/21-report-error.js"), NAMES.errPath, INJECTABLE, import.meta.url) },
   },
   {
     // A plan that *alerts* (a rename, a clock mismatch, every row cancelled) does not throw - it reports. But a
     // reported alert still has to reach a person, so it is folded into the same failure shape.
     id: "cadence-err-plan", name: NAMES.errPlan, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [340, 180],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/22-report-problem.js"), NAMES.errPlan) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/22-report-problem.js"), NAMES.errPlan, INJECTABLE, import.meta.url) },
   },
   {
     // The one branch that decides whether a run is worth a notification. The decision itself is made in the
@@ -330,7 +312,7 @@ const nodes = [
     // a future workflow-level error workflow still catches.
     id: "cadence-loud", name: NAMES.loud, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [920, 120],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/24-fail-loudly.js"), NAMES.loud) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/24-fail-loudly.js"), NAMES.loud, INJECTABLE, import.meta.url) },
   },
 ];
 
@@ -531,7 +513,18 @@ for (const [k, want] of Object.entries(RETENTION)) {
     problems.push(`settings.${k} is ${JSON.stringify(workflow.settings[k])}, must be ${JSON.stringify(want)} - without it n8n keeps no run data for this workflow and every dry run reads back as "execution not found"`);
   }
 }
-if (workflow.settings.errorWorkflow) problems.push("settings.errorWorkflow is set in the generator, but the workflow-level error workflow is parked with a trigger (D195) - a dangling id there silently swallows every alert");
+// `settings.errorWorkflow` holds an *instance* id, so it can never be a reviewed byte: it would point at
+// whatever workflow happened to own that id on this box. The watcher itself is built (n8n/error-watcher.json,
+// D206) and linking it is an instance action - the cadence's Settings -> Error Workflow picker, or MCP
+// `update_workflow` - which resolves the id off the live instance, after
+// requiring that the target be active and contain an Error Trigger.
+if (workflow.settings.errorWorkflow) problems.push("settings.errorWorkflow is set in the generator - the id belongs to the instance, so link it in the cadence's Settings -> Error Workflow after the watcher is imported and activated (D206)");
+// The trigger's hour must be written in parameters the node actually reads (D207).
+{
+  const iv = (nodes.find((n) => n.name === NAMES.schedule).parameters.rule.interval ?? [])[0] ?? {};
+  if (Object.prototype.hasOwnProperty.call(iv, "triggerAt")) problems.push(`${NAMES.schedule}: "triggerAt" is not a Schedule Trigger v1 parameter on this instance (measured 2026-11-05) - the node would fire at its default, midnight, while the artifact claims 09:00`);
+  if (iv.triggerAtHour !== 9 || iv.triggerAtMinute !== 0) problems.push(`${NAMES.schedule}: triggerAtHour/triggerAtMinute are ${JSON.stringify([iv.triggerAtHour, iv.triggerAtMinute])}, not 9/0 - every doc in this directory says the run is at 09:00`);
+}
 
 // Every series must be plannable: the fields core.mjs needs, or the run alerts at 09:00 and nobody is watching.
 for (const s of SERIES) {

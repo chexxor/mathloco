@@ -12,10 +12,16 @@
 //
 // So the loudness is re-declared explicitly: after the message is on its way, this node throws. The execution
 // ends red, the error text names the stage, and its error output is deliberately **not** wired - which is the
-// one shape that a future workflow-level error workflow (the vendor's non-negotiable for unattended jobs) will
-// still catch. That is the difference between "handled and swallowed" and "handled and reported".
+// one shape a workflow-level error workflow still catches (D206: the operator un-parked that item on
+// 2026-11-05, and `n8n/error-watcher.json` is the watcher). That difference between "handled and swallowed"
+// and "handled and reported" has a cost, and the cost is a second notification: this throw is unhandled, so a
+// linked watcher fires on it. The marker below is what lets the watcher recognise its own workflow's
+// loudness and stay quiet, because cadence already sent the message from `23 Notify on ntfy` (D194's silence
+// rule is about not training a person to skim).
 //
 // GENERATED FROM integrations/mobilizon-cadence/nodes/24-fail-loudly.js - edit that file and rebuild.
+
+// @inject core
 
 const allOf = (name) => {
   try { return $(name).all(); } catch { return null; } // that path did not run in this execution
@@ -36,7 +42,9 @@ if (bad.length) {
   const lines = bad.flatMap((r) => r.rows.map((j) => `${r.name}: ${j.alertTitle ?? "(no title)"}\n${j.summary ?? ""}`));
   // Throwing with the reporters' own words, so the failed-execution line and the ntfy message a person just
   // received say the same thing. Two vocabularies for one incident is how a log stops being evidence.
-  throw new Error(`cadence failed, and the alert was sent. Kept red on purpose (24 Fail loudly):\n${lines.join("\n\n")}`);
+  // The message starts with core.mjs' LOUD_THROW marker: that is the string the error watcher matches on
+  // before deciding not to send a second notification for a run that already sent its own.
+  throw new Error(`${LOUD_THROW}. The alert was sent; the run is kept red on purpose (24 Fail loudly).\n${lines.join("\n\n")}`);
 }
 
 // Nothing needed a red execution. Emit what this node saw, so the last line of the log says the loop closed:

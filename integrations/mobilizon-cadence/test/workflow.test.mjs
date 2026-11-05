@@ -15,6 +15,7 @@
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { runCodeNode } from "../lib/sandbox.mjs";
+import { LOUD_THROW } from "../lib/core.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -98,6 +99,20 @@ test("the workflow is one linear chain of the expected nodes", () => {
       }
     }
   }
+});
+
+test("the trigger names the hour in parameters this instance reads (D207)", () => {
+  // Measured 2026-11-05 against this instance's own type definitions and the node source on n8n master:
+  // Schedule Trigger v1 has triggerAtDay / triggerAtHour / triggerAtMinute and **no** `triggerAt`. An unread
+  // parameter is worse than a missing one - the document claims 09:00 while the node fires at its default.
+  const t = node("Trigger every morning");
+  const iv = (t.parameters.rule.interval ?? [])[0] ?? {};
+  assert.equal(iv.field, "days");
+  assert.equal(iv.daysInterval, 1);
+  assert.ok(!Object.prototype.hasOwnProperty.call(iv, "triggerAt"), "triggerAt is not a Schedule Trigger parameter - it silently means midnight");
+  assert.equal(iv.triggerAtHour, 9);
+  assert.equal(iv.triggerAtMinute, 0);
+  assert.equal(wf.settings.timezone, "America/Chicago", "09:00 means nothing without the zone it is 09:00 in");
 });
 
 test("every wired error output has its onError property, and retry is only on the idempotent calls", () => {
@@ -327,11 +342,15 @@ test("24 Fail loudly keeps a handled failure red, and stays quiet when nothing w
   // failure, and a workflow-level error workflow will not fire for it either (vendor ERROR_WORKFLOWS.md). This
   // node is how the workflow's own alarm, a red execution, survives that fix.
   const problem = [{ json: { ok: false, alertTitle: "cadence failed at read", summary: "ETIMEDOUT" } }];
-  assert.throws(
-    () => runCode("24 Fail loudly", { "21 Report error path": problem }),
-    /cadence failed, and the alert was sent[\s\S]*21 Report error path: cadence failed at read/,
-    "the thrown text must repeat the reporter's words, so the log and the ntfy message say one thing",
-  );
+  let thrown = null;
+  try { runCode("24 Fail loudly", { "21 Report error path": problem }); } catch (e) { thrown = e; }
+  assert.ok(thrown, "a reporter that said something is wrong must end the run red");
+  assert.match(String(thrown.message), /21 Report error path: cadence failed at read/,
+    "the thrown text must repeat the reporter's words, so the log and the ntfy message say one thing");
+  // The marker is the contract between this node and the error watcher: `24` throws *after* `23` delivered, so
+  // a linked watcher would otherwise send a second message for one incident, and it recognises this throw by
+  // its first characters (D206). Same constant, imported - not a second copy of the string.
+  assert.ok(String(thrown.message).startsWith(LOUD_THROW), `the throw must begin with core.mjs' LOUD_THROW (${LOUD_THROW}), got ${JSON.stringify(String(thrown.message).slice(0, 60))}`);
   assert.throws(
     () => runCode("24 Fail loudly", { "22 Report a problem": [{ json: { ok: false, alertTitle: "cadence paused: x", summary: "no_rows" } }] }),
     /cadence paused: x/,

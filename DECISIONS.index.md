@@ -212,5 +212,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D202** (2026-11-05) — the operator accepted the four n8n rulings as recommended (`1c, 2a, 3a, 4a`): retention lives in the artifact, the API key gets re-minted, `visitors` stays, and the chain runs in the recommended order (2026-11-05)
 - **D203** (2026-11-05) — the n8n instance publishes its own OpenAPI unauthenticated, and that decides the split of labour between the two doors: REST carries the artifact, MCP runs it (measured 2026-11-05)
 - **D204** (2026-11-05) — this instance stores execution data **unredacted by default**, so the password-in-run-data question now has a named switch and no measurement; the experiment is three steps and needs no Mobilizon credential (read 2026-11-05)
+- **D205** (2026-11-05) — the weekly heartbeat is a read-only proof of life that reports the rows that exist, not a second planner (2026-11-05, built)
+- **D206** (2026-11-05) — a workflow-level error workflow is a separate artifact, linked by instance id at runtime, and it stays quiet when cadence already spoke (2026-11-05, built)
+- **D207** (2026-06-04) — Schedule Trigger v1 on this instance reads `triggerAtDay`/`triggerAtHour`/`triggerAtMinute`; `triggerAt` is not a parameter and the cadence was firing at midnight while its own comments said 09:00 (measured 2026-06-04)
 
-Defined: 204 (D1-D204). Unused ids: none.
+Defined: 207 (D1-D207). Unused ids: none.

@@ -396,3 +396,49 @@ skip, which is why it is config and not a deletion.
 
 The whole behaviour is `series.config.mjs` + `lib/core.mjs`, and both are covered by
 [`test-plan.md`](test-plan.md).
+
+## 10. The two watchmen (built, gated, not yet on the instance)
+
+Two more artifacts come out of the same builders, and neither one is the cadence:
+
+| file | what it is | why it exists |
+|---|---|---|
+| `n8n/error-watcher.json` | n8n's **workflow-level error workflow** (D206): `A0 Error Trigger` → `A1 Compose the alert` → `A2 Tell a person?` → `A3 Notify on ntfy` | A per-node error branch (D195) marks a failure **handled**, so it never reaches this watcher. What only a watcher sees: a whole-run timeout, a crash between nodes, a node whose error output is unwired, a trigger that stopped firing, and `24 Fail loudly`'s deliberate throw |
+| `n8n/heartbeat.json` | a **weekly, unconditional, read-only** report (D205): Mondays 09:00 `America/Chicago`, prints the next row per series, and goes loud (priority 4) when the nearest row is more than **21 days** out | The cadence can be silent because there is nothing to do *and* because it is not running, and both look identical from the outside. 21 is deliberately A8's `RUNWAY_DAYS` (`check:ics`), so "the page will show nothing" and "the weekly note went loud" are one threshold |
+
+Three things about them are not negotiable, and both builders fail if any is broken:
+
+- **The heartbeat has no gate and no error handling.** A send that can be skipped is indistinguishable from a dead
+  scheduler, and a heartbeat that swallows an error is how a dead schedule starts looking alive. A failed heartbeat
+  stays red so the watcher reports it.
+- **The watcher holds nothing it watches.** No `series.config.mjs`, no GraphQL documents, no sign-in helper, no write
+  vocabulary, no credential values, and the only URL it can call is `https://ntfy.labradorius.com/`. A watcher that
+  depends on the Mobilizon host is taken down by the same outage.
+- **One message per incident.** `24 Fail loudly` starts its error with `lib/core.mjs` `LOUD_THROW`
+  (`"cadence kept red on purpose"`); the watcher recognises it, sets `duplicate:true`, and **withholds the send**
+  while writing `suppressedWhy` into the log — cadence's `23` already delivered that incident (D194).
+
+### What is yours to do, in order
+
+Today the import path (`n8n-api.mjs push`) knows only two artifacts, `cadence` and `probe`, and the link is a
+**picker in the n8n UI** — the error-workflow target is an *instance-local* id, so no reviewed file may contain one
+(D206). Until a `link` verb exists:
+
+1. Import each file in the n8n UI (**⋯ → Import from file**), on the instance, from the checked-out branch:
+   `integrations/mobilizon-cadence/n8n/error-watcher.json` and `.../n8n/heartbeat.json`. Both land **inactive**.
+2. Open each, confirm the Code nodes typecheck (the builders' invariants are the same ones `check:cadence` runs), and
+   **activate the heartbeat**. The watcher needs no activation beyond existing — an error workflow is fired by the
+   platform, not by a schedule.
+3. Open the **cadence** → **Settings** → **Error Workflow** → pick *Mobilizon cadence - error watcher*. This is the
+   step that makes D206 real; nothing in the repo can do it for you.
+4. Rehearse the watcher without waiting for an outage: press **Execute Workflow** on it. `ErrorTrigger`'s own mock
+   payload (read off the node's source on this instance, 2026-11-05) arrives, `A1` composes, `A2` lets it through if
+   `NTFY_TOKEN` is set, and a message lands on your phone. If it does not, `A1`'s output still shows you the composed
+   title and body.
+5. Prove the duplicate rule once, cheaply: set `MOBILIZON_PASSWORD` wrong, run the cadence. `23` sends the alert,
+   `24` throws, the watcher fires — and **sends nothing** (`suppressedWhy` names the reason). One message, one red
+   execution.
+
+Rebuild after any config change (`node integrations/mobilizon-cadence/build-alerter.mjs`,
+`build-heartbeat.mjs`), and re-import: the artifact hash is what `verify-import.mjs` compares, and a stale copy on
+the instance is drift, not an older version.

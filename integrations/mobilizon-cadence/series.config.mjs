@@ -135,8 +135,14 @@ export const ALERT = {
   click: "https://minneapolismathbookclub.com/#when-we-meet",
   /** Priorities are measured from the upstream table: 5 max (long vibration, pop-over), 4 high, 3 default,
    *  2 low (no sound, drawer only), 1 min. Nothing here is a 5: these messages arrive at 09:00 and a calendar
-   *  problem is not a three-in-the-morning emergency. A run with nothing to say sends nothing at all. */
-  priority: { problem: 4, wrote: 4, dryRun: 2 },
+   *  problem is not a three-in-the-morning emergency. A run with nothing to say sends nothing at all.
+   *
+   *  `heartbeat` is the weekly proof of life (D205): quiet on purpose, because it arrives whether or not
+   *  anything happened, and a message that buzzes once a week is a message that gets read.
+   *  `runway` is that same message when the calendar it reports is empty further out than
+   *  `HEARTBEAT.runwayDays` - the site's own staleness gate (A8, D188) would go loud about that, so the
+   *  heartbeat stops being noise and becomes the early half of it. */
+  priority: { problem: 4, wrote: 4, dryRun: 2, heartbeat: 2, runway: 4 },
   /** Only `warning` is used, because that tag name is quoted from the upstream examples. Other emoji tags are
    *  plausible but unverified here, and an unknown tag name is a message that fails to publish. */
   tags: { problem: ["warning"] },
@@ -144,6 +150,65 @@ export const ALERT = {
    *  out something went wrong. (ntfy's own limit was not measured; 1000 chars is far under the 4096-byte
    *  figure in the message-format docs, which is the number to re-check if this ever truncates.) */
   maxMessageChars: 1000,
+  /** A second channel for the error watcher only, and it is **off** (D206).
+   *
+   *  The vendor set names the recursion trap outright: if the error workflow's own channel is the channel the
+   *  monitored workflow uses, then the outage that caused the failure also eats the alert about it, and n8n
+   *  does not re-trigger on the error workflow's failure ("no infinite loop, but the failure goes nowhere").
+   *  Its mitigations are "use a different channel" or "have a fallback".
+   *
+   *  Shipped null because a fallback needs a secret that does not exist yet: the club's Discord side is a bot
+   *  token for the site Worker (`DISCORD_TOKEN`, wrangler.toml), not an incoming webhook URL, and inventing an
+   *  environment variable name for a credential nobody has minted is how a workflow ships a node that can only
+   *  fail. To turn it on: create a Discord webhook for a club channel, put its URL in an n8n environment
+   *  variable by NAME, and set
+   *
+   *      fallback: { kind: "discord", urlEnv: "MATHLOCO_ALERT_WEBHOOK", maxMessageChars: 1800 }
+   *
+   *  `build-alerter.mjs` then emits `A4 Notify on the fallback`, wired to `A3`'s error output, and
+   *  `checkAlerter()` polices the pair (`onError` without the wire, or the wire without `onError`, is the
+   *  silent-failure shape this repo has already been bitten by twice). Until then the honest statement is in
+   *  docs/security.md: one channel, and the weekly heartbeat is the backstop for "the channel is down". */
+  fallback: null,
+};
+
+/**
+ * The weekly heartbeat (operator ruling 2026-11-05, "weekly heartbeat can be built now"; D205).
+ *
+ * What it is for: every other message on this topic means "something happened". D194's silence rule makes
+ * that deliberate, and it leaves one hole no per-node error output can close - a scheduler that is simply not
+ * running sends nothing, and nothing looks identical to a quiet week. A8's runway gate (`check:ics`,
+ * N = 21 days, D188) is the only detector today, and it is a *deploy-time* detector on the *site's* snapshot,
+ * so the honest latency of "n8n is dead" is about three weeks. One message a week cuts that to seven days.
+ *
+ * It trades directly against D194, which is why it was a ruling and not a code change: one message that means
+ * "still alive" is the price of being able to notice death.
+ *
+ * It is not only a ping. It reads the same public calendar cadence reads (no credential - the same read
+ * `simulate.mjs` makes) and prints the next date each series holds and how far out it is, so the weekly note
+ * answers "is the calendar actually full?" as well as "is n8n alive?". Past `runwayDays` it goes to priority 4
+ * and names the fix, which makes it the early-warning half of A8's rule rather than a third opinion on it.
+ */
+export const HEARTBEAT = {
+  /** 0 = Sunday ... 1 = Monday, measured against this instance's own node source: Schedule Trigger v1 takes
+   *  `triggerAtDay` (an array of these numbers), `triggerAtHour` and `triggerAtMinute` - there is no `triggerAt`
+   *  string (D207). `build-heartbeat.mjs` asserts its own trigger block against these three names. */
+  weekday: 1,
+  hour: 9,
+  minute: 0,
+  everyWeeks: 1,
+  /** How far ahead of the next row the calendar may sit empty before the weekly note goes loud.
+   *  Deliberately the same number as A8's `RUNWAY_DAYS` (scripts/check-ics.mjs, D188): one threshold for
+   *  "the club is about to have nothing to attend", raised by the runtime at 7 days and by the deploy gate
+   *  at 21. If one moves, move both, and the comment in check-ics.mjs points back here. */
+  runwayDays: 21,
+  /** The public read the heartbeat makes. Forward only: it is asking "what is coming", not re-deriving the
+   *  rhythm, and a short window keeps the response small enough to read in one execution. */
+  readAheadDays: 60,
+  readLimit: 100,
+  /** Structural, not decorative: the heartbeat has no `Tell a person?` gate, because a heartbeat that can be
+   *  skipped is the same silence it exists to detect. `checkHeartbeat()` fails the build if an IF node appears. */
+  alwaysSend: true,
 };
 
 export const SERIES = [
