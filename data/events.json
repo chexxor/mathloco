@@ -19,9 +19,9 @@
       "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
       "slug": "2026-11-07-club-social",
       "summary": "MPLS Math Club - Bimonthly Social",
-      "_summary": "Verbatim from the organizer's calendar (`SUMMARY`). The word \"Bimonthly\" is D92's defect class and MILESTONES A6 input 1 asks whether our published name drops it; until that is ruled the name is quoted, not rewritten, because inventing a series name is a new claim.",
-      "series": "MPLS Math Club social",
-      "_series": "The series this instance belongs to, minus the frequency word D92 keeps off the page. Presentation of the string above, not a second claim.",
+      "_summary": "Verbatim from the organizer's calendar (`SUMMARY`). It is published verbatim in the FEED only, where it is a quotation rather than the club's claim (D189). The word \"Bimonthly\" is D92's defect class on a page, so it never reaches one: `asUpcomingItems()` prints `series`, not `summary`.",
+      "series": "MPLS Math Club Social",
+      "_series": "The name the page prints, minus the frequency word D92 keeps off it. Operator ruling 9(a) 2026-11-04 (D189): the published name is `MPLS Math Club Social`, and the rhythm lives in the data (two 14-day series, D175) rather than in a word on the page. It is a presentation of the string above, not a second claim, and the feed's `SUMMARY` stays verbatim so a subscriber reads what the organizer wrote.",
       "start": "2026-11-07T12:00",
       "end": "2026-11-07T14:00",
       "_times": "Feed says `DTSTART:20261107T120000Z` / `DTEND:...T140000Z` with no zone (D169), so the `Z` is not read as an instant. Confirmed as a wall clock on 2026-11-04 from two sources, not inferred: `.notes/roadmap-events.md` records the organizer typing **12:00** for this event on 2026-11-03 and the export answering `120000Z`, and the event page's own meta description as served today reads \"Nov 7, 2026, 12:00:00 PM - GMT\" — the club publishes 12:00 on its own page, mislabelled GMT by 5.2.4's exporter. So the club's hour is 12:00-14:00 in its own zone. Operator confirmation is asked for in `.notes/NEXT.md`; `timeConfirmed` is one boolean per row and the UID does not change when it flips, so a correction updates the subscriber's entry rather than orphaning it (D172).",
@@ -37,7 +37,7 @@
       "_blurb": "Verbatim `DESCRIPTION` as served by the feed (the feed escapes `\\,` and `\\n`; unescaped here, and `ics.mjs` re-escapes on the way out).",
       "url": "https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1",
       "image": "https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png",
-      "_image": "The organizer's own event art, 954x460 PNG, 127,098 bytes as fetched 2026-11-04. The candidate for PS-4 (the parked event thumb, MILESTONES); it stays a link until the operator rules whether the club's art gets mirrored into this repo.",
+      "_image": "The organizer's own event art, 954x460 PNG, 127,098 bytes as fetched 2026-11-04 (curl 200, `image/png`). Operator ruling 10(a) 2026-11-04 (D190): it is MIRRORED, not linked, at `src/assets/photos/event-2026-11-07-club-social.png` — the only image on the site whose bytes are not ours, and a link to another host is the one image that can 404 on a visitor. Provenance and the rights line live in `src/assets/photos/README.md`; the alt states only the role of the file, because the delegate cannot see the frame (the session's model takes no images) and D170 forbids an alt inferred from a picture nobody read. The organizer's own sentence for it is asked for in `.notes/NEXT.md`.",
       "sequence": 0,
       "status": "CONFIRMED",
       "source": {
@@ -76,5 +76,6 @@
       }
     }
   ],
-  "_dropped": "The instance feed (GET /feed/instance/ics, 6,584 bytes, 5 VEVENTs as fetched 2026-11-04) also carries three past `Bimonthly Social` rows — 2026-05-08, 2026-05-22, 2026-06-05, each at 17:00Z, each its own UID. They are not published: there is no past-events page (D117: a path needs a page) and the group feed the harvest reads does not return them (it lists upcoming only, per D74's reading of the source). If a `Past meetings` page is ever ruled, they are in the harvest, not lost."
+  "_dropped": "The instance feed (GET /feed/instance/ics, 6,584 bytes, 5 VEVENTs as fetched 2026-11-04) also carries three past `Bimonthly Social` rows — 2026-05-08, 2026-05-22, 2026-06-05, each at 17:00Z, each its own UID. They are not published: there is no past-events page (D117: a path needs a page) and the group feed the harvest reads does not return them (it lists upcoming only, per D74's reading of the source). If a `Past meetings` page is ever ruled, they are in the harvest, not lost.",
+  "_runway": "A8's rule, written into the file it guards: `npm run check:ics` FAILS when no upcoming row sits within 21 days (RUNWAY_DAYS in scripts/check-ics.mjs) and prints a warning inside 42 days. 21 = one 14-day series spacing (D175) plus a week of slack — the operator's ruling 2026-11-04, with the instruction that there is no env var (D188). The escape hatch is one dated field, `\"stalenessOkUntil\": \"YYYY-MM-DD\"`, set here by hand for a genuine gap between series. It expires on its own date, `npm run events:harvest` never sets or clears it (the harvester mutates rows in place and leaves top-level fields alone), and the name misspelled fails the `snapshot-keys` rule rather than silencing the gate for free."
 }

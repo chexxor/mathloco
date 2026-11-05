@@ -89,6 +89,9 @@ export const asUpcomingItems = (rows = upcomingEvents()) =>
     // word off the page ("Bimonthly" is the organizer's own title and stays verbatim in the feed, where it is
     // a quotation rather than the club's claim). `seriesNote` is the only second line a row may print.
     title: row.series ?? row.summary ?? null,
+    // The row's key, not a fact for the page: PS-4's art is resolved by filename (`event-<slug>.png`, D190),
+    // so an attachment follows the meeting rather than its position in the list.
+    slug: row.slug ?? null,
     series: row.seriesNote ?? null,
     status: String(row.status ?? '').toUpperCase() === 'CANCELLED' ? 'Cancelled' : null,
     venue: venueLine(row),

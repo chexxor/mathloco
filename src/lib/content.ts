@@ -56,6 +56,12 @@ export type UpcomingItem = {
    */
   endTime?: string | null;
   title: string;
+  /**
+   * The snapshot's own key for the row. The page never prints it; it exists so a file can be attached to a
+   * row by name (`src/assets/photos/event-<slug>.png`, PS-4, D190) rather than by position, so adding art is
+   * a drop and reordering the list cannot move it to the wrong meeting.
+   */
+  slug?: string | null;
   /** An optional second line. The row's own name is not repeated there — see `asUpcomingItems`. */
   series?: string | null;
   /** `Scheduled` | `Cancelled` | `Past` — status is a word, never colour or strikethrough alone. */

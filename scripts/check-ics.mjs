@@ -60,6 +60,47 @@ const offsetFor = (tz, isoDate) => {
   return m ? `${m[1]}${m[2] ?? '00'}` : null;
 };
 
+// ------------------------------------------------------------------ the runway (A8, D188)
+// Two numbers, and they live here as constants on purpose: the operator's ruling 2026-11-04 was "N = 21 days,
+// and no env var at this point". A knob nobody has to reach for is a constant a diff has to review.
+//
+// Why 21: both series run every 14 days (D175), so 21 days of runway guarantees at least one row exists while
+// still leaving a week of slack between "the organizer has not made the next one yet" and "the site is lying".
+const RUNWAY_DAYS = 21;
+// The warning fires at twice the failure distance, so there is one number to remember and one lead time.
+const RUNWAY_WARN_DAYS = RUNWAY_DAYS * 2;
+
+/**
+ * Today in the club's own zone. `src/lib/events.mjs` states the reason for the same rule: the same commit
+ * built on a UTC CI runner and on a UTC-6 laptop must not disagree about whether tonight's event is still
+ * upcoming. A gate that is supposed to fire exactly when the schedule section goes empty has to agree with
+ * the page about what "today" is — the previous version of this file compared UTC dates, which sat up to a
+ * day away from the page it was guarding (D188).
+ */
+const clubToday = (data) => {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: data.calendar?.timezone ?? 'America/Chicago',
+    year: 'numeric', month: '2-digit', day: '2-digit',
+  }).formatToParts(new Date());
+  const get = (k) => parts.find((p) => p.type === k)?.value;
+  return `${get('year')}-${get('month')}-${get('day')}`;
+};
+
+/** The rows the page may show, in the page's own order — the same predicate `isUpcoming` applies in `Schedule.astro`. */
+const upcomingRows = (data, today) =>
+  (data.events ?? [])
+    .filter((e) => String(e.status ?? '').toUpperCase() !== 'CANCELLED'
+      && `${String(e.start ?? '').slice(0, 10)}T23:59` >= `${today}T00:00`)
+    .sort((a, b) => `${a.start} ${a.uid}`.localeCompare(`${b.start} ${b.uid}`));
+
+const daysBetween = (from, to) =>
+  Math.round((Date.parse(`${to}T12:00Z`) - Date.parse(`${from}T12:00Z`)) / 86400000);
+
+const DATE_SHAPE = /^\d{4}-\d{2}-\d{2}$/;
+
+/** Top-level fields the gate knows by name, so a hatch spelled wrong fails instead of silently silencing. */
+const SNAPSHOT_KEYS = ['calendar', 'source', 'events', 'stalenessOkUntil'];
+
 // ------------------------------------------------------------------ the rules
 // Each rule returns findings: `[]` means satisfied. Rules receive (data, text) where text is the published
 // calendar, so a rule may audit the snapshot, the bytes, or both.
@@ -291,6 +332,52 @@ const RULES = [
     return out;
   },
 
+  // A snapshot is a copy, so it goes stale on its own, and the failure M6 names is that nobody notices: the
+  // landing schedule shows its empty state and every subscriber keeps a calendar whose last date has passed.
+  // `check:ics` used to *print* the distance ("next is 2026-11-07 (3 day(s) away)"), and A8's exit criterion
+  // is the sentence that makes this a gate: prints are not gates (D118).
+  (data) => {
+    const out = [];
+    const today = clubToday(data);
+    const hatch = data.stalenessOkUntil;
+    const hatchWellFormed = hatch == null || DATE_SHAPE.test(String(hatch));
+    if (!hatchWellFormed) {
+      out.push({ rule: 'runway', detail: `stalenessOkUntil ${JSON.stringify(hatch)} is not a YYYY-MM-DD date — a hatch the gate cannot read is a silence nobody granted` });
+    }
+    const rows = upcomingRows(data, today);
+    const next = rows.length ? daysBetween(today, String(rows[0].start).slice(0, 10)) : null;
+    if (next !== null && next <= RUNWAY_DAYS) return out; // the runway is long enough; nothing to say
+    const stale = next === null
+      ? `no upcoming row on or after ${today}`
+      : `the next row is ${String(rows[0].start).slice(0, 10)}, ${next} days out — more than the ${RUNWAY_DAYS}-day runway`;
+    if (hatchWellFormed && hatch != null) {
+      if (String(hatch) >= today) return out; // granted, and `report()` prints it so a green run still says so
+      out.push({
+        rule: 'runway',
+        detail: `${stale}, and the hatch expired on ${hatch} — a hatch that lives forever is exactly the silence this rule exists to end. Fetch first: \`node scripts/events-harvest.mjs\` (dry run) then \`--write\`; if the club genuinely has no date yet, replace stalenessOkUntil with a new date and say why in the commit`,
+      });
+      return out;
+    }
+    out.push({
+      rule: 'runway',
+      detail: `${stale}. Fix it by fetching: \`node scripts/events-harvest.mjs\` (prints the diff) then \`node scripts/events-harvest.mjs --write\`, then rebuild — the snapshot is a copy, and a copy nobody re-fetches is a claim about last week. For a real gap between series, set a dated \`stalenessOkUntil\` in data/events.json and say why in the commit`,
+    });
+    return out;
+  },
+
+  // The hatch above only works if the name is right. A top-level key the gate does not know is either a typo
+  // (which would silence a gate for free) or a field some tool started writing (which nobody reviewed), so it
+  // fails by name rather than passing through.
+  (data) => {
+    const out = [];
+    for (const k of Object.keys(data)) {
+      if (!k.startsWith('_') && !SNAPSHOT_KEYS.includes(k)) {
+        out.push({ rule: 'snapshot-keys', detail: `top-level field "${k}" is not one the gate knows — add it to SNAPSHOT_KEYS deliberately, or remove it (a hatch spelled almost right is a silence nobody granted)` });
+      }
+    }
+    return out;
+  },
+
   // The artifact is what a subscriber reads. If the route drifted from the renderer, or the asset layer
   // re-wrote bytes on the way out, this is what notices.
   (_data, text) => {
@@ -306,22 +393,26 @@ const RULES = [
   },
 ];
 
-/** Reported, never failed: a quiet calendar is a fact about the club, not a broken build (record 0010). */
+/** Reported, never failed: a quiet calendar is a fact about the club, not a broken build (record 0010). The
+ *  runway line prints the same number the runway rule fails on, so a green run still says how much margin is
+ *  left — the day it turns red, the number a reader needs is already in the log above it. */
 const report = (data) => {
-  const today = new Date().toISOString().slice(0, 10);
-  const upcoming = (data.events ?? [])
-    .filter((e) => String(e.status ?? '').toUpperCase() !== 'CANCELLED' && String(e.start).slice(0, 10) >= today)
-    .sort((a, b) => String(a.start).localeCompare(String(b.start)));
+  const today = clubToday(data);
+  const upcoming = upcomingRows(data, today);
   const lines = [];
+  const hatch = data.stalenessOkUntil;
+  const daysTo = (row) => daysBetween(today, String(row.start).slice(0, 10));
   if (!upcoming.length) {
-    lines.push(`no upcoming row on or after ${today} — the page renders its empty state (M6 names a silently stale schedule as the failure mode)`);
+    lines.push(`no upcoming row on or after ${today} (${data.calendar?.timezone ?? 'zone unknown'}) — the page renders its empty state (M6 names a silently stale schedule as the failure mode)`);
+    if (hatch != null) lines.push(`hatch: stalenessOkUntil ${hatch}${String(hatch) >= today ? ' is live — the runway rule is staying silent by your explicit grant' : ' has EXPIRED'}`);
     return lines;
   }
-  const daysTo = (row) => Math.round((Date.parse(`${String(row.start).slice(0, 10)}T12:00Z`) - Date.parse(`${today}T12:00Z`)) / 86400000);
-  lines.push(`${upcoming.length} upcoming row(s); next is ${String(upcoming[0].start).slice(0, 10)} (${daysTo(upcoming[0])} day(s) away)`);
+  const runway = daysTo(upcoming[0]);
+  lines.push(`${upcoming.length} upcoming row(s); next is ${String(upcoming[0].start).slice(0, 10)} (${runway} day(s) away) — runway rule fails below ${RUNWAY_DAYS} days`);
   const soon = upcoming.filter((e) => e.timeConfirmed !== true && daysTo(e) <= 7);
   if (soon.length) lines.push(`${soon.length} row(s) within 7 days still have no confirmed hour — the feed publishes the DATE and the page says "time not set"`);
-  if (daysTo(upcoming[0]) > 45) lines.push(`nothing scheduled within 45 days — worth a word to the organizer before this becomes the stale-schedule failure (M6)`);
+  if (runway > RUNWAY_DAYS && runway <= RUNWAY_WARN_DAYS) lines.push(`${runway} days of runway — inside the ${RUNWAY_WARN_DAYS}-day warning band: worth a word to the organizer before this becomes the stale-schedule failure (M6)`);
+  if (hatch != null) lines.push(`hatch present: stalenessOkUntil ${hatch} (it only matters below ${RUNWAY_DAYS} days, and it expires on its own)`);
   return lines;
 };
 
@@ -332,6 +423,18 @@ if (selftest) {
   // A row put back into the unconfirmed state: what the snapshot looks like whenever the club adds a date and
   // nobody has settled the hour yet (D172).
   const unconfirmed = (d) => { d.events[0].timeConfirmed = false; return d; };
+  // Date helpers for the runway plantings, computed from *today* so they cannot rot: a planting pinned to a
+  // literal November date stops testing anything the moment November passes.
+  const dayShift = (n) => {
+    const d = new Date(Date.now() + n * 86400000);
+    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+  };
+  const moveRow = (row, date) => {
+    row.start = `${date}T12:00`;
+    row.end = `${date}T14:00`;
+    row.timeConfirmed = true;
+    return row;
+  };
   const plantings = [
     // snapshot-level: a field a harvester or a human got wrong
     { name: 'no-PRODID', data: (d) => { delete d.calendar.prodid; return d; }, rule: 'envelope' },
@@ -369,6 +472,17 @@ if (selftest) {
     { name: 'floating-confirmed-instant', text: (t) => t.replace('DTSTART;TZID=America/Chicago:20261107T120000', 'DTSTART:20261107T120000'), rule: 'zone-on-instants' },
     { name: 'zero-length-instant-span', text: (t) => t.replace('DTEND;TZID=America/Chicago:20261107T140000', 'DTEND;TZID=America/Chicago:20261107T120000'), rule: 'date-span' },
     { name: 'artifact-drift', text: (t) => `${t}BEGIN:VEVENT\r\nUID:ghost\r\nEND:VEVENT\r\n`, rule: 'envelope' },
+    // The runway gate (A8, D188). Each of these is a way a published calendar goes quietly stale; the last is
+    // an assertion of SILENCE, because a hatch that never works is as wrong as a gate that never fires.
+    { name: 'snapshot-holds-nothing-upcoming', data: (d) => { for (const e of d.events) moveRow(e, dayShift(-30)); return d; }, rule: 'runway' },
+    { name: 'runway-beyond-N', data: (d) => { for (const e of d.events) moveRow(e, dayShift(40)); return d; }, rule: 'runway' },
+    { name: 'cancelled-rows-are-not-runway', data: (d) => { for (const e of d.events) { moveRow(e, dayShift(3)); e.status = 'CANCELLED'; } return d; }, rule: 'runway' },
+    { name: 'hatch-expired', data: (d) => { for (const e of d.events) moveRow(e, dayShift(-30)); d.stalenessOkUntil = dayShift(-1); return d; }, rule: 'runway' },
+    { name: 'hatch-not-a-date', data: (d) => { for (const e of d.events) moveRow(e, dayShift(40)); d.stalenessOkUntil = 'next month or so'; return d; }, rule: 'runway' },
+    { name: 'hatch-name-typo', data: (d) => { d.staleOkUntil = dayShift(30); return d; }, rule: 'snapshot-keys' },
+    // The one clean assertion: a live hatch on a stale snapshot must NOT fail. Planted like the others so the
+    // selftest proves both directions of the escape hatch.
+    { name: 'live-hatch-on-a-stale-snapshot', clean: true, data: (d) => { for (const e of d.events) moveRow(e, dayShift(-30)); d.stalenessOkUntil = dayShift(7); return d; }, rule: 'runway' },
   ];
 
   let missed = 0;
@@ -384,6 +498,11 @@ if (selftest) {
       continue;
     }
     const hit = run(data, text).find((f) => f.rule === p.rule);
+    if (p.clean) {
+      if (hit) { console.log(`FAIL ${p.name}: the rule fired on a state it must stay silent about: ${hit.detail}`); missed += 1; }
+      else console.log(`ok   ${p.name}: ${p.rule} stayed silent (the assertion in the other direction)`);
+      continue;
+    }
     if (hit) console.log(`ok   ${p.name} -> ${hit.rule}: ${hit.detail}`);
     else { console.log(`FAIL ${p.name}: planted a ${p.rule} defect and the gate said nothing`); missed += 1; }
   }
