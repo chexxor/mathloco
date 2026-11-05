@@ -55,7 +55,9 @@ without `includeArchived=true`, so judge `isArchived`, never the row count), and
 artifact of hand-written probes sending `X-API-Key` / `Bearer`; the same request with `X-N8N-API-KEY` returned 200 in
 the same second, `/healthz` was 200 throughout, and the token file never moved. The guide now names the header and tells
 the next session to use `n8n-api.mjs` rather than curl, because a wrong header reproduces an outage perfectly and nearly
-cost a credential rotation. |
+cost a credential rotation. **The branch is merged into local `staging`** (`3fcdf50`, 2026-11-05, operator ruling 1:
+*staging yes, push no*) — `verify` green there, 18 ok / 0 failed, and **unpushed**: `origin/staging` still sits at
+`9e15d8d`, 23 commits behind. |
 
 ### What A6 still needs from the operator (six inputs, as of 2026-11-03)
 
@@ -101,7 +103,7 @@ and `events/publish-ics-feed` was an **ancestor** of `events/mobilizon-cadence-n
 | what | how it was measured | result |
 |---|---|---|
 | `events/mobilizon-cadence-n8n` (A9 + all of A6) | `git merge-tree --write-tree --name-only staging HEAD` | exit 0, tree `217fb469`; merged `--no-ff` as `6ec69a0` |
-| `integrations/cadence-ntfy-alert` (A9's watchmen, D201-D219) | `git merge-tree --write-tree --name-only staging HEAD` before touching anything, then `git merge --no-ff` on `staging`, then `npm run verify` there; operator ruling 1 (2026-11-05) was *staging yes, push no* | exit `0`, tree `8472398c`, **no conflicted files** - so no merge ordering to negotiate (D156). Merged `--no-ff`; the sha and the verify numbers are recorded in the row added after it. **Nothing is pushed**: `origin/staging` has never seen these commits, and the proof to re-run before concluding anything is merged is `git log --oneline --ancestry-path integrations/cadence-ntfy-alert..staging` (empty means not merged; that command returning nothing is what killed a confident false claim in an earlier session)
+| `integrations/cadence-ntfy-alert` (A9's watchmen, D201-D219) | `git merge-tree --write-tree --name-only staging HEAD` before touching anything, then `git merge --no-ff` on `staging`, then `npm run verify` **on `staging`**; operator ruling 1 (2026-11-05) was *staging yes, push no* | merge-tree exit `0`, tree `8472398c`, **no conflicted files** - no merge ordering to negotiate (D156). Merged `--no-ff` as `3fcdf50`; `verify` on `staging` **18 ok / 0 failed / 0 skipped in 19.6s** (`+15%` vs the 17.1s baseline, load 5.9 -> 4.6) @measured 2026-11-05. **Nothing is pushed**: `git rev-list --count origin/staging..staging` = **23**, and `origin/staging` still sits at `9e15d8d`, so the queue - including the earlier D191 merge - has never been fetched by anything but this machine. The proof to re-run before concluding anything is merged: `git log --oneline --ancestry-path <branch>..staging` (empty means not merged; that command returning nothing is what killed a confident false claim in an earlier session). This row itself arrived in a second merge, so `staging` carries two merge commits for one item - the price of recording a merge inside the branch being merged
 | `docs/www-redirect-endstate` | same, plus a file-overlap check: the events branch changes **0** files named `README.md` at the repo root, so the two branches share no file and order is free | exit 0, tree `67ea36e0`; merged `--no-ff` as `9e15d8d` |
 | the merged result | `npm run verify` on `staging` | **17 ok / 0 failed / 15.0s** (−12% vs the 17.1s baseline) |
 | `staging` → origin | the operator's **one-time** push grant (D187); the next push is asked for again | `origin/staging` created; CI's `staging` push trigger (`e27dba3`) has now run against the queue for the first time |
