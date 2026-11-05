@@ -141,7 +141,12 @@ const RULES = [
     const uids = (data.events ?? []).map((e) => String(e.uid ?? ''));
     for (const u of uids) {
       if (!u) out.push({ rule: 'uid-shape', detail: 'a row has no UID' });
-      if (/\d{14}/.test(u)) out.push({ rule: 'uid-shape', detail: `UID ${u} looks time-derived — every redeploy would duplicate it` });
+      // Two shapes a build clock actually produces: a bare 14-digit stamp (`20261105002000`) and the ICS form with
+      // a `T` and a `Z` (`20261105T002000Z`). The digit-run test alone missed the second, which is exactly the form a
+      // harvester copying `DTSTAMP` into `uid` would write — found on 2026-11-05 when a *planting* of that shape
+      // passed the gate. A selftest that plants a defect the rule cannot see is a rule that is not gated.
+      const TIME_SHAPE = /\d{14}|\d{8}T\d{6}Z?/;
+      if (TIME_SHAPE.test(u)) out.push({ rule: 'uid-shape', detail: `UID ${u} looks time-derived — every redeploy would duplicate it` });
       if (u.includes(BUILD_DATE)) out.push({ rule: 'uid-shape', detail: 'a UID contains this build date' });
       if (u && !unfold(text).includes(`UID:${u}`)) out.push({ rule: 'uid-shape', detail: `UID ${u} is absent from the published feed` });
     }
@@ -423,12 +428,25 @@ if (selftest) {
   // A row put back into the unconfirmed state: what the snapshot looks like whenever the club adds a date and
   // nobody has settled the hour yet (D172).
   const unconfirmed = (d) => { d.events[0].timeConfirmed = false; return d; };
-  // Date helpers for the runway plantings, computed from *today* so they cannot rot: a planting pinned to a
-  // literal November date stops testing anything the moment November passes.
-  const dayShift = (n) => {
-    const d = new Date(Date.now() + n * 86400000);
-    return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-${String(d.getUTCDate()).padStart(2, '0')}`;
+  // Date helpers for the plantings, computed from **the club's own today** (the same `clubToday` the runway rule
+  // uses), not from UTC. Two plantings rotted at a UTC date boundary on 2026-11-05 because they shifted off
+  // `Date.now()` in UTC while the rule compares against the club's local date: at 18:20 Chicago an "expired hatch"
+  // computed as UTC-yesterday *is* club-today, so the hatch read as live and the runway rule correctly stayed silent.
+  // The planting, not the rule, was wrong — and a date pinned to a literal rots the same way.
+  const TODAY = clubToday(snapshot);
+  const shiftDate = (iso, n) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const t = new Date(Date.UTC(y, m - 1, d) + n * 86400000);
+    return `${t.getUTCFullYear()}-${String(t.getUTCMonth() + 1).padStart(2, '0')}-${String(t.getUTCDate()).padStart(2, '0')}`;
   };
+  const dayShift = (n) => shiftDate(TODAY, n);
+  // A planting only tests what it says it tests if its dates sit on the side of `today` it assumes. Assert that
+  // here, in one line per offset, rather than letting a drifted date turn a FAIL case silently into a clean run.
+  for (const [n, side] of [[-30, '<'], [-1, '<'], [3, '>'], [7, '>'], [40, '>']]) {
+    const d = dayShift(n);
+    const ok = side === '<' ? d < TODAY : d > TODAY;
+    if (!ok) throw new Error(`selftest planting dates have rotted: today${n > 0 ? '+' : ''}${n} = ${d} is not ${side} ${TODAY} (the club's today in ${snapshot.calendar?.timezone ?? 'America/Chicago'})`);
+  }
   const moveRow = (row, date) => {
     row.start = `${date}T12:00`;
     row.end = `${date}T14:00`;
@@ -441,7 +459,10 @@ if (selftest) {
     { name: 'no-UID', data: (d) => { delete d.events[0].uid; return d; }, rule: 'uid-shape' },
     { name: 'no-SUMMARY', data: (d) => { delete d.events[0].summary; return d; }, rule: 'sourced-rows' },
     { name: 'duplicate-UID', data: (d) => { d.events[1].uid = d.events[0].uid; return d; }, rule: 'uid-shape' },
-    { name: 'time-derived-UID', data: (d) => { d.events[0].uid = `20261104T062524Z-${d.events[0].uid}`; return d; }, rule: 'uid-shape' },
+    { name: 'time-derived-UID', data: (d) => { d.events[0].uid = `${d.events[0].source.dtstamp}-${d.events[0].uid}`; return d; }, rule: 'uid-shape' },
+    // The other half of the same rule: a UID carrying the build date with no time part. Two plantings, because one
+    // defect shape per branch is the only way a rule that has two branches is actually gated.
+    { name: 'uid-contains-the-build-date', data: (d) => { d.events[0].uid = `${BUILD_DATE}-${d.events[0].uid}`; return d; }, rule: 'uid-shape' },
     { name: 'row-stamp-drifts-from-the-harvest', data: (d) => { d.events[1].source.fetchedAt = '2026-01-01T00:00:00Z'; return d; }, rule: 'dtstamp' },
     { name: 'harvested-Z-instant-published', data: (d) => { d.events[0].start = '2026-11-07T12:00Z'; return d; }, rule: 'raw-upstream-instant' },
     { name: 'timeConfirmed-without-hour', data: (d) => { d.events[0].timeConfirmed = true; d.events[0].start = '2026-11-07'; d.events[0].end = '2026-11-07'; return d; }, rule: 'raw-upstream-instant' },

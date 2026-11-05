@@ -51,6 +51,12 @@ const swStroke = MARK.shapes.find((s) => s.sw);
 if (!arcs.length || !dashed || !solidArc || !swStroke) { console.error('the geometry table no longer has the shapes these cases expect — re-read src/lib/brand-mark.mjs'); process.exit(1); }
 
 const cases = [
+  // **Write a case's anchor on the attribute you care about, never on a whole tag.** A component that grows a
+  // `<style>` block has `data-astro-cid-*` stamped on every element Astro renders inside it, which silently
+  // un-matched two cases here on 2026-11-04 (PS-4's slot cap landed in a scoped `<style>` in `Schedule.astro`, so
+  // its `<ul>` and spans all gained a cid attribute). Both now splice: `/(<ul class="space-y-6)(")/`. The preflight
+  // below is what turns the next occurrence of this class from a confusing red gate into a two-line diagnosis.
+
   // 1. SVG foreign content: a shape that never made it into the DOM. The card hit this for real (D118
   //    lesson 1) and the box still looked fine, so only the count can see it.
   ['mark missing both equator arcs', (h) => arcs.reduce((acc, s) => acc.replace(pathEl(s), ''), h), /shape\(s\) in the document, the geometry table has/],
@@ -141,6 +147,28 @@ const cases = [
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;
 if (!selected.length) { console.error(`no case matches ${only.join(' ')}. cases: ${cases.map(([n]) => n).join(', ')}`); process.exit(2); }
+
+// Preflight: **every case's mutation must change the page, and that is checkable with string operations.** Running
+// it before the browser costs milliseconds and turns a rotted planting into a named, one-line diagnosis instead of
+// one confusing firefox FAIL per case (each case is a page load, so the old path cost minutes and pointed at the
+// page rather than at the probe). A planting that matches nothing does not prove the rule can fail, so it is fatal
+// here rather than a note - and the fix is to re-read the built HTML, never to delete the case.
+const rotted = [];
+for (const [name, mutate] of selected) {
+  try {
+    if (mutate(original) === original) rotted.push(name);
+  } catch (e) {
+    rotted.push(`${name} (the mutation threw: ${e.message})`);
+  }
+}
+if (rotted.length) {
+  console.error(`\nSELFTEST PREFLIGHT: FAIL — ${rotted.length} case(s) match nothing in the built page, so they prove nothing:`);
+  for (const n of rotted) console.error(`  - ${n}`);
+  console.error(`\nThe markup moved. Look at what the build actually makes now, and re-anchor the case on the ATTRIBUTE it\ncares about (not a whole tag: a <style> block in a component stamps data-astro-cid-* on every element in\nit, D190 — and never write a backtick inside these template literals, which is the same bug class):\n  grep -o '<[^>]*class="[^"]*space-y[^"]*"[^>]*>' dist/client/index.html | sort -u\nRe-point the case in this file. Deleting it is how a rule silently stops being gated (D173).`);
+  process.exit(1);
+}
+console.log(`selftest preflight: ${selected.length} case(s), every anchor present in the built page`);
+
 const lines = [];
 let ok = true;
 try {

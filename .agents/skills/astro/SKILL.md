@@ -129,6 +129,21 @@ const { title, body } = Astro.props;
 </div>
 ```
 
+### A `<style>` block changes every element the component renders (measured here, 2026-11-04, D190)
+
+Astro's scoped-style compiler stamps **`data-astro-cid-<hash>`** on every element inside a component that has a
+`<style>` block. Adding one to style a single element therefore rewrites the built markup of the **whole** component:
+adding one to `Schedule.astro` (for a measured slot cap) un-matched two `check:render:selftest` plantings that
+replaced whole tags, and the gate printed "the mutation matched nothing, so this case proves nothing". So:
+
+- A probe or selftest that mutates built markup anchors on the **attribute it cares about** and splices
+  (`/(<ul class="space-y-6)(")/`), never on a whole tag — added attributes then cannot void it.
+- `design/render-gate-selftest.mjs` runs an **anchor preflight** (string ops, no browser) that fails with the case
+  names and a grep to re-anchor. If it fires, re-point the case; deleting it is how a rule stops being gated (D173).
+- Prefer Tailwind tokens; when the value is a **measured** number that is not a spacing step (a slot width), a scoped
+  `<style>` is still the honest home, because `check:classes` is right to smell a `w-[323px]` bracket (D190). Just
+  expect the cid attributes, and check the probes in the same commit.
+
 ### API Route Reading Cloudflare Bindings
 
 `env` comes from `import { env } from 'cloudflare:workers'`, not `import.meta.env` and not
