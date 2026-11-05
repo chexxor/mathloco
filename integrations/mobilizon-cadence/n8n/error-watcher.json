@@ -144,7 +144,6 @@
     "timezone": "America/Chicago",
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all",
-    "savePreExecutionData": false,
     "saveManualExecutions": true
   },
   "meta": {

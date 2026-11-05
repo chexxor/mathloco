@@ -225,6 +225,43 @@ test("a lost executionOrder is fatal", () => {
   assert.ok(hits(r, "executionOrder").length >= 1);
 });
 
+test("a settings key the instance added on its own is a note; a settings key nobody set is still a warning", () => {
+  // `availableInMCP` comes back `true` on every copy this instance created (measured 2026-11-05, the first live
+  // push of all four artifacts). It is an instance decision (D202), so it is a note - but it must not become a
+  // category big enough to hide a setting that really was changed by hand on the canvas.
+  const mine = clone();
+  mine.settings.availableInMCP = true;
+  assert.equal(hits(verifyDocument(mine, CADENCE), "availableInMCP", "note").length, 1, "the instance's own default");
+  assert.equal(hits(verifyDocument(mine, CADENCE), "availableInMCP", "warn").length, 0, "a permanent warning is how a real one stops being noticed");
+
+  const hand = clone();
+  hand.settings.executionTimeout = 30;
+  assert.equal(hits(verifyDocument(hand, CADENCE), "executionTimeout", "warn").length, 1, "an unknown settings difference is still a warning");
+});
+
+test("a linked error workflow is judged by who it points at, not reported as an unexplained difference (D206)", () => {
+  // The artifact cannot carry the link: the watcher's id is issued by whichever instance this is. So a live copy
+  // that points at the reviewed watcher is *correct*, and a copy that points at some scratch workflow is the
+  // "looks like alerting, is nothing" failure. The caller resolves the id to a name when it can.
+  const linked = clone();
+  linked.settings.errorWorkflow = "dTvHkp7CmEyVNxgf";
+
+  const ours = verifyDocument(linked, CADENCE, { errorWorkflowName: "Mobilizon cadence - error watcher (alert on unhandled failure)" });
+  assert.equal(hits(ours, "errorWorkflow", "note").length, 1, "the reviewed watcher: a note, not a warning");
+  assert.equal(blocked(ours).length, 0, "a correct link must not block an activate");
+
+  const scratch = verifyDocument(linked, CADENCE, { errorWorkflowName: "my test thing" });
+  assert.equal(hits(scratch, "errorWorkflow", "drift").length, 1, "a link to a workflow this repo does not review");
+
+  // The two "no name" cases are different, and only the flag says which: an offline export that could not ask,
+  // and a live verify that asked and got nothing back (D209's dangling link - a failure sent nowhere).
+  const blind = verifyDocument(linked, CADENCE);
+  assert.equal(hits(blind, "errorWorkflow", "note").length, 1, "offline: say what could not be resolved, rather than warn");
+
+  const broken = verifyDocument(linked, CADENCE, { errorWorkflowName: null, errorWorkflowLookedUp: true });
+  assert.equal(hits(broken, "errorWorkflow", "warn").length, 1, "a live verify asked, and no workflow answers to that id - the link points nowhere");
+});
+
 test("pinned data is fatal: the run would answer from a stale snapshot", () => {
   const wf = clone();
   wf.pinData = { "02 Read the series history": [{ json: { data: { group: null } } }] };

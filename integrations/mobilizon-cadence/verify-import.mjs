@@ -40,6 +40,8 @@ import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { runCodeNode, runCodeChain } from "./lib/sandbox.mjs";
 import { checkProbe } from "./build-probe.mjs";
+import { checkAlerter } from "./build-alerter.mjs";
+import { checkHeartbeat } from "./build-heartbeat.mjs";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
 const config = await import(new URL("./series.config.mjs", import.meta.url).href);
@@ -47,6 +49,27 @@ const { INSTANCE, CREDENTIALS, RUN } = config;
 
 export const CADENCE = JSON.parse(readFileSync(here + "n8n/cadence-workflow.json", "utf8"));
 export const PROBE = JSON.parse(readFileSync(here + "n8n/env-probe.json", "utf8"));
+export const WATCHER = JSON.parse(readFileSync(here + "n8n/error-watcher.json", "utf8"));
+export const HEARTBEAT = JSON.parse(readFileSync(here + "n8n/heartbeat.json", "utf8"));
+
+/**
+ * Every artifact this repo reviews, by the name it carries on the canvas.
+ *
+ * A registry rather than a `name === PROBE.name ? PROBE : CADENCE` ternary, because there are four now and a
+ * ternary silently calls anything that is not the probe the cadence - which would have read the error watcher's
+ * bytes against the cadence's safety invariants and reported a clean watcher as drift (D206).
+ */
+export const BASELINES = [
+  { doc: CADENCE, file: "n8n/cadence-workflow.json", key: "cadence", build: "build-workflow.mjs" },
+  { doc: PROBE, file: "n8n/env-probe.json", key: "probe", build: "build-probe.mjs" },
+  { doc: WATCHER, file: "n8n/error-watcher.json", key: "watcher", build: "build-alerter.mjs" },
+  { doc: HEARTBEAT, file: "n8n/heartbeat.json", key: "heartbeat", build: "build-heartbeat.mjs" },
+];
+
+/** Resolve a canvas name to its baseline. Unknown returns null so the caller can say which names exist. */
+export function baselineFor(name) {
+  return BASELINES.find((b) => b.doc.name === name) ?? null;
+}
 
 // The names the safety invariants are written against. If a name changes in the artifact, this file must
 // change with it - which is the point: they are load-bearing, not incidental.
@@ -161,7 +184,7 @@ const mask = (s) => {
  * The check itself. Returns findings (severity, where, what, means) plus the two fingerprints and what the
  * exported copy would do.
  */
-export function verifyDocument(got, expected = CADENCE) {
+export function verifyDocument(got, expected = CADENCE, ctx = {}) {
   const F = [];
   const add = (sev, where, what, means) => F.push({ sev, where, what, means });
 
@@ -309,8 +332,19 @@ export function verifyDocument(got, expected = CADENCE) {
   for (const k of new Set([...Object.keys(sa), ...Object.keys(sb)])) {
     if (sa[k] === sb[k]) continue;
     if (k === "timezone") add("fatal", `settings.timezone`, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the trigger's 09:00 is in this zone: leave it to the instance default and the run moves hours without anyone touching a node");
+    else if (k === "errorWorkflow" && sa[k] === undefined) {
+      // The link is instance-local by construction (D206): the watcher's id is issued by whichever n8n this is,
+      // so no artifact can carry it and every linked copy differs from its artifact here. What is checkable is
+      // *who* it points at, so the name is resolved by the caller when it can (a live verify always can).
+      const named = ctx.errorWorkflowName;
+      if (named && baselineFor(named)) add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - the reviewed watcher`, "linked by `n8n-api.mjs link`: the id belongs to this instance, which is why the artifact does not declare it (D206)");
+      else if (named) add("drift", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - a workflow this repo does not review`, "the cadence's failures are pointed at something unverified: it will look like alerting and be nothing (D206). Re-run `n8n-api.mjs link cadence watcher`");
+      else if (ctx.errorWorkflowLookedUp) add("warn", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - no workflow on this instance answers to that id`, "the link points at nothing, so a failure is being sent nowhere. Re-run `n8n-api.mjs link cadence watcher`");
+      else add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - this mode cannot ask the instance whose id that is`, "run `n8n-api.mjs verify cadence` (or open the cadence's Settings) to see whether it is the reviewed watcher");
+    }
     else if (k === "executionOrder") add("fatal", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the v0 order evaluates expressions differently than every test in this directory assumes");
     else if (/^saveData|^savePre|^saveManual/.test(k)) add("note", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "execution retention: the packaged instance default on this box is save-on-success=none and manual=false, so these workflow settings are the only thing that makes a dry run readable (D201); and node 03's request body carries a password, so pruning stays a host job (docs/security.md)");
+    else if (k === "availableInMCP" && sa[k] === undefined) add("note", `settings.availableInMCP`, `${JSON.stringify(sb[k])} vs undeclared`, "the instance marks a workflow it created as available to its own MCP server, and this repo deliberately does not declare it: whether a workflow is reachable through MCP is an instance decision (D202), and writing false would fight that default on every import");
     else add("warn", `settings.${k}`, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "a workflow setting nobody set in the repo");
   }
 
@@ -326,6 +360,18 @@ export function verifyDocument(got, expected = CADENCE) {
   const isProbe = expected.name === PROBE.name;
   if (isProbe) {
     for (const p of checkProbe(got)) add("fatal", "probe", p, "this document claims to be the read-only probe; its own build invariants say why it must stay that way");
+  }
+  // Each artifact is held to **its own** argument, not the cadence's. The watcher's whole safety case is that it
+  // calls nothing but the alert server and carries no Mobilizon surface (D206); run the cadence's rules over it
+  // and a correct watcher reads as drift - which is how a watcher gets edited into something worse on the canvas.
+  // Same shape as `isProbe` above, and both checkers are the ones `check:cadence` runs on the file itself.
+  const isWatcher = expected.name === WATCHER.name;
+  const isHeartbeat = expected.name === HEARTBEAT.name;
+  if (isWatcher) {
+    for (const p of checkAlerter(got)) add("fatal", "watcher", p, "this document claims to be the error watcher; build-alerter.mjs' invariants say why it must stay minimal (D206)");
+  }
+  if (isHeartbeat) {
+    for (const p of checkHeartbeat(got)) add("fatal", "heartbeat", p, "this document claims to be the weekly heartbeat; build-heartbeat.mjs' invariants say why it must stay read-only and unconditional (D205)");
   }
   const intoCreate = (into.get(N.create) ?? []);
   if (isCadence && (intoCreate.length !== 1 || intoCreate[0].from !== N.gate)) {
@@ -344,7 +390,9 @@ export function verifyDocument(got, expected = CADENCE) {
         if (isCadence && n.name === N.notify) {
           if (parsed.origin !== new URL(config.ALERT.rootUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only the alert server ${config.ALERT.rootUrl} may be called by the delivery node`);
           if (parsed.pathname !== "/") add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, "ntfy publishes JSON to the server root, not to a topic path");
-        } else if (parsed.origin !== new URL(INSTANCE.baseUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only ${INSTANCE.baseUrl} may be called`);
+        } else if ((isCadence || isProbe) && parsed.origin !== new URL(INSTANCE.baseUrl).origin) {
+          add("fatal", `${n.name}.url`, parsed.origin, `only ${INSTANCE.baseUrl} may be called (the watcher and heartbeat answer to their own invariants instead, D206/D205)`);
+        }
         else if (isCadence && parsed.pathname !== INSTANCE.graphqlPath) add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, `5.2.4 serves ${INSTANCE.graphqlPath} on this instance (probed 2026-11-04)`);
       } catch { add("fatal", `${n.name}.url`, "not a URL", "the artifact uses the absolute endpoint literally"); }
     }
@@ -518,7 +566,13 @@ let doc;
 try { doc = JSON.parse(readFileSync(file, "utf8")); }
 catch (e) { console.error(`${file}: ${e.message}`); process.exit(2); }
 const target = Array.isArray(doc) ? doc[0] : doc;
-const expected = target?.name === PROBE.name ? PROBE : CADENCE;
+const base = baselineFor(target?.name ?? "");
+if (!base) {
+  console.error(`verify-import: no reviewed artifact is named ${JSON.stringify(target?.name)}. Known: ${BASELINES.map((b) => `${b.key} = ${b.doc.name} (${b.file})`).join(" | ")}`);
+  console.error("if the copy on the canvas was renamed by hand, that is the finding: a renamed copy is a copy someone made by hand (D184)");
+  process.exit(2);
+}
+const expected = base.doc;
 
 const res = verifyDocument(target, expected);
 if (args.includes("--fingerprint")) {

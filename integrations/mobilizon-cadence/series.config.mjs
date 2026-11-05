@@ -84,11 +84,19 @@ export const RUN = {
  * What this costs, named rather than argued: with success data stored, this workflow's own run records hold the
  * sign-in request body. Whether n8n 2.45.7 masks a `$env` password inside stored run data is **not measured**,
  * so pruning stays a host job (docs/security.md) and `verify-import.mjs` prints this as a NOTE, not a pass.
+ *
+ * One key that used to be here is gone, and the reason is a measurement rather than a preference:
+ * `savePreExecutionData` is **not** a setting the public API accepts. The first live `POST /api/v1/workflows`
+ * (2026-11-05, n8n 2.45.7 / Public API 1.1.1) answered `400 request/body/settings Unrecognized key(s) in object:
+ * 'savePreExecutionData'`, and the instance's own spec (`workflowPublicDto.generated`, saved at
+ * `.design/tmp-n8n/openapi.json`) lists seventeen keys, that one not among them. The door is strict, which is a
+ * gift: `n8n-api.mjs` now refuses any settings key outside that list **before** the POST, so a flag this build
+ * cannot carry fails at build time, not at the instance. A key the API cannot carry also cannot live in the
+ * artifact - the file, the wire and the canvas are meant to be the same bytes (D203).
  */
 export const RETENTION = {
   saveDataErrorExecution: "all",
   saveDataSuccessExecution: "all",
-  savePreExecutionData: false,
   saveManualExecutions: true,
 };
 

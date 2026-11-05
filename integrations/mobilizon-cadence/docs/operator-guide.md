@@ -113,6 +113,9 @@ What REST cannot do here: **run it**. This instance's API has no manual-run endp
 spec, 2026-11-05 — 107 paths, no `/workflows/{id}/run`). Firing a dry run and reading the execution is the MCP
 door: `node .notes/bin/n8n-mcp.mjs execute_workflow …` and `get_workflow_execution` (D197, and D201 for why the
 artifact now declares its own retention). The two doors are complementary: **REST carries the artifact, MCP runs it.**
+One caveat, measured the same day the door was needed: `POST /mcp-server/http` answers `401` for both tokens this rig
+holds, so the MCP half is currently **aspirational** — until a token this build accepts is minted, running a workflow
+means pressing **Execute Workflow** in the UI, and only REST half of the pair is live.
 
 Expected: 14 nodes, no red "node not installed" badges, and **no credential to attach** — the two authed
 requests authenticate inside the run. If n8n warns about node versions, it is offering to upgrade
@@ -397,7 +400,7 @@ skip, which is why it is config and not a deletion.
 The whole behaviour is `series.config.mjs` + `lib/core.mjs`, and both are covered by
 [`test-plan.md`](test-plan.md).
 
-## 10. The two watchmen (built, gated, not yet on the instance)
+## 10. The two watchmen (imported and verified on the instance; nothing scheduled yet)
 
 Two more artifacts come out of the same builders, and neither one is the cadence:
 
@@ -418,27 +421,58 @@ Three things about them are not negotiable, and both builders fail if any is bro
   (`"cadence kept red on purpose"`); the watcher recognises it, sets `duplicate:true`, and **withholds the send**
   while writing `suppressedWhy` into the log — cadence's `23` already delivered that incident (D194).
 
-### What is yours to do, in order
+### What is on the instance now (@measured 2026-11-05, `n8n-api.mjs status`)
 
-Today the import path (`n8n-api.mjs push`) knows only two artifacts, `cadence` and `probe`, and the link is a
-**picker in the n8n UI** — the error-workflow target is an *instance-local* id, so no reviewed file may contain one
-(D206). Until a `link` verb exists:
+All four reviewed artifacts are imported, and each one reads back as **0 fatal, 0 drift, 0 warn - the reviewed
+artifact**. The import path is `n8n-api.mjs`, which now knows all four by key (`cadence`, `probe`, `watcher`,
+`heartbeat`) and refuses a canvas name it does not review:
 
-1. Import each file in the n8n UI (**⋯ → Import from file**), on the instance, from the checked-out branch:
-   `integrations/mobilizon-cadence/n8n/error-watcher.json` and `.../n8n/heartbeat.json`. Both land **inactive**.
-2. Open each, confirm the Code nodes typecheck (the builders' invariants are the same ones `check:cadence` runs), and
-   **activate the heartbeat**. The watcher needs no activation beyond existing — an error workflow is fired by the
-   platform, not by a schedule.
-3. Open the **cadence** → **Settings** → **Error Workflow** → pick *Mobilizon cadence - error watcher*. This is the
-   step that makes D206 real; nothing in the repo can do it for you.
-4. Rehearse the watcher without waiting for an outage: press **Execute Workflow** on it. `ErrorTrigger`'s own mock
+```bash
+export N8N_API_KEY="$(cat .notes/n8n-public-api-token)"   # 0600, gitignored, never in a workflow body
+node integrations/mobilizon-cadence/n8n-api.mjs status
+node integrations/mobilizon-cadence/n8n-api.mjs verify cadence
+```
+
+| on the instance | id | state |
+|---|---|---|
+| cadence | `Ys3CdS3CSzfXeMkn` | inactive; **`settings.errorWorkflow` → the watcher**, written by `link` and read back |
+| error watcher | `dTvHkp7CmEyVNxgf` | **published** (n8n 2.x calls that activating - see below); it has no schedule, so it can only be fired by another workflow's failure |
+| heartbeat | `rCSdarhTstt3jILw` | inactive - awaiting your ruling to activate |
+| environment probe | `nSGb9ICHP6w9vFAO` | inactive, read-only |
+
+**The step no one predicted: a watcher has to be published before it can be named.** The first live `link` was
+refused - `400 The selected error workflow has no published version.` A workflow imported through this API arrives
+unpublished, and n8n will not point a workflow's failures at a version that does not exist. On this build
+`POST /workflows/{id}/activate` *is* publish (the spec: "in n8n v1, this action was termed activating"), so:
+
+```bash
+node integrations/mobilizon-cadence/n8n-api.mjs activate watcher     # verifies first; a watcher has no schedule
+node integrations/mobilizon-cadence/n8n-api.mjs link cadence watcher # writes settings.errorWorkflow, reads it back
+```
+
+`link` refuses a self-watch, a watcher that does not verify, an unpublished watcher, and a watched copy this repo
+does not recognise - and in every case nothing is written. In the UI the same link is cadence → **Settings** →
+**Error Workflow**; the value is an instance-local id, which is why no reviewed file may contain one (D206).
+
+### What is still yours to do
+
+1. **Activate the heartbeat** (`... n8n-api.mjs activate heartbeat`). It is read-only and sends one ntfy note a
+   week; the cadence stays inactive until you rule on it, since that one signs in to Mobilizon.
+2. **Rehearse the watcher** without waiting for an outage: press **Execute Workflow** on it. `ErrorTrigger`'s own mock
    payload (read off the node's source on this instance, 2026-11-05) arrives, `A1` composes, `A2` lets it through if
-   `NTFY_TOKEN` is set, and a message lands on your phone. If it does not, `A1`'s output still shows you the composed
-   title and body.
-5. Prove the duplicate rule once, cheaply: set `MOBILIZON_PASSWORD` wrong, run the cadence. `23` sends the alert,
-   `24` throws, the watcher fires — and **sends nothing** (`suppressedWhy` names the reason). One message, one red
+   `NTFY_TOKEN` is set on the instance, and a message lands on your phone. If it does not, `A1`'s output still shows
+   the composed title and body. There is no run endpoint in this API version (Public API 1.1.1 exposes executions for
+   *reading* only). **The MCP door is not open right now:** `POST /mcp-server/http` answers `401 {"message":"Unauthorized"}`
+   with the public API key as a bearer *and* with `.notes/n8n-mcp-token` (measured 2026-11-05), so today a rehearsal is a
+   **UI press** until an MCP token this build accepts is minted.
+3. **Prove the duplicate rule once**, cheaply: set `MOBILIZON_PASSWORD` wrong, run the cadence. `23` sends the alert,
+   `24` throws, the watcher fires - and **sends nothing** (`suppressedWhy` names the reason). One message, one red
    execution.
+4. **Delete the scratch copies** from the retention diagnosis, which are still on the canvas: `HO5PyBXP7TKbBQys`
+   and `OZNvFxoKUabfzwvY` (both named `... DELETE ME`). `status` prints them as `not ours`. Also `gTPNPCgjU7L0fwiZ`
+   ("Add Next Math Bi-monthly Math Social Event"), the 3-node scratch workflow from before this repo had builders -
+   it is not ours either, and only you know whether it is still wanted.
 
 Rebuild after any config change (`node integrations/mobilizon-cadence/build-alerter.mjs`,
-`build-heartbeat.mjs`), and re-import: the artifact hash is what `verify-import.mjs` compares, and a stale copy on
-the instance is drift, not an older version.
+`build-heartbeat.mjs`), then `n8n-api.mjs update <id> <key>` and re-verify: the artifact hash is what the checker
+compares, and a stale copy on the instance is drift, not an older version.

@@ -215,5 +215,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D205** (2026-11-05) — the weekly heartbeat is a read-only proof of life that reports the rows that exist, not a second planner (2026-11-05, built)
 - **D206** (2026-11-05) — a workflow-level error workflow is a separate artifact, linked by instance id at runtime, and it stays quiet when cadence already spoke (2026-11-05, built)
 - **D207** (2026-06-04) — Schedule Trigger v1 on this instance reads `triggerAtDay`/`triggerAtHour`/`triggerAtMinute`; `triggerAt` is not a parameter and the cadence was firing at midnight while its own comments said 09:00 (measured 2026-06-04)
+- **D208** (2026-11-05) — The public API is strict about `settings` and body keys; the accepted sets are read off the instance's own spec and are now gates, not folklore (measured 2026-11-05, n8n 2.45.7 / Public API 1.1.1)
+- **D209** (2026-11-05) — On n8n 2.x an imported workflow has no published version, so a watcher must be published before it can be named as an error workflow; `activate` *is* publish (measured 2026-11-05)
+- **D210** (2026-11-05) — A reviewed file may not declare `active`, but a live copy must still round-trip; `importBody` now says which is which (measured 2026-11-05)
 
-Defined: 207 (D1-D207). Unused ids: none.
+Defined: 210 (D1-D210). Unused ids: none.
