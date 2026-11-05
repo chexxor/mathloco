@@ -68,6 +68,31 @@ export const RUN = {
 };
 
 /**
+ * Execution retention, in the runtime's own words (D201, 2026-11-05).
+ *
+ * Measured on the live instance by A/B on a throwaway workflow: the YunoHost package ships
+ * `EXECUTIONS_DATA_SAVE_ON_SUCCESS=none` and `EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=false` in its rendered `.env`,
+ * so a successful run - manual or scheduled - is never persisted. The symptom is not an error: the run returns
+ * an execution id, and reading it answers `Execution '2' not found`. A dry run nobody can read is a dry run
+ * nobody ran, so both artifacts declare their own retention, and the A/B proved the workflow's settings beat
+ * the instance default.
+ *
+ * Per-workflow rather than instance-wide on purpose (operator ruling 2026-11-05, "1c"): instance-wide `all`
+ * would also keep every other workflow's run data - one of which may hold a password - and a hand-edited `.env`
+ * is re-rendered from the package template at the next `yunohost app upgrade` (D199).
+ *
+ * What this costs, named rather than argued: with success data stored, this workflow's own run records hold the
+ * sign-in request body. Whether n8n 2.45.7 masks a `$env` password inside stored run data is **not measured**,
+ * so pruning stays a host job (docs/security.md) and `verify-import.mjs` prints this as a NOTE, not a pass.
+ */
+export const RETENTION = {
+  saveDataErrorExecution: "all",
+  saveDataSuccessExecution: "all",
+  savePreExecutionData: false,
+  saveManualExecutions: true,
+};
+
+/**
  * The alert channel - **one topic on the operator's own ntfy server** (D194, adopted 2026-11-04).
  *
  * Measured on 2026-11-04 from this workspace (Linux), so a future session does not re-guess it:

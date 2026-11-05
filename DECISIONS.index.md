@@ -209,5 +209,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D199** (2026-11-05) — the YunoHost package's execution-retention settings are why "read the execution" fails; the instance-wide fix is a box change and a security trade (measured 2026-11-05; **superseded in part by D201 — the per-workflow setting is enough, the box need not change**)
 - **D200** (2026-11-05) — inbound webhooks on this n8n instance answer 403 `Basic realm="Webhook"` even with node authentication set to "none"; the check is n8n's, not the proxy's (measured 2026-11-05)
 - **D201** (2026-11-05) — execution retention is a per-workflow setting that beats the instance default, so a workflow that needs its run data read back declares it and the box stays as the packager shipped it (measured 2026-11-05)
+- **D202** (2026-11-05) — the operator accepted the four n8n rulings as recommended (`1c, 2a, 3a, 4a`): retention lives in the artifact, the API key gets re-minted, `visitors` stays, and the chain runs in the recommended order (2026-11-05)
+- **D203** (2026-11-05) — the n8n instance publishes its own OpenAPI unauthenticated, and that decides the split of labour between the two doors: REST carries the artifact, MCP runs it (measured 2026-11-05)
+- **D204** (2026-11-05) — this instance stores execution data **unredacted by default**, so the password-in-run-data question now has a named switch and no measurement; the experiment is three steps and needs no Mobilizon credential (read 2026-11-05)
 
-Defined: 201 (D1-D201). Unused ids: none.
+Defined: 204 (D1-D204). Unused ids: none.

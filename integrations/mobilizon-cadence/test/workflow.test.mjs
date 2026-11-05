@@ -82,6 +82,14 @@ test("the workflow is one linear chain of the expected nodes", () => {
     "24's throw is deliberately unwired - it is the one failure a future workflow-level error workflow can still catch");
   assert.equal(wf.settings.executionOrder, "v1");
   assert.equal(wf.settings.timezone, "America/Chicago", "the trigger's 09:00 has to mean the club's hour");
+  // Retention is not decoration: the YunoHost package ships save-on-success=none and manual=false, and the
+  // workflow's own settings are the only thing that overrides them per-workflow (measured A/B on the live
+  // instance 2026-11-05, D201). Without these, a dry run returns an execution id and reads back "not found".
+  assert.equal(wf.settings.saveManualExecutions, true, "a manual dry run with no stored execution is a dry run nobody read");
+  for (const k of ["saveDataErrorExecution", "saveDataSuccessExecution"]) {
+    assert.equal(wf.settings[k], "all", `settings.${k} must stay "all" - the run data is the only evidence a dry run produced`);
+  }
+  assert.equal(wf.settings.errorWorkflow, undefined, "the workflow-level error workflow is parked with a trigger (D195); a dangling id here swallows every alert silently");
   assert.ok(!wf.pinData || Object.keys(wf.pinData).length === 0, "pinned data would make a production run answer from a stale snapshot");
   for (const [from, ports] of Object.entries(wf.connections)) {
     for (const [port, lists] of Object.entries(ports)) {

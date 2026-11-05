@@ -71,7 +71,7 @@ function expand(nodeSource, nodeLabel) {
 const n8nTarget = { httpRequest: 4, code: 2, if: 2, scheduleTrigger: 1 };
 
 const config = await import(new URL("./series.config.mjs", import.meta.url).href);
-const { INSTANCE, CREDENTIALS, RUN, SERIES, ALERT } = config;
+const { INSTANCE, CREDENTIALS, RUN, SERIES, ALERT, RETENTION } = config;
 const ENDPOINT = `${INSTANCE.baseUrl.replace(/\/$/, "")}${INSTANCE.graphqlPath}`;
 
 const NAMES = {
@@ -111,6 +111,10 @@ const NAMES = {
 const ON_ERROR = ["cfg", "history", "signIn", "plan", "gate", "create", "audit", "report"].map((k) => NAMES[k]);
 const RETRY = ["history", "audit", "notify"].map((k) => NAMES[k]);
 const RETRY_SETTING = { retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 };
+
+// Execution retention comes from series.config.mjs (D201), and the invariant below checks that the spread
+// actually applied. The short version of why it is not left to the instance: the packaged default on this box
+// is save-on-success=none and manual=false, so an unreadable dry run is the default outcome, not the exception.
 
 /** One expression shape for every GraphQL call: the document and its variables travel on the item, so the
  *  HTTP nodes hold no API text of their own and cannot drift from `lib/queries.mjs`. */
@@ -366,12 +370,7 @@ const workflow = {
   settings: {
     executionOrder: "v1",
     timezone: INSTANCE.timezone ?? "America/Chicago",
-    // Named explicitly rather than defaulted: the sign-in node's request body contains a password, and
-    // execution data is where it would be retained. docs/security.md weighs this against the need to read a
-    // scheduled dry run after the fact; the mitigation chosen was host-level pruning, not turning data off.
-    saveDataErrorExecution: "all",
-    saveDataSuccessExecution: "all",
-    savePreExecutionData: false,
+    ...RETENTION,
   },
   meta: { templateCredsSetupCompleted: false },
   tags: ["mobilizon", "events", "cadence"],
@@ -523,6 +522,16 @@ if (RUN.dryRun === true && !READ("nodes/04-plan.js").includes("planSeries")) {
 // The one structural assumption the linear graph makes.
 const groups = [...new Set(SERIES.map((s) => s.groupActor))];
 if (groups.length > 1) problems.push(`series span ${groups.length} groups; the chain reads one group per run (see ${NAMES.cfg})`);
+
+// Retention is checked, not trusted: the three flags are what make a scheduled or manual dry run readable in
+// the runtime, and a workflow that silently inherits the packaged `none` produces an execution id and no data
+// (D201 - that is exactly how it presented on 2026-11-05, as a `not found` for an execution that had run).
+for (const [k, want] of Object.entries(RETENTION)) {
+  if (workflow.settings[k] !== want) {
+    problems.push(`settings.${k} is ${JSON.stringify(workflow.settings[k])}, must be ${JSON.stringify(want)} - without it n8n keeps no run data for this workflow and every dry run reads back as "execution not found"`);
+  }
+}
+if (workflow.settings.errorWorkflow) problems.push("settings.errorWorkflow is set in the generator, but the workflow-level error workflow is parked with a trigger (D195) - a dangling id there silently swallows every alert");
 
 // Every series must be plannable: the fields core.mjs needs, or the run alerts at 09:00 and nobody is watching.
 for (const s of SERIES) {

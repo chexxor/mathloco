@@ -310,7 +310,7 @@ export function verifyDocument(got, expected = CADENCE) {
     if (sa[k] === sb[k]) continue;
     if (k === "timezone") add("fatal", `settings.timezone`, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the trigger's 09:00 is in this zone: leave it to the instance default and the run moves hours without anyone touching a node");
     else if (k === "executionOrder") add("fatal", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the v0 order evaluates expressions differently than every test in this directory assumes");
-    else if (/^saveData|^savePre/.test(k)) add("note", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "execution retention: node 03's request body carries a password, so pruning is a host job (docs/security.md)");
+    else if (/^saveData|^savePre|^saveManual/.test(k)) add("note", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "execution retention: the packaged instance default on this box is save-on-success=none and manual=false, so these workflow settings are the only thing that makes a dry run readable (D201); and node 03's request body carries a password, so pruning stays a host job (docs/security.md)");
     else add("warn", `settings.${k}`, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "a workflow setting nobody set in the repo");
   }
 

@@ -206,7 +206,8 @@
     "timezone": "America/Chicago",
     "saveDataErrorExecution": "all",
     "saveDataSuccessExecution": "all",
-    "savePreExecutionData": false
+    "savePreExecutionData": false,
+    "saveManualExecutions": true
   },
   "meta": {
     "templateCredsSetupCompleted": false

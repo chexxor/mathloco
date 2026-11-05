@@ -1,4 +1,4 @@
-# Architecture — eleven nodes, three rules, one artifact
+# Architecture — fourteen nodes, three rules, one artifact
 
 ## Why the shape is what it is
 

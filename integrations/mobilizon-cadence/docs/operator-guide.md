@@ -80,7 +80,41 @@ the other half of what a 09:00 failure looks like.
 
 n8n → **Workflows → Import from File** → `n8n/cadence-workflow.json`.
 
-Expected: 11 nodes, no red "node not installed" badges, and **no credential to attach** — the two authed
+### 1b. The scripted way, once the API key exists (operator ruling "2a", D203)
+
+`n8n-api.mjs` imports **the reviewed bytes** over n8n's public REST API and then reads them back through the same
+checker this section describes. The key is minted in the n8n UI (Settings → n8n API → Create), kept in
+`.notes/n8n-public-api-token` on the operator's box (host-local, `0600`), and read from the shell as
+`N8N_API_KEY` — the variable *name* is in the repo, the value never is (D177).
+
+```bash
+export N8N_API_KEY="$(cat .notes/n8n-public-api-token)"
+node integrations/mobilizon-cadence/n8n-api.mjs status      # what the instance holds, and whether it is ours
+node integrations/mobilizon-cadence/n8n-api.mjs push probe   # step 0's probe, inactive
+node integrations/mobilizon-cadence/n8n-api.mjs push         # the cadence, inactive
+node integrations/mobilizon-cadence/n8n-api.mjs verify <id>  # the live copy, every time anything is edited
+```
+
+Three refusals are built in, and `test/api.test.mjs` executes each one rather than describing it:
+
+- **no duplicate.** If a workflow already carries the reviewed name, `push` stops and prints the `update <id>`
+  command instead. The guide's warning about n8n importing a second same-named workflow is now enforced by the
+  thing that does the importing.
+- **no activation of an unverified copy.** `activate` fetches the live document, runs `verify-import.mjs`'s own
+  checker, and refuses on any `fatal` or `drift` — the POST is never sent. Activating a drifted copy is how an
+  unreviewed workflow ends up on a schedule.
+- **no server-owned fields on the wire, and no silent `active:true`.** `id`, `activeVersionId`, `meta`, `tags` and
+  the rest are what the instance's OpenAPI marks `readOnly`; the test asserts that every field the artifact carries
+  which the API does not accept is on that strip list, so a field added to the generator later cannot ride onto the
+  instance uninvited. The import POST carries an **`Idempotency-Key`** derived from the artifact's fingerprint, so a
+  timed-out import retried is not a second workflow.
+
+What REST cannot do here: **run it**. This instance's API has no manual-run endpoint (measured against its own
+spec, 2026-11-05 — 107 paths, no `/workflows/{id}/run`). Firing a dry run and reading the execution is the MCP
+door: `node .notes/bin/n8n-mcp.mjs execute_workflow …` and `get_workflow_execution` (D197, and D201 for why the
+artifact now declares its own retention). The two doors are complementary: **REST carries the artifact, MCP runs it.**
+
+Expected: 14 nodes, no red "node not installed" badges, and **no credential to attach** — the two authed
 requests authenticate inside the run. If n8n warns about node versions, it is offering to upgrade
 `httpRequest`/`if`/`code`; the artifact deliberately names the *lowest* type versions that carry the features
 used, so an upgrade is safe but not required.

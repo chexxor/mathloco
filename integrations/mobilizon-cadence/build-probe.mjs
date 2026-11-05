@@ -36,7 +36,7 @@ import { resolve } from "node:path";
 
 const CHECK = process.argv.includes("--check");
 const config = await import(new URL("./series.config.mjs", import.meta.url).href);
-const { INSTANCE, CREDENTIALS } = config;
+const { INSTANCE, CREDENTIALS, RETENTION } = config;
 const OUT = new URL("./n8n/env-probe.json", import.meta.url);
 
 export const PROBE_NAME = "Mobilizon cadence - environment probe (read only)";
@@ -212,9 +212,9 @@ export function buildProbe() {
     settings: {
       executionOrder: "v1",
       timezone: INSTANCE.timezone ?? "America/Chicago",
-      saveDataErrorExecution: "all",
-      saveDataSuccessExecution: "all",
-      savePreExecutionData: false,
+      // The probe is run by hand, which is precisely the case the packaged instance default drops (D201):
+      // without saveManualExecutions the run answers an id and then "execution not found".
+      ...RETENTION,
     },
     meta: { templateCredsSetupCompleted: false },
     tags: ["mobilizon", "cadence-probe"],
@@ -325,6 +325,9 @@ export function checkProbe(wf) {
     problems.push(`the probe's name list is not what series.config.mjs declares (${wantedLiteral}) - so it is checking names nobody set`);
   }
   if (wf.settings?.executionOrder !== "v1") problems.push("settings.executionOrder is not v1 - the older order evaluates expressions differently than every test here assumes");
+  for (const [k, want] of Object.entries(RETENTION)) {
+    if (wf.settings?.[k] !== want) problems.push(`probe settings.${k} is ${JSON.stringify(wf.settings?.[k])}, must be ${JSON.stringify(want)} - the probe is answered by reading its execution back, and the packaged instance default keeps no successful runs (D201)`);
+  }
   return problems;
 }
 
