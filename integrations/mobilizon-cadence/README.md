@@ -105,6 +105,11 @@ fires, which was this artifact's silent fault until 2026-11-05.
 Node-by-node detail, including what each execution should show, is in
 [`docs/architecture.md`](docs/architecture.md).
 
+The graph was reviewed against n8n's own skill set (`github.com/n8n-io/skills`, upstream `27b6b9f`); D195 records
+where it agreed and where this rig overrides it. Its plugin bundles an `n8n-mcp` server pointed at an instance URL —
+**not wired here**, because the host answers `302 → /yunohost/sso` for every path and is LAN-only (D182). Read the
+skills, review the artifact in this directory.
+
 ## Start it up
 
 1. Set the two environment variables on the n8n host and import `n8n/cadence-workflow.json` —
