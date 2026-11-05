@@ -64,11 +64,20 @@ conditional, so the un-photographed row keeps the geometry it had, and a designe
 box rather than an empty one (DESIGN.md "States").
 
 **The event art (PS-4), and what we may say about it.** `event-2026-11-07-club-social.png` is
-**the club's own image**, mirrored from the organizer's event page
-(`.../media/1f54c290…png?name=bimonthly_social.png`; curl 200, `image/png`, **954x460**, **127,098 bytes**,
-fetched 2026-11-04) rather than linked, so the site cannot 404 on a visitor over a file it does not serve
-(ruling 10(a), D190).
+**the club's own image**, mirrored from the organizer's own media rather than linked:
+`https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png`
+(curl 200, `image/png`, **954x460**, **127,098 bytes**, fetched 2026-11-04) - mirrored so the site cannot 404 on a
+visitor over a file it does not serve (ruling 10(a), D190).
 
+- **Provenance is content-addressed, not remembered:** `sha256sum` of the mirrored file is
+  `1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c`, which is the path segment Mobilizon serves it
+  under. Re-verify with `sha256sum src/assets/photos/event-2026-11-07-club-social.png` and compare against the URL in
+  `data/events.json`'s `image` field. A filename can be re-pointed at other bytes; a hash cannot.
+- **Which rows have art (measured 2026-11-04, `integrations/mobilizon-cadence/fixtures/group-history-2026-11-04.json`):**
+  the 2026-11-07 row carries `bimonthly_social.png`; the three May/June rows carry a different file,
+  `Math_Book_Club_Header.png` (`2550d5ea…`), and the 2026-11-11 Parallel Learning row has `picture: null`. So the
+  `SLOT_ART` map in `src/components/Schedule.astro` being keyed by slug is not decoration - art is a property of the
+  row, and the parallel-learning row has none to attach.
 - **Rights line - PROPOSED, not ratified:** "the club's own event art, used with the organizer's permission."
   The ruling chose the mirror; the terms are the operator's to state, so this line is marked as a proposal in the
   file that ships it. Do not let it read as settled until the operator says the words.
@@ -76,6 +85,11 @@ fetched 2026-11-04) rather than linked, so the site cannot 404 on a visitor over
   read the frame - the session's model takes no images - and D170 forbids an alt inferred from a picture nobody
   saw. The organizer's own sentence, when it arrives, replaces it verbatim. It is the only `alt` on this site that
   describes a file rather than a picture, and that is deliberate rather than lazy.
+- **And the source has no caption to quote, which is why the ask goes to a person.** That row's GraphQL `picture` is
+  `{name: "bimonthly_social.png", url: ..., uuid: "c9110656-24d2-435e-b1c1-99a59d77690b"}` - a filename, not a
+  sentence - and the event page (a **4,755-byte** SSR shell, fetched 2026-11-04) has **no `alt` attribute anywhere**,
+  only `og:image`. D170 says quote the picture's page; there is nothing there, so this stays an open ask
+  (`.notes/to-mobilizon/answer-2026-11-04-late.md`, §5).
 
 Round 13 measured the only card the schedule section renders today - its no-source notice, not the future event
 card - and photographed it with and without a thumb: the card is **512x280.8** at 1240 with a **480px** content box,
