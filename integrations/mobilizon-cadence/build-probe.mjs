@@ -6,10 +6,13 @@
  *   node integrations/mobilizon-cadence/build-probe.mjs          # write the artifact
  *   node integrations/mobilizon-cadence/build-probe.mjs --check  # validate, write nothing, exit 1 on a problem
  *
- * Why it exists. `https://n8n.labradorius.com` sits behind the YunoHost SSO, so from outside that host the
- * cadence's own preconditions are unverifiable. Measured again 2026-11-04: `/`, `/healthz`, `/api/v1/workflows`
- * and `/mcp-server/http` all answer `302 -> labradorius.com/yunohost/sso`, and `192.168.1.120:5678` is
- * unreachable from this worktree. The four unknowns, each of which is a 09:00 failure waiting to happen:
+ * Why it exists. The cadence's own preconditions are not observable from a delegate's seat, so this probe
+ * answers them with one click on the n8n host. The route to that host has changed once already: measured
+ * 2026-11-04, `/`, `/healthz`, `/api/v1/workflows` and `/mcp-server/http` all answered
+ * `302 -> labradorius.com/yunohost/sso` and `192.168.1.120:5678` was unreachable from this worktree; measured
+ * 2026-11-05 the app answers for real and `/mcp-server/http` is driveable (D197). The five unknowns, each of
+ * which is a 09:00 failure waiting to happen, still live inside that host, which is why this probe is still the
+ * instrument:
  *
  *   1. may Code nodes see `$env`? (`N8N_BLOCK_ENV_ACCESS_IN_NODE` - and the install shape decides it: Docker,
  *      bare metal, PM2; nothing outside that host knows which)
@@ -33,7 +36,7 @@ import { resolve } from "node:path";
 
 const CHECK = process.argv.includes("--check");
 const config = await import(new URL("./series.config.mjs", import.meta.url).href);
-const { INSTANCE, CREDENTIALS } = config;
+const { INSTANCE, CREDENTIALS, RETENTION } = config;
 const OUT = new URL("./n8n/env-probe.json", import.meta.url);
 
 export const PROBE_NAME = "Mobilizon cadence - environment probe (read only)";
@@ -209,9 +212,9 @@ export function buildProbe() {
     settings: {
       executionOrder: "v1",
       timezone: INSTANCE.timezone ?? "America/Chicago",
-      saveDataErrorExecution: "all",
-      saveDataSuccessExecution: "all",
-      savePreExecutionData: false,
+      // The probe is run by hand, which is precisely the case the packaged instance default drops (D201):
+      // without saveManualExecutions the run answers an id and then "execution not found".
+      ...RETENTION,
     },
     meta: { templateCredsSetupCompleted: false },
     tags: ["mobilizon", "cadence-probe"],
@@ -322,6 +325,9 @@ export function checkProbe(wf) {
     problems.push(`the probe's name list is not what series.config.mjs declares (${wantedLiteral}) - so it is checking names nobody set`);
   }
   if (wf.settings?.executionOrder !== "v1") problems.push("settings.executionOrder is not v1 - the older order evaluates expressions differently than every test here assumes");
+  for (const [k, want] of Object.entries(RETENTION)) {
+    if (wf.settings?.[k] !== want) problems.push(`probe settings.${k} is ${JSON.stringify(wf.settings?.[k])}, must be ${JSON.stringify(want)} - the probe is answered by reading its execution back, and the packaged instance default keeps no successful runs (D201)`);
+  }
   return problems;
 }
 

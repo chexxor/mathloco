@@ -15,6 +15,7 @@
 import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { runCodeNode } from "../lib/sandbox.mjs";
+import { LOUD_THROW } from "../lib/core.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -66,10 +67,30 @@ test("the workflow is one linear chain of the expected nodes", () => {
   assert.deepEqual(wf.nodes.map((n) => n.name), [
     "Trigger every morning", "01 Config", "02 Read the series history", "03 Sign in",
     "04 Plan & decide", "05 Stop if nothing to write", "06 Create event", "07 Audit the date",
-    "08 Report", "21 Report error path", "22 Report a problem",
+    "08 Report", "21 Report error path", "22 Report a problem", "09 Tell a person?", "23 Notify on ntfy",
+    "24 Fail loudly",
   ]);
+  // The delivery chain, named: every reporter has somewhere to go, and the delivery node is the end of a path.
+  assert.deepEqual((wf.connections["21 Report error path"].main[0] ?? []).map((c) => c.node), ["23 Notify on ntfy"],
+    "a stage that threw must reach the delivery node without passing a condition that could drop it");
+  assert.deepEqual((wf.connections["22 Report a problem"].main[0] ?? []).map((c) => c.node), ["09 Tell a person?"]);
+  assert.deepEqual((wf.connections["09 Tell a person?"].main[0] ?? []).map((c) => c.node), ["23 Notify on ntfy"]);
+  assert.deepEqual((wf.connections["23 Notify on ntfy"].main[0] ?? []).map((c) => c.node), ["24 Fail loudly"],
+    "the delivery is never the end of a path: a failure n8n considers handled is not recorded as a failure, so the red execution has to be re-declared (nodes/24-fail-loudly.js)");
+  assert.equal((wf.connections["24 Fail loudly"]?.main ?? []).flat().filter(Boolean).length, 0,
+    "24 is terminal; wiring it back into a reporter would let a failed send produce a second, false alert");
+  assert.equal(wf.connections["24 Fail loudly"]?.error, undefined,
+    "24's throw is deliberately unwired - it is the one failure a future workflow-level error workflow can still catch");
   assert.equal(wf.settings.executionOrder, "v1");
   assert.equal(wf.settings.timezone, "America/Chicago", "the trigger's 09:00 has to mean the club's hour");
+  // Retention is not decoration: the YunoHost package ships save-on-success=none and manual=false, and the
+  // workflow's own settings are the only thing that overrides them per-workflow (measured A/B on the live
+  // instance 2026-11-05, D201). Without these, a dry run returns an execution id and reads back "not found".
+  assert.equal(wf.settings.saveManualExecutions, true, "a manual dry run with no stored execution is a dry run nobody read");
+  for (const k of ["saveDataErrorExecution", "saveDataSuccessExecution"]) {
+    assert.equal(wf.settings[k], "all", `settings.${k} must stay "all" - the run data is the only evidence a dry run produced`);
+  }
+  assert.equal(wf.settings.errorWorkflow, undefined, "the workflow-level error workflow is parked with a trigger (D195); a dangling id here swallows every alert silently");
   assert.ok(!wf.pinData || Object.keys(wf.pinData).length === 0, "pinned data would make a production run answer from a stale snapshot");
   for (const [from, ports] of Object.entries(wf.connections)) {
     for (const [port, lists] of Object.entries(ports)) {
@@ -80,35 +101,94 @@ test("the workflow is one linear chain of the expected nodes", () => {
   }
 });
 
-test("every request goes to the one Mobilizon host, over HTTPS, at the path 5.2.4 actually serves", () => {
+test("the trigger names the hour in parameters this instance reads (D207)", () => {
+  // Measured 2026-11-05 against this instance's own type definitions and the node source on n8n master:
+  // Schedule Trigger v1 has triggerAtDay / triggerAtHour / triggerAtMinute and **no** `triggerAt`. An unread
+  // parameter is worse than a missing one - the document claims 09:00 while the node fires at its default.
+  const t = node("Trigger every morning");
+  const iv = (t.parameters.rule.interval ?? [])[0] ?? {};
+  assert.equal(iv.field, "days");
+  assert.equal(iv.daysInterval, 1);
+  assert.ok(!Object.prototype.hasOwnProperty.call(iv, "triggerAt"), "triggerAt is not a Schedule Trigger parameter - it silently means midnight");
+  assert.equal(iv.triggerAtHour, 9);
+  assert.equal(iv.triggerAtMinute, 0);
+  assert.equal(wf.settings.timezone, "America/Chicago", "09:00 means nothing without the zone it is 09:00 in");
+});
+
+test("every wired error output has its onError property, and retry is only on the idempotent calls", () => {
+  // Both halves or neither. The artifact shipped for weeks with the wire and not the property, which is the
+  // half n8n needs: without it the slot never fires, the handler is unreachable, and the default stopWorkflow
+  // halts the run (vendor n8n-error-handling-official/NODE_ERROR_OUTPUTS.md, read 2026-11-05). D195.
+  const wiredError = new Set(Object.entries(wf.connections).filter(([, p]) => (p.error ?? []).flat().filter(Boolean).length).map(([f]) => f));
+  const expectWired = [
+    "01 Config", "02 Read the series history", "03 Sign in", "04 Plan & decide",
+    "05 Stop if nothing to write", "06 Create event", "07 Audit the date", "08 Report",
+  ];
+  assert.deepEqual([...wiredError].sort(), [...expectWired].sort(), "the set of fallible stages is a decision, not an accident");
+  for (const name of expectWired) {
+    assert.equal(node(name).onError, "continueErrorOutput", `${name}: a wired error output without onError is an unreachable branch`);
+  }
+  for (const name of ["Trigger every morning", "09 Tell a person?", "21 Report error path", "22 Report a problem", "23 Notify on ntfy", "24 Fail loudly"]) {
+    assert.equal(node(name).onError, undefined, `${name} must not route its own failure anywhere - stated reason in build-workflow.mjs`);
+    assert.equal(wiredError.has(name), false, `${name} must not have an error output wired`);
+  }
+  const retry = wf.nodes.filter((n) => n.retryOnFail === true).map((n) => n.name);
+  assert.deepEqual(retry, ["02 Read the series history", "07 Audit the date", "23 Notify on ntfy"],
+    "retry is per-node on purpose: 06 has no idempotency key on Mobilizon 5.2.4, so a retried write is a duplicate on the club's calendar; 03 would offer a wrong password to a fail2ban front");
+  for (const n of wf.nodes.filter((x) => x.retryOnFail === true)) {
+    assert.deepEqual([n.maxTries, n.waitBetweenTries], [3, 5000], `${n.name}: one retry policy in the graph (the vendor's documented defaults)`);
+  }
+});
+
+test("requests go to exactly two hosts - Mobilizon and the alert server - and only the delivery node may use the second", () => {
+  const ALERT = configItems()[0].json.ALERT;
+  assert.ok(ALERT, "01 Config does not carry ALERT - the reporters would compose messages nothing can send");
   const http = wf.nodes.filter((n) => n.type === "n8n-nodes-base.httpRequest");
-  assert.equal(http.length, 4, "read, sign in, create, audit");
+  assert.equal(http.length, 5, "read, sign in, create, audit, notify");
   for (const n of http) {
     assert.equal(n.parameters.sendQuery, false, `${n.name}: a query string is where a token lands in an access log`);
+    if (n.name === "23 Notify on ntfy") continue;   // asserted against ALERT below, not against the API host
     assert.equal(new URL(n.parameters.url).origin, "https://mobilizon.labradorius.com", n.name);
     assert.equal(new URL(n.parameters.url).pathname, "/api/v1", `${n.name} points at a path this instance 404s`);
     assert.equal(n.parameters.options.response.response.neverError, false, `${n.name}: swallowing an HTTP error hides a failed write`);
     assert.match(n.parameters.jsonBody, /^=\{\{ JSON\.stringify\(/, `${n.name}: the document must travel on the item, not be retyped here`);
   }
+  const notify = node("23 Notify on ntfy");
+  assert.equal(notify.parameters.url, ALERT.rootUrl, "the delivery node's endpoint comes from series.config.mjs");
+  assert.equal(new URL(notify.parameters.url).host, ALERT.host);
+  assert.equal(new URL(notify.parameters.url).pathname, "/", "ntfy takes JSON publishes at the root, not at a topic path");
+  assert.match(notify.parameters.jsonBody, /^=\{\{ JSON\.stringify\(\$json\.ntfy\) \}\}$/,
+    "the message body is composed by a reasoning node, so the wire holds no rule of its own");
+  assert.deepEqual(notify.parameters.options.batching, { enabled: false }, "a send that failed is reported once, not hammered");
+  for (const n of http.filter((x) => x.name !== "23 Notify on ntfy")) {
+    assert.notEqual(new URL(n.parameters.url).host, ALERT.host, `${n.name} may not call the alert server`);
+  }
 });
 
-test("only the two nodes that write are authenticated, and no secret is baked in", () => {
+test("three requests carry an Authorization header - the two writes and the alert - and no secret is baked in", () => {
   const json = JSON.stringify(wf.nodes);
   // Mobilizon 5.2.4 takes a session bearer from the login mutation; n8n credential blocks would be a second,
   // untracked auth path.
   assert.deepEqual(wf.nodes.filter((n) => n.credentials && Object.keys(n.credentials).length).map((n) => n.name), []);
   const authed = wf.nodes.filter((n) => (n.parameters.options?.headers ?? []).some((h) => h.name === "Authorization"));
-  assert.deepEqual(authed.map((n) => n.name), ["06 Create event", "07 Audit the date"]);
-  for (const n of authed) {
+  assert.deepEqual(authed.map((n) => n.name), ["06 Create event", "07 Audit the date", "23 Notify on ntfy"]);
+  for (const n of authed.filter((x) => x.name !== "23 Notify on ntfy")) {
     const h = n.parameters.options.headers.find((x) => x.name === "Authorization");
     assert.match(h.value, /^\=\{\{ 'Bearer ' \+\ \$\('03 Sign in'\)\.item\.json\.data\.login\.accessToken \}\}$/, `${n.name} must reuse this run's session token`);
   }
+  // The alert token follows the same rule as the password: read from the n8n environment **by name**, so no
+  // secret enters this file, the repo, or the config item every node can see (D177, D194).
+  const notifyAuth = node("23 Notify on ntfy").parameters.options.headers.find((h) => h.name === "Authorization");
+  assert.match(notifyAuth.value, /^=\{\{ 'Bearer ' \+ \$env\.NTFY_TOKEN \}\}$/, "the ntfy token must come from the environment, by name");
   // the password is reachable only through the environment, never as a value
   assert.match(node("03 Sign in").parameters.jsonBody, /\$env\.MOBILIZON_EMAIL/);
   assert.match(node("03 Sign in").parameters.jsonBody, /\$env\.MOBILIZON_PASSWORD/);
   for (const shape of ['"password"', '"accessToken":', '"Basic ', '"Bearer ey', "eyJ"]) {
     assert.ok(!json.includes(shape), `${shape} must not appear as a literal in the workflow`);
   }
+  // An ntfy token, by *shape* rather than by prefix: `series.config.mjs` explains the prefix in a comment, and
+  // that comment is injected into 01 Config on purpose, so "tk_" alone is not the finding - a value is.
+  assert.ok(!/\btk_[A-Za-z0-9]{16,}/.test(json), "an ntfy token value appears in the workflow - it belongs in $env.NTFY_TOKEN");
   // the public read carries no credential, which is what lets simulate.mjs run with none
   assert.ok(!node("02 Read the series history").parameters.options.headers.some((h) => h.name === "Authorization"));
 });
@@ -234,16 +314,57 @@ test("a run where every series skipped is a normal night, not an error", () => {
 
 test("the alert reporter turns a plan-level alert into the failure shape a notification can use", () => {
   const alert = { seriesKey: "mpls-social", action: "alert", reason: "no_rows_for_series", note: "a rename, probably" };
-  const got = runCode("22 Report a problem", { "04 Plan & decide": [{ json: alert }] });
+  // 01 Config is seeded because that is where the channel config lives; the case where it is absent is asserted
+  // separately, in the error reporter's test.
+  const got = runCode("22 Report a problem", { "01 Config": configItems(), "04 Plan & decide": [{ json: alert }] });
   assert.equal(got[0].json.ok, false);
   assert.equal(got[0].json.alertTitle, "cadence paused: mpls-social");
   assert.match(got[0].json.summary, /^CADENCE PROBLEM: mpls-social: no_rows_for_series/);
-  const clean = runCode("22 Report a problem", { "04 Plan & decide": [{ json: { seriesKey: "mpls-social", action: "would_create" } }] });
+  const clean = runCode("22 Report a problem", { "01 Config": configItems(), "04 Plan & decide": [{ json: { seriesKey: "mpls-social", action: "would_create" } }] });
   assert.equal(clean[0].json.ok, true);
+  // D194: a run with nothing to report must be silent. Cadence runs every morning, and a message that means
+  // "nothing happened" is the thing that makes the messages that matter unread.
+  assert.equal(clean[0].json.notifyNeeded, false, "a clean dry run must not send anything");
+  assert.equal(clean[0].json.ntfy, null);
+  assert.equal(clean[0].json.alertChannel, "mathloco-cadence", "the log still says which channel exists");
+  // A stop *is* worth a message: same shape as a thrown error, at the same priority, so a person learns one
+  // vocabulary for "something needs you".
+  assert.equal(got[0].json.notifyNeeded, true);
+  assert.equal(got[0].json.ntfy.topic, "mathloco-cadence");
+  assert.equal(got[0].json.ntfy.priority, 4, "problem = 4 (high) per the measured ntfy priority table");
+  assert.deepEqual(got[0].json.ntfy.tags, ["warning"]);
+  assert.equal(got[0].json.ntfy.title, "cadence paused: mpls-social");
+  assert.match(got[0].json.ntfy.message, /no_rows_for_series/);
+});
+
+test("24 Fail loudly keeps a handled failure red, and stays quiet when nothing was wrong", () => {
+  // n8n treats an error that came out a wired error output as *handled* - so the run is no longer recorded as a
+  // failure, and a workflow-level error workflow will not fire for it either (vendor ERROR_WORKFLOWS.md). This
+  // node is how the workflow's own alarm, a red execution, survives that fix.
+  const problem = [{ json: { ok: false, alertTitle: "cadence failed at read", summary: "ETIMEDOUT" } }];
+  let thrown = null;
+  try { runCode("24 Fail loudly", { "21 Report error path": problem }); } catch (e) { thrown = e; }
+  assert.ok(thrown, "a reporter that said something is wrong must end the run red");
+  assert.match(String(thrown.message), /21 Report error path: cadence failed at read/,
+    "the thrown text must repeat the reporter's words, so the log and the ntfy message say one thing");
+  // The marker is the contract between this node and the error watcher: `24` throws *after* `23` delivered, so
+  // a linked watcher would otherwise send a second message for one incident, and it recognises this throw by
+  // its first characters (D206). Same constant, imported - not a second copy of the string.
+  assert.ok(String(thrown.message).startsWith(LOUD_THROW), `the throw must begin with core.mjs' LOUD_THROW (${LOUD_THROW}), got ${JSON.stringify(String(thrown.message).slice(0, 60))}`);
+  assert.throws(
+    () => runCode("24 Fail loudly", { "22 Report a problem": [{ json: { ok: false, alertTitle: "cadence paused: x", summary: "no_rows" } }] }),
+    /cadence paused: x/,
+  );
+  const clean = runCode("24 Fail loudly", { "22 Report a problem": [{ json: { ok: true, alertTitle: "", summary: "" } }] });
+  assert.equal((Array.isArray(clean) ? clean : [clean])[0].json.ok, true, "a clean run must not throw here");
+  // A dry run that alerted nobody still must not look broken.
+  const quiet = runCode("24 Fail loudly", {});
+  assert.equal((Array.isArray(quiet) ? quiet : [quiet])[0].json.loudness, "nothing to keep red");
 });
 
 test("the error reporter says which stage broke, because a red dot is not an alert", () => {
   const got = runCode("21 Report error path", {
+    "01 Config": configItems(),
     "02 Read the series history": [{ json: { error: { message: "ETIMEDOUT", name: "Error" } } }],
     "06 Create event": [{ json: { error: { message: "nope" } } }],
     "08 Report": [{ json: { error: { message: "the audit disagrees" } } }],
@@ -254,4 +375,15 @@ test("the error reporter says which stage broke, because a red dot is not an ale
   assert.match(got[0].json.summary, /ETIMEDOUT/);
   // and it refuses to pretend, if the graph changes and no stage reports an error
   assert.throws(() => runCode("21 Report error path", { "02 Read the series history": [{ json: {} }] }), /out of date/);
+  assert.equal(got[0].json.notifyNeeded, true, "a thrown stage is always worth a message - it does not pass a gate");
+  assert.equal(got[0].json.ntfy.priority, 4);
+  // The degraded case, stated rather than papered over: if 01 Config is what failed there is no config item,
+  // so there is no channel. The reporter says so in its own output instead of throwing a second time.
+  const blind = runCode("21 Report error path", {
+    "03 Sign in": [{ json: { error: { message: "sign-in refused" } } }],
+  });
+  assert.equal(blind[0].json.notifyNeeded, false);
+  assert.equal(blind[0].json.alertChannel, "none configured");
+  assert.equal(blind[0].json.ntfy, null);
+  assert.match(blind[0].json.summary, /sign-in refused/, "the failure is still described, even when it cannot be sent");
 });

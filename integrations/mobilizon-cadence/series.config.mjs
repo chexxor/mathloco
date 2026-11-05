@@ -67,6 +67,158 @@ export const RUN = {
   readLimit: 100,
 };
 
+/**
+ * Execution retention, in the runtime's own words (D201, 2026-11-05).
+ *
+ * Measured on the live instance by A/B on a throwaway workflow: the YunoHost package ships
+ * `EXECUTIONS_DATA_SAVE_ON_SUCCESS=none` and `EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=false` in its rendered `.env`,
+ * so a successful run - manual or scheduled - is never persisted. The symptom is not an error: the run returns
+ * an execution id, and reading it answers `Execution '2' not found`. A dry run nobody can read is a dry run
+ * nobody ran, so both artifacts declare their own retention, and the A/B proved the workflow's settings beat
+ * the instance default.
+ *
+ * Per-workflow rather than instance-wide on purpose (operator ruling 2026-11-05, "1c"): instance-wide `all`
+ * would also keep every other workflow's run data - one of which may hold a password - and a hand-edited `.env`
+ * is re-rendered from the package template at the next `yunohost app upgrade` (D199).
+ *
+ * What this costs, named rather than argued: with success data stored, this workflow's own run records hold the
+ * sign-in request body. Whether n8n 2.45.7 masks a `$env` password inside stored run data is **not measured**,
+ * so pruning stays a host job (docs/security.md) and `verify-import.mjs` prints this as a NOTE, not a pass.
+ *
+ * One key that used to be here is gone, and the reason is a measurement rather than a preference:
+ * `savePreExecutionData` is **not** a setting the public API accepts. The first live `POST /api/v1/workflows`
+ * (2026-11-05, n8n 2.45.7 / Public API 1.1.1) answered `400 request/body/settings Unrecognized key(s) in object:
+ * 'savePreExecutionData'`, and the instance's own spec (`workflowPublicDto.generated`, saved at
+ * `.design/tmp-n8n/openapi.json`) lists seventeen keys, that one not among them. The door is strict, which is a
+ * gift: `n8n-api.mjs` now refuses any settings key outside that list **before** the POST, so a flag this build
+ * cannot carry fails at build time, not at the instance. A key the API cannot carry also cannot live in the
+ * artifact - the file, the wire and the canvas are meant to be the same bytes (D203).
+ */
+export const RETENTION = {
+  saveDataErrorExecution: "all",
+  saveDataSuccessExecution: "all",
+  saveManualExecutions: true,
+};
+
+/**
+ * The alert channel - **one topic on the operator's own ntfy server** (D194, adopted 2026-11-04).
+ *
+ * Measured on 2026-11-04 from this workspace (Linux), so a future session does not re-guess it:
+ *   - `ntfy.labradorius.com` resolves CNAME `labradorius.com` -> `75.73.33.126` - **public**, not LAN-only,
+ *     unlike `mobilizon.labradorius.com` (192.168.1.120). So the alert reaches a phone off the LAN, and
+ *     nothing can poll the Mobilizon host from away from home.
+ *   - Anonymous publish and anonymous poll are both refused: `POST /<topic>` -> `{"code":40301,"http":403,
+ *     "error":"forbidden"}` and `GET /<topic>/json?poll=1` -> the same. `GET /v1/version` -> `40101`. That is
+ *     the YunoHost package's own posture, read from its `conf/server.yml`: `auth-default-access: "deny-all"`
+ *     plus `enable-login: true`, and `ntfy access everyone "up*" wo` at install (so **a topic must not start
+ *     with `up`** - the package grants anonymous write-only there for its iOS upstream flow).
+ *   - So the channel needs a credential: an ntfy **access token** in an n8n environment variable, exactly like
+ *     the Mobilizon password (`CREDENTIALS`). ntfy tokens are `tk_`-prefixed and - measured from the upstream
+ *     docs - "grant users full access to the user account", i.e. they are **not topic-scoped**. Least privilege
+ *     therefore comes from the *account*: a purpose-built non-admin user whose ACL entry is
+ *     `read-write` on this one topic and nothing else. See docs/operator-guide.md for the commands.
+ *   - E-mail is not the channel: `labradorius.com` has no apex TXT (no SPF) and no MX record (measured
+ *     2026-11-04 by `dig`), and the n8n package's pre-wired SMTP points at the YunoHost mail server that those
+ *     records say is not set up for sending. Discord is the fallback (the repo already has a Discord webhook
+ *     gate); ntfy was chosen because it is one `POST`, self-hosted, needs no bot, and works on a phone with no
+ *     account beyond the topic.
+ *
+ * The URL is the **root**, not a topic path: ntfy accepts the whole message as a JSON body only when the
+ * request goes to the server root ("To publish as JSON, you must PUT/POST to the ntfy root URL, not to the
+ * topic URL" - docs, read 2026-11-04). That keeps the httpRequest node in the same `specifyBody: "json"` shape
+ * as every other HTTP node in this workflow, so there is no second body style to review.
+ */
+export const ALERT = {
+  provider: "ntfy",
+  host: "ntfy.labradorius.com",
+  rootUrl: "https://ntfy.labradorius.com/",
+  /** Topic ids in ntfy are `[a-zA-Z0-9_-]{1,64}`. `mathloco-` prefixes it so a topic on a shared home server
+   *  still says which project it belongs to, and it deliberately does not start with `up` (see above). */
+  topic: "mathloco-cadence",
+  /** Name of the n8n environment variable holding the `tk_...` token - a NAME, never a value, under the same
+   *  rule as `CREDENTIALS` (the build refuses a value, and the token never enters the workflow JSON). */
+  tokenEnv: "NTFY_TOKEN",
+  /** What tapping the notification opens. The public schedule page, because that is the thing an alert is
+   *  about, and reading it is how you tell whether the alert is stale. */
+  click: "https://minneapolismathbookclub.com/#when-we-meet",
+  /** Priorities are measured from the upstream table: 5 max (long vibration, pop-over), 4 high, 3 default,
+   *  2 low (no sound, drawer only), 1 min. Nothing here is a 5: these messages arrive at 09:00 and a calendar
+   *  problem is not a three-in-the-morning emergency. A run with nothing to say sends nothing at all.
+   *
+   *  `heartbeat` is the weekly proof of life (D205): quiet on purpose, because it arrives whether or not
+   *  anything happened, and a message that buzzes once a week is a message that gets read.
+   *  `runway` is that same message when the calendar it reports is empty further out than
+   *  `HEARTBEAT.runwayDays` - the site's own staleness gate (A8, D188) would go loud about that, so the
+   *  heartbeat stops being noise and becomes the early half of it. */
+  priority: { problem: 4, wrote: 4, dryRun: 2, heartbeat: 2, runway: 4 },
+  /** Only `warning` is used, because that tag name is quoted from the upstream examples. Other emoji tags are
+   *  plausible but unverified here, and an unknown tag name is a message that fails to publish. */
+  tags: { problem: ["warning"] },
+  /** The message text is capped here as well as in the reporters, so a 400 from ntfy is not how a person finds
+   *  out something went wrong. (ntfy's own limit was not measured; 1000 chars is far under the 4096-byte
+   *  figure in the message-format docs, which is the number to re-check if this ever truncates.) */
+  maxMessageChars: 1000,
+  /** A second channel for the error watcher only, and it is **off** (D206).
+   *
+   *  The vendor set names the recursion trap outright: if the error workflow's own channel is the channel the
+   *  monitored workflow uses, then the outage that caused the failure also eats the alert about it, and n8n
+   *  does not re-trigger on the error workflow's failure ("no infinite loop, but the failure goes nowhere").
+   *  Its mitigations are "use a different channel" or "have a fallback".
+   *
+   *  Shipped null because a fallback needs a secret that does not exist yet: the club's Discord side is a bot
+   *  token for the site Worker (`DISCORD_TOKEN`, wrangler.toml), not an incoming webhook URL, and inventing an
+   *  environment variable name for a credential nobody has minted is how a workflow ships a node that can only
+   *  fail. To turn it on: create a Discord webhook for a club channel, put its URL in an n8n environment
+   *  variable by NAME, and set
+   *
+   *      fallback: { kind: "discord", urlEnv: "MATHLOCO_ALERT_WEBHOOK", maxMessageChars: 1800 }
+   *
+   *  `build-alerter.mjs` then emits `A4 Notify on the fallback`, wired to `A3`'s error output, and
+   *  `checkAlerter()` polices the pair (`onError` without the wire, or the wire without `onError`, is the
+   *  silent-failure shape this repo has already been bitten by twice). Until then the honest statement is in
+   *  docs/security.md: one channel, and the weekly heartbeat is the backstop for "the channel is down". */
+  fallback: null,
+};
+
+/**
+ * The weekly heartbeat (operator ruling 2026-11-05, "weekly heartbeat can be built now"; D205).
+ *
+ * What it is for: every other message on this topic means "something happened". D194's silence rule makes
+ * that deliberate, and it leaves one hole no per-node error output can close - a scheduler that is simply not
+ * running sends nothing, and nothing looks identical to a quiet week. A8's runway gate (`check:ics`,
+ * N = 21 days, D188) is the only detector today, and it is a *deploy-time* detector on the *site's* snapshot,
+ * so the honest latency of "n8n is dead" is about three weeks. One message a week cuts that to seven days.
+ *
+ * It trades directly against D194, which is why it was a ruling and not a code change: one message that means
+ * "still alive" is the price of being able to notice death.
+ *
+ * It is not only a ping. It reads the same public calendar cadence reads (no credential - the same read
+ * `simulate.mjs` makes) and prints the next date each series holds and how far out it is, so the weekly note
+ * answers "is the calendar actually full?" as well as "is n8n alive?". Past `runwayDays` it goes to priority 4
+ * and names the fix, which makes it the early-warning half of A8's rule rather than a third opinion on it.
+ */
+export const HEARTBEAT = {
+  /** 0 = Sunday ... 1 = Monday, measured against this instance's own node source: Schedule Trigger v1 takes
+   *  `triggerAtDay` (an array of these numbers), `triggerAtHour` and `triggerAtMinute` - there is no `triggerAt`
+   *  string (D207). `build-heartbeat.mjs` asserts its own trigger block against these three names. */
+  weekday: 1,
+  hour: 9,
+  minute: 0,
+  everyWeeks: 1,
+  /** How far ahead of the next row the calendar may sit empty before the weekly note goes loud.
+   *  Deliberately the same number as A8's `RUNWAY_DAYS` (scripts/check-ics.mjs, D188): one threshold for
+   *  "the club is about to have nothing to attend", raised by the runtime at 7 days and by the deploy gate
+   *  at 21. If one moves, move both, and the comment in check-ics.mjs points back here. */
+  runwayDays: 21,
+  /** The public read the heartbeat makes. Forward only: it is asking "what is coming", not re-deriving the
+   *  rhythm, and a short window keeps the response small enough to read in one execution. */
+  readAheadDays: 60,
+  readLimit: 100,
+  /** Structural, not decorative: the heartbeat has no `Tell a person?` gate, because a heartbeat that can be
+   *  skipped is the same silence it exists to detect. `checkHeartbeat()` fails the build if an IF node appears. */
+  alwaysSend: true,
+};
+
 export const SERIES = [
   {
     key: "mpls-social", // stable id; never reuse it for a different series

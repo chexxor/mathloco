@@ -412,3 +412,173 @@ export function auditDate({ plan, created, windowRows }) {
   }
   return { ok: problems.length === 0, problems, seen: rows.length };
 }
+
+/** Is the alert channel usable? `ALERT` comes from `series.config.mjs` on the config item, so a reporter can
+ *  answer this without knowing which host or topic is configured. A missing channel is not an error - the run
+ *  still reports in the execution log - but it must be *said*, because "nobody was told" is the difference
+ *  between a monitored job and an unmonitored one (D194). */
+export function canAlert(alert) {
+  return !!(alert && alert.rootUrl && alert.topic && alert.tokenEnv);
+}
+
+/** The run summary, in the words a person reads. The execution log, the alert body, and `simulate.mjs`'s
+ *  rehearsal all print these same lines, which is the point: a rehearsal that paraphrases the real report is
+ *  a rehearsal of something else. `rows` is the per-series shape the reporters build
+ *  ({ series, action, date, beginsOn, endsOn, why, audit, url, notes, wouldSend }). `payloads: false` is what
+ *  a phone gets; the log gets them. */
+export function summaryLines({ rows, written, todayDate, payloads = true }) {
+  const label = { create: "created", would_create: "dry run - would create", skip: "nothing to do", alert: "NEEDS A PERSON" };
+  const lines = [`cadence: ${rows.length} series, ${written} event(s) written, at ${todayDate}`];
+  for (const r of rows) {
+    lines.push(`- ${r.series}: ${label[r.action] || r.action} ${r.date ?? "-"} ${r.beginsOn ?? ""}`.trimEnd());
+    if (r.why) lines.push(`    why: ${r.why}`);
+    if (r.url) lines.push(`    url: ${r.url}`);
+    if (r.audit) lines.push(`    audit: ${r.audit}`);
+    for (const n of r.notes ?? []) lines.push(`    note: ${n}`);
+    // The full createEvent argument list belongs in the execution log, where a reviewer reads it line by line.
+    // It is the *only* thing that differs from what a phone gets, because one JSON dump of a description
+    // pushes every date out of the message cap - which is how an alert becomes "see the log", i.e. unread.
+    if (payloads && r.wouldSend) lines.push(`    payload: ${JSON.stringify(r.wouldSend)}`);
+  }
+  return lines;
+}
+
+/** Which runs are worth a message, decided once (D194). Cadence runs every morning, so a message that means
+ *  "nothing happened" is itself the failure mode: it trains a person to skim the channel, and the messages
+ *  that matter get skimmed with it. So a plain skip is silent - the execution log remains the record - while
+ *  a run that *wrote* something, or a dry run that decided exactly what it would write, says so out loud.
+ *  `simulate.mjs` asks the same function, which is why the rule cannot drift between the workflow and the
+ *  rehearsal. */
+export function runKind({ written = 0, wouldWrite = 0 } = {}) {
+  return written ? "wrote" : wouldWrite ? "dryRun" : null;
+}
+
+/**
+ * The marker `24 Fail loudly` puts at the front of the error it throws, and the marker the error watcher
+ * looks for before deciding whether to speak (D206).
+ *
+ * Why a constant rather than a string in each node: cadence's own failure path already sends the message
+ * (`23 Notify on ntfy`), and `24` exists only to keep the execution red. That throw is an *unhandled* error,
+ * so once a workflow-level error workflow is linked it fires too - and without this marker the operator gets
+ * two notifications for one incident, which is the exact shape D194 says makes a channel unread. One string,
+ * thrown by one node and matched by one node, both built from this line.
+ */
+export const LOUD_THROW = "cadence kept red on purpose";
+
+/**
+ * The error watcher's message, from the payload n8n hands an Error Trigger.
+ *
+ * The shape is read off the node's own source (`packages/nodes-base/nodes/ErrorTrigger/ErrorTrigger.node.ts`,
+ * fetched 2026-11-05), which also ships the `mockManualExecution` example the node emits when you press
+ * Execute Workflow on an error workflow: `{ execution: { id, url, retryOf, error: { message, stack },
+ * lastNodeExecuted, mode }, workflow: { id, name } }`. Everything here is defensive because a watcher that
+ * throws on an unexpected payload is a watcher that failed to watch - the vendor file flags the same drift
+ * risk ("Error Trigger payload shape can change between versions").
+ *
+ * Returns `{ title, detail, click, duplicate, source }`. `duplicate: true` means cadence already told a
+ * person about this run, so the watcher composes the message and stays quiet (the caller decides).
+ */
+export function errorAlertFields(payload) {
+  const ex = payload && typeof payload === "object" ? (payload.execution ?? {}) : {};
+  const err = ex.error ?? {};
+  const wf = payload?.workflow ?? {};
+  const message = String(err.message ?? "(the error payload carried no message)");
+  const nodeName = String(ex.lastNodeExecuted ?? "(unknown node)");
+  const workflowName = String(wf.name ?? "(unknown workflow)");
+  const lines = [];
+  if (wf.name !== undefined) lines.push(`workflow   ${wf.name}${wf.id ? ` (${wf.id})` : ""}`);
+  if (ex.id) lines.push(`execution  ${ex.id}${ex.retryOf ? ` (retry of ${ex.retryOf})` : ""}`);
+  if (ex.url) lines.push(`open it    ${ex.url}`);
+  lines.push(`failed at  ${nodeName}`);
+  lines.push(`message    ${message.slice(0, 700)}`);
+  if (err.description) lines.push(`detail     ${String(err.description).slice(0, 400)}`);
+  if (Number.isFinite(err.timestamp)) {
+    lines.push(`at         ${new Date(err.timestamp).toISOString()} (the payload's own epoch ms)`);
+  }
+  if (ex.mode) lines.push(`mode       ${ex.mode}`);
+  return {
+    title: `${workflowName} failed at ${nodeName}`,
+    detail: lines.join("\n"),
+    // Tapping the notification should open the run that broke, not the site: for a failure the evidence is the
+    // execution. Falls back to the channel's default click when the payload has no url (older/newer n8n).
+    click: ex.url || null,
+    duplicate: message.startsWith(LOUD_THROW),
+    source: { workflowId: wf.id ?? null, executionId: ex.id ?? null, node: nodeName },
+  };
+}
+
+/**
+ * The weekly heartbeat's report: what each series has coming, and whether the calendar is about to be empty.
+ *
+ * It deliberately does **not** call `planSeries`. The heartbeat is not a second planner - a second planner is a
+ * second opinion that can disagree with the first in a message a person has to referee. It reports the rows
+ * that exist, in the same wall-clock terms the planner uses (`rowLocalDate`, so a row declaring `Etc/UTC` and
+ * a row declaring nothing are both read as the club reads them), and the only judgement it makes is the one
+ * A8 already rules on: how many days until the next thing.
+ */
+export function heartbeatReport({ series, events, nowIso, runwayDays }) {
+  const todayDate = wallClock(nowIso, assertTimezone(series[0]?.timezone ?? "America/Chicago")).date;
+  const rows = [];
+  for (const s of series) {
+    const live = (Array.isArray(events[s.groupActor]) ? events[s.groupActor] : [])
+      .filter((r) => matchesSeries(s, r) && isLive(r) && r.draft !== true);
+    const upcoming = live
+      .filter((r) => cmpDate(rowLocalDate(r, s), todayDate) > 0)
+      .sort((a, b) => Date.parse(a.beginsOn) - Date.parse(b.beginsOn));
+    const next = upcoming[0] ?? null;
+    const clock = next ? wallClock(next.beginsOn, rowTimezone(next, s).tz) : null;
+    rows.push({
+      series: s.key,
+      group: s.groupActor,
+      count: upcoming.length,
+      nextDate: clock ? clock.date : null,
+      nextTime: clock ? `${clock.time} ${clock.tz}` : null,
+      daysOut: clock ? Math.round((parseDate(clock.date) - parseDate(todayDate)) / DAY_MS) : null,
+      title: next ? next.title : null,
+      url: next ? next.url : null,
+    });
+  }
+  const empty = rows.filter((r) => !r.nextDate);
+  const far = rows.filter((r) => r.nextDate && r.daysOut > Number(runwayDays));
+  const kind = empty.length ? "problem" : far.length ? "runway" : "heartbeat";
+  return { todayDate, rows, kind, empty: empty.map((r) => r.series), far: far.map((r) => r.series) };
+}
+
+/** The heartbeat's words, in the same register as `summaryLines`: the execution log, the ntfy message and
+ *  `simulate.mjs --heartbeat` all print these exact lines. */
+export function heartbeatLines({ report, runwayDays }) {
+  const lines = [`heartbeat: ${report.rows.length} series, calendar read at ${report.todayDate}`];
+  for (const r of report.rows) {
+    lines.push(r.nextDate
+      ? `- ${r.series}: next ${r.nextDate} ${r.nextTime ?? ""} (${r.daysOut}d out, ${r.count} row(s) ahead)`
+      : `- ${r.series}: NOTHING scheduled after ${report.todayDate} - no row in ${r.group} is upcoming`);
+    if (r.url) lines.push(`    next row: ${r.title} ${r.url}`);
+  }
+  if (report.empty.length) lines.push(`    PROBLEM: no upcoming row for ${report.empty.join(", ")} - cadence either did not run, refused, or is not activated`);
+  if (report.far.length) lines.push(`    RUNWAY: the next row for ${report.far.join(", ")} is more than ${runwayDays} days out - the same threshold A8's check:ics gates the site on (D188)`);
+  lines.push(`    this message is the proof of life: if it stops arriving, n8n is not running this workflow - check it is activated.`);
+  return lines;
+}
+
+/** The one message shape for the alert channel. Three reporters need it (a stage that threw, a plan that
+ *  stopped, a run that wrote something), and a message that differs by path is a message nobody can learn to
+ *  read - so the fields live here and the reporters only supply the words.
+ *
+ *  Field names are quoted from ntfy's JSON-publish example (read 2026-11-04): `topic`, `title`, `message`,
+ *  `priority`, `tags`, `click`. Priorities are the documented ones - 4 high, 3 default, 2 low - and a caller
+ *  that asks for an unknown kind gets the default rather than a rejected message. */
+export function alertBody({ alert, kind, title, detail, click }) {
+  if (!canAlert(alert)) return null;
+  const cap = alert.maxMessageChars || 1000;
+  const priority = (alert.priority || {})[kind] || 3;
+  const tags = kind === "problem" ? (alert.tags || {}).problem : undefined;
+  const opens = click || alert.click;
+  return {
+    topic: alert.topic,
+    title: String(title || "cadence").slice(0, 256),
+    message: String(detail || "(no detail)").slice(0, cap),
+    priority,
+    ...(tags && tags.length ? { tags } : {}),
+    ...(opens ? { click: opens } : {}),
+  };
+}

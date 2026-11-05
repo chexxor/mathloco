@@ -48,6 +48,7 @@
 // this adds no tracked noise, and a run overwrites its own set's directory: the logs are the *last* run.
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, unlinkSync } from 'node:fs';
+import { loadavg, cpus } from 'node:os';
 import { resolve, join } from 'node:path';
 import { distState, staleLine } from '../design/dist-fresh.mjs';
 
@@ -71,6 +72,10 @@ const DEPLOY = [
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
   { name: 'check:cache', desc: 'summary-cache rules against a fake KV namespace' },
+  // The n8n integration builds an importable artifact from sources in this repo, and its rules are the same
+  // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
+  // assumed (that is what the live form of the same command is for), and it costs 1.4s @measured 2026-11-05.
+  { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: generators, invariants, 71 tests, the import checker' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.
@@ -186,6 +191,13 @@ const run = (step) => new Promise((done) => {
 
 const results = new Map();
 const t0 = Date.now();
+// A wall-clock number with no load number next to it is not a measurement. Measured 2026-11-05 (Linux, 16 CPU):
+// `build` was 17.8-21.8s inside the set and **5.85s standalone in the same minute**, because a foreign process
+// (`strata-host`) held 542% CPU and load average sat at 8-9.6. That is a +125% cost FAIL with nothing wrong in
+// the repo. The guard cannot tell a regression from a contended box unless both numbers are kept, so the
+// manifest carries the load at start and at end, and the cost line prints it.
+const loadLine = () => `${loadavg()[0].toFixed(1)}/${cpus().length}cpu`;
+const load0 = loadLine();
 let failed = 0;
 let skipped = 0;
 
@@ -238,7 +250,7 @@ try {
   const manifest = [...results.values()]
     .map((r) => `${r.code === 0 ? 'ok  ' : 'FAIL'} ${r.step.name.padEnd(24)} ${r.secs.toFixed(2).padStart(7)}s  -> ${r.step.name}.txt`)
     .join('\n');
-  writeFileSync(join(LOG_DIR, 'manifest.txt'), `# gate-run ${set === BROWSER ? 'browser' : 'deploy'} set, ${runStarted}\n# ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS})\n${manifest}\n`);
+  writeFileSync(join(LOG_DIR, 'manifest.txt'), `# gate-run ${set === BROWSER ? 'browser' : 'deploy'} set, ${runStarted}\n# ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, load ${load0} -> ${loadLine()})\n${manifest}\n`);
 } catch (e) { logBroken ||= e.message; }
 console.log(`\ngate-run: ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, set=${set === BROWSER ? 'browser' : 'deploy'})`);
 console.log(logBroken
@@ -257,7 +269,7 @@ if (!failed && !skipped && existsSync(COST_BASELINE)) {
     if (base && base.wallSecs) {
       const ratio = Number(wall) / base.wallSecs;
       const pct = Math.round((ratio - 1) * 100);
-      console.log('cost: ' + costKey + ' ' + wall + 's vs baseline ' + base.wallSecs + 's (' + base.measuredAt + ') = ' + (pct >= 0 ? '+' : '') + pct + '%');
+      console.log('cost: ' + costKey + ' ' + wall + 's vs baseline ' + base.wallSecs + 's (' + base.measuredAt + ') = ' + (pct >= 0 ? '+' : '') + pct + '% (load ' + load0 + ' -> ' + loadLine() + ')');
       for (const r of results.values()) {
         const b = base.steps && base.steps[r.step.name];
         if (b && r.secs > b * 2) console.log('cost: one step doubled - ' + r.step.name + ' ' + b + 's -> ' + r.secs.toFixed(2) + 's');
@@ -266,6 +278,8 @@ if (!failed && !skipped && existsSync(COST_BASELINE)) {
         failed++;
         console.log('cost: FAIL - over 2x the baseline. A slower gate is a gate people stop running: fix it, or');
         console.log('      re-baseline on purpose with `npm run cost:save` and say why in the commit message.');
+        console.log('      before either: time the doubled step on its own (`npm run build`). If it is near its');
+        console.log('      baseline there, the box is contended, and re-baselining freezes someone else\'s CPU in.');
       } else if (ratio > 1.4) {
         console.log('cost: WARN - over 40% vs baseline. Not a failure; look at the manifest before the new cost is normal.');
       }

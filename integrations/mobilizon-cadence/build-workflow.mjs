@@ -26,43 +26,18 @@ const here = fileURLToPath(new URL(".", import.meta.url));
 const OUT = new URL("./n8n/cadence-workflow.json", import.meta.url);
 const CHECK = process.argv.includes("--check");
 
+import { expand } from "./lib/inject.mjs";
+
 const READ = (rel) => readFileSync(new URL(rel, import.meta.url), "utf8");
 
-/** The Code-node sources are ordinary `.js` with injection markers; the imports they would need in Node are
- *  exactly the files being injected, so `export` is the only word that has to go. */
-const STRIP = (src) =>
-  src.replace(/^export (const|function|class|let|var)\s/gm, "$1 ")
-     .replace(/^export\s*\{[^}]*\}\s*$/gm, "")
-     .trim();
-
+/** The Code-node sources are ordinary `.js` with injection markers; the guards (a body that does not parse,
+ *  two injections declaring one name, ESM syntax left in an injected file) are shared with the other two
+ *  generators, so all three artifacts are expanded by the same code (D206). */
 const INJECTABLE = {
   config: "./series.config.mjs",
   core: "./lib/core.mjs",
   queries: "./lib/queries.mjs",
 };
-
-/** Replace each `// @inject <name>` line with the named file's body, rejecting a body that would not parse,
- *  that collides with another injection, or that still contains ESM syntax the sandbox has no use for. */
-function expand(nodeSource, nodeLabel) {
-  const injectedNames = [];
-  const body = nodeSource.replace(/^\/\/ @inject (\w+)\s*$/gm, (_m, what) => {
-    const file = INJECTABLE[what];
-    if (!file) throw new Error(`${nodeLabel}: unknown @inject "${what}" (known: ${Object.keys(INJECTABLE).join(", ")})`);
-    const src = STRIP(READ(file));
-    if (/^\s*(import|export)\s/m.test(src)) throw new Error(`${nodeLabel}: injected ${file} still has ESM syntax`);
-    for (const m of src.matchAll(/^(?:const|let|var|function|class)\s+([A-Za-z0-9_$]+)/gm)) injectedNames.push([m[1], file]);
-    return src;
-  });
-  const seen = new Set();
-  for (const [name, file] of injectedNames) {
-    if (seen.has(name)) throw new Error(`${nodeLabel}: "${name}" declared by two injections - a Code node would throw "already declared"`);
-    seen.add(name);
-  }
-  try { new Function("$", body); } catch (e) {
-    throw new Error(`${nodeLabel}: the generated Code node does not parse: ${e.message}`);
-  }
-  return body;
-}
 
 // ------------------------------------------------------------------ the graph
 // `n8nTarget` is the one place to change when the instance updates. typeVersions older than the instance are
@@ -71,7 +46,7 @@ function expand(nodeSource, nodeLabel) {
 const n8nTarget = { httpRequest: 4, code: 2, if: 2, scheduleTrigger: 1 };
 
 const config = await import(new URL("./series.config.mjs", import.meta.url).href);
-const { INSTANCE, CREDENTIALS, RUN, SERIES } = config;
+const { INSTANCE, CREDENTIALS, RUN, SERIES, ALERT, RETENTION } = config;
 const ENDPOINT = `${INSTANCE.baseUrl.replace(/\/$/, "")}${INSTANCE.graphqlPath}`;
 
 const NAMES = {
@@ -86,7 +61,35 @@ const NAMES = {
   report: "08 Report",
   errPath: "21 Report error path",
   errPlan: "22 Report a problem",
+  tell: "09 Tell a person?",
+  notify: "23 Notify on ntfy",
+  loud: "24 Fail loudly",
 };
+
+// Which nodes get which node-level settings, stated once as data (D195).
+//
+// `onError: "continueErrorOutput"` is the property that makes an error output *exist*. The wires below point
+// every fallible stage's error output at `21`, and the vendor docs are blunt about the pairing
+// (`n8n-error-handling-official/references/NODE_ERROR_OUTPUTS.md`, read 2026-11-05): wire without the property
+// means "the slot never fires, and the handler is unreachable"; the default is `stopWorkflow`. That was this
+// artifact's silent fault until 2026-11-05 - the error path was drawn, and could never run.
+//
+// `retryOnFail` is deliberately NOT on every network node, which is where this rig overrides the vendor
+// default (their REVIEW_CHECKLIST flags any network node without it):
+//   - 06 Create event: no retry. Mobilizon 5.2.4 has no idempotency key and no conditional create, and the
+//     engine retries on *all* errors - including a 500 returned after the row was written. A retried create is
+//     a duplicate on the club's calendar, and the plan's dedupe read happens a day later, not a second later.
+//   - 03 Sign in: no retry. A wrong password would be offered three times per run to an authenticated endpoint
+//     on a YunoHost box with fail2ban in front of it; a credential mistake is a one-time human event.
+//   - 02 and 07 (idempotent reads) and 23 (the alert itself): retry. Re-sending is harmless there, and a
+//     transient blip should not page a person. Values are the vendor's documented defaults (3 tries, 5000ms).
+const ON_ERROR = ["cfg", "history", "signIn", "plan", "gate", "create", "audit", "report"].map((k) => NAMES[k]);
+const RETRY = ["history", "audit", "notify"].map((k) => NAMES[k]);
+const RETRY_SETTING = { retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 };
+
+// Execution retention comes from series.config.mjs (D201), and the invariant below checks that the spread
+// actually applied. The short version of why it is not left to the instance: the packaged default on this box
+// is save-on-success=none and manual=false, so an unreadable dry run is the default outcome, not the exception.
 
 /** One expression shape for every GraphQL call: the document and its variables travel on the item, so the
  *  HTTP nodes hold no API text of their own and cannot drift from `lib/queries.mjs`. */
@@ -110,7 +113,14 @@ const nodes = [
     // 09:00 in the workflow's own timezone (settings.timezone below), not the instance default - so the hour
     // means what a person reading this line thinks it means. The trigger is the only start; "Execute workflow"
     // in the editor runs the same path, which is how a dry run is tested.
-    parameters: { rule: { interval: [{ field: "days", triggerAt: "09:00", daysInterval: 1 }] } },
+    // 09:00 in the workflow's own timezone (settings.timezone below), not the instance default - so the hour
+    // means what a person reading this line thinks it means. The parameter names are measured, not remembered:
+    // Schedule Trigger v1 reads triggerAtHour/triggerAtMinute, and there is no `triggerAt` string on this
+    // instance (D207 - the artifact carried one from its first commit, which meant the trigger was firing at
+    // the default, midnight, while every comment in this repo said 09:00).
+    parameters: {
+      rule: { interval: [{ field: "days", daysInterval: 1, triggerAtHour: 9, triggerAtMinute: 0 }] },
+    },
   },
   {
     // Head of the chain. It emits ONE item with the config and the documents, so the plan is deterministic,
@@ -118,7 +128,8 @@ const nodes = [
     // editing session.
     id: "cadence-config", name: NAMES.cfg, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [-580, -160],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/01-config.js"), NAMES.cfg) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/01-config.js"), NAMES.cfg, INJECTABLE, import.meta.url) },
+    onError: "continueErrorOutput",
   },
   {
     // Public read: a group's event list needs no token on Mobilizon 5.2.4 (measured 2026-11-04), so this node
@@ -132,6 +143,8 @@ const nodes = [
       sendBody: true, specifyBody: "json",
       jsonBody: gqlBody(`${FROM01}.query.readSeriesHistory`, `${FROM01}.query.readSeriesHistoryVars`),
     },
+    onError: "continueErrorOutput",
+    ...RETRY_SETTING,
   },
   {
     // The only credentialed request, and the only place the password is ever sent. It reads the two values
@@ -154,13 +167,17 @@ const nodes = [
         `{ email: $env.${CREDENTIALS.emailEnv}, password: $env.${CREDENTIALS.passwordEnv} }`,
       ),
     },
+    // No retry here, and the reason is the host rather than the API: three offers of a wrong password per run,
+    // to an authenticated endpoint behind YunoHost's fail2ban. See the RETRY block above.
+    onError: "continueErrorOutput",
   },
   {
     // The rules. One item per series, each carrying its own decision and (if it decided to write) the exact
     // variables it will send - so "what did it decide" and "what will it send" are one reviewable object.
     id: "cadence-plan", name: NAMES.plan, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [-40, -160],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/04-plan.js"), NAMES.plan) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/04-plan.js"), NAMES.plan, INJECTABLE, import.meta.url) },
+    onError: "continueErrorOutput",
   },
   {
     id: "cadence-gate", name: NAMES.gate, type: "n8n-nodes-base.if", typeVersion: n8nTarget.if,
@@ -182,6 +199,7 @@ const nodes = [
       },
       options: { branchMode: "matchingBranch" },
     },
+    onError: "continueErrorOutput",
   },
   {
     id: "cadence-create", name: NAMES.create, type: "n8n-nodes-base.httpRequest", typeVersion: n8nTarget.httpRequest,
@@ -198,6 +216,9 @@ const nodes = [
       sendBody: true, specifyBody: "json",
       jsonBody: gqlBody(`${FROM01}.query.createEvent`, `${FROM04}.createVars`),
     },
+    // No retry: a create has no idempotency key on this instance (see the RETRY block above). The audit node,
+    // one step later, is what proves whether the write landed.
+    onError: "continueErrorOutput",
   },
   {
     // Read the date back from the instance. Not a convenience: this is the only evidence, short of a human,
@@ -210,64 +231,88 @@ const nodes = [
       sendBody: true, specifyBody: "json",
       jsonBody: gqlBody(`${FROM01}.query.auditDateWindow`, `${FROM04}.auditVars`),
     },
+    onError: "continueErrorOutput",
+    ...RETRY_SETTING,
   },
   {
     id: "cadence-report", name: NAMES.report, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [760, -160],
-    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/08-report.js"), NAMES.report) },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/08-report.js"), NAMES.report, INJECTABLE, import.meta.url) },
+    onError: "continueErrorOutput",
   },
   {
     // Failure path. Every stage that can throw points its error output here, and this is the only node in the
     // workflow that reads `$json.error`. It says *which* stage broke, because a red dot on a canvas is not an
-    // alert - see README (Alerting).
+    // alert. The text lives in `nodes/21-report-error.js` like the other reasoning nodes: it needs the shared
+    // `alertBody` from `lib/core.mjs`, and a message shape copied into three places is a message nobody can
+    // learn to read.
     id: "cadence-err-path", name: NAMES.errPath, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [60, 180],
-    parameters: {
-      mode: "runOnceForAllItems",
-      jsCode: `// Generated by build-workflow.mjs - the failure reporter. Inlined because it is a dozen lines, and
-// it is the only place in this workflow that reads the sandbox's error field.
-const stages = [
-  ["read", "${NAMES.history}"], ["sign in", "${NAMES.signIn}"], ["plan", "${NAMES.plan}"],
-  ["write", "${NAMES.create}"], ["audit", "${NAMES.audit}"], ["report", "${NAMES.report}"],
-];
-const failed = [];
-for (const [label, nodeName] of stages) {
-  let item = null;
-  try { item = $(nodeName).item; } catch (e) { continue; }   // that stage did not run
-  if (item && item.json && item.json.error) failed.push([label, item.json.error]);
-}
-if (!failed.length) throw new Error('the error branch ran but no stage reported an error - this reporter is out of date');
-const first = failed[0][1];
-const who = failed.map(([label]) => label).join("+");
-return [{ json: {
-  ok: false,
-  failedAt: failed.map(([label]) => label),
-  alertTitle: 'cadence failed at ' + who,
-  alertDetail: String(first.message || first).slice(0, 900),
-  summary: 'CADENCE PROBLEM: ' + who + ' failed - ' + String(first.message || first).slice(0, 300),
-} }];`,
-    },
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/21-report-error.js"), NAMES.errPath, INJECTABLE, import.meta.url) },
   },
   {
     // A plan that *alerts* (a rename, a clock mismatch, every row cancelled) does not throw - it reports. But a
     // reported alert still has to reach a person, so it is folded into the same failure shape.
     id: "cadence-err-plan", name: NAMES.errPlan, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
     position: [340, 180],
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/22-report-problem.js"), NAMES.errPlan, INJECTABLE, import.meta.url) },
+  },
+  {
+    // The one branch that decides whether a run is worth a notification. The decision itself is made in the
+    // reasoning nodes (`notifyNeeded`), so this node is a wire, not a rule - and the condition compares the
+    // **string** form to keep the parameter block identical to the one above, which is the block whose shape
+    // depends on the n8n version (IF v2). A boolean block would be a second shape to re-verify on import.
+    id: "cadence-tell", name: NAMES.tell, type: "n8n-nodes-base.if", typeVersion: n8nTarget.if,
+    position: [520, 120],
     parameters: {
-      mode: "runOnceForAllItems",
-      jsCode: `// Generated by build-workflow.mjs - a plan that alerts does not throw, so its alert is carried to the same
-// place a thrown error goes.
-const plans = $('${NAMES.plan}').all().map((i) => i.json).filter((p) => p.action === 'alert');
-if (!plans.length) return [{ json: { ok: true, summary: 'no alerts to report' } }];
-const lines = plans.map((p) => p.seriesKey + ": " + (p.reason || "alert") + " - " + (p.note || ""));
-return [{ json: {
-  ok: false,
-  failedAt: ['plan'],
-  alertTitle: 'cadence paused: ' + plans.map((p) => p.seriesKey).join(', '),
-  alertDetail: lines.join('\\n').slice(0, 900),
-  summary: 'CADENCE PROBLEM: ' + lines.join('\\n'),
-} }];`,
+      conditions: {
+        options: { caseSensitive: true, leftValue: "", typeValidation: "strict", version: 2 },
+        conditions: [{
+          id: "reporter-wants-to-notify", leftValue: "={{ String($json.notifyNeeded) }}", filterType: "string",
+          operator: { type: "string", operation: "equals" }, rightValue: "true",
+        }],
+        combinator: "and",
+        options: {},
+      },
+      options: { branchMode: "matchingBranch" },
     },
+  },
+  {
+    // The delivery. One POST to the alert server's **root** with the whole message as a JSON body, which is the
+    // form ntfy documents for tools that cannot set headers per request - and it keeps this node in the same
+    // `specifyBody: "json"` shape as every other HTTP node here, so there is one body style to review.
+    // The URL is written literally (like the Mobilizon endpoint) so `verify-import.mjs` can hold it to the
+    // host allow-list; the token is not: `$env` reads it on the n8n host, so no secret enters this file (D177).
+    // `neverError: false` is the point - an alert that fails to publish must turn the execution red. A channel
+    // that silently drops messages is the failure this node exists to prevent (D194).
+    id: "cadence-notify", name: NAMES.notify, type: "n8n-nodes-base.httpRequest", typeVersion: n8nTarget.httpRequest,
+    position: [720, 120],
+    parameters: {
+      method: "POST", url: ALERT.rootUrl, sendQuery: false,
+      options: {
+        response: { response: { neverError: false } },
+        headers: [...HEADERS_PUBLIC, { name: "Authorization", value: `={{ 'Bearer ' + $env.${ALERT.tokenEnv} }}` }],
+        batching: { enabled: false },   // a notification that failed is reported once, not hammered five times
+      },
+      sendBody: true, specifyBody: "json",
+      jsonBody: "={{ JSON.stringify($json.ntfy) }}",
+    },
+    // Retry the send (see the RETRY block): a dropped alert is the failure this node exists to prevent, and a
+    // duplicated message costs one glance. **No onError here**, unlike every other network node: a failed send
+    // must throw and end the run, not route into `21`, which would read an absent `error` field and compose a
+    // second, wrong message about a failure that is really "the alert did not arrive". This is also the node
+    // the ON_ERROR list deliberately omits - the pair (wired error output, onError) is only meaningful when
+    // something downstream can act on it.
+    ...RETRY_SETTING,
+  },
+  {
+    // Loudness, re-declared after the error path became reachable. See nodes/24-fail-loudly.js: a wired error
+    // output makes an error "handled", so the execution stops looking like a failure - and this workflow's
+    // stated alarm is a red execution. Its own error output is left unwired on purpose, which is the one shape
+    // a future workflow-level error workflow still catches.
+    id: "cadence-loud", name: NAMES.loud, type: "n8n-nodes-base.code", typeVersion: n8nTarget.code,
+    position: [920, 120],
+    parameters: { mode: "runOnceForAllItems", jsCode: expand(READ("nodes/24-fail-loudly.js"), NAMES.loud, INJECTABLE, import.meta.url) },
   },
 ];
 
@@ -282,10 +327,22 @@ const connections = {
   [NAMES.gate]: { main: [[{ node: NAMES.create, type: "main", index: 0 }], [{ node: NAMES.report, type: "main", index: 0 }]], error: [[{ node: NAMES.errPath, type: "main", index: 0 }]] },
   [NAMES.create]: { main: [[{ node: NAMES.audit, type: "main", index: 0 }]], error: [[{ node: NAMES.errPath, type: "main", index: 0 }]] },
   [NAMES.audit]: { main: [[{ node: NAMES.report, type: "main", index: 0 }]], error: [[{ node: NAMES.errPath, type: "main", index: 0 }]] },
-  // the report's output continues into the alert reporter. Both 21 and 22 are terminals and both emit the same
-  // failure shape: 21 for a stage that threw, 22 for a plan that decided to stop. Neither is downstream of the
-  // other, so a clean run can never reach the error reporter and throw there.
-  [NAMES.report]: { main: [[{ node: NAMES.errPlan, type: "main", index: 0 }]], error: [[{ node: NAMES.errPath, type: "main", index: 0 }]] },
+  // The report's output goes two ways: into the alert reporter (22), and into the delivery gate. Both 21 and 22
+  // emit the same shape, and neither is downstream of the other, so a clean run can never reach the error
+  // reporter and throw there.
+  [NAMES.report]: {
+    main: [[{ node: NAMES.errPlan, type: "main", index: 0 }, { node: NAMES.tell, type: "main", index: 0 }]],
+    error: [[{ node: NAMES.errPath, type: "main", index: 0 }]],
+  },
+  // A run that wrote something, and a run that refused, are two different things to say, so they arrive at the
+  // gate as two items and can produce two messages. The error path does not pass the gate: a stage that threw
+  // is always worth a message.
+  [NAMES.errPlan]: { main: [[{ node: NAMES.tell, type: "main", index: 0 }]] },
+  [NAMES.errPath]: { main: [[{ node: NAMES.notify, type: "main", index: 0 }]] },
+  [NAMES.tell]: { main: [[{ node: NAMES.notify, type: "main", index: 0 }], []] },
+  // The delivery is never the last word: 24 turns the run back to red when a reporter said something is wrong.
+  // 24's own error output is unwired - an unwired throw is what a workflow-level error workflow catches.
+  [NAMES.notify]: { main: [[{ node: NAMES.loud, type: "main", index: 0 }]] },
 };
 
 const workflow = {
@@ -295,12 +352,7 @@ const workflow = {
   settings: {
     executionOrder: "v1",
     timezone: INSTANCE.timezone ?? "America/Chicago",
-    // Named explicitly rather than defaulted: the sign-in node's request body contains a password, and
-    // execution data is where it would be retained. docs/security.md weighs this against the need to read a
-    // scheduled dry run after the fact; the mitigation chosen was host-level pruning, not turning data off.
-    saveDataErrorExecution: "all",
-    saveDataSuccessExecution: "all",
-    savePreExecutionData: false,
+    ...RETENTION,
   },
   meta: { templateCredsSetupCompleted: false },
   tags: ["mobilizon", "events", "cadence"],
@@ -344,11 +396,16 @@ for (const key of ["readSeriesHistory", "readSeriesHistoryVars", "signIn", "crea
   if (!cfgNode.parameters.jsCode.includes(`${key}:`)) problems.push(`${NAMES.cfg} does not expose query "${key}"`);
 }
 
-// No request may point anywhere but the configured Mobilizon instance; no request may swallow an error.
+// No request may point anywhere but the two configured hosts, and only one node may use the second: the
+// Mobilizon instance, and the alert server. The allow-list is written out per node on purpose - "it also calls
+// one other host" is the kind of change that should have to argue with a check.
 for (const n of nodes.filter((x) => x.type === "n8n-nodes-base.httpRequest")) {
   const u = new URL(n.parameters.url);
-  if (u.origin !== new URL(INSTANCE.baseUrl).origin) problems.push(`${n.name}: url points at ${u.origin}, not ${INSTANCE.baseUrl}`);
-  if (u.pathname !== INSTANCE.graphqlPath) problems.push(`${n.name}: path is ${u.pathname}, not the path 5.2.4 serves (${INSTANCE.graphqlPath})`);
+  if (n.name === NAMES.notify) {
+    if (u.origin !== new URL(ALERT.rootUrl).origin) problems.push(`${n.name}: url points at ${u.origin}, not ${ALERT.rootUrl}`);
+    if (u.pathname !== "/") problems.push(`${n.name}: path is ${u.pathname}; ntfy JSON publish must POST to the server root`);
+  } else if (u.origin !== new URL(INSTANCE.baseUrl).origin) problems.push(`${n.name}: url points at ${u.origin}, not ${INSTANCE.baseUrl}`);
+  else if (u.pathname !== INSTANCE.graphqlPath) problems.push(`${n.name}: path is ${u.pathname}, not the path 5.2.4 serves (${INSTANCE.graphqlPath})`);
   if (n.parameters.sendQuery) problems.push(`${n.name}: a query string is where a token ends up in an access log`);
   if (!n.parameters.sendBody || n.parameters.specifyBody !== "json") problems.push(`${n.name}: body is not JSON`);
   if (n.parameters.options?.response?.response?.neverError) problems.push(`${n.name}: neverError hides GraphQL failures`);
@@ -364,6 +421,9 @@ if (!json0.includes(`$env.${CREDENTIALS.passwordEnv}`)) problems.push(`the sign-
 for (const shape of ['"password"', '"accessToken":', '"Basic ', '"Bearer ey', "eyJ"]) {
   if (json0.includes(shape)) problems.push(`${shape} must not appear as a literal in the workflow`);
 }
+// by shape, not prefix: the config's own comment explains what an ntfy token looks like, and that comment is
+// injected into 01 Config. A value is the finding, not the word.
+if (/\btk_[A-Za-z0-9]{16,}/.test(json0)) problems.push("an ntfy token value appears in a node - it belongs in $env, never in the workflow");
 
 // The error reporter is reachable only through error outputs. If a main edge ever pointed at it, a clean run
 // would arrive with no `$json.error` and throw - which reads as a mysterious second failure.
@@ -373,18 +433,56 @@ for (const [from, ports] of Object.entries(connections)) {
   }
 }
 
-// Every node that can fail has its error output wired to the reporter, and the two reporters are terminals.
+// Every node that can fail has its error output wired to the reporter, and the reporters only feed delivery.
 // A node added later without an error output fails silently in a scheduled run - the one failure mode this
 // whole graph exists to avoid.
 const wired = new Set(Object.entries(connections).filter(([, p]) => p.error?.length).map(([from]) => from));
+// Two exemptions, both stated: the delivery node has no downstream that could report its own failure, and a
+// failed send must turn the execution red rather than arrive at `21`, which would find no error field and
+// throw a second, unrelated message over the first. The gate is exempt for the same reason - its condition
+// reads a field its own upstream composed, so an error there is a graph bug, not a run failure.
+const noErrorPort = new Set([NAMES.errPath, NAMES.errPlan, NAMES.notify, NAMES.tell, NAMES.loud]);
 for (const n of nodes) {
   if (n.type === "n8n-nodes-base.scheduleTrigger") continue;
-  if (n.name === NAMES.errPath || n.name === NAMES.errPlan) continue;
+  if (noErrorPort.has(n.name)) continue;
   if (!wired.has(n.name)) problems.push(`${n.name} has no error output wired to ${NAMES.errPath}`);
 }
+
+// A wired error output is only half of it, and the half that was missing until 2026-11-05 is the node
+// property: without `onError: "continueErrorOutput"` the slot never fires, the handler is unreachable, and the
+// default `stopWorkflow` halts the run (vendor NODE_ERROR_OUTPUTS, "Error wire set, onError not configured").
+// Checked from the ON_ERROR list rather than inferred, because the *inverse* is equally bad: the same reference
+// calls "`onError` set, error output not wired" one of the worst silent-failure modes in n8n - the error is
+// discarded and the run reports success.
+const ON_ERROR_SET = new Set(ON_ERROR);
+for (const n of nodes) {
+  if (n.onError !== undefined && n.onError !== "continueErrorOutput") {
+    problems.push(`${n.name} sets onError: ${JSON.stringify(n.onError)} - this graph's error outputs only mean continueErrorOutput`);
+  }
+  if (ON_ERROR_SET.has(n.name) && !wired.has(n.name)) problems.push(`${n.name} is listed in ON_ERROR but its error output is not wired`);
+  if (wired.has(n.name) && n.onError !== "continueErrorOutput") problems.push(`${n.name} has a wired error output but no onError: "continueErrorOutput" - the branch cannot fire, and a failure would stop the run instead of alerting`);
+  if (n.onError === "continueErrorOutput" && !wired.has(n.name)) problems.push(`${n.name} sets onError: continueErrorOutput but wires nothing - the error is discarded and the execution looks successful`);
+}
+// The retry policy is a per-node decision this rig made on purpose (see the ON_ERROR/RETRY block), so an
+// accidental addition to a write node is a calendar bug, not a robustness improvement.
+const RETRY_SET = new Set(RETRY);
+for (const n of nodes) {
+  if (RETRY_SET.has(n.name) && n.retryOnFail !== true) problems.push(`${n.name} is listed in RETRY but has no retryOnFail - it would alert on a transient blip`);
+  if (!RETRY_SET.has(n.name) && n.retryOnFail === true) problems.push(`${n.name} retries but is not in RETRY - on ${NAMES.create} that means a duplicate event on the club's calendar`);
+  if (n.retryOnFail === true) {
+    if (n.maxTries !== RETRY_SETTING.maxTries || n.waitBetweenTries !== RETRY_SETTING.waitBetweenTries) {
+      problems.push(`${n.name} retries with ${n.maxTries}/${n.waitBetweenTries}ms, not the single policy in RETRY_SETTING`);
+    }
+  }
+}
+// The reporters end a *reasoning* path: what may follow them is the delivery chain and nothing else. Anything
+// else is a second failure path - the shape that made a clean run reach the error reporter once already.
+const afterReporters = new Set([NAMES.notify, NAMES.tell]);
 for (const terminal of [NAMES.errPath, NAMES.errPlan]) {
   const ports = connections[terminal];
-  if (ports && (ports.main?.length || ports.error?.length)) problems.push(`${terminal} must be a terminal - it feeds the alert, not another node`);
+  const out = ports ? Object.values(ports).flat().flat().filter(Boolean).map((c) => c.node) : [];
+  const stray = out.filter((name) => !afterReporters.has(name));
+  if (stray.length) problems.push(`${terminal} feeds ${stray.join(", ")} - it may only feed delivery`);
 }
 
 // The gate is the only write switch: it must compare the plan node's `action` against exactly "create".
@@ -407,6 +505,27 @@ if (RUN.dryRun === true && !READ("nodes/04-plan.js").includes("planSeries")) {
 const groups = [...new Set(SERIES.map((s) => s.groupActor))];
 if (groups.length > 1) problems.push(`series span ${groups.length} groups; the chain reads one group per run (see ${NAMES.cfg})`);
 
+// Retention is checked, not trusted: the three flags are what make a scheduled or manual dry run readable in
+// the runtime, and a workflow that silently inherits the packaged `none` produces an execution id and no data
+// (D201 - that is exactly how it presented on 2026-11-05, as a `not found` for an execution that had run).
+for (const [k, want] of Object.entries(RETENTION)) {
+  if (workflow.settings[k] !== want) {
+    problems.push(`settings.${k} is ${JSON.stringify(workflow.settings[k])}, must be ${JSON.stringify(want)} - without it n8n keeps no run data for this workflow and every dry run reads back as "execution not found"`);
+  }
+}
+// `settings.errorWorkflow` holds an *instance* id, so it can never be a reviewed byte: it would point at
+// whatever workflow happened to own that id on this box. The watcher itself is built (n8n/error-watcher.json,
+// D206) and linking it is an instance action - `n8n-api.mjs link <watched> <watcher>`, or the cadence's
+// Settings -> Error Workflow picker - which resolves the id off the live instance, after
+// requiring that the target be published and contain an Error Trigger.
+if (workflow.settings.errorWorkflow) problems.push("settings.errorWorkflow is set in the generator - the id belongs to the instance, so link it in the cadence's Settings -> Error Workflow after the watcher is imported and activated (D206)");
+// The trigger's hour must be written in parameters the node actually reads (D207).
+{
+  const iv = (nodes.find((n) => n.name === NAMES.schedule).parameters.rule.interval ?? [])[0] ?? {};
+  if (Object.prototype.hasOwnProperty.call(iv, "triggerAt")) problems.push(`${NAMES.schedule}: "triggerAt" is not a Schedule Trigger v1 parameter on this instance (measured 2026-11-05) - the node would fire at its default, midnight, while the artifact claims 09:00`);
+  if (iv.triggerAtHour !== 9 || iv.triggerAtMinute !== 0) problems.push(`${NAMES.schedule}: triggerAtHour/triggerAtMinute are ${JSON.stringify([iv.triggerAtHour, iv.triggerAtMinute])}, not 9/0 - every doc in this directory says the run is at 09:00`);
+}
+
 // Every series must be plannable: the fields core.mjs needs, or the run alerts at 09:00 and nobody is watching.
 for (const s of SERIES) {
   for (const f of ["key", "title", "groupActor", "everyDays", "timezone"]) {
@@ -414,6 +533,66 @@ for (const s of SERIES) {
   }
   if (!Number.isInteger(s.everyDays) || s.everyDays < 1) problems.push(`series "${s.key}" everyDays must be a positive integer`);
   if (s.weekdaySnap !== null && s.weekdaySnap !== undefined && !(s.weekdaySnap >= 0 && s.weekdaySnap <= 6)) problems.push(`series "${s.key}" weekdaySnap must be 0..6 or null`);
+}
+
+// ------------------------------------------------------- the alert channel (D194)
+// A workflow that can fail but cannot tell anyone is the failure this generator exists to prevent, so the
+// channel is checked like the date rules are - as data, before anything runs.
+if (!ALERT) problems.push("series.config.mjs exports no ALERT - the workflow has reporters and no delivery");
+else {
+  let root = null;
+  try { root = new URL(ALERT.rootUrl); } catch { problems.push(`ALERT.rootUrl is not a URL: "${ALERT.rootUrl}"`); }
+  if (root) {
+    if (root.protocol !== "https:") problems.push(`ALERT.rootUrl is ${root.protocol} - a token must not cross a plain-HTTP hop`);
+    if (root.host !== ALERT.host) problems.push(`ALERT.rootUrl host ${root.host} != ALERT.host ${ALERT.host}`);
+    // ntfy documents it twice: JSON publishing must POST to the server root, not to the topic URL.
+    if (root.pathname !== "/") problems.push(`ALERT.rootUrl path is "${root.pathname}" - JSON publish must go to the root`);
+  }
+  if (!/^[A-Za-z0-9_-]{1,64}$/.test(ALERT.topic ?? "")) problems.push(`ALERT.topic "${ALERT.topic}" is not an ntfy topic id ([A-Za-z0-9_-]{1,64})`);
+  // The YunoHost package grants anonymous write-only access to topics matching `up*` for its iOS upstream flow
+  // (measured from the package's scripts/install 2026-11-04). A topic starting with those two letters would be
+  // writable by every stranger who can reach the host.
+  if (/^up/i.test(ALERT.topic ?? "")) problems.push(`ALERT.topic "${ALERT.topic}" starts with "up", which the ynh package grants to anonymous writers`);
+  if (!/^[A-Z][A-Z0-9_]*$/.test(ALERT.tokenEnv ?? "")) problems.push(`ALERT.tokenEnv must be an environment-variable NAME, got "${ALERT.tokenEnv}"`);
+  if (ALERT.tokenEnv === CREDENTIALS.emailEnv || ALERT.tokenEnv === CREDENTIALS.passwordEnv) problems.push("ALERT.tokenEnv collides with a Mobilizon credential name");
+  for (const [k, v] of Object.entries(ALERT.priority ?? {})) {
+    if (!Number.isInteger(v) || v < 1 || v > 5) problems.push(`ALERT.priority.${k} = ${v} is outside the documented 1 (min) to 5 (max)`);
+  }
+  const notify = nodes.find((n) => n.name === NAMES.notify);
+  if (!notify) problems.push("no delivery node - the reporters compose messages nothing will send");
+  else {
+    if (notify.parameters.url !== ALERT.rootUrl) problems.push(`${NAMES.notify} posts to "${notify.parameters.url}", not ALERT.rootUrl`);
+    if ((notify.parameters.options?.response?.response?.neverError ?? false) !== false) problems.push(`${NAMES.notify} has neverError: true - a dropped alert would look like a successful run`);
+    if (notify.parameters.options?.headers?.some((h) => /tk_[A-Za-z0-9]/.test(h.value ?? ""))) problems.push(`${NAMES.notify} carries an ntfy token literal - it belongs in $env.${ALERT.tokenEnv}`);
+    const out = (connections[NAMES.notify] ?? {}).main?.flat().filter(Boolean) ?? [];
+    // Exactly one edge, and it goes to the loud node. The delivery is never the end of a path, because a run
+    // whose error was "handled" by an error output is not recorded as a failure (vendor ERROR_WORKFLOWS) - and
+    // this workflow's stated alarm is a red execution.
+    if (out.length !== 1 || out[0].node !== NAMES.loud) {
+      problems.push(`${NAMES.notify} must feed exactly one node, ${NAMES.loud} (found ${out.map((c) => c.node).join(", ") || "nothing"}) - without it a handled failure stops looking like a failure`);
+    }
+    if ((connections[NAMES.loud] ?? {}).main?.flat().filter(Boolean).length) problems.push(`${NAMES.loud} must be terminal: anything downstream of a deliberate throw is dead code`);
+    const loud = nodes.find((n) => n.name === NAMES.loud);
+    if (loud.onError !== undefined) problems.push(`${NAMES.loud} must not set onError: its throw is the one unwired failure a future workflow-level error workflow can still catch`);
+  }
+  // Every stage that can throw must be able to reach the delivery node, and so must the clean-run report.
+  const adj = new Map();
+  for (const [from, byPort] of Object.entries(connections)) {
+    for (const list of Object.values(byPort)) for (const arr of list ?? []) for (const c of arr ?? []) {
+      if (!adj.has(from)) adj.set(from, new Set());
+      adj.get(from).add(c.node);
+    }
+  }
+  const reaches = (from, to) => {
+    const seen = new Set([from]); const q = [from];
+    while (q.length) { const cur = q.shift(); if (cur === to) return true;
+      for (const nxt of adj.get(cur) ?? []) if (!seen.has(nxt)) { seen.add(nxt); q.push(nxt); } }
+    return false;
+  };
+  const mustDeliver = [...Object.entries(connections).filter(([, ports]) => ports.error).map(([from]) => from), NAMES.report];
+  for (const from of mustDeliver) {
+    if (!reaches(from, NAMES.notify)) problems.push(`${from} can fail (or report) but no path reaches ${NAMES.notify}`);
+  }
 }
 
 const json = JSON.stringify(workflow, null, 2);

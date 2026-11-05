@@ -28,8 +28,11 @@
  * artifact; fix it in the repo and re-import. WARN = n8n normalised something this script cannot read with
  * confidence; it says exactly what to look at. NOTE = expected (your alerting node, for instance).
  *
- * Nothing here contacts n8n or Mobilizon: n8n.labradorius.com answers 302 to the YunoHost SSO from this seat
- * (measured 2026-11-04), so the round trip is done by the operator's hands and by this file.
+ * Nothing here contacts n8n or Mobilizon. It reads a file you point it at. (Until 2026-11-05 that file had to
+ * come from your hands, because the host answered 302 to the YunoHost SSO for every path; since then the REST
+ * door carries the same bytes both ways - `n8n-api.mjs verify <key>` fetches the live copy and runs this file's
+ * checker on it, and `diff <(jq -S . exported.json) <(jq -S . n8n/cadence-workflow.json)` still works on an
+ * export from the UI. What this file checks, and what it refuses to do, is unchanged.)
  */
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -38,6 +41,8 @@ import { fileURLToPath } from "node:url";
 import { resolve } from "node:path";
 import { runCodeNode, runCodeChain } from "./lib/sandbox.mjs";
 import { checkProbe } from "./build-probe.mjs";
+import { checkAlerter } from "./build-alerter.mjs";
+import { checkHeartbeat } from "./build-heartbeat.mjs";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
 const config = await import(new URL("./series.config.mjs", import.meta.url).href);
@@ -45,6 +50,34 @@ const { INSTANCE, CREDENTIALS, RUN } = config;
 
 export const CADENCE = JSON.parse(readFileSync(here + "n8n/cadence-workflow.json", "utf8"));
 export const PROBE = JSON.parse(readFileSync(here + "n8n/env-probe.json", "utf8"));
+export const WATCHER = JSON.parse(readFileSync(here + "n8n/error-watcher.json", "utf8"));
+export const HEARTBEAT = JSON.parse(readFileSync(here + "n8n/heartbeat.json", "utf8"));
+
+/**
+ * Every artifact this repo reviews, by the name it carries on the canvas.
+ *
+ * A registry rather than a `name === PROBE.name ? PROBE : CADENCE` ternary, because there are four now and a
+ * ternary silently calls anything that is not the probe the cadence - which would have read the error watcher's
+ * bytes against the cadence's safety invariants and reported a clean watcher as drift (D206).
+ */
+export const BASELINES = [
+  { doc: CADENCE, file: "n8n/cadence-workflow.json", key: "cadence", build: "build-workflow.mjs" },
+  { doc: PROBE, file: "n8n/env-probe.json", key: "probe", build: "build-probe.mjs" },
+  { doc: WATCHER, file: "n8n/error-watcher.json", key: "watcher", build: "build-alerter.mjs" },
+  { doc: HEARTBEAT, file: "n8n/heartbeat.json", key: "heartbeat", build: "build-heartbeat.mjs" },
+];
+
+/** Resolve a canvas name to its baseline. Unknown returns null so the caller can say which names exist. */
+export function baselineFor(name) {
+  return BASELINES.find((b) => b.doc.name === name) ?? null;
+}
+
+/** The name a human types at the door for this artifact, so a finding can hand back the exact command. */
+export function repoKey(expected) {
+  const hit = BASELINES.find((b) => b.doc.name === expected.name);
+  if (!hit) throw new Error(`repoKey: "${expected.name}" is not a baseline this repo keeps`);
+  return hit.key;
+}
 
 // The names the safety invariants are written against. If a name changes in the artifact, this file must
 // change with it - which is the point: they are load-bearing, not incidental.
@@ -53,6 +86,7 @@ const N = {
   plan: "04 Plan & decide", gate: "05 Stop if nothing to write",
   create: "06 Create event", audit: "07 Audit the date", report: "08 Report",
   errPath: "21 Report error path", errPlan: "22 Report a problem",
+  tell: "09 Tell a person?", notify: "23 Notify on ntfy", loud: "24 Fail loudly",
 };
 
 const NODE_IGNORE = new Set(["id", "position", "meta", "webhookId", "notes", "notesInFlow"]);
@@ -158,7 +192,7 @@ const mask = (s) => {
  * The check itself. Returns findings (severity, where, what, means) plus the two fingerprints and what the
  * exported copy would do.
  */
-export function verifyDocument(got, expected = CADENCE) {
+export function verifyDocument(got, expected = CADENCE, ctx = {}) {
   const F = [];
   const add = (sev, where, what, means) => F.push({ sev, where, what, means });
 
@@ -199,9 +233,9 @@ export function verifyDocument(got, expected = CADENCE) {
     const outEdges = (got.connections?.[n]?.main ?? []).flat().length;
     if (alertOnly && !outEdges) {
       alertAdditions.add(n);
-      add("note", n, `added node, fed only by ${feeders.map((f) => f.from).join(", ")}`, "that is alerting, which the guide asks for - expected, and it does not touch the chain");
+      add("note", n, `added node, fed only by ${feeders.map((f) => f.from).join(", ")}`, "that is a second alert terminal - expected and harmless, but it lives only in n8n: the channel this repo ships and tests is 23 Notify on ntfy (D194)");
     } else if (alertOnly) add("warn", n, "added node feeds something downstream", "an alert terminal should be the end of a path; check it does not route back into the chain");
-    else add("drift", n, `added node, fed by ${feeders.map((f) => f.from || "(nothing)").join(", ") || "nothing"}`, "the reviewed artifact has 11 nodes; anything else needs a reason and a rebuild in the repo, not an edit in the editor");
+    else add("drift", n, `added node, fed by ${feeders.map((f) => f.from || "(nothing)").join(", ") || "nothing"}`, `the reviewed artifact has ${expected.nodes.length} nodes; anything else needs a reason and a rebuild in the repo, not an edit in the editor`);
   }
 
   // ---- per-node, for the nodes that exist in both
@@ -306,8 +340,19 @@ export function verifyDocument(got, expected = CADENCE) {
   for (const k of new Set([...Object.keys(sa), ...Object.keys(sb)])) {
     if (sa[k] === sb[k]) continue;
     if (k === "timezone") add("fatal", `settings.timezone`, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the trigger's 09:00 is in this zone: leave it to the instance default and the run moves hours without anyone touching a node");
+    else if (k === "errorWorkflow" && sa[k] === undefined) {
+      // The link is instance-local by construction (D206): the watcher's id is issued by whichever n8n this is,
+      // so no artifact can carry it and every linked copy differs from its artifact here. What is checkable is
+      // *who* it points at, so the name is resolved by the caller when it can (a live verify always can).
+      const named = ctx.errorWorkflowName;
+      if (named && baselineFor(named)) add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - the reviewed watcher`, "linked by `n8n-api.mjs link`: the id belongs to this instance, which is why the artifact does not declare it (D206)");
+      else if (named) add("drift", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - a workflow this repo does not review`, `${expected.name}: its failures are pointed at something unverified - it will look like alerting and be nothing (D206). Re-run "n8n-api.mjs link ${repoKey(expected)} watcher"`);
+      else if (ctx.errorWorkflowLookedUp) add("warn", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - no workflow on this instance answers to that id`, `the link points at nothing, so a failure is being sent nowhere. Re-run "n8n-api.mjs link ${repoKey(expected)} watcher"`);
+      else add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - this mode cannot ask the instance whose id that is`, `run "n8n-api.mjs verify ${repoKey(expected)}" (or open its Settings -> Error Workflow) to see whose id that is`);
+    }
     else if (k === "executionOrder") add("fatal", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the v0 order evaluates expressions differently than every test in this directory assumes");
-    else if (/^saveData|^savePre/.test(k)) add("note", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "execution retention: node 03's request body carries a password, so pruning is a host job (docs/security.md)");
+    else if (/^saveData|^savePre|^saveManual/.test(k)) add("note", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "execution retention: the packaged instance default on this box is save-on-success=none and manual=false, so these workflow settings are the only thing that makes a dry run readable (D201); and node 03's request body carries a password, so pruning stays a host job (docs/security.md)");
+    else if (k === "availableInMCP" && sa[k] === undefined) add("note", `settings.availableInMCP`, `${JSON.stringify(sb[k])} vs undeclared`, "the instance marks a workflow it created as available to its own MCP server, and this repo deliberately does not declare it: whether a workflow is reachable through MCP is an instance decision (D202), and writing false would fight that default on every import");
     else add("warn", `settings.${k}`, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "a workflow setting nobody set in the repo");
   }
 
@@ -324,6 +369,18 @@ export function verifyDocument(got, expected = CADENCE) {
   if (isProbe) {
     for (const p of checkProbe(got)) add("fatal", "probe", p, "this document claims to be the read-only probe; its own build invariants say why it must stay that way");
   }
+  // Each artifact is held to **its own** argument, not the cadence's. The watcher's whole safety case is that it
+  // calls nothing but the alert server and carries no Mobilizon surface (D206); run the cadence's rules over it
+  // and a correct watcher reads as drift - which is how a watcher gets edited into something worse on the canvas.
+  // Same shape as `isProbe` above, and both checkers are the ones `check:cadence` runs on the file itself.
+  const isWatcher = expected.name === WATCHER.name;
+  const isHeartbeat = expected.name === HEARTBEAT.name;
+  if (isWatcher) {
+    for (const p of checkAlerter(got)) add("fatal", "watcher", p, "this document claims to be the error watcher; build-alerter.mjs' invariants say why it must stay minimal (D206)");
+  }
+  if (isHeartbeat) {
+    for (const p of checkHeartbeat(got, { live: true })) add("fatal", "heartbeat", p, "this document claims to be the weekly heartbeat; build-heartbeat.mjs' invariants say why it must stay read-only and unconditional (D205)");
+  }
   const intoCreate = (into.get(N.create) ?? []);
   if (isCadence && (intoCreate.length !== 1 || intoCreate[0].from !== N.gate)) {
     add("fatal", N.create, `${intoCreate.length} inbound edge(s): ${intoCreate.map((i) => i.from).join(", ") || "none"}`, "exactly one edge may start a write, and it must come from the gate");
@@ -336,15 +393,25 @@ export function verifyDocument(got, expected = CADENCE) {
     if (u) {
       try {
         const parsed = new URL(u);
-        if (parsed.origin !== new URL(INSTANCE.baseUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only ${INSTANCE.baseUrl} may be called`);
-        if (isCadence && parsed.pathname !== INSTANCE.graphqlPath) add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, `5.2.4 serves ${INSTANCE.graphqlPath} on this instance (probed 2026-11-04)`);
+        // Two hosts, and only one node may use the second. Written out per node so that "it also calls
+        // somewhere else" has to argue with a check rather than slip past an origin comparison (D194).
+        if (isCadence && n.name === N.notify) {
+          if (parsed.origin !== new URL(config.ALERT.rootUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only the alert server ${config.ALERT.rootUrl} may be called by the delivery node`);
+          if (parsed.pathname !== "/") add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, "ntfy publishes JSON to the server root, not to a topic path");
+        } else if ((isCadence || isProbe) && parsed.origin !== new URL(INSTANCE.baseUrl).origin) {
+          add("fatal", `${n.name}.url`, parsed.origin, `only ${INSTANCE.baseUrl} may be called (the watcher and heartbeat answer to their own invariants instead, D206/D205)`);
+        }
+        else if (isCadence && parsed.pathname !== INSTANCE.graphqlPath) add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, `5.2.4 serves ${INSTANCE.graphqlPath} on this instance (probed 2026-11-04)`);
       } catch { add("fatal", `${n.name}.url`, "not a URL", "the artifact uses the absolute endpoint literally"); }
     }
   }
   if (isCadence) {
     for (const t of [N.errPath, N.errPlan]) {
       const p = got.connections?.[t];
-      const downstream = ((p?.main ?? []).flat()).filter(Boolean).filter((c) => !alertAdditions.has(c.node));
+      // The delivery chain is shipped now, so it is not an "addition": the reporters may feed the gate and the
+      // delivery node. Anything else downstream is still the second-failure-path shape that broke a clean run once.
+      const downstream = ((p?.main ?? []).flat()).filter(Boolean)
+        .filter((c) => !alertAdditions.has(c.node) && c.node !== N.tell && c.node !== N.notify);
       const viaError = ((p?.error ?? []).flat()).length;
       if (downstream.length || viaError) {
         add("drift", t, `not a terminal node (feeds ${downstream.map((c) => c.node).join(", ") || "an error branch"})`,
@@ -356,6 +423,47 @@ export function verifyDocument(got, expected = CADENCE) {
       if (json.includes(shape)) add("fatal", "nodes", `${shape} appears as a literal`, "no credential may exist in the workflow JSON: node 03 reads the names of two environment variables (D177)");
     }
     if (!json.includes(`$env.${CREDENTIALS.passwordEnv}`)) add("fatal", "03 Sign in", `it no longer reads $env.${CREDENTIALS.passwordEnv}`, "the password's only permitted home is the n8n environment");
+
+    // ---- the two halves of an error output, checked on the exported bytes (D195)
+    // This is not the node-diff argument again. The diff would report a *change*; this reports a **shape**, and
+    // it applies to a node you added in the editor as much as to the shipped ones. Both halves are silent
+    // failures: a wire with no `onError` property never fires (the run stops on the default `stopWorkflow`),
+    // and the property with no wire throws the error away and records the run as successful. The artifact sat
+    // in the first state from its first commit until 2026-11-05, which is why the check is phrased this way.
+    const wiredError = new Set(
+      Object.entries(got.connections ?? {})
+        .filter(([, ports]) => (ports?.error ?? []).flat().filter(Boolean).length)
+        .map(([from]) => from),
+    );
+    for (const n of got.nodes) {
+      const onError = n.onError;
+      if (onError !== undefined && onError !== "continueErrorOutput") {
+        add("warn", `${n.name}.onError`, JSON.stringify(onError), "this graph only uses continueErrorOutput; another value means the error goes somewhere this check cannot read");
+      }
+      if (wiredError.has(n.name) && onError !== "continueErrorOutput") {
+        add("fatal", `${n.name}.onError`, `error output wired, onError ${JSON.stringify(onError ?? null)}`,
+          "the error branch cannot fire, so a failure stops the run instead of alerting anyone (vendor NODE_ERROR_OUTPUTS: the handler is unreachable)");
+      }
+      if (onError === "continueErrorOutput" && !wiredError.has(n.name)) {
+        add("fatal", `${n.name}.onError`, "onError: continueErrorOutput with nothing wired",
+          "the error is discarded and the execution is recorded as a success - one of n8n's worst silent-failure modes");
+      }
+      if (n.retryOnFail === true && expected.name === CADENCE.name && !["02 Read the series history", "07 Audit the date", "23 Notify on ntfy"].includes(n.name)) {
+        add("fatal", `${n.name}.retryOnFail`, `retries ${n.maxTries ?? "?"} times`,
+          "this rig retries only idempotent calls: 06 has no idempotency key on Mobilizon 5.2.4, so a retried write is a duplicate on the club's calendar, and 03 retries a password against a fail2ban front");
+      }
+    }
+    // The delivery is never the end of a path (see nodes/24-fail-loudly.js for why a handled error stops
+    // looking like a failure).
+    const fromNotify = ((byName(got).get(N.notify) && got.connections?.[N.notify]?.main) ?? []).flat().filter(Boolean);
+    if (fromNotify.length !== 1 || fromNotify[0].node !== N.loud) {
+      add("fatal", `${N.notify} outgoing`, fromNotify.map((c) => c.node).join(", ") || "nothing",
+        `the delivery node must feed exactly one node, ${N.loud}: a run whose failure was "handled" is not recorded as one, and the red execution is the alarm`);
+    }
+    const fromLoud = (got.connections?.[N.loud] ?? {});
+    if (Object.values(fromLoud).flat().flat().filter(Boolean).length) {
+      add("drift", N.loud, "it feeds something", "24 is terminal by design; downstream of a deliberate throw is dead code, and wiring its error output would hide the throw from a workflow-level error workflow");
+    }
   }
 
   // ---- the exported copy, **executed**. Not a second way to catch a changed rule - the Code text is
@@ -466,7 +574,13 @@ let doc;
 try { doc = JSON.parse(readFileSync(file, "utf8")); }
 catch (e) { console.error(`${file}: ${e.message}`); process.exit(2); }
 const target = Array.isArray(doc) ? doc[0] : doc;
-const expected = target?.name === PROBE.name ? PROBE : CADENCE;
+const base = baselineFor(target?.name ?? "");
+if (!base) {
+  console.error(`verify-import: no reviewed artifact is named ${JSON.stringify(target?.name)}. Known: ${BASELINES.map((b) => `${b.key} = ${b.doc.name} (${b.file})`).join(" | ")}`);
+  console.error("if the copy on the canvas was renamed by hand, that is the finding: a renamed copy is a copy someone made by hand (D184)");
+  process.exit(2);
+}
+const expected = base.doc;
 
 const res = verifyDocument(target, expected);
 if (args.includes("--fingerprint")) {

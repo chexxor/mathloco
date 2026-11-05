@@ -30,7 +30,9 @@ export function runCodeNode(jsCode, itemsByName) {
   const $ = (name) => {
     if (!map.has(name)) throw new Error(`node "${name}" did not run`);
     const items = map.get(name);
-    return { all: () => items, item: items[0] };
+    // `first()` is part of the harness because the error watcher's node calls it (n8n's own reference form),
+    // and a harness missing a method the shipped code calls would fail the test for the wrong reason.
+    return { all: () => items, item: items[0], first: () => items[0], last: () => items[items.length - 1] };
   };
   const firstNode = [...map.values()][0] ?? [];
   return new Function("$", "$json", jsCode)($, firstNode[0]?.json);

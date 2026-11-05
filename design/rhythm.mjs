@@ -3,68 +3,36 @@
 //
 //   npm run build && npm run check:rhythm
 //
-// "Tighten the rhythm" is a request whose effect nobody can estimate: the last round's numbers said 42% of the
-// page height sits in empty runs, and 480px of the page is declared padding and margin — but the measurement
-// also said most of the emptiness is INSIDE surfaces, between their own elements, where padding rules do not
-// reach. So each option is applied as a stylesheet to a COPY of the built page and re-measured by the same
-// instrument that produced the baseline (`design/whitespace-survey.mjs`, same bars, same widths). The deltas in
-// the table are what the option buys; nothing here edits the site.
+// "Tighten the rhythm" is a request whose effect nobody can estimate. The shipped page as measured 2026-11-04 by
+// `npm run check:space` (Linux, this rig): **1240 4028px tall, 1242px in 10 empty runs = 30.8% of the height,**
+// **512px of it declared padding, painted 8.41%; 390 5352px, 1114px in 11 runs = 20.8%, painted 11.45%; 320 6125px,
+// 1381px in 12 runs = 22.5%.** And the emptiness is not one thing: at 1240 the two biggest runs (196px, 160px) are
+// the hero's own declared margins, while 146/137/177px sit at the *bottom* of three `py-16` bands and 109/71/109px
+// between the schedule's rows. So each option is applied as a stylesheet to a COPY of the built page and re-measured
+// by the same instrument that produced the baseline (`design/whitespace-survey.mjs`, same bars, same widths). The
+// deltas in the table are what the option buys; nothing here edits the site.
 //
 // Why `!important` in the variants: they have to beat Tailwind utilities (`md:mt-32`, `py-16`) from a single
 // injected style, and an override that loses silently measures the shipped page.
 //
-// The "slots" variant paints a hatched stand-in at the APPROVED photo-slot sizes (PS-1 372x564, PS-3 526x316).
-// It is not a photograph and must not be read as one: it measures the GEOMETRY of filling the slot — how many
-// empty rows and how much painted share change when that box stops being empty. Colour numbers from it are
-// meaningless; area numbers are the point.
+// The variant list is against **the page that ships now**: PS-1 carries its two plates, PS-5 (the horizon shelf)
+// exists from `lg` up, PS-4 carries the club's own event art, and PS-3 is a 56px-tall line of text, not a photo
+// slot (measured 2026-11-04: PS-3 526x56 @1240, PS-1 372x574 with media=2). The old table's `interior` option
+// tightened a six-card grid that has been gone for weeks — and measured **+184px taller and +532px emptier**, i.e.
+// it was steering at a structure that no longer exists — and its `slots` option painted PS-1 and PS-3, which are no
+// longer empty, so it came out a no-op (-47px empty). Those two are deleted, not tuned. Options here are the ones the
+// shipped page can actually answer.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 
-const WIDTHS = [1240, 390, 320];
+const WIDTHS = [1440, 1240, 1024, 640, 390, 320];
 const ROUTES = ['/'];
 
-const variants = [
-  {
-    label: 'edges',
-    what: 'declared edges only: hero margins 128/96 -> 64/64, section padding 64 -> 48',
-    css: `main { margin-top: 64px !important; margin-bottom: 64px !important; }
-section.bg-panel, section.bg-paper { padding-top: 48px !important; padding-bottom: 48px !important; }`,
-  },
-  {
-    label: 'edges-rules',
-    what: 'same trims, with a 1px rule at each band boundary instead of the lost air',
-    css: `main { margin-top: 64px !important; margin-bottom: 64px !important; }
-section.bg-panel, section.bg-paper { padding-top: 48px !important; padding-bottom: 48px !important;
-  border-top: 1px solid var(--color-rule); }`,
-  },
-  {
-    label: 'interior',
-    what: 'inside surfaces only: the six-card grid 64px in + 32px gaps -> 40px in + 24px gaps',
-    css: `.bg-panel > div > .mt-16 { margin-top: 40px !important; }
-.bg-panel .grid { gap: 24px !important; }`,
-  },
-  {
-    label: 'slots',
-    what: 'PS-1 and PS-3 filled at their approved sizes (hatched stand-in, geometry only)',
-    css: `main div[class*="grid-cols-12"] > div:last-child { background: repeating-linear-gradient(135deg,
-  transparent 0 6px, var(--color-rule) 6px 8px); }
-main div[class*="items-center"] > div:last-child { min-height: 316px !important; background:
-  repeating-linear-gradient(135deg, transparent 0 6px, var(--color-rule) 6px 8px); }`,
-  },
-  {
-    label: 'all',
-    what: 'edges + interior + slots together, to see the ceiling of the code-only option',
-    css: `main { margin-top: 64px !important; margin-bottom: 64px !important; }
-section.bg-panel, section.bg-paper { padding-top: 48px !important; padding-bottom: 48px !important; }
-.bg-panel > div > .mt-16 { margin-top: 40px !important; }
-.bg-panel .grid { gap: 24px !important; }
-main div[class*="grid-cols-12"] > div:last-child { background: repeating-linear-gradient(135deg,
-  transparent 0 6px, var(--color-rule) 6px 8px); }
-main div[class*="items-center"] > div:last-child { min-height: 316px !important; background:
-  repeating-linear-gradient(135deg, transparent 0 6px, var(--color-rule) 6px 8px); }`,
-  },
-];
+// The options live in one module so the gate table and the photographed specimen cannot drift (D160):
+// `round15.mjs` measures and photographs the SAME css strings this table prices.
+import { VARIANTS as variants } from './grill/rhythm-variants.mjs';
+
 
 if (!existsSync('dist/client/index.html')) {
   console.error('dist/client/index.html missing — run npm run build first');
@@ -113,10 +81,11 @@ const run = (label, css) => {
 };
 
 const rows = [];
-// `RHYTHM_VARIANTS=slots,edges npm run check:rhythm` measures a subset. Six variants x two widths is ~6 minutes
-// of Firefox, and most questions are about one option, so the cheap run should be possible. It is NOT a partial
-// write to the durable table: a subset run writes its own report file, because a table missing three rows and
-// labelled like the full one is how a future session quotes an incomplete comparison.
+// `RHYTHM_VARIANTS=edges,rows npm run check:rhythm` measures a subset. Six options x five widths is 30 Firefox
+// measurements (the shipped row is usually already cached by `check:space` for the same build), and most questions
+// are about one option, so the cheap run should be possible. It is NOT a partial write to the durable table: a
+// subset run writes its own report file, because a table missing three rows and labelled like the full one is how
+// a future session quotes an incomplete comparison.
 const only = (process.env.RHYTHM_VARIANTS || '').split(',').map((s) => s.trim()).filter(Boolean);
 const unknown = only.filter((l) => !variants.some((v) => v.label === l));
 if (unknown.length) {

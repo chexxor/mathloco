@@ -200,5 +200,32 @@ and a renumber silently re-points every one of them at a different decision.
 - **D190** — PS-4 gets the club's own event art, mirrored rather than linked, capped at its measured slot width, with an alt that claims only the file's role
 - **D191** — the two premises this integration rests on are gated as negatives, and a group feed is about to carry other people's events
 - **D192** — a planting is the only proof a rule exists: date-derived plantings use the rule's own clock, and every rule branch gets its own case
+- **D193** — the rhythm options are measured against the page that ships, the two that measured a retired structure are deleted, and the option list has one home
+- **D194** — cadence alerts go to the operator's own ntfy topic; the token is an env-var *name* in the artifact, and a run with nothing to say sends nothing
+- **D195** — an error output is two halves and the artifact shipped with one; retry is per-node because this rig, not the vendor default, knows what is idempotent; and loudness is re-declared after handling
+- **D196** (2026-11-05) — the n8n runtime is not writable from this seat: no route past SSO and no API credential, so the loop stays export→verify (measured 2026-11-05)
+- **D197** (2026-11-05) — the n8n runtime is driveable from this seat through the instance's own MCP server; that is the door, not the REST API (measured 2026-11-05)
+- **D198** (2026-11-05) — the n8n public REST API is mounted and answered 401 for the token this rig holds; do not conclude "disabled", and do not chase it while MCP works (measured 2026-11-05)
+- **D199** (2026-11-05) — the YunoHost package's execution-retention settings are why "read the execution" fails; the instance-wide fix is a box change and a security trade (measured 2026-11-05; **superseded in part by D201 — the per-workflow setting is enough, the box need not change**)
+- **D200** (2026-11-05) — inbound webhooks on this n8n instance answer 403 `Basic realm="Webhook"` even with node authentication set to "none"; the check is n8n's, not the proxy's (measured 2026-11-05)
+- **D201** (2026-11-05) — execution retention is a per-workflow setting that beats the instance default, so a workflow that needs its run data read back declares it and the box stays as the packager shipped it (measured 2026-11-05)
+- **D202** (2026-11-05) — the operator accepted the four n8n rulings as recommended (`1c, 2a, 3a, 4a`): retention lives in the artifact, the API key gets re-minted, `visitors` stays, and the chain runs in the recommended order (2026-11-05)
+- **D203** (2026-11-05) — the n8n instance publishes its own OpenAPI unauthenticated, and that decides the split of labour between the two doors: REST carries the artifact, MCP runs it (measured 2026-11-05)
+- **D204** (2026-11-05) — this instance stores execution data **unredacted by default**, so the password-in-run-data question now has a named switch and no measurement; the experiment is three steps and needs no Mobilizon credential (read 2026-11-05)
+- **D205** (2026-11-05) — the weekly heartbeat is a read-only proof of life that reports the rows that exist, not a second planner (2026-11-05, built)
+- **D206** (2026-11-05) — a workflow-level error workflow is a separate artifact, linked by instance id at runtime, and it stays quiet when cadence already spoke (2026-11-05, built)
+- **D207** (2026-06-04) — Schedule Trigger v1 on this instance reads `triggerAtDay`/`triggerAtHour`/`triggerAtMinute`; `triggerAt` is not a parameter and the cadence was firing at midnight while its own comments said 09:00 (measured 2026-06-04)
+- **D208** (2026-11-05) — The public API is strict about `settings` and body keys; the accepted sets are read off the instance's own spec and are now gates, not folklore (measured 2026-11-05, n8n 2.45.7 / Public API 1.1.1)
+- **D209** (2026-11-05) — On n8n 2.x an imported workflow has no published version, so a watcher must be published before it can be named as an error workflow; `activate` *is* publish (measured 2026-11-05)
+- **D210** (2026-11-05) — A reviewed file may not declare `active`, but a live copy must still round-trip; `importBody` now says which is which (measured 2026-11-05)
+- **D211** (2026-11-05) — A checker reused across two kinds of document must not assert provenance about a live copy (measured 2026-11-05)
+- **D212** — Retiring scratch is the door's soft delete, with the canvas copy on disk before the door is knocked on
+- **D213** (2026-11-05) — The weekly heartbeat is live and watched (operator ruling 1, 2026-11-05): proof of life now fires whether or not anything else does
+- **D214** (2026-11-05) — R6 is ruled: `rows` and `edges` are taken, `band-sm` is refused at 640 (operator ruling 4, 2026-11-05)
+- **D215** (2026-11-05) — A `401` gets an A/B on the request before it gets a story about the instance (measured 2026-11-05 22:31:49Z)
+- **D216** (2026-11-05) — A gate-cost comparison carries its load average, because the same set measured +50% and +125% in six minutes (measured 2026-11-05, Linux, 16 CPU)
+- **D217** (2026-11-05) — MCP is not offered as an n8n door: the REST door plus one UI button does the job, and a second door is a second thing to secure (operator ruling 3, 2026-11-05)
+- **D218** (2026-11-05) — The redaction experiment is parked, not dropped, and its trigger is a licence change or a leaked run record (operator ruling 2, 2026-11-05)
+- **D219** (2026-11-05) — A whole-document `PUT` carries the live error-workflow link with it, because the reviewed bytes deliberately do not name one (2026-11-05)
 
-Defined: 192 (D1-D192). Unused ids: none.
+Defined: 219 (D1-D219). Unused ids: none.

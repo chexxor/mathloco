@@ -80,7 +80,46 @@ the other half of what a 09:00 failure looks like.
 
 n8n → **Workflows → Import from File** → `n8n/cadence-workflow.json`.
 
-Expected: 11 nodes, no red "node not installed" badges, and **no credential to attach** — the two authed
+### 1b. The scripted way, once the API key exists (operator ruling "2a", D203)
+
+`n8n-api.mjs` imports **the reviewed bytes** over n8n's public REST API and then reads them back through the same
+checker this section describes. The key is minted in the n8n UI (Settings → n8n API → Create), kept in
+`.notes/n8n-public-api-token` on the operator's box (host-local, `0600`), and read from the shell as
+`N8N_API_KEY` — the variable *name* is in the repo, the value never is (D177).
+
+```bash
+export N8N_API_KEY="$(cat .notes/n8n-public-api-token)"
+node integrations/mobilizon-cadence/n8n-api.mjs status      # what the instance holds, and whether it is ours
+node integrations/mobilizon-cadence/n8n-api.mjs push probe   # step 0's probe, inactive
+node integrations/mobilizon-cadence/n8n-api.mjs push         # the cadence, inactive
+node integrations/mobilizon-cadence/n8n-api.mjs verify <id>  # the live copy, every time anything is edited
+```
+
+Three refusals are built in, and `test/api.test.mjs` executes each one rather than describing it:
+
+- **no duplicate.** If a workflow already carries the reviewed name, `push` stops and prints the `update <id>`
+  command instead. The guide's warning about n8n importing a second same-named workflow is now enforced by the
+  thing that does the importing.
+- **no activation of an unverified copy.** `activate` fetches the live document, runs `verify-import.mjs`'s own
+  checker, and refuses on any `fatal` or `drift` — the POST is never sent. Activating a drifted copy is how an
+  unreviewed workflow ends up on a schedule.
+- **no server-owned fields on the wire, and no silent `active:true`.** `id`, `activeVersionId`, `meta`, `tags` and
+  the rest are what the instance's OpenAPI marks `readOnly`; the test asserts that every field the artifact carries
+  which the API does not accept is on that strip list, so a field added to the generator later cannot ride onto the
+  instance uninvited. The import POST carries an **`Idempotency-Key`** derived from the artifact's fingerprint, so a
+  timed-out import retried is not a second workflow.
+
+What REST cannot do here: **run it**. This instance's API has no manual-run endpoint (measured against its own
+spec, 2026-11-05 — 107 paths, no `/workflows/{id}/run`), so **running a workflow means pressing Execute Workflow
+in the UI**, and reading what happened is `GET /api/v1/executions` (read-only) or the Executions list.
+
+The host also serves its own **MCP server** at `/mcp-server/http`. It is **not offered as a route** (operator
+ruling 2026-11-05, D217): it answers `401 {"message":"Unauthorized"}` for both tokens this rig holds (measured
+2026-11-05), and even if a token were minted it would be a second way to do what REST and one UI button already
+do. `.notes/bin/n8n-mcp.mjs` stays on disk for the day that changes; treat MCP as closed until a probe proves
+otherwise.
+
+Expected: 14 nodes, no red "node not installed" badges, and **no credential to attach** — the two authed
 requests authenticate inside the run. If n8n warns about node versions, it is offering to upgrade
 `httpRequest`/`if`/`code`; the artifact deliberately names the *lowest* type versions that carry the features
 used, so an upgrade is safe but not required.
@@ -125,8 +164,10 @@ same rules against the live one. Two different calendars, or two different copie
 how you tell which you have.
 
 What is normal in a real export: ids, version ids, timestamps, tags and node **positions** differing (n8n
-rewrites all of them; the checker ignores them), and one `note` per alerting node you added after `21`/`22`.
-What is not: any `fatal` or `drift` line. If you get one, fix it in the repo, `build-workflow.mjs`, re-import,
+rewrites all of them; the checker ignores them), and one `note` per **extra** channel node you add beside the
+shipped `23 Notify on ntfy`. What is not: any `fatal` or `drift` line — and note that the node-level settings
+(`onError`, `retryOnFail`, `maxTries`) are inside the fingerprint, so toggling "Retry On Fail" in the editor
+*is* a drift line, not cosmetic noise. If you get one, fix it in the repo, `build-workflow.mjs`, re-import,
 export again, re-run this. Do **not** fix it by editing in the n8n editor — that is how the two-configs
 problem in step 5 starts. Re-run this checker after any edit made in the editor, and once more before you
 enable writes (step 5). To see the checker prove itself first: `verify-import.mjs --selftest`.
@@ -179,24 +220,105 @@ one of them is looking at a different calendar.
   away. That rehearses the entire write path, including the undo, at zero cost to the public calendar. Once you
   have watched it once, delete the `draft: true` and rebuild.
 
-## 4. Decide on alerting *before* enabling
+## 4. Alerting: what ships, and the four commands that make it real
 
-An automation that quietly adds dates nobody noticed is a calendar nobody trusts. Two terminals emit a
-machine-friendly failure shape, and both are safe to wire a notification to:
+An automation that quietly adds dates nobody noticed is a calendar nobody trusts. As of 2026-11-05 the delivery
+is **in the artifact**, not an exercise for the reader (D194): `23 Notify on ntfy` posts to your own ntfy server,
+and `24 Fail loudly` makes sure the execution still goes red afterwards (D195 — a failure n8n considers
+"handled" stops being recorded as one, and that used to be this workflow's alarm).
 
-- `21 Report error path` — a stage threw. Body: `{ ok: false, failedAt: ["read"|"sign in"|"plan"|"write"|"audit"|"report"], alertTitle, alertDetail, summary }`
-- `22 Report a problem` — the plan decided to stop and needs a person (a rename, a clock mismatch, every row cancelled). Same shape.
+What gets sent, from `series.config.mjs` `ALERT`:
 
-Add your notification node (Discord/email/etc.) after each, and send `{{ $json.summary }}`. Keep the
-notification **off** `08 Report`: the report body quotes the club's event text and, on a dry run, the whole
-payload — that is a lot of text to push into a chat log.
+| when | title | priority | note |
+|---|---|---|---|
+| a stage threw (`21`) | `cadence failed at read+write…` | 4 high | goes straight to `23`, no condition in the way |
+| the plan stopped and needs you (`22`) | `cadence paused: <series>` | 4 high | through `09 Tell a person?` |
+| it wrote, or a dry run decided what it would write (`08`) | `cadence wrote 1 event(s)` / `cadence dry run: would write 1` | 4 / **2 drawer-only** | a dry-run report is deliberately quiet |
+| every series skipped | *nothing* | — | on purpose: a message that means "nothing happened" is what makes the messages that matter unread |
 
-Also worth setting on the workflow, if your n8n version exposes it (the label moves between versions —
-Settings, or the workflow's own menu): an **error workflow** to a small notify-me workflow, as a backstop for
-the case where even `21` fails.
+Four commands on the ntfy host (the YunoHost package keeps its CLI behind a wrapper that sets
+`NTFY_CONFIG_FILE`; `<install>` is the app's install directory — `yunohost app info ntfy`):
 
-And the positive signal: with no notification at all, "it ran and said nothing" is indistinguishable from
-"it is switched off". Wire at least the two failure terminals before you enable writes.
+```bash
+sudo -u ntfy <install>/ntfy.sh user add --role=user cadence-bot
+sudo -u ntfy <install>/ntfy.sh access cadence-bot mathloco-cadence read-write
+sudo -u ntfy <install>/ntfy.sh token add --expires=365d --label="mathloco cadence" cadence-bot
+```
+
+Put the printed `tk_…` value in the **n8n service environment** as `NTFY_TOKEN`. It never goes in the workflow:
+`23` reads it as `$env.NTFY_TOKEN`, the config carries only the *name*, and both the build and the export checker
+fail if a token-shaped value appears in the JSON. Two things to know about that grant:
+
+- **Tokens are account-scoped, not topic-scoped** (upstream docs, 2026-11-04). Least privilege is the account: a
+  non-admin user whose only ACL entry is `mathloco-cadence`.
+- **`--expires` is a trap you choose with eyes open.** When the token dies, the alerts stop and nothing notices.
+  Put the renewal date in a calendar now, or mint it without `--expires` and record a rotation date here.
+
+#### What goes in the variable, and where a token may live instead
+
+The value is **the secret string the `token add` command prints** — `tk_` followed by roughly thirty-one lowercase
+base32 characters (the shape is documented at docs.ntfy.sh/config, fetched 2026-11-05; the vendor's literal example
+is deliberately **not** copied into this file, because a real-shaped `tk_` string in a tracked file reads as a leak —
+it is the same shape the artifact check fails on ("an ntfy token value appears in a node - it belongs in $env"), and
+what a session's own leak-grep reports). Not the topic name,
+not the username, no quotes and no label text. `ntfy token add` prints it once; `ntfy token list` shows the label
+and the prefix, never the whole value again.
+
+Three homes a secret can have in n8n, measured against the docs rather than remembered:
+
+| home | what it is | on this build? | what it costs |
+| --- | --- | --- | --- |
+| **an env var on the n8n service** (what the artifact assumes) | the process environment; a Code node reads it by name with `$env` | yes — `$env` works in Code nodes unless `N8N_BLOCK_ENV_ACCESS_IN_NODE=true`, and that variable's default is `false` ([docs](https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/security.md), fetched 2026-11-05) | changing it means restarting the service; the file it lives in is a secret file, so it wants mode `0600` and must not ride into a backup that leaves the box |
+| **an n8n credential** (a `Header Auth` credential holding `Authorization: Bearer tk_…`) | n8n's intended home for service auth: encrypted at rest — an instance key (`N8N_ENCRYPTION_KEY`) protects the data encryption key that encrypts credential data ([docs](https://docs.n8n.io/deploy/host-n8n/configure-n8n/security/rotate-encryption-keys.md), fetched 2026-11-05) — and it is writable through the same REST door: this instance's own spec lists `POST /credentials`, and its credential DTO exposes only `id`, `name`, `type`, timestamps and policy flags, so a read never returns the secret (read off the saved spec 2026-11-05) | yes — credentials are core, Community included, though this instance currently holds none | the *sending node* would then reference the credential by name/id, which is instance-local state the reviewed bytes deliberately do not carry (the same reason `settings.errorWorkflow` is linked rather than baked, D206); and `23`/`A2`'s "is a channel configured at all?" branch asks `$env` by name — a credential is invisible to that question, so the branch would become a flag that can lie |
+| **n8n custom variables** (`$vars`) | a UI key/value store | **no** — self-hosted availability is Business/Enterprise ([docs](https://docs.n8n.io/build/code-in-n8n/define-custom-variables.md), fetched 2026-11-05) | and its value is substituted into execution data, which is the opposite of what a secret wants |
+
+So: **keep the env var.** It is the only one of the three that (a) exists on a Community build, (b) leaves the
+reviewed JSON free of instance-local ids, and (c) lets the *code under review* ask whether a channel exists at all
+— which is what makes an unconfigured host degrade to a loud note instead of a red run nobody reads. If the token
+later moves to a credential, say so in `series.config.mjs` and change `ALERT.tokenEnv` in the same commit, because
+the build and `probe-ntfy.mjs` both read that one name.
+
+To find the right place on the n8n host rather than guessing it:
+
+```bash
+systemctl status $(pgrep -f n8n | head -1) # which unit owns the process
+systemctl cat <that unit> | grep -i environment # where its env already comes from
+```
+
+Add it there (an `Environment=` line or the `EnvironmentFile` it points at, mode `0600`), restart the service, and
+then prove the *variable* rather than trusting the edit: run the probe workflow (`nSGb9ICHP6w9vFAO`) once in the UI
+and read its output, or send one message from this repo with `NTFY_TOKEN=tk_… node
+integrations/mobilizon-cadence/probe-ntfy.mjs`. As measured on 2026-11-05, the instance holds **no credentials**
+(`GET /api/v1/credentials` returns `[]`), so today nothing but the environment can supply this.
+
+Then prove the channel, from this repo:
+
+```bash
+node integrations/mobilizon-cadence/probe-ntfy.mjs
+```
+
+It asks the running server three questions: can a stranger **post** to your topic, can a stranger **read** it,
+and can this workspace **send**. The first two run without credentials and are part of `check.mjs` (measured
+2026-11-05: both `403 / 40301`, which is the package's `auth-default-access: "deny-all"` doing its job). The
+third prints a loud SKIP until `NTFY_TOKEN` is in your shell, and when it runs it puts a real message on your
+phone that says it is a probe.
+
+**Prove the alert path, not just the channel.** Set `MOBILIZON_PASSWORD` on the n8n host to something wrong and
+run the workflow once. Expected: `03 Sign in` fails, its error output fires, `21` names the stage, `23` delivers,
+`24` throws, the execution is **red** and the message is on your phone with the same words. Nothing can be
+written by a run that cannot sign in, so this is free. Fix the password afterwards, and note that a red run this
+deliberate is the cheapest evidence you will get that the alarm works.
+
+**Two gaps that used to be deliberate, now closed (2026-11-05):**
+
+- **"If n8n itself is down, nothing sends."** Under the silence rule a quiet week was indistinguishable from a dead
+  scheduler. Closed by the weekly heartbeat (`n8n/heartbeat.json`, D205), live and watched since 2026-11-05 (D213):
+  it sends *every* Monday whether or not anything else happened, so silence now means the scheduler is dead.
+- **"No workflow-level error workflow."** Closed by the watcher (`n8n/error-watcher.json`, D206), imported,
+  published and linked on 2026-11-05. It catches what per-node error branches cannot, because a wired error output
+  marks a failure *handled*: a whole-run timeout, a crash between nodes, a node whose error output is unwired, a
+  trigger that stopped firing, and `24 Fail loudly`'s deliberate throw - the one throw left unhandled on purpose,
+  which is why `LOUD_THROW` suppresses the duplicate message (D194).
 
 ## 5. Enable writes
 
@@ -316,3 +438,122 @@ skip, which is why it is config and not a deletion.
 
 The whole behaviour is `series.config.mjs` + `lib/core.mjs`, and both are covered by
 [`test-plan.md`](test-plan.md).
+
+## 10. The two watchmen (both live; the heartbeat is scheduled, the watcher is waiting for a failure)
+
+Two more artifacts come out of the same builders, and neither one is the cadence:
+
+| file | what it is | why it exists |
+|---|---|---|
+| `n8n/error-watcher.json` | n8n's **workflow-level error workflow** (D206): `A0 Error Trigger` → `A1 Compose the alert` → `A2 Tell a person?` → `A3 Notify on ntfy` | A per-node error branch (D195) marks a failure **handled**, so it never reaches this watcher. What only a watcher sees: a whole-run timeout, a crash between nodes, a node whose error output is unwired, a trigger that stopped firing, and `24 Fail loudly`'s deliberate throw |
+| `n8n/heartbeat.json` | a **weekly, unconditional, read-only** report (D205): Mondays 09:00 `America/Chicago`, prints the next row per series, and goes loud (priority 4) when the nearest row is more than **21 days** out | The cadence can be silent because there is nothing to do *and* because it is not running, and both look identical from the outside. 21 is deliberately A8's `RUNWAY_DAYS` (`check:ics`), so "the page will show nothing" and "the weekly note went loud" are one threshold |
+
+Three things about them are not negotiable, and both builders fail if any is broken:
+
+- **The heartbeat has no gate and no error handling.** A send that can be skipped is indistinguishable from a dead
+  scheduler, and a heartbeat that swallows an error is how a dead schedule starts looking alive. A failed heartbeat
+  stays red so the watcher reports it.
+- **The watcher holds nothing it watches.** No `series.config.mjs`, no GraphQL documents, no sign-in helper, no write
+  vocabulary, no credential values, and the only URL it can call is `https://ntfy.labradorius.com/`. A watcher that
+  depends on the Mobilizon host is taken down by the same outage.
+- **One message per incident.** `24 Fail loudly` starts its error with `lib/core.mjs` `LOUD_THROW`
+  (`"cadence kept red on purpose"`); the watcher recognises it, sets `duplicate:true`, and **withholds the send**
+  while writing `suppressedWhy` into the log — cadence's `23` already delivered that incident (D194).
+
+### What is on the instance now (@measured 2026-11-05, `n8n-api.mjs status`)
+
+All four reviewed artifacts are imported, and each one reads back as **0 fatal, 0 drift, 0 warn - the reviewed
+artifact**. The import path is `n8n-api.mjs`, which now knows all four by key (`cadence`, `probe`, `watcher`,
+`heartbeat`) and refuses a canvas name it does not review:
+
+```bash
+export N8N_API_KEY="$(cat .notes/n8n-public-api-token)"   # 0600, gitignored, never in a workflow body
+node integrations/mobilizon-cadence/n8n-api.mjs status
+node integrations/mobilizon-cadence/n8n-api.mjs verify cadence
+```
+
+| on the instance | id | state |
+|---|---|---|
+| cadence | `Ys3CdS3CSzfXeMkn` | inactive; **`settings.errorWorkflow` → the watcher**, written by `link` and read back |
+| error watcher | `dTvHkp7CmEyVNxgf` | **published** (n8n 2.x calls that activating - see below); it has no schedule, so it can only be fired by another workflow's failure |
+| heartbeat | `rCSdarhTstt3jILw` | **ACTIVE** and linked to the watcher - the weekly proof of life runs; it is read-only, and the first real fire is still unmeasured |
+| environment probe | `nSGb9ICHP6w9vFAO` | inactive, read-only |
+
+So the shipped posture as of 2026-11-05: **something now proves weekly that the scheduler is alive, and nothing yet
+writes to Mobilizon** - the cadence stays inactive, and it is the only artifact that signs in.
+
+**The step no one predicted: a watcher has to be published before it can be named.** The first live `link` was
+refused - `400 The selected error workflow has no published version.` A workflow imported through this API arrives
+unpublished, and n8n will not point a workflow's failures at a version that does not exist. On this build
+`POST /workflows/{id}/activate` *is* publish (the spec: "in n8n v1, this action was termed activating"), so:
+
+```bash
+node integrations/mobilizon-cadence/n8n-api.mjs activate watcher     # verifies first; a watcher has no schedule
+node integrations/mobilizon-cadence/n8n-api.mjs link cadence watcher # writes settings.errorWorkflow, reads it back
+```
+
+`link` refuses a self-watch, a watcher that does not verify, an unpublished watcher, and a watched copy this repo
+does not recognise - and in every case nothing is written. In the UI the same link is cadence → **Settings** →
+**Error Workflow**; the value is an instance-local id, which is why no reviewed file may contain one (D206).
+
+A linked watched copy then verifies with one extra note, and that is the correct reading:
+
+```
+NOTE settings.errorWorkflow: "dTvHkp7CmEyVNxgf" = "Mobilizon cadence - error watcher (alert on unhandled failure)" - the reviewed watcher
+```
+
+If it ever resolves to a workflow this repo does not review, that is a **drift**, and a dangling id is a **warn**:
+in both cases a failure is being sent somewhere that is not the alerting workflow.
+
+### Retiring scratch you no longer want (D212)
+
+`status` prints workflows it cannot match to a reviewed name as `not ours`. Retire them with the door's own verb:
+
+```bash
+node integrations/mobilizon-cadence/n8n-api.mjs retire gTPNPCgjU7L0fwiZ
+```
+
+That is `POST /workflows/{id}/archive` - a **soft** delete the UI can undo - and the tool writes a copy of the canvas
+to `.design/tmp-n8n/retired/<stamp>-<id>.json` **before** it calls it, then prints the path. It refuses a name this
+repo reviews (retiring an artifact is a commit first, or the builders end up pointing at a canvas that is gone) and
+refuses an ACTIVE workflow (archiving a running one leaves a trigger firing into an archived canvas). A hard
+`DELETE /workflows/{id}` exists in the API and this tool deliberately does not implement it.
+
+### What is still yours to do
+
+1. **Rehearse the watcher** without waiting for an outage: press **Execute Workflow** on it. `ErrorTrigger`'s own mock
+   payload (read off the node's source on this instance, 2026-11-05) arrives, `A1` composes, `A2` lets it through if
+   `NTFY_TOKEN` is set on the instance, and a message lands on your phone. If it does not, `A1`'s output still shows
+   the composed title and body. There is no run endpoint in this API version (Public API 1.1.1 exposes executions for
+   *reading* only), and the MCP door is closed by ruling (D217), so this rehearsal is a **UI press**.
+2. **Check the first real heartbeat fire** (Monday after 2026-11-05): `GET /api/v1/executions?workflowId=rCSdarhTstt3jILw`
+   or the UI's Executions list. The artifact says Mondays 09:00 `America/Chicago`; D207 exists because a comment once
+   claimed 09:00 while the trigger fired at midnight, so the instance's own execution list is the measurement. It
+   needs `NTFY_TOKEN` on the n8n host for the message to arrive; without it the run still succeeds and `H3`'s output
+   shows the note that would have been sent.
+3. **Prove the duplicate rule once**, cheaply: set `MOBILIZON_PASSWORD` wrong, run the cadence. `23` sends the alert,
+   `24` throws, the watcher fires - and **sends nothing** (`suppressedWhy` names the reason). One message, one red
+   execution.
+
+### If a route answers 401, A/B your own request before believing the instance
+
+On 2026-11-05 a session spent an hour believing the door had closed, because ad-hoc probes were sending the wrong
+**header name**. Same second, same token, `GET /api/v1/tags`:
+
+| what the probe sent | answer |
+| --- | --- |
+| `X-N8N-API-KEY: <token>` | 200 |
+| `X-API-Key: <token>` | 401 `{"message":"Unauthorized"}` |
+| `Authorization: Bearer <token>` | 401 (Bearer is a JWT, not the API key) |
+
+`n8n-api.mjs` already sends the header the instance's own OpenAPI names (`X-N8N-API-KEY`), so **prefer the tool over
+hand-written curl**: `node integrations/mobilizon-cadence/n8n-api.mjs status`. If you must probe by hand, use that
+header exactly. Sanity check that the instance is alive without auth: `GET /healthz` → 200. And a key file that has
+not changed (check `ls -l --time-style=long-iso .notes/n8n-public-api-token`) is evidence against rotation, not for it.
+
+If a *correct* request 401s on routes that worked a minute ago, then consider instance causes - but make the paired
+probe first, because a wrong header reproduces a whole-instance outage perfectly.
+
+Rebuild after any config change (`node integrations/mobilizon-cadence/build-alerter.mjs`,
+`build-heartbeat.mjs`), then `n8n-api.mjs update <id> <key>` and re-verify: the artifact hash is what the checker
+compares, and a stale copy on the instance is drift, not an older version.

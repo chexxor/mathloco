@@ -89,12 +89,17 @@ a credential. Its fallback is the one-line Code node in the guide; the reason th
 ## The exposure nobody should discover by accident
 
 The sign-in node's request body — and therefore that node's **input/output data in the execution log** —
-contains the password in plaintext. n8n's default is to save data for successful and failed executions.
+contains the password in plaintext. Upstream n8n's default is to save data for successful and failed executions;
+**this instance's packaged default is the opposite** (`EXECUTIONS_DATA_SAVE_ON_SUCCESS=none`,
+`EXECUTIONS_DATA_SAVE_MANUAL_EXECUTIONS=false`, D199), which is why a dry run used to read back as
+`Execution '2' not found`.
 
-This workflow keeps that default (`saveDataSuccessExecution: "all"`, `saveDataErrorExecution: "all"`, set
-explicitly in the artifact so the choice is visible), because the ledger in `08 Report` is the point of a
-scheduled run and there is nowhere else this integration writes its findings. The mitigations that come with
-that choice, in the operator guide:
+This workflow states its own retention instead of inheriting either default (`RETENTION` in `series.config.mjs`, spread
+into both artifacts, asserted by both builders and by `test/workflow.test.mjs`: `saveDataSuccessExecution:
+"all"`, `saveDataErrorExecution: "all"`, `saveManualExecutions: true`, `savePreExecutionData: false`). The ledger in
+`08 Report` is the point of a scheduled run and there is nowhere else this integration writes its findings, and the
+per-workflow setting is what keeps *other* workflows on the box from keeping their own run data (D201). The
+mitigations that come with that choice, in the operator guide:
 
 1. **Prune on the host**: `EXECUTIONS_DATA_PRUNE=true`, `EXECUTIONS_DATA_MAX_AGE=168` (hours). A stored
    password should not outlive the week it was used in.
@@ -107,6 +112,15 @@ that choice, in the operator guide:
    re-derives everything) — but the alerting story has to be in place first.
 4. Use a **dedicated account** (next section), so the value in an execution log is a scoped credential that
    can be rotated without touching the organizer's own login.
+
+**A lever this repo has read but not measured (D204).** The instance's own OpenAPI documents
+`settings.redactionPolicy` — `none` (the default: *"No redaction. All execution data is stored."*), `non-manual`,
+`manual-only`, `all` — and a read-side `GET /executions/{id}?redactExecutionData=false` that "requires the
+`execution:reveal` scope". So as shipped, the password **is** stored unredacted, and there is a per-workflow switch
+about it. Not measured: whether redaction masks only secrets or the node's whole output, which would undo what the
+retention flags buy. The experiment is in
+[`records/2026-11-05-rest-door-retention-and-redaction.md`](../records/2026-11-05-rest-door-retention-and-redaction.md)
+§4 — three steps, needs no Mobilizon credential, and its result belongs in `RETENTION` rather than in a comment.
 
 ## Least privilege: the account this should run as
 
@@ -135,7 +149,7 @@ attributing the club's event to the wrong identity.
 |---|---|---|
 | this repo | config, rules, queries, the workflow JSON with env **names** | no credential, no personal data beyond the club's own published event text |
 | n8n workflow JSON (export) | as above | safe to publish, and asserted so |
-| n8n execution data | the sign-in body (password), the GraphQL bodies, the report ledger | prune it; treat screenshots as secrets |
+| n8n execution data | the sign-in body (password, unredacted unless `settings.redactionPolicy` is set — D204), the GraphQL bodies, the report ledger | prune it; treat screenshots as secrets |
 | n8n / server logs | request URLs (one host, `/api/v1`) — assume bodies may appear | another reason the endpoint is HTTPS and the host is one |
 | the Mobilizon instance | the events it creates, which are public | the club's own description/address/venue text is copied verbatim |
 | the mathloco site | nothing | the site reads `data/events.json` from `events-harvest` (D73) |

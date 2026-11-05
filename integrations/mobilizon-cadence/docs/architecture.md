@@ -1,4 +1,4 @@
-# Architecture — eleven nodes, three rules, one artifact
+# Architecture — fourteen nodes, three rules, one artifact
 
 ## Why the shape is what it is
 
@@ -107,6 +107,31 @@ either terminal without inventing a shape.
 cancelled) into the same failure shape. Neither terminal is downstream of the other, so a clean run can never
 reach the error reporter and throw there — the build asserts that no main edge points at `21`.
 
+### `09 Tell a person?`, `23 Notify on ntfy`, `24 Fail loudly` — the delivery (D194, D195)
+Both terminals compose the message themselves, with the same `alertBody()` in `lib/core.mjs`, so the wire holds
+no rule of its own: `23` is `POST <ALERT.rootUrl>` with `jsonBody: JSON.stringify($json.ntfy)` and
+`Authorization: Bearer $env.NTFY_TOKEN` — the *name* of the variable is in the config, the value never enters
+this file. It posts to the server **root** rather than a topic path because that is ntfy's documented JSON
+publish form, and it keeps the same `specifyBody: "json"` shape as the four Mobilizon calls so a reviewer reads
+one body style.
+
+`09` gates `22`'s output only, on `String($json.notifyNeeded) == "true"` — the **string** form, so the IF-v2
+condition block is byte-identical in shape to the write gate's (that block is the one part of the document whose
+geometry depends on the n8n version). `21`'s output does **not** pass a gate: a stage that threw is always worth
+a message.
+
+`24` exists because of what fixing the error outputs did. An error that exits a wired error output is *handled*,
+and n8n stops recording the run as a failure (vendor `ERROR_WORKFLOWS.md` says a workflow-level error workflow
+will not fire for it) — while this workflow's stated alarm has always been a red execution. So after the send,
+`24` throws if `21` or `22` reported `ok: false`, quoting their own words so the failed-execution line and the
+message a person just read say the same thing. Its **error output is deliberately unwired**: that throw is the
+one failure a future workflow-level error workflow could still catch.
+
+The retry policy is per-node and deliberate (`build-workflow.mjs` states it as data): `retryOnFail` on `02`,
+`07` and `23`; **not** on `06`, because Mobilizon 5.2.4 has no idempotency key and a retry after a late 500 is a
+duplicate on the club's calendar; **not** on `03`, because a wrong password offered three times per run to a
+YunoHost box with fail2ban in front of it is a worse failure than a missed run.
+
 ## The invariants the build enforces
 
 A generation step is only worth having if it refuses to generate something wrong. `build-workflow.mjs` fails
@@ -122,7 +147,11 @@ on each of these, and each corresponds to a way n8n fails *at execution time* ra
 | no `credentials` blocks; no literal shaped like a secret; the password reachable only as `$env.NAME` | a secret committed to the repo, or exported inside a workflow JSON |
 | the IF compares `.action` against exactly `"create"`, `branchMode: matchingBranch`, and only that edge reaches the write | a dry run that can still write |
 | the error reporter is reachable only from error outputs | a clean run arriving at a node that requires `$json.error` |
-| every node except the trigger and the two reporters has its error output wired to `21`, and both reporters are terminals | a node added later that fails silently in a scheduled run |
+| every fallible stage's error output is wired to `21`, and both reporters feed only the delivery chain | a node added later that fails silently in a scheduled run |
+| a wired error output implies `onError: "continueErrorOutput"`, and the property implies a wire | the branch never firing (the artifact shipped that way until 2026-11-05), or an error discarded and the run recorded as a success |
+| `retryOnFail` appears on exactly the three nodes in `RETRY`, with one policy | a retried `createEvent` writing a second event on the club's calendar |
+| exactly two hosts, and only `23` may reach the second | the workflow quietly acquiring a third endpoint |
+| `23 → 24`, and `24` is terminal with no error output of its own | a handled failure that no longer looks like a failure |
 | `RUN.dryRun === true` still routes the decision through `core.mjs` | a plan node that stopped honouring the dry-run switch |
 | every series has `key/title/groupActor/everyDays/timezone`, `everyDays` a positive integer, `weekdaySnap` 0–6 or null | a config typo discovered as a missing event in December |
 | `--check` also compares the artifact **on disk** with what the sources produce, and refuses | importing a workflow whose rules are not the ones the tests ran |
