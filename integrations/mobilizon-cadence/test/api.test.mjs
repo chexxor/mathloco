@@ -19,6 +19,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   importBody,
+  carryLiveLink,
   makeApi,
   planPush,
   activateIfVerified,
@@ -602,6 +603,31 @@ test("a copy the instance says is ACTIVE can still be read, changed and sent bac
   assert.throws(
     () => importBody({ ...artifacts.watcher.doc, active: true }),
     /declares active:true/,
+  );
+});
+
+test("an update carries the live link, because the reviewed bytes deliberately do not name a watcher", () => {
+  const body = importBody(CADENCE);
+  assert.equal(
+    body.settings?.errorWorkflow,
+    undefined,
+    "the reviewed artifact must not name a watcher - the id belongs to the instance (D206)",
+  );
+  const sent = carryLiveLink({ settings: { errorWorkflow: "W2" } }, body, () => {});
+  assert.equal(
+    sent.settings.errorWorkflow,
+    "W2",
+    "a whole-document PUT that dropped settings.errorWorkflow would silently unlink the thing that alerts a person",
+  );
+  const named = carryLiveLink(
+    { settings: { errorWorkflow: "W9" } },
+    { settings: { errorWorkflow: "W2" } },
+    () => {},
+  );
+  assert.equal(
+    named.settings.errorWorkflow,
+    "W2",
+    "a body that already names a watcher is not silently retargeted by the live copy",
   );
 });
 

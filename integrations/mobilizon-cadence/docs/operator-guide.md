@@ -110,12 +110,14 @@ Three refusals are built in, and `test/api.test.mjs` executes each one rather th
   timed-out import retried is not a second workflow.
 
 What REST cannot do here: **run it**. This instance's API has no manual-run endpoint (measured against its own
-spec, 2026-11-05 — 107 paths, no `/workflows/{id}/run`). Firing a dry run and reading the execution is the MCP
-door: `node .notes/bin/n8n-mcp.mjs execute_workflow …` and `get_workflow_execution` (D197, and D201 for why the
-artifact now declares its own retention). The two doors are complementary: **REST carries the artifact, MCP runs it.**
-One caveat, measured the same day the door was needed: `POST /mcp-server/http` answers `401` for both tokens this rig
-holds, so the MCP half is currently **aspirational** — until a token this build accepts is minted, running a workflow
-means pressing **Execute Workflow** in the UI, and only REST half of the pair is live.
+spec, 2026-11-05 — 107 paths, no `/workflows/{id}/run`), so **running a workflow means pressing Execute Workflow
+in the UI**, and reading what happened is `GET /api/v1/executions` (read-only) or the Executions list.
+
+The host also serves its own **MCP server** at `/mcp-server/http`. It is **not offered as a route** (operator
+ruling 2026-11-05, D217): it answers `401 {"message":"Unauthorized"}` for both tokens this rig holds (measured
+2026-11-05), and even if a token were minted it would be a second way to do what REST and one UI button already
+do. `.notes/bin/n8n-mcp.mjs` stays on disk for the day that changes; treat MCP as closed until a probe proves
+otherwise.
 
 Expected: 14 nodes, no red "node not installed" badges, and **no credential to attach** — the two authed
 requests authenticate inside the run. If n8n warns about node versions, it is offering to upgrade
@@ -252,6 +254,43 @@ fail if a token-shaped value appears in the JSON. Two things to know about that 
 - **`--expires` is a trap you choose with eyes open.** When the token dies, the alerts stop and nothing notices.
   Put the renewal date in a calendar now, or mint it without `--expires` and record a rotation date here.
 
+#### What goes in the variable, and where a token may live instead
+
+The value is **the secret string the `token add` command prints** — `tk_` followed by roughly thirty-one lowercase
+base32 characters (the shape is documented at docs.ntfy.sh/config, fetched 2026-11-05; the vendor's literal example
+is deliberately **not** copied into this file, because a real-shaped `tk_` string in a tracked file reads as a leak —
+it is the same shape the artifact check fails on ("an ntfy token value appears in a node - it belongs in $env"), and
+what a session's own leak-grep reports). Not the topic name,
+not the username, no quotes and no label text. `ntfy token add` prints it once; `ntfy token list` shows the label
+and the prefix, never the whole value again.
+
+Three homes a secret can have in n8n, measured against the docs rather than remembered:
+
+| home | what it is | on this build? | what it costs |
+| --- | --- | --- | --- |
+| **an env var on the n8n service** (what the artifact assumes) | the process environment; a Code node reads it by name with `$env` | yes — `$env` works in Code nodes unless `N8N_BLOCK_ENV_ACCESS_IN_NODE=true`, and that variable's default is `false` ([docs](https://docs.n8n.io/deploy/host-n8n/configure-n8n/basic-configuration/use-environment-variables/security.md), fetched 2026-11-05) | changing it means restarting the service; the file it lives in is a secret file, so it wants mode `0600` and must not ride into a backup that leaves the box |
+| **an n8n credential** (a `Header Auth` credential holding `Authorization: Bearer tk_…`) | n8n's intended home for service auth: encrypted at rest — an instance key (`N8N_ENCRYPTION_KEY`) protects the data encryption key that encrypts credential data ([docs](https://docs.n8n.io/deploy/host-n8n/configure-n8n/security/rotate-encryption-keys.md), fetched 2026-11-05) — and it is writable through the same REST door: this instance's own spec lists `POST /credentials`, and its credential DTO exposes only `id`, `name`, `type`, timestamps and policy flags, so a read never returns the secret (read off the saved spec 2026-11-05) | yes — credentials are core, Community included, though this instance currently holds none | the *sending node* would then reference the credential by name/id, which is instance-local state the reviewed bytes deliberately do not carry (the same reason `settings.errorWorkflow` is linked rather than baked, D206); and `23`/`A2`'s "is a channel configured at all?" branch asks `$env` by name — a credential is invisible to that question, so the branch would become a flag that can lie |
+| **n8n custom variables** (`$vars`) | a UI key/value store | **no** — self-hosted availability is Business/Enterprise ([docs](https://docs.n8n.io/build/code-in-n8n/define-custom-variables.md), fetched 2026-11-05) | and its value is substituted into execution data, which is the opposite of what a secret wants |
+
+So: **keep the env var.** It is the only one of the three that (a) exists on a Community build, (b) leaves the
+reviewed JSON free of instance-local ids, and (c) lets the *code under review* ask whether a channel exists at all
+— which is what makes an unconfigured host degrade to a loud note instead of a red run nobody reads. If the token
+later moves to a credential, say so in `series.config.mjs` and change `ALERT.tokenEnv` in the same commit, because
+the build and `probe-ntfy.mjs` both read that one name.
+
+To find the right place on the n8n host rather than guessing it:
+
+```bash
+systemctl status $(pgrep -f n8n | head -1) # which unit owns the process
+systemctl cat <that unit> | grep -i environment # where its env already comes from
+```
+
+Add it there (an `Environment=` line or the `EnvironmentFile` it points at, mode `0600`), restart the service, and
+then prove the *variable* rather than trusting the edit: run the probe workflow (`nSGb9ICHP6w9vFAO`) once in the UI
+and read its output, or send one message from this repo with `NTFY_TOKEN=tk_… node
+integrations/mobilizon-cadence/probe-ntfy.mjs`. As measured on 2026-11-05, the instance holds **no credentials**
+(`GET /api/v1/credentials` returns `[]`), so today nothing but the environment can supply this.
+
 Then prove the channel, from this repo:
 
 ```bash
@@ -270,16 +309,16 @@ run the workflow once. Expected: `03 Sign in` fails, its error output fires, `21
 written by a run that cannot sign in, so this is free. Fix the password afterwards, and note that a red run this
 deliberate is the cheapest evidence you will get that the alarm works.
 
-**Two things this does not cover, both deferred on purpose (D195):**
+**Two gaps that used to be deliberate, now closed (2026-11-05):**
 
-- **If n8n itself is down, nothing sends.** Under the silence rule a quiet week is indistinguishable from a dead
-  scheduler. The candidate answer is a weekly priority-2 heartbeat message, which trades directly against the
-  silence rule above — an operator decision, not a code change.
-- **No workflow-level error workflow yet.** The vendor set calls it non-negotiable for unattended jobs because it
-  also catches whole-run timeouts, crashes between nodes and a trigger that never fires. It is a second artifact
-  plus a setting in your n8n version whose label moves. Parked until the first real write, with the trigger
-  named in D195. Note that our per-node error outputs mean a workflow-level error workflow will *not* see those
-  failures — `24 Fail loudly` is the one unwired throw it would catch.
+- **"If n8n itself is down, nothing sends."** Under the silence rule a quiet week was indistinguishable from a dead
+  scheduler. Closed by the weekly heartbeat (`n8n/heartbeat.json`, D205), live and watched since 2026-11-05 (D213):
+  it sends *every* Monday whether or not anything else happened, so silence now means the scheduler is dead.
+- **"No workflow-level error workflow."** Closed by the watcher (`n8n/error-watcher.json`, D206), imported,
+  published and linked on 2026-11-05. It catches what per-node error branches cannot, because a wired error output
+  marks a failure *handled*: a whole-run timeout, a crash between nodes, a node whose error output is unwired, a
+  trigger that stopped firing, and `24 Fail loudly`'s deliberate throw - the one throw left unhandled on purpose,
+  which is why `LOUD_THROW` suppresses the duplicate message (D194).
 
 ## 5. Enable writes
 
@@ -486,9 +525,7 @@ refuses an ACTIVE workflow (archiving a running one leaves a trigger firing into
    payload (read off the node's source on this instance, 2026-11-05) arrives, `A1` composes, `A2` lets it through if
    `NTFY_TOKEN` is set on the instance, and a message lands on your phone. If it does not, `A1`'s output still shows
    the composed title and body. There is no run endpoint in this API version (Public API 1.1.1 exposes executions for
-   *reading* only). **The MCP door is not open right now:** `POST /mcp-server/http` answers `401 {"message":"Unauthorized"}`
-   with the public API key as a bearer *and* with `.notes/n8n-mcp-token` (measured 2026-11-05), so today a rehearsal is a
-   **UI press** until an MCP token this build accepts is minted.
+   *reading* only), and the MCP door is closed by ruling (D217), so this rehearsal is a **UI press**.
 2. **Check the first real heartbeat fire** (Monday after 2026-11-05): `GET /api/v1/executions?workflowId=rCSdarhTstt3jILw`
    or the UI's Executions list. The artifact says Mondays 09:00 `America/Chicago`; D207 exists because a comment once
    claimed 09:00 while the trigger fired at midnight, so the instance's own execution list is the measurement. It

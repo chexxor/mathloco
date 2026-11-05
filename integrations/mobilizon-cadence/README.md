@@ -111,21 +111,31 @@ Node-by-node detail, including what each execution should show, is in
 
 The graph was reviewed against n8n's own skill set (`github.com/n8n-io/skills`, upstream `27b6b9f`); D195 records
 where it agreed and where this rig overrides it. Its plugin bundles an `n8n-mcp` server pointed at an instance URL —
-**not wired here**. It was left unwired because the host answered `302 → /yunohost/sso` for every path (D182);
-re-measured 2026-11-05, the host answers for real and its **own** MCP server (`/mcp-server/http`) is the door a
-seat can drive the runtime through (D197). Wiring the vendor plugin's server into a harness is still the
-operator's call, and the vendor's guidance still loses to this directory on anything rig-specific.
+**not wired here**, and as of 2026-11-05 neither is the host's own MCP server (D217, below). The vendor's guidance
+still loses to this directory on anything rig-specific.
 
-## What is actually inside n8n right now (measured 2026-11-05)
+## What is actually inside n8n right now (measured 2026-11-05, `n8n-api.mjs status`)
 
-**Not this artifact.** Reading the instance through its own MCP server (`/mcp-server/http`, D197 — the door that
-opened when the YunoHost app gained the `visitors` permission) returns exactly one workflow,
-`Add Next Math Bi-monthly Math Social Event` (`gTPNPCgjU7L0fwiZ`): three nodes — a weekly Schedule Trigger, an
-HTTP `GET` of the group page, and a stub Code node. `verify-import.mjs` against that live copy reports
-**43 fatal, 6 drift**, and `list_credentials` returns none. Step 1 below has therefore not happened yet, and the
-one-minute probe import is still the first move. Reading the live graph no longer needs the operator's hands:
-the host-local helper `node .notes/bin/n8n-mcp.mjs verify <workflowId>` fetches the copy through the runtime and
-runs this gate on it (`.notes/` is gitignored; see `.notes/runbooks/n8n-runtime-loop.md`).
+| id | state | what it is |
+| --- | --- | --- |
+| `Ys3CdS3CSzfXeMkn` | inactive, **linked** to the watcher | the cadence artifact — still a dry run |
+| `dTvHkp7CmEyVNxgf` | **ACTIVE**, published | the error watcher |
+| `rCSdarhTstt3jILw` | **ACTIVE**, linked to the watcher | the weekly heartbeat |
+| `nSGb9ICHP6w9vFAO` | inactive | the environment probe (read-only) |
+| `gTPNPCgjU7L0fwiZ`, `HO5PyBXP7TKbBQys`, `OZNvFxoKUabfzwvY` | **archived** (`isArchived: true`), canvases backed up to `.design/tmp-n8n/retired/` | the scratch that predated this directory (D212) |
+
+`GET /api/v1/credentials` returns `[]`: n8n holds no credentials, and every artifact reads its inputs by env-var
+*name* (D177). **Whether those variables exist on the n8n host is not measured** — the probe above is the tool for
+it, and nothing has run it yet, because this API version has no run endpoint and a run is a UI press. One
+execution exists (`id=4`, from a retention probe), so no reviewed workflow has fired yet and nothing has written
+to Mobilizon.
+
+**The reading door is REST, not MCP.** `n8n-api.mjs` speaks the public API with the `X-N8N-API-KEY` header. The
+host's own MCP server (`/mcp-server/http`) answers `401 {"message":"Unauthorized"}` with both tokens this rig
+holds (measured 2026-11-05), and the operator ruled it **not offered** on 2026-11-05 (D217): a second door with no
+value while REST works is a second thing to keep secure, so the guide names a UI button instead. The host-local
+`.notes/bin/n8n-mcp.mjs` stays for the day that changes, and `.notes/n8n-mcp-token` is **not** an MCP credential
+until a probe proves it is.
 
 ## Start it up
 

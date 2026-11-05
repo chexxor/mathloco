@@ -224,5 +224,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D214** (2026-11-05) — R6 is ruled: `rows` and `edges` are taken, `band-sm` is refused at 640 (operator ruling 4, 2026-11-05)
 - **D215** (2026-11-05) — A `401` gets an A/B on the request before it gets a story about the instance (measured 2026-11-05 22:31:49Z)
 - **D216** (2026-11-05) — A gate-cost comparison carries its load average, because the same set measured +50% and +125% in six minutes (measured 2026-11-05, Linux, 16 CPU)
+- **D217** (2026-11-05) — MCP is not offered as an n8n door: the REST door plus one UI button does the job, and a second door is a second thing to secure (operator ruling 3, 2026-11-05)
+- **D218** (2026-11-05) — The redaction experiment is parked, not dropped, and its trigger is a licence change or a leaked run record (operator ruling 2, 2026-11-05)
+- **D219** (2026-11-05) — A whole-document `PUT` carries the live error-workflow link with it, because the reviewed bytes deliberately do not name one (2026-11-05)
 
-Defined: 216 (D1-D216). Unused ids: none.
+Defined: 219 (D1-D219). Unused ids: none.

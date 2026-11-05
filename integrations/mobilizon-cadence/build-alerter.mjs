@@ -33,8 +33,8 @@
  * `test/watchers.test.mjs` can break it on purpose.
  *
  * What it does not do: it is not linked from anywhere in the repo. `settings.errorWorkflow` holds an *id*,
- * which belongs to the instance, so linking is an instance action (the cadence's Settings -> Error Workflow picker,
-or MCP `update_workflow`) rather than a byte in a reviewed
+ * which belongs to the instance, so linking is an instance action (`n8n-api.mjs link <watched> <watcher>`, walked
+ * live on 2026-11-05, or the cadence's Settings -> Error Workflow picker) rather than a byte in a reviewed
  * artifact - a hardcoded id would point at whatever workflow happened to occupy that id on this box, which is
  * the "silently swallows every alert" failure the generator already refuses.
  */

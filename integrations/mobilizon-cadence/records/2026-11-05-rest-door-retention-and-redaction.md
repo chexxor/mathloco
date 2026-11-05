@@ -354,3 +354,35 @@ build returns archived rows **even without** `includeArchived=true` (both calls 
 the list" is not evidence that an archive failed - read `isArchived`, not the row count. The linked heartbeat reads
 back `{active: true, settings.errorWorkflow: "dTvHkp7CmEyVNxgf", versionCounter: 2}` - the bump from 1 is the link
 write, which is why `link` is idempotent.
+
+## 10. The rulings that closed the session, and one hazard found while writing them down (2026-11-05)
+
+Four operator rulings, in answer form:
+
+| ruling | answer | what it changed |
+|---|---|---|
+| ship it | merge into `staging` | `integrations/cadence-ntfy-alert` merged into `staging` with `--no-ff`; the push and any production deploy stay the operator's (D66/D124) |
+| redaction | skip, as recommended | D218: parked with its un-parking trigger named, because a deferral without a trigger is a loss, not a park |
+| MCP | stop offering it | D217: the guide's "REST carries, MCP runs" line is deleted; running is a UI press, and `.notes/bin/n8n-mcp.mjs` survives only as a way to re-measure the door |
+| next item | start it next session | D214's `rows` + `edges` lands next, and it must carry a measurement of the **pair**, which round 15 never took |
+
+**The hazard found while documenting the above.** `settings.errorWorkflow` is instance-local and no artifact
+declares it (D206). An `update` sends a whole document. So re-importing the cadence or the heartbeat - the normal
+thing to do after a repo change - is one merge-vs-replace question away from **unlinking the watcher quietly**.
+Nothing in the verify output would have shouted: `verify` after such an update would print the missing link as a
+note against the reviewed bytes, which are *correct* to lack it. `carryLiveLink` now reads the live copy before the
+`PUT` and carries the id across, printing what it carried (D219, pinned in `test/api.test.mjs`).
+
+Whether this build would have dropped the key is still unmeasured - `GET /workflows/{id}/versions` answers `401`
+with this key, so the published copy cannot be read back and compared. The guard does not need that answer, and the
+next session should not spend a call getting it.
+
+**Where the ntfy token may live, measured rather than remembered** (docs fetched 2026-11-05, saved under
+`.design/tmp-n8n/`): an **env var on the n8n service** works and is what the artifact assumes - `$env` is available
+in Code nodes unless `N8N_BLOCK_ENV_ACCESS_IN_NODE=true`, whose documented default is `false`. An **n8n credential**
+exists on Community and is writable through the same REST door (`POST /credentials` is in this instance's 107 paths;
+the credential DTO returns `id/name/type/timestamps`, never the secret), but it moves the reference into
+instance-local node state and makes `23`/`A2`'s "is a channel configured at all?" question unanswerable from the
+reviewed code. **Custom variables** (`$vars`) are Business/Enterprise on self-hosted, so this Community build does
+not have them, and their values are substituted into execution data anyway. Recommendation stands: keep
+`NTFY_TOKEN` as a service environment variable holding the `tk_…` string `ntfy token add` prints.

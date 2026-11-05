@@ -19,11 +19,11 @@
  *     not remembered from memory: it is read off **this instance's own OpenAPI**, served unauthenticated at
  *     `GET /api/v1/docs/swagger-ui-init.js` (measured 2026-11-05: `n8n Public API` 1.1.1, 107 paths; the spec is
  *     embedded in that JS, and `/api/v1/docs/*` itself answers 200 SPA-HTML for anything).
- *   - **MCP runs and reads** (`.notes/runbooks/n8n-runtime-loop.md`, D197/D201). This instance's public API has no
- *     manual-run endpoint (`/workflows/{id}/run` is not in its 107 paths), so firing a dry run and reading its
- *     execution stays on the MCP door. And MCP's creation path is SDK code, not JSON: creating through MCP would
- *     mean re-authoring the artifact - a second copy of the config in the repo, which is the D184 failure this
- *     design refuses.
+ *   - **Nothing runs workflows from here.** This instance's public API has no manual-run endpoint (`/workflows/{id}/run`
+ *     is not in its 107 paths, measured 2026-11-05), so a manual run is a **UI press** on the canvas. The host also
+ *     serves its own MCP server at `/mcp-server/http`, and it is **not offered as a route** (operator ruling
+ *     2026-11-05): it answers `401` with the only tokens this rig holds, and a door nobody can open is worth less
+ *     than one sentence in a guide telling an operator which button to press (D217).
  *
  * What it refuses, and where each refusal is proven (test/api.test.mjs):
  *   - it never activates a copy that has not verified: `activateIfVerified` fetches the live document, runs the
@@ -345,6 +345,24 @@ export async function planPush(api, art) {
   return { create: true };
 }
 
+/**
+ * A whole-document `PUT` replaces `settings`, and the reviewed bytes deliberately carry no
+ * `settings.errorWorkflow` - the id belongs to the instance (D206). So an `update` of a linked workflow would
+ * otherwise silently unlink the thing whose whole job is to wake a person up. Whether this build drops the key
+ * is unmeasured (the `versions` route 401s with this key, so the published copy is not readable here); the
+ * guard makes the question moot either way (D219).
+ */
+export function carryLiveLink(liveDoc, body, log = console.log) {
+  const live = liveDoc?.settings?.errorWorkflow;
+  if (live && !body.settings?.errorWorkflow) {
+    body.settings = { ...(body.settings ?? {}), errorWorkflow: live };
+    log(
+      `  carrying the live error-workflow link (${live}) through this update - the reviewed bytes do not name it, because the id is the instance's (D206)`,
+    );
+  }
+  return body;
+}
+
 /** Activate, but never an unverified copy. Returns rather than exiting, so the refusal is testable. */
 export async function activateIfVerified(api, arg, log = console.log) {
   const w = await idOrName(api, arg);
@@ -598,7 +616,15 @@ async function main() {
           `  NOTE ${target.id} is ACTIVE - this PUT replaces the copy a running schedule is using. Re-verify after it; do not assume the firing version moved (unmeasured for changed bytes).`,
         );
       }
-      saved = await api.updateWorkflow(target.id, body);
+      if (target.isArchived) {
+        console.log(
+          `  NOTE ${target.id} is ARCHIVED (D212) - this writes into a retired record. Un-archive it in the UI first if it is meant to run again.`,
+        );
+      }
+      saved = await api.updateWorkflow(
+        target.id,
+        carryLiveLink(await api.getWorkflow(target.id), body),
+      );
     }
     console.log(
       `${cmd === "push" ? "created" : "updated"} ${saved.id} "${saved.name}" - ${saved.activeVersionId ? "ACTIVE" : "inactive: nothing fires until you activate it"}`,

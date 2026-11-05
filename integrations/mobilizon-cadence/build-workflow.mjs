@@ -515,9 +515,9 @@ for (const [k, want] of Object.entries(RETENTION)) {
 }
 // `settings.errorWorkflow` holds an *instance* id, so it can never be a reviewed byte: it would point at
 // whatever workflow happened to own that id on this box. The watcher itself is built (n8n/error-watcher.json,
-// D206) and linking it is an instance action - the cadence's Settings -> Error Workflow picker, or MCP
-// `update_workflow` - which resolves the id off the live instance, after
-// requiring that the target be active and contain an Error Trigger.
+// D206) and linking it is an instance action - `n8n-api.mjs link <watched> <watcher>`, or the cadence's
+// Settings -> Error Workflow picker - which resolves the id off the live instance, after
+// requiring that the target be published and contain an Error Trigger.
 if (workflow.settings.errorWorkflow) problems.push("settings.errorWorkflow is set in the generator - the id belongs to the instance, so link it in the cadence's Settings -> Error Workflow after the watcher is imported and activated (D206)");
 // The trigger's hour must be written in parameters the node actually reads (D207).
 {

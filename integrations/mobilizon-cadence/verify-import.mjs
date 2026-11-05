@@ -29,9 +29,10 @@
  * confidence; it says exactly what to look at. NOTE = expected (your alerting node, for instance).
  *
  * Nothing here contacts n8n or Mobilizon. It reads a file you point it at. (Until 2026-11-05 that file had to
- * come from your hands, because the host answered 302 to the YunoHost SSO for every path; since then a seat can
- * fetch the live copy itself through the instance's MCP server and hand it to this file - see
- * .notes/runbooks/n8n-runtime-loop.md, D197. What this file checks, and what it refuses to do, is unchanged.)
+ * come from your hands, because the host answered 302 to the YunoHost SSO for every path; since then the REST
+ * door carries the same bytes both ways - `n8n-api.mjs verify <key>` fetches the live copy and runs this file's
+ * checker on it, and `diff <(jq -S . exported.json) <(jq -S . n8n/cadence-workflow.json)` still works on an
+ * export from the UI. What this file checks, and what it refuses to do, is unchanged.)
  */
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
