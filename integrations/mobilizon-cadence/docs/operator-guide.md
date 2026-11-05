@@ -92,8 +92,16 @@ export N8N_API_KEY="$(cat .notes/n8n-public-api-token)"
 node integrations/mobilizon-cadence/n8n-api.mjs status      # what the instance holds, and whether it is ours
 node integrations/mobilizon-cadence/n8n-api.mjs push probe   # step 0's probe, inactive
 node integrations/mobilizon-cadence/n8n-api.mjs push         # the cadence, inactive
-node integrations/mobilizon-cadence/n8n-api.mjs verify <id>  # the live copy, every time anything is edited
+node integrations/mobilizon-cadence/n8n-api.mjs verify <id|name>  # the live copy, every time anything is edited
+node integrations/mobilizon-cadence/n8n-api.mjs update <id|name> cadence  # reviewed bytes onto an existing copy
+node integrations/mobilizon-cadence/n8n-api.mjs link <watched> <watcher>  # settings.errorWorkflow, read back
+node integrations/mobilizon-cadence/n8n-api.mjs retire <id-or-name>  # backup to disk, then the archive route
 ```
+
+`<id|name>` accepts a workflow id, the exact canvas name, or one of the four repo keys (`cadence`, `probe`,
+`watcher`, `heartbeat`); a key resolves to the reviewed name, so it cannot select a hand-made copy that merely
+sounds alike. The usage block above (`n8n-api.mjs` with no arguments) is the authority - if this table and it
+disagree, the code is right and this file is the one to fix.
 
 Three refusals are built in, and `test/api.test.mjs` executes each one rather than describing it:
 
@@ -555,5 +563,9 @@ If a *correct* request 401s on routes that worked a minute ago, then consider in
 probe first, because a wrong header reproduces a whole-instance outage perfectly.
 
 Rebuild after any config change (`node integrations/mobilizon-cadence/build-alerter.mjs`,
-`build-heartbeat.mjs`), then `n8n-api.mjs update <id> <key>` and re-verify: the artifact hash is what the checker
-compares, and a stale copy on the instance is drift, not an older version.
+`build-heartbeat.mjs`), then `n8n-api.mjs update <id|name> <key>` and re-verify: `update` reads the saved copy back
+and runs the same checker, exiting non-zero unless the read-back **is** the reviewed bytes. The artifact hash is what
+the checker compares, and a stale copy on the instance is drift, not an older version. One thing `update` does that is
+easy to miss: it **carries the live `settings.errorWorkflow` link forward** (D219), because the reviewed file
+deliberately does not name a watcher and the door's `PUT` is whole-document — so updating a watched workflow does not
+quietly unlink it.

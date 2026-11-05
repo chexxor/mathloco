@@ -386,3 +386,34 @@ instance-local node state and makes `23`/`A2`'s "is a channel configured at all?
 reviewed code. **Custom variables** (`$vars`) are Business/Enterprise on self-hosted, so this Community build does
 not have them, and their values are substituted into execution data anyway. Recommendation stands: keep
 `NTFY_TOKEN` as a service environment variable holding the `tk_…` string `ntfy token add` prints.
+
+## 11. The merge, and three claims this session had to take back (2026-11-05)
+
+Ruling 1 was *merge into `staging`, push is mine*, so the merge was measured before it was made (D156) and the numbers
+were written only afterwards: `git merge-tree --write-tree --name-only staging HEAD` -> exit **0**, tree **`8472398c`**,
+**no conflicted files**; merged `--no-ff` as **`3fcdf50`**; `npm run verify` **on `staging`** -> **18 ok / 0 failed /
+0 skipped, 19.6s** `= +15%` (load **5.9 -> 4.6/16cpu**) @measured 2026-11-05. Two follow-on docs merges (`221382a`,
+`640a6b0`) exist because the merge row records the merge, and a row inside the branch being merged can only be written
+after the thing it describes. `origin/staging` is untouched at `9e15d8d`: the push is the operator's (D66).
+
+The same calm box also closed the D216 question that was still open at §7: the identical gate set measured
+**19.2s (+12%)** and **19.6s (+15%)** at load 5.5-6.4 against **38.4s (+125%)** at load 8-9.6 @measured 2026-11-05.
+Contention, not regression; no baseline was rolled.
+
+Three claims were taken back during this stretch, each in the commit that contradicts it, which is the only reason they
+are worth writing down:
+
+1. **`9076363` does not exist.** A `NEXT.md` line named it as a commit on this branch; `git log --oneline -1 9076363`
+   answers `unknown revision`. The content it pointed at is `a7dbd7e`. A sha written before the commit is made is the
+   D215 failure one file over, and `DECISIONS.index.md`'s `check:decisions` has no power over it — that gate catches
+   dangling **D-ids**, not dangling object names.
+2. **A `sed -i` that matched nothing was reported as a change.** Two prose substitutions were scripted and each followed
+   by an unconditional `echo "… updated"`; `sed` exits 0 on a non-match, so one landed, one missed by four spaces of
+   indentation, and one targeted a block that runbook does not contain. The consequence was a guide line printing
+   `update <id> <key>` — a signature the tool never had (`update <id|name> [cadence|probe|watcher|heartbeat]`, read off
+   its own usage block). Fixing the prose meant copying the command out of the code that parses it.
+3. **A tree hash and a merge hash were drafted before the merge ran**, and were only caught because the neighbouring
+   sentence demanded a number that had not been produced. Measured values differ (`8472398c`, `3fcdf50`).
+
+The general shape, for the next time it would be cheaper: a claim's evidence is the command output, and a success
+message printed by the same command as the edit is not evidence. Assert the result — `grep -c` and read the number.
