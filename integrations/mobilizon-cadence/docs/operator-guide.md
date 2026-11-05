@@ -125,8 +125,10 @@ same rules against the live one. Two different calendars, or two different copie
 how you tell which you have.
 
 What is normal in a real export: ids, version ids, timestamps, tags and node **positions** differing (n8n
-rewrites all of them; the checker ignores them), and one `note` per alerting node you added after `21`/`22`.
-What is not: any `fatal` or `drift` line. If you get one, fix it in the repo, `build-workflow.mjs`, re-import,
+rewrites all of them; the checker ignores them), and one `note` per **extra** channel node you add beside the
+shipped `23 Notify on ntfy`. What is not: any `fatal` or `drift` line — and note that the node-level settings
+(`onError`, `retryOnFail`, `maxTries`) are inside the fingerprint, so toggling "Retry On Fail" in the editor
+*is* a drift line, not cosmetic noise. If you get one, fix it in the repo, `build-workflow.mjs`, re-import,
 export again, re-run this. Do **not** fix it by editing in the n8n editor — that is how the two-configs
 problem in step 5 starts. Re-run this checker after any edit made in the editor, and once more before you
 enable writes (step 5). To see the checker prove itself first: `verify-import.mjs --selftest`.
@@ -179,24 +181,68 @@ one of them is looking at a different calendar.
   away. That rehearses the entire write path, including the undo, at zero cost to the public calendar. Once you
   have watched it once, delete the `draft: true` and rebuild.
 
-## 4. Decide on alerting *before* enabling
+## 4. Alerting: what ships, and the four commands that make it real
 
-An automation that quietly adds dates nobody noticed is a calendar nobody trusts. Two terminals emit a
-machine-friendly failure shape, and both are safe to wire a notification to:
+An automation that quietly adds dates nobody noticed is a calendar nobody trusts. As of 2026-11-05 the delivery
+is **in the artifact**, not an exercise for the reader (D194): `23 Notify on ntfy` posts to your own ntfy server,
+and `24 Fail loudly` makes sure the execution still goes red afterwards (D195 — a failure n8n considers
+"handled" stops being recorded as one, and that used to be this workflow's alarm).
 
-- `21 Report error path` — a stage threw. Body: `{ ok: false, failedAt: ["read"|"sign in"|"plan"|"write"|"audit"|"report"], alertTitle, alertDetail, summary }`
-- `22 Report a problem` — the plan decided to stop and needs a person (a rename, a clock mismatch, every row cancelled). Same shape.
+What gets sent, from `series.config.mjs` `ALERT`:
 
-Add your notification node (Discord/email/etc.) after each, and send `{{ $json.summary }}`. Keep the
-notification **off** `08 Report`: the report body quotes the club's event text and, on a dry run, the whole
-payload — that is a lot of text to push into a chat log.
+| when | title | priority | note |
+|---|---|---|---|
+| a stage threw (`21`) | `cadence failed at read+write…` | 4 high | goes straight to `23`, no condition in the way |
+| the plan stopped and needs you (`22`) | `cadence paused: <series>` | 4 high | through `09 Tell a person?` |
+| it wrote, or a dry run decided what it would write (`08`) | `cadence wrote 1 event(s)` / `cadence dry run: would write 1` | 4 / **2 drawer-only** | a dry-run report is deliberately quiet |
+| every series skipped | *nothing* | — | on purpose: a message that means "nothing happened" is what makes the messages that matter unread |
 
-Also worth setting on the workflow, if your n8n version exposes it (the label moves between versions —
-Settings, or the workflow's own menu): an **error workflow** to a small notify-me workflow, as a backstop for
-the case where even `21` fails.
+Four commands on the ntfy host (the YunoHost package keeps its CLI behind a wrapper that sets
+`NTFY_CONFIG_FILE`; `<install>` is the app's install directory — `yunohost app info ntfy`):
 
-And the positive signal: with no notification at all, "it ran and said nothing" is indistinguishable from
-"it is switched off". Wire at least the two failure terminals before you enable writes.
+```bash
+sudo -u ntfy <install>/ntfy.sh user add --role=user cadence-bot
+sudo -u ntfy <install>/ntfy.sh access cadence-bot mathloco-cadence read-write
+sudo -u ntfy <install>/ntfy.sh token add --expires=365d --label="mathloco cadence" cadence-bot
+```
+
+Put the printed `tk_…` value in the **n8n service environment** as `NTFY_TOKEN`. It never goes in the workflow:
+`23` reads it as `$env.NTFY_TOKEN`, the config carries only the *name*, and both the build and the export checker
+fail if a token-shaped value appears in the JSON. Two things to know about that grant:
+
+- **Tokens are account-scoped, not topic-scoped** (upstream docs, 2026-11-04). Least privilege is the account: a
+  non-admin user whose only ACL entry is `mathloco-cadence`.
+- **`--expires` is a trap you choose with eyes open.** When the token dies, the alerts stop and nothing notices.
+  Put the renewal date in a calendar now, or mint it without `--expires` and record a rotation date here.
+
+Then prove the channel, from this repo:
+
+```bash
+node integrations/mobilizon-cadence/probe-ntfy.mjs
+```
+
+It asks the running server three questions: can a stranger **post** to your topic, can a stranger **read** it,
+and can this workspace **send**. The first two run without credentials and are part of `check.mjs` (measured
+2026-11-05: both `403 / 40301`, which is the package's `auth-default-access: "deny-all"` doing its job). The
+third prints a loud SKIP until `NTFY_TOKEN` is in your shell, and when it runs it puts a real message on your
+phone that says it is a probe.
+
+**Prove the alert path, not just the channel.** Set `MOBILIZON_PASSWORD` on the n8n host to something wrong and
+run the workflow once. Expected: `03 Sign in` fails, its error output fires, `21` names the stage, `23` delivers,
+`24` throws, the execution is **red** and the message is on your phone with the same words. Nothing can be
+written by a run that cannot sign in, so this is free. Fix the password afterwards, and note that a red run this
+deliberate is the cheapest evidence you will get that the alarm works.
+
+**Two things this does not cover, both deferred on purpose (D195):**
+
+- **If n8n itself is down, nothing sends.** Under the silence rule a quiet week is indistinguishable from a dead
+  scheduler. The candidate answer is a weekly priority-2 heartbeat message, which trades directly against the
+  silence rule above — an operator decision, not a code change.
+- **No workflow-level error workflow yet.** The vendor set calls it non-negotiable for unattended jobs because it
+  also catches whole-run timeouts, crashes between nodes and a trigger that never fires. It is a second artifact
+  plus a setting in your n8n version whose label moves. Parked until the first real write, with the trigger
+  named in D195. Note that our per-node error outputs mean a workflow-level error workflow will *not* see those
+  failures — `24 Fail loudly` is the one unwired throw it would catch.
 
 ## 5. Enable writes
 

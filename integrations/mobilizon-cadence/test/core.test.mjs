@@ -14,8 +14,8 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
 import {
-  addDays, addMinutesToTime, auditDate, buildCreateVars, cmpDate, copyAddress, copyOptions, instantFrom,
-  matchesSeries, nextCandidate, normTitle, parseDate, planSeries, rowTimezone, snapToWeekday, unwrap,
+  addDays, addMinutesToTime, alertBody, auditDate, buildCreateVars, canAlert, cmpDate, copyAddress, copyOptions, instantFrom,
+  matchesSeries, nextCandidate, normTitle, parseDate, planSeries, rowTimezone, runKind, snapToWeekday, unwrap,
   wallClock, weekdayOf,
 } from "../lib/core.mjs";
 
@@ -275,4 +275,49 @@ test("a GraphQL error is a failure even though the HTTP call succeeded", () => {
   assert.throws(() => unwrap({ data: { group: { id: "4" } }, errors: [{ message: "nope" }] }, "02"), /nope/);
   assert.deepEqual(unwrap({ data: { group: { id: "4" } } }, "02"), { group: { id: "4" } });
   assert.throws(() => unwrap(null, "02"), /empty response/);
+});
+
+
+// ---------------------------------------------------------------- the alert channel (D194)
+// Each branch of each rule gets its own case, because a rule with one test is a rule with one branch that
+// anyone can narrow by accident. The *workflow-level* cases - "a skip must stay silent", "a stage that threw
+// is always sent" - live in test/import.test.mjs and test/workflow.test.mjs, where they are planted against
+// the real generated nodes; what is tested here is the shape of a message and the decision to send one.
+
+const CHANNEL = { rootUrl: "https://ntfy.example/", topic: "mathloco-cadence", tokenEnv: "NTFY_TOKEN",
+  priority: { problem: 4, wrote: 4, dryRun: 2 }, tags: { problem: ["warning"] }, maxMessageChars: 40, click: "https://x/#when-we-meet" };
+
+test("a channel is usable only when a host, a topic and an env-var NAME are all present", () => {
+  assert.equal(canAlert(CHANNEL), true);
+  assert.equal(canAlert(null), false, "no config item - the reporters must say so rather than throw");
+  for (const k of ["rootUrl", "topic", "tokenEnv"]) {
+    assert.equal(canAlert({ ...CHANNEL, [k]: undefined }), false, `a channel missing ${k} cannot deliver`);
+  }
+  // A token *value* is not part of the config at all, so there is nothing here to check for a secret: the
+  // workflow-level check that no token literal exists lives in test/workflow.test.mjs.
+});
+
+test("which runs are worth a message: wrote and would-write yes, a plain skip no", () => {
+  assert.equal(runKind({}), null, "nothing written, nothing planned - the channel stays quiet");
+  assert.equal(runKind({ written: 0, wouldWrite: 0 }), null);
+  assert.equal(runKind({ written: 2 }), "wrote");
+  assert.equal(runKind({ wouldWrite: 1 }), "dryRun");
+  // If a run somehow both wrote and planned, the message must describe what happened, not what was considered.
+  assert.equal(runKind({ written: 2, wouldWrite: 3 }), "wrote");
+});
+
+test("the message shape: one vocabulary for every path, capped, and null when there is no channel", () => {
+  const problem = alertBody({ alert: CHANNEL, kind: "problem", title: "cadence paused: mpls-social", detail: "no_rows_for_series" });
+  assert.deepEqual(Object.keys(problem), ["topic", "title", "message", "priority", "tags", "click"]);
+  assert.equal(problem.priority, 4);
+  assert.deepEqual(problem.tags, ["warning"]);
+  const dry = alertBody({ alert: CHANNEL, kind: "dryRun", title: "t", detail: "d" });
+  assert.equal(dry.priority, 2, "a dry-run report is drawer-only: it must not sound like a failure");
+  assert.equal("tags" in dry, false, "only problem messages carry the warning tag, so a reader learns the vocabulary");
+  // An unknown kind publishes at the default rather than being rejected by the server at the worst moment.
+  assert.equal(alertBody({ alert: CHANNEL, kind: "wat", title: "t", detail: "d" }).priority, 3);
+  // The cap is the reporters' protection: a detail string built from an error dump is unbounded.
+  const long = alertBody({ alert: CHANNEL, kind: "wrote", title: "t", detail: "x".repeat(500) });
+  assert.equal(long.message.length, 40, "the cap in series.config.mjs must be the last word before the wire");
+  assert.equal(alertBody({ alert: null, kind: "problem", title: "t", detail: "d" }), null);
 });

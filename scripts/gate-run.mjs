@@ -71,6 +71,10 @@ const DEPLOY = [
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
   { name: 'check:cache', desc: 'summary-cache rules against a fake KV namespace' },
+  // The n8n integration builds an importable artifact from sources in this repo, and its rules are the same
+  // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
+  // assumed (that is what the live form of the same command is for), and it costs 1.4s @measured 2026-11-05.
+  { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: generators, invariants, 71 tests, the import checker' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.

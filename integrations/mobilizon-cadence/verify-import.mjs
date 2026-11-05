@@ -53,6 +53,7 @@ const N = {
   plan: "04 Plan & decide", gate: "05 Stop if nothing to write",
   create: "06 Create event", audit: "07 Audit the date", report: "08 Report",
   errPath: "21 Report error path", errPlan: "22 Report a problem",
+  tell: "09 Tell a person?", notify: "23 Notify on ntfy", loud: "24 Fail loudly",
 };
 
 const NODE_IGNORE = new Set(["id", "position", "meta", "webhookId", "notes", "notesInFlow"]);
@@ -199,9 +200,9 @@ export function verifyDocument(got, expected = CADENCE) {
     const outEdges = (got.connections?.[n]?.main ?? []).flat().length;
     if (alertOnly && !outEdges) {
       alertAdditions.add(n);
-      add("note", n, `added node, fed only by ${feeders.map((f) => f.from).join(", ")}`, "that is alerting, which the guide asks for - expected, and it does not touch the chain");
+      add("note", n, `added node, fed only by ${feeders.map((f) => f.from).join(", ")}`, "that is a second alert terminal - expected and harmless, but it lives only in n8n: the channel this repo ships and tests is 23 Notify on ntfy (D194)");
     } else if (alertOnly) add("warn", n, "added node feeds something downstream", "an alert terminal should be the end of a path; check it does not route back into the chain");
-    else add("drift", n, `added node, fed by ${feeders.map((f) => f.from || "(nothing)").join(", ") || "nothing"}`, "the reviewed artifact has 11 nodes; anything else needs a reason and a rebuild in the repo, not an edit in the editor");
+    else add("drift", n, `added node, fed by ${feeders.map((f) => f.from || "(nothing)").join(", ") || "nothing"}`, `the reviewed artifact has ${expected.nodes.length} nodes; anything else needs a reason and a rebuild in the repo, not an edit in the editor`);
   }
 
   // ---- per-node, for the nodes that exist in both
@@ -336,15 +337,23 @@ export function verifyDocument(got, expected = CADENCE) {
     if (u) {
       try {
         const parsed = new URL(u);
-        if (parsed.origin !== new URL(INSTANCE.baseUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only ${INSTANCE.baseUrl} may be called`);
-        if (isCadence && parsed.pathname !== INSTANCE.graphqlPath) add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, `5.2.4 serves ${INSTANCE.graphqlPath} on this instance (probed 2026-11-04)`);
+        // Two hosts, and only one node may use the second. Written out per node so that "it also calls
+        // somewhere else" has to argue with a check rather than slip past an origin comparison (D194).
+        if (isCadence && n.name === N.notify) {
+          if (parsed.origin !== new URL(config.ALERT.rootUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only the alert server ${config.ALERT.rootUrl} may be called by the delivery node`);
+          if (parsed.pathname !== "/") add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, "ntfy publishes JSON to the server root, not to a topic path");
+        } else if (parsed.origin !== new URL(INSTANCE.baseUrl).origin) add("fatal", `${n.name}.url`, parsed.origin, `only ${INSTANCE.baseUrl} may be called`);
+        else if (isCadence && parsed.pathname !== INSTANCE.graphqlPath) add("fatal", `${n.name}.url`, `path ${parsed.pathname}`, `5.2.4 serves ${INSTANCE.graphqlPath} on this instance (probed 2026-11-04)`);
       } catch { add("fatal", `${n.name}.url`, "not a URL", "the artifact uses the absolute endpoint literally"); }
     }
   }
   if (isCadence) {
     for (const t of [N.errPath, N.errPlan]) {
       const p = got.connections?.[t];
-      const downstream = ((p?.main ?? []).flat()).filter(Boolean).filter((c) => !alertAdditions.has(c.node));
+      // The delivery chain is shipped now, so it is not an "addition": the reporters may feed the gate and the
+      // delivery node. Anything else downstream is still the second-failure-path shape that broke a clean run once.
+      const downstream = ((p?.main ?? []).flat()).filter(Boolean)
+        .filter((c) => !alertAdditions.has(c.node) && c.node !== N.tell && c.node !== N.notify);
       const viaError = ((p?.error ?? []).flat()).length;
       if (downstream.length || viaError) {
         add("drift", t, `not a terminal node (feeds ${downstream.map((c) => c.node).join(", ") || "an error branch"})`,
@@ -356,6 +365,47 @@ export function verifyDocument(got, expected = CADENCE) {
       if (json.includes(shape)) add("fatal", "nodes", `${shape} appears as a literal`, "no credential may exist in the workflow JSON: node 03 reads the names of two environment variables (D177)");
     }
     if (!json.includes(`$env.${CREDENTIALS.passwordEnv}`)) add("fatal", "03 Sign in", `it no longer reads $env.${CREDENTIALS.passwordEnv}`, "the password's only permitted home is the n8n environment");
+
+    // ---- the two halves of an error output, checked on the exported bytes (D195)
+    // This is not the node-diff argument again. The diff would report a *change*; this reports a **shape**, and
+    // it applies to a node you added in the editor as much as to the shipped ones. Both halves are silent
+    // failures: a wire with no `onError` property never fires (the run stops on the default `stopWorkflow`),
+    // and the property with no wire throws the error away and records the run as successful. The artifact sat
+    // in the first state from its first commit until 2026-11-05, which is why the check is phrased this way.
+    const wiredError = new Set(
+      Object.entries(got.connections ?? {})
+        .filter(([, ports]) => (ports?.error ?? []).flat().filter(Boolean).length)
+        .map(([from]) => from),
+    );
+    for (const n of got.nodes) {
+      const onError = n.onError;
+      if (onError !== undefined && onError !== "continueErrorOutput") {
+        add("warn", `${n.name}.onError`, JSON.stringify(onError), "this graph only uses continueErrorOutput; another value means the error goes somewhere this check cannot read");
+      }
+      if (wiredError.has(n.name) && onError !== "continueErrorOutput") {
+        add("fatal", `${n.name}.onError`, `error output wired, onError ${JSON.stringify(onError ?? null)}`,
+          "the error branch cannot fire, so a failure stops the run instead of alerting anyone (vendor NODE_ERROR_OUTPUTS: the handler is unreachable)");
+      }
+      if (onError === "continueErrorOutput" && !wiredError.has(n.name)) {
+        add("fatal", `${n.name}.onError`, "onError: continueErrorOutput with nothing wired",
+          "the error is discarded and the execution is recorded as a success - one of n8n's worst silent-failure modes");
+      }
+      if (n.retryOnFail === true && expected.name === CADENCE.name && !["02 Read the series history", "07 Audit the date", "23 Notify on ntfy"].includes(n.name)) {
+        add("fatal", `${n.name}.retryOnFail`, `retries ${n.maxTries ?? "?"} times`,
+          "this rig retries only idempotent calls: 06 has no idempotency key on Mobilizon 5.2.4, so a retried write is a duplicate on the club's calendar, and 03 retries a password against a fail2ban front");
+      }
+    }
+    // The delivery is never the end of a path (see nodes/24-fail-loudly.js for why a handled error stops
+    // looking like a failure).
+    const fromNotify = ((byName(got).get(N.notify) && got.connections?.[N.notify]?.main) ?? []).flat().filter(Boolean);
+    if (fromNotify.length !== 1 || fromNotify[0].node !== N.loud) {
+      add("fatal", `${N.notify} outgoing`, fromNotify.map((c) => c.node).join(", ") || "nothing",
+        `the delivery node must feed exactly one node, ${N.loud}: a run whose failure was "handled" is not recorded as one, and the red execution is the alarm`);
+    }
+    const fromLoud = (got.connections?.[N.loud] ?? {});
+    if (Object.values(fromLoud).flat().flat().filter(Boolean).length) {
+      add("drift", N.loud, "it feeds something", "24 is terminal by design; downstream of a deliberate throw is dead code, and wiring its error output would hide the throw from a workflow-level error workflow");
+    }
   }
 
   // ---- the exported copy, **executed**. Not a second way to catch a changed rule - the Code text is

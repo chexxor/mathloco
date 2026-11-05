@@ -201,5 +201,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D191** — the two premises this integration rests on are gated as negatives, and a group feed is about to carry other people's events
 - **D192** — a planting is the only proof a rule exists: date-derived plantings use the rule's own clock, and every rule branch gets its own case
 - **D193** — the rhythm options are measured against the page that ships, the two that measured a retired structure are deleted, and the option list has one home
+- **D194** — cadence alerts go to the operator's own ntfy topic; the token is an env-var *name* in the artifact, and a run with nothing to say sends nothing
+- **D195** — an error output is two halves and the artifact shipped with one; retry is per-node because this rig, not the vendor default, knows what is idempotent; and loudness is re-declared after handling
 
-Defined: 193 (D1-D193). Unused ids: none.
+Defined: 195 (D1-D195). Unused ids: none.

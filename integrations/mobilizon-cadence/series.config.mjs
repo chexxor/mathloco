@@ -67,6 +67,60 @@ export const RUN = {
   readLimit: 100,
 };
 
+/**
+ * The alert channel - **one topic on the operator's own ntfy server** (D194, adopted 2026-11-04).
+ *
+ * Measured on 2026-11-04 from this workspace (Linux), so a future session does not re-guess it:
+ *   - `ntfy.labradorius.com` resolves CNAME `labradorius.com` -> `75.73.33.126` - **public**, not LAN-only,
+ *     unlike `mobilizon.labradorius.com` (192.168.1.120). So the alert reaches a phone off the LAN, and
+ *     nothing can poll the Mobilizon host from away from home.
+ *   - Anonymous publish and anonymous poll are both refused: `POST /<topic>` -> `{"code":40301,"http":403,
+ *     "error":"forbidden"}` and `GET /<topic>/json?poll=1` -> the same. `GET /v1/version` -> `40101`. That is
+ *     the YunoHost package's own posture, read from its `conf/server.yml`: `auth-default-access: "deny-all"`
+ *     plus `enable-login: true`, and `ntfy access everyone "up*" wo` at install (so **a topic must not start
+ *     with `up`** - the package grants anonymous write-only there for its iOS upstream flow).
+ *   - So the channel needs a credential: an ntfy **access token** in an n8n environment variable, exactly like
+ *     the Mobilizon password (`CREDENTIALS`). ntfy tokens are `tk_`-prefixed and - measured from the upstream
+ *     docs - "grant users full access to the user account", i.e. they are **not topic-scoped**. Least privilege
+ *     therefore comes from the *account*: a purpose-built non-admin user whose ACL entry is
+ *     `read-write` on this one topic and nothing else. See docs/operator-guide.md for the commands.
+ *   - E-mail is not the channel: `labradorius.com` has no apex TXT (no SPF) and no MX record (measured
+ *     2026-11-04 by `dig`), and the n8n package's pre-wired SMTP points at the YunoHost mail server that those
+ *     records say is not set up for sending. Discord is the fallback (the repo already has a Discord webhook
+ *     gate); ntfy was chosen because it is one `POST`, self-hosted, needs no bot, and works on a phone with no
+ *     account beyond the topic.
+ *
+ * The URL is the **root**, not a topic path: ntfy accepts the whole message as a JSON body only when the
+ * request goes to the server root ("To publish as JSON, you must PUT/POST to the ntfy root URL, not to the
+ * topic URL" - docs, read 2026-11-04). That keeps the httpRequest node in the same `specifyBody: "json"` shape
+ * as every other HTTP node in this workflow, so there is no second body style to review.
+ */
+export const ALERT = {
+  provider: "ntfy",
+  host: "ntfy.labradorius.com",
+  rootUrl: "https://ntfy.labradorius.com/",
+  /** Topic ids in ntfy are `[a-zA-Z0-9_-]{1,64}`. `mathloco-` prefixes it so a topic on a shared home server
+   *  still says which project it belongs to, and it deliberately does not start with `up` (see above). */
+  topic: "mathloco-cadence",
+  /** Name of the n8n environment variable holding the `tk_...` token - a NAME, never a value, under the same
+   *  rule as `CREDENTIALS` (the build refuses a value, and the token never enters the workflow JSON). */
+  tokenEnv: "NTFY_TOKEN",
+  /** What tapping the notification opens. The public schedule page, because that is the thing an alert is
+   *  about, and reading it is how you tell whether the alert is stale. */
+  click: "https://minneapolismathbookclub.com/#when-we-meet",
+  /** Priorities are measured from the upstream table: 5 max (long vibration, pop-over), 4 high, 3 default,
+   *  2 low (no sound, drawer only), 1 min. Nothing here is a 5: these messages arrive at 09:00 and a calendar
+   *  problem is not a three-in-the-morning emergency. A run with nothing to say sends nothing at all. */
+  priority: { problem: 4, wrote: 4, dryRun: 2 },
+  /** Only `warning` is used, because that tag name is quoted from the upstream examples. Other emoji tags are
+   *  plausible but unverified here, and an unknown tag name is a message that fails to publish. */
+  tags: { problem: ["warning"] },
+  /** The message text is capped here as well as in the reporters, so a 400 from ntfy is not how a person finds
+   *  out something went wrong. (ntfy's own limit was not measured; 1000 chars is far under the 4096-byte
+   *  figure in the message-format docs, which is the number to re-check if this ever truncates.) */
+  maxMessageChars: 1000,
+};
+
 export const SERIES = [
   {
     key: "mpls-social", // stable id; never reuse it for a different series

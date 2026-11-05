@@ -60,18 +60,97 @@ test("n8n's own export noise is not a finding (ids, timestamps, moved nodes)", (
   assert.deepEqual(blocked(r), [], blocked(r).map((f) => `${f.sev} ${f.where}: ${f.what}`));
 });
 
-test("the alerting node the guide asks for is a note, not a failure", () => {
+// The repo ships its own delivery node now (`23 Notify on ntfy`, D194), so this test is about the *second*
+// channel: an operator wiring a Discord node next to it is expected, and must not read as a breakage.
+test("a second alerting node, added beside the shipped one, is a note - not a failure", () => {
   const wf = clone();
   wf.nodes.push({
-    id: "alert-1", name: "23 Tell me", type: "n8n-nodes-base.discord", typeVersion: 3, position: [420, 320],
+    id: "alert-1", name: "24 Tell me on Discord", type: "n8n-nodes-base.discord", typeVersion: 3, position: [420, 320],
     parameters: { webhookUrl: "https://discord.example/x", content: "={{ $json.summary }}" },
   });
-  wf.connections["21 Report error path"] = { main: [[{ node: "23 Tell me", type: "main", index: 0 }]] };
-  wf.connections["22 Report a problem"] = { main: [[{ node: "23 Tell me", type: "main", index: 0 }]] };
+  // Pushed onto the existing arrays: replacing them would delete the shipped delivery edge, which is a fatal
+  // finding on purpose (the planting two tests below proves the chain is checked).
+  wf.connections["21 Report error path"].main[0].push({ node: "24 Tell me on Discord", type: "main", index: 0 });
+  wf.connections["22 Report a problem"].main[0].push({ node: "24 Tell me on Discord", type: "main", index: 0 });
   const r = verifyDocument(wf, CADENCE);
   assert.deepEqual(blocked(r), [], blocked(r).map((f) => `${f.sev} ${f.where}: ${f.what}`));
-  assert.ok(hits(r, "23 Tell me", "note").length === 1, JSON.stringify(r.findings));
-  assert.match(JSON.stringify(hits(r, "23 Tell me", "note")), /21 Report error path, 22 Report a problem/);
+  assert.ok(hits(r, "24 Tell me on Discord", "note").length === 1, JSON.stringify(r.findings));
+  // Both feeders named, in whatever order the graph produced them.
+  const note = JSON.stringify(hits(r, "24 Tell me on Discord", "note"));
+  assert.match(note, /21 Report error path/);
+  assert.match(note, /22 Report a problem/);
+});
+
+test("the two halves of an error output are both checked, and either half alone is fatal (D195)", () => {
+  // Half one: the wire exists, the node property does not. This is the defect the shipped artifact carried
+  // from its first commit - every fallible stage pointed its error output at 21, and none of them had
+  // onError, so the branch could never fire and the run just stopped. A reviewer reading the canvas sees a
+  // complete-looking error path.
+  const noProp = clone();
+  delete noProp.nodes.find((n) => n.name === "02 Read the series history").onError;
+  const r1 = verifyDocument(noProp, CADENCE);
+  assert.ok(hits(r1, "error branch cannot fire").length >= 1, JSON.stringify(r1.findings));
+
+  // Half two: the property, no wire. n8n throws the error away and records the run as a success.
+  const noWire = clone();
+  noWire.nodes.find((n) => n.name === "24 Fail loudly").onError = "continueErrorOutput";
+  const r2 = verifyDocument(noWire, CADENCE);
+  assert.ok(hits(r2, "with nothing wired").length >= 1, JSON.stringify(r2.findings));
+
+  // An onError value this graph does not use is at least worth saying out loud.
+  const other = clone();
+  other.nodes.find((n) => n.name === "03 Sign in").onError = "stopWorkflow";
+  assert.ok(hits(verifyDocument(other, CADENCE), "onError", "warn").length >= 1);
+});
+
+test("retry is allowed only on the calls this rig proved idempotent", () => {
+  // The vendor default is retry on every network node. On this instance 06 has no idempotency key, so a retry
+  // after a 500 that followed a successful write is a second event on the club's calendar - the read that would
+  // notice it runs the next morning. Same for 03: a wrong password offered three times per run to a host with
+  // fail2ban in front of it.
+  for (const name of ["06 Create event", "03 Sign in"]) {
+    const wf = clone();
+    const n = wf.nodes.find((x) => x.name === name);
+    Object.assign(n, { retryOnFail: true, maxTries: 3, waitBetweenTries: 5000 });
+    const r = verifyDocument(wf, CADENCE);
+    assert.ok(hits(r, `${name}.retryOnFail`).length >= 1, `${name}: ${JSON.stringify(r.findings)}`);
+  }
+});
+
+test("the delivery node must still feed the loud node", () => {
+  const wf = clone();
+  wf.connections["23 Notify on ntfy"] = {};
+  const r = verifyDocument(wf, CADENCE);
+  assert.ok(hits(r, "24 Fail loudly").length >= 1, JSON.stringify(r.findings));
+  // and 24 itself stays terminal: downstream of a deliberate throw is dead code
+  const wf2 = clone();
+  wf2.connections["24 Fail loudly"] = { main: [[{ node: "01 Config", type: "main", index: 0 }]] };
+  // drift, not fatal: an edge downstream of a deliberate throw is dead code rather than an unsafe graph.
+  assert.ok(hits(verifyDocument(wf2, CADENCE), "24 is terminal", "drift").length >= 1);
+});
+
+test("a channel node you add in the editor is policed by the same error-output rule", () => {
+  // The point of writing the pairing rule generically: the operator's own addition - the second channel the
+  // guide invites - fails the same way silently, and nobody should have to know the two-halves rule to get
+  // caught by the checker.
+  const wf = clone();
+  wf.nodes.push({
+    id: "alert-2", name: "25 Bounce to e-mail", type: "n8n-nodes-base.emailSend", typeVersion: 2, position: [420, 420],
+    parameters: { fromEmail: "a@b.c", toEmail: "d@e.f", subject: "cadence", emailFormat: "text", text: "={{ $json.summary }}" },
+  });
+  wf.connections["21 Report error path"].main[0].push({ node: "25 Bounce to e-mail", type: "main", index: 0 });
+  wf.connections["25 Bounce to e-mail"] = { error: [[{ node: "21 Report error path", type: "main", index: 0 }]] };
+  const r = verifyDocument(wf, CADENCE);
+  assert.ok(hits(r, "25 Bounce to e-mail.onError").length >= 1, JSON.stringify(r.findings));
+});
+
+test("deleting the shipped delivery edge is fatal, because an alert that cannot send is the failure mode", () => {
+  const wf = clone();
+  delete wf.connections["23 Notify on ntfy"];
+  wf.connections["21 Report error path"] = {};
+  const r = verifyDocument(wf, CADENCE);
+  assert.ok(hits(r, "21 Report error path").length >= 1, JSON.stringify(blocked(r)));
+  assert.match(JSON.stringify(blocked(r)), /23 Notify on ntfy/, "the missing delivery edge has to be named");
 });
 
 // ------------------------------------------------------- the write path's safety, broken one at a time
@@ -201,10 +280,13 @@ test("readGate reads both v1 and v2 condition blocks, and refuses a third shape"
 
 test("a node version n8n upgraded is a warning, not a failure", () => {
   const wf = clone();
+  const httpNodes = CADENCE.nodes.filter((n) => n.type === "n8n-nodes-base.httpRequest");
   for (const n of wf.nodes) if (n.type === "n8n-nodes-base.httpRequest") n.typeVersion = 5;
   const r = verifyDocument(wf, CADENCE);
   assert.deepEqual(blocked(r), []);
-  assert.equal(hits(r, "n8n upgraded the node on import", "warn").length, 4);
+  // Derived, so an added HTTP node cannot make this assertion a stale count of a previous graph.
+  assert.equal(httpNodes.length >= 4, true, "the planting assumes the graph still has its HTTP nodes");
+  assert.equal(hits(r, "n8n upgraded the node on import", "warn").length, httpNodes.length);
 });
 
 test("a node renamed inside n8n breaks the copy's own run, and that is reported as a run failure", () => {
@@ -246,8 +328,21 @@ test("the export is not only identical, it still runs: the club's rows in, the t
   assert.equal(report.ok, true);
   assert.equal(report.written, 0, "an exported copy, executed, writes nothing");
   assert.match(report.summary, /2 series, 0 event\(s\) written/);
-  assert.deepEqual(run.emitted["22 Report a problem"], [{ json: { ok: true, summary: "no alerts to report" } }],
-    "a clean dry run reaches the alert reporter and finds nothing to alert on");
+  // The log carries the createEvent arguments; the phone must not (D194). One JSON dump of a description is
+  // enough to push every date out of the message cap, which is how an alert turns into "see the log".
+  assert.match(report.summary, /payload: /, "the execution log must still hold the full arguments");
+  if (report.ntfy) {
+    assert.doesNotMatch(report.ntfy.message, /payload: /, "the alert message must not carry payload dumps");
+    assert.ok(report.ntfy.message.length <= 1000, "the cap in series.config.mjs is the last word before the wire");
+  }
+  assert.deepEqual(run.emitted["22 Report a problem"], [{
+    json: { ok: true, summary: "no alerts to report", notifyNeeded: false, alertChannel: "mathloco-cadence", ntfy: null },
+  }], "a clean dry run reaches the alert reporter, finds nothing to alert on, and says it would send nothing");
+  // The delivery decision is asserted here as well as in workflow.test.mjs, because this is the copy that would
+  // really run: a dry run that decided to write must be worth a message, at the quiet priority.
+  assert.equal(report.notifyNeeded, true, "a dry run that would write two events must be worth telling someone about");
+  assert.equal(report.ntfy.topic, "mathloco-cadence");
+  assert.equal(report.ntfy.priority, 2, "a dry-run notice is a drawer message, not a sound (D194)");
 });
 
 test("flip dryRun in the export and execute it: the plan node emits `create`, so the gate is the only thing left", () => {

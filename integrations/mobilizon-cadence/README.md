@@ -37,7 +37,8 @@ The three rules worth arguing about are all in `lib/core.mjs`, each with its rea
 ## Commands
 
 ```bash
-node integrations/mobilizon-cadence/check.mjs            # build --check + probe + 61 tests + import self-check + live read-only plan
+node integrations/mobilizon-cadence/check.mjs            # build --check + probe + every test in test/ + import self-check + live read-only plan + the two premise probes
+node integrations/mobilizon-cadence/check.mjs            # (the test count is printed by the runner; a count in a doc is a number that rots)
 node integrations/mobilizon-cadence/check.mjs --offline  # same, without the live read (CI / no route)
 node integrations/mobilizon-cadence/simulate.mjs         # what it would do today, credentials, no writes
 node integrations/mobilizon-cadence/simulate.mjs --now 2026-12-01T14:00:00Z --fixture fixtures/group-history-2026-11-04.json
@@ -91,7 +92,15 @@ Trigger every morning (09:00 America/Chicago)
                  ├─ true  → 06 Create event → 07 Audit the date ─┐
                  └─ false ───────────────────────────────────────┴─ 08 Report → 22 Report a problem
                 (every stage's error output → 21 Report error path)
+                     21 ─────────────────────────┐
+                     22 → 09 Tell a person? ──────┴→ 23 Notify on ntfy → 24 Fail loudly
 ```
+
+The right-hand branch is the alert path (D194): `21`/`22` compose a message with the same `alertBody` the report
+uses, `09` decides whether a run is worth a message at all, `23` posts it to your own ntfy topic with a token
+read from n8n's environment by **name**, and `24` throws afterwards so the execution still ends red (D195).
+Every fallible stage carries `onError: "continueErrorOutput"` — without that property a wired error output never
+fires, which was this artifact's silent fault until 2026-11-05.
 
 Node-by-node detail, including what each execution should show, is in
 [`docs/architecture.md`](docs/architecture.md).
@@ -106,8 +115,10 @@ Node-by-node detail, including what each execution should show, is in
 3. Run it once in the editor and read the `08 Report` output. Compare it with
    `node integrations/mobilizon-cadence/simulate.mjs` — they must agree, and both must be right about the
    dates.
-4. Only then decide about `dryRun`, and read the alerting step first: a workflow that writes a date nobody
-   noticed is a calendar nobody trusts.
+4. Only then decide about `dryRun`, and read the alerting step first (`docs/operator-guide.md` §4): the delivery
+   node ships, but it cannot send until the ntfy account, token and `NTFY_TOKEN` exist on the host — and a
+   channel whose first exercise is its own failure is not a channel. `probe-ntfy.mjs` proves it; then break the
+   password once and watch the alert arrive.
 
 ## What this does not do
 

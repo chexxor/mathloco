@@ -35,6 +35,10 @@ return [{
     runAt: now.toISOString(),
     groupActor: groups[0],
     INSTANCE, CREDENTIALS, RUN, SERIES,
+    // The alert channel travels on the config item for the same reason the GraphQL documents do: the
+    // delivery node holds no endpoint text of its own, so `series.config.mjs` stays the one place a host
+    // or a topic can change. Nothing secret: `ALERT.tokenEnv` is a NAME (D177 keeps secrets in n8n env).
+    ALERT,
     query: {
       // 02 - public read, no credential attached and none needed.
       readSeriesHistory: READ_SERIES_HISTORY,

@@ -75,6 +75,7 @@
     "cf:secrets:list:preview": "wrangler preview secret list",
     "cf:secrets:list:preview-base": "wrangler preview base-config secret list",
     "cf:kv:create": "wrangler kv namespace create SUMMARY_CACHE",
+    "check:cadence": "node integrations/mobilizon-cadence/check.mjs --offline",
     "check:cache": "tsx scripts/check-summary-cache.ts",
     "assets:social": "node scripts/make-social-share.mjs",
     "probe:cpu": "node scripts/probe-config.mjs && wrangler deploy --config dist/server/wrangler.probe.json",

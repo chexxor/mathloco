@@ -16,6 +16,8 @@
 const allOf = (name) => {
   try { return $(name).all(); } catch { return []; } // the branch never ran - every series skipped, which is a normal night
 };
+const cfgItem = (() => { try { return $('01 Config').item; } catch { return null; } })();
+const ALERTCFG = cfgItem && cfgItem.json ? cfgItem.json.ALERT : null;
 
 const plans = allOf('04 Plan & decide').map((i) => i.json);
 const created = allOf('06 Create event')
@@ -65,19 +67,46 @@ for (const plan of plans) {
   rows.push(row);
 }
 
-const label = { create: "created", would_create: "dry run - would create", skip: "nothing to do", alert: "NEEDS A PERSON" };
-const lines = [];
-lines.push(`cadence: ${rows.length} series, ${created.length} event(s) written, at ${plans[0] && plans[0].todayDate}`);
-for (const r of rows) {
-  lines.push(`- ${r.series}: ${label[r.action] || r.action} ${r.date} ${r.beginsOn}`.trimEnd());
-  if (r.why) lines.push(`    why: ${r.why}`);
-  if (r.url) lines.push(`    url: ${r.url}`);
-  if (r.audit) lines.push(`    audit: ${r.audit}`);
-  for (const n of r.notes || []) lines.push(`    note: ${n}`);
-  if (r.wouldSend) lines.push(`    payload: ${JSON.stringify(r.wouldSend)}`);
-}
-const summary = lines.join("\n");
+// One vocabulary for "what happened", shared with the alert body and with simulate.mjs's rehearsal (D194):
+// three places that each format the run are three chances to rehearse a report the workflow never sends.
+const summary = summaryLines({ rows, written: created.length, todayDate: plans[0] && plans[0].todayDate }).join("\n");
+// The alert gets the same lines minus the payload dumps (see summaryLines): a phone has a message cap, and a
+// single copied description is enough to push every date the alert exists to report off the end of it.
+const alertDetail = summaryLines({ rows: rows.map((r) => ({ ...r, wouldSend: undefined })), written: created.length, todayDate: plans[0] && plans[0].todayDate }).join("\n");
 
 if (problems.length) throw new Error(`cadence wrote an event but the audit disagrees:\n${problems.join("\n")}\n\n${summary}`);
 
-return { json: { ok: true, written: created.length, series: rows.length, summary, rows } };
+/* Should a person be told? (D194) Cadence runs every morning, so a message that means "nothing happened" is
+   the failure mode: it trains a person to skim past the channel, and the messages that matter go unread with
+   it. So this reports only when the run *did* something - wrote an event, or (in a dry run) decided exactly
+   what it would write, which is the evidence a dry run was worth watching. A plain skip stays silent, and the
+   execution log stays the record. */
+const wouldWrite = plans.filter((p) => p.action === "would_create").length;
+const kind = runKind({ written: created.length, wouldWrite });
+const notifyNeeded = Boolean(kind) && canAlert(ALERTCFG);
+const ntfy = notifyNeeded
+  ? alertBody({
+      alert: ALERTCFG,
+      kind,
+      title: created.length
+        ? `cadence wrote ${created.length} event(s)`
+        : `cadence dry run: would write ${wouldWrite}`,
+      detail: alertDetail,
+    })
+  : null;
+
+return {
+  json: {
+  ok: true,
+  written: created.length,
+  wouldWrite,
+  series: rows.length,
+  summary,
+  rows,
+  // Stated even when it is false, so a dry run's log answers "would a person have been told?" without
+  // having to know how the graph is wired.
+  notifyNeeded,
+  alertChannel: canAlert(ALERTCFG) ? ALERTCFG.topic : "none configured",
+  ntfy,
+  },
+};

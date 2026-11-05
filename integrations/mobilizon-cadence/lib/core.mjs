@@ -412,3 +412,65 @@ export function auditDate({ plan, created, windowRows }) {
   }
   return { ok: problems.length === 0, problems, seen: rows.length };
 }
+
+/** Is the alert channel usable? `ALERT` comes from `series.config.mjs` on the config item, so a reporter can
+ *  answer this without knowing which host or topic is configured. A missing channel is not an error - the run
+ *  still reports in the execution log - but it must be *said*, because "nobody was told" is the difference
+ *  between a monitored job and an unmonitored one (D194). */
+export function canAlert(alert) {
+  return !!(alert && alert.rootUrl && alert.topic && alert.tokenEnv);
+}
+
+/** The run summary, in the words a person reads. The execution log, the alert body, and `simulate.mjs`'s
+ *  rehearsal all print these same lines, which is the point: a rehearsal that paraphrases the real report is
+ *  a rehearsal of something else. `rows` is the per-series shape the reporters build
+ *  ({ series, action, date, beginsOn, endsOn, why, audit, url, notes, wouldSend }). `payloads: false` is what
+ *  a phone gets; the log gets them. */
+export function summaryLines({ rows, written, todayDate, payloads = true }) {
+  const label = { create: "created", would_create: "dry run - would create", skip: "nothing to do", alert: "NEEDS A PERSON" };
+  const lines = [`cadence: ${rows.length} series, ${written} event(s) written, at ${todayDate}`];
+  for (const r of rows) {
+    lines.push(`- ${r.series}: ${label[r.action] || r.action} ${r.date ?? "-"} ${r.beginsOn ?? ""}`.trimEnd());
+    if (r.why) lines.push(`    why: ${r.why}`);
+    if (r.url) lines.push(`    url: ${r.url}`);
+    if (r.audit) lines.push(`    audit: ${r.audit}`);
+    for (const n of r.notes ?? []) lines.push(`    note: ${n}`);
+    // The full createEvent argument list belongs in the execution log, where a reviewer reads it line by line.
+    // It is the *only* thing that differs from what a phone gets, because one JSON dump of a description
+    // pushes every date out of the message cap - which is how an alert becomes "see the log", i.e. unread.
+    if (payloads && r.wouldSend) lines.push(`    payload: ${JSON.stringify(r.wouldSend)}`);
+  }
+  return lines;
+}
+
+/** Which runs are worth a message, decided once (D194). Cadence runs every morning, so a message that means
+ *  "nothing happened" is itself the failure mode: it trains a person to skim the channel, and the messages
+ *  that matter get skimmed with it. So a plain skip is silent - the execution log remains the record - while
+ *  a run that *wrote* something, or a dry run that decided exactly what it would write, says so out loud.
+ *  `simulate.mjs` asks the same function, which is why the rule cannot drift between the workflow and the
+ *  rehearsal. */
+export function runKind({ written = 0, wouldWrite = 0 } = {}) {
+  return written ? "wrote" : wouldWrite ? "dryRun" : null;
+}
+
+/** The one message shape for the alert channel. Three reporters need it (a stage that threw, a plan that
+ *  stopped, a run that wrote something), and a message that differs by path is a message nobody can learn to
+ *  read - so the fields live here and the reporters only supply the words.
+ *
+ *  Field names are quoted from ntfy's JSON-publish example (read 2026-11-04): `topic`, `title`, `message`,
+ *  `priority`, `tags`, `click`. Priorities are the documented ones - 4 high, 3 default, 2 low - and a caller
+ *  that asks for an unknown kind gets the default rather than a rejected message. */
+export function alertBody({ alert, kind, title, detail }) {
+  if (!canAlert(alert)) return null;
+  const cap = alert.maxMessageChars || 1000;
+  const priority = (alert.priority || {})[kind] || 3;
+  const tags = kind === "problem" ? (alert.tags || {}).problem : undefined;
+  return {
+    topic: alert.topic,
+    title: String(title || "cadence").slice(0, 256),
+    message: String(detail || "(no detail)").slice(0, cap),
+    priority,
+    ...(tags && tags.length ? { tags } : {}),
+    ...(alert.click ? { click: alert.click } : {}),
+  };
+}

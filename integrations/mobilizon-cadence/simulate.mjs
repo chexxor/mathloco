@@ -21,7 +21,8 @@ import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { INSTANCE, RUN, SERIES } from "./series.config.mjs";
 import { READ_SERIES_HISTORY } from "./lib/queries.mjs";
-import { planSeries, unwrap, wallClock } from "./lib/core.mjs";
+import { alertBody, canAlert, planSeries, runKind, summaryLines, unwrap, wallClock } from "./lib/core.mjs";
+import { ALERT } from "./series.config.mjs";
 
 const here = fileURLToPath(new URL(".", import.meta.url));
 const args = process.argv.slice(2);
@@ -103,6 +104,38 @@ else {
       console.log(`      ${JSON.stringify(p.createVars)}`);
     }
     console.log();
+  }
+  // The rehearsal of the report *and* the alert (D194). This prints what 08 Report would have written to the
+  // execution log, and then whether that run would have reached a person - using the same functions the
+  // workflow's own nodes call, so a rehearsal cannot drift from what ships.
+  const todayDate = wallClock(nowIso, SERIES[0].timezone).date;
+  const rows = plans.map((p) => ({
+    series: p.seriesKey, action: p.action, date: p.candidate ? p.candidate.date : "-",
+    beginsOn: p.candidate ? p.candidate.beginsOn : "-", endsOn: p.candidate ? p.candidate.endsOn : "-",
+    why: p.reason || (p.note ?? ""), audit: "", url: "", notes: p.notes ?? [],
+    wouldSend: p.action === "would_create" ? p.createVars : undefined,   // log only; the alert strips it below
+  }));
+  const wouldWrite = plans.filter((p) => p.action === "would_create").length;
+  const kind = runKind({ written: 0, wouldWrite });
+  console.log("08 Report would print to the execution log:");
+  for (const line of summaryLines({ rows, written: 0, todayDate })) console.log(`  ${line}`);
+  console.log();
+  if (!canAlert(ALERT)) {
+    console.log("would a person be told?  NO - series.config.mjs ALERT is incomplete, so the run is unmonitored.");
+  } else if (!kind) {
+    console.log(`would a person be told?  no - every series skipped, and a message that means "nothing happened" is how a channel goes unread (D194).`);
+  } else {
+    const msg = alertBody({
+      alert: ALERT, kind,
+      title: `cadence dry run: would write ${wouldWrite}`,
+      // payloads stripped, exactly as 08 Report does it - the rehearsal shows the message a phone would get.
+      detail: summaryLines({ rows: rows.map((r) => ({ ...r, wouldSend: undefined })), written: 0, todayDate }).join("\n"),
+    });
+    console.log(`would a person be told?  yes -> ${ALERT.provider} ${ALERT.rootUrl.replace(/\/$/, "")}/${msg.topic} (priority ${msg.priority}${msg.priority === 2 ? ", drawer only - a dry-run report is deliberately quiet" : ""})`);
+    console.log(`  title    ${msg.title}`);
+    console.log(`  message  ${msg.message.split("\n")[0]}${msg.message.includes("\n") ? ` (+${msg.message.split("\n").length - 1} more lines, capped at ${ALERT.maxMessageChars})` : ""}`);
+    console.log(`  opens    ${msg.click}`);
+    console.log(`  send is wired in n8n as "23 Notify on ntfy"; the token is read there from $${ALERT.tokenEnv}, by name.`);
   }
   console.log("nothing was written. in n8n the same decision runs with RUN.dryRun, and `create` only when you flip it.");
 }
