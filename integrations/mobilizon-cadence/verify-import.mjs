@@ -71,6 +71,13 @@ export function baselineFor(name) {
   return BASELINES.find((b) => b.doc.name === name) ?? null;
 }
 
+/** The name a human types at the door for this artifact, so a finding can hand back the exact command. */
+export function repoKey(expected) {
+  const hit = BASELINES.find((b) => b.doc.name === expected.name);
+  if (!hit) throw new Error(`repoKey: "${expected.name}" is not a baseline this repo keeps`);
+  return hit.key;
+}
+
 // The names the safety invariants are written against. If a name changes in the artifact, this file must
 // change with it - which is the point: they are load-bearing, not incidental.
 const N = {
@@ -338,9 +345,9 @@ export function verifyDocument(got, expected = CADENCE, ctx = {}) {
       // *who* it points at, so the name is resolved by the caller when it can (a live verify always can).
       const named = ctx.errorWorkflowName;
       if (named && baselineFor(named)) add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - the reviewed watcher`, "linked by `n8n-api.mjs link`: the id belongs to this instance, which is why the artifact does not declare it (D206)");
-      else if (named) add("drift", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - a workflow this repo does not review`, "the cadence's failures are pointed at something unverified: it will look like alerting and be nothing (D206). Re-run `n8n-api.mjs link cadence watcher`");
-      else if (ctx.errorWorkflowLookedUp) add("warn", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - no workflow on this instance answers to that id`, "the link points at nothing, so a failure is being sent nowhere. Re-run `n8n-api.mjs link cadence watcher`");
-      else add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - this mode cannot ask the instance whose id that is`, "run `n8n-api.mjs verify cadence` (or open the cadence's Settings) to see whether it is the reviewed watcher");
+      else if (named) add("drift", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} = "${named}" - a workflow this repo does not review`, `${expected.name}: its failures are pointed at something unverified - it will look like alerting and be nothing (D206). Re-run "n8n-api.mjs link ${repoKey(expected)} watcher"`);
+      else if (ctx.errorWorkflowLookedUp) add("warn", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - no workflow on this instance answers to that id`, `the link points at nothing, so a failure is being sent nowhere. Re-run "n8n-api.mjs link ${repoKey(expected)} watcher"`);
+      else add("note", `settings.errorWorkflow`, `${JSON.stringify(sb[k])} - this mode cannot ask the instance whose id that is`, `run "n8n-api.mjs verify ${repoKey(expected)}" (or open its Settings -> Error Workflow) to see whose id that is`);
     }
     else if (k === "executionOrder") add("fatal", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "the v0 order evaluates expressions differently than every test in this directory assumes");
     else if (/^saveData|^savePre|^saveManual/.test(k)) add("note", k, `${JSON.stringify(sb[k])} vs ${JSON.stringify(sa[k])}`, "execution retention: the packaged instance default on this box is save-on-success=none and manual=false, so these workflow settings are the only thing that makes a dry run readable (D201); and node 03's request body carries a password, so pruning stays a host job (docs/security.md)");
@@ -371,7 +378,7 @@ export function verifyDocument(got, expected = CADENCE, ctx = {}) {
     for (const p of checkAlerter(got)) add("fatal", "watcher", p, "this document claims to be the error watcher; build-alerter.mjs' invariants say why it must stay minimal (D206)");
   }
   if (isHeartbeat) {
-    for (const p of checkHeartbeat(got)) add("fatal", "heartbeat", p, "this document claims to be the weekly heartbeat; build-heartbeat.mjs' invariants say why it must stay read-only and unconditional (D205)");
+    for (const p of checkHeartbeat(got, { live: true })) add("fatal", "heartbeat", p, "this document claims to be the weekly heartbeat; build-heartbeat.mjs' invariants say why it must stay read-only and unconditional (D205)");
   }
   const intoCreate = (into.get(N.create) ?? []);
   if (isCadence && (intoCreate.length !== 1 || intoCreate[0].from !== N.gate)) {

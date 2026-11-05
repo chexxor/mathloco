@@ -400,7 +400,7 @@ skip, which is why it is config and not a deletion.
 The whole behaviour is `series.config.mjs` + `lib/core.mjs`, and both are covered by
 [`test-plan.md`](test-plan.md).
 
-## 10. The two watchmen (imported and verified on the instance; nothing scheduled yet)
+## 10. The two watchmen (both live; the heartbeat is scheduled, the watcher is waiting for a failure)
 
 Two more artifacts come out of the same builders, and neither one is the cadence:
 
@@ -437,8 +437,11 @@ node integrations/mobilizon-cadence/n8n-api.mjs verify cadence
 |---|---|---|
 | cadence | `Ys3CdS3CSzfXeMkn` | inactive; **`settings.errorWorkflow` → the watcher**, written by `link` and read back |
 | error watcher | `dTvHkp7CmEyVNxgf` | **published** (n8n 2.x calls that activating - see below); it has no schedule, so it can only be fired by another workflow's failure |
-| heartbeat | `rCSdarhTstt3jILw` | inactive - awaiting your ruling to activate |
+| heartbeat | `rCSdarhTstt3jILw` | **ACTIVE** and linked to the watcher - the weekly proof of life runs; it is read-only, and the first real fire is still unmeasured |
 | environment probe | `nSGb9ICHP6w9vFAO` | inactive, read-only |
+
+So the shipped posture as of 2026-11-05: **something now proves weekly that the scheduler is alive, and nothing yet
+writes to Mobilizon** - the cadence stays inactive, and it is the only artifact that signs in.
 
 **The step no one predicted: a watcher has to be published before it can be named.** The first live `link` was
 refused - `400 The selected error workflow has no published version.` A workflow imported through this API arrives
@@ -454,24 +457,65 @@ node integrations/mobilizon-cadence/n8n-api.mjs link cadence watcher # writes se
 does not recognise - and in every case nothing is written. In the UI the same link is cadence → **Settings** →
 **Error Workflow**; the value is an instance-local id, which is why no reviewed file may contain one (D206).
 
+A linked watched copy then verifies with one extra note, and that is the correct reading:
+
+```
+NOTE settings.errorWorkflow: "dTvHkp7CmEyVNxgf" = "Mobilizon cadence - error watcher (alert on unhandled failure)" - the reviewed watcher
+```
+
+If it ever resolves to a workflow this repo does not review, that is a **drift**, and a dangling id is a **warn**:
+in both cases a failure is being sent somewhere that is not the alerting workflow.
+
+### Retiring scratch you no longer want (D212)
+
+`status` prints workflows it cannot match to a reviewed name as `not ours`. Retire them with the door's own verb:
+
+```bash
+node integrations/mobilizon-cadence/n8n-api.mjs retire gTPNPCgjU7L0fwiZ
+```
+
+That is `POST /workflows/{id}/archive` - a **soft** delete the UI can undo - and the tool writes a copy of the canvas
+to `.design/tmp-n8n/retired/<stamp>-<id>.json` **before** it calls it, then prints the path. It refuses a name this
+repo reviews (retiring an artifact is a commit first, or the builders end up pointing at a canvas that is gone) and
+refuses an ACTIVE workflow (archiving a running one leaves a trigger firing into an archived canvas). A hard
+`DELETE /workflows/{id}` exists in the API and this tool deliberately does not implement it.
+
 ### What is still yours to do
 
-1. **Activate the heartbeat** (`... n8n-api.mjs activate heartbeat`). It is read-only and sends one ntfy note a
-   week; the cadence stays inactive until you rule on it, since that one signs in to Mobilizon.
-2. **Rehearse the watcher** without waiting for an outage: press **Execute Workflow** on it. `ErrorTrigger`'s own mock
+1. **Rehearse the watcher** without waiting for an outage: press **Execute Workflow** on it. `ErrorTrigger`'s own mock
    payload (read off the node's source on this instance, 2026-11-05) arrives, `A1` composes, `A2` lets it through if
    `NTFY_TOKEN` is set on the instance, and a message lands on your phone. If it does not, `A1`'s output still shows
    the composed title and body. There is no run endpoint in this API version (Public API 1.1.1 exposes executions for
    *reading* only). **The MCP door is not open right now:** `POST /mcp-server/http` answers `401 {"message":"Unauthorized"}`
    with the public API key as a bearer *and* with `.notes/n8n-mcp-token` (measured 2026-11-05), so today a rehearsal is a
    **UI press** until an MCP token this build accepts is minted.
+2. **Check the first real heartbeat fire** (Monday after 2026-11-05): `GET /api/v1/executions?workflowId=rCSdarhTstt3jILw`
+   or the UI's Executions list. The artifact says Mondays 09:00 `America/Chicago`; D207 exists because a comment once
+   claimed 09:00 while the trigger fired at midnight, so the instance's own execution list is the measurement. It
+   needs `NTFY_TOKEN` on the n8n host for the message to arrive; without it the run still succeeds and `H3`'s output
+   shows the note that would have been sent.
 3. **Prove the duplicate rule once**, cheaply: set `MOBILIZON_PASSWORD` wrong, run the cadence. `23` sends the alert,
    `24` throws, the watcher fires - and **sends nothing** (`suppressedWhy` names the reason). One message, one red
    execution.
-4. **Delete the scratch copies** from the retention diagnosis, which are still on the canvas: `HO5PyBXP7TKbBQys`
-   and `OZNvFxoKUabfzwvY` (both named `... DELETE ME`). `status` prints them as `not ours`. Also `gTPNPCgjU7L0fwiZ`
-   ("Add Next Math Bi-monthly Math Social Event"), the 3-node scratch workflow from before this repo had builders -
-   it is not ours either, and only you know whether it is still wanted.
+
+### If a route answers 401, A/B your own request before believing the instance
+
+On 2026-11-05 a session spent an hour believing the door had closed, because ad-hoc probes were sending the wrong
+**header name**. Same second, same token, `GET /api/v1/tags`:
+
+| what the probe sent | answer |
+| --- | --- |
+| `X-N8N-API-KEY: <token>` | 200 |
+| `X-API-Key: <token>` | 401 `{"message":"Unauthorized"}` |
+| `Authorization: Bearer <token>` | 401 (Bearer is a JWT, not the API key) |
+
+`n8n-api.mjs` already sends the header the instance's own OpenAPI names (`X-N8N-API-KEY`), so **prefer the tool over
+hand-written curl**: `node integrations/mobilizon-cadence/n8n-api.mjs status`. If you must probe by hand, use that
+header exactly. Sanity check that the instance is alive without auth: `GET /healthz` → 200. And a key file that has
+not changed (check `ls -l --time-style=long-iso .notes/n8n-public-api-token`) is evidence against rotation, not for it.
+
+If a *correct* request 401s on routes that worked a minute ago, then consider instance causes - but make the paired
+probe first, because a wrong header reproduces a whole-instance outage perfectly.
 
 Rebuild after any config change (`node integrations/mobilizon-cadence/build-alerter.mjs`,
 `build-heartbeat.mjs`), then `n8n-api.mjs update <id> <key>` and re-verify: the artifact hash is what the checker

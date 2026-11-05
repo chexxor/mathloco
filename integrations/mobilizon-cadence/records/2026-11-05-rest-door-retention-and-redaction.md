@@ -193,7 +193,8 @@ schedule, so publishing it runs nothing.
 **The instance has no credentials at all** (`GET /credentials?limit=50` -> `{"data":[]}`), which is the fact D186
 predicted: the n8n MCP/API tokens on this rig live outside n8n (files, env), so nothing here can export a Mobilizon
 password by exporting a credential. The `n8n-mcp` MCP session token is not an n8n credential either; the API token
-that works is the one in `.notes/n8n-public-api-token` (`X-API-Key`).
+that works is the one in `.notes/n8n-public-api-token`, sent as the header the instance's own spec names: `X-N8N-API-KEY`
+(see §9.1 - an alias header does not work, and that cost an hour of believing the door was shut).
 
 **Executions confirm D201 rather than contradicting it**: `GET /executions` lists exactly one run, id 4, belonging
 to the retention scratch workflow - the only workflow that has ever completed on this instance. None of the four
@@ -232,3 +233,124 @@ Two door facts from the same minute, both cheap for the next session: `GET /work
 **MCP endpoint refuses both tokens** this rig holds — `POST /mcp-server/http` with the public API key as a bearer,
 and with `.notes/n8n-mcp-token`, both answer 401. Consequence: nothing in this directory can *run* a workflow, so
 every rehearsal in the operator guide is a UI press until an MCP token that this build accepts is minted.
+
+## 8. Redaction, read from the contract rather than assumed (@measured 2026-11-05, `n8n Public API` 1.1.1 + docs)
+
+D204 parked "does a redaction policy hide the sign-in body?" as an experiment. Before running anything the operator
+asked what the setting *is*, so it was read from two sources instead of remembered:
+
+- **The instance's own contract** (`.design/tmp-n8n/openapi.json`, saved this session by
+  `.notes/bin/n8n-openapi.mjs save`): `settings.redactionPolicy` is an enum of **`none`** (default),
+  **`non-manual`**, **`manual-only`**, **`all`**. `GET /executions` takes `redactExecutionData`: `true` always
+  redacts, `false` asks for unredacted data and **requires `execution:reveal`**, and *omitted* means "follow the
+  workflow's policy". A redacted response can carry `redactionInfo` = `{isRedacted, reason, canReveal}`.
+- **n8n's own docs**, markdown twin: `https://docs.n8n.io/deploy/host-n8n/configure-n8n/security/redact-execution-data.md`
+  (saved to `.design/tmp-n8n/redact-execution-data.md`, 200, 17,935 bytes, 2026-11-05). Its own words: it redacts
+  **all** input and output `item.json` for each node, replacing it with **an empty object** (line 88), removes
+  `item.binary`, always redacts fields node authors mark `sensitiveOutputFields`, and redacts **error messages**,
+  keeping only error type and HTTP status (line 91). Execution metadata stays: node names, status, timing, structure
+  (line 96). Plans (lines 12-13): **n8n Cloud: Enterprise; self-hosted: Enterprise**. Per-workflow redaction from
+  **2.16.0**, instance-level enforcement from **2.26.0** (line 15).
+
+What that means for this project, before any experiment:
+
+1. It is **all-or-nothing per node**, not a field picker. Turning it on for the cadence hides the sign-in body
+   (which carries `MOBILIZON_PASSWORD`) *and* the plan, the GraphQL rows, the dry-run payload and the created-event
+   id — the exact evidence `saveDataSuccessExecution: all` was turned on for in D201, and the evidence "verify the
+   date we actually wrote" depends on.
+2. The mode split is the only useful dial, and the UI calls it **Redact production execution data** / **Redact
+   manual execution data** (line 43, 59-60): production = webhook/schedule runs while active, manual = a press of
+   **Execute Workflow**. n8n's own recommendation is production-only, "protects live data while keeping manual test
+   runs visible for debugging" (line 74). That is **not** the split this project wants: D201 turned on
+   `saveDataSuccessExecution: all` precisely so *manual dry runs* could be read, and once real writes exist, the
+   scheduled run's created-event id is the audit trail that matters most. So either mode costs the one piece of
+   evidence the cadence was built to leave behind.
+3. **The plan gate comes first, and so does the scope gate.** Enforcement, when a licence has it, sets a floor and
+   the public API "rejects attempts to create or update a workflow with a redaction policy below the floor" (line
+   80) — which would interact with `importBody`'s settings allowlist, not silently override it. The instance is a
+   Community build (YunoHost package). Redaction is an Enterprise
+   feature, so the honest expectation is that the API *accepts* the key (it is in the 17-key settings allowlist,
+   D208) and nothing happens. And the contract says changing it needs a `workflow:enableRedaction` scope, while this
+   key already 401s on `/versions` — so the experiment may fail on scope before it fails on licence.
+
+Cheap partial experiment, when wanted: `update` the **probe** (not the cadence) with
+`settings.redactionPolicy: "all"`, run it once in the UI, then `GET /executions/{id}?redactExecutionData=false`
+and look for `redactionInfo`. The probe is disposable and carries no credential except the ones it reads from
+`$env`. **Not run yet** — it needs a UI press, and the full answer also needs the reveal scope.
+
+The threat model is worth restating, because redaction's stated purpose is least-privilege *between teams*: this
+instance has one admin, who is the operator. The password in stored run data is a **backup/DB-at-rest** exposure,
+not a coworker exposure, which is why retention plus host-side pruning (`docs/security.md`) was the shipped answer
+and why the two options here are "accept it, or lose the audit trail", not "fix it".
+
+## 9. Later the same day: the heartbeat goes live, the scratch goes to archive, and a 401 gets blamed on the wrong thing (@measured 2026-11-05)
+
+Operator rulings in (numbered, answered as numbers — the house shape): activate the heartbeat, retire the three
+`not ours` workflows, accept the A3/R6 rhythm recommendation, and explain redaction before running it (§8).
+
+**Heartbeat is live.** `activate heartbeat` → `activated rCSdarhTstt3jILw`, then `link heartbeat watcher` → linked to
+`dTvHkp7CmEyVNxgf`. Cadence and probe remain inactive; nothing writes to Mobilizon. Recorded as D213.
+
+**A false fatal, in this repo's own gate** (D211). Minutes after that link, `verify heartbeat` answered
+`1 fatal … settings.errorWorkflow is set in a generated artifact`. `verifyDocument` reuses `build-heartbeat.mjs`'s
+`checkHeartbeat` on the live document, and one of that checker's rules is about **provenance of generated bytes**
+(D207: no artifact may bake in an instance-local id), not about a property of a running document. The rule is now
+`checkHeartbeat(wf, { live: true })`-scoped, with tests in both directions: the builder still refuses the byte, and
+a linked live heartbeat reads **0 fatal / 0 drift / 0 warn**. Had it been left, the plausible response was to unlink
+the heartbeat to satisfy a message — giving up the watcher's coverage for a wording bug.
+
+**Scratch retired, not deleted** (D212). `n8n-api.mjs retire <id|name>` calls the door's `POST /workflows/{id}/archive`
+(its OpenAPI calls it a soft delete; the UI restores it), after writing the canvas copy to
+`.design/tmp-n8n/retired/<stamp>-<id>.json`. It refuses a name this repo reviews, and refuses an ACTIVE workflow.
+Run against all three:
+
+```
+archived HO5PyBXP7TKbBQys "[probe] n8n API header diagnostic - DELETE ME" (2 nodes)
+archived OZNvFxoKUabfzwvY "[probe] execution retention - DELETE ME" (2 nodes)
+archived gTPNPCgjU7L0fwiZ  "Add Next Math Bi-monthly Math Social Event" (3 nodes)
+```
+
+### 9.1 The door did not blink - my probe used a header this build does not accept (same day, corrected)
+
+An earlier draft of this record claimed the public API 401d on every route for ~10 minutes after the heartbeat
+activation. **That claim is false, and it is corrected here rather than left standing.** The 401s came from ad-hoc
+probes; the tool's own calls to the same routes at the same minutes were returning 200. Measured A/B, same second,
+same key, `GET /api/v1/tags?limit=1` @ 2026-11-05 22:31:49Z:
+
+| header | status |
+| --- | --- |
+| `X-N8N-API-KEY: <token>` | **200** `{"data":[],...}` |
+| `X-API-Key: <token>` | **401** `{"message":"Unauthorized"}` |
+| `Authorization: Bearer <token>` | **401** `{"message":"Unauthorized"}` |
+
+The instance was healthy throughout: `GET /healthz` and `/healthz/readiness` → **200**, and `POST /rest/login` → 400
+(the app answers, only the public-API auth failed). The token file never moved: mtime `2026-11-05 14:36`, sha256
+prefix `1c1d9ba868a12edc` before and after. `n8n-api.mjs` sends `X-N8N-API-KEY`, which is what the instance's own
+`openapi.json` names under `securitySchemes.ApiKeyAuth` (the earlier phase where *that* header 401d was a different,
+real problem: the public API was not enabled yet).
+
+So the lesson is not "retry before rotating" - it is **A/B the request, not the instance, before narrating an
+outage**: one path, two headers, one second apart. A 401 that says "your key is wrong" can mean the key, the header
+name, or the auth scheme, and only a paired probe separates them. `makeApi`'s message (D198) is fine: it describes
+the request *it* made, and it was telling the truth about a call that used the right header.
+
+Still one execution total (id 4, the archived retention scratch, `success`), still no credentials on the instance, and
+no execution by any reviewed artifact — the heartbeat has not fired yet (next Monday).
+
+**Archived state, confirmed after the door was re-read correctly** (`GET /workflows?limit=50`, 200):
+
+```
+HO5PyBXP7TKbBQys                    archived  [probe] n8n API header diagnostic - DELETE ME
+OZNvFxoKUabfzwvY                    archived  [probe] execution retention - DELETE ME
+gTPNPCgjU7L0fwiZ                    archived  Add Next Math Bi-monthly Math Social Event
+Ys3CdS3CSzfXeMkn                             Mobilizon cadence (inactive)
+nSGb9ICHP6w9vFAO                             Mobilizon cadence - environment probe (inactive)
+dTvHkp7CmEyVNxgf ACTIVE                      Mobilizon cadence - error watcher
+rCSdarhTstt3jILw ACTIVE                      Mobilizon cadence - weekly heartbeat
+```
+
+`isArchived: true` on all three scratch workflows, so `retire` did what D212 claims. Note the listing quirk: this
+build returns archived rows **even without** `includeArchived=true` (both calls returned 7 rows), so "it is still in
+the list" is not evidence that an archive failed - read `isArchived`, not the row count. The linked heartbeat reads
+back `{active: true, settings.errorWorkflow: "dTvHkp7CmEyVNxgf", versionCounter: 2}` - the bump from 1 is the link
+write, which is why `link` is idempotent.

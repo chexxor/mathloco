@@ -145,7 +145,7 @@ export function buildHeartbeat() {
  * The heartbeat's invariants, as a function so a test can break them on purpose.
  * Returns [] for a heartbeat this repo would ship; otherwise the reasons it is not one.
  */
-export function checkHeartbeat(wf) {
+export function checkHeartbeat(wf, { live = false } = {}) {
   const problems = [];
   const nodes = wf.nodes ?? [];
   const nodeNames = new Set(nodes.map((n) => n.name));
@@ -253,7 +253,13 @@ export function checkHeartbeat(wf) {
   for (const [k, want] of Object.entries(RETENTION)) {
     if (wf.settings?.[k] !== want) problems.push(`settings.${k} is ${JSON.stringify(wf.settings?.[k])}, must be ${JSON.stringify(want)} (D201)`);
   }
-  if (wf.settings?.errorWorkflow) problems.push("settings.errorWorkflow is set in a generated artifact - the id belongs to the instance, so linking is an instance action (Settings -> Error Workflow), never a byte here");
+  // Provenance, not a property of a running document. A *generated* artifact must not carry an error-workflow
+  // id: the id names a workflow on whichever instance the file lands on, so baking one in makes the artifact
+  // unshippable (D207). A live copy is different in kind - `n8n-api.mjs link` puts an id there on purpose, and
+  // D206 wants it there - so the live verifier asks the question that is answerable about a live copy (is the
+  // id the reviewed watcher?) and does not get to make this claim. Provenance of a live copy is the
+  // fingerprint comparison, which runs next door in verify-import.mjs.
+  if (!live && wf.settings?.errorWorkflow) problems.push("settings.errorWorkflow is set in a generated artifact - the id belongs to the instance, so linking is an instance action (`n8n-api.mjs link`), never a byte here");
   for (const [from, ports] of Object.entries(wf.connections ?? {})) {
     if (!nodeNames.has(from)) problems.push(`connections reference ${from}, which is not a node`);
     for (const list of Object.values(ports)) for (const arr of list ?? []) for (const c of arr ?? []) {

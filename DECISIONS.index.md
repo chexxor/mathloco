@@ -218,5 +218,11 @@ and a renumber silently re-points every one of them at a different decision.
 - **D208** (2026-11-05) — The public API is strict about `settings` and body keys; the accepted sets are read off the instance's own spec and are now gates, not folklore (measured 2026-11-05, n8n 2.45.7 / Public API 1.1.1)
 - **D209** (2026-11-05) — On n8n 2.x an imported workflow has no published version, so a watcher must be published before it can be named as an error workflow; `activate` *is* publish (measured 2026-11-05)
 - **D210** (2026-11-05) — A reviewed file may not declare `active`, but a live copy must still round-trip; `importBody` now says which is which (measured 2026-11-05)
+- **D211** (2026-11-05) — A checker reused across two kinds of document must not assert provenance about a live copy (measured 2026-11-05)
+- **D212** — Retiring scratch is the door's soft delete, with the canvas copy on disk before the door is knocked on
+- **D213** (2026-11-05) — The weekly heartbeat is live and watched (operator ruling 1, 2026-11-05): proof of life now fires whether or not anything else does
+- **D214** (2026-11-05) — R6 is ruled: `rows` and `edges` are taken, `band-sm` is refused at 640 (operator ruling 4, 2026-11-05)
+- **D215** (2026-11-05) — A `401` gets an A/B on the request before it gets a story about the instance (measured 2026-11-05 22:31:49Z)
+- **D216** (2026-11-05) — A gate-cost comparison carries its load average, because the same set measured +50% and +125% in six minutes (measured 2026-11-05, Linux, 16 CPU)
 
-Defined: 210 (D1-D210). Unused ids: none.
+Defined: 216 (D1-D216). Unused ids: none.

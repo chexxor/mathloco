@@ -39,17 +39,30 @@
  * than the API disabled - `/api/v1/ping` 404s while real routes 401 (D198).
  */
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { verifyDocument, fingerprint, CADENCE, PROBE, BASELINES, baselineFor } from "./verify-import.mjs";
+import {
+  verifyDocument,
+  fingerprint,
+  CADENCE,
+  PROBE,
+  BASELINES,
+  baselineFor,
+} from "./verify-import.mjs";
 
 // Re-exported so a caller (the tests, a future CI step) judges a live copy through exactly the door the CLI
 // verbs judge through - one comparison, not two that can drift.
 export { verifyDocument, fingerprint };
 
 const here = fileURLToPath(new URL(".", import.meta.url));
-const config = await import(new URL("./series.config.mjs", import.meta.url).href);
-const BASE = (process.env.N8N_URL ?? "https://n8n.labradorius.com").replace(/\/$/, "");
+const config = await import(
+  new URL("./series.config.mjs", import.meta.url).href
+);
+const BASE = (process.env.N8N_URL ?? "https://n8n.labradorius.com").replace(
+  /\/$/,
+  "",
+);
 const API = "/api/v1";
 
 /** Fields the live spec marks `readOnly`, or otherwise owns. Sending them is at best ignored and at worst accepted
@@ -62,17 +75,45 @@ const API = "/api/v1";
  *  price of sending a live document back to the door. Anything the door hands out that it does not accept back
  *  belongs here, so a round trip stays possible without anyone re-reading the 400. */
 export const SERVER_OWNED = new Set([
-  "id", "active", "activeVersionId", "createdAt", "updatedAt", "isArchived", "versionId", "triggerCount",
-  "nodeGroups", "staticData", "projectId", "parentFolderId", "meta", "tags", "shared", "activeVersion", "description",
-  "versionCounter", "sourceWorkflowId", "parentFolder",
+  "id",
+  "active",
+  "activeVersionId",
+  "createdAt",
+  "updatedAt",
+  "isArchived",
+  "versionId",
+  "triggerCount",
+  "nodeGroups",
+  "staticData",
+  "projectId",
+  "parentFolderId",
+  "meta",
+  "tags",
+  "shared",
+  "activeVersion",
+  "description",
+  "versionCounter",
+  "sourceWorkflowId",
+  "parentFolder",
 ]);
 
 /** The top-level keys the door's own schema accepts in a create/update body (@measured 2026-11-05 from the
  *  instance's spec: `createWorkflow` / `updateWorkflow` requestBody). The door rejects anything outside a list like
  *  this without saying what it wanted, so the list is checked here - before the call, with the keys named. */
 export const BODY_ALLOWED = new Set([
-  "name", "nodes", "connections", "settings", "pinData", "staticData", "tags", "meta", "parentFolderId",
-  "projectId", "nodeGroups", "active", "description",
+  "name",
+  "nodes",
+  "connections",
+  "settings",
+  "pinData",
+  "staticData",
+  "tags",
+  "meta",
+  "parentFolderId",
+  "projectId",
+  "nodeGroups",
+  "active",
+  "description",
 ]);
 
 /**
@@ -89,13 +130,28 @@ export const BODY_ALLOWED = new Set([
  * from `series.config.mjs`, not to filter it here.
  */
 export const SETTINGS_ALLOWED = new Set([
-  "availableInMCP", "binaryMode", "callerIds", "callerPolicy", "credentialResolverId", "customTelemetryTags",
-  "errorWorkflow", "executionOrder", "executionTimeout", "redactionPolicy", "saveDataErrorExecution",
-  "saveDataSuccessExecution", "saveExecutionProgress", "saveManualExecutions", "timeSavedMode",
-  "timeSavedPerExecution", "timezone",
+  "availableInMCP",
+  "binaryMode",
+  "callerIds",
+  "callerPolicy",
+  "credentialResolverId",
+  "customTelemetryTags",
+  "errorWorkflow",
+  "executionOrder",
+  "executionTimeout",
+  "redactionPolicy",
+  "saveDataErrorExecution",
+  "saveDataSuccessExecution",
+  "saveExecutionProgress",
+  "saveManualExecutions",
+  "timeSavedMode",
+  "timeSavedPerExecution",
+  "timezone",
 ]);
 
-export const artifacts = Object.fromEntries(BASELINES.map((b) => [b.key, { doc: b.doc, file: b.file, build: b.build }]));
+export const artifacts = Object.fromEntries(
+  BASELINES.map((b) => [b.key, { doc: b.doc, file: b.file, build: b.build }]),
+);
 
 /** Which baseline a live copy is supposed to match, resolved from its own name. Refusing an unknown name is the
  *  point: the old `name === PROBE.name ? PROBE : CADENCE` would have checked the error watcher's bytes against
@@ -103,7 +159,9 @@ export const artifacts = Object.fromEntries(BASELINES.map((b) => [b.key, { doc: 
 export function expectedFor(doc) {
   const b = baselineFor(doc?.name ?? "");
   if (!b) {
-    throw new Error(`no reviewed artifact is named ${JSON.stringify(doc?.name)}. Known: ${BASELINES.map((x) => `${x.key} = ${x.doc.name}`).join(", ")} - a copy on the canvas with a name this repo does not know is a copy someone made by hand (D184)`);
+    throw new Error(
+      `no reviewed artifact is named ${JSON.stringify(doc?.name)}. Known: ${BASELINES.map((x) => `${x.key} = ${x.doc.name}`).join(", ")} - a copy on the canvas with a name this repo does not know is a copy someone made by hand (D184)`,
+    );
   }
   return b.doc;
 }
@@ -119,11 +177,15 @@ export function expectedFor(doc) {
  *  both cases, so activation stays a separate, explicit command either way. */
 export function importBody(artifact, { fromInstance = false } = {}) {
   if (artifact.active === true && !fromInstance) {
-    throw new Error("importBody: the artifact declares active:true - activation is a separate, explicit command (activateIfVerified), never a side effect of an import (D209)");
+    throw new Error(
+      "importBody: the artifact declares active:true - activation is a separate, explicit command (activateIfVerified), never a side effect of an import (D209)",
+    );
   }
   // Strict about `settings` before the POST, because the instance is: an unknown key is a 400 that names nothing
   // useful at the far end, and by then a workflow may already have been created.
-  const unknownSettings = Object.keys(artifact.settings ?? {}).filter((k) => !SETTINGS_ALLOWED.has(k));
+  const unknownSettings = Object.keys(artifact.settings ?? {}).filter(
+    (k) => !SETTINGS_ALLOWED.has(k),
+  );
   if (unknownSettings.length) {
     throw new Error(
       `importBody: settings keys this n8n build cannot carry: ${unknownSettings.join(", ")}. ` +
@@ -132,7 +194,8 @@ export function importBody(artifact, { fromInstance = false } = {}) {
     );
   }
   const body = {};
-  for (const [k, v] of Object.entries(artifact)) if (!SERVER_OWNED.has(k)) body[k] = v;
+  for (const [k, v] of Object.entries(artifact))
+    if (!SERVER_OWNED.has(k)) body[k] = v;
   const extra = Object.keys(body).filter((k) => !BODY_ALLOWED.has(k));
   if (extra.length) {
     throw new Error(
@@ -145,27 +208,43 @@ export function importBody(artifact, { fromInstance = false } = {}) {
 }
 
 /** A thin REST client. `fetchImpl` is injectable so the tests never touch the network. */
-export function makeApi({ fetchImpl = fetch, base = BASE, key = process.env.N8N_API_KEY } = {}) {
+export function makeApi({
+  fetchImpl = fetch,
+  base = BASE,
+  key = process.env.N8N_API_KEY,
+} = {}) {
   const call = async (method, path, body, extraHeaders = {}) => {
     const res = await fetchImpl(`${base}${API}${path}`, {
       method,
-      headers: { "content-type": "application/json", ...(key ? { "X-N8N-API-KEY": key } : {}), ...extraHeaders },
+      headers: {
+        "content-type": "application/json",
+        ...(key ? { "X-N8N-API-KEY": key } : {}),
+        ...extraHeaders,
+      },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
     const text = await res.text();
     let json = null;
-    try { json = JSON.parse(text); } catch { /* an HTML body means a proxy answered, not the API */ }
+    try {
+      json = JSON.parse(text);
+    } catch {
+      /* an HTML body means a proxy answered, not the API */
+    }
     if (!res.ok) {
-      const why = res.status === 401
-        ? "the key is not validating - stale, deleted, or minted before an instance-secret rotation (D198). Re-mint it: Settings -> n8n API -> Create, then export N8N_API_KEY=..."
-        : !json && /<\s*(html|!doctype)/i.test(text)
-          ? "an HTML body answered: a proxy, not the API (the YunoHost SSO did exactly this until 2026-11-05, D196)"
-          : res.status === 404
-            ? "no such route. Unknown paths under /api/v1 404 while the SPA 200s elsewhere - check the path against the instance's own spec at GET /api/v1/docs/swagger-ui-init.js"
-            : text.slice(0, 300);
+      const why =
+        res.status === 401
+          ? "the key is not validating - stale, deleted, or minted before an instance-secret rotation (D198). Re-mint it: Settings -> n8n API -> Create, then export N8N_API_KEY=..."
+          : !json && /<\s*(html|!doctype)/i.test(text)
+            ? "an HTML body answered: a proxy, not the API (the YunoHost SSO did exactly this until 2026-11-05, D196)"
+            : res.status === 404
+              ? "no such route. Unknown paths under /api/v1 404 while the SPA 200s elsewhere - check the path against the instance's own spec at GET /api/v1/docs/swagger-ui-init.js"
+              : text.slice(0, 300);
       throw new Error(`${method} ${API}${path} -> ${res.status}: ${why}`);
     }
-    if (!json) throw new Error(`${method} ${API}${path} -> ${res.status} but the body is not JSON: a proxy or the SPA fallback answered, not the API`);
+    if (!json)
+      throw new Error(
+        `${method} ${API}${path} -> ${res.status} but the body is not JSON: a proxy or the SPA fallback answered, not the API`,
+      );
     return json;
   };
   return {
@@ -174,17 +253,24 @@ export function makeApi({ fetchImpl = fetch, base = BASE, key = process.env.N8N_
     // Idempotency-Key, derived from the artifact's own fingerprint: n8n documents retrying a POST with the same
     // key (docs.n8n.io "Idempotency", read 2026-11-05). A timed-out import POST is exactly the case where a
     // blind retry would leave two copies on the canvas, which is the duplicate this file already refuses.
-    createWorkflow: (body, idempotencyKey = fingerprint(body)) => call("POST", "/workflows", body, { "idempotency-key": idempotencyKey }),
-    updateWorkflow: (id, body) => call("PUT", `/workflows/${encodeURIComponent(id)}`, body),
-    activate: (id) => call("POST", `/workflows/${encodeURIComponent(id)}/activate`),
-    deactivate: (id) => call("POST", `/workflows/${encodeURIComponent(id)}/deactivate`),
-    archive: (id) => call("POST", `/workflows/${encodeURIComponent(id)}/archive`),
+    createWorkflow: (body, idempotencyKey = fingerprint(body)) =>
+      call("POST", "/workflows", body, { "idempotency-key": idempotencyKey }),
+    updateWorkflow: (id, body) =>
+      call("PUT", `/workflows/${encodeURIComponent(id)}`, body),
+    activate: (id) =>
+      call("POST", `/workflows/${encodeURIComponent(id)}/activate`),
+    deactivate: (id) =>
+      call("POST", `/workflows/${encodeURIComponent(id)}/deactivate`),
+    archive: (id) =>
+      call("POST", `/workflows/${encodeURIComponent(id)}/archive`),
   };
 }
 
 /** `?name=` is a contains-match on this API, so filtering is a narrowing step and equality is done here. */
 export async function findByName(api, name) {
-  const page = await api.listWorkflows(`?name=${encodeURIComponent(name)}&excludePinnedData=true`);
+  const page = await api.listWorkflows(
+    `?name=${encodeURIComponent(name)}&excludePinnedData=true`,
+  );
   const all = page.data ?? [];
   return { exact: all.filter((w) => w.name === name), all };
 }
@@ -199,11 +285,19 @@ export async function idOrName(api, arg) {
   try {
     const w = await api.getWorkflow(arg);
     if (w?.id) return w;
-  } catch { /* not an id (or not found by id): fall through to the name search */ }
+  } catch {
+    /* not an id (or not found by id): fall through to the name search */
+  }
   const { exact, all } = await findByName(api, name);
   if (exact.length === 1) return exact[0];
-  if (exact.length > 1) throw new Error(`${exact.length} workflows are named exactly "${name}" - use the id`);
-  if (all.length) throw new Error(`no exact match for "${name}"; near matches: ${all.map((w) => `${w.id} ${w.name}`).join(" | ")}`);
+  if (exact.length > 1)
+    throw new Error(
+      `${exact.length} workflows are named exactly "${name}" - use the id`,
+    );
+  if (all.length)
+    throw new Error(
+      `no exact match for "${name}"; near matches: ${all.map((w) => `${w.id} ${w.name}`).join(" | ")}`,
+    );
   return null;
 }
 
@@ -215,9 +309,12 @@ export function report(doc, expected, log = console.log, ctx = {}) {
   const res = verifyDocument(doc, expected, ctx);
   const counts = { fatal: 0, drift: 0, warn: 0, note: 0 };
   for (const f of res.findings) counts[f.sev]++;
-  for (const f of res.findings) log(`  ${f.sev.toUpperCase().padEnd(5)} ${f.where}: ${f.what}`);
+  for (const f of res.findings)
+    log(`  ${f.sev.toUpperCase().padEnd(5)} ${f.where}: ${f.what}`);
   const clean = counts.fatal + counts.drift === 0;
-  log(`  ${counts.fatal} fatal, ${counts.drift} drift, ${counts.warn} warn, ${counts.note} note - ${clean ? "the reviewed artifact" : "NOT the reviewed artifact"}`);
+  log(
+    `  ${counts.fatal} fatal, ${counts.drift} drift, ${counts.warn} warn, ${counts.note} note - ${clean ? "the reviewed artifact" : "NOT the reviewed artifact"}`,
+  );
   return { ...res, counts, clean };
 }
 
@@ -239,7 +336,11 @@ export async function ctxFor(api, doc) {
 export async function planPush(api, art) {
   const { exact } = await findByName(api, art.doc.name);
   if (exact.length) {
-    return { create: false, existing: exact[0], why: `"${art.doc.name}" already exists as ${exact[0].id} (${exact[0].activeVersionId ? "ACTIVE" : "inactive"}) - updating it rather than creating a second copy` };
+    return {
+      create: false,
+      existing: exact[0],
+      why: `"${art.doc.name}" already exists as ${exact[0].id} (${exact[0].activeVersionId ? "ACTIVE" : "inactive"}) - updating it rather than creating a second copy`,
+    };
   }
   return { create: true };
 }
@@ -252,14 +353,22 @@ export async function activateIfVerified(api, arg, log = console.log) {
   const expected = expectedFor(doc);
   log(`verifying the live copy before activating ${w.id} "${doc.name}":`);
   const r = report(doc, expected, log, await ctxFor(api, doc));
-  if (!r.clean) return { activated: false, why: "the live copy is not the reviewed artifact - fix it in the repo, rebuild, update, re-verify (D184)" };
+  if (!r.clean)
+    return {
+      activated: false,
+      why: "the live copy is not the reviewed artifact - fix it in the repo, rebuild, update, re-verify (D184)",
+    };
   if (doc.name === CADENCE.name) {
-    log(config.RUN.dryRun
-      ? "  note: series.config.mjs says dryRun:true - an activated cadence computes, reports and writes nothing (the shipped posture)"
-      : "  WARNING: series.config.mjs says dryRun:false - activating this copy schedules real writes to Mobilizon");
+    log(
+      config.RUN.dryRun
+        ? "  note: series.config.mjs says dryRun:true - an activated cadence computes, reports and writes nothing (the shipped posture)"
+        : "  WARNING: series.config.mjs says dryRun:false - activating this copy schedules real writes to Mobilizon",
+    );
   }
   if (doc.name === artifacts.watcher.doc.name) {
-    log("  note: a watcher has no schedule of its own - nothing fires until a watched workflow names it in settings.errorWorkflow (the link command, or Settings -> Error Workflow)");
+    log(
+      "  note: a watcher has no schedule of its own - nothing fires until a watched workflow names it in settings.errorWorkflow (the link command, or Settings -> Error Workflow)",
+    );
   }
   await api.activate(w.id);
   return { activated: true, id: w.id };
@@ -274,43 +383,86 @@ export async function activateIfVerified(api, arg, log = console.log) {
  * and the watched copy, because `expectedFor` refuses a copy this repo does not recognise. A workflow pointed at
  * itself is how a watcher ends up watching nothing: n8n does not re-trigger on an error workflow's own failure.
  */
-export async function linkWorkflow(api, watchedArg, watcherArg, log = console.log) {
+export async function linkWorkflow(
+  api,
+  watchedArg,
+  watcherArg,
+  log = console.log,
+) {
   const watched = await idOrName(api, watchedArg);
-  if (!watched) return { linked: false, why: `no workflow matching "${watchedArg}"` };
+  if (!watched)
+    return { linked: false, why: `no workflow matching "${watchedArg}"` };
   const watcher = await idOrName(api, watcherArg);
-  if (!watcher) return { linked: false, why: `no workflow matching "${watcherArg}"` };
+  if (!watcher)
+    return { linked: false, why: `no workflow matching "${watcherArg}"` };
   if (watcher.id === watched.id) {
-    return { linked: false, why: "a workflow cannot watch itself - n8n does not re-trigger on an error workflow's own failure, so a self-link is silence with a setting attached (D206)" };
+    return {
+      linked: false,
+      why: "a workflow cannot watch itself - n8n does not re-trigger on an error workflow's own failure, so a self-link is silence with a setting attached (D206)",
+    };
   }
   const wdoc = await api.getWorkflow(watcher.id);
   log(`verifying the watcher before anything points at it (${wdoc.name}):`);
   const r = report(wdoc, expectedFor(wdoc), log, await ctxFor(api, wdoc));
-  if (!r.clean) return { linked: false, why: `the copy named "${wdoc.name}" is not the reviewed watcher - fix it in the repo, rebuild, update, re-verify (D184)` };
+  if (!r.clean)
+    return {
+      linked: false,
+      why: `the copy named "${wdoc.name}" is not the reviewed watcher - fix it in the repo, rebuild, update, re-verify (D184)`,
+    };
   if (!wdoc.activeVersionId) {
     // Measured 2026-11-05, first live attempt: the body is accepted, then the door answers
     // `400 The selected error workflow has no published version.` An artifact imported through this API arrives
     // unpublished, and n8n will not point a workflow's failures at a version that does not exist yet.
-    return { linked: false, why: `"${wdoc.name}" has no published version, so n8n refuses to point anything's failures at it. Publish it first: POST /workflows/{id}/publish, which this API documents as the successor to /activate ("in n8n v1, this action was termed activating"). For a watcher that is not a second kind of action - it has no schedule, so publishing it fires nothing on its own.` };
+    return {
+      linked: false,
+      why: `"${wdoc.name}" has no published version, so n8n refuses to point anything's failures at it. Publish it first: POST /workflows/{id}/publish, which this API documents as the successor to /activate ("in n8n v1, this action was termed activating"). For a watcher that is not a second kind of action - it has no schedule, so publishing it fires nothing on its own.`,
+    };
   }
   const doc = await api.getWorkflow(watched.id);
-  expectedFor(doc);                       // refuses to re-wire a copy this repo does not recognise
+  expectedFor(doc); // refuses to re-wire a copy this repo does not recognise
   if (String(doc.settings?.errorWorkflow ?? "") === String(watcher.id)) {
     // Running this twice is how someone checks they got it right, so the second run must not bump the version
     // counter for nothing: the instance already holds exactly what was asked for.
-    log(`already linked: ${doc.id} "${doc.name}" -> error workflow ${watcher.id} "${watcher.name}" - nothing written`);
-    return { linked: true, unchanged: true, id: doc.id, name: doc.name, watcher: watcher.id, watcherName: wdoc.name, got: doc.settings.errorWorkflow };
+    log(
+      `already linked: ${doc.id} "${doc.name}" -> error workflow ${watcher.id} "${watcher.name}" - nothing written`,
+    );
+    return {
+      linked: true,
+      unchanged: true,
+      id: doc.id,
+      name: doc.name,
+      watcher: watcher.id,
+      watcherName: wdoc.name,
+      got: doc.settings.errorWorkflow,
+    };
   }
-  const body = importBody({ ...doc, settings: { ...(doc.settings ?? {}), errorWorkflow: watcher.id } }, { fromInstance: true });
+  const body = importBody(
+    {
+      ...doc,
+      settings: { ...(doc.settings ?? {}), errorWorkflow: watcher.id },
+    },
+    { fromInstance: true },
+  );
   await api.updateWorkflow(watched.id, body);
   const after = await api.getWorkflow(watched.id);
   const got = after.settings?.errorWorkflow;
-  return { linked: got === watcher.id, id: watched.id, name: doc.name, watcher: watcher.id, watcherName: wdoc.name, got };
+  return {
+    linked: got === watcher.id,
+    id: watched.id,
+    name: doc.name,
+    watcher: watcher.id,
+    watcherName: wdoc.name,
+    got,
+  };
 }
 
 const pickArtifact = (arg) => {
   if (arg === undefined || arg === "cadence") return artifacts.cadence;
   const a = artifacts[arg];
-  if (!a) throw new Error(`unknown artifact "${arg}" - this repo reviews: ${Object.keys(artifacts).join(", ")} (the name is the fourth field of the usage block)`);
+  if (!a)
+    throw new Error(
+      `unknown artifact "${arg}" - this repo reviews: ${Object.keys(artifacts).join(", ")} (the name is the fourth field of the usage block)`,
+    );
   return a;
 };
 
@@ -319,9 +471,72 @@ const pickArtifact = (arg) => {
 function artifactOnDisk(art) {
   const onDisk = JSON.parse(readFileSync(resolve(here, art.file), "utf8"));
   if (JSON.stringify(onDisk) !== JSON.stringify(art.doc)) {
-    throw new Error(`${art.file} is not what the baseline in verify-import.mjs describes - run build-workflow.mjs / build-probe.mjs, then check.mjs`);
+    throw new Error(
+      `${art.file} is not what the baseline in verify-import.mjs describes - run build-workflow.mjs / build-probe.mjs, then check.mjs`,
+    );
   }
   return onDisk;
+}
+
+/** Where a retired workflow's bytes go before the door touches it. Ignored scratch (`.design/tmp-*`), and
+ * already where this instance's own `openapi.json` lives, so instance data has one home on this machine. */
+const RETIRED_DIR = join(here, "..", "..", ".design", "tmp-n8n", "retired");
+
+/**
+ * Retiring a scratch workflow means the door's own verb: `POST /workflows/{id}/archive`, which its OpenAPI
+ * describes as a soft delete - the record survives, `includeArchived=true` still lists it, and the UI can
+ * restore it. That is the whole reason a delegate may be pointed at it where `DELETE /workflows/{id}` is not.
+ *
+ * Three guards, each learned from what is actually on this canvas: a name this repo reviews is retired in a
+ * commit and not at the door (otherwise the builders and the artifact files point at a workflow that is gone),
+ * `.design/tmp-n8n/retired/` (gitignored, and already where this instance's own `openapi.json` lives) before
+ * a byte of the archive happens, so "DELETE ME" cannot cost the operator a probe they had not read yet.
+ */
+export async function retireWorkflow(
+  api,
+  arg,
+  { log = console.log, dir = RETIRED_DIR } = {},
+) {
+  const found = await idOrName(api, arg);
+  if (!found)
+    return {
+      retired: false,
+      why: `no workflow matches "${arg}" - status lists what is on the canvas`,
+    };
+  const { id } = found;
+  const doc = await api.getWorkflow(id);
+
+  if (baselineFor(doc.name)) {
+    return {
+      retired: false,
+      why:
+        `"${doc.name}" is an artifact this repo reviews. Retiring one at the door would leave the builders and ` +
+        `the files on disk pointing at a workflow that is not there. Retire it in a commit (delete the builder, ` +
+        `the artifact and its baseline), then retire the copy here - in that order.`,
+    };
+  }
+  if (doc.active) {
+    return {
+      retired: false,
+      why:
+        `"${doc.name}" is ACTIVE. Archiving a running workflow leaves a trigger firing into an archived canvas. ` +
+        `Deactivate it first ("deactivate ${arg}"), then retire it.`,
+    };
+  }
+
+  await mkdir(dir, { recursive: true });
+  const file = join(
+    dir,
+    `${new Date().toISOString().replace(/[:.]/g, "-")}-${id}.json`,
+  );
+  await writeFile(file, JSON.stringify(doc, null, 2) + "\n", "utf8");
+
+  await api.archive(id);
+  log(
+    `archived ${id} "${doc.name}" (${doc.nodes.length} node(s)) - a soft delete: the record survives, and the ` +
+      `UI can restore it.\n  a copy of what was there is at ${file}`,
+  );
+  return { retired: true, id, name: doc.name, file };
 }
 
 async function main() {
@@ -334,7 +549,9 @@ async function main() {
     console.log(`${(page.data ?? []).length} workflow(s) at ${BASE}`);
     for (const w of page.data ?? []) {
       const b = baselineFor(w.name);
-      console.log(`  ${w.id}  ${(w.activeVersionId ? "ACTIVE" : "inactive").padEnd(9)} ${(b ? `${b.key} artifact` : "not ours").padEnd(16)} ${w.name}`);
+      console.log(
+        `  ${w.id}  ${(w.activeVersionId ? "ACTIVE" : "inactive").padEnd(9)} ${(b ? `${b.key} artifact` : "not ours").padEnd(16)} ${w.name}`,
+      );
     }
     return;
   }
@@ -345,7 +562,9 @@ async function main() {
     const doc = await api.getWorkflow(w.id);
     const expected = expectedFor(doc);
     console.log(`live copy ${w.id} "${doc.name}" against ${expected.name}:`);
-    process.exit(report(doc, expected, console.log, await ctxFor(api, doc)).clean ? 0 : 1);
+    process.exit(
+      report(doc, expected, console.log, await ctxFor(api, doc)).clean ? 0 : 1,
+    );
   }
 
   if (cmd === "push" || cmd === "update") {
@@ -357,8 +576,12 @@ async function main() {
       const plan = await planPush(api, art);
       if (!plan.create) {
         console.log(plan.why);
-        console.log(`  node integrations/mobilizon-cadence/n8n-api.mjs update ${plan.existing.id} ${art.key}`);
-        console.log("  (refusing to leave two same-named workflows on the canvas - the guide's warning, enforced)");
+        console.log(
+          `  node integrations/mobilizon-cadence/n8n-api.mjs update ${plan.existing.id} ${art.key}`,
+        );
+        console.log(
+          "  (refusing to leave two same-named workflows on the canvas - the guide's warning, enforced)",
+        );
         process.exit(1);
       }
       saved = await api.createWorkflow(body);
@@ -371,14 +594,23 @@ async function main() {
         // identical bytes on the ACTIVE watcher: `versionCounter` and `activeVersionId` were unchanged, so a
         // no-change update is a no-op on the instance. Different bytes are not measured, so the safe order for a
         // workflow that is live is: update, then re-verify, then decide whether to re-publish.
-        console.log(`  NOTE ${target.id} is ACTIVE - this PUT replaces the copy a running schedule is using. Re-verify after it; do not assume the firing version moved (unmeasured for changed bytes).`);
+        console.log(
+          `  NOTE ${target.id} is ACTIVE - this PUT replaces the copy a running schedule is using. Re-verify after it; do not assume the firing version moved (unmeasured for changed bytes).`,
+        );
       }
       saved = await api.updateWorkflow(target.id, body);
     }
-    console.log(`${cmd === "push" ? "created" : "updated"} ${saved.id} "${saved.name}" - ${saved.activeVersionId ? "ACTIVE" : "inactive: nothing fires until you activate it"}`);
+    console.log(
+      `${cmd === "push" ? "created" : "updated"} ${saved.id} "${saved.name}" - ${saved.activeVersionId ? "ACTIVE" : "inactive: nothing fires until you activate it"}`,
+    );
     console.log("read back and checked against the reviewed artifact:");
     const savedDoc = await api.getWorkflow(saved.id);
-    const r = report(savedDoc, art.doc, console.log, await ctxFor(api, savedDoc));
+    const r = report(
+      savedDoc,
+      art.doc,
+      console.log,
+      await ctxFor(api, savedDoc),
+    );
     process.exit(r.clean ? 0 : 1);
   }
 
@@ -386,16 +618,35 @@ async function main() {
     const r = await linkWorkflow(api, args[1], args[2]);
     if (r.linked && r.unchanged) return; // exit 0: the answer to "is it linked?" was already yes
     if (r.linked) {
-      console.log(`linked ${r.id} "${r.name}" -> error workflow ${r.watcher} "${r.watcherName}"`);
-      console.log("  read back from the instance, so this is what the canvas now holds (D206)");
-    } else { console.log(`refused: ${r.why}`); process.exit(1); }
+      console.log(
+        `linked ${r.id} "${r.name}" -> error workflow ${r.watcher} "${r.watcherName}"`,
+      );
+      console.log(
+        "  read back from the instance, so this is what the canvas now holds (D206)",
+      );
+    } else {
+      console.log(`refused: ${r.why}`);
+      process.exit(1);
+    }
     return;
   }
 
   if (cmd === "activate") {
     const r = await activateIfVerified(api, args[1]);
     if (r.activated) console.log(`activated ${r.id}`);
-    else { console.log(`refused: ${r.why}`); process.exit(1); }
+    else {
+      console.log(`refused: ${r.why}`);
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (cmd === "retire") {
+    const r = await retireWorkflow(api, args[1]);
+    if (!r.retired) {
+      console.log(`refused: ${r.why}`);
+      process.exit(1);
+    }
     return;
   }
 
@@ -416,6 +667,8 @@ async function main() {
        link <watched> <watcher>       set one workflow's error workflow to another, after both verify (D206)
        activate <id|name>              only after the live copy verifies (it refuses otherwise)
        deactivate <id|name>
+       retire <id|name>                archive a workflow this repo does NOT review, after writing a local copy
+                                       of it first (soft delete: the UI can restore it)
 
 <id|name> takes a workflow id, its exact canvas name, or one of the four repo keys (cadence, probe, watcher,
 heartbeat) - a key resolves to the reviewed name, so it cannot select a hand-made copy that merely sounds alike.
@@ -428,5 +681,8 @@ checking is safe. \`activate\` is the one command that puts a schedule on the in
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === import.meta.filename) {
-  main().catch((e) => { console.error(`n8n-api: ${e.message}`); process.exit(1); });
+  main().catch((e) => {
+    console.error(`n8n-api: ${e.message}`);
+    process.exit(1);
+  });
 }
