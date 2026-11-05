@@ -1,0 +1,272 @@
+{
+ "probed_at": "2026-11-05T17:47:38.791Z",
+ "base": "https://n8n.labradorius.com",
+ "openapi_source": {
+  "url": "/api/v1/docs/swagger-ui-init.js",
+  "note": "the spec is embedded as options.swaggerDoc; /api/v1/docs/* answers 200 text/html (SPA fallback)",
+  "bytes": 1441305
+ },
+ "openapi": {
+  "openapi": "3.0.0",
+  "title": "n8n Public API",
+  "version": "1.1.1",
+  "pathCount": 107,
+  "servers": [
+   {
+    "url": "/api/v1",
+    "description": "Current n8n instance (self-hosted built-in playground)"
+   },
+   {
+    "url": "{url}/api/v1",
+    "description": "Self-hosted n8n instance",
+    "variables": {
+     "url": {
+      "default": "https://example.com"
+     }
+    }
+   }
+  ]
+ },
+ "route_probe_unauthenticated": {
+  "workflows": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "workflows/deadbeef1234": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "executions": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "executions/1": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "credentials": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "tags": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "variables": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "owners": {
+   "status": 404,
+   "content_type": "application/json",
+   "body": {
+    "message": "not found"
+   }
+  },
+  "executions/1/run": {
+   "status": 404,
+   "content_type": "application/json",
+   "body": {
+    "message": "not found"
+   }
+  },
+  "workflows/deadbeef1234/activate": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "workflows/deadbeef1234/deactivate": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "workflows/deadbeef1234/restore": {
+   "status": 401,
+   "content_type": "application/json",
+   "body": {
+    "message": "Unauthorized"
+   }
+  },
+  "api/v1/workflows": {
+   "status": 404,
+   "content_type": "application/json",
+   "body": {
+    "message": "not found"
+   }
+  },
+  "docs/json": {
+   "status": 200,
+   "content_type": "text/html",
+   "body": "\n<!-- HTML for static distribution bundl"
+  },
+  "docs/openapi.json": {
+   "status": 200,
+   "content_type": "text/html",
+   "body": "\n<!-- HTML for static distribution bundl"
+  },
+  "openapi.yaml": {
+   "status": 404,
+   "content_type": "application/json",
+   "body": {
+    "message": "not found"
+   }
+  }
+ },
+ "post_workflows": {
+  "required": [
+   "name",
+   "nodes",
+   "connections",
+   "settings"
+  ],
+  "properties": [
+   "id",
+   "name",
+   "active",
+   "activeVersionId",
+   "createdAt",
+   "updatedAt",
+   "isArchived",
+   "versionId",
+   "triggerCount",
+   "nodes",
+   "connections",
+   "settings",
+   "nodeGroups",
+   "staticData",
+   "pinData",
+   "projectId",
+   "parentFolderId",
+   "meta",
+   "tags",
+   "shared",
+   "activeVersion",
+   "description"
+  ]
+ },
+ "readOnly_stripped_before_import": [
+  "id",
+  "active",
+  "activeVersionId",
+  "createdAt",
+  "updatedAt",
+  "isArchived",
+  "versionId",
+  "triggerCount",
+  "nodeGroups",
+  "staticData",
+  "projectId",
+  "parentFolderId",
+  "meta",
+  "tags",
+  "shared",
+  "activeVersion",
+  "description"
+ ],
+ "settings_keys": [
+  "saveExecutionProgress",
+  "saveManualExecutions",
+  "saveDataErrorExecution",
+  "saveDataSuccessExecution",
+  "executionTimeout",
+  "errorWorkflow",
+  "timezone",
+  "executionOrder",
+  "binaryMode",
+  "callerPolicy",
+  "callerIds",
+  "timeSavedMode",
+  "timeSavedPerExecution",
+  "redactionPolicy",
+  "availableInMCP",
+  "customTelemetryTags",
+  "credentialResolverId"
+ ],
+ "redaction_policy": {
+  "type": "string",
+  "enum": [
+   "none",
+   "non-manual",
+   "manual-only",
+   "all"
+  ],
+  "description": "Controls whether execution data is redacted for this workflow.\n\nAvailable options:\n- `none` (default): No redaction. All execution data is stored.\n- `non-manual`: Redact production (non-manually triggered) executions only.\n- `manual-only`: Redact manually triggered executions only.\n- `all`: Redact all executions, manual and production.",
+  "example": "non-manual"
+ },
+ "get_execution_params": [
+  {
+   "name": "executionId",
+   "schema": {
+    "type": "integer",
+    "minimum": 1
+   }
+  },
+  {
+   "name": "includeData",
+   "schema": {
+    "type": "string",
+    "enum": [
+     "true",
+     "false"
+    ],
+    "default": "false",
+    "description": "Whether or not to include the execution's detailed data."
+   }
+  },
+  {
+   "name": "ignoreDataSizeLimit",
+   "schema": {
+    "type": "string",
+    "enum": [
+     "true",
+     "false"
+    ],
+    "default": "false",
+    "description": "Whether to return the full execution data even if it exceeds the configured size limit (EXECUTIONS_DATA_MAX_DISPLAY_SIZE). Oversized executions are otherwise returned without their data."
+   }
+  },
+  {
+   "name": "redactExecutionData",
+   "schema": {
+    "type": "string",
+    "enum": [
+     "true",
+     "false"
+    ],
+    "description": "Controls execution data redaction. When `true`, execution output data is always redacted. When `false`, requests unredacted (revealed) data — requires the `execution:reveal` scope. When omitted, follows the workflow redaction policy."
+   }
+  }
+ ],
+ "manual_run_endpoint": [],
+ "test_run_paths": [
+  "/workflows/{workflowId}/test-runs",
+  "/workflows/{workflowId}/test-runs/{runId}",
+  "/workflows/{workflowId}/test-runs/{runId}/test-cases",
+  "/workflows/{workflowId}/test-runs/{runId}/cancel"
+ ]
+}
