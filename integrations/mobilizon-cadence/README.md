@@ -107,8 +107,21 @@ Node-by-node detail, including what each execution should show, is in
 
 The graph was reviewed against n8n's own skill set (`github.com/n8n-io/skills`, upstream `27b6b9f`); D195 records
 where it agreed and where this rig overrides it. Its plugin bundles an `n8n-mcp` server pointed at an instance URL —
-**not wired here**, because the host answers `302 → /yunohost/sso` for every path and is LAN-only (D182). Read the
-skills, review the artifact in this directory.
+**not wired here**. It was left unwired because the host answered `302 → /yunohost/sso` for every path (D182);
+re-measured 2026-11-05, the host answers for real and its **own** MCP server (`/mcp-server/http`) is the door a
+seat can drive the runtime through (D197). Wiring the vendor plugin's server into a harness is still the
+operator's call, and the vendor's guidance still loses to this directory on anything rig-specific.
+
+## What is actually inside n8n right now (measured 2026-11-05)
+
+**Not this artifact.** Reading the instance through its own MCP server (`/mcp-server/http`, D197 — the door that
+opened when the YunoHost app gained the `visitors` permission) returns exactly one workflow,
+`Add Next Math Bi-monthly Math Social Event` (`gTPNPCgjU7L0fwiZ`): three nodes — a weekly Schedule Trigger, an
+HTTP `GET` of the group page, and a stub Code node. `verify-import.mjs` against that live copy reports
+**43 fatal, 6 drift**, and `list_credentials` returns none. Step 1 below has therefore not happened yet, and the
+one-minute probe import is still the first move. Reading the live graph no longer needs the operator's hands:
+the host-local helper `node .notes/bin/n8n-mcp.mjs verify <workflowId>` fetches the copy through the runtime and
+runs this gate on it (`.notes/` is gitignored; see `.notes/runbooks/n8n-runtime-loop.md`).
 
 ## Start it up
 

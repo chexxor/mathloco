@@ -28,8 +28,10 @@
  * artifact; fix it in the repo and re-import. WARN = n8n normalised something this script cannot read with
  * confidence; it says exactly what to look at. NOTE = expected (your alerting node, for instance).
  *
- * Nothing here contacts n8n or Mobilizon: n8n.labradorius.com answers 302 to the YunoHost SSO from this seat
- * (measured 2026-11-04), so the round trip is done by the operator's hands and by this file.
+ * Nothing here contacts n8n or Mobilizon. It reads a file you point it at. (Until 2026-11-05 that file had to
+ * come from your hands, because the host answered 302 to the YunoHost SSO for every path; since then a seat can
+ * fetch the live copy itself through the instance's MCP server and hand it to this file - see
+ * .notes/runbooks/n8n-runtime-loop.md, D197. What this file checks, and what it refuses to do, is unchanged.)
  */
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";

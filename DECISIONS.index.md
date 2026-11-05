@@ -204,5 +204,9 @@ and a renumber silently re-points every one of them at a different decision.
 - **D194** — cadence alerts go to the operator's own ntfy topic; the token is an env-var *name* in the artifact, and a run with nothing to say sends nothing
 - **D195** — an error output is two halves and the artifact shipped with one; retry is per-node because this rig, not the vendor default, knows what is idempotent; and loudness is re-declared after handling
 - **D196** (2026-11-05) — the n8n runtime is not writable from this seat: no route past SSO and no API credential, so the loop stays export→verify (measured 2026-11-05)
+- **D197** (2026-11-05) — the n8n runtime is driveable from this seat through the instance's own MCP server; that is the door, not the REST API (measured 2026-11-05)
+- **D198** (2026-11-05) — the n8n public REST API is mounted and answered 401 for the token this rig holds; do not conclude "disabled", and do not chase it while MCP works (measured 2026-11-05)
+- **D199** (2026-11-05) — the YunoHost package's execution-retention settings are why "read the execution" fails; the runtime loop is write → run → read-the-graph until they change (measured 2026-11-05)
+- **D200** (2026-11-05) — inbound webhooks on this n8n instance answer 403 `Basic realm="Webhook"` even with node authentication set to "none"; the check is n8n's, not the proxy's (measured 2026-11-05)
 
-Defined: 196 (D1-D196). Unused ids: none.
+Defined: 200 (D1-D200). Unused ids: none.
