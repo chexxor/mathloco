@@ -430,7 +430,10 @@ State the fact, name where it came from, give a path out, carry the date. **Neve
 ("weekly", "every other week", "bimonthly") — the site publishes **series names and real dates** (D92),
 and a fabricated "join us every week" survived two years in the shipped copy. **Never** put an
 unbracketed invented fact in a specimen: `[YEAR]`, `[CADENCE]`, `[N]`, `[verbatim]` stay bracketed until
-a source exists.
+a source exists. **In markup text write the character, never an escape:** `club’s`, not `club\u2019s`; HTML has no
+`\uXXXX` syntax, so an escape written between tags is painted as those eight characters and it did ship on
+`/schedule`. Inside a JavaScript string or a JSON file the escape is correct and decodes — which is why the rule
+is enforced by a gate that reads rendered text (`npm run check:escapes`), not by a grep for backslashes.
 
 ## Motion
 
@@ -980,5 +983,9 @@ word in event prose.
   `src/components/Schedule.astro`, whose three states are all designed — **D108**: missing content is a state with
   designed content, never a blank and never a build failure. The retired strings themselves are now gated:
   `check:content` (`scripts/check-content.mjs`) fails a build that ships any of them again, a cadence word with no
-  named source (D92), a request-time number from `Math.random()` (D136), or a bracketed placeholder. The batch
+  named source (D92), a request-time number from `Math.random()` (D136), or a bracketed placeholder. Its sibling
+  `check:escapes` (`scripts/check-escapes.mjs`) fails an escape sequence that reaches a reader — in built page
+  text, in a `<meta>` description, in a `alt`/`title`/`aria-label` a screen reader speaks, or in the rendered-text
+  context of an `.astro`/`.svelte` source; it excludes `dist/client/events.ics`, where a backslash is what
+  RFC 5545 requires. The batch
   order and the states to build are in `design/token-plan.md`; the per-class worklist is `design/token-map.md`.

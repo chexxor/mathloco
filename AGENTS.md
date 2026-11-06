@@ -55,9 +55,9 @@ three actors straight is the whole job:
 3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
    once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
-   (check, check:classes, check:design, check:decisions, check:figures, check:social, check:social:selftest,
-   db:check, check:sanitize,
-   check:cache, audit:gate, build, check:deploy). It is
+   (the set lives in `scripts/gate-run.mjs`, and `node scripts/gate-run.mjs --list` prints it. It used to be
+   enumerated in this file and went stale twice, so the enumeration is gone - read the list rather than trusting
+   this sentence). It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
    a chain hides which step broke, run the steps separately - and read
@@ -101,11 +101,20 @@ Then execute on that resulting promp.
    never renumber one, because 600-odd citations in tracked code would silently re-point at a different
    decision. `check:decisions` fails on a `D###` citation with no entry - it caught one the day it landed.
 3. If the milestone moved, update **`MILESTONES.md`** (tracked): the item, its exit criterion, its state.
-4. Report status - done / blocked / unverified, with evidence.
-5. Take notes in appropriate about trouble or pitfalls you encountered as well as propose solutions to ensure future efforts can shortcut the trouble.
-6. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
-7. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
-8. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
+4. Report status - done / blocked / unverified, with evidence. For **every open decision** the session touched,
+   the report ends with a **recommendation, not a menu**: your ranked answer, one line of pros and one line of
+   cons per option (including options the operator did not name, if they are real), the access or permission each
+   option would require, and the one measurement that would change the ranking. If you recommend against a
+   stated preference, say so plainly and say why.
+5. Close the report with a **Value added** section - what this session delivered beyond the item it was given,
+   and what it made cheaper for the next session (a gate that now catches a class of defect, a correction to a
+   note the next session would have trusted, a probe that costs seconds instead of an hour). Anything in it that
+   is not already in `NEXT.md`, `MILESTONES.md` or `DECISIONS.index.md` is a claim without an artifact, so land
+   the artifact first.
+6. Take notes in appropriate about trouble or pitfalls you encountered as well as propose solutions to ensure future efforts can shortcut the trouble.
+7. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
+8. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
+9. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
    push it, and report the preview URL (`npm run preview:deploy` - it runs `verify` first, then deploys a
    Worker Preview). `staging` is a review environment, not the site: it gets the preview D1 and preview KV,
    and it never touches the apex triggers. Protocol and gotchas: `.notes/runbooks/staging-branch-preview.md`
