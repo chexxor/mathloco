@@ -243,5 +243,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D233** (2026-11-07) — A gate retry under the same load is the same race: `check:render` now re-measures a failed cell alone, after the pool drains (2026-11-07, Linux, Firefox 158.0.1, `npm run verify:browser`)
 - **D234** (2026-11-07) — Two probes, one page, different numbers: a measured number names its probe *and* its viewport height (2026-11-07, Linux, Firefox 158.0.1, `check:space` vs `design/schedule-geometry.mjs`)
 - **D235** (2026-11-07) — A literal escape sequence reached a reader on /schedule; the gate reads rendered text, because the same bytes are correct in a string literal (2026-11-07, Linux/Fedora 45, `scripts/check-escapes.mjs` + `git show HEAD:src/components/Schedule.astro`)
+- **D236** (2026-11-07) — The harvest needs no credential: measured, and the hand-off line that said otherwise is corrected (2026-11-07, Fedora 45 native, Node 22.23.4, `scripts/events-harvest.mjs` + `curl` + `grep`)
+- **D237** (2026-11-07) — A session's report ends with a ranked recommendation and a Value added section (operator ruling, 2026-11-07)
 
-Defined: 235 (D1-D235). Unused ids: none.
+Defined: 237 (D1-D237). Unused ids: none.
