@@ -66,7 +66,8 @@ three actors straight is the whole job:
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
    not in `verify`.
 4. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
-   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, or
+   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
+   event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
    improvising**. The index (symptom -> runbook) is `.notes/runbooks/README.md`; read
    `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
