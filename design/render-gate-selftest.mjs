@@ -139,7 +139,11 @@ const cases = [
   // slot cap landing in a scoped `<style>` in `Schedule.astro` silently un-matched both — each case printed
   // "the mutation matched nothing ... this case proves nothing", which is the only honest way for a planting
   // to fail. Match the attribute you care about and splice, and added attributes cannot void a case.
-  ['ring on a tint', (h) => h.replace(/(<ul class="space-y-6)(")/, '$1 bg-panel$2'), /under the 3\.0 graphic bar/],
+  // R6 (D214) re-anchored this case: it used to match `<ul class="space-y-6"` and the ruling changed that
+  // utility to `space-y-4`, which is the same failure mode as the cid bug one line up — the class list is
+  // exactly what a spacing ruling edits. `data-art-cap` is the schedule list's intentional handle (the same
+  // attribute `design/grill/rhythm-variants.mjs` selects on), so anchor here and keep mutating the class.
+  ['ring on a tint', (h) => h.replace(/<ul class="([^"]*"[^>]*data-art-cap="323")/, '<ul class=" bg-panel $1'), /under the 3\.0 graphic bar/],
   // The leak this rule exists for (D181): the exact bytes a `//` comment produced in the built card on 2026-11-04,
   // re-inserted at the same place. Without this planting, "comments never ship" is a hope, not a check.
   ['leaked // comment in a card', (h) => h.replace(/(<span class="text-label text-ink-3"[^>]*>)/, '$1// One text node, so the render gate sees one measurement'), /begins like source-comment syntax/],

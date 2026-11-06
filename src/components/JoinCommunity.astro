@@ -17,7 +17,9 @@ const membership = value(content.membership);
 const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.length : null;
 ---
 
-<section class="bg-paper py-16">
+{/* `py-12` (48px): the band air is one ruled step across all four landing-page bands (R6, D214) — see the
+    hero's note for what the trim bought and the reasons section's note for what it costs a row. */}
+<section class="bg-paper py-12">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
       <h2 class="text-heading font-extrabold text-ink">
