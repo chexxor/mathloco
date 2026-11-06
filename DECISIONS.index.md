@@ -234,5 +234,10 @@ and a renumber silently re-points every one of them at a different decision.
 - **D224** (2026-11-06) — A second event card buys painted area, not filled space: +197px of page and 0px less empty run (measured 2026-11-06, Linux, `check:rhythm`)
 - **D225** (2026-11-06) — Mobilizon mints a fresh UID for a date edit, so a cancellation is ours to author; the same churn cost a check:ics rule its blind spot, and the gate found the hand-edit's defect (2026-11-06, Linux, curl + `check:ics` / `check:ics:selftest`)
 - **D226** (2026-11-06) — A test that asserts a distance from today must pin its own clock: the heartbeat's `daysOut` case went red on the wall clock, unrelated to the harvest it was found under (2026-11-06, Linux, node --test)
+- **D227** (2026-11-07) — The homepage carries one date and a pointer; `/schedule` carries the list: fixing a dead nav label by building the page it promised (2026-11-07, Linux, `check:content` + `design/grill/nav-measure.mjs`)
+- **D228** (2026-11-07) — "Come once" and the next date are one question, so the landing page asks it once: `JoinCommunity.astro` merged into the compact schedule band (2026-11-07, Linux, `check:render` + `check:classes`)
+- **D229** (2026-11-07) — "There is more" is drawn, not said: the deck of hairlines under the preview card (2026-11-07, Linux, `check:render` ring probe)
+- **D230** (2026-11-07) — A page the gates do not know about is a page nobody measured: route lists come off the artifact (2026-11-07, Linux, `design/emitted-routes.mjs`)
+- **D231** (2026-11-07) — One date is drawn one way on both schedule surfaces: leaf · copy · plate, and the row pass is what made the claim measurable (2026-11-07, Linux, Firefox 158.0.1, `node design/schedule-geometry.mjs` + `npm run check:space`)
 
-Defined: 226 (D1-D226). Unused ids: none.
+Defined: 231 (D1-D231). Unused ids: none.
