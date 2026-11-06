@@ -18,9 +18,12 @@ import Footer from '../components/Footer.astro';
  * recognise `/schedule` as an emitted route (it reads routes off the build artifact rather than remembering
  * them), what puts it in the sitemap (`@astrojs/sitemap`), and what keeps it off Worker CPU.
  *
- * It renders `<Schedule />` with no `variant` and no `limit`: the full width, every open date in the
- * snapshot, no cap. The rows come from `upcoming()` -> `data/events.json` — the same source the homepage
- * card and `/events.ics` read, so no two surfaces can disagree about a date (D223).
+ * It renders `<Schedule />` with no `variant` and no `limit`: the full width, and the windowed list — the next
+ * `HORIZON_WEEKS` weeks, at most `MAX_ROWS` rows, both from `src/lib/event-window.mjs` (D238). The rows come from
+ * `upcoming()` -> `data/events.json` — the same source the homepage card and `/events.ics` read, so no two
+ * surfaces can disagree about a date (D223). What is windowed is this page's length, never the feed: a subscriber
+ * who follows `/events.ics` gets every date the organizer has made, however far out — which is why the page names
+ * what it left out rather than letting the calendar look short.
  */
 export const prerender = true;
 ---

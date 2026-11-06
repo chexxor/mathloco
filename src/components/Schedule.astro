@@ -9,6 +9,10 @@ import {
   scheduleConfigured,
 } from '../lib/content.ts';
 import type { UpcomingItem } from '../lib/content.ts';
+// The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
+// can compare it against the same rule rather than a copy of it (D238).
+import { todayIn } from '../lib/events.mjs';
+import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs';
 
 /**
  * When we meet — the schedule, in two widths of one component.
@@ -53,9 +57,12 @@ import type { UpcomingItem } from '../lib/content.ts';
  * 2026-11-07, the split (D227). The homepage used to print up to four rows, which made the landing page a
  * calendar and left the calendar with no home: `/events.ics` existed, `/schedule` did not, and a visitor who
  * wanted "what else is coming?" had one answer only — paste a URL into a calendar client. Now:
- *   - `variant="full"` (the `/schedule` page) lists **every open date in the snapshot**, no cap. A page about
- *     dates does not ration them; the cap that lived here (`slice(0, 4)`) was a homepage constraint wearing a
- *     general one, and it silently truncated the only page that would ever want the whole list.
+ *   - `variant="full"` (the `/schedule` page) lists every open date in the snapshot — **within a window**
+ *     (D238). The "no cap" this line used to assert was true for one day: an uncapped list is a page that grows
+ *     with every date a host creates, and D224 priced one art-bearing row at **+197px of page**. What this
+ *     variant lists is `HORIZON_WEEKS` weeks ahead, at most `MAX_ROWS` rows, both from
+ *     `src/lib/event-window.mjs`, and the page says out loud what it left out. `/events.ics` stays uncapped:
+ *     the limit is a page-layout rule, not a fact about the club's calendar.
  *   - `variant="compact"` (the homepage, `src/pages/index.astro`) shows the **ONE next date** and points at the
  *     page of record. One row, because D224 priced a second art-bearing row at **+197px of page and 0px less
  *     empty run** on the homepage; that cost is worth paying once, for the date that matters most, and not at
@@ -102,21 +109,40 @@ import type { UpcomingItem } from '../lib/content.ts';
 type Props = {
   /** `compact` = the homepage's card of the next date, merged with the join band. `full` = `/schedule`. */
   variant?: 'full' | 'compact';
-  /** How many rows to render. Unset means every open date in the snapshot (the page does not ration them). */
+  /** How many rows to render. Unset means the full variant's windowed list (`HORIZON_WEEKS`, `MAX_ROWS`, D238). */
   limit?: number;
 };
 
 const { variant = 'full', limit } = Astro.props;
 const compact = variant === 'compact';
 
-// The homepage takes the next date and nothing else; the schedule page takes the whole snapshot. Both read
-// one `upcoming()` call, which reads `data/events.json`, which is what `/events.ics` publishes.
+// The homepage takes the next date and nothing else; the schedule page takes the windowed list. Both read one
+// `upcoming()` call, which reads `data/events.json`, which is what `/events.ics` publishes.
 const all = upcoming();
-const items = typeof limit === 'number' ? all.slice(0, limit) : all;
+// `todayIn()` supplies the snapshot's own zone, so the window is measured from the same "today" the rows are
+// compared against (D188: a page and its gate reading different clocks is how a date goes missing).
+const win = scheduleWindow(all, todayIn());
+const items = typeof limit === 'number' ? all.slice(0, limit) : win.shown;
 const next: UpcomingItem | null = items[0] ?? null;
 // How many open dates the compact card is NOT showing. Counted off the same call, so the mark that says
 // "there is more" cannot outrun the snapshot it came from.
 const hidden = Math.max(0, all.length - items.length);
+// The window adds a state the empty block has to name honestly: dates exist, and every one of them is past the
+// horizon this page can show. Printing "No date is on the calendar yet" over that snapshot states a claim the
+// file contradicts (D238).
+const beyondWindow = items.length === 0 && win.hiddenHorizon > 0;
+// What the page left out, assembled as a sentence where the counts are (D238): a window nothing mentions reads as
+// "this club is quiet" rather than "this page is short". Built in the frontmatter rather than in the markup so the
+// words come from the same plan that did the hiding, and so the footer stays one paragraph with one way out — the
+// calendar feed — instead of two conditional clauses competing with a link for the reader's attention.
+const omitted = [];
+if (win.hiddenHorizon > 0) {
+  omitted.push(`This page lists the next ${HORIZON_WEEKS} weeks, and ${win.hiddenHorizon} more ${win.hiddenHorizon === 1 ? 'date is' : 'dates are'} booked past ${formatDate(win.horizonEnd, 'wide')}.`);
+}
+if (win.hiddenCap > 0) {
+  omitted.push(`It lists at most ${MAX_ROWS} dates, and ${win.hiddenCap} more ${win.hiddenCap === 1 ? 'is' : 'are'} inside that window.`);
+}
+const omittedText = omitted.join(' ');
 /**
  * How many edges to draw under the card: one per date the card is not showing, at most two.
  *
@@ -133,9 +159,18 @@ const venueLine = value(empty?.venueLine);
 // The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
 // is a fact about the club, the second is a fact about this page, and only the first may be stated as the
 // club's. With no source configured the block says what the page knows: dates live on Meetup.
-const status = scheduleConfigured() ? (empty?.status ?? 'Nothing scheduled') : 'Dates live on Meetup';
-const emptyTitle = empty?.title ?? 'No date is on the calendar yet.';
-const emptyBody = empty?.body ?? 'Dates are set in the club\'s Discord and posted on Meetup, where the calendar and the sign-up live.';
+let status = scheduleConfigured() ? (empty?.status ?? 'Nothing scheduled') : 'Dates live on Meetup';
+let emptyTitle = empty?.title ?? 'No date is on the calendar yet.';
+let emptyBody = empty?.body ?? 'Dates are set in the club\'s Discord and posted on Meetup, where the calendar and the sign-up live.';
+if (beyondWindow) {
+  // Same notice grammar `check:render` measures (status word, lede title, body, dated line) — only the words
+  // change, because the fact is different: the calendar has dates, this page just cannot show them yet.
+  // `beyondWindow` cannot be true with no open date, so `firstOpen` is read through a local rather than a `!`.
+  const far = win.firstOpen;
+  status = 'Past this page’s window';
+  emptyTitle = `The next date is ${formatDate(far?.date ?? '', 'wide')}.`;
+  emptyBody = `That is more than ${HORIZON_WEEKS} weeks out, and this page lists the ${HORIZON_WEEKS} weeks it can show at once. The calendar file carries every date the organizer has made, however far out.`;
+}
 
 // The join band's copy, read from src/content.json with its source, exactly as `JoinCommunity.astro` read
 // it: where meetings are held (`venues`), and what the roster says and when it was read (`membership` —
@@ -303,7 +338,10 @@ const lede = compact
         <div class="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2">
           {hidden > 0 && (
             <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
-              All {all.length} dates <span aria-hidden="true">→</span>
+              {/* The label has to match what the target page actually lists: `/schedule` shows a window, not the
+                  whole future, so promising "All 14 dates" on a page that prints 8 would be a link that lies
+                  about its own destination (D238). */}
+              {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All ${win.shown.length} dates`} <span aria-hidden="true">→</span>
             </a>
           )}
           <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
@@ -412,6 +450,7 @@ const lede = compact
           refuse would be a promise this page cannot keep. */}
       {!compact && items.length > 0 && (
         <p class="mt-6 text-body leading-prose text-ink-2 font-body">
+          {omittedText}
           Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Add the club calendar</a> —
           Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
         </p>

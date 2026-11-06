@@ -26,6 +26,8 @@
     "events:harvest": "node scripts/events-harvest.mjs",
     "check:ics": "node scripts/check-ics.mjs",
     "check:ics:selftest": "node scripts/check-ics.mjs --selftest",
+    "check:schedule-window": "node scripts/check-schedule-window.mjs",
+    "check:schedule-window:selftest": "node scripts/check-schedule-window.mjs --selftest",
     "check:classes": "tsx scripts/check-classes.ts",
     "check:design": "node design/audit-references.mjs --stale",
     "decisions:index": "node scripts/decision-index.mjs",

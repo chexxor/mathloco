@@ -11,6 +11,11 @@
  * into the page. One snapshot, two renderings, so the page and the feed cannot disagree.
  */
 import tracked from '../../data/events.json';
+// The date/eligibility/window rules live in a JSON-free module so `scripts/` can check the built page against
+// them instead of against a copy of them (the same split `ics-data.mjs` makes for the feed). Re-exported here so
+// every existing importer keeps importing one module.
+import { isUpcoming, startDate, todayInZone } from './event-window.mjs';
+export { addDays, HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from './event-window.mjs';
 
 // A review-only overlay, the same trick src/lib/content.ts uses for its slots (D120's render-harness note):
 // files in gitignored `src/content.local/` merge over the tracked snapshot in filename order, so a session can
@@ -39,21 +44,7 @@ export { snapshot };
  * laptop must not disagree about whether tonight's event is still upcoming (the same class of bug that made
  * `content.ts` parse `date` fields as calendar dates rather than instants).
  */
-export const todayIn = (tz = snapshot.calendar.timezone) => {
-  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' })
-    .formatToParts(new Date());
-  const get = (k) => parts.find((p) => p.type === k)?.value;
-  return `${get('year')}-${get('month')}-${get('day')}`;
-};
-
-/** The date part of a row's start, as a calendar date string. */
-export const startDate = (row) => String(row.start ?? '').slice(0, 10);
-
-/** A row a calendar may show as happening: not cancelled, and its day has not finished. */
-export const isUpcoming = (row, today = todayIn()) => {
-  if (String(row.status ?? '').toUpperCase() === 'CANCELLED') return false;
-  return `${startDate(row)}T23:59` >= `${today}T00:00`;
-};
+export const todayIn = (tz = snapshot.calendar.timezone) => todayInZone(tz);
 
 export const events = () =>
   [...(snapshot.events ?? [])].sort((a, b) => `${a.start} ${a.uid}`.localeCompare(`${b.start} ${b.uid}`));

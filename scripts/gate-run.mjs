@@ -79,6 +79,10 @@ const DEPLOY = [
   // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
   // assumed (that is what the live form of the same command is for), and it costs 1.4s @measured 2026-11-05.
   { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: generators, invariants, 71 tests, the import checker' },
+  // Which dates `/schedule` is allowed to print, checked against the rule module rather than a copy of it. Runs
+  // before `build` because it opens no artifact (D118 again: a gate that can go red before anyone builds is a
+  // gate that catches the defect on the branch that introduced it).
+  { name: 'check:schedule-window:selftest', desc: 'the schedule-window gate can still fail (17 cases: 9 rule, 8 page plantings)' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.
@@ -90,6 +94,9 @@ const DEPLOY = [
   // the rendered-text context of every `.astro`/`.svelte` source, because the same bytes are correct inside a
   // string literal. `dist/client/events.ics` is out of scope by design - RFC 5545 escapes with backslashes.
   { name: 'check:escapes', desc: 'no escape sequence reaches a reader: built text and meta, and template text at the source', needs: ['build'] },
+  // The page half of the same rule: `data-date` handles off the built page against `scheduleWindow()`'s plan,
+  // plus the requirement that a page hiding dates says so and offers `/events.ics` (D238).
+  { name: 'check:schedule-window', desc: '/schedule prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
 ];
 
 // The browser ritual (D123): everything a human used to type by hand, in one command, over the dist that

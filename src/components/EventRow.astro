@@ -52,6 +52,13 @@
  * capped to the column (314x151). @measured 2026-11-07 by `node design/schedule-geometry.mjs`, which prints
  * those boxes for both routes. A row's height moves with its copy (the Nov 11 row is 217 tall) because the copy
  * lane is the part that stretches, not the plate.
+ *
+ * `data-copy` and `data-date` are probe handles, not styling. `design/schedule-geometry.mjs` measures the copy
+ * lane inside the row; `scripts/check-schedule-window.mjs` reads `data-date` off the built page and compares the
+ * dates `/schedule` actually printed against the window `src/lib/event-window.mjs` says it should print (D238).
+ * The ISO date goes on the element rather than being parsed back out of the painted sentence because a gate that
+ * re-parses prose breaks the day the prose is rewritten — and D173's rule is that a handle is part of the
+ * interface, so it stays written.
  */
 import config from '../config.json';
 import { filled, formatDate, timeSpan } from '../lib/content.ts';
@@ -66,7 +73,7 @@ type Props = {
 const { item } = Astro.props;
 ---
 
-<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6" data-surface="row">
+<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6" data-surface="row" data-date={item.date}>
   <EventLeaf date={item.date} />
   {/* `data-copy` is a probe handle for `design/schedule-geometry.mjs`, which measures the copy lane against
       the plate and the leaf; `min-w-0` is the load-bearing part (see the header). */}
