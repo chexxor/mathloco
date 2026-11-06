@@ -59,8 +59,11 @@ const plates = [
 {/* `py-12`, not `py-16`: the band's own air is part of what round 15 measured - its 128px of `py-16` was one
     of the two figures A3 was opened with (the other was a 283px hole inside the reasons section, and both are
     superseded by this ruling - the band now brings 96px and the reasons section's inside emptiness is 186px,
-    measured 2026-11-05 by `npm run check:space`, D220). R6 took every landing-page band to a single 48px step
-    (D214). The plates keep their box; only the air around the shelf moves. */}
+    measured 2026-11-05 by `npm run check:space`, D220). Re-measured 2026-11-06 with two event rows on the page:
+    reasons is still **186px**, and the largest run inside a surface on this page is the **join section's 274px** - a
+    band moving cannot reach either of those, because both are inside a surface rather than between sections
+    (D223). R6 took every landing-page band to a single 48px step (D214). The plates keep their box; only the air
+    around the shelf moves. */}
 <section class="bg-paper py-12 hidden lg:block" aria-label="Plates from public-domain mathematics books">
   {/* `flex` on the wrapper is not styling: check:space records a `data-slot` box only for a child of a grid or
       flex container, so a PS box inside a plain block is invisible to the survey and to every design round that

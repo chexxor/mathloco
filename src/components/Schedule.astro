@@ -50,26 +50,48 @@ import {
 const items = upcoming().slice(0, 4);
 
 /**
- * PS-4 — the event-card thumb, filled for the one row that has art (operator ruling 10(a), 2026-11-04, D190).
+ * PS-4 — the event-card thumb, filled for the rows that have art (operator ruling 10(a), 2026-11-04, D190).
  *
  * Keyed by slug, because the file in `src/assets/photos/` is named after the row (`event-<slug>.png`) and
- * `PhotoSlot` resolves it by filename prefix. The `ratio` is **the art's own** (954x460), not the 323x110 the
- * slot was first defined at: D168 ruled that a plate is not cropped to fit a box, and the club's own event
- * image is a plate — 323x110 would have cut 30% of its height.
+ * `PhotoSlot` resolves it by filename prefix. The `ratio` is **the art's own**, measured from each file's PNG
+ * header rather than from its filename: the social's art is 954x460 and Parallel Learning's is **1321x755**
+ * @measured 2026-11-06 by reading the IHDR of `src/assets/photos/event-2026-11-11-parallel-learning.png`.
+ * There is deliberately **no fallback ratio**: D168 ruled that art is not cropped to fit a box, and a default
+ * declared ratio that disagrees with the file is the reflow that rule exists to prevent — the old `?? '954 / 460'`
+ * would have quietly distorted the second image. A `SLOT_ART` entry is therefore a claim about a specific file.
  *
  * The `alt` states only what the file's role proves. It does **not** describe the frame: this session's model
  * takes no images, and D170's rule ("alt text and provenance are quoted from the picture page, not inferred")
- * is exactly the rule that forbids writing what nobody read. The organizer's own sentence for the image is
- * asked for in `.notes/NEXT.md`; when it arrives it replaces this string verbatim.
+ * is exactly the rule that forbids writing what nobody read. The organizer's own sentence for either image is
+ * asked for in `.notes/NEXT.md`; when it arrives it replaces these strings verbatim.
  *
  * A row with no entry renders NO box at all: `PhotoSlot`'s fallback is its own `<slot />`, which is empty
  * here. That is a designed absence, not a hole — DESIGN.md's states rule bars a "photo coming" box, and the
- * hatched stand-in belongs in review rounds (`npm run round10`), not on the page.
+ * hatched stand-in belongs in review rounds (`npm run round10`), not on the page. The 2026-11-07 social had no
+ * entry for exactly that reason until its art arrived; the row the feed dropped is now
+ * `STATUS:CANCELLED` under the slug `2026-11-07-club-social-cancelled`, so `upcoming()` drops it and it gets no
+ * entry. The meeting itself still happened: the organizer re-issued it under a fresh UID at 05:44:52Z (D225),
+ * and that row's slug is `2026-11-07-club-social` — the natural key, which is why the dead row was renamed
+ * rather than the live one (D223's filename rule, `event-<slug>.png`).
+ *
+ * Two rows on one page now carry the same poster: the Nov 7 and Nov 21 socials have byte-identical art
+ * (sha256 1f54c290…, verified by hashing the fetch, not by comparing filenames). The build hashes both PNGs to
+ * one asset URL, so the browser downloads it once and only the repo pays the duplicate. Whether both should be
+ * *displayed* is asked of the operator in `.notes/NEXT.md` — this table wires what the source supplies, and
+ * suppressing sourced art is a product call, not a wiring one.
  */
 const SLOT_ART: Record<string, { ratio: string; alt: string }> = {
   '2026-11-07-club-social': {
     ratio: '954 / 460',
     alt: 'The club\u2019s own event image for this social',
+  },
+  '2026-11-21-club-social': {
+    ratio: '954 / 460',
+    alt: 'The club\u2019s own event image for this social',
+  },
+  '2026-11-11-parallel-learning': {
+    ratio: '1321 / 755',
+    alt: 'The club\u2019s own event image for this study session',
   },
 };
 const empty = content.schedule?.empty;
@@ -86,8 +108,16 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
     D220): 24px below the heading (was 48), 16px between rows (was 24), 8px of row padding (was 12). Round 15
     priced the option at **-88px of page at 1440/1240/1024 and -120px at 640/390/320, with the emptiness
     falling 36-73px** @measured 2026-11-04 by `npm run check:rhythm`; as shipped with `edges`, this section
-    alone measures **80px shorter at 1240** (852 -> 772) @measured 2026-11-05 by `npm run check:space`. With
-    these values in, the sweep re-prices `rows` at 0px/0px at all six widths - the row stays as a drift guard. */}
+    alone measured **80px shorter at 1240** (852 -> 772) @measured 2026-11-05 by `npm run check:space` - that is
+    the **one-row** section, not today's: with two art-bearing rows it is **968.9px tall at 1240** with a
+    **144px** biggest run inside it @measured 2026-11-06 by `npm run check:space`. A row costs roughly what a
+    plate costs: +197px of page for the second card (D223). With these values in, the sweep re-prices `rows` at
+    0px/0px at all six widths - the row stays as a drift guard.
+
+    A `STATUS:CANCELLED` row is **published and not shown**: `upcomingEvents()` drops it from this list, while
+    `events.ics` keeps it with its UID and a raised SEQUENCE so a subscriber's client retires its copy (D223,
+    and D72's rule that a cancelled meeting is announced rather than deleted). The 2026-11-07 social is the first
+    row this happened to, and it is why the preview that showed a Nov 7 meetup no longer does. */}
 <section class="bg-paper py-12" aria-labelledby="when-we-meet">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
@@ -132,20 +162,24 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
                 <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
               )}
               {/* PS-4 (D190): the club's own event art, mirrored into src/assets/photos/ and resolved by
-                  filename, so adding art to a row is a file drop rather than an edit.
+                  filename, so adding art to a row is a file drop plus a `SLOT_ART` entry for its ratio and alt.
                   `data-slot="PS-4"` is a probe handle (check:space ranks slot boxes by it), and the row is
                   `flex flex-col` for the same reason: the survey records a data-slot box only for a child of a
                   grid or flex container, so without it PS-4 is invisible to every design round that reads it
                   (measured 2026-11-03 for PS-5, same mechanism).
                   The wrapper renders ONLY for a row with art, so a row without art keeps the geometry it had
                   before this change byte for byte — a designed absence is the absence of a box, not an empty
-                  one (DESIGN.md "States"). */}
+                  one (DESIGN.md "States"). Capped at `.event-slot`'s 323px, the three plates measure **323x184.6**
+                  (Parallel Learning, file 1321x755) and **323x155.8** twice (the two socials, file 954x460) at
+                  1240, and 256x146.3 / 256x123.4 at 320, where the column is narrower than the cap — every one a
+                  downscale of its file, and no media query hides them at any width.
+                  @measured 2026-11-06 by check:space (`.design/tmp-whitespace/space-root-{1240,320}.json`). */}
               {SLOT_ART[item.slug ?? ''] && (
                 <div data-slot="PS-4" class="event-slot">
                   <PhotoSlot
                     slot={`event-${item.slug}`}
-                    ratio={SLOT_ART[item.slug ?? '']?.ratio ?? '954 / 460'}
-                    alt={SLOT_ART[item.slug ?? '']?.alt}
+                    ratio={SLOT_ART[item.slug ?? '']!.ratio}
+                    alt={SLOT_ART[item.slug ?? '']!.alt}
                     class="rounded-control event-art"
                   />
                 </div>
@@ -216,8 +250,9 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
   /* PS-4 is capped at its declared slot width — **323 CSS px**, the card interior round 13 measured — because
      these rows are full-width strips, not cards. Measured on the first build of this change with no cap: the
      954px art rendered **1132x546** at 1240, which is a 1.19x upscale of the file, one image painting 11.28%
-     of the page, and **+558px** of document. Capped, the box is 323x156 at 1240 (the art's own 954/460 aspect,
-     uncropped per D168) and 326x157 -> 256x123 down the phone widths, every one a downscale.
+     of the page, and **+558px** of document. Capped, each plate keeps **its own** aspect ratio, uncropped per
+     D168: 323x155.8 for the 954x460 social art and 323x184.6 for the 1321x755 Parallel Learning art at 1240, and
+     256x123.4 / 256x146.3 at 320. @measured 2026-11-06 by check:space.
      The width lives here rather than in a `w-[323px]` class because 323px is a measured slot, not a spacing
      step, and `check:classes` is right to treat a one-off bracket value as a smell. */
   .event-slot {
