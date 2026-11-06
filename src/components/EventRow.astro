@@ -1,0 +1,111 @@
+---
+/**
+ * One event row — the same object the homepage's next-date card is, at the width of a list.
+ *
+ * There is deliberately **no `variant` prop here** (D227): the row is one shape, and the two schedule
+ * surfaces differ only in *how many* rows they print and *what leads them*. The homepage prints one of these
+ * inside a preview card; `/schedule` prints every open one. Two components holding two copies of "what a
+ * date looks like" is how a site ends up with two calendars that disagree — the same reason the dates live in
+ * `data/events.json` rather than in `src/content.json`.
+ *
+ * The composition, which is the homepage card's composition (2026-11-07, operator: "the calendar event style
+ * on the home page is looking great... ensure the events on the schedule page receive the same design
+ * improvement pass"): **leaf · copy · plate**, right-to-left on `sm` and up, stacked below it.
+ *   - `EventLeaf` is the date as a block, not as a sentence — the eye finds the day, then the month, and the
+ *     weekday decides whether you can come.
+ *   - the copy block is the sentence version of the same fact, which is what an assistive tech reads and
+ *     what a visitor quoting the date on Discord copies; the leaf is `aria-hidden` so the date is said once.
+ *   - PS-4 sits at the END of the row, at its cap, so the copy lane keeps its measure and the plate does not
+ *     push the date off the left edge. Art on the right is also the reading order: date, then what it is,
+ *     then the picture of it.
+ *
+ * What is a claim and where it comes from:
+ *   - the date, the hour, the title, the venue line and the art all come from `upcoming()`, which reads the
+ *     committed snapshot of the club's own Mobilizon feed (`data/events.json`). Nothing in this file is typed
+ *     by hand.
+ *   - a `STATUS:CANCELLED` row never reaches this component: `isUpcoming` drops it from the list while
+ *     `/events.ics` still publishes it with its UID and a raised SEQUENCE, so a subscriber's client retires
+ *     its copy and a person on the page is not told their plan is off (D223, D104).
+ *   - an hour the organizer has not settled prints "time not set" rather than a guessed one (D169/D172);
+ *     `asUpcomingItems` hands back `time: null` for exactly that case.
+ *   - the quiet line under the title is the row's own `seriesNote`/`series`, never a frequency word — D92:
+ *     the site publishes series names and real dates, and `check:content` fails "monthly" in visible text.
+ *   - the venue line is a fact the organizer typed, carried verbatim in the feed's `venue.raw`, so it has a
+ *     source and D92's bracket rule does not apply to it.
+ *
+ * Geometry, and why each piece is load-bearing:
+ *   - `inset-shadow-rule` is the row's ONE edge (D220's `edges` half of the R6 pair). The leaf inside it is a
+ *     `bg-tint` **fill** and not a second box — a keylined leaf inside a keylined row is two boundaries in
+ *     one component, and `check:render` measures both sides of every ring and fails a keyline that straddles
+ *     two grounds (D149-3c, design/records/0018).
+ *   - the `<li>` is a flex container so `check:space` records the `data-slot="PS-4"` box at all: the survey
+ *     only records a slot box for a child of a grid or flex container — measured 2026-11-03 for PS-5. Drop
+ *     `flex` and PS-4 goes invisible to every design round that reads it.
+ *   - `min-w-0` on the copy lane: without it a long venue string sets the lane's minimum width and the plate
+ *     gets pushed out of the row instead of the text wrapping.
+ *   - the spacing inside a row is the R6 `rows` option the operator ruled (D214, measured as a pair in D220),
+ *     kept equal to the card's so one row of a list and the homepage card are visibly the same object.
+ *
+ * "Visibly the same object" is measured, not intended: at 1240 the homepage's next-date card and a row here are
+ * both **1164x188**, both carry a **112x96** leaf, a **633x152** copy lane and a **323x156** plate sitting 24px
+ * inside the row's right keyline. At 390 they are 346x516 and 346x492 with the same 112x96 leaf and a plate
+ * capped to the column (314x151). @measured 2026-11-07 by `node design/schedule-geometry.mjs`, which prints
+ * those boxes for both routes. A row's height moves with its copy (the Nov 11 row is 217 tall) because the copy
+ * lane is the part that stretches, not the plate.
+ */
+import config from '../config.json';
+import { filled, formatDate, timeSpan } from '../lib/content.ts';
+import type { UpcomingItem } from '../lib/content.ts';
+import EventArt from './EventArt.astro';
+import EventLeaf from './EventLeaf.astro';
+
+type Props = {
+  item: UpcomingItem;
+};
+
+const { item } = Astro.props;
+---
+
+<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6" data-surface="row">
+  <EventLeaf date={item.date} />
+  {/* `data-copy` is a probe handle for `design/schedule-geometry.mjs`, which measures the copy lane against
+      the plate and the leaf; `min-w-0` is the load-bearing part (see the header). */}
+  <div data-copy class="min-w-0 flex-1">
+    {filled(item.title) && <h3 class="text-lede font-bold text-ink font-body">{item.title}</h3>}
+    {/* The class list on this span is exactly `text-label text-ink-3` and nothing more — the same handle the
+        compact card writes, so the two surfaces keep matching the probe that anchors on it (D173). It is the
+        date said as a sentence, which is the version a screen reader hears and the version worth quoting. */}
+    <p class="mt-1 tabular-nums"><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}</span></p>
+    {filled(item.series) && (
+      <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.series}</p>
+    )}
+    {filled(item.venue) && (
+      <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
+    )}
+    {/* The row's one way out, and it is the way out the band offers: the Meetup group. The feed also carries a
+        per-event URL (`item.url`, the Mobilizon page for that exact date), and pointing a row at its own event
+        page is tempting and cheap — but the site's own copy tells newcomers the sign-up is on Meetup, and
+        silently moving the row's path to a second platform is a product claim, not a refactor. Asked of the
+        operator in `.notes/NEXT.md`; until it is ruled, `item.url` is unused here.
+        Quiet link, not a control: D139 reserves `data-control` for the band's one primary, and a row of 48px
+        buttons would put the loudest thing in the band under every date in it. */}
+    <p class="mt-2">
+      <a
+        href={config.URLs.meetupGroup}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+      >
+        Details and sign-up <span aria-hidden="true">→</span>
+      </a>
+    </p>
+  </div>
+  {/* PS-4 (D190): the club's own event art, mirrored into src/assets/photos/ and resolved by filename, so
+      adding art to a row is a file drop plus an `artFor` entry for its ratio and alt (src/lib/event-art.ts).
+      The wrapper renders ONLY for a row with art, so a row without art keeps the geometry it had before this
+      change byte for byte — a designed absence is the absence of a box, not an empty one (DESIGN.md "States").
+      Capped at `.event-slot`'s 323px, the declared slot width, and never upscaled. Same cap as the homepage
+      card, so the same poster is the same size on both surfaces. Re-measure with `npm run check:space`
+      (`.design/tmp-whitespace/space-root-{1240,320}.json`) before quoting a plate size. */}
+  <EventArt slug={item.slug} />
+</li>

@@ -121,11 +121,14 @@ const focus = value(content.focus);
               >Join Our Group</a
             >
           </div>
+          {/* The secondary used to be `target=_blank` at Meetup's own events page, which made the site's own
+              schedule page a dead end one click away from a third-party page. `/schedule` is an emitted route
+              now (`dist/client/schedule/index.html`), so the label stays honest and `check:content`'s dead-path
+              rule can see the target; Meetup stays one step further on, where the sign-up actually is.
+              No `target`: an internal navigation that a visitor can go back from. */}
           <div class='mt-3 sm:mt-0 sm:ml-3'>
             <a
-              href={`${config.URLs.meetupGroup}/events`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/schedule"
               data-control="secondary"
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
             >

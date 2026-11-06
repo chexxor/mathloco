@@ -180,14 +180,47 @@ export const formatDate = (iso: string, style: 'wide' | 'short' = 'short'): stri
   }).format(dt);
 };
 
-/** "7:30 pm", or null — an unset time is stated as "time not set", never defaulted (DESIGN.md, Notices). */
-export const formatTime = (hhmm: string): string | null => {
+/**
+ * One date, in the three pieces a calendar leaf draws: `{ month: 'Nov', day: '7', weekday: 'Sat' }`.
+ *
+ * It lives beside `formatDate` rather than in the component that draws the leaf for one reason: the parsing
+ * is the fragile part. A `new Date('2026-11-07')` is UTC midnight, which a build running in a negative UTC
+ * offset prints as Nov 6 — the defect `formatDate`'s `Date.UTC` + `timeZone: 'UTC'` pair exists to prevent.
+ * A leaf built by a second parser is a second chance at that bug, and the leaf sits next to a prose date
+ * built by the first one, so the disagreement would be visible on the page rather than in a log.
+ */
+export const dateParts = (iso: string): { month: string; day: string; weekday: string } => {
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return { month: iso, day: '', weekday: '' };
+  const dt = new Date(Date.UTC(y, m - 1, d));
+  const at = (opts: Intl.DateTimeFormatOptions) =>
+    new Intl.DateTimeFormat('en-US', { ...opts, timeZone: 'UTC' }).format(dt);
+  return { month: at({ month: 'short' }), day: at({ day: 'numeric' }), weekday: at({ weekday: 'short' }) };
+};
+
+/** "7:30 pm", or null — an unset time is stated as "time not set", never defaulted (DESIGN.md, Notices). */export const formatTime = (hhmm: string): string | null => {
   const m = /^([01]?\d|2[0-3]):([0-5]\d)$/.exec(hhmm);
   if (!m) return null;
   const h = Number(m[1]);
   const suffix = h < 12 ? 'am' : 'pm';
   const hour = h % 12 === 0 ? 12 : h % 12;
   return `${hour}:${m[2]} ${suffix}`;
+};
+
+/**
+ * The hour the organizer set, as a span: "12:00 pm – 2:00 pm", or "12:00 pm" when only the start is settled,
+ * or "time not set" when neither is (D169/D172 — a row published as a DATE has no confirmed hour, and the
+ * site says so rather than defaulting to midnight or to "7 pm").
+ *
+ * It lives here rather than in the row component because both schedule surfaces print it — the homepage's
+ * one-date card and every row on `/schedule` — and two copies of the sentence about an hour is two chances
+ * for one of them to guess.
+ */
+export const timeSpan = (row: { time?: string | null; endTime?: string | null }): string => {
+  const start = row.time ? formatTime(row.time) : null;
+  if (!start) return 'time not set';
+  const end = row.endTime ? formatTime(row.endTime) : null;
+  return end ? `${start} \u2013 ${end}` : start;
 };
 
 /** "Nov 3, 2026" from an ISO calendar date — the dated lane for a fact a human wrote down. Parsed as a
@@ -201,6 +234,20 @@ export const formatSince = (iso: string): string => {
 
 /** The build's own date, for the dated lane of a prerendered page. The only age a static page can compute (D103). */
 export const builtOn = (): string => formatSince(new Date().toISOString().slice(0, 10));
+
+/**
+ * The day the club's own calendar was last read — "6 Nov 2026", or null when the snapshot does not say.
+ *
+ * It is the stamp every published `DTSTAMP` in `/events.ics` derives from (`data/events.json`'s
+ * `source.fetchedAt`, which `check:ics`'s dtstamp rule asserts row by row), which is the reason the site's
+ * "copied from" line reads from here rather than from `builtOn()`: a page that says it was copied on one
+ * date and a calendar file whose rows say another is the same defect as a page and a calendar file that
+ * disagree about a date.
+ */
+export const copiedOn = (): string | null => {
+  const f = snapshot.source?.fetchedAt;
+  return typeof f === 'string' && f.length >= 10 ? formatSince(f.slice(0, 10)) : null;
+};
 
 /**
  * Every slot in the tracked content that still needs a human, and every slot that states a claim it cannot

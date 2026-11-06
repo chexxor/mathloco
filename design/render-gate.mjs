@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // render-gate.mjs — do the ratified tokens survive contact with a real browser?
 //
-//   node design/render-gate.mjs            # '/', '/404' and '/chat' at 1240, 390, 320
+//   node design/render-gate.mjs            # every route dist/client emits, at 1240, 640, 390, 320
 //   node design/render-gate.mjs /chat      # one page
 //   node design/render-gate.mjs --no-build # measure the dist that is already there (see below)
 //   RENDER_JOBS=1 node design/render-gate.mjs   # serialize the firefox runs (default 4 at once)
@@ -54,6 +54,7 @@ import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync } from 
 import { resolve } from 'node:path';
 import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 import { BARS } from './grill/okcolor.mjs';
+import { emittedRoutes } from './emitted-routes.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
@@ -79,8 +80,14 @@ const NO_BUILD = argv.includes('--no-build');
 // one firefox smaller and the retry one longer: wall cost measured in design/gate-cost.json.
 const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 3));
 const pages = argv.filter((a) => a.startsWith('/'));
-const routes = pages.length ? pages : ['/', '/404', '/chat'];
 const dist = resolve('dist/client');
+// Which routes the gate measures is read off the artifact, not remembered here — see
+// `design/emitted-routes.mjs` for why the literal `['/', '/404', '/chat']` had to go. An explicit `/route`
+// argument still wins, because probing one page is the normal way to debug one page. The list is built
+// BELOW the build step, not here: a page added by this very commit is not in `dist` until the build the
+// gate itself runs has emitted it, and a route list captured before the build is the same forgetting the
+// literal used to do.
+let routes;
 // the tier boundary is read out of the token block, not remembered: a moved --breakpoint-nav-narrow
 // moves this gate with it instead of quietly disagreeing with the CSS
 // The tier boundary is READ from the token block, never remembered, so this gate cannot drift from the
@@ -140,6 +147,10 @@ if (!NO_BUILD) {
 }
 mkdirSync('.design/render', { recursive: true });
 
+routes = pages.length ? pages : emittedRoutes(dist);
+if (!routes.length) { console.error(`no .html under ${dist} — the build emitted nothing to measure`); process.exit(1); }
+console.log(`routes ${routes.join(' ')}`);
+
 const fails = [];
 const warns = [];
 const num = (v) => (typeof v === 'number' ? v : NaN);
@@ -165,7 +176,7 @@ const run = (route, width) => new Promise((done) => {
 // calling __send()). One in nine showed up while timing this. A gate that flakes is a gate people learn
 // to re-run instead of trust, so a cell gets a second attempt; two failures in a row is a real FAIL and
 // the report says which it was.
-const ATTEMPTS = Number(process.env.RENDER_ATTEMPTS || 3);
+const ATTEMPTS = Number(process.env.RENDER_ATTEMPTS || 2);
 async function measureCell(route, width) {
   let last = null;
   for (let n = 1; n <= ATTEMPTS; n++) {
@@ -179,7 +190,13 @@ async function measureCell(route, width) {
     }
     if (n < ATTEMPTS) console.error(`  retry ${route} @${width} — ${last.err && last.err.message ? String(last.err.message).slice(0, 60) : 'no report posted'}`);
   }
-  const tail = (last.stderr || '').split('\n').filter(Boolean).slice(-2).join(' | ');
+  // The probe's own error lines, not just the last two things it printed. `page-measure.mjs` says most
+  // loudly when the thing it cannot do is a page problem ("Unsupported element for pixel sampling",
+  // "font wait: ... never reached status loaded"), and those lines sit ABOVE the "probing rendered-..."
+  // chatter, which is what `slice(-2)` used to report \u2014 so a red cell could not be told from the @390 flake
+  // (line 77) without re-running the whole matrix by hand.
+  const said = (last.stderr || '').split('\n').filter(Boolean);
+  const tail = [...new Set(said.filter((l) => /error|sample|font wait|never reached|SyntaxError/i.test(l)).slice(-3).concat(said.slice(-2)))].join(' | ');
   return { err: new Error(`${last.err && last.err.message ? last.err.message : 'no report'}${tail ? ' :: ' + tail.slice(0, 160) : ''}`) };
 }
 
@@ -197,12 +214,26 @@ async function pool(jobs, items, work) {
 
 const cells = routes.flatMap((route) => widths.map((w) => [route, w]));
 const got = new Map();
-const raw = await pool(Math.min(JOBS, cells.length), cells, ([route, w]) => measureCell(route, w).then((r) => ({ route, width: w, ...r })));
-for (const r of raw) {
+const record = (r) => {
   const at = `${r.route} @${r.width}`;
-  if (r.err) { got.set(at, { err: r.err }); continue; }
+  if (r.err) { got.set(at, { err: r.err }); return; }
   writeFileSync(`.design/render/${r.route.replace(/\//g, '_') || 'root'}-${r.width}.json`, JSON.stringify(r.j, null, 1));
   got.set(at, { j: r.j });
+};
+const raw = await pool(Math.min(JOBS, cells.length), cells, ([route, w]) => measureCell(route, w).then((r) => ({ route, width: w, ...r })));
+for (const r of raw) record(r);
+
+// A cell that could not post **with three firefoxes running** is re-measured **alone**, after the pool has
+// drained. The mechanism, measured 2026-11-07 (Linux, Firefox 158.0.1): `/ @390` failed all 3 in-pool
+// attempts in one run and passed 3 of 3 the same command run on its own, minutes later, on the same bytes.
+// Retries inside the pool cannot fix that, because a retry under the same load is the same race \u2014 which is why
+// ATTEMPTS went from 3 to 2 in-pool and this uncontended pass exists: same total attempts, and the last one
+// runs against nothing but the page.
+const flaked = raw.filter((r) => r.err);
+if (flaked.length) {
+  console.error(`  ${flaked.length} cell(s) failed inside the ${JOBS}-firefox pool \u2014 re-measuring ${flaked.map((r) => `${r.route} @${r.width}`).join(', ')} alone`);
+  const again = await pool(1, flaked.map((r) => [r.route, r.width]), ([route, w]) => measureCell(route, w).then((r) => ({ route, width: w, ...r })));
+  for (const r of again) record(r);
 }
 
 for (const route of routes) {

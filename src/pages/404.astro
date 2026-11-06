@@ -20,8 +20,8 @@ export const prerender = true;
     <h1 class="text-display-1 font-extrabold text-ink mb-6">We could not find that page</h1>
 
     <p class="text-lede leading-prose text-ink-2 mb-12 max-w-measure mx-auto">
-      The link may be old, or the address may have a typo. Everything we have is one of these two
-      places.
+      The link may be old, or the address may have a typo. Everything we have sits behind one of these
+      links.
     </p>
 
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
@@ -44,11 +44,16 @@ export const prerender = true;
     <p class="text-label text-ink-3 mt-16">
       Looking for a specific meetup?
       <a
+        href="/schedule"
+        class="underline text-ink-2 hover:text-gold"
+      >Our schedule page</a
+      > lists every date on the club’s own calendar, and
+      <a
         href={URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
         class="underline text-ink-2 hover:text-gold"
-      >Our Meetup group</a
+      >our Meetup group</a
       > lists every session.
     </p>
   </main>

@@ -1,13 +1,17 @@
 ---
 import config from '../config.json';
-import PhotoSlot from '../components/PhotoSlot.astro';
+import EventArt from './EventArt.astro';
+import EventLeaf from './EventLeaf.astro';
+import EventRow from './EventRow.astro';
+import PhotoSlot from './PhotoSlot.astro';
 import {
-  content, upcoming, value, filled, formatDate, formatTime, builtOn, scheduleConfigured,
+  content, upcoming, value, filled, copiedOn, formatDate, timeSpan, formatSince, builtOn,
+  scheduleConfigured,
 } from '../lib/content.ts';
+import type { UpcomingItem } from '../lib/content.ts';
 
 /**
- * When we meet — the section that replaced `UpcomingMeetups.astro` and `PastEvents.astro`
- * (operator request, 2026-11-03: use placeholders for the content we are missing).
+ * When we meet — the schedule, in two widths of one component.
  *
  * What it replaced, and why the replacement had to be written rather than enabled:
  * `.notes/roadmap-events.md` measured `UpcomingMeetups.astro` as "**entirely invented placeholder
@@ -19,250 +23,399 @@ import {
  * and a comment. Both flags were `false` in `src/config.json`, and prod agrees — the curl numbers are in
  * the roadmap note.
  *
- * The three states, all designed (record 0010: missing content is a state, never a blank, never a build
- * failure; DESIGN.md "States"):
+ * The three states, all designed, none of them an invented event (record 0010: missing content is a state,
+ * never a blank, never a build failure; DESIGN.md "States"):
  *   - **dates exist** → rows: date lane, series name, status word. D92: the site publishes **series names
  *     and real dates**, never a frequency.
  *   - **a source is configured and holds nothing** → the round-7 empty state the operator chose (option A as
  *     measured then: 305px, status word + title + two-line body + a 48px primary and a 40px secondary — D139
  *     has since retired the 40px step for buttons — + the dated line, "two paths out"), because a guaranteed
  *     condition of an upcoming-only feed is a gap between events.
- *   - **no source configured yet** (today: D132 rules the source is Mobilizon or an ICS feed and the
- *     operator has to provision one) → the same block, with its own status line, and the bracketed
+ *   - **no source configured yet** (D132 rules the source is Mobilizon or an ICS feed, and the committed
+ *     snapshot says it was read from one) → the same block, with its own status line, and the bracketed
  *     `[venue blurb]` from `src/content.json` **not rendered**: a bracket is a hole in our knowledge, and
  *     DESIGN.md keeps brackets off the page until a source exists. `scripts/check-content.mjs` fails a
  *     build that ships one.
  *
  * Controls, after the D139 ruling (2026-11-03):
- *   - One control: the **48px primary** in the hero's own grammar (`px-8 py-4`, no hard-coded height —
- *     DESIGN.md: "heights are derived, not chosen"), and it declares `data-control="primary"` because the
+ *   - One control per band: the **48px primary** in the hero's own grammar (`px-8 py-4`, no hard-coded
+ *     height — DESIGN.md: "heights are derived, not chosen"), declaring `data-control="primary"` because the
  *     height rules now match the name the source publishes (D140).
- *   - The **second path is an inline link, not a second button.** It was written while the gate still demanded
+ *   - Every other path is an **inline link, not a second button.** It was written while the gate still demanded
  *     a 40px secondary and then forbade one (record 0016); the ruling retired 40px for buttons, so a second
  *     button would now be legal at 48px. It stays a link anyway: DESIGN.md prices an in-sentence path at its
  *     24px line, and a notice-shaped block reads better with one pressable block and one path in prose than
- *     with two buttons of the same size. If a future round wants the button, `data-control="secondary"` is
- *     the name it must carry.
- * Both paths still go somewhere that exists — Meetup and `/chat`. No "Past meetings" button: there is no
- * past-events page, and D117's rule is that a path needs a page (that is what killed `Schedule` and
- * `Members` from the nav).
+ *     with two buttons of the same size.
+ * Every path goes somewhere that exists — D117's rule is that a path needs a page (that is what killed
+ * `Schedule` and `Members` from the nav). As of 2026-11-07 the `Schedule` path has a page:
+ * `src/pages/schedule.astro`, so the nav label is back with something behind it.
+ *
+ * 2026-11-07, the split (D227). The homepage used to print up to four rows, which made the landing page a
+ * calendar and left the calendar with no home: `/events.ics` existed, `/schedule` did not, and a visitor who
+ * wanted "what else is coming?" had one answer only — paste a URL into a calendar client. Now:
+ *   - `variant="full"` (the `/schedule` page) lists **every open date in the snapshot**, no cap. A page about
+ *     dates does not ration them; the cap that lived here (`slice(0, 4)`) was a homepage constraint wearing a
+ *     general one, and it silently truncated the only page that would ever want the whole list.
+ *   - `variant="compact"` (the homepage, `src/pages/index.astro`) shows the **ONE next date** and points at the
+ *     page of record. One row, because D224 priced a second art-bearing row at **+197px of page and 0px less
+ *     empty run** on the homepage; that cost is worth paying once, for the date that matters most, and not at
+ *     all for the rest — the rest belongs on a page whose whole job is dates.
+ *   - `limit` is the prop that says how many rows, so the two call sites read the same `upcoming()` and
+ *     cannot drift into two calendars. `check:ics` and `check:content` are what keep the page and
+ *     `/events.ics` honest about the dates themselves.
+ *
+ * 2026-11-07, the second half of the same change (D228): the compact width **absorbed the join band**
+ * (`JoinCommunity.astro`, "Come once / How it works"), which is deleted. Why merged rather than left beside
+ * it: the two bands answered one question in two places — one said "here is a date", the other said "here is
+ * how you come to a date" — with the horizon band between them, so a reader met the promise and its mechanics
+ * three screens apart. The landing page now runs hero → what we take up → the horizon → **come once, with the
+ * next date inside it** → footer. That is a rhythm change and it has not been priced: `npm run check:rhythm`
+ * owes it a number before anyone claims one (asked in `.notes/NEXT.md` with A3).
+ *
+ * The compact card is deliberately NOT the full width's row. One row of list markup would read as a
+ * truncated list, which is what the old homepage was; the card draws the date the way a calendar draws a
+ * date — month, day number, weekday, in a filled leaf — and the leaf is the sign that this surface is a
+ * preview of a page rather than a short list. The full width's rows stay ruled strips (D220's `edges`),
+ * because there the dates, not one date, are the thing.
+ *
+ * The rhythm inside the full width is R6's `rows` option, ruled 2026-11-05 (D214; the pair's measurement is
+ * D220): 24px below the heading (was 48), 16px between rows (was 24), 8px of row padding (was 12). Round 15
+ * priced the option at **-88px of page at 1440/1240/1024 and -120px at 640/390/320, with the emptiness
+ * falling 36-73px** @measured 2026-11-04 by `npm run check:rhythm`; as shipped with `edges`, this section
+ * alone measured **80px shorter at 1240** (852 -> 772) @measured 2026-11-05 by `npm run check:space` - that is
+ * the **one-row** section, not today's: with two art-bearing rows it is **968.9px tall at 1240** with a
+ * **144px** biggest run inside it @measured 2026-11-06 by `npm run check:space`. A row costs roughly what a
+ * plate costs: +197px of page for the second card (D224). With these values in, the sweep re-prices `rows` at
+ * 0px/0px at all six widths - the row stays as a drift guard.
+ *
+ * A `STATUS:CANCELLED` row is **published and not shown**: `isUpcoming` drops it from this list, while
+ * `events.ics` keeps it with its UID and a raised SEQUENCE so a subscriber's client retires its copy (D223,
+ * and D72's rule that a cancelled meeting is announced rather than deleted). The 2026-11-07 social is the first
+ * row this happened to, and it is why the preview that showed a Nov 7 meetup no longer does.
+ *
+ * The file name stays `Schedule.astro` even though the compact width now carries the join band, and the
+ * section's id stays `when-we-meet` even though the heading beside it now reads "Come once": both are probe
+ * handles — `design/grill/rhythm-variants.mjs` and `round14-options.mjs` select the landing-page section by
+ * that id. Renaming either is a separate change with its own reference sweep (the same ruling that kept
+ * `WhyJoinUs.astro` named).
  */
-const items = upcoming().slice(0, 4);
-
-/**
- * PS-4 — the event-card thumb, filled for the rows that have art (operator ruling 10(a), 2026-11-04, D190).
- *
- * Keyed by slug, because the file in `src/assets/photos/` is named after the row (`event-<slug>.png`) and
- * `PhotoSlot` resolves it by filename prefix. The `ratio` is **the art's own**, measured from each file's PNG
- * header rather than from its filename: the social's art is 954x460 and Parallel Learning's is **1321x755**
- * @measured 2026-11-06 by reading the IHDR of `src/assets/photos/event-2026-11-11-parallel-learning.png`.
- * There is deliberately **no fallback ratio**: D168 ruled that art is not cropped to fit a box, and a default
- * declared ratio that disagrees with the file is the reflow that rule exists to prevent — the old `?? '954 / 460'`
- * would have quietly distorted the second image. A `SLOT_ART` entry is therefore a claim about a specific file.
- *
- * The `alt` states only what the file's role proves. It does **not** describe the frame: this session's model
- * takes no images, and D170's rule ("alt text and provenance are quoted from the picture page, not inferred")
- * is exactly the rule that forbids writing what nobody read. The organizer's own sentence for either image is
- * asked for in `.notes/NEXT.md`; when it arrives it replaces these strings verbatim.
- *
- * A row with no entry renders NO box at all: `PhotoSlot`'s fallback is its own `<slot />`, which is empty
- * here. That is a designed absence, not a hole — DESIGN.md's states rule bars a "photo coming" box, and the
- * hatched stand-in belongs in review rounds (`npm run round10`), not on the page. The 2026-11-07 social had no
- * entry for exactly that reason until its art arrived; the row the feed dropped is now
- * `STATUS:CANCELLED` under the slug `2026-11-07-club-social-cancelled`, so `upcoming()` drops it and it gets no
- * entry. The meeting itself still happened: the organizer re-issued it under a fresh UID at 05:44:52Z (D225),
- * and that row's slug is `2026-11-07-club-social` — the natural key, which is why the dead row was renamed
- * rather than the live one (D223's filename rule, `event-<slug>.png`).
- *
- * Two rows on one page now carry the same poster: the Nov 7 and Nov 21 socials have byte-identical art
- * (sha256 1f54c290…, verified by hashing the fetch, not by comparing filenames). The build hashes both PNGs to
- * one asset URL, so the browser downloads it once and only the repo pays the duplicate. Whether both should be
- * *displayed* is asked of the operator in `.notes/NEXT.md` — this table wires what the source supplies, and
- * suppressing sourced art is a product call, not a wiring one.
- */
-const SLOT_ART: Record<string, { ratio: string; alt: string }> = {
-  '2026-11-07-club-social': {
-    ratio: '954 / 460',
-    alt: 'The club\u2019s own event image for this social',
-  },
-  '2026-11-21-club-social': {
-    ratio: '954 / 460',
-    alt: 'The club\u2019s own event image for this social',
-  },
-  '2026-11-11-parallel-learning': {
-    ratio: '1321 / 755',
-    alt: 'The club\u2019s own event image for this study session',
-  },
+type Props = {
+  /** `compact` = the homepage's card of the next date, merged with the join band. `full` = `/schedule`. */
+  variant?: 'full' | 'compact';
+  /** How many rows to render. Unset means every open date in the snapshot (the page does not ration them). */
+  limit?: number;
 };
+
+const { variant = 'full', limit } = Astro.props;
+const compact = variant === 'compact';
+
+// The homepage takes the next date and nothing else; the schedule page takes the whole snapshot. Both read
+// one `upcoming()` call, which reads `data/events.json`, which is what `/events.ics` publishes.
+const all = upcoming();
+const items = typeof limit === 'number' ? all.slice(0, limit) : all;
+const next: UpcomingItem | null = items[0] ?? null;
+// How many open dates the compact card is NOT showing. Counted off the same call, so the mark that says
+// "there is more" cannot outrun the snapshot it came from.
+const hidden = Math.max(0, all.length - items.length);
+/**
+ * How many edges to draw under the card: one per date the card is not showing, at most two.
+ *
+ * This is the continuation said as a mark instead of a sentence. The card is the top card of a deck, and the
+ * deck shows through under it; the earlier version spent eleven words ("That is the next one. 2 more dates
+ * are on the schedule page") on the same fact, which is the sentence a preview should not have to say.
+ * Capped at two because a third stops reading as a deck and starts reading as a ruler. The number itself is
+ * not lost — it is in the link's text, where it is also an instruction rather than a description.
+ */
+const peeks = Math.min(hidden, 2);
+
 const empty = content.schedule?.empty;
 const venueLine = value(empty?.venueLine);
 // The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
 // is a fact about the club, the second is a fact about this page, and only the first may be stated as the
 // club's. With no source configured the block says what the page knows: dates live on Meetup.
 const status = scheduleConfigured() ? (empty?.status ?? 'Nothing scheduled') : 'Dates live on Meetup';
-const title = empty?.title ?? 'No date is on the calendar yet.';
-const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on Meetup, where the calendar and the sign-up live.';
+const emptyTitle = empty?.title ?? 'No date is on the calendar yet.';
+const emptyBody = empty?.body ?? 'Dates are set in the club\'s Discord and posted on Meetup, where the calendar and the sign-up live.';
+
+// The join band's copy, read from src/content.json with its source, exactly as `JoinCommunity.astro` read
+// it: where meetings are held (`venues`), and what the roster says and when it was read (`membership` —
+// D136: the count is dated, it has no '+' on it, and the regular-attendee figure is deliberately not
+// published). The join prose around it stayed in markup, where it shipped: a new slot in content.json
+// without a source would be an `openSlots` hole for `check:content` to report.
+const venues = value(content.venues);
+const membership = value(content.membership);
+const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.length : null;
+
+// D117: a path needs a page, and it has one now, so the compact card may point at it.
+const scheduleHref = '/schedule';
+// When the copy was taken. This is the same stamp every published `DTSTAMP` derives from (`check:ics`'s
+// dtstamp rule asserts it), so the sentence under a date and the calendar file a subscriber holds cannot
+// disagree about when the club's calendar was last read.
+const copied = copiedOn();
+// The heading is the page's own h1 on /schedule and a section h2 on the homepage, where the hero owns the h1.
+const headingId = 'when-we-meet';
+const Heading = compact ? 'h2' : 'h1';
+// The eyebrow is the compact width's locator. The lede used to read "These dates are copied from the club's
+// own calendar" on a page that showed one date \u2014 a plural about a singular, which is what a reader meets
+// first on the landing page \u2014 so the compact copy is written for one date and the full copy for many.
+const eyebrow = items.length ? 'Next date' : 'The calendar';
+// The compact lede is the join band's own sentence, kept verbatim from `JoinCommunity.astro` so the operator's
+// words survive the merge. It deliberately does NOT say "these dates are copied from the club's own calendar":
+// that sentence is the full width's, and it shipped on the homepage after the split said one date was coming
+// \u2014 a plural about a singular. The homepage says the same fact where it is checkable, as a dated line under
+// the date it describes.
+const lede = compact
+  ? 'One place to say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether this is your kind of room.'
+  : 'These dates are copied from the club\u2019s own calendar. The sign-up is on Meetup.';
 ---
 
-{/* The rhythm inside this section is R6's `rows` option, ruled 2026-11-05 (D214; the pair's measurement is
-    D220): 24px below the heading (was 48), 16px between rows (was 24), 8px of row padding (was 12). Round 15
-    priced the option at **-88px of page at 1440/1240/1024 and -120px at 640/390/320, with the emptiness
-    falling 36-73px** @measured 2026-11-04 by `npm run check:rhythm`; as shipped with `edges`, this section
-    alone measured **80px shorter at 1240** (852 -> 772) @measured 2026-11-05 by `npm run check:space` - that is
-    the **one-row** section, not today's: with two art-bearing rows it is **968.9px tall at 1240** with a
-    **144px** biggest run inside it @measured 2026-11-06 by `npm run check:space`. A row costs roughly what a
-    plate costs: +197px of page for the second card (D223). With these values in, the sweep re-prices `rows` at
-    0px/0px at all six widths - the row stays as a drift guard.
-
-    A `STATUS:CANCELLED` row is **published and not shown**: `upcomingEvents()` drops it from this list, while
-    `events.ics` keeps it with its UID and a raised SEQUENCE so a subscriber's client retires its copy (D223,
-    and D72's rule that a cancelled meeting is announced rather than deleted). The 2026-11-07 social is the first
-    row this happened to, and it is why the preview that showed a Nov 7 meetup no longer does. */}
-<section class="bg-paper py-12" aria-labelledby="when-we-meet">
+<section class="bg-paper py-12" aria-labelledby={headingId}>
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
-      <h2 id="when-we-meet" class="text-heading font-extrabold text-ink">When We Meet</h2>
-      <p class="mt-4 text-lede leading-prose text-ink-2 font-body max-w-measure mx-auto">
-        These dates are copied from the club's own calendar. The sign-up is on Meetup.
-      </p>
+      {compact && <p class="text-label uppercase tracking-wide text-ink-3">{eyebrow}</p>}
+      {/* Written out rather than assembled with `class:list={[...]}`: `check:classes` reads the literal word
+          `list` out of that syntax and reports it as a class that generates no CSS, so the assembled form
+          buys a false failure. A conditional template string keeps every token literal in the source the
+          gate reads. */}
+      <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'mt-1 text-heading' : 'text-display-1'}`}>{compact ? 'Come once' : 'When We Meet'}</Heading>
+      <p class={`mt-4 leading-prose text-ink-2 font-body max-w-measure mx-auto ${compact ? 'text-lede' : 'text-body'}`}>{lede}</p>
     </div>
 
     <div class="mt-6">
-      {items.length ? (
-        <ul class="space-y-4" data-art-cap="323">
-          {items.map((item) => (
-            <li class="inset-shadow-rule rounded-control px-4 py-2 flex flex-col">
-              <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
-                <span class="text-label font-medium text-ink tabular-nums">
-                  {formatDate(item.date, 'wide')}
-                </span>
-                {/* A JSX comment, not `//`: inside `{items.map()}` the template body is JSX children, where a
-                    `//` line is not a comment at all — it shipped as visible text in every card (2026-11-04).
-                    One text node, so the render gate sees one measurement. An unconfirmed hour prints
-                    "time not set" rather than a guessed one (D172); a confirmed one prints the span the
-                    organizer set, in the club's own zone. */}
-                <span class="text-label text-ink-3">
-                  {item.time
-                    ? `${formatTime(item.time)}${item.endTime ? ` – ${formatTime(item.endTime)}` : ''}`
-                    : 'time not set'}
-                </span>
-                {filled(item.status) && (
-                  <span class="text-label font-medium text-ink-2 uppercase tracking-wide">{item.status}</span>
-                )}
-              </div>
-              <h3 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h3>
-              {filled(item.series) && (
-                <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.series}</p>
-              )}
-              {filled(item.venue) && (
-                // The address is a fact the organizer typed, with a source (data/events.json carries the
-                // feed it came from), so D92's bracket rule does not apply to it. The organizer's full
-                // `LOCATION` string — street, postcode, state, country — is what the feed publishes; the
-                // page shows the navigable line.
-                <p class="mt-1 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
-              )}
-              {/* PS-4 (D190): the club's own event art, mirrored into src/assets/photos/ and resolved by
-                  filename, so adding art to a row is a file drop plus a `SLOT_ART` entry for its ratio and alt.
-                  `data-slot="PS-4"` is a probe handle (check:space ranks slot boxes by it), and the row is
-                  `flex flex-col` for the same reason: the survey records a data-slot box only for a child of a
-                  grid or flex container, so without it PS-4 is invisible to every design round that reads it
-                  (measured 2026-11-03 for PS-5, same mechanism).
-                  The wrapper renders ONLY for a row with art, so a row without art keeps the geometry it had
-                  before this change byte for byte — a designed absence is the absence of a box, not an empty
-                  one (DESIGN.md "States"). Capped at `.event-slot`'s 323px, the three plates measure **323x184.6**
-                  (Parallel Learning, file 1321x755) and **323x155.8** twice (the two socials, file 954x460) at
-                  1240, and 256x146.3 / 256x123.4 at 320, where the column is narrower than the cap — every one a
-                  downscale of its file, and no media query hides them at any width.
-                  @measured 2026-11-06 by check:space (`.design/tmp-whitespace/space-root-{1240,320}.json`). */}
-              {SLOT_ART[item.slug ?? ''] && (
-                <div data-slot="PS-4" class="event-slot">
-                  <PhotoSlot
-                    slot={`event-${item.slug}`}
-                    ratio={SLOT_ART[item.slug ?? '']!.ratio}
-                    alt={SLOT_ART[item.slug ?? '']!.alt}
-                    class="rounded-control event-art"
-                  />
-                </div>
-              )}
-              <p class="mt-2 text-body leading-prose text-ink-2 font-body">
-                <a
-                  href={config.URLs.meetupGroup}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-                >
-                  Details and sign-up on Meetup</a
-                >.
-              </p>
-            </li>
-          ))}
-        </ul>
-        // One path out, in prose rather than a second button (the D139 ruling prices an in-sentence path at
-        // its 24px line). The link is the feed itself: a person pastes that URL into Google Calendar, Apple
-        // Calendar or Outlook and the dates follow the club from then on. Deliberately not a `webcal://`
-        // shortcut — an https link either opens a client or downloads a file a client opens, and a scheme
-        // that some browsers refuse would be a promise this page cannot keep.
-        <p class="mt-6 text-body leading-prose text-ink-2 font-body">
-          Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Add the club calendar</a> —
-          Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
-        </p>
-      ) : (
+      {items.length === 0 && (
         // The chosen empty state (round 7, option A) in the shipped notice grammar: status word, `--lede`
-        // title, two-line body, a 48px primary, the second path, the dated line. The second path is an inline
-        // link rather than a 40px secondary button — see the control note at the top of this file. `min-h-20`
-        // is not needed here: this block is prerendered at its full height, so there is no arrival to shift
-        // the page.
+        // title, two-line body, the dated line, then the paths out. One copy of this block for both widths:
+        // an empty calendar is empty on either surface, and the two paths out (Meetup, the chat) are the
+        // whole answer on both. `min-h-20` is not needed: this block is prerendered at its full height, so
+        // there is no arrival to shift the page.
+        //
+        // One boundary (operator ruling, 2026-11-03): the ring is the notice's edge and the only edge in it,
+        // so the paths out sit BELOW the box rather than inside it. `role="status"` is what makes that block
+        // measurable — `check:render` holds it to the notice grammar (no fill, 1px ring at the ratified
+        // contrast, 48px+) and fails any filled or ringed action that ever moves back inside. Before this
+        // change the primary button sat inside the ring: one box, two edges.
         <div class="max-w-measure">
           <div role="status" class="inset-shadow-rule rounded-control px-4 py-6">
             <p class="text-label font-medium text-ink-3">{status}</p>
-            <h3 class="mt-1 text-lede font-bold text-ink font-body">{title}</h3>
-            <p class="mt-2 text-body leading-prose text-ink-2 font-body">{body}</p>
+            <h3 class="mt-1 text-lede font-bold text-ink font-body">{emptyTitle}</h3>
+            <p class="mt-2 text-body leading-prose text-ink-2 font-body">{emptyBody}</p>
             {venueLine && <p class="mt-2 text-body leading-prose text-ink-2 font-body">{venueLine}</p>}
-            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {builtOn()}; no calendar source is wired to it yet.</p>
+            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {builtOn()}{copied ? `, and the club’s calendar was last read ${copied}.` : '; no calendar source is wired to it yet.'}</p>
           </div>
-          <!-- One boundary (operator ruling, 2026-11-03): the ring is the notice's edge and the only edge in
-               it, so the paths out sit BELOW the box rather than inside it. `role="status"` is what makes that
-               block measurable — `check:render` then holds it to the notice grammar (no fill, 1px ring at the
-               ratified contrast, 48px+) and fails any filled or ringed action that ever moves back inside.
-               Before this change the primary button sat inside the ring: one box, two edges. -->
-          <div class="mt-4">
-            <a
-              href={`${config.URLs.meetupGroup}/join`}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-control="primary"
-              class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
-            >
-              Join on Meetup
-            </a>
-          </div>
+          {/* The primary button belongs to the band, and the compact band has one below with the chat path
+              beside it. Printing it in the notice too would put two `data-control="primary"` controls in one
+              section — the gate measures each at 48px, but a band with two primaries has no primary. */}
+          {!compact && (
+            <div class="mt-4">
+              <a
+                href={`${config.URLs.meetupGroup}/join`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-control="primary"
+                class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+              >
+                Join on Meetup
+              </a>
+            </div>
+          )}
           <p class="mt-3 text-body leading-prose text-ink-2 font-body">
             Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Ask in the chat</a> —
             someone from the club reads it.
           </p>
         </div>
       )}
+
+      {compact && next && (
+        /* A one-item list, which is the whole point of the compact width: one date, not a short list. The
+           `<ul data-art-cap="323">` handle is carried over from the full width deliberately. It is the handle
+           `design/render-gate-selftest.mjs` (its "ring on a tint" planting) and
+           `design/grill/rhythm-variants.mjs` select the schedule band by, and it is true here: the art inside
+           this card is PS-4, capped at the same 323px. If this band's markup moves again, those two probes get
+           re-anchored in the same commit (D173).
+
+           The preview card itself: its one edge is the ratified inset ring (D220's `edges`), so the date leaf inside
+           it is a FILL (`bg-tint`) and not a second box: a keylined leaf inside a keylined card is two
+           boundaries in one component, and `check:render` measures both sides of every ring and fails a
+           keyline that straddles two grounds (D149-3c). `tint` is a fill that carries `ink` at 10.96, so the
+           leaf gets its own block without getting an edge.
+           The leaf is `aria-hidden` because the same date is spelled out in prose beside it — a screen reader
+           hears it once. Its three lines come from `dateParts`, which parses the ISO date the same UTC way
+           `formatDate` does; a leaf built by a second parser is a second chance to print yesterday's date.
+           The three children of this flex row are the leaf, the copy and PS-4, and `flex` is load-bearing
+           rather than cosmetic: `check:space` records a `data-slot` box only for the child of a flex or grid
+           container (measured 2026-11-03 for PS-5, same mechanism). */
+        <ul class="space-y-4" data-art-cap="323">
+          <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6" data-surface="preview">
+          <EventLeaf date={next.date} />
+          <div data-copy class="min-w-0 flex-1">
+            {filled(next.title) && <h3 class="text-lede font-bold text-ink font-body">{next.title}</h3>}
+            {/* The date twice on purpose: the leaf is the shape, this line is the sentence a reader scans and
+                an assistive tech reads once. `formatDate` in wide style, then the hour the organizer set. */}
+            {/* The class list on this span is exactly `text-label text-ink-3` and nothing more, because the
+                selftest's "leaked // comment in a card" planting anchors on that attribute pair: D173's rule is
+                that a planting gets re-anchored when markup moves, never deleted, and an anchor is only an
+                anchor if the component keeps writing it. A handle is part of the interface. */}
+            <p class="mt-1 tabular-nums"><span class="text-label text-ink-3">{formatDate(next.date, 'wide')} · {timeSpan(next)}</span></p>
+            {filled(next.venue) && (
+              <p class="mt-2 text-body leading-prose text-ink-2 font-body">{next.venue}</p>
+            )}
+            {/* D218: the dated line sits inside the band, under the date it answers for, because "is this
+                current?" is asked at the date and answered nowhere else on the page. The stamp is the feed's
+                own (`copiedOn`), not the build's, so it matches the DTSTAMP of every row in /events.ics. */}
+            {copied && (
+              <p class="mt-2 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar on {copied}</span></p>
+            )}
+          </div>
+            <EventArt slug={next.slug} />
+          </li>
+        </ul>
+      )}
+
+      {/* The deck showing through under the card, and the two ways out of the preview.
+
+          `peeks` hairlines, each one the ratified 1px inset `--color-rule` ring (D220's `edges`), inset one
+          step further than the one above it, so the stack reads as "more of these" and the card stays the top
+          of it. 8px below the card and 4px apart: at 4px the card's own bottom ring and the first hairline
+          read as one double line (measured 2026-11-07 at 1240: card bottom 2344, hairline 2348), and at 8px
+          they read as two objects. They are rings and not fills because a fill cannot say this: `panel` and `tint` measure
+          1.04-1.10 against `paper` (DESIGN.md's colour round: "a tint is never doing the separation the ring
+          does"), and a painted `border`/`outline` hairline is precisely what `check:render`'s keyline rule
+          exists to fail. On the page's own ground the ring measures 3.01 on both sides (design/records/0018),
+          so it clears the 3.0 graphic bar with ONE ground, which is what D149-3c requires.
+
+          `aria-hidden`, because the fact belongs to the link: a screen reader hears "All 3 dates", and the
+          stack is that fact drawn for the eye. No `role`, so the notice grammar (D136) is not in play. */}
+      {compact && peeks > 0 && (
+        <div aria-hidden="true" class="mt-2 space-y-1">
+          {Array.from({ length: peeks }, (_, i) => (
+            <div class={`h-1 rounded-b-card inset-shadow-rule ${i === 0 ? 'mx-4' : 'mx-8'}`} />
+          ))}
+        </div>
+      )}
+
+      {/* Two quiet links, not a paragraph. D139 keeps `data-control` for the band's one primary: a second 48px
+          control under the date would compete with the date itself, which is the loudest thing in the band by
+          design. `decoration-rule` keeps the underline at the hairline token rather than at the text colour,
+          so it reads as the same weight as the deck above it. The count in the label is the number the deleted
+          sentence used to carry; `/events.ics` keeps its path (D218) without the Google/Apple/Outlook
+          sentence, which `/schedule` still says in full. */}
+      {compact && items.length > 0 && (
+        <div class="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+          {hidden > 0 && (
+            <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+              All {all.length} dates <span aria-hidden="true">→</span>
+            </a>
+          )}
+          <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+            Add to a calendar <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      )}
+
+      {!compact && items.length > 0 && (
+        <>
+          <ul class="space-y-4" data-art-cap="323">
+            {items.map((item) => <EventRow item={item} />)}
+          </ul>
+          {/* D218's dated line, once for the list rather than once per row: "is this current?" is asked of the
+              calendar, not of a row. The stamp is the feed's own `source.fetchedAt` (`copiedOn()`), which is
+              what every published `DTSTAMP` in `/events.ics` derives from \u2014 so the page and the file a
+              subscriber holds cannot disagree about when the club was last read. */}
+          {copied && (
+            <p class="mt-3 tabular-nums"><span class="text-label text-ink-3">Copied from the club\u2019s own calendar on {copied}</span></p>
+          )}
+        </>
+      )}
+
+      {/* The join band's mechanics, absorbed into this section on 2026-11-07 (D228). The tinted card is a
+          FILL, not a boundary, so the section still has one keylined box (the preview card) and the page has
+          one dark region (the footer). PS-3 stays named here for the same reason PS-4 stays named in the
+          rows: `check:space` ranks the reserved places by `data-slot`, and `npm run round13`/`round14`
+          refuse to run once the page stops naming its own photo places.
+          The two paths out stand BELOW the card, on the page's own ground, and that is a measurement rather
+          than a taste: the secondary is `bg-paper inset-shadow-rule`, so its ring has its own `paper` fill on
+          one side and whatever it stands on on the other; inside this card it would stand on `panel`, where
+          `--color-rule` measures 2.88 — under the 3.0 graphic bar (D149-3c, design/records/0018). */}
+      {compact && (
+        <>
+          <div class="mt-8 bg-panel rounded-card p-6 sm:p-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div>
+                <h3 class="text-subhead font-semibold text-ink">How it works</h3>
+                <div class="mt-3 space-y-3 text-body leading-prose text-ink-2 font-body">
+                  {venues && (
+                    <p>
+                      {venues}
+                      {venueCount ? ` The club has used ${venueCount} of them.` : ''} A date and its place go up
+                      on Meetup; the discussion keeps running between meetings in the chat.
+                    </p>
+                  )}
+                  <p>
+                    Nobody hands you homework and there is no level to clear. If you would rather hear what is
+                    being argued about before you go, the chat invite is below.
+                  </p>
+                  {membership && (
+                    <p>
+                      {membership} — counted {content.membership.asOf ? formatSince(content.membership.asOf) : 'today'},
+                      and that is the list, not the room.
+                    </p>
+                  )}
+                </div>
+              </div>
+              {/* PS-3, the join media column (round 10 ruling: reserve it now). Its box measured **532x56 at
+                  1240** (one paragraph) inside a grid row **326** tall, and **310x85 at 390**, **240x113 at
+                  320**, where the grid is one column. @measured 2026-11-03 by check:space — the paragraph that
+                  used to be inside this column moved into the copy beside it, so this box needs re-measuring
+                  before any round quotes it again.
+                  The join path stays whether or not the plate does: art may add to the join path here, never
+                  replace it (D149-1b, D94). */}
+              <div data-slot="PS-3">
+                <PhotoSlot
+                  slot="join"
+                  ratio="532 / 128"
+                  caption="the club mid-session, wide crop (532x128)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a
+              href={config.URLs.meetupGroup}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-control="primary"
+              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+            >
+              Join on Meetup
+              <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </a>
+            <a
+              href={config.URLs.discordInvite}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-control="secondary"
+              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+            >
+              Join the chat
+            </a>
+          </div>
+        </>
+      )}
+
+      {/* One path out, in prose rather than a second button (D139 prices an in-sentence path at its 24px
+          line). The link is the feed itself: a person pastes that URL into Google Calendar, Apple Calendar or
+          Outlook and the dates follow the club from then on. Deliberately not a `webcal://` shortcut — an
+          https link either opens a client or downloads a file a client opens, and a scheme that some browsers
+          refuse would be a promise this page cannot keep. */}
+      {!compact && items.length > 0 && (
+        <p class="mt-6 text-body leading-prose text-ink-2 font-body">
+          Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Add the club calendar</a> —
+          Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
+        </p>
+      )}
     </div>
   </div>
 </section>
-
-<style>
-  /* PS-4 is capped at its declared slot width — **323 CSS px**, the card interior round 13 measured — because
-     these rows are full-width strips, not cards. Measured on the first build of this change with no cap: the
-     954px art rendered **1132x546** at 1240, which is a 1.19x upscale of the file, one image painting 11.28%
-     of the page, and **+558px** of document. Capped, each plate keeps **its own** aspect ratio, uncropped per
-     D168: 323x155.8 for the 954x460 social art and 323x184.6 for the 1321x755 Parallel Learning art at 1240, and
-     256x123.4 / 256x146.3 at 320. @measured 2026-11-06 by check:space.
-     The width lives here rather than in a `w-[323px]` class because 323px is a measured slot, not a spacing
-     step, and `check:classes` is right to treat a one-off bracket value as a smell. */
-  .event-slot {
-    margin-top: 0.75rem;
-    width: 100%;
-    max-width: 323px;
-  }
-  .event-art {
-    display: block;
-    width: 100%;
-    height: auto;
-  }
-</style>

@@ -4,7 +4,6 @@ import HorizonBand from '../components/HorizonBand.astro';
 import Layout from '../layouts/Layout.astro';
 import Schedule from '../components/Schedule.astro';
 import WhyJoinUs from '../components/WhyJoinUs.astro';
-import JoinCommunity from '../components/JoinCommunity.astro';
 import Footer from '../components/Footer.astro';
 import { sections } from '../config.json';
 
@@ -20,7 +19,13 @@ export const prerender = true;
   <HeroSection />
   <WhyJoinUs />
   <HorizonBand />
-  {sections.showSchedule && <Schedule />}
-  <JoinCommunity />
+  {/* D227: the homepage carries the ONE next date, not the calendar, and `limit={1}` is the whole split —
+      the card's facts come from the same `upcoming()` the `/schedule` page's rows and `/events.ics` read, so
+      no two surfaces can drift apart. D228: this one call is also the landing page's join band ("Come once",
+      "How it works", the two paths out), which used to be a separate `JoinCommunity.astro` section below the
+      fold; it is the same band now, because a date and how you come to it are one question.
+      `sections.showSchedule` gates this band only: turning it off hides the homepage's date and the join
+      mechanics, and does not un-publish `/schedule`. */}
+  {sections.showSchedule && <Schedule variant="compact" limit={1} />}
   <Footer />
 </Layout>

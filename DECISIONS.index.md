@@ -239,5 +239,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D229** (2026-11-07) — "There is more" is drawn, not said: the deck of hairlines under the preview card (2026-11-07, Linux, `check:render` ring probe)
 - **D230** (2026-11-07) — A page the gates do not know about is a page nobody measured: route lists come off the artifact (2026-11-07, Linux, `design/emitted-routes.mjs`)
 - **D231** (2026-11-07) — One date is drawn one way on both schedule surfaces: leaf · copy · plate, and the row pass is what made the claim measurable (2026-11-07, Linux, Firefox 158.0.1, `node design/schedule-geometry.mjs` + `npm run check:space`)
+- **D232** (2026-11-07) — Currency is asked at the date, so the stamp sits under the date, and it is the feed's own stamp not the build's (2026-11-07, Linux, `check:ics` + `node design/schedule-geometry.mjs`)
+- **D233** (2026-11-07) — A gate retry under the same load is the same race: `check:render` now re-measures a failed cell alone, after the pool drains (2026-11-07, Linux, Firefox 158.0.1, `npm run verify:browser`)
+- **D234** (2026-11-07) — Two probes, one page, different numbers: a measured number names its probe *and* its viewport height (2026-11-07, Linux, Firefox 158.0.1, `check:space` vs `design/schedule-geometry.mjs`)
 
-Defined: 231 (D1-D231). Unused ids: none.
+Defined: 234 (D1-D234). Unused ids: none.

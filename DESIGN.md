@@ -380,6 +380,50 @@ freshness.
   `1240, 640, 390, 320` (D146): 320 is mandatory, and 640 is the `sm:` flip that lands inside the phone-landscape
   band. The gate prints which breakpoints `src/` uses and names any flip the set does not measure.
 
+## A date is one object: leaf · copy · plate (ruled 2026-11-07, D231)
+
+The schedule has **two surfaces and one shape**. The homepage prints one date — the next open one — inside the
+join band; `/schedule` prints every open date. Both draw it the same way, in this order:
+
+- **leaf** — month, day number, weekday, stacked, `bg-tint` **fill**, `EventLeaf.astro`. It is `aria-hidden`:
+  the same date is spelled out in prose beside it, and a screen reader should hear a date once.
+- **copy lane** — `min-w-0 flex-1`. `min-w-0` is load-bearing: without it a long venue string sets the lane's
+  minimum width and the plate is pushed out of the row instead of the text wrapping.
+- **plate** — the event's own art, right-aligned on `sm:` and up, capped at **323px** by the single
+  `.event-slot` rule in `EventArt.astro` (D173). One image per band, and never a placeholder beside real art
+  (D152/D154/D224).
+
+Rules that are not decoration:
+
+- **One boundary per component.** The row/card's one edge is the `inset-shadow-rule` inset ring; the leaf inside
+  it is a **fill**, never a second keyline. A keylined leaf inside a keylined row puts two boundaries in one
+  component, and `check:render` measures both sides of every ring and fails a keyline that straddles two grounds
+  (D149-3c).
+- **"There are more dates" is drawn, not said** (D229). Under the homepage card sit up to two 4px-tall inset-ring
+  hairlines, inset 16px and 32px, 8px below the card and 4px apart. No gradient fade, no "see more" button, no
+  carousel. The count stays in the **link text** (`All 3 dates →`), which is where assistive tech reads it; the
+  deck itself is `aria-hidden`.
+- **The plate cap is one number, read from the drawing code.** `node design/schedule-geometry.mjs` parses the
+  323px out of `EventArt.astro`'s scoped style rather than remembering it, so a cap change cannot leave a probe
+  reporting a number nothing decides (same reasoning as the route lists in D230).
+- **The stamp under a date is the feed's stamp, not the build's** (D232). `copiedOn()` formats the snapshot's own
+  `source.fetchedAt`, which is what every published `DTSTAMP` in `/events.ics` derives from, so the page and a
+  subscriber's calendar client cannot name different days. `builtOn()` belongs to the empty state, where the
+  build date is the honest fact.
+- **Singular on the preview, plural on the page.** The compact band says "the next date"; `/schedule` says "these
+  dates". An hour the organizer has not settled prints **"time not set"** (`timeSpan`, D169/D172) — never a
+  guessed one.
+
+Measured, at one viewport on both surfaces @measured 2026-11-07 by `node design/schedule-geometry.mjs`: at 1240
+the homepage card and a schedule row are both **1164x188**, with a **112x96** leaf, a **633x152** copy lane and a
+**323x156** plate whose right edge sits 24px inside the keyline; at 390 they are 346x516 and 346x492 with the same
+**112x96** leaf and a plate capped to the column (**314x151**). Page-level cost of putting the list on its own
+page @measured 2026-11-07 by `npm run check:space`: homepage **4221 → 3180px at 1240**, **5707 → 4725 at 390**,
+**6463 → 5297 at 320**, and `/schedule` **1329px at 1240** with two empty runs totalling 211px (15.9% of the page).
+Those page numbers come from a two-pass survey (it re-opens the page in a viewport as tall as the document, so
+there is no scrollbar and a capped plate lands on the cap); a single-pass probe of the same build reports a taller
+page and a narrower plate, and that is a viewport difference, not a regression — see D234 before comparing them.
+
 ## Copy
 
 State the fact, name where it came from, give a path out, carry the date. **Never** state a frequency

@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Schedule from '../components/Schedule.astro';
+import Footer from '../components/Footer.astro';
+
+/**
+ * The schedule page — the page of record for the club's dates (D227).
+ *
+ * Why a page at all: the homepage used to print up to four rows, and `/events.ics` was the only other place
+ * dates existed. That left the one question a newcomer actually has — "what else is coming?" — with one
+ * answer: paste a URL into a calendar client. This page answers it in the browser, and it is what the
+ * homepage's next-date card and the nav's `Schedule` label both point at.
+ *
+ * Why it is a page and not a homepage anchor: D117 is the rule that killed `Schedule` and `Members` from the
+ * nav, because they targeted paths the build did not emit and rendered the 404. A nav label is a promise
+ * about a path, so the path has to be a file. `prerender` makes that true in the most boring way —
+ * `dist/client/schedule/index.html` — which is also what makes `scripts/check-content.mjs`'s dead-path rule
+ * recognise `/schedule` as an emitted route (it reads routes off the build artifact rather than remembering
+ * them), what puts it in the sitemap (`@astrojs/sitemap`), and what keeps it off Worker CPU.
+ *
+ * It renders `<Schedule />` with no `variant` and no `limit`: the full width, every open date in the
+ * snapshot, no cap. The rows come from `upcoming()` -> `data/events.json` — the same source the homepage
+ * card and `/events.ics` read, so no two surfaces can disagree about a date (D223).
+ */
+export const prerender = true;
+---
+
+<Layout title="Schedule - Minneapolis Math Book Club" path="/schedule">
+  <main>
+    <Schedule />
+  </main>
+  <Footer />
+</Layout>
