@@ -9,10 +9,17 @@
 // --breakpoint-nav-narrow's retirement in src/styles/global.css and D117: with this label set the wide
 // tier fits everywhere, so a second tier bought nothing.
 //
-// Headroom, because the schedule page is coming: "Schedule" measured 57.6px at this tier, so adding it
+// Headroom, measured before the schedule page existed: "Schedule" is 57.6px at this tier, so adding it
 // back puts the row at 245 (171 + a 16px gap + 57.6) — inside 276. A third link would not fit at the
 // floor. So the row carries ONE more real path, not two, and the probe says so the moment it does not.
-const navItems = [{ href: '/chat', label: 'Chat' }];
+// 2026-11-07: that one path is spent on `Schedule`, because `src/pages/schedule.astro` now emits
+// `dist/client/schedule/index.html` (D117's rule — a label needs a page behind it, and this is the page
+// the homepage's next-date card points at). `Members` stays out: there is still no members page, and the
+// arithmetic says a third label would clip at the 320 floor anyway.
+const navItems = [
+  { href: '/schedule', label: 'Schedule' },
+  { href: '/chat', label: 'Chat' },
+];
 ---
 
 <header class="bg-paper">

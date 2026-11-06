@@ -10,9 +10,11 @@ import config from '../config.json';
 //
 // Why there is no button in here: the primary control is an `ink` FILL (DESIGN.md "Buttons"), and an
 // ink fill on the ink band is invisible. So paths on the band are named by hue instead — the
-// `--color-path-*-on-ink` steps exist for precisely this ("the same four paths on the dark band",
-// 4.74 meetup / 4.59 discord, asserted in the contrast oracle) — and the band gets exactly one dark
-// region, which is what `check:render` counts.
+// `--color-path-*-on-ink` steps exist for precisely this ("the same four paths on the dark band" — the four
+// are the outbound platform steps, calendar / Meetup / Discord / Mobilizon, and an internal link like
+// `/chat` or `/schedule` carries no hue at all, it is the band's own text colour; the hue is what marks a
+// path that leaves the site, 4.74 meetup / 4.59 discord, asserted in the contrast oracle) — and the band
+// gets exactly one dark region, which is what `check:render` counts.
 //
 // No "Home" link: the serif mark below is the home path, same as in the nav (D100, and the operator
 // confirmed the fourth nav link goes too).
@@ -30,6 +32,12 @@ const year = new Date().getFullYear();
       aria-label="Where to next"
       class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2"
     >
+      <a
+        href='/schedule'
+        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+      >
+        Schedule
+      </a>
       <a
         href='/chat'
         class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'

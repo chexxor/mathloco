@@ -2,9 +2,16 @@
 export interface Props {
   title?: string;
   noindex?: boolean;
+  /**
+   * This page's own path, e.g. `/schedule`. A page that does not name itself in `rel=canonical` is telling
+   * every crawler it is a copy of the homepage, which is exactly how a new page fails to get indexed;
+   * `chat.astro` and `schedule.astro` now pass theirs. Unset means the apex, which is the homepage.
+   */
+  path?: string;
 }
 
-const { title = seo.title, noindex = false } = Astro.props;
+const { title = seo.title, noindex = false, path = '' } = Astro.props;
+const canonical = seo.canonical.replace(/\/$/, '') + path;
 const robots = noindex ? 'noindex,nofollow' : 'index,follow';
 // The ratified serif pair, latin subset only (design/decisions.json typeFamily: 33,116 B + 29,588 B).
 // `import "@fontsource/pt-serif"` pulled every subset — the build was shipping cyrillic woff2 for a
@@ -23,11 +30,11 @@ import Navigation from '../components/Navigation.astro';
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="canonical" href={seo.canonical} />
+    <link rel="canonical" href={canonical} />
     <meta name="robots" content={robots} />
     <meta name="googlebot" content={robots} />
     <meta name="description" content={seo.description} />
-    <meta property="og:url" content={seo.canonical} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={seo.title} />
     <meta property="og:description" content={seo.description} />
     <meta property="og:type" content="website" />

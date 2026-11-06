@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // line-length.mjs — characters per line, measured on the built page at the shipped widths.
 //
-//   node design/line-length.mjs                     # '/', '/404', '/chat' at 1240, 390, 320 (builds first)
+//   node design/line-length.mjs                     # every route dist/client emits, at 1240, 390, 320 (builds first)
 //   node design/line-length.mjs / --no-build        # the dist that is already there
 //   node design/line-length.mjs / 375 360           # one route, its own widths
 //   RENDER_JOBS=1 node design/line-length.mjs       # serialize the firefox runs (default 4)
@@ -20,16 +20,20 @@ import { execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { distState, staleLine } from './dist-fresh.mjs';
+import { emittedRoutes } from './emitted-routes.mjs';
 
 const argv = process.argv.slice(2);
 const NO_BUILD = argv.includes('--no-build');
 const pos = argv.filter((a) => !a.startsWith('--'));
 const routesArg = pos.filter((a) => a.startsWith('/'));
-const routes = routesArg.length ? routesArg : ['/', '/404', '/chat'];
 const widthsArg = pos.filter((a) => /^\d+$/.test(a)).map(Number);
 const widths = widthsArg.length ? widthsArg : (process.env.RENDER_WIDTHS || '1240,390,320').split(',').map(Number);
 const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 4));
 const dist = resolve('dist/client');
+// Every route the build emits, read off the artifact (see design/emitted-routes.mjs): a diagnostic that
+// only ever looks at the homepage cannot tell you whether the type ramp works on a page nobody added yet.
+// Assigned after the build step below, so a page this commit adds is in the list.
+let routes;
 if (!existsSync(dist)) { console.error('dist/client missing — run npm run build first (or drop --no-build)'); process.exit(2); }
 if (!NO_BUILD) {
   const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm';
@@ -41,6 +45,10 @@ if (!NO_BUILD) {
   if (!STALE.fresh && !STALE.allowed) { console.error(`lines:measure: ${staleLine(STALE)}`); process.exit(1); }
 }
 mkdirSync('.design/render', { recursive: true });
+
+routes = routesArg.length ? routesArg : emittedRoutes(dist);
+if (!routes.length) { console.error(`no .html under ${dist} — the build emitted nothing to measure`); process.exit(2); }
+console.log(`routes ${routes.join(' ')}`);
 
 const run = (route, width) => new Promise((done) => {
   const height = width === 390 ? 844 : 1400;

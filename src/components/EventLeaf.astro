@@ -1,0 +1,47 @@
+---
+/**
+ * The date leaf: month, day, weekday, stacked — a calendar page torn off and stood up on its end.
+ *
+ * It is a component because the schedule has two surfaces (D227) and a leaf written out twice is a date
+ * printed twice. That is the same reason the rows themselves moved into `EventRow.astro` and the dates into
+ * `data/events.json`: two copies of how a date looks is two chances to print different ones. The homepage's
+ * preview card and every row on `/schedule` call this.
+ *
+ * Why each line is there:
+ *   - `aria-hidden` — the same date is spelled out in prose beside the leaf (`formatDate(date, 'wide')`), so
+ *     a screen reader hears it once, as a sentence. A leaf that is read out is a date read twice.
+ *   - `bg-tint` is a **fill, not a boundary** (D149-3c: one edge per component). The card and the row each
+ *     carry the section's only keyline for that date; a keylined leaf inside a keylined card is two
+ *     boundaries in one object, and `check:render` measures both sides of every ring — a `--color-rule` ring
+ *     inside a `tint` reads 2.74, under the 3.0 graphic bar (design/records/0018). So the leaf gets its block
+ *     by colour and the card gets it by hairline.
+ *   - `tabular-nums` on the numeral, so "7" and "21" hold the same width and a column of leaves lines up.
+ *   - Three lines, not one: the month names the block, the numeral is what you scan for, the weekday is the
+ *     fact that decides whether you can come at all. The club's dates are weekday-specific (a Saturday
+ *     social, a Tuesday learning night), so the weekday is not decoration.
+ *
+ * The three values come from `dateParts`, which parses the ISO date the same UTC way `formatDate` does — a
+ * leaf built by a second parser is a second chance to print yesterday's date in a build that runs in UTC.
+ *
+ * `data-leaf` is a probe handle, not styling: `design/schedule-geometry.mjs` measures the leaf inside a row so
+ * "the same design on both surfaces" is a number and not a vibe. A handle is only a handle if the markup keeps
+ * writing it (D173).
+ */
+import { dateParts } from '../lib/content.ts';
+
+type Props = {
+  /** An ISO calendar date from `data/events.json` (`YYYY-MM-DD`), never an instant. */
+  date: string;
+  /** Leaf width. Kept as one class token so `check:classes` sees a literal. */
+  widthClass?: string;
+};
+
+const { date, widthClass = 'w-28' } = Astro.props;
+const parts = dateParts(date);
+---
+
+<div aria-hidden="true" data-leaf class={`bg-tint rounded-control ${widthClass} self-start sm:self-auto flex-shrink-0 px-4 py-3 text-center`}>
+  <p class="text-label font-semibold uppercase tracking-wide text-ink-2">{parts.month}</p>
+  <p class="text-heading font-extrabold tabular-nums text-ink">{parts.day}</p>
+  <p class="text-label text-ink-3">{parts.weekday}</p>
+</div>

@@ -1,0 +1,69 @@
+---
+/**
+ * PS-4 — a row's own event art, in the one place that wiring lives.
+ *
+ * Extracted from `Schedule.astro`/`EventRow.astro` on 2026-11-07, the day the schedule grew a second
+ * surface: the homepage's preview card and the `/schedule` page's rows both need the club's poster for a
+ * row, and the 323px cap, the declared ratio, the filename lookup and the `data-slot` handle are four
+ * claims that must be identical on both. Two copies of that block is how the two surfaces end up
+ * disagreeing about the same picture.
+ *
+ * Renders NOTHING when the row has no entry in `artFor` (src/lib/event-art.ts). That is a designed
+ * absence, not a hole: DESIGN.md's states rule bars a "photo coming" box on the page, and the hatched
+ * placeholder belongs in review rounds (`npm run round10`), not in front of a visitor.
+ *
+ * `data-slot="PS-4"` is a probe handle, and this wrapper is only measured when its parent is a grid or
+ * flex container — `design/whitespace-survey.mjs` records a slot box for a child of one, so a call site
+ * that drops the flex loses PS-4 from every design round that reads it (measured 2026-11-03 for PS-5,
+ * same mechanism). Both call sites are flex for that reason.
+ */
+import { artFor } from '../lib/event-art.ts';
+import PhotoSlot from './PhotoSlot.astro';
+
+type Props = {
+  /** The row's slug; the file is `src/assets/photos/event-<slug>.<ext>` (D190's filename rule). */
+  slug: string | null | undefined;
+  /** Extra classes for the <img> — the cap and the ratio stay here, not at the call site. */
+  class?: string;
+  /**
+   * Spacing on the wrapper, and only spacing. The 323px cap is a measured slot and lives here; the air above
+   * the slot is the call site's, because the two call sites sit in different flex directions: a stacked row
+   * needs `mt-3`, a flex-row card already has its `gap`.
+   */
+  wrapClass?: string;
+};
+
+const { slug, class: extra, wrapClass } = Astro.props;
+const art = artFor(slug);
+---
+
+{art && (
+  <div data-slot="PS-4" class={`event-slot ${wrapClass ?? ''}`}>
+    <PhotoSlot
+      slot={`event-${slug}`}
+      ratio={art.ratio}
+      alt={art.alt}
+      class={`rounded-control event-art ${extra ?? ''}`}
+    />
+  </div>
+)}
+
+<style>
+  /* PS-4 is capped at its declared slot width — **323 CSS px**, the card interior round 13 measured — because
+     these rows are full-width strips, not cards. Measured on the first build of this change with no cap: the
+     954px art rendered **1132x546** at 1240, which is a 1.19x upscale of the file, one image painting 11.28%
+     of the page, and **+558px** of document. Capped, each plate keeps **its own** aspect ratio, uncropped per
+     D168: 323x155.8 for the 954x460 social art and 323x184.6 for the 1321x755 Parallel Learning art at 1240, and
+     256x123.4 / 256x146.3 at 320. @measured 2026-11-06 by check:space.
+     The width lives here rather than in a `w-[323px]` class because 323px is a measured slot, not a spacing
+     step, and `check:classes` is right to treat a one-off bracket value as a smell. */
+  .event-slot {
+    width: 100%;
+    max-width: 323px;
+  }
+  .event-art {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+</style>
