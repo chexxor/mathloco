@@ -71,6 +71,9 @@ const DEPLOY = [
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
+  // Runs before `build` on purpose: its fixture tree is its own, so a defect in this class is caught on a branch
+  // nobody has built yet, and the artifact half of it is the reason it still belongs in this set.
+  { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (25 fixtures: 13 plantings, 11 clean forms, 1 severity case)' },
   { name: 'check:cache', desc: 'summary-cache rules against a fake KV namespace' },
   // The n8n integration builds an importable artifact from sources in this repo, and its rules are the same
   // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
@@ -82,6 +85,11 @@ const DEPLOY = [
   { name: 'check:deploy', desc: 'the built artifact is deployable on the apex', needs: ['build'] },
   { name: 'check:content', desc: 'no placeholder, no unsourced claim, no fabricated number ships', needs: ['build'] },
   { name: 'check:content:selftest', desc: 'the content gate can still fail', needs: ['build'] },
+  // What shipped on /schedule: `club\u2019s` painted literally, at every width, through a green `verify`.
+  // This reads the bytes a reader sees (page text, `<meta>`, and the attributes a screen reader speaks) plus
+  // the rendered-text context of every `.astro`/`.svelte` source, because the same bytes are correct inside a
+  // string literal. `dist/client/events.ics` is out of scope by design - RFC 5545 escapes with backslashes.
+  { name: 'check:escapes', desc: 'no escape sequence reaches a reader: built text and meta, and template text at the source', needs: ['build'] },
 ];
 
 // The browser ritual (D123): everything a human used to type by hand, in one command, over the dist that

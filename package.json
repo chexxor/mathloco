@@ -21,6 +21,8 @@
     "check:sanitize": "tsx scripts/check-sanitize.ts",
     "check:content": "node scripts/check-content.mjs",
     "check:content:selftest": "node scripts/check-content.mjs --selftest",
+    "check:escapes": "node scripts/check-escapes.mjs",
+    "check:escapes:selftest": "node scripts/check-escapes.mjs --selftest",
     "events:harvest": "node scripts/events-harvest.mjs",
     "check:ics": "node scripts/check-ics.mjs",
     "check:ics:selftest": "node scripts/check-ics.mjs --selftest",

@@ -242,5 +242,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D232** (2026-11-07) — Currency is asked at the date, so the stamp sits under the date, and it is the feed's own stamp not the build's (2026-11-07, Linux, `check:ics` + `node design/schedule-geometry.mjs`)
 - **D233** (2026-11-07) — A gate retry under the same load is the same race: `check:render` now re-measures a failed cell alone, after the pool drains (2026-11-07, Linux, Firefox 158.0.1, `npm run verify:browser`)
 - **D234** (2026-11-07) — Two probes, one page, different numbers: a measured number names its probe *and* its viewport height (2026-11-07, Linux, Firefox 158.0.1, `check:space` vs `design/schedule-geometry.mjs`)
+- **D235** (2026-11-07) — A literal escape sequence reached a reader on /schedule; the gate reads rendered text, because the same bytes are correct in a string literal (2026-11-07, Linux/Fedora 45, `scripts/check-escapes.mjs` + `git show HEAD:src/components/Schedule.astro`)
 
-Defined: 234 (D1-D234). Unused ids: none.
+Defined: 235 (D1-D235). Unused ids: none.
