@@ -96,7 +96,12 @@ const { item } = Astro.props;
         rel="noopener noreferrer"
         class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
       >
-        Details and sign-up <span aria-hidden="true">→</span>
+        Details and sign-up{' '}
+        {/* The visible label stays short (the band's lede says the sign-up is on Meetup), but a link read out
+            of context — a screen reader's link list — has to say where it goes and that it leaves the site.
+            The suffix is for the accessible name only, so it is not painted and not measured. */}
+        <span class="sr-only"> on Meetup, opens in a new tab</span>
+        <span aria-hidden="true">→</span>
       </a>
     </p>
   </div>
