@@ -143,10 +143,18 @@ const RULES = [
       if (!u) out.push({ rule: 'uid-shape', detail: 'a row has no UID' });
       // Two shapes a build clock actually produces: a bare 14-digit stamp (`20261105002000`) and the ICS form with
       // a `T` and a `Z` (`20261105T002000Z`). The digit-run test alone missed the second, which is exactly the form a
-      // harvester copying `DTSTAMP` into `uid` would write — found on 2026-11-05 when a *planting* of that shape
+      // harvester copying `DTSTAMP` into `uid` would write - found on 2026-11-05 when a *planting* of that shape
       // passed the gate. A selftest that plants a defect the rule cannot see is a rule that is not gated.
+      //
+      // The third shape is the ISO one (`2026-11-06T05:00:28Z`), and it found me on 2026-11-06: hand-writing the
+      // cancelled row's `source.dtstamp` in the JSON form rather than the verbatim ICS form made the
+      // `time-derived-UID` planting invisible, because punctuation splits every digit run the rule looks for. A
+      // timestamp with dashes and colons is just as time-derived once it is glued into a UID, so the test runs on the
+      // punctuation-stripped string too. The four shipped UUIDv4s stripped of `[-:]` hold runs of at most 6 digits
+      // (longest: `198943`, `213498`), so this does not flag a real UUID - and the selftest now plants both shapes.
       const TIME_SHAPE = /\d{14}|\d{8}T\d{6}Z?/;
-      if (TIME_SHAPE.test(u)) out.push({ rule: 'uid-shape', detail: `UID ${u} looks time-derived — every redeploy would duplicate it` });
+      if (TIME_SHAPE.test(u) || TIME_SHAPE.test(u.replace(/[-:]/g, '')))
+        out.push({ rule: 'uid-shape', detail: `UID ${u} looks time-derived — every redeploy would duplicate it` });
       if (u.includes(BUILD_DATE)) out.push({ rule: 'uid-shape', detail: 'a UID contains this build date' });
       if (u && !unfold(text).includes(`UID:${u}`)) out.push({ rule: 'uid-shape', detail: `UID ${u} is absent from the published feed` });
     }
@@ -460,6 +468,10 @@ if (selftest) {
     { name: 'no-SUMMARY', data: (d) => { delete d.events[0].summary; return d; }, rule: 'sourced-rows' },
     { name: 'duplicate-UID', data: (d) => { d.events[1].uid = d.events[0].uid; return d; }, rule: 'uid-shape' },
     { name: 'time-derived-UID', data: (d) => { d.events[0].uid = `${d.events[0].source.dtstamp}-${d.events[0].uid}`; return d; }, rule: 'uid-shape' },
+    // The same defect written in the JSON clock's punctuation instead of ICS punctuation. Two plantings for the two
+    // punctuation shapes, because the rule now tests both, and a rule branch with no planting is an ungated branch -
+    // which is how the compact one came to be missed on 2026-11-05 and the ISO one on 2026-11-06.
+    { name: 'iso-time-derived-UID', data: (d) => { d.events[0].uid = `${d.source.fetchedAt}-${d.events[0].uid}`; return d; }, rule: 'uid-shape' },
     // The other half of the same rule: a UID carrying the build date with no time part. Two plantings, because one
     // defect shape per branch is the only way a rule that has two branches is actually gated.
     { name: 'uid-contains-the-build-date', data: (d) => { d.events[0].uid = `${BUILD_DATE}-${d.events[0].uid}`; return d; }, rule: 'uid-shape' },

@@ -9,15 +9,50 @@
   "source": {
     "kind": "mobilizon",
     "url": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
-    "software": "Mobilizon 5.2.4",
-    "fetchedAt": "2026-11-04T07:15:30Z",
+    "software": "-//Elixir ICalendar//Mobilizon 5.2.4//EN",
+    "fetchedAt": "2026-11-06T05:46:03Z",
     "_fetchedAt": "The stamp every VEVENT's DTSTAMP derives from (RFC 5545 3.8.7: the moment the information was put in the calendar object). Deliberately a committed value, not `new Date()`: a build-time DTSTAMP would make every deploy a change to every subscriber's calendar, and would make D72's byte-identity assertion unmeasurable.",
-    "_rule": "Read as served 2026-11-04 (curl, 200, `text/calendar`, 2578 bytes, 2 VEVENTs, no RRULE, no TZID, no VTIMEZONE, LF-only lines, longest content line 721 chars). Mobilizon 5.2.4's exporter writes wall-clock numbers wearing a `Z` and no zone (D169, and the same finding in `.notes/roadmap-events.md` after the operator set the instance timezone to Chicago) — so the harvest treats them as candidates, never as instants, until the organizer states the wall clock. The instance's own past rows sit at 17:00Z (12:00 CDT), which is consistent with a *correct* conversion, so the exporter cannot be assumed to behave one way for every row."
+    "_rule": "Read as served 2026-11-06 05:46Z (curl, 200, `text/calendar; charset=utf-8`, 4,184 octets, 3 VEVENTs, no RRULE, no VTIMEZONE, LF-only line endings, longest unfolded content line 721 chars, PRODID `-//Elixir ICalendar//Mobilizon 5.2.4//EN`). Every DTSTART/DTEND now carries `TZID=America/Chicago` (6 occurrences) - the shape changed under us: the 2026-11-04 read of the same feed was 2,578 octets with 2 VEVENTs, bare `Z` on every instant and no zone at all, which is what D169 ruled on. Two reads 90 seconds apart were byte-identical, so the 05:44:52Z edit is settled; the shape is still a thing to re-measure rather than remember (D222, D225).",
+    "_churn": "This feed across three reads on two days, each one measured at the time it is quoted: read 2026-11-04T07:15:30Z (the previous `source.fetchedAt`) - 2,578 octets, 2 VEVENTs, no TZID. Read 2026-11-06, rows upstream-stamped 04:12:55Z - 2,818 octets, 2 VEVENTs, TZID on every instant, the Nov 7 social gone, a Nov 21 social present. Read 2026-11-06 ~05:44Z, rows upstream-stamped 05:44:52Z - 4,184 octets, 3 VEVENTs, the Nov 7 social back under a new UID with a one-hour-shorter end; that read was confirmed by a second fetch 90s later, byte-identical. Two shapes in under two hours on the second day: the organizer was editing. Consequence for anyone who subscribes: every harvest moves `source.fetchedAt`, and `check:ics`'s dtstamp rule requires every published DTSTAMP to equal it, so each harvest reads to every subscriber's client as an edit to every row. Harvesting on a cadence is therefore a product decision, not an operational one (D225)."
   },
   "events": [
     {
-      "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
+      "uid": "76a29f38-e8f3-46a3-ab36-3009d69afe65",
       "slug": "2026-11-07-club-social",
+      "summary": "MPLS Math Club - Bimonthly Social",
+      "_summary": "Verbatim from the organizer's calendar (SUMMARY). Published verbatim in the FEED only, where it is a quotation rather than the club's claim (D189); asUpcomingItems() prints `series`, not `summary`.",
+      "series": "MPLS Math Club Social",
+      "_series": "The name the page prints, minus the frequency word D92 keeps off a page (ruling 9(a), 2026-11-04, D189). `asUpcomingItems()` prints `series`, not `summary`. The harvester copies SUMMARY into `series` for every new row, so this is re-asserted by hand on every harvest - parked in D223 with its trigger.",
+      "start": "2026-11-07T12:00",
+      "end": "2026-11-07T13:00",
+      "timeConfirmed": true,
+      "_times": "Confirmed, and this time the zone is on the wire: `DTSTART;TZID=America/Chicago:20261107T120000` / `DTEND;TZID=America/Chicago:20261107T130000` (rawStart/rawEnd beside this note). That is the opposite shape from the 2026-11-04 read of the same meeting, where Mobilizon 5.2.4 wrote `20261107T120000Z` with no TZID and no VTIMEZONE and the `Z` was therefore not believed (D169). Two things confirm the wall clock now: the instance states the zone on the line, and the 12:00 start is the hour the organizer gave on 2026-11-04 (`.notes/roadmap-events.md`). The END is not copied from anywhere: 13:00 is this row's own wire value, one hour shorter than the 14:00 end on the UID it re-issues. That difference is recorded, not harmonized - a shorter social is the organizer's decision, and inventing a matching end would be inventing a fact (D225).",
+      "venue": {
+        "name": "Angel Food Bakery",
+        "street": "8100 Minnetonka Boulevard",
+        "city": "Saint Louis Park, Minnesota",
+        "raw": "Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States"
+      },
+      "geo": "44.9498412;-93.3824443",
+      "blurb": "We are interested in discussing algorithms of most any kind. If you have an algorithm or related topic you want to discuss, come and hang out with us!\n\nThe topics we have discussed: artificial intelligence, automata, category theory, and math & computer science olympiad exercises.\n\nIdeally, attendees would post a comment before the date of the event with a topic they can discuss. Potential attendees might want to know what people at this event are interested in, and they want to see that the event is alive and well.\n\nIf no topics are posted, then we can generate topics to discuss at the next meetup.\n\nDiscord server for the group, if you're interested: https://discord.gg/wx5S7YJSkU",
+      "url": "https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65",
+      "_reissues": "This row re-issues UID 649bf59a (slug `2026-11-07-club-social-cancelled`), which the feed dropped between the 2026-11-04 and 2026-11-06 reads. Evidence, all of it from the feed: same SUMMARY, same LOCATION, same GEO, same ATTACH hash, same date, and both reads taken 45 minutes apart with every surviving row stamped DTSTAMP 20261106T054452Z. What changed is the END - 14:00 to 13:00. Mobilizon mints a fresh UID for a date/time edit rather than raising the old row's SEQUENCE, so the old UID's retirement is not in the source anywhere and has to be published by us (D223, D225).",
+      "image": "https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png",
+      "_image": "The organizer's own event art, byte-identical to the Nov 21 row's (sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c, 954x460 PNG, 127,098 bytes - re-fetched and hashed 2026-11-06; the hash is also the URL's path segment, so the URL verifies itself). Mirrored per D190 at src/assets/photos/event-2026-11-07-club-social.png. Two rows on one page now show the same poster; the build hashes both PNGs to one asset URL, so the browser downloads it once and only the repo pays the duplicate bytes. Whether both should be *shown* is an open question to the operator (D225). The alt states only the role of the file, because nobody in this session has seen the frame (D170).",
+      "sequence": 0,
+      "status": "CONFIRMED",
+      "source": {
+        "feed": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
+        "uid": "76a29f38-e8f3-46a3-ab36-3009d69afe65",
+        "fetchedAt": "2026-11-06T05:46:03Z",
+        "dtstamp": "20261106T054452Z",
+        "rawStart": "20261107T120000",
+        "rawEnd": "20261107T130000"
+      }
+    },
+    {
+      "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
+      "slug": "2026-11-07-club-social-cancelled",
       "summary": "MPLS Math Club - Bimonthly Social",
       "_summary": "Verbatim from the organizer's calendar (`SUMMARY`). It is published verbatim in the FEED only, where it is a quotation rather than the club's claim (D189). The word \"Bimonthly\" is D92's defect class on a page, so it never reaches one: `asUpcomingItems()` prints `series`, not `summary`.",
       "series": "MPLS Math Club Social",
@@ -37,15 +72,20 @@
       "_blurb": "Verbatim `DESCRIPTION` as served by the feed (the feed escapes `\\,` and `\\n`; unescaped here, and `ics.mjs` re-escapes on the way out).",
       "url": "https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1",
       "image": "https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png",
-      "_image": "The organizer's own event art, 954x460 PNG, 127,098 bytes as fetched 2026-11-04 (curl 200, `image/png`). Operator ruling 10(a) 2026-11-04 (D190): it is MIRRORED, not linked, at `src/assets/photos/event-2026-11-07-club-social.png` — the only image on the site whose bytes are not ours, and a link to another host is the one image that can 404 on a visitor. Provenance and the rights line live in `src/assets/photos/README.md`; the alt states only the role of the file, because the delegate cannot see the frame (the session's model takes no images) and D170 forbids an alt inferred from a picture nobody read. The organizer's own sentence for it is asked for in `.notes/NEXT.md`.",
-      "sequence": 0,
-      "status": "CONFIRMED",
+      "_image": "The organizer's own event art, 954x460 PNG, 127,098 bytes. Mirrored (D190 ruling 10(a), 2026-11-04), and since 2026-11-06 the file is named for the row that now carries it: src/assets/photos/event-2026-11-21-club-social.png - the same bytes, because the Nov 21 row's ATTACH is byte-identical (fetched and hashed 2026-11-06: sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c). That hash is also the path segment Mobilizon serves the media under, so the URL in `image` verifies itself: the file this row points at has the bytes the URL names (D223). Provenance and the rights line live in src/assets/photos/README.md; the alt states only the role of the file, because the delegate cannot see the frame (D170).",
+      "sequence": 1,
+      "status": "CANCELLED",
+      "_status": "Cancelled on the 2026-11-06 harvest by the hand that read the feed, not by a sentence from the organizer, and the reason is now observed rather than inferred. What the feed said: read on 2026-11-06 (2,818 octets, rows stamped 04:12:55Z) this UID was absent and a Nov 21 row was present; read again the same morning (4,184 octets, rows stamped 05:44:52Z) it was still absent, and a new UID 76a29f38 had appeared for Nov 7 12:00-13:00 with the same SUMMARY, the same LOCATION string, the same GEO pair and the same art hash (feed 4,184 octets, 3 VEVENTs, every row stamped DTSTAMP 20261106T054452Z). So the organizer edited the meeting, and Mobilizon's edit mints a new UID instead of raising this row's SEQUENCE - which is why a date change arrives here as one vanished row plus one new row, and why the cancellation is ours to author: the source never announces it (D225). RFC 5545 makes UID+SEQUENCE the only way a subscriber's client learns its copy is stale, so the row keeps its UID and its SEQUENCE moves 0 -> 1 (D72). What is NOT claimed: that the organizer used the word cancelled, and that the Nov 21 row replaced this one - it did not, the two sit on the calendar at once 14 days apart (D175's spacing), so Nov 21 is an additional social.",
       "source": {
         "feed": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
         "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
-        "fetchedAt": "2026-11-04T07:15:30Z",
-        "dtstamp": "20261104T062524Z"
-      }
+        "fetchedAt": "2026-11-06T05:46:03Z",
+        "dtstamp": "20261106T054603Z",
+        "_fetchedAt": "Left at the 2026-11-06 harvest stamp even though the row is not in that feed: the harvest is also the read that established its absence, and the gate requires one stamp per snapshot so a cancelled row cannot smuggle a stale DTSTAMP into every subscriber."
+      },
+      "_dtstamp": "Its DTSTAMP moved with the cancellation (2026-11-06T05:46:03Z, the harvest stamp), not with the 2026-11-04 harvest: RFC 5545 3.8.7 makes DTSTAMP the moment the information was put in this calendar object, and cancelling is new information. check:ics requires every published DTSTAMP to equal source.fetchedAt, so a row the harvest cannot update (it is no longer in the feed) gets its stamp moved by the hand that moved its status. Written in the compact ICS shape the other rows' `source.dtstamp` uses - the JSON ISO shape is a different field's convention, and writing it here made a check:ics selftest planting invisible for an hour (D225).",
+      "_slug": "The slug is the id a human types when reporting a problem with a row, and the key PS-4's art resolves by filename (`event-<slug>.png`, D190). This row carries a `-cancelled` suffix so the natural slug `2026-11-07-club-social` is free for the row that actually happened: Mobilizon minted a new UID for the re-issued meeting (D225), so two rows want that date. A dead row's key should say it is dead. Nothing on the page reads this slug - `upcomingEvents()` drops CANCELLED rows and there is no past-events page (D117) - and the row has no `SLOT_ART` entry, so it renders nothing anywhere.",
+      "_fetchedAt": "Left at this harvest stamp (2026-11-06T05:46:03Z) even though the row is not in that feed: the harvest is also the read that established its absence, and ics.mjs publishes each row DTSTAMP from this field, so a cancelled row cannot keep the stamp of an older read - check:ics dtstamp requires every published DTSTAMP to equal source.fetchedAt, and on 2026-11-06 it caught exactly that when the hand moved the top-level stamp and not this one."
     },
     {
       "uid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0",
@@ -65,14 +105,53 @@
       },
       "geo": "44.9057455;-93.2878163",
       "blurb": "Join us for a welcoming space where math lovers come together to study independently, side by side. Whether you are working through a textbook, researching a new concept, or progressing a personal project, this is a time and space to allow you to prioritize your learning of the mathematics that's currently interesting you.\n\nWe gather twice a month on weekday evenings to work in parallel. We are each on our own path but let's help each other to continue our studies and learning.\n\nWhether you are a seasoned mathematician or simply mathematically minded, you are welcome here. Bring your books or notes and your curiosity.\n\nWe look forward to learning alongside you!",
+      "_blurb": "Verbatim DESCRIPTION as served by the feed (unescaped from the RFC 3.3.11 TEXT form; ics.mjs re-escapes on the way out).",
       "url": "https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0",
-      "sequence": 0,
+      "image": "https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png",
+      "_image": "The organizer's own event art, 1321x755 PNG, 93,921 bytes as fetched 2026-11-06 (curl 200, image/png; sha256 0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec, which is also the URL's path segment). It did not exist at the 2026-11-04 harvest: the feed carried no ATTACH for this UID, which is why the row rendered no box (a designed absence, not a hole - see Schedule.astro's SLOT_ART comment). Mirrored per D190 at src/assets/photos/event-2026-11-11-parallel-learning.png. The alt states only the role of the file (D170); the organizer's own sentence for it, and the rights line, are asked for in .notes/NEXT.md.",
+      "sequence": 1,
       "status": "CONFIRMED",
       "source": {
         "feed": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
         "uid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0",
-        "fetchedAt": "2026-11-04T07:15:30Z",
-        "dtstamp": "20261104T062524Z"
+        "fetchedAt": "2026-11-06T05:46:03Z",
+        "dtstamp": "20261106T054452Z",
+        "rawStart": "20261111T180000",
+        "rawEnd": "20261111T200000"
+      }
+    },
+    {
+      "uid": "99df9996-f213-498e-a661-8bffddfdf115",
+      "slug": "2026-11-21-club-social",
+      "summary": "MPLS Math Club - Bimonthly Social",
+      "_summary": "Verbatim from the organizer's calendar (SUMMARY). Published verbatim in the FEED only, where it is a quotation rather than the club's claim (D189); asUpcomingItems() prints `series`, not `summary`.",
+      "series": "MPLS Math Club Social",
+      "_series": "The name the page prints, minus the frequency word D92 keeps off a page. Ruled 2026-11-04, ruling 9(a) (D189), and re-asserted by hand on 2026-11-06 because the harvester copies SUMMARY into `series` for a new row - and since D219 its stripSeries() would also strip the word from the whole string, printing \"MPLS Math Club - Social\". The ruled name is not derived; it is chosen, so it is re-entered at every new row until a harvest carries a curated map.",
+      "start": "2026-11-21T12:00",
+      "end": "2026-11-21T14:00",
+      "_times": "Feed says DTSTART;TZID=America/Chicago:20261121T120000 - the zone arrives on the line, unlike the 2026-11-04 harvest, where 5.2.4 wrote 20261107T120000Z with no TZID and no VTIMEZONE (D169). timeConfirmed is therefore set true on the source's own declaration: the instance now states the zone (which is what A9 ruling 4(a) asked the operator to do to these rows - D223). Two corroborations, not the basis: the organizer typed 12:00 for this series on 2026-11-03 (.notes/roadmap-events.md), and this row's hour pair, venue string, GEO and art hash are identical to the Nov 7 row's, whose hour was confirmed the same way.",
+      "timeConfirmed": true,
+      "venue": {
+        "name": "Angel Food Bakery",
+        "street": "8100 Minnetonka Boulevard",
+        "city": "Saint Louis Park, Minnesota",
+        "raw": "Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States"
+      },
+      "geo": "44.9498412;-93.3824443",
+      "blurb": "We are interested in discussing algorithms of most any kind. If you have an algorithm or related topic you want to discuss, come and hang out with us!\n\nThe topics we have discussed: artificial intelligence, automata, category theory, and math & computer science olympiad exercises.\n\nIdeally, attendees would post a comment before the date of the event with a topic they can discuss. Potential attendees might want to know what people at this event are interested in, and they want to see that the event is alive and well.\n\nIf no topics are posted, then we can generate topics to discuss at the next meetup.\n\nDiscord server for the group, if you're interested: https://discord.gg/wx5S7YJSkU",
+      "_blurb": "Verbatim DESCRIPTION as served by the feed (unescaped from the RFC 3.3.11 TEXT form).",
+      "url": "https://mobilizon.labradorius.com/events/99df9996-f213-498e-a661-8bffddfdf115",
+      "image": "https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png",
+      "_image": "Byte-identical to the Nov 7 row's art (sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c, 127,098 bytes, 954x460). Mirrored per D190 at src/assets/photos/event-2026-11-21-club-social.png, which is the file the Nov 7 row had mirrored: git mv, not a re-download, because the bytes are the same - proved by hashing the fetched URL, not by trusting the shared filename (D223).",
+      "sequence": 0,
+      "status": "CONFIRMED",
+      "source": {
+        "feed": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
+        "uid": "99df9996-f213-498e-a661-8bffddfdf115",
+        "fetchedAt": "2026-11-06T05:46:03Z",
+        "dtstamp": "20261106T054452Z",
+        "rawStart": "20261121T120000",
+        "rawEnd": "20261121T140000"
       }
     }
   ],

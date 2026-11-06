@@ -18,16 +18,19 @@ computed `display`), not chosen. They are in CSS px at a 1240 viewport; the reco
 | `horizon-radio1922.png` (**shipped 2026-11-04**) | PS-5 | last leaf | same band | nothing: **768x358** from a 1024x478 scan |
 | `join.<ext>` | PS-3 | join card media column, above the buttons | 532x128 at 1240 / 310x245 at 390 | 532x128 (4.15:1 - a wide band; a taller photo grows the card by the difference) |
 | `venue.<ext>` | PS-2 | *proposed* full-width strip, not built | would be 1192x320 at 1240, 358x230 at 390 | 1192x320 (3.73:1, hard crop from 4:3) |
-| `event-<slug>.<ext>` (**one shipped 2026-11-04**: `event-2026-11-07-club-social.png`, the club's own event art - D190) | PS-4 | event-card thumb, inside the schedule row; the row is `flex flex-col` so the survey can see the box | **323x156 @y2421 at 1240**, **323x156 @y3317 at 390**, **256x123** at 320 — capped at 323 CSS px in `.event-slot` because these rows are full-width strips: uncapped, the 954px file rendered **1132x546** at 1240 (+558px of page, 11.28% of its pixels in one img) | nothing: the box is the file's **own 954/460 aspect**, uncropped (D168). The old 323x110 definition would have cut 30% of its height |
+| `event-<slug>.<ext>` (**three shipped**: `event-2026-11-07-club-social.png`, `event-2026-11-11-parallel-learning.png` and `event-2026-11-21-club-social.png`, the club's own event art - D190, D223, D225) | PS-4 | event-card thumb, inside the schedule row; the row is `flex flex-col` so the survey can see the box | **323x184.6** once and **323x155.8** twice at 1240; **256x146.3** and **256x123.4** twice at 320 — capped at 323 CSS px in `.event-slot` because these rows are full-width strips: uncapped, the 954px file rendered **1132x546** at 1240 (+558px of page, 11.28% of its pixels in one img) - @measured 2026-11-06 by check:space | nothing: each box is its **file's own aspect** (1321/755 and 954/460), uncropped (D168, D223). The old 323x110 definition would have cut 30% of the social's height |
 
 **How a plate gets here**: `npm run plates` (`scripts/plate-asset.mjs`) re-crops a quarantined plate from
 `design/assets/photos/<key>.png` through `design/grill/plate-crop.mjs` — the one recipe the review rounds measure
 their specimens with — and writes the file the page imports. Nothing is copied by hand, so the page and the specimen
 cannot show different crops. Today: hero `47518a39c1` (**377kB**, was 493kB before the crop learned to cap at the
-scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB), and the event art
-(127kB, the only file here that is not ours). That is **1.46MB** of tracked binary (was 1.33MB before D190), and
-`src/assets/` is gitignored apart from this directory, so these five files are the binaries this repo tracks and
-the size the design gates' numbers depend on; `check:space` re-reads them at every run (the hero paints
+scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB), the two socials' event art
+(127kB each, byte-identical, `1f54c290`) and Parallel Learning's (94kB, `0e26aa4894`) - seven PNGs,
+**1,511,215 bytes** of tracked binary. @measured 2026-11-06 by `ls -l src/assets/photos/*.png`. (This line said
+**1.46MB** for five files and then **1,384,117** for six; the sum of the files actually on disk contradicts both, so
+the sum is what ships.) `src/assets/` is gitignored apart from this
+directory, so these files are the binaries this repo tracks and the size the design gates' numbers depend on;
+`check:space` re-reads them at every run (the hero paints
 **372x304**, 2.06% of the page's pixels).
 
 **The three band leaves, and where they come from.** Provenance below is **quoted** from each picture's own page
@@ -59,40 +62,57 @@ file that carried them.
   named colour, native 1024x478. https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212
 
 PS-2 is a definition only: it needs a venue photograph, and the archive is books, not rooms.
-PS-4 is filled for the one row that has art. A row with no art renders **no box at all** - the wrapper is
-conditional, so the un-photographed row keeps the geometry it had, and a designed absence is the absence of a
-box rather than an empty one (DESIGN.md "States").
+PS-4 is filled for the rows that have art - three of them today. A row with no art renders **no box at all** - the
+wrapper is conditional, so the un-photographed row keeps the geometry it had, and a designed absence is the
+absence of a box rather than an empty one (DESIGN.md "States"). The `STATUS:CANCELLED` row is the current example:
+it has no `SLOT_ART` entry and `upcomingEvents()` drops it, so its slug names no file and paints no box anywhere.
 
-**The event art (PS-4), and what we may say about it.** `event-2026-11-07-club-social.png` is
-**the club's own image**, mirrored from the organizer's own media rather than linked:
-`https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png`
-(curl 200, `image/png`, **954x460**, **127,098 bytes**, fetched 2026-11-04) - mirrored so the site cannot 404 on a
-visitor over a file it does not serve (ruling 10(a), D190).
+**The event art (PS-4), and what we may say about it.** Both files are **the club's own images**, mirrored from the
+organizer's own media rather than linked: the site never 404s on a visitor over a file it does not serve
+(ruling 10(a), D190).
 
-- **Provenance is content-addressed, not remembered:** `sha256sum` of the mirrored file is
-  `1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c`, which is the path segment Mobilizon serves it
-  under. Re-verify with `sha256sum src/assets/photos/event-2026-11-07-club-social.png` and compare against the URL in
-  `data/events.json`'s `image` field. A filename can be re-pointed at other bytes; a hash cannot.
-- **Which rows have art (measured 2026-11-04, `integrations/mobilizon-cadence/fixtures/group-history-2026-11-04.json`):**
-  the 2026-11-07 row carries `bimonthly_social.png`; the three May/June rows carry a different file,
-  `Math_Book_Club_Header.png` (`2550d5ea…`), and the 2026-11-11 Parallel Learning row has `picture: null`. So the
-  `SLOT_ART` map in `src/components/Schedule.astro` being keyed by slug is not decoration - art is a property of the
-  row, and the parallel-learning row has none to attach.
+| File | Upstream | Measured on the file |
+|---|---|---|
+| `event-2026-11-07-club-social.png` | `https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png` (the same media the 2026-11-21 row serves; fetched 2026-11-04, refetched and `cmp`-verified 2026-11-06) | **954x460**, 127,098 bytes, `sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c` |
+| `event-2026-11-21-club-social.png` | `https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png` (fetched 2026-11-04, refetched 2026-11-06) | **954x460**, 127,098 bytes, `sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c` |
+| `event-2026-11-11-parallel-learning.png` | `https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png` (fetched and re-fetched 2026-11-06) | **1321x755**, 93,921 bytes, `sha256 0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec` |
+
+- **Provenance is content-addressed, not remembered:** in both cases `sha256sum` of the mirrored file **is** the path
+  segment Mobilizon serves it under, and re-fetching the URL in `data/events.json`'s `image` field gives bytes
+  `cmp` reports identical (`cmp /tmp/pl-recheck.png src/assets/photos/event-2026-11-11-parallel-learning.png`,
+  2026-11-06). A filename can be re-pointed at other bytes; a hash cannot. Re-verify with
+  `sha256sum src/assets/photos/event-*.png`.
+- **The social's art is one image for two rows, and the file identity is the hash.** Both socials serve the same
+  media (`1f54c290…`), so there are two PNGs here with identical bytes and one upstream file. `cmp` reports them
+  identical; the build hashes both to the **same asset URL** (`event-2026-11-07-club-social.Bx3seRvs_Z1djt4s.webp`
+  appears twice in `dist/client/index.html`), so a visitor downloads it once and only the repo pays the duplicate.
+  Naming follows the row, not the bytes: the slug is the filename key (`event-<slug>.png`, D190), so when the
+  organizer re-issued the 2026-11-07 social under a fresh UID (D225), the live row kept the natural slug and the file
+  it names, and the retired row moved to `2026-11-07-club-social-cancelled` - which names no file at all. Whether the
+  same poster should be *shown* twice on one page is asked of the operator; the wiring ships what the source supplies.
+- **Which rows have art (re-read live 2026-11-06, `https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics`):**
+  all three upcoming rows carry an `ATTACH`. The 2026-11-11 row gained `parallel_studies.png`, which the 2026-11-04
+  snapshot did not have (`picture: null` then), and that is why the Parallel Learning card showed no image on the
+  preview and shows one now. The `SLOT_ART` map in `src/components/Schedule.astro` being keyed by slug is not
+  decoration - art is a property of the row, and it can arrive after the row does.
+- **A `?name=` in a media URL is a label, not identity.** The same `1f54c290…` media was served as
+  `?name=bimonthly_social.png` on two dates; a URL-only diff would call that a new image. Compare hashes, and note
+  that `curl`'s cache here keys on the URL, so a changed `?name=` silently re-downloads identical bytes.
 - **Rights line - PROPOSED, not ratified:** "the club's own event art, used with the organizer's permission."
   The ruling chose the mirror; the terms are the operator's to state, so this line is marked as a proposal in the
   file that ships it. Do not let it read as settled until the operator says the words.
-- **The `alt` states only the file's role** ("The club's own event image for this social") because nobody here
-  read the frame - the session's model takes no images - and D170 forbids an alt inferred from a picture nobody
-  saw. The organizer's own sentence, when it arrives, replaces it verbatim. It is the only `alt` on this site that
-  describes a file rather than a picture, and that is deliberate rather than lazy.
-- **And the source has no caption to quote, which is why the ask goes to a person.** That row's GraphQL `picture` is
-  `{name: "bimonthly_social.png", url: ..., uuid: "c9110656-24d2-435e-b1c1-99a59d77690b"}` - a filename, not a
-  sentence - and the event page (a **4,755-byte** SSR shell, fetched 2026-11-04) has **no `alt` attribute anywhere**,
-  only `og:image`. D170 says quote the picture's page; there is nothing there, so this stays an open ask
+- **Each `alt` states only the file's role** ("The club's own event image for this social" / "...for this study
+  session") because nobody here read the frames - the session's model takes no images - and D170 forbids an alt
+  inferred from a picture nobody saw. The organizer's own sentence, when it arrives, replaces it verbatim. These
+  are the only `alt`s on this site that describe a file rather than a picture, and that is deliberate rather than lazy.
+- **And the source has no caption to quote, which is why the ask goes to a person.** Mobilizon's `picture` objects
+  are `{name, url, uuid}` - filenames, not sentences - and the event page (a **4,755-byte** SSR shell, fetched
+  2026-11-04; re-fetched 2026-11-06 at ~4.7kB with no server-rendered `h1` or `alt` anywhere) has no caption to
+  quote. D170 says quote the picture's page; there is nothing there, so this stays an open ask
   (`.notes/to-mobilizon/answer-2026-11-04-late.md`, §5).
 
-Round 13 measured the only card the schedule section renders today - its no-source notice, not the future event
-card - and photographed it with and without a thumb: the card is **512x280.8** at 1240 with a **480px** content box,
+Round 13 measured the only card the schedule section rendered **then** - its no-source notice, not a future event
+card, a state the page no longer has (D223) - and photographed it with and without a thumb: the card is **512x280.8** at 1240 with a **480px** content box,
 and **358x353.2** at 390 with **326px**, so the 323px thumb fits at phone width with **3px** to spare; planting it
 costs **+122px** of card and page at both widths and leaves `check:render` green. `@measured 2026-11-03 by
 round13` (`design/grill/round13/report.json`; the before/after pictures are in `design/grill/round-13-hero.html`, D160).

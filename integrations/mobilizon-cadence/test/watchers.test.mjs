@@ -161,6 +161,12 @@ test("the heartbeat is weekly, unconditional, public-read, and holds no credenti
 
 test("the heartbeat reports the rows that exist, and says it is the proof of life", () => {
   const cfg = firstJson(runCode(beat, BEAT_NAMES.cfg));
+  // Pin the clock. H1 stamps `runAt: now.toISOString()`, so an unpinned case asserts against the wall clock:
+  // this one went red on its own at 05:00Z on 2026-11-06 (00:00 America/Chicago) because `daysOut` for the
+  // fixture's Nov 7 row is 2 only while the run day is Nov 5 (D192 names exactly this - a planted date that
+  // stops sitting on the side of today its case assumes; D226 records the day it fired). 15:00Z is 09:00 in
+  // the heartbeat's own zone and hour.
+  cfg.runAt = "2026-11-05T15:00:00Z";
   const seeded = { [BEAT_NAMES.cfg]: [{ json: cfg }], [BEAT_NAMES.read]: [{ json: { data: { group: FIXTURE.data.group } } }] };
   assert.ok(cfg.query.readSeriesHistoryVars.preferredUsername, "H1 is the source node: it exports the calendar read's document and vars, and nothing else");
   assert.equal(Object.keys(cfg).sort().join(","), "ALERT,HEARTBEAT,SERIES,groupActor,query,runAt", "H1 exporting a write document is how a read-only workflow stops being read-only");

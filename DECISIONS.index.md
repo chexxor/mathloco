@@ -228,5 +228,11 @@ and a renumber silently re-points every one of them at a different decision.
 - **D218** (2026-11-05) — The redaction experiment is parked, not dropped, and its trigger is a licence change or a leaked run record (operator ruling 2, 2026-11-05)
 - **D219** (2026-11-05) — A whole-document `PUT` carries the live error-workflow link with it, because the reviewed bytes deliberately do not name one (2026-11-05)
 - **D220** (2026-11-05) — `rows` + `edges` is measured as a pair, and the pair's number is not the sum of its halves (measured 2026-11-05, Linux, `check:rhythm`)
+- **D221** (2026-11-06) — R6 merges to `staging` as a merge commit and ships to the Worker Preview, and the preview is checked at the URL rather than assumed (operator grant, 2026-11-06)
+- **D222** (2026-11-04) — The Mobilizon feed changed shape and content between 2026-11-04 and 2026-11-06: the missing event art is not a bug, and the published schedule is now stale (read 2026-11-06, curl, Linux)
+- **D223** (2026-11-06) — A row the feed dropped is published as `STATUS:CANCELLED` with its SEQUENCE raised, its art is renamed rather than re-fetched, and the hand does what the harvester cannot (operator ruling 1a, 2026-11-06, Linux)
+- **D224** (2026-11-06) — A second event card buys painted area, not filled space: +197px of page and 0px less empty run (measured 2026-11-06, Linux, `check:rhythm`)
+- **D225** (2026-11-06) — Mobilizon mints a fresh UID for a date edit, so a cancellation is ours to author; the same churn cost a check:ics rule its blind spot, and the gate found the hand-edit's defect (2026-11-06, Linux, curl + `check:ics` / `check:ics:selftest`)
+- **D226** (2026-11-06) — A test that asserts a distance from today must pin its own clock: the heartbeat's `daysOut` case went red on the wall clock, unrelated to the harvest it was found under (2026-11-06, Linux, node --test)
 
-Defined: 220 (D1-D220). Unused ids: none.
+Defined: 226 (D1-D226). Unused ids: none.
