@@ -1,39 +1,42 @@
 {
   "deploy": {
-    "measuredAt": "2026-11-04",
-    "wallSecs": 17.1,
+    "measuredAt": "2026-11-06",
+    "wallSecs": 16,
+    "load": "4.5/16cpu",
     "steps": {
-      "check": 9.34,
-      "check:classes": 0.49,
-      "check:design": 0.2,
-      "check:decisions": 0.31,
-      "check:figures": 0.12,
-      "check:social": 0.38,
-      "check:social:selftest": 1.28,
-      "db:check": 0.43,
-      "check:sanitize": 0.3,
-      "check:ics": 0.15,
-      "check:ics:selftest": 0.26,
-      "check:cache": 1.14,
-      "audit:gate": 1.06,
-      "build": 5.04,
-      "check:deploy": 0.32,
-      "check:content": 0.21,
-      "check:content:selftest": 0.18
+      "check": 6.85,
+      "check:classes": 0.41,
+      "check:design": 0.17,
+      "check:decisions": 0.29,
+      "check:figures": 0.11,
+      "check:social": 0.34,
+      "check:social:selftest": 1.17,
+      "db:check": 0.4,
+      "check:sanitize": 0.25,
+      "check:ics": 0.14,
+      "check:ics:selftest": 0.52,
+      "check:cache": 0.93,
+      "check:cadence": 1.19,
+      "audit:gate": 0.82,
+      "build": 6.85,
+      "check:deploy": 0.21,
+      "check:content": 0.11,
+      "check:content:selftest": 0.11
     }
   },
   "browser": {
-    "measuredAt": "2026-11-04",
-    "wallSecs": 100.6,
+    "measuredAt": "2026-11-06",
+    "wallSecs": 113.7,
+    "load": "2.4/16cpu",
     "steps": {
-      "check:render:dist": 33.03,
-      "check:mark": 7.33,
-      "check:social:live": 1.82,
-      "check:space": 10.9,
-      "check:ground": 10.85,
-      "check:ground:selftest": 18.91,
-      "check:render:selftest": 17.76
+      "check:render:dist": 66.46,
+      "check:mark": 6.04,
+      "check:social:live": 1.19,
+      "check:space": 6.79,
+      "check:ground": 6.68,
+      "check:ground:selftest": 11.87,
+      "check:render:selftest": 14.64
     }
   },
-  "note": "tracked baseline for the cost guard in scripts/gate-run.mjs. Re-baseline on purpose, in a commit that says why."
+  "note": "tracked baseline for the cost guard in scripts/gate-run.mjs. Re-baseline on purpose, in a commit that says why. The `load` field is the 1-minute load average / CPU count at the end of that run: a baseline taken under a high load is a bar the repo cannot clear, so check it before trusting a comparison."
 }
