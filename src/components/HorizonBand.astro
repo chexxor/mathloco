@@ -56,7 +56,12 @@ const plates = [
 {/* `lg:px-6` rather than the usual `lg:px-8`: the measured band box is 384 CSS px per plate inside 24px side
     padding at 1240, and a different padding would make this markup a different page from the one the round
     measured. `data-slot="PS-5"` is a probe handle — check:space ranks slot boxes by it. */}
-<section class="bg-paper py-16 hidden lg:block" aria-label="Plates from public-domain mathematics books">
+{/* `py-12`, not `py-16`: the band's own air is part of what round 15 measured - its 128px of `py-16` was one
+    of the two figures A3 was opened with (the other was a 283px hole inside the reasons section, and both are
+    superseded by this ruling - the band now brings 96px and the reasons section's inside emptiness is 186px,
+    measured 2026-11-05 by `npm run check:space`, D220). R6 took every landing-page band to a single 48px step
+    (D214). The plates keep their box; only the air around the shelf moves. */}
+<section class="bg-paper py-12 hidden lg:block" aria-label="Plates from public-domain mathematics books">
   {/* `flex` on the wrapper is not styling: check:space records a `data-slot` box only for a child of a grid or
       flex container, so a PS box inside a plain block is invisible to the survey and to every design round that
       reads it. Measured 2026-11-03: PS-5 was absent from the slot list until its parent became a flex container. */}

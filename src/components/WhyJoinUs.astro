@@ -33,7 +33,10 @@ import { content, threads } from '../lib/content.ts';
 const items = threads();
 ---
 
-<section class="bg-panel py-16">
+{/* `py-12` (48px), not `py-16` (64px): the band air was ruled down on 2026-11-05 (D214, R6) and measured
+    again on 2026-11-06 (see the hero's note for the pair's number). Every landing-page band carries the
+    same step, so this section's edge is a number the reader meets four times, not four numbers. */}
+<section class="bg-panel py-12">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-measure">
       <h2 class="text-heading font-extrabold text-ink">
@@ -50,11 +53,12 @@ const items = threads();
       // No hairlines between the rows, on purpose, and that is a measurement rather than a taste: the render
       // gate fails a painted 1px line that is a border/outline instead of the ratified inset ring
       // (`inset-shadow-rule`), and on this section's `bg-panel` ground `--color-rule` measures 2.88 — under
-      // the 3.0 graphic bar it is solved to hit on paper (3.01). Rows sit on 12px padding (DESIGN.md,
-      // Spacing) and the label/gloss weight difference does the grouping the rule was going to do.
-      <ul class="mt-8 grid grid-cols-1 gap-x-12 md:grid-cols-2">
+      // the 3.0 graphic bar it is solved to hit on paper (3.01). Rows sit on **8px** padding with 24px above
+      // the list and 32px between the two columns (DESIGN.md, Spacing; the trim from 12/32/48 is R6, D214),
+      // and the label/gloss weight difference does the grouping the rule was going to do.
+      <ul class="mt-6 grid grid-cols-1 gap-x-8 md:grid-cols-2">
         {items.map(({ label, gloss }) => (
-          <li class="py-3 text-body leading-prose font-body">
+          <li class="py-2 text-body leading-prose font-body">
             <span class="font-semibold text-ink">{label}</span>
             {gloss && <span class="text-ink-2"> — {gloss}</span>}
           </li>
@@ -75,7 +79,11 @@ const items = threads();
       // word, 4.61 on panel and 4.82 on paper, both over the 4.5 text bar. The state genuinely is a caution:
       // an empty list is a fact about this page's wiring, not about the club, and the sentence says exactly
       // that. `check:render` asserts every inset ring's pair, so if this branch ever renders it is measured.
-      <div class="mt-8 inset-shadow-gold rounded-control px-4 py-3 max-w-measure">
+      // `mt-6`, matching the list this notice stands in place of, so the two states of this one slot do not
+      // sit on different grids. The notice's own `px-4 py-3` stays: DESIGN.md puts notice padding at 12/16,
+      // and R6 ruled about rows, not notices. Nothing in the pair's measurement covers this branch — the
+      // shipped page always has threads — so it is a consistency edit, declared as one.
+      <div class="mt-6 inset-shadow-gold rounded-control px-4 py-3 max-w-measure">
         <p class="text-body font-medium text-gold">Nothing is on the list right now.</p>
         <p class="mt-1 text-body leading-prose text-ink-2">
           What the club is pulling on is decided in its chat, so an empty list here means the page has not

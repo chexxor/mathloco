@@ -82,7 +82,13 @@ const title = empty?.title ?? 'No date is on the calendar yet.';
 const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on Meetup, where the calendar and the sign-up live.';
 ---
 
-<section class="bg-paper py-16" aria-labelledby="when-we-meet">
+{/* The rhythm inside this section is R6's `rows` option, ruled 2026-11-05 (D214; the pair's measurement is
+    D220): 24px below the heading (was 48), 16px between rows (was 24), 8px of row padding (was 12). Round 15
+    priced the option at **-88px of page at 1440/1240/1024 and -120px at 640/390/320, with the emptiness
+    falling 36-73px** @measured 2026-11-04 by `npm run check:rhythm`; as shipped with `edges`, this section
+    alone measures **80px shorter at 1240** (852 -> 772) @measured 2026-11-05 by `npm run check:space`. With
+    these values in, the sweep re-prices `rows` at 0px/0px at all six widths - the row stays as a drift guard. */}
+<section class="bg-paper py-12" aria-labelledby="when-we-meet">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
       <h2 id="when-we-meet" class="text-heading font-extrabold text-ink">When We Meet</h2>
@@ -91,11 +97,11 @@ const body = empty?.body ?? 'Dates are set in the club\'s Discord and posted on 
       </p>
     </div>
 
-    <div class="mt-12">
+    <div class="mt-6">
       {items.length ? (
-        <ul class="space-y-6" data-art-cap="323">
+        <ul class="space-y-4" data-art-cap="323">
           {items.map((item) => (
-            <li class="inset-shadow-rule rounded-control px-4 py-3 flex flex-col">
+            <li class="inset-shadow-rule rounded-control px-4 py-2 flex flex-col">
               <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
                 <span class="text-label font-medium text-ink tabular-nums">
                   {formatDate(item.date, 'wide')}

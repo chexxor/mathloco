@@ -55,8 +55,22 @@ const label = heroLabel();
 const focus = value(content.focus);
 ---
 
+{/* The hero's own air is **64px top and bottom at every width**, which is a ruling rather than a tidy
+    number (D214, R6; the pair's measurement is D220). It used to be a responsive ramp - 48/32 base, 48/48
+    from `sm`, 128/96 from `md` - and round 15 priced the flat version against the page as it shipped:
+    `edges` (hero 128/96 -> 64/64, every band's `py-16` -> 48) bought **-224px of page and -224px of empty
+    run at 1440/1240/1024, -64px at 640, -48px at 390/320**; with `rows` (the schedule and reasons edits in
+    `Schedule.astro` / `WhyJoinUs.astro`) the page landed **320px shorter and 289px less empty at
+    1440/1240, 176px and 114px at 320** @measured 2026-11-05 by `npm run check:rhythm`, whose table
+    (`design/rhythm/report.json`) holds both the before row and the after row. One step at every width
+    rather than three is deliberate: the option the operator chose was one number, and the phone pays the
+    same trim - which is why the phone column is in that table (D161: a desktop-only delta has hidden a
+    mobile cost here before), and why 320/390 *gained* air at this edge (48/32 -> 64/64) and still got
+    shorter overall. With these margins in place `check:rhythm` re-prices `edges` at 0px/0px at all six
+    widths: the row stays in the sweep as a drift guard, and it starts buying pixels again if this edge
+    re-inflates. */}
 <main
-  class='mx-auto max-w-screen-xl px-4 mb-8 mt-12 sm:mt-12 sm:mb-12 sm:px-6 md:mt-32 md:mb-24'
+  class='mx-auto max-w-screen-xl px-4 mt-16 mb-16 sm:px-6'
 >
   <div class='lg:grid lg:grid-cols-12 lg:gap-8'>
     <div class='mb-12 md:max-w-2xl md:mx-auto lg:col-span-8'>

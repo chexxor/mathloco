@@ -227,5 +227,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D217** (2026-11-05) — MCP is not offered as an n8n door: the REST door plus one UI button does the job, and a second door is a second thing to secure (operator ruling 3, 2026-11-05)
 - **D218** (2026-11-05) — The redaction experiment is parked, not dropped, and its trigger is a licence change or a leaked run record (operator ruling 2, 2026-11-05)
 - **D219** (2026-11-05) — A whole-document `PUT` carries the live error-workflow link with it, because the reviewed bytes deliberately do not name one (2026-11-05)
+- **D220** (2026-11-05) — `rows` + `edges` is measured as a pair, and the pair's number is not the sum of its halves (measured 2026-11-05, Linux, `check:rhythm`)
 
-Defined: 219 (D1-D219). Unused ids: none.
+Defined: 220 (D1-D220). Unused ids: none.

@@ -64,7 +64,21 @@ a Tailwind 2 name that generated nothing).
 |---|---|---|---|---|---|---|---|---|
 | px | 4 | 8 | 12 | 16 | 24 | 32 | 48 | 64 |
 
-Rows and lists sit on **12px padding, 8px gaps** ("comfy", round 6 Q4). Notice padding is 12/16.
+Rows and lists sit on **8px row padding, 16px between rows, 24px above a list, 32px between grid columns** (R6 /
+D214, applied 2026-11-05; this replaced round 6 Q4's "comfy" pair of 12px padding with 24/32/48 gaps). Notice
+padding is 12/16 - R6 ruled rows, not notices.
+
+**Section air is one step at every width, not a responsive ramp:** **48px** (`py-12`) on every landing-page band -
+reasons, the horizon shelf, the schedule, the join section - and **64px** (`mt-16 mb-16`) at the page's own top and
+bottom edges. Round 6's ramp (48/32 base, 48/48 at `sm`, 128/96 at `md`) is gone: the operator ruled one number, and
+the phone pays the same trim as the desktop (D214).
+
+**What that bought, measured as a pair rather than assumed** - the two `design/rhythm/report.json` rows in git, same
+instrument, same six widths: **−320px of document height and −289px of empty run at 1440/1240, −320/−260 at 1024,
+−192/−137 at 640, −176/−113 at 390, −176/−114 at 320**; at 1240 the empty share falls **30.8% → 25.7%** and painted
+rises **8.41% → 9.13%**, one whole empty run disappears at every width, and the biggest run falls **196px → 148px**.
+@measured 2026-11-05 by `npm run check:rhythm` (D220 - it also records why the pair is 8px better than the sum of
+the two options, and why 320/390 *gained* hero air and still got shorter).
 
 **Never** use a step outside that set. The 20px orphan (`mt-5`, `sm:mt-5`: 5 writes) maps to **24** in
 `design-apply`; `gap-3.5` (14px) → **12**, `gap-1.5` (6px) → **8**. If no step fits, change the scale,
@@ -558,7 +572,11 @@ and the screen can disagree.
   0.274% / 0.550%): in absolute pixels that is ~14.5k either way, so the band added no colour and the *share* rose
   only because the denominator shrank. And the honest bad half: empty runs went **9 runs / 1075px → 10 runs /
   1215px** at 1240 — the band brings 128px of its own `py-16` and the cut left a **283px** hole inside the reasons
-  section, so the emptiness moved rather than closed. That hole is A3's rhythm question, now with a number on it.
+  section, so the emptiness moved rather than closed. That hole is A3's rhythm question, now with a number on it —
+  and R6 (D214, applied 2026-11-05) closed it: re-measured at 1240 the band brings **96px** of `py-12`, the reasons
+  section's inside emptiness is **186px**, and the largest hole inside a surface on the page is now **273px in the
+  join section** @measured 2026-11-05 by `npm run check:space` (D220). Padding cannot reach a hole like that; it is
+  the next rhythm question, not R6's.
 
 ### Photograph slots and third-party marks (ruled 2026-11-02, applied)
 
@@ -812,22 +830,27 @@ word in event prose.
   now carried by photographs instead. The **27° `gold ↔ path-discord`** twin is ruled a **defect to fix**, in its own
   measured round (the fix re-homes `path-discord` into the only open window, 246–274°, and moves 12 measured pairs).
   **Body line spacing gets its own round** (round 11), because it moves geometry the rest of the system depends on.
-- **Vertical rhythm is measured and unruled** (`npm run check:rhythm`, 2026-11-02; rows in
-  `design/rhythm/report.json`). Each option is applied as CSS to a **copy** of `dist/client`
-  (`.design/tmp-whitespace/dist-<option>/`) and measured there — the shipped artifact is never mutated, and a cached
-  variant report is invalidated when the built page's fingerprint changes. At 1240, shipped: **2492px**, **41.5%**
-  of the height in 8 empty runs, **4.30%** painted. Options measured: **edges** (hero margins 128/96 → 64/64,
-  section padding 64 → 48) **−160px** tall, **37.5%** empty, biggest run 217 → 169; **edges+1px rules** −158px and
-  no painted-share change (a rule costs air, not ink, so these two are a *look* decision the numbers cannot make);
-  **interior** (the six-card grid's padding and gaps) **−32px** and, after the demotion, **more** emptiness (+42px in
-  9 runs) — the cheap lever is not a good one here; **slots** (PS-1 and PS-3 filled at their approved sizes)
-  **page height unchanged**, −51px empty, painted **4.30% → 10.99%**; **all** −192px tall, 37.7% empty, painted
-  11.91%. At 390 the levers move: the hero is not a grid below 1024, so **slots** buys only −67px there, while
-  **interior** buys −135px — which is the same finding as round 10's, that on a phone the emptiness lives *between
-  the six cards*. Emptiness splits **509px at surface edges** (what padding and line boxes declare) against the rest
-  **between elements inside a surface**, where padding cannot reach. The recommendation is a **sequence, not a
-  ruling in the abstract**: fill the two approved slots first (it costs no height and roughly doubles painted
-  share), then re-measure, and only then decide whether the 160px of edge air still reads as air.
+- **Vertical rhythm is ruled and applied** (round 15; ruled **D214**, landed 2026-11-05, and the pair's own number is
+  **D220**). `npm run check:rhythm` prices each option by applying it as CSS to a **copy** of `dist/client`
+  (`.design/tmp-whitespace/dist-<option>/`) and measuring there — the shipped artifact is never mutated, a cached
+  variant report is invalidated when the built page's fingerprint changes, and the options live in one module
+  (`design/grill/rhythm-variants.mjs`) so the gate table and the photographed specimen cannot drift (D160).
+  Shipped now: **1240 3708px, 25.7% of the height in 9 empty runs (biggest 148px), 9.13% painted**; 1024 **3762px /
+  28.0%**; 640 **4610px / 24.6%**; 390 **5176px / 19.3% in 10 runs**, 11.84% painted; 320 **5949px / 21.3% in 11
+  runs** @measured 2026-11-05 by `npm run check:rhythm`. The two ruled options stay in the table and now measure
+  **0px height / 0px empty at all six widths**, which is the drift guard: if a band or a row re-inflates, `edges` or
+  `rows` starts buying pixels again and the table says so on its face. Measured and **still unruled**:
+  **`band-up`** (the horizon shelf moved under the hero: **+0px height, −26 to −29px empty**), **`band-bleed`**
+  (**+25px at 1440**, 0px everywhere else), **`band-any`** (the shelf at every width: **+524/+82 at 640, +356/+27 at
+  390, +491/+144 at 320** — the same shape as `band-sm`, which D214 refused) @measured 2026-11-05 by
+  `npm run check:rhythm`. The emptiness now splits **651px at a surface's own edges** (padding and line leading)
+  against **302px between elements inside surfaces**, where padding cannot reach; at 320 that inverts — **568**
+  against **699** — so on a phone the majority of the emptiness is interior and no amount of band padding fixes it
+  @measured 2026-11-05 by `npm run check:rhythm`. (That pair is the report row's per-surface totals: **edges** = Σ
+  `emptyTop + emptyBottom`, **interior** = Σ `gapsInside` − edges, so 1240 is 651 against 953 − 651 and 320 is 568
+  against 1267 − 568; recompute it from `design/rhythm/report.json` rather than re-deriving it by hand.) (The 2026-11-02 figures this bullet used to carry — **2492px**,
+  **41.5%**, `interior`, `slots` — described a six-card grid that has been gone for weeks and a page whose slots were
+  empty; deleted rather than carried, per the house rule. `design/rhythm/report.json` is the table.)
 - **The page is thin, not wide — round 10 (area)** (`npm run check:space`, 2026-11-02, operator: "the landing page
   is still mostly whitespace"). Measured on the settled, whole-page crop **after** the mark demotion: at 1240 the
   built document is **2492px** tall, **4.30%** of pixels differ from their own ground by the 0.05 same-colour bar,
