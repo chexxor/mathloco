@@ -154,18 +154,14 @@ export const threads = (): { label: string; gloss: string | null }[] =>
 export const scheduleConfigured = (): boolean => filled(content.schedule?.source) || Boolean(snapshot.source?.kind);
 
 /**
- * What the hero's label lane says. Round 7's ruling: an empty calendar is a *state*, so when a source is
- * configured but holds nothing the label changes to "Nothing scheduled" rather than disappearing — a
- * visitor can then tell an empty calendar from a broken page. With no source configured there is no
- * calendar to be empty, so the label carries the cadence the operator ruled (and no other claim).
+ * Retired 2026-11-07 (D239). This used to decide what the hero's label lane said — the next date, or "Nothing
+ * scheduled", or the ruled cadence. The operator asked for the hero to introduce the group rather than the next
+ * meeting, and the date it printed was already printed 300px lower down inside the compact schedule band, beside
+ * the leaf that draws it and the dated line that says when it was copied. The empty-calendar state the round-7
+ * ruling was protecting did not go with it: the compact band's own notice carries the status word, the title, the
+ * body and the dated line, and `check:render` holds that block to the notice grammar. So the states are here,
+ * where a calendar is actually shown, and the hero prints a locator that cannot go stale.
  */
-export const heroLabel = (): { text: string; tone: 'next' | 'empty' | 'cadence' } => {
-  const next = upcoming()[0];
-  if (next) return { text: `Next: ${formatDate(next.date, 'wide')}${next.time ? ` · ${formatTime(next.time)}` : ''}`, tone: 'next' };
-  if (scheduleConfigured()) return { text: content.schedule?.empty?.status || 'Nothing scheduled', tone: 'empty' };
-  const cadence = value(content.cadence);
-  return cadence ? { text: `${cadence} Meetups`, tone: 'cadence' } : { text: 'On Meetup', tone: 'cadence' };
-};
 
 /** "Saturday, 14 Nov" — calendar-date parsing, so a build running in UTC cannot print yesterday's date. */
 export const formatDate = (iso: string, style: 'wide' | 'short' = 'short'): string => {

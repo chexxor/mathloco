@@ -21,7 +21,7 @@ export const prerender = true;
   <HorizonBand />
   {/* D227: the homepage carries the ONE next date, not the calendar, and `limit={1}` is the whole split —
       the card's facts come from the same `upcoming()` the `/schedule` page's rows and `/events.ics` read, so
-      no two surfaces can drift apart. D228: this one call is also the landing page's join band ("Come once",
+      no two surfaces can drift apart. D228: this one call is also the landing page's join band (its heading,
       "How it works", the two paths out), which used to be a separate `JoinCommunity.astro` section below the
       fold; it is the same band now, because a date and how you come to it are one question.
       `sections.showSchedule` gates this band only: turning it off hides the homepage's date and the join

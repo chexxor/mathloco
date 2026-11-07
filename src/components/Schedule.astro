@@ -194,13 +194,20 @@ const Heading = compact ? 'h2' : 'h1';
 // own calendar" on a page that showed one date \u2014 a plural about a singular, which is what a reader meets
 // first on the landing page \u2014 so the compact copy is written for one date and the full copy for many.
 const eyebrow = items.length ? 'Next date' : 'The calendar';
-// The compact lede is the join band's own sentence, kept verbatim from `JoinCommunity.astro` so the operator's
-// words survive the merge. It deliberately does NOT say "these dates are copied from the club's own calendar":
-// that sentence is the full width's, and it shipped on the homepage after the split said one date was coming
-// \u2014 a plural about a singular. The homepage says the same fact where it is checkable, as a dated line under
-// the date it describes.
+// The compact lede used to be the join band's sentence, kept verbatim when the bands merged (D228): "One place to
+// say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether
+// this is your kind of room." The operator asked for the join copy rewritten (2026-11-07), and the clause that did
+// not hold up is the last one: it promises a verdict about the reader's own taste from a single evening, which is
+// the page telling someone how they will feel. It also talked about the site's two surfaces ("one place ... one
+// place") on a band whose job is to get someone to a table. What replaces it says the two facts this band can back
+// up - where the sign-up is, and that the date above it came from the club's own calendar - and then what the thing
+// being decided about actually is.
 const lede = compact
-  ? 'One place to say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether this is your kind of room.'
+  ? ['The sign-up is on Meetup' + (items.length ? ', and the date above is copied from the club\u2019s own calendar' : '') + '. ',
+     // The clause about the date above the lede exists only when there is one. On the empty state this band
+     // renders a notice instead of a date, and a lede that said "the date above" would be pointing at nothing -
+     // the same class of defect as the plural-about-a-singular above.
+     'What happens at the table is the book itself \u2014 people argue about it, bring their own examples, and nobody is lecturing.'].join('')
   : 'These dates are copied from the club\u2019s own calendar. The sign-up is on Meetup.';
 ---
 
@@ -212,7 +219,7 @@ const lede = compact
           `list` out of that syntax and reports it as a class that generates no CSS, so the assembled form
           buys a false failure. A conditional template string keeps every token literal in the source the
           gate reads. */}
-      <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'mt-1 text-heading' : 'text-display-1'}`}>{compact ? 'Come once' : 'When We Meet'}</Heading>
+      <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'mt-1 text-heading' : 'text-display-1'}`}>{'When We Meet'}</Heading>
       <p class={`mt-4 leading-prose text-ink-2 font-body max-w-measure mx-auto ${compact ? 'text-lede' : 'text-body'}`}>{lede}</p>
     </div>
 

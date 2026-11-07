@@ -2,7 +2,7 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
-import { content, heroLabel, value } from '../lib/content.ts';
+import { content, value } from '../lib/content.ts';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
 // 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
@@ -40,13 +40,16 @@ for (const s of MARK.shapes) {
 }
 if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot.role}" has no fill class in HeroSection.astro — add it to FILL_CLASS`);
 
-// The label lane is data, not prose. D92: the site publishes series names and real dates, and a frequency
-// word is only allowed with a named source (the one it has is recorded beside the word in
-// src/content.json). Three states, one lane: a real date when the calendar has one; "Nothing scheduled"
-// when a configured calendar holds nothing (round 7's ruling — the label changes rather than disappearing,
-// so a visitor can tell an empty calendar from a broken page); and the ruled cadence while no calendar
-// source is wired up at all (D132).
-const label = heroLabel();
+// The label lane used to open the hero with the club's next date — "Next: Saturday, Nov 7 · 12:00 pm" — which
+// put a *date* in the one place on the site whose job is to say what the group is (operator, 2026-11-07: the hero
+// "should introduce the group as a whole, not the next meeting"; and the same date appears 300px further down the
+// page on the compact schedule card, where it sits beside the leaf that draws it and the dated line that says when
+// it was copied). The lane is now a locator about the club, and it cannot go stale, because nothing in it is a
+// date. What the lane used to do in its other two states — "Nothing scheduled" instead of nothing at all, so an
+// empty calendar is distinguishable from a broken page (DESIGN.md, States) — moved to the surface that actually
+// shows a calendar: the compact band's empty state carries the status word, the title, the body and the dated
+// line, in the notice grammar `check:render` holds. `heroLabel()` is deleted with this lane (D239).
+const locator = 'A book, a room, and whoever shows up';
 // The hero used to end with "Current Focus: Number Theory and Abstract Algebra". The slot behind it had no
 // source, `check:content` had it listed as an unsourced claim, and on 2026-11-03 the operator ruled it false:
 // "We no longer have that focus. We have no current focus at all right now." So `focus` here is whatever a
@@ -75,7 +78,10 @@ const focus = value(content.focus);
   <div class='lg:grid lg:grid-cols-12 lg:gap-8'>
     <div class='mb-12 md:max-w-2xl md:mx-auto lg:col-span-8'>
       <div class='text-label uppercase tracking-wide mb-4'>
-        <span class="text-ink-3">{label.text}</span>
+        {/* Not a date, and not a frequency word either: `cadence` ("Monthly") is a sourced slot, but D92's rule is
+            that a frequency word needs its named source in the same breath, and an eyebrow is too short a breath.
+            This line's job is to tell a first-time visitor what kind of thing this is before the h1 names it. */}
+        <span class="text-ink-3">{locator}</span>
       </div>
 
       <h1

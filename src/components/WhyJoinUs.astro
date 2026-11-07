@@ -1,6 +1,6 @@
 ---
 import config from '../config.json';
-import { content, threads } from '../lib/content.ts';
+import { threads } from '../lib/content.ts';
 
 /*
  * WHAT THIS SECTION REPLACED (2026-11-03). It used to be six cards with checkmarks — "Expert Guidance",
@@ -45,7 +45,7 @@ const items = threads();
       <p class="mt-4 text-lede leading-prose text-ink-2 font-body">
         Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up
         with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of
-        them is a prerequisite for the others.
+        them is a prerequisite for arriving.
       </p>
     </div>
 
@@ -92,6 +92,12 @@ const items = threads();
       </div>
     )}
 
+    {/* The closing line used to end "One evening is enough to tell whether this is your kind of room." Same
+        sentence as the compact schedule band's lede, so it appeared twice on the landing page, and both copies
+        promised the reader a verdict about their own taste on the club's behalf (operator, 2026-11-07: rewrite
+        it). What the page can honestly say is what a meeting costs and what it does not require; what it cannot
+        say is how the room will feel to you. That is said plainly instead of guessed at - and the sentence is
+        now in one place (this band) rather than two, so the two surfaces cannot drift. D239. */}
     <p class="mt-12 max-w-measure text-body leading-prose text-ink-2 font-body">
       Dates and places go up on{' '}
       <a
@@ -99,7 +105,8 @@ const items = threads();
         href={config.URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
-      >Meetup</a>, where the sign-up is. One evening is enough to tell whether this is your kind of room.
+      >Meetup</a>, where the sign-up is. Whether the room is your kind of room is not something a page can tell
+      you.
     </p>
   </div>
 </section>
