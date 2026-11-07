@@ -252,7 +252,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D242** (2026-11-07) — The share-card gate's drift tolerance widened from a 3px floor to a band on the run's own width, because the wordmark changed; what the gate still proves, and what it no longer does (2026-11-07, Linux, `check:social` / `check:social:selftest`)
 - **D243** (2026-11-08) — The descriptor names both cities, the wordmark takes the display step, the compact band loses its second sentence, and a display step can only be priced in a class the build emits (2026-11-08, Linux, `npm run round16` + `npm run build`)
 - **D244** (2026-11-08) — `wrangler preview` provisions a preview hostname **on the attached custom domain**, and unlike the `workers.dev` preview it is indexable (2026-11-08, Linux, `npm run preview:deploy` + `curl -D`)
-- **D245** (2026-11-08) — The five 2026-11-08 rulings, and the measurement that changes their order: the live site is seven days and 178 commits behind every gate that is green (2026-11-08, Linux, `git log`/`git merge-tree` + `npx wrangler deployments list` + `curl` + `scripts/live-probe.mjs`)
+- **D245** (2026-11-08) — The five 2026-11-08 rulings, and the measurement that changes their order: the live site is seven days and 178 commits behind every gate that is green (2026-11-08, Linux, `git log`/`git merge-tree` + `npx wrangler deployments list` + `curl` + `scripts/live-probe.mjs`) — _amended in place_
 - **D246** (2026-11-08) — `www` cannot be a Custom Domain while its CNAME exists; the docs' answer for a root-canonical site is a proxied placeholder record plus one Single Redirect, and the Free plan has room for it (2026-11-08, Linux, docs `index.md` twins + `openssl s_client` + `curl`)
+- **D247** (2026-11-08) — A markdown table row with the wrong cell count is invisible in a diff and visible in the browser, so `MILESTONES.md`'s rows are now counted by `npm run check:tables` (2026-11-08, Linux, `scripts/check-tables.mjs`, first run against this repo's own tracked prose)
 
-Defined: 246 (D1-D246). Unused ids: none.
+Defined: 247 (D1-D247). Unused ids: none.

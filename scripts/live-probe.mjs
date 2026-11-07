@@ -25,16 +25,16 @@ const strict = process.argv.includes('--strict');
 const targets = [
   { group: 'production', url: 'https://matheapolis.com/', expect: 200 },
   { group: 'production', url: 'https://matheapolis.com/schedule', expect: 200 },
-  { group: 'production', url: 'https://matheapolis.com/events.ics', expect: 200 },
+  { group: 'production', url: 'https://matheapolis.com/events.ics', expect: 200, ics: true },
   { group: 'production', url: 'https://minneapolismathbookclub.com/', expect: 200 },
   { group: 'production', url: 'https://minneapolismathbookclub.com/schedule', expect: 200 },
-  { group: 'production', url: 'https://minneapolismathbookclub.com/events.ics', expect: 200 },
+  { group: 'production', url: 'https://minneapolismathbookclub.com/events.ics', expect: 200, ics: true },
   // `expect: null` is a ruling that is still open, not a pass: www.matheapolis.com 404s today and the
   // operator has to rule 1a/1b/1c before anyone can call that right or wrong (D245).
   { group: 'production', url: 'https://www.matheapolis.com/', expect: null },
   { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/', expect: 200 },
   { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/schedule', expect: 200 },
-  { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/events.ics', expect: 200 },
+  { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/events.ics', expect: 200, ics: true },
 ];
 
 // Tells, each one a fact about *which artifact* answered rather than a style opinion.
@@ -46,18 +46,43 @@ const tells = [
   ['Pages-era palette', 'text-blue-600'],
 ];
 
-async function probe(url) {
+async function probe(url, { ics = false } = {}) {
   try {
-    const res = await fetch(url, { redirect: 'manual' });
+    // Followed by hand, and the chain kept, because the cutover being planned in D245/D246 *is* a chain of
+    // redirects: a 301 that lands on a 404 has to be visible as `301 -> 404`, not collapsed into either end.
+    // `/schedule` already answers `307 -> /schedule/` on the Preview while every internal link says `href="/schedule"`.
+    const chain = [];
+    let res = await fetch(url, { redirect: 'manual' });
+    let hops = 0;
+    while (res.status >= 300 && res.status < 400 && hops < 4) {
+      const location = res.headers.get('location');
+      chain.push({ status: res.status, location: location ?? '' });
+      if (!location) break;
+      res = await fetch(new URL(location, res.url ?? url), { redirect: 'manual' });
+      hops++;
+    }
     const type = res.headers.get('content-type') ?? '';
-    const body = type.includes('text/html') || type.includes('text/plain') ? await res.text() : '';
+    // The bug this file had on its first run (measured 2026-11-08): it read the body only for `text/html` and
+    // `text/plain`, so `/events.ics` — a real 6,049-byte `text/calendar` document (curl agrees) — printed `0 b`
+    // with no title and no tells. A probe that only reads bodies it recognises reports an absent artifact in
+    // place of a present one, and the feed is the thing A16's gate and the calendar subscribers depend on.
+    const isText = /^text\//.test(type) || /(json|xml|calendar|javascript)/.test(type);
+    const body = isText ? await res.text() : '';
     const robots = res.headers.get('x-robots-tag') ?? '';
     const cache = res.headers.get('cf-cache-status') ?? '';
     const previewErr = res.headers.get('x-preview-user-error') ?? '';
+    const vevents = ics ? (body.match(/BEGIN:VEVENT/g) ?? []).length : 0;
+    const isCalendar = ics && body.includes('BEGIN:VCALENDAR');
     return {
       status: res.status,
-      location: res.headers.get('location') ?? '',
+      first: chain[0]?.status ?? res.status,
+      hops,
+      location: chain[0]?.location ?? (res.headers.get('location') ?? ''),
       bytes: body.length,
+      type,
+      ics,
+      isCalendar,
+      vevents,
       title: (body.match(/<title>([^<]*)<\/title>/)?.[1] ?? '').trim(),
       robots,
       cache,
@@ -65,7 +90,7 @@ async function probe(url) {
       tells: tells.map(([, needle]) => (body.includes(needle) ? 1 : 0)),
     };
   } catch (e) {
-    return { status: 'ERR', location: '', bytes: 0, title: '', robots: '', cache: '', previewErr: '', error: e.message, tells: tells.map(() => 0) };
+    return { status: 'ERR', first: 'ERR', hops: 0, location: '', bytes: 0, type: '', ics, isCalendar: false, vevents: 0, title: '', robots: '', cache: '', previewErr: '', error: e.message, tells: tells.map(() => 0) };
   }
 }
 
@@ -75,7 +100,27 @@ const built = existsSync(distIndex) ? readFileSync(distIndex, 'utf8') : null;
 const builtTitle = built?.match(/<title>([^<]*)<\/title>/)?.[1]?.trim() ?? null;
 
 const results = [];
-for (const t of targets) results.push({ ...t, ...(await probe(t.url)) });
+for (const t of targets) results.push({ ...t, ...(await probe(t.url, { ics: t.ics })) });
+
+// `--json` exists so the scheduled watchdog in `.notes/runbooks/deploy-pipeline-workers-builds.md` can read this
+// probe the same way it reads a `check:*` step: one artifact, no prose to parse, exit code the only verdict.
+if (process.argv.includes('--json')) {
+  const strictProblems = [];
+  for (const r of results) {
+    if (r.expect === null) continue;
+    if (r.status !== r.expect) strictProblems.push(`${r.group} ${r.url} answered ${r.first} -> ${r.status} after ${r.hops} redirect(s)`);
+    if (r.ics && r.status === 200 && !r.isCalendar) strictProblems.push(`${r.group} ${r.url} answered 200 with ${r.type || 'no content-type'} and no BEGIN:VCALENDAR`);
+  }
+  const liveHome = results.find((r) => r.group === 'production' && r.url.endsWith('matheapolis.com/'));
+  console.log(JSON.stringify({
+    measuredAt: new Date().toISOString(),
+    built: built ? { path: distIndex, title: builtTitle } : null,
+    deployedMatchesBuild: Boolean(built && liveHome?.status === 200 && liveHome.title === builtTitle),
+    strictProblems,
+    results,
+  }));
+  process.exit(strict && strictProblems.length ? 1 : 0);
+}
 
 const width = Math.max(...results.map((r) => r.url.length));
 let group = '';
@@ -85,10 +130,11 @@ for (const r of results) {
     console.log(`\n${group}`);
   }
   const flags = [
-    r.location ? `-> ${r.location}` : '',
+    r.hops || r.location ? `${r.first}${r.location ? ` -> ${r.location}` : ''}${r.hops ? ` -> ${r.status}` : ''}` : '',
     r.previewErr ? 'x-preview-user-error' : '',
     r.cache ? `cache:${r.cache}` : '',
     r.robots ? `robots:${r.robots}` : '',
+    r.ics ? (r.isCalendar ? `calendar:${r.vevents} VEVENT${r.vevents === 1 ? '' : 's'}` : 'calendar:NO') : '',
     r.error ? r.error : '',
   ]
     .filter(Boolean)
@@ -99,10 +145,18 @@ for (const r of results) {
   if (r.title) console.log(`       title: ${r.title}`);
 }
 
-console.log('\ntells (rename / descriptor / wordmark step / Pages-era nav / Pages-era palette)');
+console.log('\ntells (rename / descriptor / wordmark step / Pages-era nav / Pages-era palette) — HTML bodies only');
 for (const r of results) {
-  if (!r.bytes) continue;
+  if (!r.bytes || r.ics) continue;
   console.log(`  ${r.tells.join(' ')}  ${r.url}`);
+}
+
+const feeds = results.filter((r) => r.ics);
+if (feeds.length) {
+  console.log("\nthe feed, as a visitor gets it (the calendar subscribers' half of A16's gate)");
+  for (const r of feeds) {
+    console.log(`  ${r.status}${r.hops ? ` (after ${r.hops} redirect${r.hops === 1 ? '' : 's'})` : ''}  ${r.url}  ${r.bytes}b  ${r.type || 'no content-type'}  ${r.isCalendar ? `${r.vevents} VEVENT${r.vevents === 1 ? '' : 's'}` : 'NOT a VCALENDAR'}`);
+  }
 }
 
 const liveHome = results.find((r) => r.group === 'production' && r.url.endsWith('matheapolis.com/'));
@@ -131,10 +185,12 @@ if (strict) {
   const problems = [];
   for (const r of results) {
     if (r.expect === null) continue;
-    if (r.status !== 200) problems.push(`${r.group} ${r.url} answered ${r.status}${r.location ? ` (-> ${r.location})` : ''}`);
+    // The end of the chain is what a visitor gets. A 301 onto a 404 must fail here even though a 301 happened.
+    if (r.status !== r.expect) problems.push(`${r.group} ${r.url} answered ${r.first}${r.hops ? ` -> ${r.status}` : ` (${r.status})`} after ${r.hops} redirect${r.hops === 1 ? '' : 's'}`);
+    if (r.ics && r.status === 200 && !r.isCalendar) problems.push(`${r.group} ${r.url} answered 200 with ${r.type || 'no content-type'} and no BEGIN:VCALENDAR - a feed that is not a feed`);
   }
   if (problems.length) {
-    console.log('\n--strict: production URLs that did not answer 200');
+    console.log('\n--strict: targets that did not answer as expected');
     for (const p of problems) console.log(`  ${p}`);
     process.exit(1);
   }
