@@ -48,6 +48,7 @@
     "round13": "node design/round13.mjs",
     "round14": "node design/round14.mjs",
     "round15": "node design/round15.mjs",
+    "round16": "node design/round16.mjs",
     "plates": "node scripts/plate-asset.mjs",
     "check:space": "node design/whitespace-survey.mjs",
     "check:ground": "node design/pixel-ground.mjs",
@@ -86,7 +87,8 @@
     "falsify:manifest": "node scripts/falsify-manifest-token.mjs",
     "check:social": "node scripts/check-social-card.mjs",
     "check:social:selftest": "node scripts/check-social-card.mjs --selftest",
-    "check:social:live": "node scripts/make-social-share.mjs .design/tmp-card-live.jpg"
+    "check:social:live": "node scripts/make-social-share.mjs .design/tmp-card-live.jpg",
+    "round16:base": "node design/grill/copy-shipped.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.4.3",

@@ -247,5 +247,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D237** (2026-11-07) — A session's report ends with a ranked recommendation and a Value added section (operator ruling, 2026-11-07)
 - **D238** (2026-11-06) — `/schedule` prints a window, not the whole future: 8 weeks, at most 8 rows, and the page says what it left out (2026-11-06, Fedora 45 native, Node 24.22.1, `src/lib/event-window.mjs` + `scripts/check-schedule-window.mjs`)
 - **D239** (2026-11-07) — The landing page opens with what the club is, not with the next date; the "one evening is enough" promise is deleted rather than reworded (2026-11-07, Fedora 45 native, Node 24.22.1, built `dist/client/index.html` + a planted all-CANCELLED snapshot)
+- **D240** (2026-11-07) — The club is **Matheapolis**: the name, the descriptor and the continuity line, what a rename reaches in this repo, and the two strings it deliberately does not touch (2026-11-07, Linux, `npm run verify`, `npm run round16`)
+- **D241** (2026-11-07) — Two apexes answer the same Worker on purpose: every hostname is a declared trigger, `check:deploy` counts them, and the legacy zone route dies only with the 301 that replaces it (2026-11-07, Linux, curl + `wrangler` config + `check:deploy`)
+- **D242** (2026-11-07) — The share-card gate's drift tolerance widened from a 3px floor to a band on the run's own width, because the wordmark changed; what the gate still proves, and what it no longer does (2026-11-07, Linux, `check:social` / `check:social:selftest`)
 
-Defined: 239 (D1-D239). Unused ids: none.
+Defined: 242 (D1-D242). Unused ids: none.
