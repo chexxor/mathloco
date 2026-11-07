@@ -140,8 +140,15 @@ not permanent: **when a real dated line exists, the display step moves to it and
 to `text-heading`** (operator ruling 2026-11-01, D112 — the rule used to read "reserved for when/where",
 which on a landing page whose event sections are switched off would have left the display step
 reserved for content that does not exist, and flattened the title to 27.7px beside two 27.7px section
-headings). Applied today: landing `h1` = `text-display-1` base / `text-display-2` at ≥sm, `h2`s and the
-footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`.
+headings). Applied today: landing `h1` = `text-display-1` base / `text-display-3` at ≥sm, `h2`s and the
+footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`. The step to display-3 is the rename's
+(A15): one 11-letter word at display-2 holds 250.5px of a 672px column at 1240 and at display-3 holds 300.4px,
+and the page costs +8px at 640 and nothing at 1240, 390 or 320 @measured 2026-11-08 by `npm run round16`; the
+`sm:` bound is what keeps the 320 box (276px) from wrapping a 300px name. **A display step can only be priced in a
+class the build emits.** Tailwind generates the utilities its scanner saw in `src/`, so an option that retypes a
+utility no source file uses removes a rule and adds none: `sm:text-display-4` measured **−16px** at 640 with the
+wordmark at 208.7px of ink, i.e. what display-1 paints — a shrink reported as a growth. `design/round16.mjs` now
+throws when an option adds a class token the built CSS does not contain.
 
 **Never** use `text-display-4` (62.9px) below a 375 viewport without a cap. The fits are measured in the face
 the title actually renders in — Public Sans Variable at the weight it writes, `design/fonts/display-fit-chrome.json`
@@ -359,24 +366,30 @@ freshness.
   sphere diagram only.
 - The nav is **one row at every width, `flex-wrap: nowrap`, one type tier at every width**: links at
   `text-label` with 16px gaps, targets 32px tall (16px line box + py-2). Shape is D100's; the tier
-  boundary is not (D117). The mark is `MPLS Math Club`, 16px serif with "Math" in `gold` (4.82 on paper),
-  it is the home path, and its `aria-label` carries the full club name. D100 rejected a 13px target, so do
+  boundary is not (D117). The mark is the club's own name — `Matheapolis` since the 2026-11-07 rename, `MPLS Math Club`
+  before it — in `font-body` at the `text-body` step, ink, no accent: the old gold `Math` inside the mark depended on
+  "Math" being a word inside the mark, and a coined single word has no word boundary to colour. (The gold `∑` summand
+  stays, and only on the ink band, where `gold-on-ink` is the hue the contrast oracle allows.) It is the home path, and
+  its `aria-label` carries the name. D100 rejected a 13px target, so do
   not shave the padding.
 - **The label set is the mark plus `Chat`.** `Schedule` and `Members` were dropped on 2026-11-02 (D117):
   the build emits `index.html`, `chat/index.html` and `404.html` only, and `public/` has no redirect rules,
   so those two labels were links to the 404 page — on `main` as well as here. A nav item requires a page.
-  Measured with the probe `check:render` runs at every width @measured 2026-11-03 by check:render: the row **needs 176px** against a container
-  that offers 276 at a 320 viewport and 256 at 300. (This line said **171px** from 2026-11-02 to 2026-11-03 while the
-  probe reported 176 at every width — a doc figure a probe contradicts is a doc bug; quote the probe's line.) `--breakpoint-nav-narrow` (370px) and the narrow
+  Measured with the probe `check:render` runs at every width @measured 2026-11-07 by check:render: the row **needs 217px** against a container
+  that offers 276 at a 320 viewport. (The line said **176px** from 2026-11-03, when the mark was `MPLS Math Club`; the
+  rename is the only thing that has changed in the row since, but the delta is not attributed to it — re-run the probe
+  before quoting a nav figure. A doc figure a probe contradicts is a doc bug; quote the probe's line.) `--breakpoint-nav-narrow` (370px) and the narrow
   `text-micro` nav tier went with the dead labels — a tier that fits everywhere is not a tier. An
   arbitrary `min-[…]:` / `max-[…]:` bracket in live markup is banned outright, because the gates read
   tokens and a bracket writes nothing to any token.
-- **Headroom for the schedule page, measured:** `Schedule` is 57.6px at this tier, so adding it back puts
-  the row at **~250** (176 + 57.6 + a 16px gap) — inside 276 by ~26px. A third path would not fit at the floor. One
-  more path, not two, and the probe says so the moment it stops fitting.
+- **Headroom for the schedule page, re-measured and now negative:** `Schedule` is 57.6px at this tier, so adding it
+  back puts the row at **~291** (217 + 57.6 + a 16px gap) — **over** the 276px a 320 viewport offers by ~15px. The old
+  line here said "inside 276 by ~26px", and it stopped being true when the row grew to 217 @measured 2026-11-07 by
+  check:render. So a `Schedule` nav item is not free at the floor: it needs a shorter label, a smaller tier, or the
+  floor itself re-argued. One more path, not two, and the probe says so the moment it stops fitting.
 - **The site's floor is 320px** (D114, operator ruling 2026-11-02), and `check:render` refuses to run a
   default width set that has dropped 320. What sets the floor changed with D117: it used to be the nav
-  (3px of margin at 320); the nav now clears the floor by 100px (needs 176, offered 276), and the binding constraint is the hero
+  (3px of margin at 320); the nav now clears the floor by 59px (needs 217, offered 276), and the binding constraint is the hero
   primary control, which measures 48px at 310 and wraps to 64px at 300 — breaking the control grammar.
   Below the floor the gate says so rather than hiding it. Ask for the sub-floor widths any time with
   `RENDER_WIDTHS=1240,640,390,375,360,320,310,300 node design/render-gate.mjs /`. The **default** set is
@@ -463,7 +476,7 @@ resolve through Public Sans Variable at 500/600/800 instead of a synthesised sys
 
 ## The share card is one screen of the site, and the browser composes it
 
-`public/book-club-social-share.jpg` (1200x630 — what `og:image` / `twitter:card` point at) is generated by
+`public/matheapolis-social-share.jpg` (1200x630 — what `og:image` / `twitter:card` point at) is generated by
 `scripts/make-social-share.mjs` (`npm run assets:social`). It is not hand-drawn art, and it has no
 photograph: D86 rules stock crowd photography out ("shows people who have never attended"), D94 records
 that no club photographs exist so the site is **photo-free by construction** — and the card used to be a
@@ -519,7 +532,7 @@ the gate can fail.
 The site's graphic language is the club's diagram (D86): routes arriving at one point on a sphere. **No
 stock people photography, ever** (D94: no photograph of this club exists, so a photo of strangers is a
 false statement about who attends), and `ratify-check.mjs` enforces it structurally — no live source under
-`src/` may import a raster. The only rasters in the repo are generated (`public/book-club-social-share.jpg`)
+`src/` may import a raster. The only rasters in the repo are generated (`public/matheapolis-social-share.jpg`)
 or third-party brand marks in `public/` that are never imported.
 
 The mark lives in **one file**: `src/lib/brand-mark.mjs` exports `MARK` (viewBox 240x150 — the surface ring,

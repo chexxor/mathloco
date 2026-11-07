@@ -49,7 +49,25 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
 // empty calendar is distinguishable from a broken page (DESIGN.md, States) — moved to the surface that actually
 // shows a calendar: the compact band's empty state carries the status word, the title, the body and the dated
 // line, in the notice grammar `check:render` holds. `heroLabel()` is deleted with this lane (D239).
-const locator = 'A book, a room, and whoever shows up';
+// The lane said "A book, a room, and whoever shows up" until 2026-11-07, when the operator rebranded the club as
+// **Matheapolis** ("I want the focus on the people and the ideas more than the book. the book is more an
+// inspiration"). With the name now a single coined word, the lane's job changed: it carries the **descriptor**,
+// which is what tells a stranger what "Matheapolis" is a club of. The operator picked "A Twin Cities math club";
+// the longer wording they offered ("A math club for the Twin Cities") was measured in the same slot and costs the
+// same: 180px vs 242px of ink in a 288px lane at 320, one line box at every width
+// @measured 2026-11-07 by `npm run round16` (design/grill/round16/report.json), so the choice is voice, not layout.
+// It still contains no date, so the staleness rule that killed the "Next: …" label still holds.
+//
+// It names **both cities** from 2026-11-08 (operator: "we should say 'Minneapolis-St. Paul Math Club' instead of
+// 'Twin Cities Math Club' to make it clear the name of the club is a play on words with the name of the city").
+// The pun is `Math` inside `Minneapolis`, and a descriptor that says "Twin Cities" never prints the city the
+// wordmark puns on; the lane is where the pun becomes readable. Still a locator, not the wordmark, and still no
+// date. The article is dropped here because the lane is a label, not a sentence, and the lane's `uppercase`
+// transform is what the width is spent on: this string paints 243.7px of ink in a 288px lane at 320 in **one**
+// line box, +0 page height at every shipped width @measured 2026-11-08 by `npm run round16`. The article form
+// measures 257px and also holds one line, so it is kept where the phrase is read as a sentence - `seo.title` and
+// the `<title>` that mirrors it. The en dash is the pair-of-place-names form; the operator typed a hyphen.
+const locator = 'Minneapolis\u2013St. Paul math club';
 // The hero used to end with "Current Focus: Number Theory and Abstract Algebra". The slot behind it had no
 // source, `check:content` had it listed as an unsourced claim, and on 2026-11-03 the operator ruled it false:
 // "We no longer have that focus. We have no current focus at all right now." So `focus` here is whatever a
@@ -84,11 +102,31 @@ const focus = value(content.focus);
         <span class="text-ink-3">{locator}</span>
       </div>
 
+      {/* One word, one line, at every width this site is probed at (1240 / 640 / 390 / 320): the name is 251px of
+          ink at display-2 with 672px available at 1240, and 209px in 288px at 320 @measured 2026-11-07 by
+          `npm run round16`. The shipped h1 needed a `&nbsp;` tie and a `hidden md:inline` <br> to break "Minneapolis
+          Math Book Club" into two lines that did not orphan a word; none of that machinery survives the rename,
+          and the phone gets its fold back (-56px of page at 320, -7px at 390). The `text-ink` span on the second
+          half went with the second half.
+
+          One display step bigger from `sm` (approved 2026-11-08). The rename created this choice: one 11-letter
+          word had 421px of unused line at 1240 at display-2, and the old three-word name never had that air to
+          spend. The step is priced, not asserted - the name goes from 250.5px to 300.4px of ink in a 672px column at
+          1240, the identity column keeps its 10 line boxes there, and the page costs **+0 at 1240, +8 at 640, +0 at
+          390, +0 at 320** @measured 2026-11-08 by `npm run round16`: the reversal option (`size-2`) measures
+          3140/4550/4713/5223 against the shipped 3140/4558/4713/5223. The `sm:` bound is why three of those four
+          are zero - at 390 and 320 the h1 is display-1 either way, and `DESIGN.md`'s fit table is why that matters
+          (display-3's 309.3px longest-word fit needs ~310px of box; the boxes are 276 at 320, 346 at 390).
+
+          The ladder stops here for a reason found the hard way. Pricing `sm:text-display-4` measured **-16px at
+          640** with the name at 208.7px of ink - what display-1 paints - because no source file uses that class, so
+          Tailwind emits no rule for it and the mutation removed a step instead of adding one. `design/round16.mjs`
+          now throws on any class an option adds that the built CSS does not emit; the ceiling that stays typed is
+          `DESIGN.md`'s own ban on `text-display-4` below a 375 viewport without a cap. */}
       <h1
-        class='mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-2'
+        class='mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3'
       >
-        Minneapolis Math<!-- -->&nbsp;<br class='hidden md:inline' /><span
-          class='text-ink'>Book Club</span>
+        Matheapolis
       </h1>
 
       <p
@@ -99,12 +137,18 @@ const focus = value(content.focus);
         Dates go up on Meetup; most of the arguing happens in the chat between meetings.
       </p>
 
+      {/* The last sentence names the old club, once, on the page a returning member or an old link lands on. The
+          wording is the Meetup listing's own name ("Minneapolis Mathematics Book Club"), not the site's old
+          wordmark, because that is the name six years of members, printed flyers and the Meetup URL actually carry.
+          Cost, measured before shipping: one extra line box in this lede at 640/390/320 and +28 to +61px of page
+          @measured 2026-11-07 by `npm run round16`. Keep it for at least a season of the redirect; deleting it is a
+          copy edit, not a migration. */}
       <p
         class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
       >
         There is no syllabus, no reading list to keep up with, and no current focus. What the club is
         pulling on is decided in its own chat, and some of the threads open there are further down
-        this page. Bring a question; you don't need a field.
+        this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.
       </p>
 
       {focus && (

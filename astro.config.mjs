@@ -7,8 +7,11 @@ import svelte from '@astrojs/svelte';
 // https://astro.build/config
 export default defineConfig({
   // Keep in sync with `seo.canonical` in src/config.json; required for @astrojs/sitemap
-  // and for canonical/OG URLs.
-  site: 'https://minneapolismathbookclub.com',
+  // and for canonical/OG URLs. This is the host the sitemap’s <loc> entries carry, so after the 2026-11-07
+  // cutover to matheapolis.com a stale value here publishes the legacy apex as the canonical URL of every page —
+  // the one inconsistency in a domain move that a 301 cannot undo. Nothing in the gate set reads the host in
+  // <loc>, so this comment is the only thing keeping the two apexes in step.
+  site: 'https://matheapolis.com',
   integrations: [sitemap(), svelte()],
   output: 'server',
   // Nothing in this app reads Astro sessions, but @astrojs/cloudflare v14 enables a KV-backed session

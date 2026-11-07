@@ -1,8 +1,8 @@
 {
   "_rule": "The event snapshot the site publishes from — D70's contract (`/events.ics` plus this row shape, the writer deliberately deferred) and D73's topology (Mobilizon is the club of record; mathloco keeps a DERIVED snapshot and never fetches Mobilizon at request time, so Mobilizon being down costs editing, not serving). Nothing here is invented: every row is a field the organizer typed into Mobilizon, harvested from the group feed by `npm run events:harvest`, and each row carries the URL and the fetch that put it here. D92's copy rule still binds the *page*: real dates and series names, never a frequency inferred from the rows. `npm run check:ics` fails the build on the spec traps (D72) and on any instant published without a confirmed wall clock (D169).",
   "calendar": {
-    "prodid": "-//Minneapolis Math Book Club//Events 1.0//EN",
-    "name": "Minneapolis Math Book Club",
+    "prodid": "-//Matheapolis//Events 1.0//EN",
+    "name": "Matheapolis",
     "timezone": "America/Chicago",
     "_timezone": "The club meets in the Twin Cities, so the published instants carry this TZID with a VTIMEZONE (D72). `check:ics` asserts the offsets against the runtime's tz database rather than trusting this string."
   },

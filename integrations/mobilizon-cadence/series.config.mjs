@@ -140,7 +140,7 @@ export const ALERT = {
   tokenEnv: "NTFY_TOKEN",
   /** What tapping the notification opens. The public schedule page, because that is the thing an alert is
    *  about, and reading it is how you tell whether the alert is stale. */
-  click: "https://minneapolismathbookclub.com/#when-we-meet",
+  click: "https://matheapolis.com/#when-we-meet",
   /** Priorities are measured from the upstream table: 5 max (long vibration, pop-over), 4 high, 3 default,
    *  2 low (no sound, drawer only), 1 min. Nothing here is a 5: these messages arrive at 09:00 and a calendar
    *  problem is not a three-in-the-morning emergency. A run with nothing to say sends nothing at all.

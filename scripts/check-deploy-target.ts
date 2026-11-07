@@ -25,9 +25,12 @@ const ARTIFACT = resolve(process.cwd(), 'dist/server/wrangler.json');
 // The deploy contract. Change these together with wrangler.toml, never one without the other.
 const EXPECTED = {
   workerName: 'minneapolis-math-book-club',
-  apex: 'minneapolismathbookclub.com',
+  apex: 'minneapolismathbookclub.com', // the legacy apex: still attached, because it is what serves the redirect
+  newApex: 'matheapolis.com', // the apex the club is called at now (2026-11-07)
   routePattern: 'minneapolismathbookclub.com/*',
-  customDomainPattern: 'minneapolismathbookclub.com',
+  // Every Custom Domain the Worker must be attached to. A name added in the dashboard and missing here is
+  // detached by the next `wrangler deploy` - which is how a routine build takes a domain offline.
+  customDomains: ['minneapolismathbookclub.com', 'matheapolis.com'],
   prodDb: 'd1-mathloco-prod-db',
   previewDb: 'd1-mathloco-preview-db',
   guildId: '1170385683379126343', // the SERVER id; the bot's app id yields 10004 "Unknown Guild"
@@ -91,11 +94,11 @@ const flags = (config.compatibility_flags ?? []) as string[];
 //    proxied record to exist for the hostname. Both are declared while the Pages-era record is retired
 //    (wrangler.toml; runbook: deploy-pipeline-workers-builds).
 check(
-  routes.some((r) => r.pattern === EXPECTED.customDomainPattern && r.custom_domain === true),
-  `custom domain ${EXPECTED.customDomainPattern} present`,
+  EXPECTED.customDomains.every((host) => routes.some((r) => r.pattern === host && r.custom_domain === true)),
+  `custom domains ${EXPECTED.customDomains.join(', ')} present`,
   `wrangler replaces triggers on deploy, so a config without this entry DETACHES the Custom Domain and
      leaves the apex depending on whatever DNS record happens to exist. Add back
-     { pattern = "${EXPECTED.customDomainPattern}", custom_domain = true } to wrangler.toml.`,
+     { pattern = "<host>", custom_domain = true } to wrangler.toml for whichever one is missing.`,
 );
 check(
   routes.some((r) => r.pattern === EXPECTED.routePattern),
@@ -104,10 +107,11 @@ check(
      apex has been re-probed with the leftover Pages record gone (runbook: deploy-pipeline-workers-builds).`,
 );
 check(
-  routes.length === 2,
-  `exactly 2 triggers declared, found ${routes.length}`,
+  routes.length === EXPECTED.customDomains.length + 1,
+  `exactly ${EXPECTED.customDomains.length + 1} triggers declared, found ${routes.length}`,
   `wrangler deploy replaces the Worker's whole trigger set with this list, so anything added by hand in
-     the dashboard is detached on the next build. Declared: the Custom Domain and the route.`,
+     the dashboard is detached on the next build. Declared: one Custom Domain per apex, plus the
+     legacy zone route. Add the missing entry here AND to EXPECTED.customDomains above.`,
 );
 
 // 2. Dead-end deploy shapes we already tried and refuted.
@@ -262,4 +266,6 @@ if (failures.length) {
   console.log('but deploying this artifact would not be the deploy you think it is.');
   process.exit(1);
 }
-console.log(`\n${passed.length} checks passed: this artifact is deployable on ${EXPECTED.apex}.`);
+console.log(
+  `\n${passed.length} checks passed: this artifact is deployable on ${EXPECTED.newApex} (and still attached to ${EXPECTED.apex}).`,
+);
