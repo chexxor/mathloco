@@ -140,8 +140,15 @@ not permanent: **when a real dated line exists, the display step moves to it and
 to `text-heading`** (operator ruling 2026-11-01, D112 — the rule used to read "reserved for when/where",
 which on a landing page whose event sections are switched off would have left the display step
 reserved for content that does not exist, and flattened the title to 27.7px beside two 27.7px section
-headings). Applied today: landing `h1` = `text-display-1` base / `text-display-2` at ≥sm, `h2`s and the
-footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`.
+headings). Applied today: landing `h1` = `text-display-1` base / `text-display-3` at ≥sm, `h2`s and the
+footer sum glyph = `text-heading`, 404 and chat `h1` = `text-display-1`. The step to display-3 is the rename's
+(A15): one 11-letter word at display-2 holds 250.5px of a 672px column at 1240 and at display-3 holds 300.4px,
+and the page costs +8px at 640 and nothing at 1240, 390 or 320 @measured 2026-11-08 by `npm run round16`; the
+`sm:` bound is what keeps the 320 box (276px) from wrapping a 300px name. **A display step can only be priced in a
+class the build emits.** Tailwind generates the utilities its scanner saw in `src/`, so an option that retypes a
+utility no source file uses removes a rule and adds none: `sm:text-display-4` measured **−16px** at 640 with the
+wordmark at 208.7px of ink, i.e. what display-1 paints — a shrink reported as a growth. `design/round16.mjs` now
+throws when an option adds a class token the built CSS does not contain.
 
 **Never** use `text-display-4` (62.9px) below a 375 viewport without a cap. The fits are measured in the face
 the title actually renders in — Public Sans Variable at the weight it writes, `design/fonts/display-fit-chrome.json`

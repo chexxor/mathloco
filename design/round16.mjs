@@ -151,6 +151,55 @@ function externalSlots() {
 }
 
 // --- 3. the probe ------------------------------------------------------------------------------------------
+/**
+ * A class the build never emitted is not an option - it is a no-op that reads as a saving.
+ *
+ * Measured the hard way on 2026-11-08: pricing `sm:text-display-4` reported **-16px of page at 640** with the
+ * wordmark at 208.7px of ink, which is what `text-display-1` paints. Tailwind emits a utility its scanner saw in
+ * `src/`, and no source file uses `sm:text-display-4`, so the mutation removed a rule and added none: the option
+ * priced a size REDUCTION as a size INCREASE, and the specimen would have photographed a smaller name under a
+ * label saying it was bigger. `check:classes` cannot catch this because the class never reaches `src/` - it is
+ * written into a copy of the built page.
+ *
+ * So: every class token an option ADDS to a `class="…"` attribute is looked for, in the selector form the CSS
+ * uses, in the stylesheets the probe actually loads. A token with no rule throws. Tokens that are not a plain
+ * `variant:utility` shape are skipped rather than guessed at (an arbitrary value escapes more than a colon), and
+ * the skip is said out loud in the notes so the check's coverage is visible in the record.
+ */
+function classTokens(html) {
+  const out = new Set();
+  for (const m of html.matchAll(/class="([^"]*)"/g)) for (const t of m[1].split(/\s+/)) if (t) out.add(t);
+  return out;
+}
+function cssText(dir) {
+  const acc = [];
+  const walk = (d) => {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const p = join(d, e.name);
+      if (e.isDirectory()) { walk(p); continue; }
+      if (e.name.endsWith('.css')) acc.push(readFileSync(p, 'utf8'));
+    }
+  };
+  try { walk(dir); } catch { /* no css dir - the check below reports the token as a missing rule */ }
+  return acc;
+}
+function assertLiveClasses(dir, option) {
+  const css = cssText(dir);
+  const skipped = [];
+  for (const p of optionMutations(option)) {
+    const before = classTokens(p.from), after = classTokens(p.to);
+    for (const t of after) {
+      if (before.has(t)) continue;
+      if (!/^[a-z0-9-]+(?::[a-z0-9-]+)*$/.test(t)) { skipped.push(t); continue; }
+      const selector = `.${t.replace(/:/g, '\\:')}`;
+      if (!css.some((c) => c.includes(selector))) {
+        throw new Error(`round16: option "${option.label}" adds the class "${t}" (${p.where}), which the built CSS does not emit - the mutation is inert, so its page-height number measures a missing rule rather than the option. Use a step the site already generates, or add the utility to src/ and rebuild before pricing it.`);
+      }
+    }
+  }
+  if (skipped.length) notes.push(`"${option.label}": class tokens NOT checked for a generated rule (not a plain variant:utility shape): ${skipped.join(', ')}`);
+}
+
 function distCopy(label, option) {
   const dir = `${SCRATCH}/dist-${label}`;
   rmSync(dir, { recursive: true, force: true });
@@ -173,6 +222,7 @@ function distCopy(label, option) {
     }
     if (out !== html) writeFileSync(file, out);
   }
+  assertLiveClasses(dir, option);
   notes.push(`applied "${option.label}" to ${shippedPages.length} built pages (${counts.map((c) => `${c.where} x${c.matches}`).join(', ')} on /, ${siblings} further replacements on the other routes)`);
   return { dir, counts };
 }
@@ -226,7 +276,7 @@ async function measure(label, option) {
   return at;
 }
 
-say(`round16 — ${1 + options.length} pages x ${WIDTHS.length} widths (${WIDTHS.join('/')}); dist built ${new Date(STALE.built.mtimeMs).toISOString()}`);
+say(`round16 — ${1 + options.length} rows (the shipped page + ${options.length} options) x ${WIDTHS.length} widths (${WIDTHS.join('/')}); ${shippedPages.length} built pages carry each mutation; dist built ${new Date(STALE.built.mtimeMs).toISOString()}`);
 const baseline = { label: 'shipped', at: await measure('shipped', null) };
 for (const w of WIDTHS) {
   if (!baseline.at[String(w)].identity) throw new Error(`the shipped page produced no identity box at ${w}`);

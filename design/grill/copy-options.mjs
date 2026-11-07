@@ -35,9 +35,9 @@
 // a byte that has drifted from the build makes the round measure a page that does not exist.
 export const SHIPPED = {
   "name": "Matheapolis",
-  "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-2\">Matheapolis</h1>",
-  "locator": "A Twin Cities math club",
-  "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar. What happens at the table is the math itself — people argue about it, bring their own examples, and nobody is lecturing.",
+  "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
+  "locator": "Minneapolis–St. Paul math club",
+  "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
   "formerly": "Formerly the Minneapolis Mathematics Book Club.",
   "footerAnchor": "<p class=\"mt-6 text-micro\">Minneapolis, Minnesota</p>"
 };
@@ -62,26 +62,82 @@ export const ORG_OF_RECORD = [
 ];
 
 // The rename is ruled (operator, 2026-11-07: "I want to rebrand this group under Matheapolis with a subtitle
-// something like 'A Twin Cities math club' or 'A math club for the Twin Cities'"), and it shipped: the name is in
-// the h1, the descriptor is in the hero's label lane, and the old name survives once as a continuity sentence.
-// What is still open, and what this round therefore prices:
+// something like 'A Twin Cities math club' or 'A math club for the Twin Cities'"), and so is its second half
+// (operator, 2026-11-08: "we should say \u201cMinneapolis-St. Paul Math Club\u201d instead of \u201cTwin Cities Math Club\u201d to
+// make it clear the name of the club is a play on words with the name of the city"). Both shipped, together with
+// the two copy reductions the same review asked for (the hero's second paragraph, deleted in the branch; the
+// compact band's second sentence, deleted here) and the bigger wordmark.
+//
+// What this round prices NOW is therefore mostly the way back: the three shipped moves are each repriced as a
+// reversal, so the number that justified them stays in the record instead of expiring when the option that produced
+// it is deleted, and so a future session that wants to undo one meets a measurement rather than an opinion. The
+// two open alternatives (`subline`, `formerly-footer`) are kept because both were declined with a number attached,
+// and the descriptor's article form is kept because the shipped lane drops it while `seo.title` keeps it — the
+// asymmetry is a ruling, and a ruling that is only described in prose is one a later edit will "fix" by accident.
 const EYEBROW_TABLE = 'A table, a question, and whoever shows up';
+
+// The descriptor that shipped (2026-11-08) and the two forms this round compared. The lane is `uppercase`, and
+// capitals are wider than the lowercase these strings are typed in, so the ink cost is measured in the lane, not
+// counted in characters. The en dash (\u2013) is the pair-of-place-names form; the operator typed a hyphen.
+const LOCATOR_CITIES = 'Minneapolis\u2013St. Paul math club';
+const LOCATOR_TWIN = 'A Twin Cities math club';
+// The band lede with its second sentence put back, for `band-restore`.
+const BAND_FULL = `${BAND_MEETUP} What happens at the table is the math itself \u2014 people argue about it, bring their own examples, and nobody is lecturing.`;
 
 export const OPTIONS = [
   {
-    label: 'size-3',
-    what: 'the wordmark one display step bigger from `sm` (`sm:text-display-2` -> `sm:text-display-3`)',
-    h1: SHIPPED.h1.replace('sm:text-display-2', 'sm:text-display-3'),
-    claims: 'Nothing new — the same name, set larger. This is the option the rename created: a single 11-letter word at display-2 measures 251px of ink in a 672px column at 1240, so the hero has 421px of unused line @measured 2026-11-07 by `npm run round16`. Either that air is the design, or the name gets bigger; the old three-word name had no such choice.',
-    surface: 'One class in `src/components/HeroSection.astro`. The name’s ink width at 320 is what decides it: display-2 measures 209px in a 288px lane there, and display-3 scales that by 52.4/43.7.',
+    label: 'locator-twin',
+    what: 'the hero descriptor back to naming the metro (`Minneapolis\u2013St. Paul math club` -> `A Twin Cities math club`)',
+    locator: LOCATOR_TWIN,
+    claims: 'The claim is identical either way; the difference is whether the page ever prints the city the wordmark puns on. Repricing the shipped string as a reversal is what keeps the 2026-11-08 ruling cheap to audit: if the shorter form ever becomes necessary, this option says what it would buy.',
+    surface: 'Three slots move together and one of them is outside this file: `locator` in `src/components/HeroSection.astro`, `seo.title` in `src/config.json`, and the `<Layout title>` in `src/pages/index.astro`, which is a literal copy of the config string.',
+  },
+  {
+    label: 'locator-cities-article',
+    what: 'the shipped descriptor with the article restored (`A Minneapolis\u2013St. Paul math club`)',
+    locator: `A ${LOCATOR_CITIES}`,
+    claims: 'Identical claim, two characters longer. Priced because the shipped state is asymmetric on purpose — no article in the lane (it is a label), article in `seo.title` (a title is read as a sentence fragment) — and an asymmetry with no number next to it gets "fixed" by a later edit.',
+    surface: 'Same three slots as `locator-twin`.',
+  },
+  {
+    label: 'size-2',
+    what: 'the wordmark one display step smaller from `sm` (`sm:text-display-3` -> `sm:text-display-2`)',
+    h1: SHIPPED.h1.replace('sm:text-display-3', 'sm:text-display-2'),
+    claims: 'The shipped step, priced in reverse. The rename created the choice: a single 11-letter word at display-2 measured 251px of ink in a 672px column at 1240, i.e. 421px of unused line, and the old three-word name never had that air to spend. Reversing it measures +0 page height at 1240, 390 and 320 and -8px at 640 @measured 2026-11-08 by `npm run round16` - the wordmark would drop from 300.4px to 250.5px of ink and the page would not notice, which is why the step is cheap enough to keep and why the argument for it is the column, not the fold.',
+    surface: 'One class in `src/components/HeroSection.astro`. The step is `sm:`-bounded, which is why the 320 width (already at display-1 for one word) is where a reversal buys nothing.',
+  },
+  // `size-4` is deliberately NOT an option, and the reason is a finding rather than a preference. Pricing
+  // `sm:text-display-4` on 2026-11-08 measured -16px of page at 640 with the wordmark at 208.7px of ink - the width
+  // `text-display-1` paints - because Tailwind emits only utilities its scanner saw in `src/`, no source file here
+  // uses `sm:text-display-4`, and the mutation therefore removed a rule while adding none. The number looked like a
+  // saving and was a size reduction wearing a bigger label. `design/round16.mjs` now throws on any class token an
+  // option adds that the built CSS does not emit, so this ladder can only be priced in steps the site really
+  // generates. The ceiling that stays typed rather than measured is `DESIGN.md`'s display-fit table: the longest
+  // real word at display-4 is 371.3px, the whole former club name at display-4 is 868px nowrap, and the step is
+  // banned below a 375 viewport without a cap.
+  {
+    label: 'band-restore',
+    what: 'the compact band\u2019s deleted second sentence put back on the homepage',
+    band: BAND_FULL,
+    claims: 'It re-makes a claim the operator deleted ("what happens at the table is the math itself — people argue about it, bring their own examples, and nobody is lecturing"), so this is not a free revert: the 2026-11-07 rewrite of the join copy is what removed the earlier clause for promising a verdict about the reader\u2019s taste from one evening, and this sentence is the sibling of that one. Priced so the deletion is reversible with a number in hand.',
+    surface: '`src/components/Schedule.astro`, compact branch only — the full-page lede on `/schedule` never carried this sentence, which is why deleting it costs `/schedule` nothing.',
+  },
+  {
+    label: 'lede-cities',
+    what: 'the hero lede\u2019s \u201cin the Twin Cities\u201d named as the descriptor names it (\u201cin the Minneapolis\u2013St. Paul area\u201d)',
+    extra: [
+      { where: 'hero lede', from: 'in a coffee shop or a brewery in the Twin Cities and work', to: `in a coffee shop or a brewery in the ${LOCATOR_CITIES.slice(0, LOCATOR_CITIES.indexOf(' math'))} area and work` },
+    ],
+    claims: 'Same fact, spelled the way the lane now spells it. Deliberately NOT priced as a shipped change: the descriptor already names both cities 300px above this sentence, and the venues the page sources are Minneapolis, St. Paul and the surrounding area (src/content.json `venues`), so a wider phrase is the honest one and a third repetition of the two city names in one column is the defect the band\u2019s deleted clause was.',
+    surface: 'One phrase in `src/components/HeroSection.astro` (`lede`). `seo.description` already ships the named-cities form, so this option is about the painted page only.',
   },
   {
     label: 'subline',
     what: 'the descriptor UNDER the name inside the h1 (`text-subhead`), and the label lane goes back to being a locator about the room',
-    h1: '<h1 class="mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-2">Matheapolis<span class="block mt-2 text-subhead font-body text-ink-2">A Twin Cities math club</span></h1>',
+    h1: SHIPPED.h1.replace('>Matheapolis</h1>', `>Matheapolis<span class="block mt-2 text-subhead font-body text-ink-2">A ${LOCATOR_CITIES}</span></h1>`),
     locator: EYEBROW_TABLE,
-    claims: 'The same two facts, swapped in size: the name stays the big line and the descriptor becomes a serif line under it, while the small-caps lane returns to describing the room rather than the club. The longer wording the operator offered ("A math club for the Twin Cities") costs +32px of page at 320 over this one @measured 2026-11-07, so the shorter wording is the one carried here.',
-    surface: 'One structural change in `HeroSection.astro` (the descriptor becomes a `<span>` inside the h1, so the heading\'s accessible name is "Matheapolis, A Twin Cities math club") plus the locator string.',
+    claims: 'The same two facts, swapped in size: the name stays the big line and the descriptor becomes a serif line under it, while the small-caps lane returns to describing the room rather than the club. The longer wording the operator offered ("A math club for the Twin Cities") costs +32px of page at 320 over the shorter one @measured 2026-11-07, so the shorter wording is the one carried here.',
+    surface: 'One structural change in `HeroSection.astro` (the descriptor becomes a `<span>` inside the h1, so the heading\u2019s accessible name is "Matheapolis, A Minneapolis\u2013St. Paul math club") plus the locator string.',
   },
   {
     label: 'formerly-footer',
@@ -92,13 +148,6 @@ export const OPTIONS = [
     ],
     claims: 'Identical fact ("the club used to be the Minneapolis Mathematics Book Club"), placed where a search snippet and an old link land rather than where a returning member reads. The footer carries it on all four routes; the hero carries it on one.',
     surface: 'One sentence moved from `HeroSection.astro` to `Footer.astro`. Note what the specimen cannot show: the footer sits below the photographed identity block, so the crop for this option is the same image as shipped — read the page-height column, not the picture.',
-  },
-  {
-    label: 'band-short',
-    what: 'delete the compact band\'s second sentence, keeping only the Meetup-and-calendar sentence',
-    band: BAND_MEETUP,
-    claims: 'Nothing. It removes a claim ("what happens at the table is the math itself — people argue about it …") rather than making one, so the only risk is that the band stops explaining the club — which is arguably the h1 and the label lane\'s job now that the descriptor is on the page.',
-    surface: '`src/components/Schedule.astro`: one element deleted from the array that joins the band lede. Cheapest layout win the rename found — the full clause costs 34px of page at 1240 and 169px at 320 @measured 2026-11-07, because it wraps to 8 line boxes at 320 against 3 for the Meetup sentence alone.',
   },
 ];
 

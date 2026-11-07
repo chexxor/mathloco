@@ -44,7 +44,10 @@ const shipped = {
   name: config.seo.name,
   h1: grab('the h1', /<h1 class="mt-1 text-display-1[^>]*>[\s\S]*?<\/h1>/),
   locator: grab('the hero locator', /<span class="text-ink-3">([^<]*)<\/span>/),
-  band: grab('the schedule band lede', /The sign-up is on Meetup,[\s\S]*?lecturing\./),
+  // The band lede, in whichever form the page ships: the 2026-11-08 ruling deleted its second sentence, and an
+  // anchor that requires the deleted clause is an anchor that fails the build it is meant to measure. The optional
+  // half is kept so a restored clause is re-based, not a crash.
+  band: grab('the schedule band lede', /The sign-up is on Meetup,[\s\S]*?calendar\.(?: What happens at the table[\s\S]*?lecturing\.)?/),
   formerly: grab('the continuity sentence', /Formerly the Minneapolis Mathematics Book Club\./),
   footerAnchor: grab('the footer place line', /<p class="mt-6 text-micro">Minneapolis, Minnesota<\/p>/),
 };

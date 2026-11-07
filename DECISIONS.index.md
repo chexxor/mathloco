@@ -250,5 +250,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D240** (2026-11-07) — The club is **Matheapolis**: the name, the descriptor and the continuity line, what a rename reaches in this repo, and the two strings it deliberately does not touch (2026-11-07, Linux, `npm run verify`, `npm run round16`)
 - **D241** (2026-11-07) — Two apexes answer the same Worker on purpose: every hostname is a declared trigger, `check:deploy` counts them, and the legacy zone route dies only with the 301 that replaces it (2026-11-07, Linux, curl + `wrangler` config + `check:deploy`)
 - **D242** (2026-11-07) — The share-card gate's drift tolerance widened from a 3px floor to a band on the run's own width, because the wordmark changed; what the gate still proves, and what it no longer does (2026-11-07, Linux, `check:social` / `check:social:selftest`)
+- **D243** (2026-11-08) — The descriptor names both cities, the wordmark takes the display step, the compact band loses its second sentence, and a display step can only be priced in a class the build emits (2026-11-08, Linux, `npm run round16` + `npm run build`)
 
-Defined: 242 (D1-D242). Unused ids: none.
+Defined: 243 (D1-D243). Unused ids: none.
