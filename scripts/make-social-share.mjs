@@ -1,4 +1,4 @@
-// Regenerates `public/book-club-social-share.jpg` — the image `og:image` / `twitter:card` point at
+// Regenerates `public/matheapolis-social-share.jpg` — the image `og:image` / `twitter:card` point at
 // (src/layouts/Layout.astro declares 1200x630 to match). `npm run assets:social`; needs no credentials and
 // no network, but does need firefox, because the card is composed by the browser.
 //
@@ -70,13 +70,13 @@ const markStroke = (role) => `var(--color-${MARK_COLOURS.ink[role]})`;
 // imports the same file with named bindings - the parse is the portable half.
 const config = JSON.parse(fs.readFileSync(path.resolve('src/config.json'), 'utf8'));
 const DOMAIN = new URL(config.seo.canonical).host;
-if (config.seo.image !== '/book-club-social-share.jpg') console.warn('NOTE: src/config.json seo.image is ' + config.seo.image + ', but this script writes public/book-club-social-share.jpg');
+if (config.seo.image !== '/matheapolis-social-share.jpg') console.warn('NOTE: src/config.json seo.image is ' + config.seo.image + ', but this script writes public/matheapolis-social-share.jpg');
 
 const W = 1200;
 const H = 630;
 const PAD = 70;
 const root = process.cwd();
-const out = path.resolve(process.argv[2] ?? 'public/book-club-social-share.jpg');
+const out = path.resolve(process.argv[2] ?? 'public/matheapolis-social-share.jpg');
 const html = path.resolve('.design/tmp-card.html');
 const png = path.resolve('.design/tmp-card.png');
 
@@ -145,8 +145,8 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
   <div class="ground" data-ground></div>
 
   <div class="run kicker" data-band="kicker">Minneapolis, MN</div>
-  <div class="run title" data-band="title">Minneapolis Math Book Club</div>
-  <div class="run lede" data-band="lede">We read mathematical texts and talk about them.</div>
+  <div class="run title" data-band="title">Matheapolis</div>
+  <div class="run lede" data-band="lede">Around a table, working one idea through together.</div>
   <div class="run invite" data-band="invite">Bring a question &#183; you don't need a field</div>
 
   <!-- the club's mark: two lines that leave a sphere's equator at right angles - so parallel - and cross at the
@@ -185,7 +185,7 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
     </span>
   </div>
 
-  <div class="probe" data-band="fallback-probe">Minneapolis Math Book Club</div>
+  <div class="probe" data-band="fallback-probe">Matheapolis</div>
 </body></html>`;
 
 fs.mkdirSync(path.dirname(html), { recursive: true });
@@ -215,7 +215,7 @@ await sharp(png)
 // it without firefox. Tracked in git (like design/fonts/*.json) because it is the other half of the claim:
 // "these pixels are what this document painted, in these faces, at these sizes". A run to another output
 // path writes its own report rather than clobbering the shipped artifact's half of the claim.
-const report = out === path.resolve('public/book-club-social-share.jpg')
+const report = out === path.resolve('public/matheapolis-social-share.jpg')
   ? path.resolve('design/card-page.json')
   : path.resolve(`${out}.report.json`);   // beside the artifact; `tmp-*` keeps it out of git
 fs.writeFileSync(report, JSON.stringify(posted, null, 1) + '\n');

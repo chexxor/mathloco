@@ -207,7 +207,12 @@ const lede = compact
      // The clause about the date above the lede exists only when there is one. On the empty state this band
      // renders a notice instead of a date, and a lede that said "the date above" would be pointing at nothing -
      // the same class of defect as the plural-about-a-singular above.
-     'What happens at the table is the book itself \u2014 people argue about it, bring their own examples, and nobody is lecturing.'].join('')
+     // 2026-11-07, the rename: this clause said "the book itself", which contradicted the hero two paragraphs
+     // above it ("no reading list to keep up with") and stopped making sense once the book left the name. It says
+     // "the math itself" now. The word is priced: "the mathematics itself" pushes this lede from 3 line boxes to 4
+     // at 1240 (+28px of page) while "math" holds 3 @measured 2026-11-07 by `npm run round16` - which is why the
+     // shorter noun is in the shipped copy and the longer one is not.
+     'What happens at the table is the math itself \u2014 people argue about it, bring their own examples, and nobody is lecturing.'].join('')
   : 'These dates are copied from the club\u2019s own calendar. The sign-up is on Meetup.';
 ---
 

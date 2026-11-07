@@ -80,6 +80,13 @@ const RETIRED = [
   'our monthly book club meetings', 'Why Join Our Meetup Group', 'Monthly in-person study sessions',
   'Collaborative problem-solving', 'Network with math enthusiasts', 'Connect with fellow math enthusiasts',
   'Join Our Next Session', 'Join Our Community',
+  // The pre-rename identity copy, retired 2026-11-07 when the operator rebranded the club as Matheapolis ("I want
+  // the focus on the people and the ideas more than the book. the book is more an inspiration"). If either is back
+  // in what a visitor reads, a name slot was renamed only halfway or an old branch re-landed. The one permitted
+  // mention of the old framing is the hero's continuity sentence, which names the club's FORMER name in the Meetup
+  // listing's own spelling ("Minneapolis Mathematics Book Club") - a fact about the past. These two are present
+  // tense: the lane that made a book the venue, and the band clause that said the book is what happens at the table.
+  'A book, a room, and whoever shows up', 'the table is the book itself',
 ];
 
 // D136's defect class: a number the page invents at request time.

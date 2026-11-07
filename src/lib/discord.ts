@@ -28,7 +28,7 @@ import {
 const DISCORD_API = 'https://discord.com/api/v10';
 const DISCORD_TIMEOUT_MS = 10_000;
 // Discord's ToS wants an identifiable User-Agent for bots.
-const DISCORD_USER_AGENT = 'minneapolismathbookclub.com (https://minneapolismathbookclub.com, 1.0)';
+const DISCORD_USER_AGENT = 'matheapolis.com (https://matheapolis.com, 1.0)';
 
 const ANTHROPIC_API = 'https://api.anthropic.com/v1/messages';
 // The Anthropic SDK releases this repo previously pinned sent this version header, so the

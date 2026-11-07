@@ -1,4 +1,4 @@
-// Pixel checks for `public/book-club-social-share.jpg` — the image `og:image` / `twitter:card` point at.
+// Pixel checks for `public/matheapolis-social-share.jpg` — the image `og:image` / `twitter:card` point at.
 // Shared by the generator (`npm run assets:social`, which checks what it just wrote) and the gate
 // (`npm run check:social`, which checks the committed artifact with no firefox and no regeneration).
 //
@@ -184,16 +184,27 @@ export async function checkCard(file, { page = null } = {}) {
 
     // Face-substitution check: the ink extent in the pixels vs the layout box the page reported. firefox
     // screenshots at load; if a webfont applies afterwards, the run is set in a fallback face at different
-    // widths, and that is a wrong card that looks fine. Tolerance is 1.5% of the run, calibrated against
-    // the planted control above (a real substitution moved that run 118px; anti-aliasing moves the ends by
-    // 1-5px).
+    // widths, and that is a wrong card that looks fine. The planted control above is the calibration: a real
+    // substitution moved that run 118px.
+    //
+    // The tolerance used to be `max(3, 1.5% of the run)`, and that shape is wrong: the noise is at the run's two
+    // ENDS (side bearings and anti-aliasing), so it is a few px whatever the run says, while a substitution scales
+    // with the run. Renaming the club to a single short word on 2026-11-07 exposed it - the title run went from
+    // ~900px to 371px and its allowance shrank to 5.6px against a 6px end effect, failing a card that was painted
+    // correctly. Measured on this artifact, legitimate drift is 2-6px across five runs from 11.1px to 62.9px type
+    // (kicker 3, title 6, lede 2, invite 2, paths 5) @measured 2026-11-07 by `npm run check:social`, so the floor
+    // is 8px and the size term keeps big type's allowance proportional to the size that causes it. Note what this
+    // rule cannot have: a planted control. The defect it catches is a timing skew between layout and screenshot,
+    // which no static card file can reproduce - hence the control above measures the SMALLEST signal the rule must
+    // see (118px), not the largest noise it must accept.
     if (run) {
       let rlo = Infinity, rhi = -Infinity;
       for (let y = y0; y < y1; y++) for (let x = Math.max(0, run.x0 - 6); x < Math.min(width, run.x1 + 6); x++) {
         if (contrast(at(x, y), g) >= INK_RATIO) { if (x < rlo) rlo = x; if (x > rhi) rhi = x; }
       }
       const shotW = rhi - rlo + 1, pageW = run.width || run.x1 - run.x0, drift = Math.abs(shotW - pageW);
-      if (drift > Math.max(3, pageW * 0.015)) fail(`${b.name}: ink spans ${shotW}px, the page laid the run out at ${pageW}px (${run.face} ${run.size}/${run.weight}) — the screenshot is set in a different face than the layout, so it was taken before the webfont applied, or the run overflowed its box`);
+      const allow = Math.max(8, run.size * 0.15, pageW * 0.015);
+      if (drift > allow) fail(`${b.name}: ink spans ${shotW}px, the page laid the run out at ${pageW}px (${run.face} ${run.size}/${run.weight}) — the screenshot is set in a different face than the layout, so it was taken before the webfont applied, or the run overflowed its box (allow ${allow.toFixed(1)}px)`);
       else pass(`${b.name}: ink ${shotW}px wide vs page run ${pageW}px in ${run.face} ${run.size}/${run.weight} (drift ${drift})`);
     }
 
@@ -349,7 +360,7 @@ export async function selfTest() {
     const real = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
     const wrongHue = JSON.parse(JSON.stringify(real));
     const word = (wrongHue.painted['path-discord'] = [70, 95, 205]);   // blurple, not the token's red-orange
-    cases.push(['path word in the wrong hue', 'public/book-club-social-share.jpg', wrongHue, /different hue than the path grammar/]);
+    cases.push(['path word in the wrong hue', 'public/matheapolis-social-share.jpg', wrongHue, /different hue than the path grammar/]);
     void word;
 
     // 6. a mark shape missing from the document. This is the failure mode that produced D118 lesson 1: SVG
@@ -360,13 +371,13 @@ export async function selfTest() {
       const dropped = JSON.parse(JSON.stringify(real));
       dropped.mark.shapes = dropped.mark.shapes.slice(0, MARK_SHAPE_COUNT - 1);
       dropped.mark.count = dropped.mark.shapes.length;
-      cases.push(['mark missing a shape', 'public/book-club-social-share.jpg', dropped, /shape went missing/]);
+      cases.push(['mark missing a shape', 'public/matheapolis-social-share.jpg', dropped, /shape went missing/]);
 
       // 7. a mark shape painted under the graphic bar (3.0, D101). Same box, same count, same everything —
       // one stroke's colour moved a hair towards the ground. Pixels alone cannot see which shape did it.
       const faint = JSON.parse(JSON.stringify(real));
       faint.mark.shapes[0].paintedStroke = [46, 62, 50];      // ~1.1 against the card's ink ground
-      cases.push(['mark shape under the graphic bar', 'public/book-club-social-share.jpg', faint, /under the 3.0 graphic bar/]);
+      cases.push(['mark shape under the graphic bar', 'public/matheapolis-social-share.jpg', faint, /under the 3.0 graphic bar/]);
     }
   }
 
@@ -394,7 +405,7 @@ if (process.argv[1] && process.argv[1].endsWith('check-social-card.mjs')) {
     console.log('SELFTEST: PASS');
     process.exit(0);
   }
-  const file = process.argv[2] ?? 'public/book-club-social-share.jpg';
+  const file = process.argv[2] ?? 'public/matheapolis-social-share.jpg';
   // The page report the generator left behind (design/card-page.json) is what makes the offline gate
   // stronger than "no amber, and the ink is bright": the colour-pair and path-hue assertions need to know
   // what colour each run asked for. Without it those assertions are skipped, so the absence is reported.
