@@ -64,7 +64,10 @@ three actors straight is the whole job:
    `.design/tmp-gate-logs/<set>/<step>.txt`: every step's full output is kept from the last run, pass or
    fail (D144). `npm run check:discord` and
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
-   not in `verify`.
+   not in `verify`. Neither is **`npm run probe:live`**: read-only, no secret, no deploy right, and the only
+   instrument here that compares **what a visitor is actually served** against what this tree would ship - every
+   gate in `verify` reads `dist/`, so a green gate set says nothing about what is deployed (D245: production ran
+   a 2026-10-31 artifact for a week while 22 gates stayed green). Run it before reasoning about "the live site".
 4. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
    Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or

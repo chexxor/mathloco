@@ -65,6 +65,12 @@ const DEPLOY = [
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
   { name: 'check:decisions', desc: 'the tracked decision index matches the log, and no D-id citation dangles' },
   { name: 'check:figures', desc: 'a measured number in DESIGN.md carries a date, and that date is not stale' },
+  // Tracked prose is a contract, and a markdown table row with the wrong cell count still renders: the extra or
+  // missing cell becomes an unnamed column at the right edge. `MILESTONES.md` carried one such row (A2, three
+  // cells under a four-column header) and one in the parked table, both introduced by hand-resolved merges,
+  // and both invisible in a diff @measured 2026-11-08.
+  { name: 'check:tables', desc: 'every markdown table row in the tracked prose has its header\'s cell count' },
+  { name: 'check:tables:selftest', desc: 'the table gate can still fail (3 plantings: an extra cell, a missing cell, a short header; 4 clean forms)' },
   { name: 'check:social', desc: 'the committed share card against its painted report' },
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
