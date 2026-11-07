@@ -303,8 +303,11 @@ freshness.
 
 - **Zero upcoming events converts.** It is not a sentence (104px, nothing to press) and it is never
   hidden (47px): status word, `text-lede` title, two-line body, a 48px primary, a second path (a 48px
-  secondary or an inline link, D139), the dated line. The hero's "Next:" label changes to "Nothing
-  scheduled" rather than disappearing, so an empty calendar is distinguishable from a broken page.
+  secondary or an inline link, D139), the dated line. An empty calendar stays distinguishable from a broken
+  page **on the surface that shows a calendar**: the schedule band converts to that grammar, with its status
+  word and dated line. The hero used to carry the signal in its label lane ("Next: Sat, Nov 7" becoming
+  "Nothing scheduled"); since 2026-11-07 the hero opens with a locator about the club and no date at all, so
+  there is no lane to convert (D239) — the requirement survived the move, it just lives where the calendar is.
 - **Loading is one 24px `role="status"` line, no motion.** No spinner, no skeleton (the shipped skeleton
   material measures 1.05 fill / 1.18 edge = a rectangle pretending to be content). Reserve the height so
   the page does not jump when content lands.

@@ -245,5 +245,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D235** (2026-11-07) — A literal escape sequence reached a reader on /schedule; the gate reads rendered text, because the same bytes are correct in a string literal (2026-11-07, Linux/Fedora 45, `scripts/check-escapes.mjs` + `git show HEAD:src/components/Schedule.astro`)
 - **D236** (2026-11-07) — The harvest needs no credential: measured, and the hand-off line that said otherwise is corrected (2026-11-07, Fedora 45 native, Node 22.23.4, `scripts/events-harvest.mjs` + `curl` + `grep`)
 - **D237** (2026-11-07) — A session's report ends with a ranked recommendation and a Value added section (operator ruling, 2026-11-07)
+- **D238** (2026-11-06) — `/schedule` prints a window, not the whole future: 8 weeks, at most 8 rows, and the page says what it left out (2026-11-06, Fedora 45 native, Node 24.22.1, `src/lib/event-window.mjs` + `scripts/check-schedule-window.mjs`)
+- **D239** (2026-11-07) — The landing page opens with what the club is, not with the next date; the "one evening is enough" promise is deleted rather than reworded (2026-11-07, Fedora 45 native, Node 24.22.1, built `dist/client/index.html` + a planted all-CANCELLED snapshot)
 
-Defined: 237 (D1-D237). Unused ids: none.
+Defined: 239 (D1-D239). Unused ids: none.
