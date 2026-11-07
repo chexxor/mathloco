@@ -251,5 +251,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D241** (2026-11-07) — Two apexes answer the same Worker on purpose: every hostname is a declared trigger, `check:deploy` counts them, and the legacy zone route dies only with the 301 that replaces it (2026-11-07, Linux, curl + `wrangler` config + `check:deploy`)
 - **D242** (2026-11-07) — The share-card gate's drift tolerance widened from a 3px floor to a band on the run's own width, because the wordmark changed; what the gate still proves, and what it no longer does (2026-11-07, Linux, `check:social` / `check:social:selftest`)
 - **D243** (2026-11-08) — The descriptor names both cities, the wordmark takes the display step, the compact band loses its second sentence, and a display step can only be priced in a class the build emits (2026-11-08, Linux, `npm run round16` + `npm run build`)
+- **D244** (2026-11-08) — `wrangler preview` provisions a preview hostname **on the attached custom domain**, and unlike the `workers.dev` preview it is indexable (2026-11-08, Linux, `npm run preview:deploy` + `curl -D`)
 
-Defined: 243 (D1-D243). Unused ids: none.
+Defined: 244 (D1-D244). Unused ids: none.
