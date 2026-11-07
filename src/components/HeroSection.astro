@@ -48,7 +48,7 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
 // date. What the lane used to do in its other two states — "Nothing scheduled" instead of nothing at all, so an
 // empty calendar is distinguishable from a broken page (DESIGN.md, States) — moved to the surface that actually
 // shows a calendar: the compact band's empty state carries the status word, the title, the body and the dated
-// line, in the notice grammar `check:render` holds. `heroLabel()` stays exported for that band's own eyebrow.
+// line, in the notice grammar `check:render` holds. `heroLabel()` is deleted with this lane (D239).
 const locator = 'A book, a room, and whoever shows up';
 // The hero used to end with "Current Focus: Number Theory and Abstract Algebra". The slot behind it had no
 // source, `check:content` had it listed as an unsourced claim, and on 2026-11-03 the operator ruled it false:
