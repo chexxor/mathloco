@@ -75,7 +75,7 @@ import cloudflare from '@astrojs/cloudflare';
 import svelte from '@astrojs/svelte';
 
 export default defineConfig({
-  site: 'https://minneapolismathbookclub.com',
+  site: 'https://matheapolis.com',
   integrations: [sitemap(), svelte()],
   output: 'server',
   adapter: cloudflare({
@@ -206,13 +206,17 @@ This site's deploy target is **Cloudflare Workers** (`npm run deploy` = gates + 
 **pushes git**; a production `wrangler deploy` is also the operator's, unless they have explicitly
 told you to do it. Two things about deploying that are specific to this repo:
 
-- **The apex has two declared triggers, and wrangler *replaces* the trigger set on every deploy.**
-  `wrangler.toml` must list both: `{ pattern = "minneapolismathbookclub.com", custom_domain = true }` and
-  `{ pattern = "minneapolismathbookclub.com/*", zone_name = "minneapolismathbookclub.com" }`. Anything added
+- **Every hostname is a declared trigger, and wrangler *replaces* the trigger set on every deploy.**
+  Since the 2026-11-07 rename the site answers on two apexes, and `wrangler.toml` declares three triggers:
+  `{ pattern = "minneapolismathbookclub.com", custom_domain = true }` (legacy, kept attached so old links and
+  calendar subscribers keep working), `{ pattern = "minneapolismathbookclub.com/*", zone_name = "minneapolismathbookclub.com" }`
+  (its zone route, the legacy workaround — do not delete it until a 301 replaces it), and
+  `{ pattern = "matheapolis.com", custom_domain = true }` (the apex the operator bought and attached). Anything added
   in the dashboard or with `--domain` that is not in this file gets detached by the next build — a
   routine-looking command takes the live site down. `npm run check:deploy` (last step of `verify`) asserts the
-  built `dist/server/wrangler.json` carries both, that exactly two triggers are declared, plus the assets
-  root, D1 ids, KV namespaces, Preview vars, byte budget and manifest integrity — 21 checks.
+  built `dist/server/wrangler.json` carries all three, in that count, plus the assets root, D1 ids, KV namespaces,
+  Preview vars, byte budget and manifest integrity — 21 checks. `astro.config.mjs`'s `site:` is the host the
+  sitemap publishes; it must match the new apex, and no gate checks that host.
 - **Custom Domain vs route, and why the order mattered.** A Custom Domain is refused while the hostname has a
   pre-existing record (`code: 100117`), so the route went first (no outage) and the Custom Domain went after
   the Pages hostname was detached. Cloudflare then creates its own record pointing at the Worker, and a Custom

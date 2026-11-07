@@ -50,6 +50,16 @@ preview_urls = true
 routes = [
   { pattern = "minneapolismathbookclub.com", custom_domain = true },
   { pattern = "minneapolismathbookclub.com/*", zone_name = "minneapolismathbookclub.com" },
+  # The new apex (2026-11-07). The operator added this Custom Domain in the dashboard, and the trap this
+  # file's comment above describes is exactly why it is declared here: `wrangler deploy` replaces the
+  # trigger set with what this file says, so an undeclared Custom Domain is DETACHED by the next routine
+  # deploy. Measured the same day: https://matheapolis.com answers 200 from this Worker (cf-cache-status:
+  # HIT) while https://www.matheapolis.com answers 404 with `x-preview-user-error: true` - the `www` name
+  # has no trigger, so it is NOT a hostname this site serves. Do not point copy at `www.` and do not add
+  # an entry for it until a Custom Domain for `www` exists and re-probes 200.
+  # The old apex stays attached on purpose: it is where six years of links, the Mobilizon alert cards and
+  # calendar subscribers point, and it is what a 301 to the new apex has to be served from.
+  { pattern = "matheapolis.com", custom_domain = true },
 ]
 
 # The Discord guild (server) id is a public snowflake, not a credential, so it lives here where it
