@@ -25,6 +25,9 @@ import { OPTIONS, WIDTHS, SHOT_WIDTHS, RAMP_TOKENS } from './grill/round17-optio
 // The colour maths is the shared module, asserted against the numbers DESIGN.md cites (okcolor.mjs --selftest),
 // so a ground reported here cannot disagree with the census or the contrast oracle.
 import { rgbTripleFromBytes, tripleToBytes, asTriple, contrastBytes, nearestBrand, hueGap, dist, BARS } from './grill/okcolor.mjs';
+// The pixel probe lives in grill/edge-probe.mjs: it is a pure function of a screenshot and the bar's bottom
+// edge, so a round can re-measure a photograph it already took without re-rendering the page.
+import { edgeReport } from './grill/edge-probe.mjs';
 
 const SCRATCH = '.design/tmp-round17';
 const OUT = 'design/grill/round17';
@@ -245,7 +248,10 @@ for (const opt of OPTS) {
     writeFileSync(`${SCRATCH}/m-${opt.label}-${w}.json`, JSON.stringify(j, null, 2));
     measure[w] = j;
   }
-  const unmeasured = WIDTHS.filter((w) => measure[w].probeError);
+  // A probe that THREW posts `errors: [...]` and still counts as `done`, so the row would otherwise be priced on
+  // a half-built record (found 2026-11-08: a throw in the sticky probe left `sizes` undefined and the runner died
+  // 40 lines later with a TypeError far from the cause). Both failure shapes are a hole.
+  const unmeasured = WIDTHS.filter((w) => measure[w].probeError || (measure[w].errors && measure[w].errors.length));
   if (unmeasured.length) console.log(`   ${opt.label}: NOT measured at ${unmeasured.join('/')}px after 3 attempts - recorded as a hole, not hidden`);
 
   // Rule 2: the step has to have painted, at every width, on both sides of the 640 flip.
@@ -328,6 +334,8 @@ for (const opt of OPTS) {
       rowNeededOfAvailable: WIDTHS.map((w) => `${measure[w].nav.row.needed}/${measure[w].nav.row.available}@${w}`).join('  '),
       docHeightByWidth: WIDTHS.map((w) => `${measure[w].doc.scrollHeight}@${w}`).join('  '),
       markStrokeFloor: markFloor,
+      edgeReport: await edgeReport(shots[1240] && shots[1240].png, m.header && m.header.bottom, m.doc && m.doc.bgBytes),
+      sticky: m.sticky || null,
       dupPairs: (m.sentences?.duplicatePairs || []).map((p) => `${p.a.own.slice(0,44)}… <> ${p.b.own.slice(0,44)}… @${p.jaccard}`),
       foldCopyChars: (m.fold || []).reduce((a, e) => a + e.own.length, 0),
       howItWorksY: m.sections?.['how-it-works']?.y ?? null,
@@ -342,6 +350,7 @@ for (const opt of OPTS) {
       lane: measure[w].lane ? { own: measure[w].lane.own, fs: measure[w].lane.fs, y: measure[w].lane.y } : null,
       nameInFirstScreen: measure[w].nameInFirstScreen,
       gaps: measure[w].gaps,
+      sticky: measure[w].sticky || null,
       docHeight: measure[w].doc.scrollHeight,
       fold: (measure[w].fold || []).map((e) => ({ tag: e.tag, own: e.own, y: e.y, fs: e.fs })),
       sections: measure[w].sections || {},

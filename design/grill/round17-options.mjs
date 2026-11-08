@@ -43,6 +43,12 @@ const HEADER_OPEN = '<header class="bg-paper">';
 const NAV_MARK = '<a href="/" class="flex-shrink-0 whitespace-nowrap py-2 font-body text-body text-ink" aria-label="Matheapolis, home">Matheapolis</a>';
 const NAV_LABEL = '<a href="/schedule" class="whitespace-nowrap py-2 text-label text-ink font-medium hover:text-gold" aria-label="Navigate to Schedule">Schedule</a>';
 const LANE = '<div class="text-label uppercase tracking-wide mb-4"><span class="text-ink-3">Minneapolis math club</span></div>';
+
+// Anchors in the BUILT page for the structural options (the operator's 2026-11-08 ruling: separate the bar
+// structurally, not with strong colour). `BAR_CLOSE` is unique in the built page - the footer nav closes without
+// the two inner divs - so it is a safe insertion point for a second row inside the bar.
+const NAV_OPEN = '<nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">';
+const BAR_CLOSE = '</div></div></nav></header>';
 const H1 = '<h1 class="mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3">Matheapolis</h1>';
 
 // A type step through the tokens, at the `sm:` flip the page already uses (640px is where the h1 steps
@@ -187,6 +193,110 @@ export const OPTIONS = [
     mutations: [],
     css: stepCss({ labels: 'body', mark: 'lede' }),
     step: { labels: 'body', mark: 'lede' },
+  },
+
+  // ---- The structural half of the brief (operator, 2026-11-08): "recommendations for all the questions here
+  // using structural separation rather than strong colour." Every option below changes structure - elevation, an
+  // inset keyline, the bar's own air, what the bar carries - and paints no new colour. The warm grounds above stay
+  // in the round as the priced alternative the ruling moved away from, so the comparison is a number rather than
+  // a preference.
+  //
+  // Why these four, and not "make the nav type bigger": `chrome-ground-step` and `nav-step-only` already priced
+  // the obvious type answer and `check:render` rejects it - the nav's own probe reads `one type tier: text-label
+  // at every width` (D100), and a nav label raised to the body step is a second tier with no ratified token
+  // behind it (`--breakpoint-nav-narrow` was retired with D117). So the bar's identity has to come from the bar.
+  //
+  // The edge is measured, not asserted: the runner samples the eight device rows under the bar in the screenshot
+  // and reports the contrast those painted bytes have against the page's own ground. A device that paints nothing
+  // there cannot separate the bar from the page, however good it looks in the spec.
+  {
+    label: 'chrome-elevation',
+    title: 'The bar sits above the page (shadow-e1, defined and unused until now)',
+    what: "DESIGN.md's elevation level 1 on the header: `0 1px 2px 0 rgba(32,57,39,.165)`. The token is ratified but no surface on the site uses it, so this is the system's own answer to 'make it chrome' at zero colour cost.",
+    surfaces: 'One class on the header element in `src/components/Navigation.astro`. No token change, no new rule in `global.css` - `shadow-e1` is already emitted by the build (check:classes resolves it), so this is a markup edit, not a palette edit.',
+    mutations: [{ where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper shadow-e1">' }],
+    gate: 'check:render (header shadow) + the round\'s edge probe: how much contrast the shadow actually paints under the bar',
+  },
+  {
+    label: 'chrome-elevation-2',
+    title: 'The bar sits above the page, harder (shadow-e2, the level-2 token)',
+    what: "DESIGN.md's elevation level 2 on the header - the two-stop shadow ratified for 'something that floats over content'. Priced next to level 1 so the doc's 1.51 claim gets the same pixel test the 1.35 claim got.",
+    surfaces: "One class on the header element in `src/components/Navigation.astro`. `shadow-e2` is already emitted by the build, so this is markup, not a token change.",
+    mutations: [{ where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper shadow-e2">' }],
+    gate: "check:render (header shadow) + the edge probe: what the two stops actually paint under the bar",
+  },
+  {
+    label: 'chrome-sticky-e2',
+    title: 'The bar stays, and it floats (sticky + shadow-e2)',
+    what: "Level-2 elevation on a sticky bar: DESIGN.md defines shadow-e2 as 'something that floats over content', and a bar that stays while the page scrolls is exactly that. Priced as a pair because the edge probe shows the shadow alone paints 1.78 under the bar - the only device in the round that clears the 1.35 layer bar - and the sticky probe shows a bar without an edge hides copy invisibly.",
+    surfaces: "One class on the header element in `src/components/Navigation.astro`, plus the `position:sticky` rule. The built CSS emits zero `position:sticky` today, so shipping this needs the classes in source for Tailwind to generate them (D-round note in the specimen, section 9d).",
+    mutations: [
+      { where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper sticky top-0 shadow-e2">' },
+      { where: 'injected style in the page head', from: '</head>', to: '<style>header.sticky{position:sticky;top:0;z-index:20}</style></head>' },
+    ],
+    gate: "check:render + the edge probe (what the two stops paint) + the sticky probe (what the bar covers at scroll 600)",
+  },
+  {
+    label: 'chrome-keyline',
+    title: "An inset keyline ring on the bar (the system's inset ring, not a border)",
+    what: '`inset-shadow-rule` on the header - a 1px rule inside the bar\'s own edges, the same grammar the secondary button already uses. No ground change, no outer border, so the bar keeps DESIGN.md\'s hairline grammar: part of the page, marked.',
+    surfaces: 'One class on the header element. `inset-shadow-rule` is the ratified keyline the secondary button and every notice already use, so no new token is introduced.',
+    mutations: [{ where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper inset-shadow-rule">' }],
+    gate: "check:render (header shadow) + check:design's no-border rule (an inset ring is not a border; D103)",
+  },
+  {
+    label: 'chrome-airier',
+    title: 'The bar gets more of its own air (nav py-4 -> py-6)',
+    what: "Separation by spacing: the bar's content block goes from 72px to 88px tall, so the chrome has a body the page ground does not. Costs 16px of page at every width and 16px of the phone fold - which is exactly what `check:rhythm` charges for air that paints nothing.",
+    surfaces: 'One class on the nav element in `src/components/Navigation.astro`; `py-6` is already emitted by the build.',
+    mutations: [{ where: 'Navigation.astro `<nav>`', from: NAV_OPEN, to: '<nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-6">' }],
+    gate: 'check:render (nav row at every width) + check:rhythm (empty run at the top of the page)',
+  },
+  {
+    label: 'bar-carries-descriptor',
+    title: 'The bar carries the descriptor; the hero lane goes',
+    what: "Answers the specimen's 'what goes at the bottom of the bar' structurally: the ruled phrase `Minneapolis math club` moves out of the hero label lane and into the bar as a second row at the label tier, so the chrome has content of its own and the h1 stands alone. Copy-neutral - the same phrase, one place instead of two.",
+    surfaces: 'Two files: a second row added inside the nav in `src/components/Navigation.astro`, and the label lane deleted from `src/components/HeroSection.astro`. Every class used is one the build already emits.',
+    mutations: [
+      { where: 'Navigation.astro `<nav>` close', from: BAR_CLOSE, to: '</div></div><div class="mt-2 text-label uppercase tracking-wide text-ink-3">Minneapolis math club</div></nav></header>' },
+      { where: 'HeroSection.astro label lane', from: LANE, to: '' },
+    ],
+    gate: 'check:copy (the three descriptor slots) + check:render (nav one row, nav tier) + check:rhythm',
+  },
+
+  // --- structural separation, no ground change (operator's steer, 2026-11-08: "separate the bar structurally
+  // rather than painting it strongly"). These four rows are the answer to "what makes the bar chrome" without
+  // touching the palette; the runner's edge probe measures what each one actually PAINTS in the eight device rows
+  // under the bar, so a device that reads well in the spec but paints nothing is refused by measurement.
+  {
+    label: 'chrome-sticky',
+    title: 'The bar stays put (position: sticky) - chrome as furniture, painted nothing',
+    what: "The structural definition of chrome: the bar is the part of the page that is always there. Nothing is painted, no ground changes, no ink moves. The cost is not contrast, it is occlusion - the probe scrolls to 600px and lists every text box the bar now sits on top of, because a bar that covers copy with the same ground it sits on hides copy with no edge to show the hiding.",
+    surfaces: 'One class on the header in `src/components/Navigation.astro`. `sticky`/`top-0` are Tailwind v4 core utilities the build does not emit today (grep the built CSS: zero `position:sticky`), so the source has to carry them for the CSS to exist - the round injects the rule to price the behaviour without editing global.css.',
+    mutations: [{ where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper sticky top-0">' }],
+    css: '<style>header.sticky{position:sticky;top:0;z-index:20}</style>',
+    gate: 'check:render (nav one row, targets) + the round\'s sticky probe: what the bar covers at scroll 600',
+  },
+  {
+    label: 'chrome-sticky-keyline',
+    title: 'The bar stays put AND shows its edge (sticky + the ratified inset rule ring)',
+    what: 'Elevation grammar needs a floating object to have an edge; a sticky bar painted the page\'s own ground has none. This is the pair: `sticky top-0` plus `inset-shadow-rule`, the 1px inset ring DESIGN.md already ratifies for every boundary on paper. The ring is measured, not asserted - the edge probe reads the painted bytes of the bar\'s last device row against the paper painted 40 rows below it.',
+    surfaces: 'One class on the header element. `inset-shadow-rule` is already emitted by the build (check:classes resolves it); `sticky top-0` must be added to the source so Tailwind emits it.',
+    mutations: [{ where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper sticky top-0 inset-shadow-rule">' }],
+    css: '<style>header.sticky{position:sticky;top:0;z-index:20}</style>',
+    gate: 'check:render + check:design (an inset ring is not a border, D103) + the edge probe and the sticky probe',
+  },
+  {
+    label: 'bar-carries-descriptor-keyline',
+    title: 'The bar carries the descriptor and shows its edge - content plus a 1px ring, no ground',
+    what: 'The two structural devices that survive measurement together: the descriptor moves into the bar as a second row, so the chrome has its own content, and the ratified inset rule ring gives the bar a boundary the eye can find. Nothing is painted, no token changes, the h1 stands alone, and the phrase stays in the copy the title already carries.',
+    surfaces: 'Two files: a second row inside the nav in `src/components/Navigation.astro`, the label lane deleted from `src/components/HeroSection.astro`.',
+    mutations: [
+      { where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper inset-shadow-rule">' },
+      { where: 'Navigation.astro `<nav>` close', from: BAR_CLOSE, to: '</div></div><div class="mt-2 text-label uppercase tracking-wide text-ink-3">Minneapolis math club</div></nav></header>' },
+      { where: 'HeroSection.astro label lane', from: LANE, to: '' },
+    ],
+    gate: 'check:copy (the three descriptor slots) + check:render + check:design + the edge probe',
   },
 
   {

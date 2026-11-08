@@ -178,8 +178,14 @@ thing to enforce. **Never** use `rounded-lg`/`rounded-md` (Tailwind's ramp) on a
 | `shadow-e1` | `0 1px 2px rgba(32,57,39,.165)` | something that floats: a menu |
 | `shadow-e2` | `0 2px 5px -1px …,.22 + 0 12px 28px -6px …,.30` | something that floats over content |
 
-Level 1 measures **1.35** at the contact edge, level 2 **1.51** — both at or over the layer bar. The
-stops are ink-tinted on purpose: a black stop wide enough to read at a wide blur paints a 2.10 grey
+Those are the token's numbers, not the page's: they are the stops composited at full alpha in
+`design/grill/contrast/gen-ratify-cfg.mjs` (the `S('elevation level 1 contact edge', ...)` lines).
+Read off the pixels Firefox actually paints under a 72px header, level 1 measures **1.25** at its
+darkest row below the bar - **under** the 1.35 layer bar - and level 2 measures **1.78**, because its two
+stops overlap at the contact edge. Level 1 does not make a surface read as a layer; level 2 does. Any
+future "this shadow makes it a layer" claim has to be measured on the render, not on the token.
+@measured 2026-11-08 by round17's edge probe (`design/grill/edge-probe.mjs`, the 11-row strip at the bar's bottom edge)
+The stops are ink-tinted on purpose: a black stop wide enough to read at a wide blur paints a 2.10 grey
 band.
 
 **A keyline is a PAIR, and `rule` is solved for two grounds, not for all of them.** `--color-rule`

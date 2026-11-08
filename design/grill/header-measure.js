@@ -208,6 +208,27 @@
       out.sections['how-it-works'] = { y: b.y, h: b.h, fs: b.fs, own: b.own, cls: b.cls };
     }
 
+    // STICKY probe (added 2026-11-08 for the structural half of this round). A bar that stays is chrome in the
+    // plainest sense - it is the furniture that is always there - but a sticky bar that paints the same ground as
+    // the page hides whatever scrolls under it with no edge to show the hiding. So the probe scrolls, reads the
+    // bar's rect at scroll 600, and lists every text element whose box the bar now covers, with the overlap in px.
+    // Scroll position is restored before posting, so every number above is still measured at the top.
+    const stickyPos = headerEl ? getComputedStyle(headerEl).position : null;
+    const sticky = { position: stickyPos, top: headerEl ? getComputedStyle(headerEl).top : null };
+    try {
+      if (stickyPos === 'sticky' || stickyPos === 'fixed') {
+      window.scrollTo(0, 600);
+      const r = headerEl.getBoundingClientRect();
+      const covered = [...document.querySelectorAll('main p, main h1, main h2, main h3, main a, section p, section h2, section h3, section a, article p')]
+        .filter((el) => !el.closest('header'))
+        .map((el) => { const b = el.getBoundingClientRect(); return { el, b }; })
+        .filter(({ b }) => b.width > 0 && b.bottom > r.top + 1 && b.top < r.bottom - 1)
+        .map(({ el, b }) => ({ tag: el.tagName.toLowerCase(), own: ownFull(el).slice(0, 60), overlapPx: +(Math.min(b.bottom, r.bottom) - Math.max(b.top, r.top)).toFixed(1), y: +b.top.toFixed(1) }));
+      sticky.atScroll600 = { y: +r.top.toFixed(1), h: +r.height.toFixed(1), covers: covered.length, first: covered.slice(0, 6) };
+      window.scrollTo(0, 0);
+      }
+    } catch (e) { sticky.error = String(e && e.message ? e.message : e); }
+
     // A near-duplicate detector, on the artifact. Normalisation is deliberate and dumb - case, punctuation, the
     // site's hyphen-as-dash and `\u2014`, collapsed whitespace - because the defect this catches is "the same
     // sentence in two surfaces", not "two sentences that rhyme". Jaccard over word sets, reported with both
@@ -250,6 +271,7 @@
     pairs.sort((x, y) => (y.overlap - x.overlap) || (y.jaccard - x.jaccard));
     out.sentences = { count: sentences.length, minSharedContentWords: 3, threshold: 'jaccard >= 0.45 OR overlap >= 0.5', duplicatePairs: pairs.map(({ shared, sharedWords, jaccard, overlap, a, b }) => ({ shared, sharedWords, jaccard, overlap, a, b })) };
     out.copySurfaces = Object.keys(out.sections).length;
+    out.sticky = sticky;
 
     out.sizes = {
       navIdentityFs: items[0] ? items[0].textFs : null,

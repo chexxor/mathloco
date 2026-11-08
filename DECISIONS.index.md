@@ -259,5 +259,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D249** (2026-11-08) — Every session report carries the milestone above its "Value added" section, so a report is dated against the roadmap it moved (2026-11-08, operator ruling)
 - **D250** (2026-11-08) — A cross-surface near-duplicate sentence is now a gate failure, and the detector that found it was reading `<path>` as a paragraph (2026-11-08, Linux, `node scripts/check-content.mjs` + `--selftest` + `npm run verify`)
 - **D251** (2026-11-08) — The header bar paints no ground at all, and every warm ground priced for it fails a bar the palette already has (2026-11-08, Linux, Firefox 159.0, `node design/round17.mjs` + `design/grill/round17-build.mjs`)
+- **D252** (2026-11-08) — What actually paints under the header: the ring is an edge, level-1 elevation is not a layer, and only shadow-e2 clears the layer bar
 
-Defined: 251 (D1-D251). Unused ids: none.
+Defined: 252 (D1-D252). Unused ids: none.
