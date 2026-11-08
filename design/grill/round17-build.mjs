@@ -177,7 +177,7 @@ const edgeRow = (o) => {
   return `<tr><td>${o.label === 'shipped' ? 'shipped' : `${letter(OPTS.indexOf(o))}. ${o.label}`}</td>
     <td>${o.title}</td><td class="n">${e.barBytes}</td><td class="n">${e.paperBytes}</td>
     <td class="n">${inside}</td><td class="n">${below}</td>
-    <td class="n">${e.paintsALayer ? 'paints a layer' : 'paints nothing the eye can find'}</td><td class="n">${s}</td>
+    <td class="n">${e.paintsALayer ? 'reads as a layer' : e.paintsAnEdge ? 'reads as an edge, not a layer' : 'paints nothing the eye can find'}</td><td class="n">${s}</td>
     <td>${zooms[o.label] ? `<img src="data:image/png;base64,${b64(zooms[o.label])}" width="160" height="27" alt="the bar's bottom edge at 2x">` : '<span class="skip">no photograph</span>'}</td></tr>`;
 };
 const EDGE_ROWS = BAR.filter((o) => o.headline && o.headline.edgeReport && !o.headline.edgeReport.error);
@@ -186,7 +186,7 @@ const SHADOW_EDGE = (EDGE_ROWS.find((o) => o.label === 'chrome-elevation') || {}
 const SHADOW2_EDGE = (EDGE_ROWS.find((o) => o.label === 'chrome-elevation-2') || {}).headline?.edgeReport?.maxBelow;
 const KEYLINE_EDGE = (EDGE_ROWS.find((o) => o.label === 'chrome-keyline') || {}).headline.edgeReport.edgeRow && EDGE_ROWS.find((o) => o.label === 'chrome-keyline').headline.edgeReport.edgeRow.vsPaper;
 const layered = EDGE_ROWS.filter((o) => o.headline.edgeReport.paintsALayer).map((o) => `${o.label} (${o.headline.edgeReport.maxBelow})`);
-const edgeFindings = `the inset rule ring paints a real edge at ${KEYLINE_EDGE} (the ratified graphic keyline, bar 3.0, D103), the level-1 shadow's darkest painted row is ${SHADOW_EDGE}, the level-2 shadow's is ${SHADOW2_EDGE}, and every other device sits at ${SHIPPED_EDGE} - the same bytes as the paper it stands on. ${layered.length ? 'Only ' + layered.join(', ') + ' reaches the 1.35 layer bar by painting a ground.' : 'No option reaches the 1.35 layer bar without painting a ground.'}`;
+const edgeFindings = `the inset rule ring paints a real edge at ${KEYLINE_EDGE} (the ratified graphic keyline, bar 3.0, D103), the level-1 shadow's darkest painted row is ${SHADOW_EDGE}, the level-2 shadow's is ${SHADOW2_EDGE}, and every other device sits at ${SHIPPED_EDGE} - the same bytes as the paper it stands on. ${layered.length ? 'Only ' + layered.join(', ') + ' reaches the 1.35 layer bar - both by painting the level-2 shadow, not a ground.' : 'No option reaches the 1.35 layer bar.'}`;
 
 // The recommendation section reads its numbers from the record, so it cannot quote a value the probe did not
 // measure. These helpers resolve an option label to the fields the section cites.
