@@ -36,7 +36,7 @@
 export const SHIPPED = {
   "name": "Matheapolis",
   "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
-  "locator": "Minneapolis–St. Paul math club",
+  "locator": "Minneapolis math club",
   "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
   "formerly": "Formerly the Minneapolis Mathematics Book Club.",
   "footerAnchor": "<p class=\"mt-6 text-micro\">Minneapolis, Minnesota</p>"
@@ -68,36 +68,56 @@ export const ORG_OF_RECORD = [
 // the two copy reductions the same review asked for (the hero's second paragraph, deleted in the branch; the
 // compact band's second sentence, deleted here) and the bigger wordmark.
 //
-// What this round prices NOW is therefore mostly the way back: the three shipped moves are each repriced as a
-// reversal, so the number that justified them stays in the record instead of expiring when the option that produced
-// it is deleted, and so a future session that wants to undo one meets a measurement rather than an opinion. The
-// two open alternatives (`subline`, `formerly-footer`) are kept because both were declined with a number attached,
-// and the descriptor's article form is kept because the shipped lane drops it while `seo.title` keeps it — the
-// asymmetry is a ruling, and a ruling that is only described in prose is one a later edit will "fix" by accident.
+// What this round prices NOW is therefore mostly the way back: each shipped move is repriced as a reversal, so the
+// number that justified it stays in the record instead of expiring when the option that produced it is deleted, and a
+// future session that wants to undo one meets a measurement rather than an opinion. The descriptor has been ruled
+// three times in one day, which is exactly what this file is for: 2026-11-07 "A Twin Cities math club" (D240) ->
+// 2026-11-08 "Minneapolis–St. Paul math club", naming the city the wordmark puns on (D243) -> 2026-11-08, same
+// day, "Remove St. Paul from the subtitle of the club name. Minneapolis being named is sufficient for the subtitle
+// and SEO" (D248). The pair form survives here as `locator-pair`, priced, so re-opening that ruling costs a run
+// rather than an argument. The two open alternatives (`subline`, `formerly-footer`) are kept because both were
+// declined with a number attached, and the descriptor's article asymmetry is kept because a ruling that is only
+// described in prose is one a later edit will "fix" by accident.
 const EYEBROW_TABLE = 'A table, a question, and whoever shows up';
 
-// The descriptor that shipped (2026-11-08) and the two forms this round compared. The lane is `uppercase`, and
-// capitals are wider than the lowercase these strings are typed in, so the ink cost is measured in the lane, not
-// counted in characters. The en dash (\u2013) is the pair-of-place-names form; the operator typed a hyphen.
-const LOCATOR_CITIES = 'Minneapolis\u2013St. Paul math club';
+// The descriptor that shipped (2026-11-08, the third ruling of the day) and the two forms it is ranked against. The
+// lane is `uppercase`, and capitals are wider than the lowercase these strings are typed in, so the ink cost is
+// measured in the lane, not counted in characters. The en dash (–) is the pair-of-place-names form, and it went
+// with the second half it was joining: `Minneapolis math club` is not a pair, so it carries no dash.
+const LOCATOR_SHIPPED = 'Minneapolis math club';
+const LOCATOR_PAIR = 'Minneapolis\u2013St. Paul math club';
 const LOCATOR_TWIN = 'A Twin Cities math club';
 // The band lede with its second sentence put back, for `band-restore`.
 const BAND_FULL = `${BAND_MEETUP} What happens at the table is the math itself \u2014 people argue about it, bring their own examples, and nobody is lecturing.`;
 
 export const OPTIONS = [
   {
-    label: 'locator-twin',
-    what: 'the hero descriptor back to naming the metro (`Minneapolis\u2013St. Paul math club` -> `A Twin Cities math club`)',
-    locator: LOCATOR_TWIN,
-    claims: 'The claim is identical either way; the difference is whether the page ever prints the city the wordmark puns on. Repricing the shipped string as a reversal is what keeps the 2026-11-08 ruling cheap to audit: if the shorter form ever becomes necessary, this option says what it would buy.',
-    surface: 'Three slots move together and one of them is outside this file: `locator` in `src/components/HeroSection.astro`, `seo.title` in `src/config.json`, and the `<Layout title>` in `src/pages/index.astro`, which is a literal copy of the config string.',
+    label: 'locator-pair',
+    what: 'the hero descriptor back to naming both cities (`Minneapolis math club` -> `Minneapolis\u2013St. Paul math club`)',
+    locator: LOCATOR_PAIR,
+    claims: 'The 2026-11-08 ruling this reverses said the pair form is what makes the pun on the city name readable; the same-day correction said Minneapolis alone is sufficient for the subtitle and the SEO slots. What the pair buys is coverage of the venues the page sources (src/content.json names places on both sides of the metro, and `venueCount` counts them); what it costs is width in an `uppercase` face. Priced so the correction is reversible with a number in hand.',
+    surface: 'Three slots move together and one of them is outside this file: `locator` in `src/components/HeroSection.astro`, `seo.title` in `src/config.json`, and the `<Layout title>` in `src/pages/index.astro`, which is a literal copy of the config string. `scripts/check-copy.mjs` asserts all three carry the same phrase, which is why an option that moves one has to move all three.',
   },
   {
-    label: 'locator-cities-article',
-    what: 'the shipped descriptor with the article restored (`A Minneapolis\u2013St. Paul math club`)',
-    locator: `A ${LOCATOR_CITIES}`,
-    claims: 'Identical claim, two characters longer. Priced because the shipped state is asymmetric on purpose — no article in the lane (it is a label), article in `seo.title` (a title is read as a sentence fragment) — and an asymmetry with no number next to it gets "fixed" by a later edit.',
-    surface: 'Same three slots as `locator-twin`.',
+    label: 'locator-pair-article',
+    what: 'the both-cities form with the article restored (`A Minneapolis\u2013St. Paul math club`)',
+    locator: `A ${LOCATOR_PAIR}`,
+    claims: 'The widest form of the descriptor, kept because it is the one an operator is most likely to type by hand - "A Minneapolis-St. Paul math club" reads like a sentence, and the lane is not a sentence. The shipped lane drops the article and `seo.title` keeps it; that asymmetry is a ruling (D243).',
+    surface: 'Same three slots as `locator-pair`.',
+  },
+  {
+    label: 'locator-twin',
+    what: 'the hero descriptor back to naming the metro (`Minneapolis math club` -> `A Twin Cities math club`)',
+    locator: LOCATOR_TWIN,
+    claims: 'The 2026-11-07 wording, which the first 2026-11-08 ruling replaced because a descriptor that says "Twin Cities" never prints the city the wordmark puns on (`Math` inside `Minneapolis`). Kept as the cheapest form on the page, so the ranking of the three is a measurement rather than a memory.',
+    surface: 'Same three slots as `locator-pair`.',
+  },
+  {
+    label: 'locator-article',
+    what: 'the shipped descriptor with the article restored (`A Minneapolis math club`)',
+    locator: `A ${LOCATOR_SHIPPED}`,
+    claims: 'Identical claim, two characters longer. Priced because the shipped state is asymmetric on purpose - no article in the lane (it is a label), article in `seo.title` (a title is read as a sentence fragment) - and an asymmetry with no number next to it gets "fixed" by a later edit.',
+    surface: 'Same three slots as `locator-pair`.',
   },
   {
     label: 'size-2',
@@ -126,18 +146,18 @@ export const OPTIONS = [
     label: 'lede-cities',
     what: 'the hero lede\u2019s \u201cin the Twin Cities\u201d named as the descriptor names it (\u201cin the Minneapolis\u2013St. Paul area\u201d)',
     extra: [
-      { where: 'hero lede', from: 'in a coffee shop or a brewery in the Twin Cities and work', to: `in a coffee shop or a brewery in the ${LOCATOR_CITIES.slice(0, LOCATOR_CITIES.indexOf(' math'))} area and work` },
+      { where: 'hero lede', from: 'in a coffee shop or a brewery in the Twin Cities and work', to: `in a coffee shop or a brewery in the ${LOCATOR_PAIR.slice(0, LOCATOR_PAIR.indexOf(' math'))} area and work` },
     ],
-    claims: 'Same fact, spelled the way the lane now spells it. Deliberately NOT priced as a shipped change: the descriptor already names both cities 300px above this sentence, and the venues the page sources are Minneapolis, St. Paul and the surrounding area (src/content.json `venues`), so a wider phrase is the honest one and a third repetition of the two city names in one column is the defect the band\u2019s deleted clause was.',
-    surface: 'One phrase in `src/components/HeroSection.astro` (`lede`). `seo.description` already ships the named-cities form, so this option is about the painted page only.',
+    claims: 'The metro form of the lede\u2019s place phrase, priced because the page sources venues on both sides of the metro (src/content.json `venues`, and the band counts them). Deliberately NOT shipped with the 2026-11-08 descriptor correction: the operator ruled the metadata and the lane need name Minneapolis only, and this sentence is body copy, not a slot. Kept because it is the honest wider claim, and because with the lane now naming one city this is the only sentence on the page that names the pair - if the operator wants St. Paul back on the page but not in the metadata, this option is where it goes.',
+    surface: 'One phrase in `src/components/HeroSection.astro` (`lede`). `seo.description` now ships the Minneapolis-only form (2026-11-08), so this option is about the painted page only - it is the one place the metro claim can live without touching the metadata.',
   },
   {
     label: 'subline',
     what: 'the descriptor UNDER the name inside the h1 (`text-subhead`), and the label lane goes back to being a locator about the room',
-    h1: SHIPPED.h1.replace('>Matheapolis</h1>', `>Matheapolis<span class="block mt-2 text-subhead font-body text-ink-2">A ${LOCATOR_CITIES}</span></h1>`),
+    h1: SHIPPED.h1.replace('>Matheapolis</h1>', `>Matheapolis<span class="block mt-2 text-subhead font-body text-ink-2">A ${LOCATOR_SHIPPED}</span></h1>`),
     locator: EYEBROW_TABLE,
     claims: 'The same two facts, swapped in size: the name stays the big line and the descriptor becomes a serif line under it, while the small-caps lane returns to describing the room rather than the club. The longer wording the operator offered ("A math club for the Twin Cities") costs +32px of page at 320 over the shorter one @measured 2026-11-07, so the shorter wording is the one carried here.',
-    surface: 'One structural change in `HeroSection.astro` (the descriptor becomes a `<span>` inside the h1, so the heading\u2019s accessible name is "Matheapolis, A Minneapolis\u2013St. Paul math club") plus the locator string.',
+    surface: 'One structural change in `HeroSection.astro` (the descriptor becomes a `<span>` inside the h1, so the heading\u2019s accessible name is "Matheapolis, A Minneapolis math club") plus the locator string.',
   },
   {
     label: 'formerly-footer',

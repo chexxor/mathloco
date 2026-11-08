@@ -58,16 +58,24 @@ if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot
 // @measured 2026-11-07 by `npm run round16` (design/grill/round16/report.json), so the choice is voice, not layout.
 // It still contains no date, so the staleness rule that killed the "Next: …" label still holds.
 //
-// It names **both cities** from 2026-11-08 (operator: "we should say 'Minneapolis-St. Paul Math Club' instead of
-// 'Twin Cities Math Club' to make it clear the name of the club is a play on words with the name of the city").
-// The pun is `Math` inside `Minneapolis`, and a descriptor that says "Twin Cities" never prints the city the
-// wordmark puns on; the lane is where the pun becomes readable. Still a locator, not the wordmark, and still no
-// date. The article is dropped here because the lane is a label, not a sentence, and the lane's `uppercase`
-// transform is what the width is spent on: this string paints 243.7px of ink in a 288px lane at 320 in **one**
-// line box, +0 page height at every shipped width @measured 2026-11-08 by `npm run round16`. The article form
-// measures 257px and also holds one line, so it is kept where the phrase is read as a sentence - `seo.title` and
-// the `<title>` that mirrors it. The en dash is the pair-of-place-names form; the operator typed a hyphen.
-const locator = 'Minneapolis\u2013St. Paul math club';
+// It names **Minneapolis alone** from 2026-11-08 (operator, same day as the ruling below: "Remove St. Paul from the
+// subtitle of the club name. Minneapolis being named is sufficient for the subtitle and SEO"). The pair form
+// (`Minneapolis–St. Paul math club`) shipped for a few hours and is repriced as the `locator-metro` reversal in
+// `design/grill/copy-options.mjs`, so the trade is a number rather than a memory. What the pair bought and what it
+// cost, both measured: it is the only form that names both venues the page sources (src/content.json `venues`), and
+// it is 35px wider in the lane @measured 2026-11-08 by `npm run round16`.
+// The lane said "A Twin Cities math club" until 2026-11-08, when the operator ruled that the descriptor should name
+// the city the wordmark puns on: "we should say 'Minneapolis-St. Paul Math Club' instead of 'Twin Cities Math Club'
+// to make it clear the name of the club is a play on words with the name of the city" (D243). The pun is `Math`
+// inside `Minneapolis`, and a descriptor that says "Twin Cities" never prints the city the wordmark puns on — the
+// first half of that ruling stands; the second city is what the same-day correction removed.
+// Still a locator, not the wordmark, and still no date. The article is dropped here because the lane is a label, not
+// a sentence, and the lane's `uppercase` transform is what the width is spent on: measure before editing, and note
+// that the en dash went with the second half it was joining (DESIGN.md type: an en dash pairs place names, and
+// `Minneapolis math club` is not a pair). `scripts/check-copy.mjs` asserts this string and `seo.title` still carry
+// each other, because the three slots holding the descriptor are separate files and a copy edit that reaches two of
+// three is this repo's own documented defect class.
+const locator = 'Minneapolis math club';
 // The hero used to end with "Current Focus: Number Theory and Abstract Algebra". The slot behind it had no
 // source, `check:content` had it listed as an unsourced claim, and on 2026-11-03 the operator ruled it false:
 // "We no longer have that focus. We have no current focus at all right now." So `focus` here is whatever a

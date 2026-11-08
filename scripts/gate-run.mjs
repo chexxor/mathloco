@@ -69,6 +69,10 @@ const DEPLOY = [
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
+  // The descriptor is one phrase in three files (`const locator`, `seo.title`, the page `<Layout title>`), and the
+  // tree sat 2-of-3 for a day with every gate green. Reads source, so it runs before `build` (D118's rule).
+  { name: 'check:copy', desc: 'the club descriptor: three slots, one phrase, no superseded form, no date' },
+  { name: 'check:copy:selftest', desc: 'the copy gate can still fail (9 plantings, each into a fixture copy)' },
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
   // Runs before `build` on purpose: its fixture tree is its own, so a defect in this class is caught on a branch

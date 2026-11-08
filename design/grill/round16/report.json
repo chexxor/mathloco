@@ -1,6 +1,6 @@
 {
  "round": 16,
- "measuredAt": "2026-11-07T07:13:50.771Z",
+ "measuredAt": "2026-11-07T22:54:50.305Z",
  "widths": [
   1240,
   640,
@@ -13,20 +13,20 @@
   320
  ],
  "notes": [
-  "applied \"locator-twin\" to 4 built pages (locator x4 on /, 3 further replacements on the other routes)",
-  "applied \"locator-cities-article\" to 4 built pages (locator x4 on /, 3 further replacements on the other routes)",
-  "probe @320: the browser posted nothing on attempt 1; retried",
+  "applied \"locator-pair\" to 4 built pages (locator x7 on /, 3 further replacements on the other routes)",
+  "applied \"locator-pair-article\" to 4 built pages (locator x7 on /, 3 further replacements on the other routes)",
+  "applied \"locator-twin\" to 4 built pages (locator x7 on /, 3 further replacements on the other routes)",
+  "applied \"locator-article\" to 4 built pages (locator x7 on /, 3 further replacements on the other routes)",
   "applied \"size-2\" to 4 built pages (h1 x1 on /, 0 further replacements on the other routes)",
   "applied \"band-restore\" to 4 built pages (band lede x1 on /, 0 further replacements on the other routes)",
   "applied \"lede-cities\" to 4 built pages (hero lede x1 on /, 0 further replacements on the other routes)",
-  "probe @320: the browser posted nothing on attempt 1; retried",
-  "applied \"subline\" to 4 built pages (h1 x1, locator x5 on /, 3 further replacements on the other routes)",
+  "applied \"subline\" to 4 built pages (h1 x1, locator x8 on /, 3 further replacements on the other routes)",
   "applied \"formerly-footer\" to 4 built pages (hero continuity x1, footer small print x1 on /, 1 further replacements on the other routes)"
  ],
  "shipped": {
   "name": "Matheapolis",
   "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
-  "locator": "Minneapolis–St. Paul math club",
+  "locator": "Minneapolis math club",
   "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
   "formerly": "Formerly the Minneapolis Mathematics Book Club.",
   "footerAnchor": "<p class=\"mt-6 text-micro\">Minneapolis, Minnesota</p>"
@@ -253,20 +253,20 @@
      "inkW": 288,
      "availW": 288,
      "fontSize": "16px",
-     "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
     },
     "locator": {
      "box": {
       "x": 16,
       "y": 136,
-      "w": 243.7,
+      "w": 178.2,
       "h": 16
      },
      "lines": 1,
-     "inkW": 243.7,
+     "inkW": 178.2,
      "availW": 288,
      "fontSize": "13.3px",
-     "text": "Minneapolis–St. Paul math club"
+     "text": "Minneapolis math club"
     },
     "h1": {
      "box": {
@@ -336,20 +336,20 @@
      "inkW": 358,
      "availW": 358,
      "fontSize": "16px",
-     "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
     },
     "locator": {
      "box": {
       "x": 16,
       "y": 136,
-      "w": 243.7,
+      "w": 178.2,
       "h": 16
      },
      "lines": 1,
-     "inkW": 243.7,
+     "inkW": 178.2,
      "availW": 358,
      "fontSize": "13.3px",
-     "text": "Minneapolis–St. Paul math club"
+     "text": "Minneapolis math club"
     },
     "h1": {
      "box": {
@@ -419,20 +419,20 @@
      "inkW": 592,
      "availW": 592,
      "fontSize": "16px",
-     "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
     },
     "locator": {
      "box": {
       "x": 24,
       "y": 136,
-      "w": 243.7,
+      "w": 178.2,
       "h": 16
      },
      "lines": 1,
-     "inkW": 243.7,
+     "inkW": 178.2,
      "availW": 592,
      "fontSize": "13.3px",
-     "text": "Minneapolis–St. Paul math club"
+     "text": "Minneapolis math club"
     },
     "h1": {
      "box": {
@@ -501,20 +501,20 @@
      "inkW": 672,
      "availW": 672,
      "fontSize": "16px",
-     "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
     },
     "locator": {
      "box": {
       "x": 76,
       "y": 136,
-      "w": 243.7,
+      "w": 178.2,
       "h": 16
      },
      "lines": 1,
-     "inkW": 243.7,
+     "inkW": 178.2,
      "availW": 672,
      "fontSize": "13.3px",
-     "text": "Minneapolis–St. Paul math club"
+     "text": "Minneapolis math club"
     },
     "h1": {
      "box": {
@@ -574,10 +574,708 @@
  },
  "options": [
   {
+   "label": "locator-pair",
+   "what": "the hero descriptor back to naming both cities (`Minneapolis math club` -> `Minneapolis–St. Paul math club`)",
+   "claims": "The 2026-11-08 ruling this reverses said the pair form is what makes the pun on the city name readable; the same-day correction said Minneapolis alone is sufficient for the subtitle and the SEO slots. What the pair buys is coverage of the venues the page sources (src/content.json names places on both sides of the metro, and `venueCount` counts them); what it costs is width in an `uppercase` face. Priced so the correction is reversible with a number in hand.",
+   "surface": "Three slots move together and one of them is outside this file: `locator` in `src/components/HeroSection.astro`, `seo.title` in `src/config.json`, and the `<Layout title>` in `src/pages/index.astro`, which is a literal copy of the config string. `scripts/check-copy.mjs` asserts all three carry the same phrase, which is why an option that moves one has to move all three.",
+   "name": "Matheapolis",
+   "locator": "Minneapolis–St. Paul math club",
+   "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
+   "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
+   "at": {
+    "320": {
+     "pageHeight": 5223,
+     "shotH": 5223,
+     "identity": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 288,
+       "h": 903.3
+      },
+      "lines": 21,
+      "inkW": 288,
+      "availW": 288,
+      "fontSize": "16px",
+      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 243.7,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 243.7,
+      "availW": 288,
+      "fontSize": "13.3px",
+      "text": "Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 16,
+       "y": 168,
+       "w": 288,
+       "h": 40
+      },
+      "lines": 1,
+      "inkW": 208.7,
+      "availW": 288,
+      "fontSize": "36.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 16,
+       "y": 220,
+       "w": 288,
+       "h": 303.9
+      },
+      "lines": 9,
+      "inkW": 287.5,
+      "availW": 288,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 16,
+       "y": 3261.9,
+       "w": 288,
+       "h": 101.3
+      },
+      "lines": 3,
+      "inkW": 285.8,
+      "availW": 288,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 16,
+       "y": 4941.7,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 288,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     },
+     "crop": ".design/tmp-round16/id-locator-pair-320.png"
+    },
+    "390": {
+     "pageHeight": 4713,
+     "shotH": 4713,
+     "identity": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 358,
+       "h": 768.3
+      },
+      "lines": 17,
+      "inkW": 358,
+      "availW": 358,
+      "fontSize": "16px",
+      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 243.7,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 243.7,
+      "availW": 358,
+      "fontSize": "13.3px",
+      "text": "Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 16,
+       "y": 168,
+       "w": 358,
+       "h": 40
+      },
+      "lines": 1,
+      "inkW": 208.7,
+      "availW": 358,
+      "fontSize": "36.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 16,
+       "y": 220,
+       "w": 358,
+       "h": 270.1
+      },
+      "lines": 8,
+      "inkW": 356.7,
+      "availW": 358,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 16,
+       "y": 2968.7,
+       "w": 358,
+       "h": 101.3
+      },
+      "lines": 3,
+      "inkW": 332.8,
+      "availW": 358,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 16,
+       "y": 4455.9,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 358,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     },
+     "crop": ".design/tmp-round16/id-locator-pair-390.png"
+    },
+    "640": {
+     "pageHeight": 4558,
+     "shotH": 4558,
+     "identity": {
+      "box": {
+       "x": 24,
+       "y": 136,
+       "w": 592,
+       "h": 553.7
+      },
+      "lines": 11,
+      "inkW": 592,
+      "availW": 592,
+      "fontSize": "16px",
+      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 24,
+       "y": 136,
+       "w": 243.7,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 243.7,
+      "availW": 592,
+      "fontSize": "13.3px",
+      "text": "Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 24,
+       "y": 168,
+       "w": 592,
+       "h": 56
+      },
+      "lines": 1,
+      "inkW": 300.4,
+      "availW": 592,
+      "fontSize": "52.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 24,
+       "y": 248,
+       "w": 592,
+       "h": 168.8
+      },
+      "lines": 5,
+      "inkW": 577.3,
+      "availW": 592,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 24,
+       "y": 2767.7,
+       "w": 592,
+       "h": 67.5
+      },
+      "lines": 2,
+      "inkW": 564.9,
+      "availW": 592,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 24,
+       "y": 4321.9,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 592,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     }
+    },
+    "1240": {
+     "pageHeight": 3140,
+     "shotH": 3140,
+     "identity": {
+      "box": {
+       "x": 76,
+       "y": 136,
+       "w": 672,
+       "h": 520.2
+      },
+      "lines": 10,
+      "inkW": 672,
+      "availW": 672,
+      "fontSize": "16px",
+      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 76,
+       "y": 136,
+       "w": 243.7,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 243.7,
+      "availW": 672,
+      "fontSize": "13.3px",
+      "text": "Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 76,
+       "y": 168,
+       "w": 672,
+       "h": 56
+      },
+      "lines": 1,
+      "inkW": 300.4,
+      "availW": 672,
+      "fontSize": "52.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 76,
+       "y": 248,
+       "w": 672,
+       "h": 135.1
+      },
+      "lines": 4,
+      "inkW": 665.7,
+      "availW": 672,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 276.4,
+       "y": 1991.5,
+       "w": 675.2,
+       "h": 67.5
+      },
+      "lines": 2,
+      "inkW": 659.7,
+      "availW": 675.2,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 32,
+       "y": 2975.8,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 1164,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     },
+     "crop": ".design/tmp-round16/id-locator-pair-1240.png"
+    }
+   },
+   "delta": {
+    "320": "+0",
+    "390": "+0",
+    "640": "+0",
+    "1240": "+0"
+   }
+  },
+  {
+   "label": "locator-pair-article",
+   "what": "the both-cities form with the article restored (`A Minneapolis–St. Paul math club`)",
+   "claims": "The widest form of the descriptor, kept because it is the one an operator is most likely to type by hand - \"A Minneapolis-St. Paul math club\" reads like a sentence, and the lane is not a sentence. The shipped lane drops the article and `seo.title` keeps it; that asymmetry is a ruling (D243).",
+   "surface": "Same three slots as `locator-pair`.",
+   "name": "Matheapolis",
+   "locator": "A Minneapolis–St. Paul math club",
+   "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
+   "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
+   "at": {
+    "320": {
+     "pageHeight": 5223,
+     "shotH": 5223,
+     "identity": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 288,
+       "h": 903.3
+      },
+      "lines": 21,
+      "inkW": 288,
+      "availW": 288,
+      "fontSize": "16px",
+      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 257,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 257,
+      "availW": 288,
+      "fontSize": "13.3px",
+      "text": "A Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 16,
+       "y": 168,
+       "w": 288,
+       "h": 40
+      },
+      "lines": 1,
+      "inkW": 208.7,
+      "availW": 288,
+      "fontSize": "36.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 16,
+       "y": 220,
+       "w": 288,
+       "h": 303.9
+      },
+      "lines": 9,
+      "inkW": 287.5,
+      "availW": 288,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 16,
+       "y": 3261.9,
+       "w": 288,
+       "h": 101.3
+      },
+      "lines": 3,
+      "inkW": 285.8,
+      "availW": 288,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 16,
+       "y": 4941.7,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 288,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     },
+     "crop": ".design/tmp-round16/id-locator-pair-article-320.png"
+    },
+    "390": {
+     "pageHeight": 4713,
+     "shotH": 4713,
+     "identity": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 358,
+       "h": 768.3
+      },
+      "lines": 17,
+      "inkW": 358,
+      "availW": 358,
+      "fontSize": "16px",
+      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 16,
+       "y": 136,
+       "w": 257,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 257,
+      "availW": 358,
+      "fontSize": "13.3px",
+      "text": "A Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 16,
+       "y": 168,
+       "w": 358,
+       "h": 40
+      },
+      "lines": 1,
+      "inkW": 208.7,
+      "availW": 358,
+      "fontSize": "36.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 16,
+       "y": 220,
+       "w": 358,
+       "h": 270.1
+      },
+      "lines": 8,
+      "inkW": 356.7,
+      "availW": 358,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 16,
+       "y": 2968.7,
+       "w": 358,
+       "h": 101.3
+      },
+      "lines": 3,
+      "inkW": 332.8,
+      "availW": 358,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 16,
+       "y": 4455.9,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 358,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     },
+     "crop": ".design/tmp-round16/id-locator-pair-article-390.png"
+    },
+    "640": {
+     "pageHeight": 4558,
+     "shotH": 4558,
+     "identity": {
+      "box": {
+       "x": 24,
+       "y": 136,
+       "w": 592,
+       "h": 553.7
+      },
+      "lines": 11,
+      "inkW": 592,
+      "availW": 592,
+      "fontSize": "16px",
+      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 24,
+       "y": 136,
+       "w": 257,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 257,
+      "availW": 592,
+      "fontSize": "13.3px",
+      "text": "A Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 24,
+       "y": 168,
+       "w": 592,
+       "h": 56
+      },
+      "lines": 1,
+      "inkW": 300.4,
+      "availW": 592,
+      "fontSize": "52.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 24,
+       "y": 248,
+       "w": 592,
+       "h": 168.8
+      },
+      "lines": 5,
+      "inkW": 577.3,
+      "availW": 592,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 24,
+       "y": 2767.7,
+       "w": 592,
+       "h": 67.5
+      },
+      "lines": 2,
+      "inkW": 564.9,
+      "availW": 592,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 24,
+       "y": 4321.9,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 592,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     }
+    },
+    "1240": {
+     "pageHeight": 3140,
+     "shotH": 3140,
+     "identity": {
+      "box": {
+       "x": 76,
+       "y": 136,
+       "w": 672,
+       "h": 520.2
+      },
+      "lines": 10,
+      "inkW": 672,
+      "availW": 672,
+      "fontSize": "16px",
+      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+     },
+     "locator": {
+      "box": {
+       "x": 76,
+       "y": 136,
+       "w": 257,
+       "h": 16
+      },
+      "lines": 1,
+      "inkW": 257,
+      "availW": 672,
+      "fontSize": "13.3px",
+      "text": "A Minneapolis–St. Paul math club"
+     },
+     "h1": {
+      "box": {
+       "x": 76,
+       "y": 168,
+       "w": 672,
+       "h": 56
+      },
+      "lines": 1,
+      "inkW": 300.4,
+      "availW": 672,
+      "fontSize": "52.4px",
+      "text": "Matheapolis"
+     },
+     "heroLede": {
+      "box": {
+       "x": 76,
+       "y": 248,
+       "w": 672,
+       "h": 135.1
+      },
+      "lines": 4,
+      "inkW": 665.7,
+      "availW": 672,
+      "fontSize": "21.1px",
+      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+     },
+     "bandLede": {
+      "box": {
+       "x": 276.4,
+       "y": 1991.5,
+       "w": 675.2,
+       "h": 67.5
+      },
+      "lines": 2,
+      "inkW": 659.7,
+      "availW": 675.2,
+      "fontSize": "21.1px",
+      "text": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar."
+     },
+     "footerName": {
+      "box": {
+       "x": 32,
+       "y": 2975.8,
+       "w": 126.8,
+       "h": 33
+      },
+      "lines": 1,
+      "inkW": 126.8,
+      "availW": 1164,
+      "fontSize": "17.6px",
+      "text": "Matheapolis ∑"
+     },
+     "crop": ".design/tmp-round16/id-locator-pair-article-1240.png"
+    }
+   },
+   "delta": {
+    "320": "+0",
+    "390": "+0",
+    "640": "+0",
+    "1240": "+0"
+   }
+  },
+  {
    "label": "locator-twin",
-   "what": "the hero descriptor back to naming the metro (`Minneapolis–St. Paul math club` -> `A Twin Cities math club`)",
-   "claims": "The claim is identical either way; the difference is whether the page ever prints the city the wordmark puns on. Repricing the shipped string as a reversal is what keeps the 2026-11-08 ruling cheap to audit: if the shorter form ever becomes necessary, this option says what it would buy.",
-   "surface": "Three slots move together and one of them is outside this file: `locator` in `src/components/HeroSection.astro`, `seo.title` in `src/config.json`, and the `<Layout title>` in `src/pages/index.astro`, which is a literal copy of the config string.",
+   "what": "the hero descriptor back to naming the metro (`Minneapolis math club` -> `A Twin Cities math club`)",
+   "claims": "The 2026-11-07 wording, which the first 2026-11-08 ruling replaced because a descriptor that says \"Twin Cities\" never prints the city the wordmark puns on (`Math` inside `Minneapolis`). Kept as the cheapest form on the page, so the ranking of the three is a measurement rather than a memory.",
+   "surface": "Same three slots as `locator-pair`.",
    "name": "Matheapolis",
    "locator": "A Twin Cities math club",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
@@ -923,12 +1621,12 @@
    }
   },
   {
-   "label": "locator-cities-article",
-   "what": "the shipped descriptor with the article restored (`A Minneapolis–St. Paul math club`)",
-   "claims": "Identical claim, two characters longer. Priced because the shipped state is asymmetric on purpose — no article in the lane (it is a label), article in `seo.title` (a title is read as a sentence fragment) — and an asymmetry with no number next to it gets \"fixed\" by a later edit.",
-   "surface": "Same three slots as `locator-twin`.",
+   "label": "locator-article",
+   "what": "the shipped descriptor with the article restored (`A Minneapolis math club`)",
+   "claims": "Identical claim, two characters longer. Priced because the shipped state is asymmetric on purpose - no article in the lane (it is a label), article in `seo.title` (a title is read as a sentence fragment) - and an asymmetry with no number next to it gets \"fixed\" by a later edit.",
+   "surface": "Same three slots as `locator-pair`.",
    "name": "Matheapolis",
-   "locator": "A Minneapolis–St. Paul math club",
+   "locator": "A Minneapolis math club",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
    "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
    "at": {
@@ -946,20 +1644,20 @@
       "inkW": 288,
       "availW": 288,
       "fontSize": "16px",
-      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "A Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 257,
+       "w": 191.5,
        "h": 16
       },
       "lines": 1,
-      "inkW": 257,
+      "inkW": 191.5,
       "availW": 288,
       "fontSize": "13.3px",
-      "text": "A Minneapolis–St. Paul math club"
+      "text": "A Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1013,7 +1711,7 @@
       "fontSize": "17.6px",
       "text": "Matheapolis ∑"
      },
-     "crop": ".design/tmp-round16/id-locator-cities-article-320.png"
+     "crop": ".design/tmp-round16/id-locator-article-320.png"
     },
     "390": {
      "pageHeight": 4713,
@@ -1029,20 +1727,20 @@
       "inkW": 358,
       "availW": 358,
       "fontSize": "16px",
-      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "A Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 257,
+       "w": 191.5,
        "h": 16
       },
       "lines": 1,
-      "inkW": 257,
+      "inkW": 191.5,
       "availW": 358,
       "fontSize": "13.3px",
-      "text": "A Minneapolis–St. Paul math club"
+      "text": "A Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1096,7 +1794,7 @@
       "fontSize": "17.6px",
       "text": "Matheapolis ∑"
      },
-     "crop": ".design/tmp-round16/id-locator-cities-article-390.png"
+     "crop": ".design/tmp-round16/id-locator-article-390.png"
     },
     "640": {
      "pageHeight": 4558,
@@ -1112,20 +1810,20 @@
       "inkW": 592,
       "availW": 592,
       "fontSize": "16px",
-      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "A Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 24,
        "y": 136,
-       "w": 257,
+       "w": 191.5,
        "h": 16
       },
       "lines": 1,
-      "inkW": 257,
+      "inkW": 191.5,
       "availW": 592,
       "fontSize": "13.3px",
-      "text": "A Minneapolis–St. Paul math club"
+      "text": "A Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1194,20 +1892,20 @@
       "inkW": 672,
       "availW": 672,
       "fontSize": "16px",
-      "text": "A Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "A Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 76,
        "y": 136,
-       "w": 257,
+       "w": 191.5,
        "h": 16
       },
       "lines": 1,
-      "inkW": 257,
+      "inkW": 191.5,
       "availW": 672,
       "fontSize": "13.3px",
-      "text": "A Minneapolis–St. Paul math club"
+      "text": "A Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1261,7 +1959,7 @@
       "fontSize": "17.6px",
       "text": "Matheapolis ∑"
      },
-     "crop": ".design/tmp-round16/id-locator-cities-article-1240.png"
+     "crop": ".design/tmp-round16/id-locator-article-1240.png"
     }
    },
    "delta": {
@@ -1277,7 +1975,7 @@
    "claims": "The shipped step, priced in reverse. The rename created the choice: a single 11-letter word at display-2 measured 251px of ink in a 672px column at 1240, i.e. 421px of unused line, and the old three-word name never had that air to spend. Reversing it measures +0 page height at 1240, 390 and 320 and -8px at 640 @measured 2026-11-08 by `npm run round16` - the wordmark would drop from 300.4px to 250.5px of ink and the page would not notice, which is why the step is cheap enough to keep and why the argument for it is the column, not the fold.",
    "surface": "One class in `src/components/HeroSection.astro`. The step is `sm:`-bounded, which is why the 320 width (already at display-1 for one word) is where a reversal buys nothing.",
    "name": "Matheapolis",
-   "locator": "Minneapolis–St. Paul math club",
+   "locator": "Minneapolis math club",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
    "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-2\">Matheapolis</h1>",
    "at": {
@@ -1295,20 +1993,20 @@
       "inkW": 288,
       "availW": 288,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 288,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1378,20 +2076,20 @@
       "inkW": 358,
       "availW": 358,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 358,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1461,20 +2159,20 @@
       "inkW": 592,
       "availW": 592,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 24,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 592,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1543,20 +2241,20 @@
       "inkW": 672,
       "availW": 672,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 76,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 672,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1626,7 +2324,7 @@
    "claims": "It re-makes a claim the operator deleted (\"what happens at the table is the math itself — people argue about it, bring their own examples, and nobody is lecturing\"), so this is not a free revert: the 2026-11-07 rewrite of the join copy is what removed the earlier clause for promising a verdict about the reader’s taste from one evening, and this sentence is the sibling of that one. Priced so the deletion is reversible with a number in hand.",
    "surface": "`src/components/Schedule.astro`, compact branch only — the full-page lede on `/schedule` never carried this sentence, which is why deleting it costs `/schedule` nothing.",
    "name": "Matheapolis",
-   "locator": "Minneapolis–St. Paul math club",
+   "locator": "Minneapolis math club",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar. What happens at the table is the math itself — people argue about it, bring their own examples, and nobody is lecturing.",
    "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
    "at": {
@@ -1644,20 +2342,20 @@
       "inkW": 288,
       "availW": 288,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 288,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1727,20 +2425,20 @@
       "inkW": 358,
       "availW": 358,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 358,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1810,20 +2508,20 @@
       "inkW": 592,
       "availW": 592,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 24,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 592,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1892,20 +2590,20 @@
       "inkW": 672,
       "availW": 672,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 76,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 672,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -1972,10 +2670,10 @@
   {
    "label": "lede-cities",
    "what": "the hero lede’s “in the Twin Cities” named as the descriptor names it (“in the Minneapolis–St. Paul area”)",
-   "claims": "Same fact, spelled the way the lane now spells it. Deliberately NOT priced as a shipped change: the descriptor already names both cities 300px above this sentence, and the venues the page sources are Minneapolis, St. Paul and the surrounding area (src/content.json `venues`), so a wider phrase is the honest one and a third repetition of the two city names in one column is the defect the band’s deleted clause was.",
-   "surface": "One phrase in `src/components/HeroSection.astro` (`lede`). `seo.description` already ships the named-cities form, so this option is about the painted page only.",
+   "claims": "The metro form of the lede’s place phrase, priced because the page sources venues on both sides of the metro (src/content.json `venues`, and the band counts them). Deliberately NOT shipped with the 2026-11-08 descriptor correction: the operator ruled the metadata and the lane need name Minneapolis only, and this sentence is body copy, not a slot. Kept because it is the honest wider claim, and because with the lane now naming one city this is the only sentence on the page that names the pair - if the operator wants St. Paul back on the page but not in the metadata, this option is where it goes.",
+   "surface": "One phrase in `src/components/HeroSection.astro` (`lede`). `seo.description` now ships the Minneapolis-only form (2026-11-08), so this option is about the painted page only - it is the one place the metro claim can live without touching the metadata.",
    "name": "Matheapolis",
-   "locator": "Minneapolis–St. Paul math club",
+   "locator": "Minneapolis math club",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
    "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
    "at": {
@@ -1993,20 +2691,20 @@
       "inkW": 288,
       "availW": 288,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 288,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2076,20 +2774,20 @@
       "inkW": 358,
       "availW": 358,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 358,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2159,20 +2857,20 @@
       "inkW": 592,
       "availW": 592,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 24,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 592,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2241,20 +2939,20 @@
       "inkW": 672,
       "availW": 672,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Minneapolis–St. Paul area and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 76,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 672,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2322,11 +3020,11 @@
    "label": "subline",
    "what": "the descriptor UNDER the name inside the h1 (`text-subhead`), and the label lane goes back to being a locator about the room",
    "claims": "The same two facts, swapped in size: the name stays the big line and the descriptor becomes a serif line under it, while the small-caps lane returns to describing the room rather than the club. The longer wording the operator offered (\"A math club for the Twin Cities\") costs +32px of page at 320 over the shorter one @measured 2026-11-07, so the shorter wording is the one carried here.",
-   "surface": "One structural change in `HeroSection.astro` (the descriptor becomes a `<span>` inside the h1, so the heading’s accessible name is \"Matheapolis, A Minneapolis–St. Paul math club\") plus the locator string.",
+   "surface": "One structural change in `HeroSection.astro` (the descriptor becomes a `<span>` inside the h1, so the heading’s accessible name is \"Matheapolis, A Minneapolis math club\") plus the locator string.",
    "name": "Matheapolis",
    "locator": "A table, a question, and whoever shows up",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
-   "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis<span class=\"block mt-2 text-subhead font-body text-ink-2\">A Minneapolis–St. Paul math club</span></h1>",
+   "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis<span class=\"block mt-2 text-subhead font-body text-ink-2\">A Minneapolis math club</span></h1>",
    "at": {
     "320": {
      "pageHeight": 5311,
@@ -2673,7 +3371,7 @@
    "claims": "Identical fact (\"the club used to be the Minneapolis Mathematics Book Club\"), placed where a search snippet and an old link land rather than where a returning member reads. The footer carries it on all four routes; the hero carries it on one.",
    "surface": "One sentence moved from `HeroSection.astro` to `Footer.astro`. Note what the specimen cannot show: the footer sits below the photographed identity block, so the crop for this option is the same image as shipped — read the page-height column, not the picture.",
    "name": "Matheapolis",
-   "locator": "Minneapolis–St. Paul math club",
+   "locator": "Minneapolis math club",
    "band": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
    "h1": "<h1 class=\"mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3\">Matheapolis</h1>",
    "at": {
@@ -2691,20 +3389,20 @@
       "inkW": 288,
       "availW": 288,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 288,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2774,20 +3472,20 @@
       "inkW": 358,
       "availW": 358,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 16,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 358,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2857,20 +3555,20 @@
       "inkW": 592,
       "availW": 592,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 24,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 592,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -2939,20 +3637,20 @@
       "inkW": 672,
       "availW": 672,
       "fontSize": "16px",
-      "text": "Minneapolis–St. Paul math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
+      "text": "Minneapolis math clubMatheapolisWe meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer. Dates go up on Meetup; most of the arguing happens in the chat between meetings.There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field.Join Our GroupView Schedule"
      },
      "locator": {
       "box": {
        "x": 76,
        "y": 136,
-       "w": 243.7,
+       "w": 178.2,
        "h": 16
       },
       "lines": 1,
-      "inkW": 243.7,
+      "inkW": 178.2,
       "availW": 672,
       "fontSize": "13.3px",
-      "text": "Minneapolis–St. Paul math club"
+      "text": "Minneapolis math club"
      },
      "h1": {
       "box": {
@@ -3017,5 +3715,5 @@
    }
   }
  ],
- "seconds": 138.9
+ "seconds": 72.7
 }
