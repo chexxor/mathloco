@@ -55,6 +55,19 @@ ${mark ? `  nav a[aria-label="Matheapolis, home"]{font-size:var(${RAMP_TOKENS[ma
 }
 </style>`;
 
+// A candidate GROUND is written as a namespaced token plus a class, never as an inline style: round 9's rule (D129)
+// is that a candidate colour is not a role until the operator rules it, and a class is what would actually ship.
+// The mutation drops `bg-paper` so the candidate class is the only ground on the bar; the runner then measures the
+// bytes Firefox paints and derives the layer contrast and the role contrasts from them (round17.mjs, groundReport).
+const groundCss = (name, value) => `<style>:root{--w-${name}:${value}}.bg-w-${name}{background-color:var(--w-${name})}</style>`;
+const warmGround = (name, value) => ({
+  where: 'Layout.astro `header`', from: HEADER_OPEN, to: `<header class="bg-w-${name}">`,
+});
+
+// ---- The colour half of the brief (operator, 2026-11-08): "I think we could use the amber/gold color, rather
+// than that odd teal/aqua color." Every ground below is priced on the built page, so the answer is a photograph
+// and a number, not an opinion about warmth.
+
 // ---- The second half of the brief (operator, 2026-11-08, mid-round): "there is duplication between the 'How it
 // works' section on the homepage and the very first section, 'We meet around a table…'". The probe now names the
 // pairs on the artifact rather than on reading (`out.sentences.duplicatePairs`): three pairs fire on the shipped
@@ -93,6 +106,65 @@ export const OPTIONS = [
     surfaces: 'One device, one token. This design language separates surfaces by GROUND, not by a drawn line - there is no border in `src/` at all, and a painted 1px hairline is a gate FAIL. `tint` is ratified as a hover fill that carries ink (10.96) and never gold (4.39 = FAIL), so using it as a persistent band extends a role rather than adding a colour: it needs a line in DESIGN.md and a `token-map` entry. Cheapest row in the round - one class.',
     gate: 'Passes `check:render` untouched (no nav, control or band rule is touched; `tint` is not a dark ground, so the one-dark-band rule is not reached). `check:ground` re-reads the page grounds and would report the second light band; a keyline across the edge is what would trip its straddle rule, and this option draws none.',
     mutations: [{ where: 'Layout.astro `header`', from: HEADER_OPEN, to: '<header class="bg-tint">' }],
+  },
+
+  {
+    label: 'chrome-ground-warm',
+    title: "the bar gets a warm ground: the tint's lightness and chroma, gold's hue",
+    what: '`<header class="bg-paper">` → a candidate `--w-warm: oklch(95% .03 62)` — the same L and C as `tint`, hue moved from 152° (the ink family) to 62° (gold’s hue). Nothing else moves.',
+    surfaces: 'The like-for-like answer to "swap the aqua for amber": identical weight, opposite temperature. It is not a new token in @theme, so it is priced as a `--w-*` candidate exactly as round 9 namespaces candidates (D129). What it does to the roles is what the record measures: ink still clears (10.81), but `gold` on it is 4.33 and `rule` is 2.70 — both under their bars, and worse than on tint (4.39 / 2.74). Warmth is not free in a palette whose only boundary role is `rule`.',
+    gate: "The `tint` role extension is the same one `chrome-ground` needs (a DESIGN.md line + a `token-map` entry), plus a new candidate token the operator has to ratify or reject. No keyline is drawn, so `check:ground`'s straddle rule is not reached.",
+    mutations: [warmGround('warm', 'oklch(95% .03 62)')],
+    css: groundCss('warm', 'oklch(95% .03 62)'),
+  },
+
+  {
+    label: 'chrome-ground-warm-band',
+    title: 'a warm ground strong enough to see: oklch(93% .05 62)',
+    what: 'The bar painted at L 93, C .05, hue 62 — warm enough to register as a band rather than a whisper.',
+    surfaces: 'The chroma is over the 0.04 "chromatic" bar `check:color` reads from the census, so this is the first header ground on this site the census would call a colour (tint at C .03 sits under it: D129 measured 46.9% faint / 0.5% strong). The cost is on the roles: layer-vs-page 1.20 (still under the 1.35 layer bar), ink-3 4.35 - the meta tier drops under the 4.5 text bar - gold 4.03, rule 2.51.',
+    gate: 'Any box inside this bar that carries a `rule` ring fails the straddle and under-bar rules of `check:render` (record 0018) the same way a tinted box does, at a worse number.',
+    mutations: [warmGround('band', 'oklch(93% .05 62)')],
+    css: groundCss('band', 'oklch(93% .05 62)'),
+  },
+
+  {
+    label: 'chrome-ground-gold-fill',
+    title: 'the bar painted with the gold token itself (priced to be refused)',
+    what: '`<header class="bg-paper">` → a candidate `--w-goldband: var(--color-gold)` — `oklch(55% .12 62)`, the ratified gold, used as a surface.',
+    surfaces: 'The literal version of "use the amber", priced because D88 already settled it once: gold is a mark in this system, not a ground — "gold as ink is brand-neutral; gold as a bright fill is not, and cannot be." The record prints what ink on that fill measures (2.50) so the refusal is a number rather than a rule citation.',
+    gate: 'Ink text on it is 2.50 against the 4.5 text bar. The contrast oracle in `check:render` measures text against its painted ground, so the shipped gate is expected to FAIL this row - kept in the record for that reason.',
+    mutations: [warmGround('goldband', 'var(--color-gold)')],
+    css: groundCss('goldband', 'var(--color-gold)'),
+  },
+
+  {
+    label: 'chrome-ink-warm',
+    title: "the ground stays paper; the bar’s ink is warmed to gold's hue",
+    what: 'The bar keeps `bg-paper`; a class `ink-warm` on the header re-declares `--color-ink`, `--color-ink-2`, `--color-ink-3` and `--color-rule` inside the bar at hue 62 instead of 152. Same lightness, same chroma, warmth instead of teal. No ground change.',
+    surfaces: 'This is the direct answer to "that odd teal": the bar is not teal by accident, it is `ink`, and every ink in the palette sits at hue 152. Warmed ink on paper measures 12.37 (cool ink 12.02) - legibility is not the problem. The problem is D88: warm ink at L 32 C .045 H 62 lands 0.063 OKLab from UPS brown #351C15, inside the 0.135 commerce-brand zone. And the reserved join-path hues move closer to it: discord (35°) is 27° away and mobilizon (105°) is 43° away, under the >=47° separation `src/styles/global.css` writes for the path hues. Warming ink is a palette ruling, not a header tweak.',
+    gate: 'Nothing in @theme changes; the override is a class the build would emit, scoped to the header. `check:render’s oracle reads warm ink on paper at 12.37, so this row is expected to pass the shipped gate.',
+    mutations: [{ where: 'Layout.astro `header`', from: HEADER_OPEN, to: '<header class="bg-paper ink-warm">' }],
+    css: '<style>.ink-warm{--color-ink:oklch(32% 0.045 62);--color-ink-2:oklch(45% 0.035 62);--color-ink-3:oklch(52% 0.028 62);--color-rule:oklch(65.5% 0.03 62)}</style>',
+  },
+
+  {
+    label: 'chrome-ground-panel',
+    title: 'the warm ground the palette already has: `panel`',
+    what: '`<header class="bg-paper">` → `<header class="bg-panel">` — `oklch(97% .008 85)`, a ratified role, same hue as paper.',
+    surfaces: 'Warmth with no new token and no new hue: `panel` is paper’s own hue, so the bar goes warmer rather than greener. It is also the weakest of the four grounds (1.04 against paper) and puts `rule` at 2.88, under the 3.0 graphic bar — DESIGN.md already says a tint was never doing the separation a ring does.',
+    gate: 'No new token, so no DESIGN.md extension is needed — `panel` is already a ratified role. The rule that still applies is the one DESIGN.md writes for it: nothing `rule`-ringed may sit inside it.',
+    mutations: [{ where: 'Layout.astro `header`', from: HEADER_OPEN, to: '<header class="bg-panel">' }],
+  },
+
+  {
+    label: 'nav-name-gold',
+    title: 'the ground stays paper; the bar’s name is painted gold',
+    what: 'The nav identity item’s colour goes `ink` → `gold` through the token (`color:var(--color-gold)` on the nav’s own aria-label selector). No ground change.',
+    surfaces: 'Gold where the palette already allows gold: on paper, at 4.82, over the 4.5 text bar. It answers "use the amber in the header" without touching a ground at all. The question it raises is a grammar one, not a contrast one — DESIGN.md assigns gold to "quiet action, notice word, caution keyline", and D112-line reasoning removed the gold `Math` from the mark because a coined word has no boundary to colour. The record shows the pixels; the ruling is about what gold means here.',
+    gate: 'No token changes, no keyline changes. The contrast oracle in `check:render` reads it at rest (4.82 on paper), so this row is expected to pass the shipped gate.',
+    mutations: [],
+    css: `<style>nav a[aria-label="Matheapolis, home"]{color:var(--color-gold)}</style>`,
   },
 
   {

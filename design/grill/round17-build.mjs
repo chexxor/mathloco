@@ -13,6 +13,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
+import { rgbTripleFromBytes, dist, SAME_COLOUR_BAR, BARS, hueGap, asTriple, contrastTriple } from './okcolor.mjs';
 
 const REPORT = resolve('design/grill/round17/report.json');
 const SCRATCH = resolve('.design/tmp-round17');
@@ -95,6 +96,7 @@ const card = (o, w) => {
     <figcaption><b>${o.label === 'shipped' ? 'shipped (incumbent)' : `${letter(OPTS.indexOf(o))}. ${o.title}`}</b>
       <span class="what">${o.what}</span>
       <span class="nums">bar ${m.header.box} ground <b>${m.header.ground}</b> border ${m.header.border} shadow ${m.header.shadow}
+        ${o.headline && o.headline.groundReport ? `· layer vs page <b>${o.headline.groundReport.layerVsPage}</b> (bar ${o.headline.groundReport.layerBar}) · ink ${o.headline.groundReport.roles.ink} gold ${o.headline.groundReport.roles.gold} rule ${o.headline.groundReport.roles.rule}` : ''}
         · name ${m.nameInFirstScreen} in the first screen
         · nav ${items} · row ${m.row.needed} of ${m.row.available}
         · page ${m.docHeight}px ${o.label === 'shipped' ? '' : `(${sgn(m.docHeight - b.docHeight)})`}</span>
@@ -106,6 +108,26 @@ const card = (o, w) => {
 const strip = (w, opts) => `<h2>at ${w}px — shipped bar ${at(BASE, w).header.box}, page ${at(BASE, w).docHeight}px</h2>
 <p class="scale">Every crop is the same region of the page: the header, the hero, and the copy directly under it. A change you cannot see here is a change the page cannot show.</p>
 <div class="strip">${opts.map((o) => card(o, w)).join('\n')}</div>`;
+
+// The ground table: every bar option's painted bytes, how far that ground is from the page's own ground against the
+// ratified 1.35 layer bar (D101), and what each role the header can paint measures ON it. This is the half of the
+// round that answers "make the header amber instead of teal" - warmth is not free, and the price is written here in
+// contrast, measured off bytes the browser actually painted.
+const PAGE_BYTES = (BASE.headline.groundReport?.bytes || '').split(',').map(Number).filter((n) => Number.isFinite(n));
+const groundRow = (o) => {
+  const g = o.headline && o.headline.groundReport;
+  if (!g) return `<tr><td>${o.label}</td><td class="n" colspan="10">no ground measured for this row</td></tr>`;
+  const bad = (v, bar) => v < bar ? `<b class="fail">${v}</b>` : v;
+  const dPage = PAGE_BYTES.length ? dist(rgbTripleFromBytes(PAGE_BYTES), rgbTripleFromBytes(g.bytes.split(',').map(Number))) : null;
+  return `<tr><td>${o.label === 'shipped' ? 'shipped' : `${letter(OPTS.indexOf(o))}. ${o.label}`}</td>
+    <td class="n">${g.oklch}</td><td class="n">${g.bytes}</td>
+    <td class="n">${bad(g.layerVsPage, g.layerBar)} <span class="tiny">(bar ${g.layerBar})</span></td>
+    <td class="n">${dPage === null ? '' : `${dPage}${dPage < SAME_COLOUR_BAR ? ' <span class="fail">reads as the same colour</span>' : ''}`}</td>
+    <td class="n">${bad(g.roles.ink, g.bars.text)}</td><td class="n">${bad(g.roles['ink-3'], g.bars.text)}</td>
+    <td class="n">${bad(g.roles.gold, g.bars.text)}</td><td class="n">${bad(g.roles.rule, g.bars.graphic)}</td>
+    <td class="n">${(g.painted || []).map((p) => `${p.t.replace(/, home|Navigate to /, '')} ${bad(p.on, g.bars.text)}`).join(' · ') || 'not measured'}</td>
+    <td class="n">${g.hueGapToGold === null ? '' : g.hueGapToGold}</td><td class="n">${g.nearestBrand}</td></tr>`;
+};
 
 const numRow = (o) => {
   const h = o.headline;
@@ -139,6 +161,35 @@ const copyCard = (o) => {
 };
 
 const floor = BASE.headline.markStrokeFloor;
+
+const barOf = (role) => (role === 'rule' ? BARS.graphic : BARS.text);
+const inkBytes = (label) => {
+  const p = OPTS.find((x) => x.label === label)?.headline?.groundReport?.painted?.[0];
+  return p ? { on: p.on, bytes: p.bytes, brand: p.brand ? `${p.brand.brand} ${p.brand.d}` : 'not measured' } : null;
+};
+// How far a candidate ink sits from the four hues the join paths already own. The palette keeps 40 degrees between
+// signal hues (okcolor.mjs hueWindows), so an ink inside that band is not free to use.
+const pathGap = (bytes) => ['calendar', 'meetup', 'discord', 'mobilizon'].map((p) => ({ p, gap: hueGap(rgbTripleFromBytes(bytes.split(',').map(Number)), asTriple(tok('path-' + p))) })).sort((a, b) => a.gap - b.gap);
+const WARM_LABELS = ['chrome-ground', 'chrome-ground-warm', 'chrome-ground-warm-band', 'chrome-ground-panel', 'chrome-ground-gold-fill', 'chrome-ink-warm', 'nav-name-gold'];
+const warmBlock = WARM_LABELS.map((l) => OPTS.find((o) => o.label === l)).filter((o) => o && o.headline.groundReport).map((o) => {
+  const g = o.headline.groundReport;
+  const fails = Object.entries(g.roles).filter(([r, v]) => r !== 'band-text' && v < barOf(r)).map(([r, v]) => `${r} ${v} (bar ${barOf(r)})`);
+  const dPage = PAGE_BYTES.length ? dist(rgbTripleFromBytes(PAGE_BYTES), rgbTripleFromBytes(g.bytes.split(',').map(Number))) : null;
+  const runs = o.gates || [];
+  const gr = runs[0];
+  const realFails = gr ? (gr.fails || []).filter((f) => !/RENDER GATE:/.test(f) && !/measurement failed|TIMEOUT/.test(f)) : [];
+  const flaked = gr && (gr.fails || []).some((f) => /measurement failed|TIMEOUT/.test(f));
+  const gate = !gr ? 'gate not run' : gr.ok ? 'shipped gate clean' : (realFails.length ? `${realFails.length} shipped-gate failure(s): ${realFails.slice(0, 3).map((f) => f.trim()).join(' | ')}` : 'gate red only because a probe flaked');
+  return `<li><b>${o.label}</b> - ground ${g.oklch} = rgb(${g.bytes})${g.paintedBy !== BASE.headline.groundReport.paintedBy ? '' : ' (ground unchanged from shipped)'}. Layer vs page <b>${g.layerVsPage}</b>, OKLab distance from the page ground <b>${dPage}</b>. Roles painted on it: ${Object.entries(g.roles).filter(([r]) => r !== 'band-text').map(([r, v]) => `${r} ${v}`).join(', ')}. ${fails.length ? 'Below its bar: ' + fails.join('; ') + '.' : 'Every role clears its bar.'} Nav ink as painted: ${g.paintedMin}${g.paintedBrand ? ', brand distance ' + g.paintedBrand : ''}. ${gate}.</li>`;
+});
+// The floor sweep: how far a hue-62 ground has to move before the eye reads it as a separate layer, and what that
+// costs the roles that have to live on it. Token arithmetic (okcolor.mjs), so it is reproducible without a browser.
+const warmFloor = [95, 93, 91, 89, 87, 85].map((L) => {
+  const t = asTriple(`oklch(${L}% 0.06 62)`);
+  return { L, layer: contrastTriple(C.paper, t), d: dist(asTriple(C.paper), t), ink: contrastTriple(t, asTriple(C.ink)), gold: contrastTriple(t, asTriple(C.gold)), rule: contrastTriple(t, asTriple(C.rule)) };
+});
+const warmInk = inkBytes('chrome-ink-warm');
+const coolInk = inkBytes('shipped');
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><title>Round 17 — the header bar and the name, photographed</title>
@@ -177,7 +228,24 @@ ${strip(1240, BAR)}
 <h2>2. The bar at 390px (the phone, where the row has ${at(BASE, 390).row.needed}px of ${at(BASE, 390).row.available}px)</h2>
 ${strip(390, BAR)}
 
-<h2>3. The numbers, at every width</h2>
+<h2>3. The ground each bar paints, measured off the pixels the browser painted</h2>
+<p class="scale">Bytes come from the live page's computed background, not from the stylesheet (record 0020). "Layer vs page" is the header ground against the page ground; the ratified layer bar is 1.35 (D101), so a ground the eye cannot separate from the page is a ground that is not a layer. "Distance to page" is OKLab: below 0.05 two surfaces read as the same colour (D88's own same-colour bar). The role columns are each token painted on THAT ground: ink and ink-3 against the 4.5 text bar, gold (the colour the nav's hover and the focus ring use) against 4.5, rule (every keyline, every card edge and the sphere mark's outline) against the 3.0 graphic bar. Bold is a failure of the bar.</p>
+<table><tr><th>option</th><th>painted oklch</th><th>bytes</th><th>layer vs page</th><th>distance to page</th><th>ink</th><th>ink-3</th><th>gold</th><th>rule</th><th>nav text, as painted</th><th>hue gap to gold</th><th>nearest brand (D88 zone is 0.135)</th></tr>
+${BAR.map(groundRow).join('\n')}</table>
+
+<h2>4. Could the bar be amber? Every warm ground priced, and what it costs</h2>
+<p class="scale">A ground is only worth painting if the eye can see it as a ground - layer bar 1.35, same-colour bar 0.05 - and if every role painted on it still clears its own bar: 4.5 for text, 3.0 for a boundary or a graphic. rule is every notice's inset edge, every card border and the mark's outline, so a ground that sinks rule below 3 does not just change the header: it erases the mark's own edge on the bar it sits in.</p>
+<ul>${warmBlock}</ul>
+<p class="scale"><b>How warm can a ground get and still be a layer?</b> A hue-62 ground at chroma .06, darkened one lightness step at a time, with the roles the header must paint measured on it. This is the arithmetic that decides whether a warm bar can exist at all, and it is computed from the ratified tokens in grill/okcolor.mjs, so it reproduces without a browser.</p>
+<table><tr><th>ground oklch</th><th>layer vs paper</th><th>OKLab distance</th><th>ink on it</th><th>gold on it</th><th>rule on it</th></tr>
+${warmFloor.map((r) => `<tr><td>${r.L}% .06 62</td><td class="n">${r.layer}${r.layer < BARS.layer ? ' <span class="fail">not a layer</span>' : ''}</td><td class="n">${r.d}</td><td class="n">${r.ink}</td><td class="n">${r.gold}${r.gold < BARS.text ? ' <span class="fail">under 4.5</span>' : ''}</td><td class="n">${r.rule}${r.rule < BARS.graphic ? ' <span class="fail">under 3.0</span>' : ''}</td></tr>`).join('\n')}</table>
+<div class="note"><b>The four numbers that answer the amber question.</b>
+<b>1.</b> The shipped bar paints nothing: its ground is the page's, ${BASE.headline.groundReport.bytes}, measured layer contrast ${BASE.headline.groundReport.layerVsPage}. The bar is separated from the page by 24px of air and an inset shadow, not by ground.<br>
+<b>2.</b> No warm ground priced here reaches the layer bar. The amber wash is 1.11 and sits under 0.05 OKLab from paper, so it reads as paper while still costing gold and rule their bars. The sweep above shows the ground has to reach about L89 to hit 1.35 - and at L89 rule on it measures ${warmFloor.find((r) => r.L === 89)?.rule} and gold ${warmFloor.find((r) => r.L === 89)?.gold}. A warm ground big enough to be a layer is big enough to break the boundary role it has to support.<br>
+<b>3.</b> gold as a fill is a 4.82 layer and takes the nav's text to 2.50 - the same number DESIGN.md already records for gold on the dark band, "an invisible focus ring". The shipped render gate fails it at all four widths, and painting the header makes it a second dark band where the palette allows one (D101). In this system gold is a mark, a word and a keyline; it is not a surface, and DESIGN.md's rule against a signal hue (D102) says the same thing in words.<br>
+<b>4.</b> The green in the header is the ink, not the ground. ink, ink-2, ink-3 and rule are hue 152 by design - the mark's own hue, chosen from a 58-candidate sweep in round 9 (D19) - while paper is hue 85, a warm off-white. The bar is paper with cool ink on it, and that is what reads as teal. It is priced as G (chrome-ink-warm): warm ink reads ${warmInk.on} on paper, its painted bytes ${warmInk.bytes} are ${warmInk.brand} from a real brand, and the shipped cool ink's bytes ${coolInk.bytes} are ${coolInk.brand} - the 0.135 zone (D88) does not separate the two, so the argument is hue and role, not brand collision. Warm ink sits ${pathGap(warmInk.bytes)[0].gap} degrees from ${pathGap(warmInk.bytes)[0].p}'s path hue; the cool ink sits ${pathGap(coolInk.bytes)[0].gap} from ${pathGap(coolInk.bytes)[0].p}'s.</div>
+
+<h2>5. The numbers, at every width</h2>
 <table><tr><th>option</th><th>nav name</th><th>nav label</th><th>hero</th><th>bar ground</th><th>name in fold / on page</th><th>near-duplicate pairs</th><th>page height delta</th><th>bar height delta</th><th>first-screen copy delta</th><th>shipped gate</th></tr>
 ${OPTS.map(numRow).join('\n')}</table>
 
@@ -187,16 +255,16 @@ so a 1px floor (D119) needs the mark at least <b>${floor.minWidthFor1pxFloorPx}p
 first <code>svg[data-mark]</code> on the page — took the glyph for the hero mark and failed ${((OPTS.find((o) => o.label === 'nav-glyph').gates || [])[0].fails || []).length} checks. A nav glyph is
 possible only as its own thing with its own rule, not as the mark.</div>
 
-<h2>4. The copy the page says twice</h2>
+<h2>6. The copy the page says twice</h2>
 <p class="scale">Sentences are compared on content words only, split at terminal punctuation (not at semicolons — this page writes its repeated claims as semicolon pairs). A pair is reported when it shares at least 3 content words and either Jaccard ≥ 0.45 or overlap ≥ 0.5. Jaccard is shared vocabulary over union; overlap is how much of the shorter sentence is inside the longer one.</p>
 <table><tr><th>sentence A</th><th>sentence B</th><th>shared words</th><th>jaccard</th><th>overlap</th><th>where</th></tr>
 ${pairRows}</table>
 
-<h2>5. Deleting one side of each pair — every option is a deletion, not a reword</h2>
+<h2>7. Deleting one side of each pair — every option is a deletion, not a reword</h2>
 <p class="scale">Copy here comes from \`src/content.json\` and ruled strings, so a priced option can only remove an exact sentence. Rewording is a ruling first, and an option that reworded would be pricing the builder's words, not the club's.</p>
 ${COPY.map(copyCard).join('\n')}
 
-<h2>6. What this round cannot yet answer</h2>
+<h2>8. What this round cannot yet answer</h2>
 <div class="note">
   <b>a.</b> \`name-lockup\` and \`descriptor-owns-display\` pass the shipped render gate, but \`npm run check:copy\` reads <i>source</i>, and the round mutates the built page. Neither has been run against the copy gate; both move the descriptor between slots, which is exactly what \`slot-coupling\` exists to catch.<br>
   <b>b.</b> No \`design/copy-duplicates.json\` baseline exists yet, so \`check:content\`'s \`near-duplicate-surface\` rule currently carries its exemptions in code. Run \`node scripts/check-content.mjs --print-baseline\` and rule each pair open or accepted.<br>

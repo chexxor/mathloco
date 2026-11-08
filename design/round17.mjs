@@ -22,6 +22,9 @@ import { mkdirSync, rmSync, cpSync, readFileSync, writeFileSync, readdirSync, ex
 import { join, resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
 import { OPTIONS, WIDTHS, SHOT_WIDTHS, RAMP_TOKENS } from './grill/round17-options.mjs';
+// The colour maths is the shared module, asserted against the numbers DESIGN.md cites (okcolor.mjs --selftest),
+// so a ground reported here cannot disagree with the census or the contrast oracle.
+import { rgbTripleFromBytes, tripleToBytes, asTriple, contrastBytes, nearestBrand, hueGap, dist, BARS } from './grill/okcolor.mjs';
 
 const SCRATCH = '.design/tmp-round17';
 const OUT = 'design/grill/round17';
@@ -29,7 +32,9 @@ const FAST = process.argv.includes('--fast');
 // `--only chrome-ground,dup-homework-band-goes` re-prices named options and merges their rows into an existing
 // record. A round is ~25 minutes; a single flaked row should not cost the whole round, and a record whose verdict is
 // a probe flake is worse than a record with a named, re-run row.
-const ONLY = (process.argv.find((a) => a.startsWith('--only=')) || '').replace('--only=', '').split(',').filter(Boolean);
+const onlyFlag = process.argv.findIndex((a) => a === '--only' || a.startsWith('--only='));
+const ONLY = (onlyFlag < 0 ? '' : process.argv[onlyFlag].includes('=') ? process.argv[onlyFlag].slice(7) : (process.argv[onlyFlag + 1] || '')).split(',').filter(Boolean);
+if (process.argv.includes('--list')) { console.log(OPTIONS.map((o) => `${o.label}  -  ${o.title}`).join('\n')); process.exit(0); }
 const BACKUP = `${SCRATCH}/index-shipped.html`;
 
 const run = (args, timeout = 240000) => execFileSync('node', args, { maxBuffer: 64 * 1024 * 1024, timeout }).toString();
@@ -119,6 +124,44 @@ for (const sig of ['SIGINT', 'SIGTERM']) {
   });
 }
 const ramp = rampFromCss('dist/client');
+const MISSING_TOKENS = [];
+
+// The colour question under the bar, answered off the bytes Firefox painted (record 0020: a computed colour
+// string cannot describe a ground when a background image is involved) rather than off the stylesheet:
+//   * what the bar's ground IS, in the space @theme writes tokens in
+//   * how far it is from the page's own ground, against the ratified 1.35 layer bar (D101) — the number the
+//     operator's "the bar is not distinguishable from the page body" is actually asking for
+//   * what every role the header can paint measures ON it (ink, ink-3, rule, gold, band-text), against the 4.5
+//     text bar and the 3.0 graphic bar — this is where a warm ground stops being a free swap
+//   * how close it is to a commerce brand, in D88's 0.135 zone
+function groundReport(m) {
+  const g = m.header?.ground?.bytes;
+  if (!g) return null;
+  const roles = {};
+  for (const role of ['ink', 'ink-2', 'ink-3', 'rule', 'gold', 'band-text']) {
+    const spec = ramp[`--color-${role}`];
+    if (!spec) { MISSING_TOKENS.push(`--color-${role}`); continue; }
+    roles[role] = contrastBytes(tripleToBytes(asTriple(spec)), g);
+  }
+  const t = rgbTripleFromBytes(g);
+  const page = m.doc?.bgBytes;
+  const painted = (m.nav?.items || []).filter((i) => i.colorBytes).map((i) => ({ t: i.t, on: contrastBytes(i.colorBytes, g), bytes: i.colorBytes.join(','), brand: nearestBrand(rgbTripleFromBytes(i.colorBytes), 1)[0] }));
+  return {
+    bytes: g.join(','),
+    paintedBy: m.header.ground.from,
+    oklch: `${t.L}% ${t.C} ${t.H}`,
+    layerVsPage: page ? contrastBytes(g, page) : null,
+    layerBar: BARS.layer,
+    distToPage: page ? dist(t, rgbTripleFromBytes(page)) : null,
+    roles,
+    bars: { text: BARS.text, graphic: BARS.graphic },
+    painted,
+    paintedMin: painted.length ? Math.min(...painted.map((p) => p.on)) : null,
+    paintedBrand: painted.length ? painted.map((p) => `${p.brand.brand} ${p.brand.d}`).sort((a, b) => parseFloat(a.split(' ')[1]) - parseFloat(b.split(' ')[1]))[0] : null,
+    hueGapToGold: ramp['--color-gold'] ? hueGap(t, asTriple(ramp['--color-gold'])) : null,
+    nearestBrand: nearestBrand(t, 2).map((b) => `${b.brand} ${b.d}`).join(', '),
+  };
+}
 
 function distCopy(label, option, html) {
   const dir = `${SCRATCH}/${label}`;
@@ -270,6 +313,7 @@ for (const opt of OPTS) {
     gates,
     headline: {
       nameInFirstScreen1240: m.nameInFirstScreen,
+      groundReport: groundReport(m),
       nameOnPage1240: m.namePicks.filter((p) => p.painted).length,
       navIdentityFs: m.sizes.navIdentityFs,
       navLabelFs: m.sizes.navLabelFs,
@@ -322,6 +366,13 @@ for (const opt of OPTS) {
   const g = gates ? (gates.every((x) => x.ok) ? 'gate ok' : 'GATE FAILS (kept in the record, not hidden)') : 'gate skipped';
   console.log(`${opt.label.padEnd(22)} identity ${String(entry.headline.navIdentityFs).padEnd(7)} label ${String(entry.headline.navLabelFs).padEnd(7)} hero ${String(entry.headline.heroFs).padEnd(7)} ground ${String(entry.headline.headerGround).padEnd(28)} names-in-fold ${entry.headline.nameInFirstScreen1240}/${entry.headline.nameOnPage1240}  row ${entry.headline.rowNeededOfAvailable}  ${g}`);
   console.log(`${' '.repeat(23)}dup pairs: ${(m.sentences?.duplicatePairs || []).length}  (fold copy ${entry.headline.foldCopyChars} chars, how-it-works at y ${entry.headline.howItWorksY}px)`);
+  if (entry.headline.groundReport) {
+    const gr = entry.headline.groundReport;
+    console.log(`${' '.repeat(23)}ground ${gr.oklch} (${gr.bytes}, painted by ${gr.paintedBy}) · vs page ${gr.layerVsPage} (layer bar ${gr.layerBar}) · ` +
+      Object.entries(gr.roles).map(([r, c]) => `${r} ${c}${c < (r === 'rule' ? gr.bars.graphic : gr.bars.text) ? ' FAIL' : ''}`).join(' · ') +
+      (gr.painted.length ? ` · painted nav ${gr.painted.map((p) => `${p.t} ${p.on}`).join(', ')}` : '') +
+      ` · nearest brand ${gr.nearestBrand}`);
+  }
   if (entry.deltas) console.log(`${' '.repeat(23)}deltas: page ${entry.deltas.docHeightByWidth}  nav row ${entry.deltas.navRowNeededByWidth}  ${entry.deltas.headerHeight}  names-in-fold ${sgn(entry.deltas.nameInFirstScreen)}  mark floor: ${entry.headline.markStrokeFloor ? entry.headline.markStrokeFloor.minWidthFor1pxFloorPx + 'px wide' : 'n/a'}`);
   if (gates && !gates[0].ok) for (const f of (gates[0].fails || [gates[0].detail])) console.log(`     ${f.trim().slice(0, 160)}`);
 }

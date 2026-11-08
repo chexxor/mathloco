@@ -109,6 +109,9 @@
         textCls: (textEl.getAttribute('class') || '').slice(0, 90),
         textOnly: own.slice(0, 34),
         ground: groundOf(a),
+        // The colour the nav text is actually painted, in bytes, so a ground swap can be checked against the ink
+        // that ships rather than against a token string that a scoped override may have changed.
+        color: ts.color, colorBytes: paintBytes(ts.color),
       };
     });
 
@@ -148,7 +151,10 @@
     out.url = location.href;
     out.elapsedMs = Date.now() - T0;
     out.scroll = scrollAtMeasure;
-    out.doc = { bg: getComputedStyle(document.body).backgroundColor, scrollHeight: document.documentElement.scrollHeight };
+    // The page's own painted ground, as bytes, so the header's ground can be differenced against it rather than
+    // against the token string. "Is the bar a different ground from the page" is the round-17 question, and the
+    // ratified layer bar (1.35, D101) is a contrast number — a contrast number needs two painted pairs (record 0020).
+    out.doc = { bg: getComputedStyle(document.body).backgroundColor, bgBytes: paintBytes(getComputedStyle(document.body).backgroundColor), scrollHeight: document.documentElement.scrollHeight };
     out.header = header;
     out.nav = { cls: navEl ? (navEl.getAttribute('class') || '') : null, items, row };
     out.namePicks = namePicks;
