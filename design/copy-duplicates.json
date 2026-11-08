@@ -1,0 +1,80 @@
+{
+  "rule": "near-duplicate-surface",
+  "gate": "npm run check:content (scripts/check-content.mjs)",
+  "measuredAt": "2026-11-08",
+  "howToRegenerate": "node scripts/check-content.mjs --print-baseline  (prints this shape; it never writes it)",
+  "scores": "content words only; sentences split on terminal punctuation only. A pair is a pair when it shares >=3 content words and (Jaccard >= 0.45 or overlap >= 0.5). Overlap is shared words over the SHORTER sentence, because a paraphrase of a long sentence scores low on Jaccard alone.",
+  "statusMeaning": {
+    "open": "the repeat is real and unruled: the gate stays green on it; deleting one side or taking a ruling is the exit",
+    "deliberate": "the repeat is the point of the surface - a source line or a ruling says so, in why",
+    "template": "identical row furniture on sibling rows: one string rendered twice. Coupling, not duplication - if one row changes, both must"
+  },
+  "pairs": [
+    {
+      "signature": "a date and its place go up on meetup the discussion keeps running between meetings in the chat <> dates go up on meetup most of the arguing happens in the chat between meetings",
+      "shared": 3,
+      "jaccard": 0.273,
+      "overlap": 0.5,
+      "status": "open",
+      "ruled": null,
+      "surfaces": "hero (main:Matheapolis) <> section:How it works",
+      "why": "One statement about where the dates and the conversation live, said 2,179px apart on the same page (hero y248 <> band y2427 @1240). Priced as dup-dates-chat-hero-goes and dup-dates-chat-band-goes.",
+      "measuredAt": "2026-11-08"
+    },
+    {
+      "signature": "there is no syllabus no reading list to keep up with and no current focus <> this is not a syllabus and there is nothing to keep up with any of them can be dropped midsentence the list changes when the chat changes and none of them is a prerequisite for arriving",
+      "shared": 3,
+      "jaccard": 0.2,
+      "overlap": 0.5,
+      "status": "open",
+      "ruled": null,
+      "surfaces": "hero (main:Matheapolis) <> section:What we take up",
+      "why": "The reassurance about obligation appears three times in three vocabularies: syllabus (hero), syllabus again (section), homework/level (join band). Priced as dup-homework-band-goes, and inside dedup-hero-trims / dedup-below-trims.",
+      "measuredAt": "2026-11-08"
+    },
+    {
+      "signature": "threads that are open in the club's chat <> what the club is pulling on is decided in its own chat and some of the threads open there are further down this page",
+      "shared": 4,
+      "jaccard": 0.444,
+      "overlap": 1,
+      "status": "open",
+      "ruled": null,
+      "surfaces": "hero (main:Matheapolis) <> section:What we take up",
+      "why": "Every content word of the section's opener is inside the hero's signpost - the strongest pair on the page, and the one the operator pointed at (2026-11-08: \"there is duplication between the 'How it works' section on the homepage and the very first section\"). Priced as deletions in design/grill/round17-options.mjs: dup-threads-hero-goes, dup-threads-section-goes, dedup-hero-trims, dedup-below-trims.",
+      "measuredAt": "2026-11-08"
+    },
+    {
+      "signature": "copied from the club's own calendar on nov 6 2026 <> the signup is on meetup and the date above is copied from the club's own calendar",
+      "shared": 4,
+      "jaccard": 0.4,
+      "overlap": 0.667,
+      "status": "deliberate",
+      "ruled": null,
+      "surfaces": "section:When We Meet (homepage compact band) <> section:Parallel Learning for Mathematical Minds (event row)",
+      "why": "Both surfaces draw a date from the same snapshot and each states its provenance where the date is painted - the same rule records 0010/0011 exist for. Accepted: the repeat is the source line, not decorative copy. It becomes a defect only if one of the two stops carrying a date or a source.",
+      "measuredAt": "2026-11-08"
+    },
+    {
+      "signature": "copied from the club's own calendar on nov 6 2026 <> these dates are copied from the club's own calendar",
+      "shared": 4,
+      "jaccard": 0.5,
+      "overlap": 0.667,
+      "status": "deliberate",
+      "ruled": null,
+      "surfaces": "section:When We Meet (/schedule) <> section:MPLS Math Club Social (/schedule event row)",
+      "why": "The same provenance rule on the schedule page: the page lede and each row that prints a date say where the date came from.",
+      "measuredAt": "2026-11-08"
+    },
+    {
+      "signature": "details and signup on meetup opens in a new tab <> details and signup on meetup opens in a new tab",
+      "shared": 6,
+      "jaccard": 1,
+      "overlap": 1,
+      "status": "template",
+      "ruled": null,
+      "surfaces": "section:Parallel Learning for Mathematical Minds <> section:MPLS Math Club Social",
+      "why": "Not two sentences - one row template rendered for two events. The gate cannot tell row furniture from copy, so the pair is recorded rather than exempted by a special case. If a future round rewords one row, this row goes stale and the pair goes red: that is the coupling enforced, not a false positive.",
+      "measuredAt": "2026-11-08"
+    }
+  ]
+}

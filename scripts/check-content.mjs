@@ -25,7 +25,8 @@
 // What FAILS: a bracketed placeholder in built HTML; a placeholder photo fill (`data-placeholder`) in a
 // build whose tracked `src/content.json` has placeholders off, or a tracked config that turns them on; a
 // retired fabricated string; a cadence word with no `source` beside it; `Math.random()` in copy generation;
-// an internal link to a route the build does not emit.
+// an internal link to a route the build does not emit; a cross-surface near-duplicate sentence that
+// `design/copy-duplicates.json` does not already record (see the rule block above the scanner).
 //
 // What is REPORTED, not failed: the open placeholder slots in `src/content.json` — the operator's punch
 // list (photographs, the venue line, the member count and its source, the calendar source from D132) — and
@@ -105,6 +106,106 @@ const emittedRoutes = (htmlFiles, distDir) => htmlFiles.map((f) => {
 /** Strip comments and tags: a comment is not something a visitor reads, and prod's HTML carried the
  *  fabricated "Next meetup: Saturday, 2:00 PM" inside one, which made whole-page content probes lie. */
 const visibleText = (html) => html.replace(/<!--[\s\S]*?-->/g, ' ').replace(/<script[\s\S]*?<\/script>/g, ' ').replace(/<[^>]+>/g, ' ');
+
+// ---- near-duplicate surface copy -------------------------------------------------------------
+// The rule this repo did not have until 2026-11-08, when the operator read the homepage and said it twice: "there
+// is duplication between the 'How it works' section on the homepage and the very first section, 'We meet around a
+// table…'". They were right, and the instructive part is that a reader noticed it long before anything here could:
+// the page states the same facts in two surfaces ~2,180px apart, in three vocabularies. Measured on the built
+// homepage, and reproduced by this gate:
+//   hero    y248   "Dates go up on Meetup; most of the arguing happens in the chat between meetings."
+//   band    y2427  "A date and its place go up on Meetup; the discussion keeps running between meetings in the chat."
+//   hero    y407   "There is no syllabus, no reading list to keep up with, and no current focus."
+//   section y872   "This is not a syllabus and there is nothing to keep up with: any of them can be dropped…"
+//   hero    y407   "What the club is pulling on is decided in its own chat, and some of the threads open there…"
+//   section y872   "Threads that are open in the club's chat."
+//
+// Why a machine and not a note: duplicated copy is not a style complaint here, it is LENGTH. Every repeated
+// sentence is vertical space on a page whose whole design argument is that the first screen answers the question,
+// and check:space's own rule is that a repeated verb is cheaper than an added label. Duplication is also how a
+// sourced claim drifts: the band's sentence sits beside the `venues` slot and the hero's does not, so the twins can
+// be edited apart and only one of them stays traceable to a source.
+//
+// What FAILS: a cross-surface repeat that design/copy-duplicates.json does not know about. The baseline is this
+// repo's own pattern (design-enforce's "only fails when it gets worse"): the pairs already shipped are recorded as
+// OPEN, with their scores and no ruling, so the gate cannot be blamed for a defect the operator is still deciding
+// — while any NEW repeat is red the moment it ships. Deleting the copy, or accepting a pair with a ruling id, are
+// both exits.
+//
+// What it deliberately is NOT: a semantic detector. Content words only, and two scores — Jaccard (how much of the
+// combined vocabulary is shared) and the overlap coefficient (how much of the SHORTER sentence is inside the longer
+// one, because a paraphrase of a long sentence scores low on Jaccard alone) — over a floor of 3 shared content
+// words. Splitting is on terminal punctuation only: this page writes both of its worst twins as semicolon-joined
+// pairs, and splitting on ';' is exactly how a detector misses them.
+
+const BASELINE_PATH = resolve('design', 'copy-duplicates.json');
+const STOP = new Set(['the', 'and', 'for', 'are', 'but', 'not', 'you', 'your', 'with', 'that', 'this', 'from', 'their', 'they', 'them', 'its', 'it', 'a', 'an', 'of', 'in', 'to', 'on', 'at', 'is', 'was', 'be', 'been', 'do', 'does', 'has', 'have', 'had', 'we', 'our', 'us', 'he', 'she', 'as', 'by', 'or', 'if', 'so', 'than', 'then', 'there', 'here', 'what', 'which', 'who', 'would', 'will', 'can', 'some', 'any', 'no', 'most', 'into', 'about', 'before', 'between', 'up', 'down', 'out', 'off', 'over', 'under']);
+const plain = (frag) => frag.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').replace(/&#39;|&apos;|\u2019/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, ' ').trim();
+const contentWords = (t) => new Set(t.toLowerCase().replace(/[.,;:!?\u2013\u2014\u2019'()\[\]]/g, ' ').split(' ').filter((w) => w.length > 2 && !STOP.has(w)));
+// A signature, not an index: a baseline row must survive a reword of the sentence beside it, and it must not match
+// a different pair that happens to share three words.
+const dupSignature = (a, b) => [a, b].map((t) => t.toLowerCase().replace(/[^a-z0-9' ]/g, '').replace(/\s+/g, ' ').trim()).sort().join(' <> ');
+
+/** Every sentence of page copy, tagged with the surface a reader would name it by. Surfaces come from the
+ *  document's own structure — the enclosing section id and the heading the copy sits under — because the ruling is
+ *  about WHICH surface keeps a sentence, and "the hero" versus "the join band" is the whole ruling. */
+function surfaceSentences(html) {
+  const out = [];
+  let heading = '';
+  let section = 'page';
+  // `\b` after `<p` and `<h` is not decoration: `<p[^>]*>` also matches `<path`, and the sphere mark's SVG is
+  // full of them. Without the boundary the first `<path>` in the hero opened a "paragraph" that ran to the next
+  // literal `</p>`, swallowing the "What we take up" heading and its paragraph — so the strongest pair on the page
+  // (the hero's threads signpost <> the section's "Threads that are open in the club's chat.") read as one
+  // 5-word sentence and the gate missed the duplicate the operator had just pointed at. Measured 2026-11-08:
+  // 21 "sentences" on the built homepage, 2 of them SVG path soup.
+  const re = /<(section|main|header|footer)\b[^>]*>|<h([1-3])\b[^>]*>([\s\S]*?)<\/h\2>|<p\b[^>]*>([\s\S]*?)<\/p>/g;
+  for (const m of html.matchAll(re)) {
+    if (m[1]) { const id = m[0].match(/id="([^"]+)"/); section = id ? `#${id[1]}` : m[1]; continue; }
+    if (m[2]) { heading = plain(m[3]); continue; }
+    const text = plain(m[4]);
+    if (text.split(' ').length < 5) continue;
+    for (const part of text.split(/(?<=[.!?])\s+/)) {
+      const t = part.trim();
+      if (contentWords(t).size < 4) continue;
+      out.push({ own: t.slice(0, 200), surface: `${section}:${heading}`, words: contentWords(t) });
+    }
+  }
+  return out;
+}
+
+function scanDuplicates(built, baseline) {
+  const failSeen = new Map();
+  const openSeen = new Map();
+  const known = new Set((baseline.pairs || []).map((p) => p.signature));
+  for (const [file, html] of built) {
+    const sents = surfaceSentences(html);
+    for (let i = 0; i < sents.length; i++) {
+      for (let j = i + 1; j < sents.length; j++) {
+        const a = sents[i], b = sents[j];
+        if (a.surface === b.surface) continue;
+        const shared = [...a.words].filter((w) => b.words.has(w));
+        const union = new Set([...a.words, ...b.words]).size;
+        const jaccard = shared.length / union;
+        const overlap = shared.length / Math.min(a.words.size, b.words.size);
+        if (shared.length < 3 || (jaccard < 0.45 && overlap < 0.5)) continue;
+        const row = {
+          rule: 'near-duplicate-surface', file, signature: dupSignature(a.own, b.own),          shared: shared.length, sharedWords: shared.join(','),
+          jaccard: +jaccard.toFixed(3), overlap: +overlap.toFixed(3),
+          detail: `${a.surface}: "${a.own}"  <>  ${b.surface}: "${b.own}"`,
+        };
+        // One row per pair, not one row per page that carries it: the same twin can appear on three emitted pages,
+        // and three identical baseline rows would read as three defects.
+        const bucket = known.has(row.signature) ? openSeen : failSeen;
+        const prev = bucket.get(row.signature);
+        if (prev) { if (!prev.files.includes(file)) prev.files.push(file); continue; }
+        row.files = [file];
+        bucket.set(row.signature, row);
+      }
+    }
+  }
+  return { fails: [...failSeen.values()], opens: [...openSeen.values()] };
+}
 
 function scanPage(html, file, emitted, distDir) {
   const fails = [];
@@ -188,12 +289,15 @@ function run(distDir, srcDir, tracked) {
   const built = htmlFiles.map((f) => [f, readFileSync(f, 'utf8')]);
   const emitted = emittedRoutes(htmlFiles, distDir);
   const srcFiles = walk(srcDir, ['.astro', '.svelte', '.ts', '.tsx', '.mjs', '.js']).filter((f) => !f.endsWith('content.ts'));
+  const baseline = existsSync(BASELINE_PATH) ? JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) : { pairs: [] };
+  const dup = scanDuplicates(built, baseline);
   const fails = [
     ...built.flatMap(([f, h]) => scanPage(h, f, emitted, distDir)),
     ...scanSource(srcFiles),
+    ...dup.fails,
   ];
   const { cadenceHits } = checkConfig(tracked, built);
-  return { fails, built, cadenceHits, emitted };
+  return { fails, built, cadenceHits, emitted, dupOpens: dup.opens, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
 }
 
 // ---- selftest: can this gate fail? (D118 — a gate whose failure mode is a green line is no gate) ----
@@ -212,6 +316,28 @@ if (selftest) {
     { name: 'dead-path', html: clean.replace('</body>', '<a href="/schedule">Schedule</a></body>') },
     { name: 'unsourced-cadence', html: clean.replace('</body>', '<p>Monthly meetups</p></body>') },
     { name: 'invented-number', html: clean, src: 'Join our active community of ' + '${Math.random()}+ members.' },
+    // Two surfaces, one statement, different vocabulary — the shape the operator actually found on the page. It is
+    // planted against an EMPTY baseline (below) because the baseline is what makes the shipped pairs non-failures,
+    // and a selftest that read the real baseline could pass by forgetting it knows this pair.
+    // The planted pair is the REAL one, copied off the built homepage, not a paraphrase of it: the clean fixture's
+    // own one-liner shares only the word "Meetup" with the band, which is a 1-word overlap and correctly does not
+    // fire. Planting a weak pair would prove the selftest can plant, not that the rule catches this defect.
+    {
+      name: 'near-duplicate-surface', rule: 'near-duplicate-surface',
+      html: `<html><body><main><h1>Matheapolis</h1><p>Dates go up on Meetup; most of the arguing happens in the chat between meetings.</p></main><section id="when-we-meet"><h2>When We Meet</h2><p>A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.</p></section></body></html>`,
+    },
+    // The near-miss that must NOT fire: shared vocabulary is not the same defect when the surfaces say different
+    // things. Without this planting the rule drifts into noise and gets the whole gate switched off.
+    { name: 'shared-words-not-a-duplicate', negative: true, html: clean.replace('</body>', '<section id="how"><h2>How it works</h2><p>Meetup holds the calendar and the chat holds the arguments, which is why the schedule page copies its dates from the club calendar.</p></section></body>') },
+    // The exemption has to be load-bearing, not decorative: the identical pair, with its signature in the baseline,
+    // must go GREEN and still be reported. If `known` were ignored the shipped page would be red; if the gate only
+    // ever printed baseline rows, nobody would notice a rule that had stopped firing. `recorded: true` builds the
+    // baseline from the pair itself rather than from a hand-typed string, so a change to `dupSignature` shows up
+    // here as a red planting instead of a silent pass.
+    {
+      name: 'near-duplicate-recorded-not-exempted', rule: 'near-duplicate-surface', recorded: true,
+      html: `<html><body><main><h1>Matheapolis</h1><p>Dates go up on Meetup; most of the arguing happens in the chat between meetings.</p></main><section id="when-we-meet"><h2>When We Meet</h2><p>A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.</p></section></body></html>`,
+    },
   ];
   const trackedNoSource = { cadence: { value: 'Monthly', source: null }, photos: { placeholders: false } };
   let bad = 0;
@@ -223,8 +349,18 @@ if (selftest) {
     const html = [[`${dir}/index.html`, p.html]];
     let fails = [...scanPage(p.html, `${dir}/index.html`, ['/', '/chat'], dir), ...scanSource(p.src ? [`${dir}/src/Fake.astro`] : [])];
     if (p.name === 'unsourced-cadence') fails = [...fails, ...checkConfig(trackedNoSource, html).fails];
-    const caught = fails.some((f) => f.rule === (p.rule ?? p.name));
-    console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(24)} ${fails.map((f) => f.rule).join(',') || 'nothing'}`);
+    let dup = null;
+    if (p.rule === 'near-duplicate-surface') {
+      const baseline = p.recorded ? { pairs: scanDuplicates(html, { pairs: [] }).fails.map((f) => ({ signature: f.signature })) } : { pairs: [] };
+      dup = scanDuplicates(html, baseline);
+      fails = [...fails, ...dup.fails];
+    }
+    const caught = p.recorded
+      ? dup.fails.length === 0 && dup.opens.length === 1
+      : p.negative
+        ? !fails.some((f) => f.rule === 'near-duplicate-surface')
+        : fails.some((f) => f.rule === (p.rule ?? p.name));
+    console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(34)} ${p.recorded ? `green, reported as open (${dup.opens.length})` : fails.map((f) => f.rule).join(',') || 'nothing'}`);
     if (!caught) bad++;
   }
   // and the clean fixture must pass, or the gate is just always red
@@ -272,7 +408,15 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-const { fails, built, cadenceHits } = run(distDir, srcDir, tracked);
+const { fails, built, cadenceHits, dupOpens, staleBaseline } = run(distDir, srcDir, tracked);
+
+// `--print-baseline` is a paste helper, not a write. A baseline row means "this repeat is known and ruled", and an
+// gate that can write its own exemptions is a gate that eventually has none.
+if (args.includes('--print-baseline')) {
+  const d = scanDuplicates(built, { pairs: [] });
+  console.log(JSON.stringify({ pairs: d.fails.map((f) => ({ signature: f.signature, shared: f.shared, jaccard: f.jaccard, overlap: f.overlap, status: 'open', ruled: null, note: f.detail })) }, null, 2));
+  process.exit(0);
+}
 
 console.log(`check:content — ${built.length} built page(s) over ${walk(srcDir, ['.astro', '.svelte', '.ts']).length} source file(s)`);
 console.log(`  built HTML: ${built.map(([f]) => f.split('/').slice(-2).join('/')).join(', ')}`);
@@ -291,6 +435,15 @@ if (uns.length) {
   for (const u of uns) console.log(`   ~ ${u.path}: "${u.value}" — add source + asOf in src/content.json (D92)`);
 }
 
+if (dupOpens.length) {
+  console.log(`\n  near-duplicate surface copy, already in the baseline (${dupOpens.length}) — known, not yet ruled:`);
+  for (const d of dupOpens) console.log(`   ~ ${d.file.split('/').pop()}  shared ${d.shared} (${d.sharedWords})  jaccard ${d.jaccard} overlap ${d.overlap}\n       ${d.detail}`);
+}
+if (staleBaseline.length) {
+  console.log(`\n  baseline rows that no longer match anything on the page (${staleBaseline.length}) — the copy was fixed or reworded; delete the row so the pair stays visible if it comes back:`);
+  for (const p of staleBaseline) console.log(`   - ${p.signature}`);
+}
+
 if (fails.length) {
   console.log('');
   for (const f of fails) console.log(`  FAIL ${f.rule.padEnd(24)} ${f.file}\n       ${f.detail}`);
@@ -298,5 +451,5 @@ if (fails.length) {
   console.log('review-only state is in an artifact that carries the apex triggers.');
   process.exit(1);
 }
-console.log(`\nNo placeholder, no fabricated number, no dead path and no unsourced cadence in the built pages.`);
+console.log(`\nNo placeholder, no fabricated number, no dead path, no unsourced cadence and no new near-duplicate sentence in the built pages.`);
 console.log(`Run \`npm run check:content:selftest\` to see that these checks can still fail.`);

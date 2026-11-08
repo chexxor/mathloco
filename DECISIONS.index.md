@@ -257,5 +257,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D247** (2026-11-08) — A markdown table row with the wrong cell count is invisible in a diff and visible in the browser, so `MILESTONES.md`'s rows are now counted by `npm run check:tables` (2026-11-08, Linux, `scripts/check-tables.mjs`, first run against this repo's own tracked prose)
 - **D248** (2026-11-08) — The descriptor names Minneapolis only; the three slots that carry it are one phrase by ruling, and `npm run check:copy` is what keeps them one phrase (2026-11-08, Linux/CST host, `npm run round16`, `node scripts/check-copy.mjs --selftest`)
 - **D249** (2026-11-08) — Every session report carries the milestone above its "Value added" section, so a report is dated against the roadmap it moved (2026-11-08, operator ruling)
+- **D250** (2026-11-08) — A cross-surface near-duplicate sentence is now a gate failure, and the detector that found it was reading `<path>` as a paragraph (2026-11-08, Linux, `node scripts/check-content.mjs` + `--selftest` + `npm run verify`)
 
-Defined: 249 (D1-D249). Unused ids: none.
+Defined: 250 (D1-D250). Unused ids: none.
