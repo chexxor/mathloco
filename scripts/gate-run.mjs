@@ -63,6 +63,11 @@ const DEPLOY = [
   { name: 'check', desc: 'astro check: types in .astro/.svelte/.ts' },
   { name: 'check:classes', desc: 'every written class resolves to CSS' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
+  // The roadmap is one file (.notes/PLAN.md, host-local) and MILESTONES.md is its tracked projection. Two
+  // files claiming "what is next" drift, and the drift is invisible in a table cell (S015). Reads prose, so
+  // it runs before build; the selftest plants each defect class and requires a named failure.
+  { name: 'check:plan', desc: 'the plan, its tracked projection and NEXT.md agree; every milestone has an exit gate' },
+  { name: 'check:plan:selftest', desc: 'the plan gate can still fail (18 plantings, incl. the CI clone case)' },
   { name: 'check:decisions', desc: 'the tracked decision index matches the log, and no D-id citation dangles' },
   { name: 'check:figures', desc: 'a measured number in DESIGN.md carries a date, and that date is not stale' },
   { name: 'check:social', desc: 'the committed share card against its painted report' },

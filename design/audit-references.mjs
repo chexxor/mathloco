@@ -81,6 +81,7 @@ const PENDING = [
   [/(NNNN|round-N\.|00[0-9]{2}$|-0009$)/, 'a skill template or shorthand for a set of records, not one path'],
   [/^\.design\/tmp-/, 'scratch: producing it is the point of the tool that names it'],
   [/^src\/content\.local$/, 'a gitignored directory that exists only while a REVIEW build is planted: scripts/review-render.mjs creates and removes it, and src/lib/content.ts globs the directory (never a filename) precisely because it may not exist'],
+  [/^docs\/(spec\/source-contract\.md|threat-model\.md|adr\/0001[^/]*\.md|fixtures)/, 'the stage gates named by .notes/PLAN.md (G2-G5): the plan names the file that must exist before the stage is entered, and it is written by the milestone that owns the gate (MS06-MS09). Citing it before it exists is the fence, not a broken link - the rule is that no adapter code, no token and no live write lands before it'],
 ];
 const pending = (p) => PENDING.find(([re]) => re.test(p));
 

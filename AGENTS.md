@@ -14,12 +14,41 @@ three actors straight is the whole job:
   comes back, report, and escalate. You may drive the loop on the operator's behalf. You never
   become a seat.
 
+## Planning system (`S015`)
+
+`.notes/PLAN.md` is the roadmap: stages, gates, milestones `MS01`-`MS11`, scope fences, decision rules,
+pitfall register. `.notes/NEXT.md` is the session entry point and **no longer carries a queue** - "what's
+next" lives in `PLAN.md` §Milestones, so the two files can't disagree. `.notes/QUESTIONS.md` archives asks
+and the letters that closed them; `.notes/SESSIONS.md` is the per-session trail.
+
+- **Gates beat enthusiasm.** A stage is entered when the file proving its gate exists. No adapter code
+  before `docs/spec/source-contract.md` (G2) and an accepted `docs/adr/0001-*` (G4). No token held or sent
+  before `docs/threat-model.md` (G3). Nothing touches a live account before the fixture harness proves the
+  payload offline (G5). No merge without a written review under `code-review-and-quality` (G6).
+- **Cost to undo decides who decides.** `reversible`: the delegate decides and records it. `costly`: the
+  delegate decides, writes the ADR, and tells the operator. `one-way`: operator's letter first, with at
+  least two alternatives written down in the same file.
+- **Decide at the last responsible moment.** If a milestone's evidence would change the answer, the answer
+  waits for the evidence. Open questions are capped at three.
+- **Ids are never reused or renumbered:** rulings `S###` (append-only), milestones `MS##`, questions
+  `Q###`. Plan status columns change in place; decisions never do - supersede them with a new `S###`.
+- **Every session ends with a report:** the stage and milestone moved, what exists now that didn't before,
+  what remains in that milestone, and every decision the operator must make with pros, cons, and a
+  recommendation. `PLAN.md` §Session protocol is the template.
+
+`npm run check:plan` is what makes the above true rather than aspirational: it fails on a missing plan
+section, a milestone row with no exit gate, a status outside the vocabulary, a paused or blocked row with
+no resume trigger, an `MILESTONES.md` status that disagrees with the plan, a fourth open question, a
+`NEXT.md` that carries a queue, or an `S###`/`MS##` citation with no entry. `check:plan:selftest` plants
+each of those and requires a named failure. Both are in `verify`.
+
 ## Clock in (run this at the start of every session)
 
-1. Read **`.notes/NEXT.md`** - the current priority, its queue id, and the exact next command - and
-   **`MILESTONES.md`** (tracked), which states the current milestone and, for every item, the command or
-   ruling that closes it. An item without an exit criterion is a topic; if you are about to start one and
-   cannot name its gate, write the gate first.
+1. Read **`.notes/NEXT.md`** - the stage, the active milestone, the exact first command, the traps - and
+   **`.notes/PLAN.md` §Milestones** (the only place "what's next" lives). **`MILESTONES.md`** (tracked) is
+   the projection of that table for a fresh clone; `check:plan` keeps the two identical. An item without an
+   exit criterion is a topic; if you are about to start one and cannot name its gate, write the gate first.
+   If the plan says a milestone is `paused`, do not resume it without the trigger it names.
 2. **Load the project skills before writing framework or UI code.** They live in `.agents/skills/` and
    each is repo-specific, so its text beats what you remember - and appearing in the available-skills
    list is **not** loading it; open the file. Which to open:
@@ -72,13 +101,14 @@ three actors straight is the whole job:
    improvising**. The index (symptom -> runbook) is `.notes/runbooks/README.md`; read
    `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
    which is gitignored - they are host-local, so a fresh clone will not have them.
-5. Resume from `NEXT.md`. Do not re-derive the priority from the roadmap - the roadmap is not in
-   this repo (the tracked prose at the root is `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and
-   `DECISIONS.index.md`), so `NEXT.md` is the only
-   queue view a session gets. Durable plans that are not queue items live beside it: `roadmap-events.md`
-   (surfacing and syncing the meetup schedule), `roadmap-brand.md` (the mark's surface identity, the colour
-   expansion, and what either re-measures) and `asset-sources.md` (which image sources are
-   legitimately usable, and what their terms are).
+5. Resume from `NEXT.md`, and take the priority from `PLAN.md` §Milestones - never from memory or from a
+   chat log. The roadmap is host-local (`.notes/` is gitignored); the tracked prose at the root is
+   `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and `DECISIONS.index.md`. Durable plans that are
+   not milestones live beside the plan: `roadmap-events.md` (surfacing and syncing the meetup schedule),
+   `roadmap-brand.md` (the mark's surface identity, the colour expansion, and what either re-measures) and
+   `asset-sources.md` (which image sources are legitimately usable, and what their terms are). Before you
+   enter stage S2 or S3, check the gate table in `PLAN.md`: a stage is entered when the file proving its
+   gate exists, not when the work is convenient.
 
 ## Work protocol
 
@@ -94,27 +124,39 @@ Then execute on that resulting promp.
 
 ## Clock out (before you stop)
 
-1. Update **`.notes/NEXT.md`**: the current item, its queue id, the exact next command, and any
-   blocker. Leave it truer than you found it, because the next session has only this file.
-2. Record a durable decision's *why* in `.notes/DECISIONS.md`, not just its *what*, then run
+1. Write the session report in **`.notes/SESSIONS.md`** in the shape `PLAN.md` §Session protocol gives:
+   the stage and milestone moved, what exists now that did not before (with its evidence), what remains in
+   that milestone and by whom, every decision the operator must make with pros, cons and a recommendation,
+   anything parked **with its trigger**, and the exact command the next session runs first.
+2. Update **`.notes/NEXT.md`**: the stage, the active milestone, the exact first command, and any blocker.
+   Leave it truer than you found it, because the next session reads only this file and then the plan.
+   Do not put a queue back into it.
+3. Record a durable decision's *why* in `.notes/DECISIONS.md`, not just its *what*, then run
    **`npm run decisions:index`** so the tracked `DECISIONS.index.md` gains its one line. Ids are append-only:
    never renumber one, because 600-odd citations in tracked code would silently re-point at a different
    decision. `check:decisions` fails on a `D###` citation with no entry - it caught one the day it landed.
-3. If the milestone moved, update **`MILESTONES.md`** (tracked): the item, its exit criterion, its state.
-4. Report status - done / blocked / unverified, with evidence. For **every open decision** the session touched,
+   A planning ruling goes in `PLAN.md` §Rulings as one line with its cost class (`S###`, append-only); if
+   the reasoning needs paragraphs, it is a decision and takes a `D###` as well. Never write the same ruling
+   twice.
+4. If the milestone moved, change its **status in `PLAN.md` §Milestones** and update **`MILESTONES.md`**
+   (tracked) in the **same commit** - `check:plan` fails when the two disagree, and a plan the tracked
+   projection does not match is a plan a fresh clone does not have.
+5. Report status - done / blocked / unverified, with evidence. For **every open decision** the session touched,
    the report ends with a **recommendation, not a menu**: your ranked answer, one line of pros and one line of
    cons per option (including options the operator did not name, if they are real), the access or permission each
    option would require, and the one measurement that would change the ranking. If you recommend against a
    stated preference, say so plainly and say why.
-5. Close the report with a **Value added** section - what this session delivered beyond the item it was given,
+6. Close the report with a **Value added** section - what this session delivered beyond the item it was given,
    and what it made cheaper for the next session (a gate that now catches a class of defect, a correction to a
    note the next session would have trusted, a probe that costs seconds instead of an hour). Anything in it that
    is not already in `NEXT.md`, `MILESTONES.md` or `DECISIONS.index.md` is a claim without an artifact, so land
    the artifact first.
-6. Take notes in appropriate about trouble or pitfalls you encountered as well as propose solutions to ensure future efforts can shortcut the trouble.
-7. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
-8. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
-9. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
+7. Take notes in appropriate places about trouble or pitfalls you encountered, and propose the solution that
+   lets a future session shortcut it - the pitfall register in `PLAN.md` is where a class of trap goes, and
+   `.notes/PITFALLS.md` is where its detail lives.
+8. Consider the parts of your work that took a lot of wall-clock time to execute on, and propose solutions to hasten future efforts that are likely to also take a lot of wall-clock time, without sacrificing quality of the project.
+9. Ensure you commit your changes to a feature branch, so the operator can review it before merging to main.
+10. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
    push it, and report the preview URL (`npm run preview:deploy` - it runs `verify` first, then deploys a
    Worker Preview). `staging` is a review environment, not the site: it gets the preview D1 and preview KV,
    and it never touches the apex triggers. Protocol and gotchas: `.notes/runbooks/staging-branch-preview.md`
@@ -133,6 +175,7 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
   against a baseline. A decision gets a source; a measurement gets a date.
 - **A deferral names its target, always.** "Defer whatever you like" produced a deferral list nobody could
   reconstruct. If it is not written with a trigger that un-parks it, it is not parked - it is lost (D148).
+  `check:plan` now enforces it: a `paused` or `blocked` milestone row with no resume trigger fails the gate.
 - **Rulings come back in answer form** (`1b, 2b, 3c`). Seven decisions in one line, none ambiguous. Ask
   numbered questions; answer numbered answers.
 - **Blocking questions go into `NEXT.md`'s Operator ToDo before the session starts**, not discovered mid-run.

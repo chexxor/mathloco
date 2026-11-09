@@ -261,5 +261,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D251** (2026-11-08) — The header bar paints no ground at all, and every warm ground priced for it fails a bar the palette already has (2026-11-08, Linux, Firefox 159.0, `node design/round17.mjs` + `design/grill/round17-build.mjs`)
 - **D252** (2026-11-08) — What actually paints under the header: the ring is an edge, level-1 elevation is not a layer, and only shadow-e2 clears the layer bar
 - **D253** — Tailwind's content scan reads the whole repo, so a class named in prose becomes shipped CSS
+- **D254** — The roadmap is one file with stable ids, and a gate keeps its two projections in sync
 
-Defined: 253 (D1-D253). Unused ids: none.
+Defined: 254 (D1-D254). Unused ids: none.

@@ -33,6 +33,8 @@
     "check:schedule-window:selftest": "node scripts/check-schedule-window.mjs --selftest",
     "check:classes": "tsx scripts/check-classes.ts",
     "check:design": "node design/audit-references.mjs --stale",
+    "check:plan": "node scripts/check-plan.mjs",
+    "check:plan:selftest": "node scripts/check-plan.mjs --selftest",
     "decisions:index": "node scripts/decision-index.mjs",
     "check:decisions": "node scripts/decision-index.mjs --check",
     "check:figures": "node scripts/check-figures.mjs",
