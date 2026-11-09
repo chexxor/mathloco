@@ -56,6 +56,10 @@ src/content.local/
 # Dev Notes
 .notes/
 
+# Context-handoff records written by the pi-context-budget extension when a session's context is
+# reset (see .notes/runbooks/context-handoff-budget.md). They are session state, not site content.
+.ai-work/
+
 # Design pass. The durable half is TRACKED in `design/` (no dot): the gates and their harness, the
 # probes behind every number DESIGN.md quotes, the specimens, the machine records — see
 # design/README.md and design/records/0009-design-evidence-is-tracked.md.
