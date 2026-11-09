@@ -96,6 +96,11 @@ const DEPLOY = [
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.
   { name: 'check:deploy', desc: 'the built artifact is deployable on the apex', needs: ['build'] },
+  // One host, asserted in four places (astro.config `site`, config.json `seo.canonical`, the shipped
+  // robots.txt Sitemap line, every canonical/og/twitter tag). A stale host in a shipped artifact is a
+  // rebrand defect no other gate sees (D261): robots.txt named the apex being retired while the sitemap
+  // itself was correct.
+  { name: 'check:site-host', desc: 'the artifact names one host about itself: robots, sitemap locs, canonical, og, twitter', needs: ['build'] },
   { name: 'check:content', desc: 'no placeholder, no unsourced claim, no fabricated number ships', needs: ['build'] },
   { name: 'check:content:selftest', desc: 'the content gate can still fail', needs: ['build'] },
   // What shipped on /schedule: `club\u2019s` painted literally, at every width, through a green `verify`.
