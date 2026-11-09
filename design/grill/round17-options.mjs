@@ -229,7 +229,7 @@ export const OPTIONS = [
     label: 'chrome-sticky-e2',
     title: 'The bar stays, and it floats (sticky + shadow-e2)',
     what: "Level-2 elevation on a sticky bar: DESIGN.md defines shadow-e2 as 'something that floats over content', and a bar that stays while the page scrolls is exactly that. Priced as a pair because the edge probe shows the shadow alone paints 1.78 under the bar - the only device in the round that clears the 1.35 layer bar - and the sticky probe shows a bar without an edge hides copy invisibly.",
-    surfaces: "One class on the header element in `src/components/Navigation.astro`, plus the `position:sticky` rule. The built CSS emits zero `position:sticky` today, so shipping this needs the classes in source for Tailwind to generate them (D-round note in the specimen, section 9d).",
+    surfaces: "Two classes on the header in `src/components/Navigation.astro`, plus a stacking utility. The shipped stylesheet does contain `.sticky{position:sticky}` and `.top-0{top:0}` today, but only because Tailwind's scanner reads this round's own module (D253) - writing them in the markup is what makes them mean something.",
     mutations: [
       { where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper sticky top-0 shadow-e2">' },
       { where: 'injected style in the page head', from: '</head>', to: '<style>header.sticky{position:sticky;top:0;z-index:20}</style></head>' },
@@ -272,7 +272,7 @@ export const OPTIONS = [
     label: 'chrome-sticky',
     title: 'The bar stays put (position: sticky) - chrome as furniture, painted nothing',
     what: "The structural definition of chrome: the bar is the part of the page that is always there. Nothing is painted, no ground changes, no ink moves. The cost is not contrast, it is occlusion - the probe scrolls to 600px and lists every text box the bar now sits on top of, because a bar that covers copy with the same ground it sits on hides copy with no edge to show the hiding.",
-    surfaces: 'One class on the header in `src/components/Navigation.astro`. `sticky`/`top-0` are Tailwind v4 core utilities the build does not emit today (grep the built CSS: zero `position:sticky`), so the source has to carry them for the CSS to exist - the round injects the rule to price the behaviour without editing global.css.',
+    surfaces: "One class on the header in `src/components/Navigation.astro`. `sticky`/`top-0` appear in the shipped stylesheet today only because the round names them (D253); shipping needs them written in the markup, plus a stacking utility - the built CSS emits no `z-*` rule at all.",
     mutations: [{ where: 'Navigation.astro `<header>`', from: HEADER_OPEN, to: '<header class="bg-paper sticky top-0">' }],
     css: '<style>header.sticky{position:sticky;top:0;z-index:20}</style>',
     gate: 'check:render (nav one row, targets) + the round\'s sticky probe: what the bar covers at scroll 600',

@@ -260,5 +260,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D250** (2026-11-08) — A cross-surface near-duplicate sentence is now a gate failure, and the detector that found it was reading `<path>` as a paragraph (2026-11-08, Linux, `node scripts/check-content.mjs` + `--selftest` + `npm run verify`)
 - **D251** (2026-11-08) — The header bar paints no ground at all, and every warm ground priced for it fails a bar the palette already has (2026-11-08, Linux, Firefox 159.0, `node design/round17.mjs` + `design/grill/round17-build.mjs`)
 - **D252** (2026-11-08) — What actually paints under the header: the ring is an edge, level-1 elevation is not a layer, and only shadow-e2 clears the layer bar
+- **D253** — Tailwind's content scan reads the whole repo, so a class named in prose becomes shipped CSS
 
-Defined: 252 (D1-D252). Unused ids: none.
+Defined: 253 (D1-D253). Unused ids: none.
