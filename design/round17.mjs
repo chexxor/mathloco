@@ -112,8 +112,13 @@ const shippedHtml = readFileSync('dist/client/index.html', 'utf8');
 // candidate as "shipped" and prices every option against it. Measured 2026-11-08 (Linux): a `--only` run killed by a
 // shell timeout left `bg-tint` in the header, and the run that followed measured its `shipped` row at 21.1px nav type
 // on a tint ground, then threw because the shipped anchor no longer existed. Refuse, and name the fix.
-if (!/<header class="bg-paper"/.test(shippedHtml) || !/Minneapolis math club/.test(shippedHtml)) {
-  console.error('round17: dist/client/index.html is not the shipped page — a previous round was killed while the gate swap was in place. Run `npm run build` to restore it, then re-run this round.');
+// The shipped header's class list is read from the source rather than typed here. Measured 2026-11-09: MS03 ruled
+// the inset ring into the bar, and this guard - hard-coded to `<header class="bg-paper"` - refused to measure the
+// page it exists to protect. "Is dist the page the source builds?" is the question; a class list baked into this
+// file answers it only until the next chrome ruling.
+const shippedHeaderClass = (readFileSync('src/components/Navigation.astro', 'utf8').match(/<header class="([^"]+)"/) || [])[1];
+if (!shippedHeaderClass || !shippedHtml.includes(`<header class="${shippedHeaderClass}"`) || !/Minneapolis math club/.test(shippedHtml)) {
+  console.error(`round17: dist/client/index.html is not the shipped page (expected <header class="${shippedHeaderClass || '?'}">) — a previous round was killed while the gate swap was in place. Run \`npm run build\` to restore it, then re-run this round.`);
   process.exit(1);
 }
 mkdirSync(SCRATCH, { recursive: true });

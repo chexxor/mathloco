@@ -1,6 +1,6 @@
 {
   "round": 17,
-  "measuredAt": "2026-11-08T22:20:20.602Z",
+  "measuredAt": "2026-11-09T05:14:31.155Z",
   "os": "linux (native, no container - D131)",
   "question": "The club name is painted in the header bar and again as the largest text on the page, and the header bar carries the page ground with a type step smaller than a body line. What makes the bar read as chrome, and what does each way of doing it cost?",
   "widths": [
@@ -101,11 +101,11 @@
         "headerGround": "252,250,246 from header.bg-paper",
         "headerBox": "1228x72",
         "headerBorderBottom": "0px solid oklch(0.32 0.045 152)",
-        "headerShadow": "none",
+        "headerShadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0",
         "headerToHeroGap": 96,
         "laneFs": null,
         "rowNeededOfAvailable": "217/1164@1240  217/580@640  217/346@390  217/276@320",
-        "docHeightByWidth": "3161@1240  4522@640  4761@390  5289@320",
+        "docHeightByWidth": "3071@1240  4432@640  4553@390  5052@320",
         "markStrokeFloor": {
           "thinnestStrokeUnits": 1.3,
           "minWidthFor1pxFloorPx": 184.6,
@@ -134,10 +134,10 @@
             },
             {
               "y": 71,
-              "bytes": "252,250,246",
-              "vsPage": 1,
-              "vsPaper": 1,
-              "vsBar": 1
+              "bytes": "132,150,136",
+              "vsPage": 3.01,
+              "vsPaper": 3.01,
+              "vsBar": 3.01
             },
             {
               "y": 72,
@@ -205,26 +205,22 @@
           ],
           "edgeRow": {
             "y": 71,
-            "bytes": "252,250,246",
-            "vsPaper": 1
+            "bytes": "132,150,136",
+            "vsPaper": 3.01
           },
           "maxBelow": 1,
           "layerBar": 1.35,
           "graphicBar": 3,
           "paintsALayer": false,
-          "paintsAnEdge": false
+          "paintsAnEdge": true
         },
         "sticky": {
           "position": "static",
           "top": "auto"
         },
-        "dupPairs": [
-          "What the club is pulling on is decided in it… <> Threads that are open in the club's chat.… @0.444",
-          "Dates go up on Meetup; most of the arguing h… <> A date and its place go up on Meetup; the di… @0.273",
-          "There is no syllabus, no reading list to kee… <> This is not a syllabus and there is nothing … @0.2"
-        ],
-        "foldCopyChars": 802,
-        "howItWorksY": 2403.6
+        "dupPairs": [],
+        "foldCopyChars": 734,
+        "howItWorksY": 2369.9
       },
       "deltas": {
         "docHeightByWidth": "0px@1240  0px@640  0px@390  0px@320",
@@ -240,7 +236,7 @@
             "box": "308x72",
             "ground": "252,250,246",
             "border": "0px solid oklch(0.32 0.045 152)",
-            "shadow": "none"
+            "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0"
           },
           "navItems": [
             {
@@ -307,7 +303,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 5289,
+          "docHeight": 5052,
           "fold": [
             {
               "tag": "h1",
@@ -323,7 +319,7 @@
             },
             {
               "tag": "p",
-              "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+              "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
               "y": 569.7,
               "fs": "21.1px"
             }
@@ -344,7 +340,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
                   "fs": "21.1px"
                 },
                 {
@@ -369,7 +365,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
+                  "own": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
                   "fs": "21.1px"
                 },
                 {
@@ -390,7 +386,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 3284.4,
+              "y": 3216.8,
               "copy": [
                 {
                   "tag": "h2",
@@ -444,12 +440,12 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them. A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
+                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them.",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "p",
-                  "own": "Nobody hands you homework and there is no level to clear. If you would rather hear what is being argued about before you go, the chat invite is below.",
+                  "own": "If you would rather hear what is being argued about before you go, the chat invite is below.",
                   "fs": "17.6px"
                 },
                 {
@@ -470,7 +466,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 4988.8,
+              "y": 4752.2,
               "copy": [
                 {
                   "tag": "p",
@@ -495,83 +491,21 @@
               ]
             },
             "how-it-works": {
-              "y": 4117.6,
+              "y": 4050.1,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
               "cls": "text-subhead font-semibold text-ink"
             }
           },
-          "dupPairs": [
-            {
-              "shared": 4,
-              "sharedWords": [
-                "club",
-                "chat",
-                "threads",
-                "open"
-              ],
-              "jaccard": 0.444,
-              "overlap": 1,
-              "a": {
-                "own": "What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page.",
-                "surface": "main:Matheapolis",
-                "y": 569.7
-              },
-              "b": {
-                "own": "Threads that are open in the club's chat.",
-                "surface": "section:What we take up",
-                "y": 1718.9
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "meetup",
-                "chat",
-                "meetings"
-              ],
-              "jaccard": 0.273,
-              "overlap": 0.5,
-              "a": {
-                "own": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
-                "surface": "main:Matheapolis",
-                "y": 220
-              },
-              "b": {
-                "own": "A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
-                "surface": "section:When We Meet",
-                "y": 4161.6
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "syllabus",
-                "list",
-                "keep"
-              ],
-              "jaccard": 0.2,
-              "overlap": 0.5,
-              "a": {
-                "own": "There is no syllabus, no reading list to keep up with, and no current focus.",
-                "surface": "main:Matheapolis",
-                "y": 569.7
-              },
-              "b": {
-                "own": "This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
-                "surface": "section:What we take up",
-                "y": 1718.9
-              }
-            }
-          ]
+          "dupPairs": []
         },
         "390": {
           "header": {
             "box": "378x72",
             "ground": "252,250,246",
             "border": "0px solid oklch(0.32 0.045 152)",
-            "shadow": "none"
+            "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0"
           },
           "navItems": [
             {
@@ -638,7 +572,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 4761,
+          "docHeight": 4553,
           "fold": [
             {
               "tag": "h1",
@@ -654,7 +588,7 @@
             },
             {
               "tag": "p",
-              "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+              "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
               "y": 502.1,
               "fs": "21.1px"
             }
@@ -675,7 +609,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
                   "fs": "21.1px"
                 },
                 {
@@ -700,7 +634,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
+                  "own": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
                   "fs": "21.1px"
                 },
                 {
@@ -721,7 +655,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 2957.3,
+              "y": 2889.8,
               "copy": [
                 {
                   "tag": "h2",
@@ -775,12 +709,12 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them. A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
+                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them.",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "p",
-                  "own": "Nobody hands you homework and there is no level to clear. If you would rather hear what is being argued about before you go, the chat invite is below.",
+                  "own": "If you would rather hear what is being argued about before you go, the chat invite is below.",
                   "fs": "17.6px"
                 },
                 {
@@ -801,7 +735,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 4476.9,
+              "y": 4268.5,
               "copy": [
                 {
                   "tag": "p",
@@ -826,83 +760,21 @@
               ]
             },
             "how-it-works": {
-              "y": 3778.4,
+              "y": 3710.9,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
               "cls": "text-subhead font-semibold text-ink"
             }
           },
-          "dupPairs": [
-            {
-              "shared": 4,
-              "sharedWords": [
-                "club",
-                "chat",
-                "threads",
-                "open"
-              ],
-              "jaccard": 0.444,
-              "overlap": 1,
-              "a": {
-                "own": "What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page.",
-                "surface": "main:Matheapolis",
-                "y": 502.1
-              },
-              "b": {
-                "own": "Threads that are open in the club's chat.",
-                "surface": "section:What we take up",
-                "y": 1684.8
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "meetup",
-                "chat",
-                "meetings"
-              ],
-              "jaccard": 0.273,
-              "overlap": 0.5,
-              "a": {
-                "own": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
-                "surface": "main:Matheapolis",
-                "y": 220
-              },
-              "b": {
-                "own": "A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
-                "surface": "section:When We Meet",
-                "y": 3822.4
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "syllabus",
-                "list",
-                "keep"
-              ],
-              "jaccard": 0.2,
-              "overlap": 0.5,
-              "a": {
-                "own": "There is no syllabus, no reading list to keep up with, and no current focus.",
-                "surface": "main:Matheapolis",
-                "y": 502.1
-              },
-              "b": {
-                "own": "This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
-                "surface": "section:What we take up",
-                "y": 1684.8
-              }
-            }
-          ]
+          "dupPairs": []
         },
         "640": {
           "header": {
             "box": "628x72",
             "ground": "252,250,246",
             "border": "0px solid oklch(0.32 0.045 152)",
-            "shadow": "none"
+            "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0"
           },
           "navItems": [
             {
@@ -969,7 +841,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 4522,
+          "docHeight": 4432,
           "fold": [
             {
               "tag": "h1",
@@ -985,7 +857,7 @@
             },
             {
               "tag": "p",
-              "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+              "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
               "y": 440.8,
               "fs": "21.1px"
             }
@@ -1006,7 +878,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
                   "fs": "21.1px"
                 },
                 {
@@ -1031,7 +903,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
+                  "own": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
                   "fs": "21.1px"
                 },
                 {
@@ -1052,7 +924,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 2711.7,
+              "y": 2677.9,
               "copy": [
                 {
                   "tag": "h2",
@@ -1106,12 +978,12 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them. A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
+                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them.",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "p",
-                  "own": "Nobody hands you homework and there is no level to clear. If you would rather hear what is being argued about before you go, the chat invite is below.",
+                  "own": "If you would rather hear what is being argued about before you go, the chat invite is below.",
                   "fs": "17.6px"
                 },
                 {
@@ -1132,7 +1004,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 4278.1,
+              "y": 4188,
               "copy": [
                 {
                   "tag": "p",
@@ -1157,83 +1029,21 @@
               ]
             },
             "how-it-works": {
-              "y": 3740.6,
+              "y": 3706.8,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
               "cls": "text-subhead font-semibold text-ink"
             }
           },
-          "dupPairs": [
-            {
-              "shared": 4,
-              "sharedWords": [
-                "club",
-                "chat",
-                "threads",
-                "open"
-              ],
-              "jaccard": 0.444,
-              "overlap": 1,
-              "a": {
-                "own": "What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page.",
-                "surface": "main:Matheapolis",
-                "y": 440.8
-              },
-              "b": {
-                "own": "Threads that are open in the club's chat.",
-                "surface": "section:What we take up",
-                "y": 1675.7
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "meetup",
-                "chat",
-                "meetings"
-              ],
-              "jaccard": 0.273,
-              "overlap": 0.5,
-              "a": {
-                "own": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
-                "surface": "main:Matheapolis",
-                "y": 248
-              },
-              "b": {
-                "own": "A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
-                "surface": "section:When We Meet",
-                "y": 3784.6
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "syllabus",
-                "list",
-                "keep"
-              ],
-              "jaccard": 0.2,
-              "overlap": 0.5,
-              "a": {
-                "own": "There is no syllabus, no reading list to keep up with, and no current focus.",
-                "surface": "main:Matheapolis",
-                "y": 440.8
-              },
-              "b": {
-                "own": "This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
-                "surface": "section:What we take up",
-                "y": 1675.7
-              }
-            }
-          ]
+          "dupPairs": []
         },
         "1240": {
           "header": {
             "box": "1228x72",
             "ground": "252,250,246",
             "border": "0px solid oklch(0.32 0.045 152)",
-            "shadow": "none"
+            "shadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0"
           },
           "navItems": [
             {
@@ -1300,7 +1110,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 3161,
+          "docHeight": 3071,
           "fold": [
             {
               "tag": "h1",
@@ -1316,7 +1126,7 @@
             },
             {
               "tag": "p",
-              "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+              "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
               "y": 407.1,
               "fs": "21.1px"
             },
@@ -1328,7 +1138,7 @@
             },
             {
               "tag": "p",
-              "own": "Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
+              "own": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
               "y": 872.2,
               "fs": "21.1px"
             }
@@ -1349,7 +1159,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
+                  "own": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat. Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.",
                   "fs": "21.1px"
                 },
                 {
@@ -1374,7 +1184,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Threads that are open in the club's chat. This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
+                  "own": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
                   "fs": "21.1px"
                 },
                 {
@@ -1395,7 +1205,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 1935.5,
+              "y": 1901.7,
               "copy": [
                 {
                   "tag": "h2",
@@ -1449,12 +1259,12 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them. A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
+                  "own": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table. The club has used 15 of them.",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "p",
-                  "own": "Nobody hands you homework and there is no level to clear. If you would rather hear what is being argued about before you go, the chat invite is below.",
+                  "own": "If you would rather hear what is being argued about before you go, the chat invite is below.",
                   "fs": "17.6px"
                 },
                 {
@@ -1475,7 +1285,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 2917.1,
+              "y": 2827,
               "copy": [
                 {
                   "tag": "p",
@@ -1500,82 +1310,20 @@
               ]
             },
             "how-it-works": {
-              "y": 2403.6,
+              "y": 2369.9,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
               "cls": "text-subhead font-semibold text-ink"
             }
           },
-          "dupPairs": [
-            {
-              "shared": 4,
-              "sharedWords": [
-                "club",
-                "chat",
-                "threads",
-                "open"
-              ],
-              "jaccard": 0.444,
-              "overlap": 1,
-              "a": {
-                "own": "What the club is pulling on is decided in its own chat, and some of the threads open there are further down this page.",
-                "surface": "main:Matheapolis",
-                "y": 407.1
-              },
-              "b": {
-                "own": "Threads that are open in the club's chat.",
-                "surface": "section:What we take up",
-                "y": 872.2
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "meetup",
-                "chat",
-                "meetings"
-              ],
-              "jaccard": 0.273,
-              "overlap": 0.5,
-              "a": {
-                "own": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
-                "surface": "main:Matheapolis",
-                "y": 248
-              },
-              "b": {
-                "own": "A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.",
-                "surface": "section:When We Meet",
-                "y": 2447.6
-              }
-            },
-            {
-              "shared": 3,
-              "sharedWords": [
-                "syllabus",
-                "list",
-                "keep"
-              ],
-              "jaccard": 0.2,
-              "overlap": 0.5,
-              "a": {
-                "own": "There is no syllabus, no reading list to keep up with, and no current focus.",
-                "surface": "main:Matheapolis",
-                "y": 407.1
-              },
-              "b": {
-                "own": "This is not a syllabus and there is nothing to keep up with: any of them can be dropped mid-sentence, the list changes when the chat changes, and none of them is a prerequisite for arriving.",
-                "surface": "section:What we take up",
-                "y": 872.2
-              }
-            }
-          ]
+          "dupPairs": []
         }
       },
       "shots": {
         "390": {
           "png": ".design/tmp-round17/shot-shipped-390.png",
-          "docHeight": 4761,
+          "docHeight": 4553,
           "marks": [
             {
               "name": "hero",
@@ -1590,7 +1338,7 @@
         },
         "1240": {
           "png": ".design/tmp-round17/shot-shipped-1240.png",
-          "docHeight": 3161,
+          "docHeight": 3071,
           "marks": [
             {
               "name": "hero",
@@ -48701,7 +48449,6 @@
     }
   ],
   "reRan": [
-    "shipped",
-    "chrome-sticky-e2"
+    "shipped"
   ]
 }

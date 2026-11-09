@@ -22,7 +22,17 @@ const navItems = [
 ];
 ---
 
-<header class="bg-paper">
+<!-- Round 17 (MS03), operator ruling 2026-11-09 (S017 B1): the bar is chrome by an edge, not by a ground.
+     Measured on the built page before the change (2026-11-08, design/grill/edge-probe.mjs): the header paints
+     no ground of its own - its computed background is the page's paper (layer contrast 1.00, OKLab distance 0),
+     so nothing in the bar separates it from the page. Every ground the palette has was priced and refused:
+     panel 1.04, tint 1.10, warm tint 1.11 (drops `rule` to 2.74 against its own 3.0 bar), warm band 1.20
+     (`rule` 2.51), gold fill fails outright (nav ink 2.5). The ratified inset ring is the one device that
+     clears the graphic bar for free in height: 3.01 against the paper it stands on, bar still 1228x72.
+     `shadow-e2` paints 1.78 - a layer, not an edge - and is held back until the bar actually moves (sticky,
+     parked in PLAN.md §Parked with its trigger). An inset ring is not a border (D103), so check:design's
+     no-border rule still holds. -->
+<header class="bg-paper inset-shadow-rule">
   <nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
     <!-- D100 shape B, re-measured on the built artifact by `npm run check:render`: one row at every
          width, `flex-wrap: nowrap`, one type tier (text-label) at every width, 16px gaps, and link

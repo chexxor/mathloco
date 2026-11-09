@@ -262,5 +262,15 @@ and a renumber silently re-points every one of them at a different decision.
 - **D252** (2026-11-08) — What actually paints under the header: the ring is an edge, level-1 elevation is not a layer, and only shadow-e2 clears the layer bar
 - **D253** — Tailwind's content scan reads the whole repo, so a class named in prose becomes shipped CSS
 - **D254** — The roadmap is one file with stable ids, and a gate keeps its two projections in sync
+- **D255** (2026-11-09) — Operator questions are grouped by area with stable letters, and the answer is the letter (2026-11-09, operator ruling, Linux)
+- **D256** (2026-11-09) — Production does not move until the RSVP page exists (2026-11-09, operator ruling, one-way: a deploy to a live site)
+- **D257** (2026-11-09) — Everything installed on the YunoHost box is a YunoHost package with a web GUI and maintenance docs (2026-11-09, operator ruling, costly: it changes where MS05 lives)
+- **D258** (2026-11-09) — RSVP aggregation is un-parked: Meetup by public page read, Mobilizon by OAuth, attendance as a dated snapshot (2026-11-09, operator ruling, one-way: it publishes attendance about real people)
+- **D259** (2026-11-09) — A schedule row links to the event, not to the group (2026-11-09, operator ruling, reversible: a link target, one string per row)
+- **D260** (2026-11-09) — `www.matheapolis.com` after the CNAME deletion answers 404 from Cloudflare, and the fix is a proxied placeholder plus one Single Redirect (2026-11-09, Linux, `openssl s_client` + `curl -I`)
+- **D261** (2026-11-09) — The shipped artifact must name one host about itself; `npm run check:site-host` is what enforces it (2026-11-09, Linux, `node scripts/check-site-host.mjs`)
+- **D262** (2026-11-09) — The header bar gets the ratified ring, and `sticky` waits for the bar to actually move (2026-11-09, ruling `S017` B4/B5, Linux, `node design/round17.mjs --only shipped` + `design/grill/edge-probe.mjs`)
+- **D263** (2026-11-09) — A guard that hard-codes a string it is guarding is a guard that fails when the code is fixed (2026-11-09, Linux)
+- **D264** (2026-11-09) — Meetup's event data is readable without a credential, and `scripts/meetup-events.mjs` is the reader; the RSVP page is not built yet (2026-11-09, Linux, Node 24, `curl` + `node scripts/meetup-events.mjs`)
 
-Defined: 254 (D1-D254). Unused ids: none.
+Defined: 264 (D1-D264). Unused ids: none.

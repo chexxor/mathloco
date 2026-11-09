@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-07T07:53:57.316Z",
- "siteFp": "dc9b5071c6",
+ "measuredAt": "2026-11-09T05:05:59.098Z",
+ "siteFp": "63aad7870e",
  "widths": [
   1240,
   390,
@@ -23,16 +23,16 @@
     250,
     246
    ],
-   "groundExact": 1608458,
-   "groundPct": 76.81,
+   "groundExact": 1620134,
+   "groundPct": 76.3,
    "span": 12.666666666666686,
-   "sd": 2.69,
+   "sd": 2.67,
    "flat": {
     "x": 256,
-    "y": 0,
+    "y": 16,
     "size": 64,
-    "span": 0,
-    "sd": 0
+    "span": 110,
+    "sd": 13.64
    },
    "surfaces": [
     {
@@ -41,7 +41,7 @@
       250,
       246
      ],
-     "pct": 41.3
+     "pct": 42.5
     },
     {
      "rgb": [
@@ -49,7 +49,7 @@
       245,
       239
      ],
-     "pct": 35
+     "pct": 33.3
     },
     {
      "rgb": [
@@ -57,7 +57,7 @@
       57,
       39
      ],
-     "pct": 9.6
+     "pct": 9.8
     },
     {
      "rgb": [
@@ -65,20 +65,20 @@
       0,
       0
      ],
-     "pct": 1.8
+     "pct": 1
     }
    ],
-   "distinct": 51932,
-   "hairlines": 12,
-   "runs": 12,
+   "distinct": 55169,
+   "hairlines": 11,
+   "runs": 11,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
    "hairlineMax": 3.01,
    "weakest": {
-    "y": 608,
-    "x": 247,
-    "len": 151,
+    "y": 71,
+    "x": 1,
+    "len": 1226,
     "core": [
      132,
      150,
@@ -97,6 +97,21 @@
     "clip": 3
    },
    "pairs": [
+    {
+     "y": 71,
+     "x": 1,
+     "len": 1226,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
     {
      "y": 608,
      "x": 247,
@@ -128,7 +143,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2083,
+     "y": 2049,
      "x": 35,
      "len": 1158,
      "core": [
@@ -143,7 +158,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2270,
+     "y": 2265,
      "x": 35,
      "len": 1158,
      "core": [
@@ -158,7 +173,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2279,
+     "y": 2274,
      "x": 51,
      "len": 1125,
      "core": [
@@ -173,7 +188,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2282,
+     "y": 2277,
      "x": 50,
      "len": 1128,
      "core": [
@@ -188,37 +203,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2287,
-     "x": 67,
-     "len": 1093,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 2290,
-     "x": 66,
-     "len": 1096,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 2318,
+     "y": 2305,
      "x": 32,
      "len": 81,
      "core": [
@@ -233,7 +218,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2318,
+     "y": 2305,
      "x": 137,
      "len": 123,
      "core": [
@@ -248,7 +233,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2760,
+     "y": 2691,
      "x": 225,
      "len": 136,
      "core": [
@@ -263,7 +248,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2807,
+     "y": 2738,
      "x": 225,
      "len": 136,
      "core": [
@@ -295,16 +280,16 @@
     250,
     246
    ],
-   "groundExact": 765963,
-   "groundPct": 75.1,
-   "span": 12.666666666666686,
-   "sd": 2.65,
+   "groundExact": 759925,
+   "groundPct": 74.22,
+   "span": 13,
+   "sd": 2.63,
    "flat": {
     "x": 240,
-    "y": 0,
+    "y": 16,
     "size": 64,
-    "span": 0,
-    "sd": 0
+    "span": 110,
+    "sd": 13.64
    },
    "surfaces": [
     {
@@ -313,7 +298,7 @@
       250,
       246
      ],
-     "pct": 41.7
+     "pct": 42.8
     },
     {
      "rgb": [
@@ -321,7 +306,7 @@
       245,
       239
      ],
-     "pct": 33.2
+     "pct": 31.2
     },
     {
      "rgb": [
@@ -329,28 +314,28 @@
       57,
       39
      ],
-     "pct": 8.5
+     "pct": 8.9
     },
     {
      "rgb": [
-      0,
-      0,
-      0
+      71,
+      91,
+      76
      ],
-     "pct": 1.6
+     "pct": 0.8
     }
    ],
-   "distinct": 35308,
-   "hairlines": 13,
-   "runs": 13,
+   "distinct": 38111,
+   "hairlines": 12,
+   "runs": 12,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
    "hairlineMax": 3.01,
    "weakest": {
-    "y": 856,
-    "x": 19,
-    "len": 352,
+    "y": 71,
+    "x": 1,
+    "len": 388,
     "core": [
      132,
      150,
@@ -369,6 +354,21 @@
     "clip": 3
    },
    "pairs": [
+    {
+     "y": 71,
+     "x": 1,
+     "len": 388,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
     {
      "y": 856,
      "x": 19,
@@ -415,7 +415,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3094,
+     "y": 3026,
      "x": 19,
      "len": 352,
      "core": [
@@ -430,7 +430,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3561,
+     "y": 3550,
      "x": 19,
      "len": 352,
      "core": [
@@ -445,7 +445,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3570,
+     "y": 3559,
      "x": 35,
      "len": 319,
      "core": [
@@ -460,7 +460,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3573,
+     "y": 3562,
      "x": 34,
      "len": 322,
      "core": [
@@ -475,37 +475,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3578,
-     "x": 51,
-     "len": 287,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3581,
-     "x": 50,
-     "len": 290,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3609,
+     "y": 3590,
      "x": 16,
      "len": 81,
      "core": [
@@ -520,7 +490,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3609,
+     "y": 3590,
      "x": 121,
      "len": 123,
      "core": [
@@ -535,7 +505,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4200,
+     "y": 4069,
      "x": 209,
      "len": 136,
      "core": [
@@ -550,7 +520,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4247,
+     "y": 4116,
      "x": 209,
      "len": 136,
      "core": [
@@ -582,16 +552,16 @@
     250,
     246
    ],
-   "groundExact": 689371,
-   "groundPct": 77.32,
-   "span": 13,
-   "sd": 2.66,
+   "groundExact": 697738,
+   "groundPct": 76.73,
+   "span": 12.333333333333343,
+   "sd": 2.65,
    "flat": {
     "x": 240,
-    "y": 0,
+    "y": 16,
     "size": 64,
-    "span": 0,
-    "sd": 0
+    "span": 110,
+    "sd": 13.64
    },
    "surfaces": [
     {
@@ -600,7 +570,7 @@
       250,
       246
      ],
-     "pct": 41.2
+     "pct": 43.2
     },
     {
      "rgb": [
@@ -608,7 +578,7 @@
       245,
       239
      ],
-     "pct": 35.8
+     "pct": 33.3
     },
     {
      "rgb": [
@@ -616,28 +586,28 @@
       57,
       39
      ],
-     "pct": 8.1
+     "pct": 8.5
     },
     {
      "rgb": [
-      0,
-      0,
-      0
+      71,
+      91,
+      76
      ],
-     "pct": 1.1
+     "pct": 0.9
     }
    ],
-   "distinct": 25699,
-   "hairlines": 13,
-   "runs": 13,
+   "distinct": 27816,
+   "hairlines": 12,
+   "runs": 12,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
    "hairlineMax": 3.01,
    "weakest": {
-    "y": 991,
-    "x": 19,
-    "len": 282,
+    "y": 71,
+    "x": 1,
+    "len": 318,
     "core": [
      132,
      150,
@@ -656,6 +626,21 @@
     "clip": 3
    },
    "pairs": [
+    {
+     "y": 71,
+     "x": 1,
+     "len": 318,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
     {
      "y": 991,
      "x": 19,
@@ -702,7 +687,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3387,
+     "y": 3320,
      "x": 19,
      "len": 282,
      "core": [
@@ -717,7 +702,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3874,
+     "y": 3858,
      "x": 19,
      "len": 282,
      "core": [
@@ -732,7 +717,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3883,
+     "y": 3867,
      "x": 35,
      "len": 249,
      "core": [
@@ -747,7 +732,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3886,
+     "y": 3870,
      "x": 34,
      "len": 252,
      "core": [
@@ -762,37 +747,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3891,
-     "x": 51,
-     "len": 217,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3894,
-     "x": 50,
-     "len": 220,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3922,
+     "y": 3898,
      "x": 16,
      "len": 81,
      "core": [
@@ -807,7 +762,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3922,
+     "y": 3898,
      "x": 121,
      "len": 123,
      "core": [
@@ -822,7 +777,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4686,
+     "y": 4493,
      "x": 19,
      "len": 136,
      "core": [
@@ -837,7 +792,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4733,
+     "y": 4540,
      "x": 19,
      "len": 136,
      "core": [

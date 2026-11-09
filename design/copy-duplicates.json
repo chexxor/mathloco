@@ -1,8 +1,14 @@
 {
   "rule": "near-duplicate-surface",
   "gate": "npm run check:content (scripts/check-content.mjs)",
-  "measuredAt": "2026-11-08",
+  "measuredAt": "2026-11-09",
   "howToRegenerate": "node scripts/check-content.mjs --print-baseline  (prints this shape; it never writes it)",
+  "ruleOfExit": "A pair leaves this file when the copy is deleted or a ruling settles it. It is NOT kept with status 'resolved': a signature in this file is an exemption, so keeping a closed pair would let the same duplicate ship again without going red. The three pairs closed by S018/D262 are listed in `resolved` below for provenance only.",
+  "resolved": [
+    { "pair": "band's Meetup/chat twin <> hero's date-and-chat line", "closedBy": "S018 (2026-11-09)", "how": "the band's line deleted; the hero keeps the one statement of where dates and discussion live" },
+    { "pair": "hero syllabus line <> band's homework line", "closedBy": "S018 (2026-11-09)", "how": "the band's homework line deleted; the hero's syllabus sentence now carries the chat statement too" },
+    { "pair": "hero threads signpost <> 'What we take up' opener", "closedBy": "S018 (2026-11-09)", "how": "the hero signpost became the syllabus line; the section opener kept its sourcing clause, because check:content refuses an unsourced list (D92)" }
+  ],
   "scores": "content words only; sentences split on terminal punctuation only. A pair is a pair when it shares >=3 content words and (Jaccard >= 0.45 or overlap >= 0.5). Overlap is shared words over the SHORTER sentence, because a paraphrase of a long sentence scores low on Jaccard alone.",
   "statusMeaning": {
     "open": "the repeat is real and unruled: the gate stays green on it; deleting one side or taking a ruling is the exit",
@@ -10,39 +16,6 @@
     "template": "identical row furniture on sibling rows: one string rendered twice. Coupling, not duplication - if one row changes, both must"
   },
   "pairs": [
-    {
-      "signature": "a date and its place go up on meetup the discussion keeps running between meetings in the chat <> dates go up on meetup most of the arguing happens in the chat between meetings",
-      "shared": 3,
-      "jaccard": 0.273,
-      "overlap": 0.5,
-      "status": "open",
-      "ruled": null,
-      "surfaces": "hero (main:Matheapolis) <> section:How it works",
-      "why": "One statement about where the dates and the conversation live, said 2,179px apart on the same page (hero y248 <> band y2427 @1240). Priced as dup-dates-chat-hero-goes and dup-dates-chat-band-goes.",
-      "measuredAt": "2026-11-08"
-    },
-    {
-      "signature": "there is no syllabus no reading list to keep up with and no current focus <> this is not a syllabus and there is nothing to keep up with any of them can be dropped midsentence the list changes when the chat changes and none of them is a prerequisite for arriving",
-      "shared": 3,
-      "jaccard": 0.2,
-      "overlap": 0.5,
-      "status": "open",
-      "ruled": null,
-      "surfaces": "hero (main:Matheapolis) <> section:What we take up",
-      "why": "The reassurance about obligation appears three times in three vocabularies: syllabus (hero), syllabus again (section), homework/level (join band). Priced as dup-homework-band-goes, and inside dedup-hero-trims / dedup-below-trims.",
-      "measuredAt": "2026-11-08"
-    },
-    {
-      "signature": "threads that are open in the club's chat <> what the club is pulling on is decided in its own chat and some of the threads open there are further down this page",
-      "shared": 4,
-      "jaccard": 0.444,
-      "overlap": 1,
-      "status": "open",
-      "ruled": null,
-      "surfaces": "hero (main:Matheapolis) <> section:What we take up",
-      "why": "Every content word of the section's opener is inside the hero's signpost - the strongest pair on the page, and the one the operator pointed at (2026-11-08: \"there is duplication between the 'How it works' section on the homepage and the very first section\"). Priced as deletions in design/grill/round17-options.mjs: dup-threads-hero-goes, dup-threads-section-goes, dedup-hero-trims, dedup-below-trims.",
-      "measuredAt": "2026-11-08"
-    },
     {
       "signature": "copied from the club's own calendar on nov 6 2026 <> the signup is on meetup and the date above is copied from the club's own calendar",
       "shared": 4,

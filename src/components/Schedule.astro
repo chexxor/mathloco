@@ -402,13 +402,17 @@ const lede = compact
                   {venues && (
                     <p>
                       {venues}
-                      {venueCount ? ` The club has used ${venueCount} of them.` : ''} A date and its place go up
-                      on Meetup; the discussion keeps running between meetings in the chat.
+                      {venueCount ? ` The club has used ${venueCount} of them.` : ''}
                     </p>
                   )}
+                  {/* Round 17 (MS03), operator ruling 2026-11-09 (S017 B3): the band keeps only what only the
+                      band can carry - the sourced venues, the venue count, the roster and its date. The
+                      Meetup/chat statement lives in the hero, and the no-homework reassurance lives in the
+                      hero's no-syllabus line. Removing a claim is the safe direction under check:content
+                      (D92); the sentence this replaces is priced in design/grill/round17-options.mjs as
+                      dup-dates-chat-band-goes and dup-homework-band-goes. */}
                   <p>
-                    Nobody hands you homework and there is no level to clear. If you would rather hear what is
-                    being argued about before you go, the chat invite is below.
+                    If you would rather hear what is being argued about before you go, the chat invite is below.
                   </p>
                   {membership && (
                     <p>
