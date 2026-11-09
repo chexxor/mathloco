@@ -1,0 +1,4 @@
+{
+  "_why": "Utilities that Tailwind emits with no occurrence in src/, deliberately allowed. Every entry must carry a reason; an empty list means every dead utility is visible in the check:css-utilities report (D253). The typography plugin and Tailwind's own defaults cannot be scoped out, so if one ever needs exempting, name it and say why here.",
+  "exempt": []
+}

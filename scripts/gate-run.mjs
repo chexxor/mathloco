@@ -101,6 +101,10 @@ const DEPLOY = [
   // The page half of the same rule: `data-date` handles off the built page against `scheduleWindow()`'s plan,
   // plus the requirement that a page hiding dates says so and offers `/events.ics` (D238).
   { name: 'check:schedule-window', desc: '/schedule prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
+  // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name
+  // written in design prose lands in the stylesheet every visitor downloads. The number is the budget;
+  // the baseline makes a new round's invented class names visible the day they are written.
+  { name: 'check:css-utilities', desc: 'utilities in the shipped CSS that no file in src/ writes', needs: ['build'] },
 ];
 
 // The browser ritual (D123): everything a human used to type by hand, in one command, over the dist that
