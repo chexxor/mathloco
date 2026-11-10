@@ -301,27 +301,63 @@ console.log(logBroken
 // as the width sets grew (D146) and nobody compared two runs. A gate that takes twice as long is a gate
 // people stop running, so every green run compares itself against a tracked baseline. Only 2x fails: CPU
 // contention on a home rig is real, and a 40% wobble is not a regression.
+//
+// The comparison is on WORK SECONDS - the sum of what each step took - not the wall clock, because wall
+// measures the box and work measures the set (D269). Measured 2026-11-10, Linux native, 16 CPU: the same
+// 30-step set ran 38.0s wall / 36.4s of work while `strata-host` sat at 792% CPU (load 7.6/16) and 23.8s
+// wall / 30.3s of work at load 4.8 -> 5.2/16. The wall number moved 60% with the box; the set did not
+// change. Wall is still printed, with its load, so a contended run is readable rather than mysterious.
 const COST_BASELINE = resolve('design', 'gate-cost.json');
 const costKey = set === BROWSER ? 'browser' : 'deploy';
+const LOAD_LIMIT = Number(process.env.GATE_LOAD_LIMIT || 6);   // 1-minute load average / CPU count - the same limit gate-cost.mjs refuses to save above. Override it with GATE_LOAD_LIMIT to exercise both branches of the guard.
+
+// Two comparisons, because the two ways a gate set gets slow are different (D269):
+//   like-for-like - the steps the baseline knows, now vs then. This is the one that catches a gate that got
+//     slower. A set that grew from 18 steps to 30 does not move it.
+//   whole set - reported so a run is readable, never failed on its own.
+// Neither can tell "the repo changed" from "someone else's process is eating the box", so the FAIL is gated
+// on load: at or below 6/16cpu the guard bites; above it the run is a WARN with the load printed, because
+// `npm run deploy` runs `verify` first and a contended rig must not block a ship step for a reason that is
+// not a defect (D118).
 if (!failed && !skipped && existsSync(COST_BASELINE)) {
   try {
     const base = JSON.parse(readFileSync(COST_BASELINE, 'utf8'))[costKey];
-    if (base && base.wallSecs) {
-      const ratio = Number(wall) / base.wallSecs;
+    const baseWork = base ? (base.workSecs ?? base.wallSecs) : null;   // pre-D269 baselines recorded wall only
+    if (baseWork) {
+      const loadStart = Number((load0.split('/')[0] || '0'));
+      const loadEnd = Number((loadLine().split('/')[0] || '0'));
+      const contended = Math.max(loadStart, loadEnd) > LOAD_LIMIT;
+      const baseStepCount = Object.keys(base.steps ?? {}).length;
+      const shared = [...results.values()].filter((r) => base.steps && base.steps[r.step.name] > 0);
+      const sharedNow = shared.reduce((a, r) => a + r.secs, 0);
+      const sharedBase = shared.reduce((a, r) => a + base.steps[r.step.name], 0);
+      const ratio = sharedBase ? sharedNow / sharedBase : Number(sum) / baseWork;
       const pct = Math.round((ratio - 1) * 100);
-      console.log('cost: ' + costKey + ' ' + wall + 's vs baseline ' + base.wallSecs + 's (' + base.measuredAt + ') = ' + (pct >= 0 ? '+' : '') + pct + '% (load ' + load0 + ' -> ' + loadLine() + ')');
+      console.log('cost: ' + costKey + ' ' + sum + 's of work, ' + wall + 's wall, ' + results.size + ' steps (load ' + load0 + ' -> ' + loadLine() + ')');
+      console.log('cost: like-for-like ' + shared.length + ' steps the baseline knows: ' + sharedNow.toFixed(1) + 's now vs ' + sharedBase.toFixed(1) + 's (' + base.measuredAt + ') = ' + (pct >= 0 ? '+' : '') + pct + '%');
+      if (results.size !== baseStepCount) {
+        const unbaselined = [...results.values()].filter((r) => !(base.steps && base.steps[r.step.name] > 0));
+        const extra = unbaselined.reduce((a, r) => a + r.secs, 0).toFixed(1);
+        console.log('cost: the set has ' + results.size + ' steps, the baseline ' + baseStepCount + '; ' + unbaselined.length + ' step(s) it does not know cost ' + extra + 's: ' + unbaselined.map((r) => r.step.name + ' ' + r.secs.toFixed(2) + 's').join(', '));
+      }
       for (const r of results.values()) {
         const b = base.steps && base.steps[r.step.name];
         if (b && r.secs > b * 2) console.log('cost: one step doubled - ' + r.step.name + ' ' + b + 's -> ' + r.secs.toFixed(2) + 's');
       }
       if (ratio > 2) {
-        failed++;
-        console.log('cost: FAIL - over 2x the baseline. A slower gate is a gate people stop running: fix it, or');
-        console.log('      re-baseline on purpose with `npm run cost:save` and say why in the commit message.');
-        console.log('      before either: time the doubled step on its own (`npm run build`). If it is near its');
-        console.log('      baseline there, the box is contended, and re-baselining freezes someone else\'s CPU in.');
+        if (contended) {
+          console.log('cost: WARN - 2x the baseline work, but the rig was at load ' + load0 + ' -> ' + loadLine() + '; the guard only fails at or below ' + LOAD_LIMIT + '/16cpu.');
+          console.log('      Time the doubled step on its own (`npm run build`). If it is near its baseline there, the box is');
+          console.log('      contended: stop the busy process, re-run, then `npm run cost:save` from the quiet run.');
+        } else {
+          failed++;
+          console.log('cost: FAIL - over 2x the baseline work on a rig at or below ' + LOAD_LIMIT + '/16cpu. A slower gate is a gate people stop running: fix it, or');
+          console.log('      re-baseline on purpose with `npm run cost:save` and say why in the commit message.');
+          console.log('      before either: time the doubled step on its own (`npm run build`). If it is near its');
+          console.log('      baseline there, the box is contended, and re-baselining freezes someone else\'s CPU in.');
+        }
       } else if (ratio > 1.4) {
-        console.log('cost: WARN - over 40% vs baseline. Not a failure; look at the manifest before the new cost is normal.');
+        console.log('cost: WARN - over 40% more work than the baseline for the steps it knows. Not a failure; the line above names the new steps before you call this normal.');
       }
     }
   } catch (e) {

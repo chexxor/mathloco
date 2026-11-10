@@ -1,28 +1,42 @@
 {
   "deploy": {
-    "measuredAt": "2026-11-06",
-    "wallSecs": 16,
-    "load": "4.5/16cpu",
+    "measuredAt": "2026-11-10",
+    "wallSecs": 29.1,
+    "workSecs": 35.5,
+    "load": "5.7/16cpu",
     "steps": {
-      "check": 6.85,
-      "check:classes": 0.41,
-      "check:design": 0.17,
-      "check:decisions": 0.29,
-      "check:figures": 0.11,
-      "check:social": 0.34,
-      "check:social:selftest": 1.17,
-      "db:check": 0.4,
-      "check:sanitize": 0.25,
-      "check:ics": 0.14,
-      "check:ics:selftest": 0.52,
-      "check:cache": 0.93,
-      "check:cadence": 1.19,
-      "audit:gate": 0.82,
-      "build": 6.85,
-      "check:deploy": 0.21,
-      "check:content": 0.11,
-      "check:content:selftest": 0.11
-    }
+      "check": 7.83,
+      "check:classes": 0.42,
+      "check:design": 0.26,
+      "check:lsp": 0.12,
+      "check:lsp:selftest": 0.12,
+      "check:plan": 0.38,
+      "check:plan:selftest": 0.38,
+      "check:decisions": 0.37,
+      "check:figures": 0.12,
+      "check:social": 0.35,
+      "check:social:selftest": 1.16,
+      "db:check": 0.41,
+      "check:sanitize": 0.27,
+      "check:copy": 0.12,
+      "check:copy:selftest": 0.13,
+      "check:ics": 0.15,
+      "check:ics:selftest": 0.53,
+      "check:escapes:selftest": 0.13,
+      "check:cache": 0.99,
+      "check:cadence": 1.25,
+      "check:schedule-window:selftest": 0.12,
+      "audit:gate": 1.05,
+      "build": 17.65,
+      "check:deploy": 0.22,
+      "check:site-host": 0.12,
+      "check:content": 0.13,
+      "check:content:selftest": 0.12,
+      "check:escapes": 0.13,
+      "check:schedule-window": 0.13,
+      "check:css-utilities": 0.3
+    },
+    "stepCount": 30
   },
   "browser": {
     "measuredAt": "2026-11-06",
@@ -38,5 +52,5 @@
       "check:render:selftest": 14.64
     }
   },
-  "note": "tracked baseline for the cost guard in scripts/gate-run.mjs. Re-baseline on purpose, in a commit that says why. The `load` field is the 1-minute load average / CPU count at the end of that run: a baseline taken under a high load is a bar the repo cannot clear, so check it before trusting a comparison."
+  "note": "tracked baseline for the cost guard in scripts/gate-run.mjs. The comparison is on workSecs - the sum of the time each step took - not wallSecs: wall measures the box, work measures the set (D269). Re-baseline on purpose, in a commit that says why. The `load` field is the 1-minute load average / CPU count at the end of that run: a baseline taken under a high load is a bar the repo cannot clear, so check it before trusting a comparison, and gate-cost.mjs refuses to save above 6/16cpu without --force."
 }

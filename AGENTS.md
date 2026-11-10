@@ -108,7 +108,19 @@ each of those and requires a named failure. Both are in `verify`.
    `.design/tmp-gate-logs/<set>/<step>.txt`: every step's full output is kept from the last run, pass or
    fail (D144). `npm run check:discord` and
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
-   not in `verify`.
+   not in `verify`. Five more scripts sit outside `verify` on purpose, and each now has its reason written
+   down rather than left to inference (D269): `review:render` plants placeholder states, builds, measures them
+   with the browser gates and restores - it mutates the tree, so it is an instrument for the missing-content
+   state (record 0024 found its defects there), not a gate; `check:area`, `check:rhythm` and `check:color` are
+   design-round probes that report numbers and never exit non-zero, so in `verify` they would cost a build and
+   a browser for no verdict; `probe:cpu` deploys a throwaway Worker to measure per-request CPU on the real
+   runtime, which needs Cloudflare credentials and touches live infrastructure. `add-a-gate --audit` is what
+   keeps this list honest: any script outside the runner with no reason anywhere is reported as drift.
+   The cost guard in `gate-run.mjs` compares **work seconds, like-for-like** against `design/gate-cost.json`
+   (the steps the baseline knows; new steps are listed with their cost) and **fails only when the run started
+   and ended at or below 6/16cpu** - a contended rig is a WARN with the load printed, not a blocked ship step
+   (D269). `npm run cost:save` refuses to freeze a baseline from a run above that load unless you pass
+   `--force` and say why.
 5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
    Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or

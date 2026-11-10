@@ -276,5 +276,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D266** (2026-11-10) — pi-lens is the code-intelligence package for this rig, and `.astro` reaches it only through a repo-owned server entry (2026-11-10, Linux, Node 24, `pi list`, `node scripts/gate-run.mjs check:lsp check:lsp:selftest`, `node .ai-work/lsp-probe.mjs`, `~/.pi-lens/latency.log`)
 - **D267** (2026-11-10) — A session's state is a command, not a memory: three clock-in skills (2026-11-10, Linux native, Node 24.22.1, `node .agents/skills/resume-checkin/scripts/checkin.mjs` 0.085s, `node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --audit`, `node .agents/skills/measure-a-claim/scripts/stamps.mjs --stale`)
 - **D268** (2026-11-10) — `check:design`'s stale-path audit exempts a *planned* path only with a reason that names the milestone that will write it (2026-11-10, Linux native, `node design/audit-references.mjs --stale; echo $?`)
+- **D269** (2026-11-10) — the cost guard compares **work seconds**, not the wall clock, and refuses to freeze a baseline written under a load the rig cannot clear (2026-11-10, operator-approved; Linux native, 16 CPU, `npm run verify` and `node scripts/gate-cost.mjs`)
 
-Defined: 268 (D1-D268). Unused ids: none.
+Defined: 269 (D1-D269). Unused ids: none.
