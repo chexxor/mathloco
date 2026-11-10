@@ -33,6 +33,8 @@
     "check:schedule-window:selftest": "node scripts/check-schedule-window.mjs --selftest",
     "check:classes": "tsx scripts/check-classes.ts",
     "check:design": "node design/audit-references.mjs --stale",
+    "check:lsp": "node scripts/check-lsp-config.mjs",
+    "check:lsp:selftest": "node scripts/check-lsp-config.mjs --selftest",
     "check:site-host": "node scripts/check-site-host.mjs",
     "check:plan": "node scripts/check-plan.mjs",
     "check:plan:selftest": "node scripts/check-plan.mjs --selftest",

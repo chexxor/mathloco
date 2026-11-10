@@ -63,6 +63,13 @@ const DEPLOY = [
   { name: 'check', desc: 'astro check: types in .astro/.svelte/.ts' },
   { name: 'check:classes', desc: 'every written class resolves to CSS' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
+  // pi-lens can reach `.astro` (19 files - the surface the design handles and probe anchors live on) only
+  // through a custom server entry in `.pi-lens.json` (D266), and every way that entry rots is silent: delete
+  // it and the .astro files simply stop answering, drop the tsdk init option and astro-ls refuses to
+  // initialize, switch autoformat or autofix on and a gate set that compares bytes starts seeing files
+  // rewritten on every edit. Reads config only, so it runs before `build` (D118).
+  { name: 'check:lsp', desc: 'the LSP config registers astro-ls for .astro, sets its tsdk, keeps format/autofix off' },
+  { name: 'check:lsp:selftest', desc: 'the LSP config gate can still fail (7 plantings)' },
   // The roadmap is one file (.notes/PLAN.md, host-local) and MILESTONES.md is its tracked projection. Two
   // files claiming "what is next" drift, and the drift is invisible in a table cell (S015). Reads prose, so
   // it runs before build; the selftest plants each defect class and requires a named failure.

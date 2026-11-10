@@ -273,5 +273,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D263** (2026-11-09) — A guard that hard-codes a string it is guarding is a guard that fails when the code is fixed (2026-11-09, Linux)
 - **D264** (2026-11-09) — Meetup's event data is readable without a credential, and `scripts/meetup-events.mjs` is the reader; the RSVP page is not built yet (2026-11-09, Linux, Node 24, `curl` + `node scripts/meetup-events.mjs`)
 - **D265** (2026-11-10) — Sign-up links sit on the date, not on a page; no headcount is printed anywhere (2026-11-10, Linux, Node 24, `node scripts/meetup-events.mjs --check`, `curl`)
+- **D266** (2026-11-10) — pi-lens is the code-intelligence package for this rig, and `.astro` reaches it only through a repo-owned server entry (2026-11-10, Linux, Node 24, `pi list`, `node scripts/gate-run.mjs check:lsp check:lsp:selftest`, `node .ai-work/lsp-probe.mjs`, `~/.pi-lens/latency.log`)
 
-Defined: 265 (D1-D265). Unused ids: none.
+Defined: 266 (D1-D266). Unused ids: none.

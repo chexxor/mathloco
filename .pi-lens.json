@@ -1,0 +1,19 @@
+{
+  "$schema": "https://raw.githubusercontent.com/apmantza/pi-lens/master/docs/schema/pi-lens-config-v1.json",
+  "ignore": ["dist/**", ".design/**", ".ai-work/**"],
+  "lsp": {
+    "servers": {
+      "astro": {
+        "name": "Astro language server",
+        "extensions": [".astro"],
+        "command": ["node_modules/.bin/astro-ls", "--stdio"],
+        "initializationOptions": {
+          "typescript": { "tsdk": "node_modules/typescript/lib" }
+        }
+      }
+    }
+  },
+  "format": { "enabled": false },
+  "autofix": { "enabled": false },
+  "actionableWarnings": { "autoFix": { "enabled": false } }
+}
