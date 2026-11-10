@@ -59,8 +59,23 @@ each of those and requires a named failure. Both are in `verify`.
      (it sequences design-extract -> grill -> ratify -> apply -> enforce); `beautify`,
      `apply-transitions`, `choose-icons`, `empty-states` are the smaller follow-ons
    - before merging anything → `code-review-and-quality/SKILL.md`
+   - at the start of a session → `resume-checkin/SKILL.md` - one command prints branch, HEAD, dirty paths,
+     the active milestone row, the gate list and whether the last gate run predates the commit you are on
+   - before adding a check to `verify` → `add-a-gate/SKILL.md` - a gate not in `scripts/gate-run.mjs` runs
+     only when a human remembers it; its `--audit` lists the ones that already drifted
+   - before writing any number into prose → `measure-a-claim/SKILL.md` - the stamp grammar, the 60-day
+     rule, and the probe that produces the figure
    Skills are tracked, so if one goes stale against the code, **fix it in the same commit** that makes
    it stale (e.g. a config change invalidates the config block quoted in `astro/SKILL.md`).
+3. **Code intelligence is installed, and it is narrow on purpose (D266).** `pi-lens` registers 13 tools
+   (`lens_diagnostics`, `lsp_navigation`, `ast_grep_search`, `read_symbol`, `module_report`, ...); five are
+   `situational` and stay invisible until something calls `pi_lens_activate_tools`, so one empty run is not
+   evidence a capability is missing. `.pi-lens.json` (tracked) is what makes `.astro` reachable at all - the
+   package's built-in registry does not know Astro, and without the `initializationOptions.typescript.tsdk`
+   the server refuses to initialize. `npm run check:lsp` asserts the entry, the tsdk, and that format and
+   autofix stay off: this repo's correctness is byte comparisons, and a formatter that rewrites files on
+   edit is a gate-breaking machine wearing a convenience hat. Cold cost measured 2026-11-10: astro-ls
+   spawns in 580ms and answers `documentSymbol` in 51ms; the first typescript LSP call takes ~10s.
    - **A second skill home exists, and it is host-local:** the vendored Cloudflare set from the
      `pi-cloudflare` pi package, at `.pi/npm/node_modules/pi-cloudflare/skills/` (`.pi/` is gitignored, so a
      fresh machine must reinstall the package to have them). 18 skills. They are **vendor** guidance, so this
@@ -81,7 +96,7 @@ each of those and requires a named failure. Both are in `verify`.
      candidate fonts). Read `design/README.md` before adding, renaming or deleting a file in either. After
      a rename run `node design/audit-references.mjs --stale` — it exits 1 if any doc or script cites a path
      that no longer exists; a pointer into a wall is how a future session loses a probe for good.
-3. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
+4. `git status --short -- .` - know what is already uncommitted before you touch anything. Then
    `git log --oneline main..HEAD | cat` to see how far the branch is ahead, and run the CI gate set
    once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
    (the set lives in `scripts/gate-run.mjs`, and `node scripts/gate-run.mjs --list` prints it. It used to be
@@ -94,14 +109,14 @@ each of those and requires a named failure. Both are in `verify`.
    fail (D144). `npm run check:discord` and
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
    not in `verify`.
-4. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
+5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a
    Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
    improvising**. The index (symptom -> runbook) is `.notes/runbooks/README.md`; read
    `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
    which is gitignored - they are host-local, so a fresh clone will not have them.
-5. Resume from `NEXT.md`, and take the priority from `PLAN.md` §Milestones - never from memory or from a
+6. Resume from `NEXT.md`, and take the priority from `PLAN.md` §Milestones - never from memory or from a
    chat log. The roadmap is host-local (`.notes/` is gitignored); the tracked prose at the root is
    `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and `DECISIONS.index.md`. Durable plans that are
    not milestones live beside the plan: `roadmap-events.md` (surfacing and syncing the meetup schedule),

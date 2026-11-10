@@ -274,5 +274,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D264** (2026-11-09) — Meetup's event data is readable without a credential, and `scripts/meetup-events.mjs` is the reader; the RSVP page is not built yet (2026-11-09, Linux, Node 24, `curl` + `node scripts/meetup-events.mjs`)
 - **D265** (2026-11-10) — Sign-up links sit on the date, not on a page; no headcount is printed anywhere (2026-11-10, Linux, Node 24, `node scripts/meetup-events.mjs --check`, `curl`)
 - **D266** (2026-11-10) — pi-lens is the code-intelligence package for this rig, and `.astro` reaches it only through a repo-owned server entry (2026-11-10, Linux, Node 24, `pi list`, `node scripts/gate-run.mjs check:lsp check:lsp:selftest`, `node .ai-work/lsp-probe.mjs`, `~/.pi-lens/latency.log`)
+- **D267** (2026-11-10) — A session's state is a command, not a memory: three clock-in skills (2026-11-10, Linux native, Node 24.22.1, `node .agents/skills/resume-checkin/scripts/checkin.mjs` 0.085s, `node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --audit`, `node .agents/skills/measure-a-claim/scripts/stamps.mjs --stale`)
+- **D268** (2026-11-10) — `check:design`'s stale-path audit exempts a *planned* path only with a reason that names the milestone that will write it (2026-11-10, Linux native, `node design/audit-references.mjs --stale; echo $?`)
 
-Defined: 266 (D1-D266). Unused ids: none.
+Defined: 268 (D1-D268). Unused ids: none.
