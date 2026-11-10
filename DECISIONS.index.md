@@ -272,5 +272,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D262** (2026-11-09) — The header bar gets the ratified ring, and `sticky` waits for the bar to actually move (2026-11-09, ruling `S017` B4/B5, Linux, `node design/round17.mjs --only shipped` + `design/grill/edge-probe.mjs`)
 - **D263** (2026-11-09) — A guard that hard-codes a string it is guarding is a guard that fails when the code is fixed (2026-11-09, Linux)
 - **D264** (2026-11-09) — Meetup's event data is readable without a credential, and `scripts/meetup-events.mjs` is the reader; the RSVP page is not built yet (2026-11-09, Linux, Node 24, `curl` + `node scripts/meetup-events.mjs`)
+- **D265** (2026-11-10) — Sign-up links sit on the date, not on a page; no headcount is printed anywhere (2026-11-10, Linux, Node 24, `node scripts/meetup-events.mjs --check`, `curl`)
 
-Defined: 264 (D1-D264). Unused ids: none.
+Defined: 265 (D1-D265). Unused ids: none.
