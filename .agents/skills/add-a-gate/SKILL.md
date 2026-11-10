@@ -32,6 +32,14 @@ node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --new check:attendance
 
 `--new` writes `scripts/check-<name>.mjs` and prints the wiring lines. It refuses to overwrite.
 
+Before the gate is real, all three modes exit 1 with the same named fix (`check:foo: CHANGE-ME missing -
+set TARGET to the file this gate checks`) - the skeleton guards every read of `TARGET`, so a placeholder
+never produces a stack trace. Fill `TARGET` first, then the `verdict`, then the plantings.
+
+Do not copy the template somewhere else to test it. `root` is computed as `new URL('..', import.meta.url)`,
+which is the repo root only for a file in `scripts/`; anywhere else it resolves one level too high and the
+gate reports a file missing that is sitting beside it (`.notes/PITFALLS.md`, measured 2026-11-10).
+
 ## Scheduling, and why it matters
 
 | The gate reads | Put it | Because |
