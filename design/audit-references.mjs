@@ -83,6 +83,7 @@ const PENDING = [
   [/^src\/content\.local$/, 'a gitignored directory that exists only while a REVIEW build is planted: scripts/review-render.mjs creates and removes it, and src/lib/content.ts globs the directory (never a filename) precisely because it may not exist'],
   [/^docs\/(spec\/source-contract\.md|threat-model\.md|adr\/0001[^/]*\.md|fixtures)/, 'the stage gates named by .notes/PLAN.md (G2-G5): the plan names the file that must exist before the stage is entered, and it is written by the milestone that owns the gate (MS06-MS09). Citing it before it exists is the fence, not a broken link - the rule is that no adapter code, no token and no live write lands before it'],
   [/^scripts\/check-rsvp(-page)?\.mjs$/, 'MS12 (S019): src/lib/rsvp.mjs names the two gates its own milestone row lists as its exit criteria, and the reader in scripts/meetup-events.mjs already carries the snapshot half of check:rsvp. The gate scripts are written by the milestone that owns them. (D268)'],
+  [/^src\/components\/SignUpLinks\.astro$/, 'MS12 (S019): src/lib/rsvp.mjs (host-local WIP, the paused milestone) names the component that prints the sign-up links on a row; the milestone row that owns it lists it as its exit criterion, so citing it before it is written is the fence, not a broken link.'],
 ];
 const pending = (p) => PENDING.find(([re]) => re.test(p));
 

@@ -10,6 +10,11 @@
 //   node scripts/gate-cost.mjs --save     write the baseline from the last runs
 //   node scripts/gate-cost.mjs --save --force   save even under a load this rig cannot clear
 //
+// A set is only saved when its last run was fully green. A manifest with a failed or skipped step is a
+// different step set, and freezing it silently shrinks the baseline (measured 2026-11-10: the browser
+// manifest from a run with "5 ok, 1 failed, 1 skipped" would have replaced a 7-step baseline with 5 steps,
+// so the next browser run could not be compared with anything). Ruling: D271.
+//
 // The comparison since D269 is on WORK SECONDS (the sum of the steps' own times), because wall measures the
 // box and work measures the set. The `load` field is kept for the same reason: it tells you whether the
 // number you are freezing was produced by this repo or by whatever else was running on the rig.
@@ -32,6 +37,7 @@ function read(set) {
   // box is a bar nobody can clear, so the number travels with the entry rather than being forgotten.
   const lm = /load ([\d.]+\/\d+cpu) -> ([\d.]+\/\d+cpu)/.exec(text);
   if (!wm) return null;
+  const counts = /^(\d+) ok, (\d+) failed, (\d+) skipped/m.exec(text);
   const steps = {};
   for (const m of text.matchAll(/^ok\s+(\S+)\s+([\d.]+)s/gm)) steps[m[1]] = Number(m[2]);
   return {
@@ -39,6 +45,9 @@ function read(set) {
     wallSecs: Number(wm[1]),
     workSecs: sm ? Number(sm[1]) : null,
     load: lm ? lm[2] : null,
+    ok: counts ? Number(counts[1]) : Object.keys(steps).length,
+    failed: counts ? Number(counts[2]) : null,
+    skipped: counts ? Number(counts[3]) : null,
     steps,
     stepCount: Object.keys(steps).length,
   };
@@ -84,10 +93,23 @@ if (process.argv.includes('--save')) {
       console.error('      Stop whatever is busy (this rig: `strata-host`) and re-run that set, or pass --force and say why in the commit.');
       continue;
     }
-    saving[s] = v;
+    if ((v.failed ?? 0) + (v.skipped ?? 0) > 0 && !process.argv.includes('--force')) {
+      const b = base[s];
+      console.error(`cost: skipped the ${s} set - its last run was ${v.ok} ok, ${v.failed} failed, ${v.skipped} skipped (${v.measuredAt}).`);
+      console.error(`      Freezing it would write ${v.stepCount} steps${b ? ` over a baseline of ${b.stepCount}` : ''}, so the next run of that set has nothing to be compared against. Run the set green, then save.`);
+      continue;
+    }
+    saving[s] = {
+      measuredAt: v.measuredAt,
+      wallSecs: v.wallSecs,
+      workSecs: v.workSecs,
+      load: v.load,
+      steps: v.steps,
+      stepCount: v.stepCount,
+    };   // the ok/failed/skipped counts stay in the manifest; the baseline records only what the guard compares
   }
   if (!Object.keys(saving).length) {
-    console.error('cost: nothing saved - every manifest available was produced under a load this rig cannot clear.');
+    console.error('cost: nothing saved - every manifest available was produced under a load this rig cannot clear, or by a run that was not fully green.');
     process.exit(1);
   }
   const out = {

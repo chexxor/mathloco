@@ -72,10 +72,18 @@ each of those and requires a named failure. Both are in `verify`.
    `situational` and stay invisible until something calls `pi_lens_activate_tools`, so one empty run is not
    evidence a capability is missing. `.pi-lens.json` (tracked) is what makes `.astro` reachable at all - the
    package's built-in registry does not know Astro, and without the `initializationOptions.typescript.tsdk`
-   the server refuses to initialize. `npm run check:lsp` asserts the entry, the tsdk, and that format and
-   autofix stay off: this repo's correctness is byte comparisons, and a formatter that rewrites files on
-   edit is a gate-breaking machine wearing a convenience hat. Cold cost measured 2026-11-10: astro-ls
-   spawns in 580ms and answers `documentSymbol` in 51ms; the first typescript LSP call takes ~10s.
+   the server answers `initialize` and then rejects every type-backed request - `documentSymbol` comes back
+   `"Unhandled method"` @measured 2026-11-10 by `.design/tmp-lsp-timing.mjs`), so the .astro files are dark even
+   though nothing errors. `npm run check:lsp` asserts the entry, the tsdk, that format and autofix stay off -
+   this repo's correctness is byte comparisons, and a formatter that rewrites files on edit is a gate-breaking
+   machine wearing a convenience hat - and, since D270, that the server is actually **live**: the gate spawns
+   `astro-ls`, sends `initialize`, opens the smallest .astro in `src/`, and requires a non-empty
+   `documentSymbol`. A config that reads perfectly and a server that never answers are the same defect to a
+   reader of the config only. Cost @measured 2026-11-10 by the gate itself (Linux native, node 24.22.1):
+   `check:lsp` 3.3s of work, its selftest 3.8s - spawn to `initialize` 0.6s, first `documentSymbol` 2.4s, the
+   embedded TypeScript service's warm-up. The 51ms `documentSymbol` quoted in D266 was a **warm** server inside
+   a session, and the first typescript LSP call in a session takes ~10s; the gate pays the warm-up once per run
+   instead of assuming it has already been paid.
    - **A second skill home exists, and it is host-local:** the vendored Cloudflare set from the
      `pi-cloudflare` pi package, at `.pi/npm/node_modules/pi-cloudflare/skills/` (`.pi/` is gitignored, so a
      fresh machine must reinstall the package to have them). 18 skills. They are **vendor** guidance, so this

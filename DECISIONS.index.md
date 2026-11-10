@@ -277,5 +277,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D267** (2026-11-10) — A session's state is a command, not a memory: three clock-in skills (2026-11-10, Linux native, Node 24.22.1, `node .agents/skills/resume-checkin/scripts/checkin.mjs` 0.085s, `node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --audit`, `node .agents/skills/measure-a-claim/scripts/stamps.mjs --stale`)
 - **D268** (2026-11-10) — `check:design`'s stale-path audit exempts a *planned* path only with a reason that names the milestone that will write it (2026-11-10, Linux native, `node design/audit-references.mjs --stale; echo $?`)
 - **D269** (2026-11-10) — the cost guard compares **work seconds**, not the wall clock, and refuses to freeze a baseline written under a load the rig cannot clear (2026-11-10, operator-approved; Linux native, 16 CPU, `npm run verify` and `node scripts/gate-cost.mjs`)
+- **D270** (2026-11-10) — no third-party Astro LSP is installed; the three candidates are all wrappers around the server this repo already registers, and the one idea worth taking from them is now a gate (2026-11-10, delegate-decided, reversible; Linux native, node 24.22.1, `node scripts/check-lsp-config.mjs`, `node scripts/check-lsp-config.mjs --selftest`, `node .design/tmp-lsp-timing.mjs`, `api.github.com/repos/<owner>/<repo>`, `lsp_navigation` on `src/components/EventRow.astro`)
+- **D271** (2026-11-10) — `cost:save` will not freeze a baseline from a run that was not fully green (2026-11-10, delegate-decided, reversible; Linux native, Node 24.22.1, `node scripts/gate-cost.mjs`, `node scripts/gate-run.mjs verify:browser` manifests)
 
-Defined: 269 (D1-D269). Unused ids: none.
+Defined: 271 (D1-D271). Unused ids: none.
