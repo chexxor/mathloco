@@ -218,6 +218,20 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
   function that referenced variables that did not exist.
 - **A pipe swallows an exit code.** `npm run check:design | tail -30; echo $?` reported the exit of `tail`.
   Check the gate's own exit, or the manifest in `.design/tmp-gate-logs/`.
+- **Every tool call carries a timeout, and none runs longer than 10 minutes.** The shell tool has **no
+  default timeout**, so an unbounded command - a build, a browser probe, a `wrangler` call waiting on a
+  network - runs until the session does. Guess the wall time first, then pass a timeout a little higher
+  than the guess: `npm run verify` is 35.1s wall / 46.3s work and `verify:browser` 113.7s work
+  @measured 2026-11-11 by `design/gate-cost.json`, so 120s is the honest budget for those two, not 600s.
+  Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
+  the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
+  genuinely cannot finish inside 600s it is not one command: run the gate steps individually, start the
+  long one in the background, or read `.design/tmp-gate-logs/<set>/<step>.txt` rather than waiting on the
+  pipe (D144). When a timeout fires, do not re-issue the same command with a bigger number - find out
+  *why* it ran long (strata-host contention, the four-way parallel set, a probe waiting for a page that
+  never posts, D216). The 10-minute ceiling also covers searches: a recursive grep over the whole tree is
+  usually the command that quietly runs for hours, and "never run a whole-filesystem search" is already
+  the rule against it.
 - **A tracked file generated from a host-local source is regenerated in the same commit that changes the
   source.** `DECISIONS.index.md` is generated from the gitignored `.notes/DECISIONS.md`, so writing a decision without
   running `npm run decisions:index` turned the index gate red on a branch sitting under review (D155). The gate firing
