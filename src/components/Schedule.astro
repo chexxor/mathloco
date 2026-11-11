@@ -3,6 +3,7 @@ import config from '../config.json';
 import EventArt from './EventArt.astro';
 import EventLeaf from './EventLeaf.astro';
 import EventRow from './EventRow.astro';
+import SignUpLinks from './SignUpLinks.astro';
 import PhotoSlot from './PhotoSlot.astro';
 import {
   content, upcoming, value, filled, copiedOn, formatDate, timeSpan, formatSince, builtOn,
@@ -214,12 +215,20 @@ const eyebrow = items.length ? 'Next date' : 'The calendar';
 // this sentence existed only on the homepage: the full-page lede below never carried it, so `/schedule` loses
 // nothing. The 2026-11-07 pricing of "math" against "mathematics" inside this clause (+28px at 1240) is history
 // rather than a live trade - the noun is not on the homepage any more.
+// D273 (2026-11-11): the lede no longer names a single platform. "The sign-up is on Meetup" was true of every
+// printed date the day it was written, and it is the sentence a visitor carries into the row below, where the
+// cluster can say Meetup, Discord, or neither (S019). A lede that names one site when the row under it offers
+// two is the same defect class as a button labelled "Details and sign-up" that happens to go to Meetup. The
+// claim the band can back up is the one the resolver decides per date: each printed date links to whatever
+// sign-up page the club has posted for it.
 const lede = compact
   // The clause about the date above the lede exists only when there is one. On the empty state this band renders a
   // notice instead of a date, and a lede that said "the date above" would be pointing at nothing - the same class
   // of defect as the plural-about-a-singular above.
-  ? 'The sign-up is on Meetup' + (items.length ? ', and the date above is copied from the club\u2019s own calendar' : '') + '.'
-  : 'These dates are copied from the club\u2019s own calendar. The sign-up is on Meetup.';
+  ? (items.length
+      ? 'The date above is copied from the club\u2019s own calendar, and it links to the page where you sign up.'
+      : 'The club\u2019s dates come from its own calendar.')
+  : 'These dates are copied from the club\u2019s own calendar. Each one links to the page the club posts its sign-up on.';
 ---
 
 <section class="bg-paper py-12" aria-labelledby={headingId}>
@@ -298,7 +307,14 @@ const lede = compact
            rather than cosmetic: `check:space` records a `data-slot` box only for the child of a flex or grid
            container (measured 2026-11-03 for PS-5, same mechanism). */
         <ul class="space-y-4" data-art-cap="323">
-          <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6" data-surface="preview">
+          {/* `data-date` here is the same handle the row carries (D173): the homepage card is one row of the
+             same list, and a gate that has to treat the two surfaces differently is a gate that will be wrong
+             the day one of them moves. */}
+          {/* `lg:flex-row`, not `sm:flex-row`, for the arithmetic EventRow.astro's header carries (112 leaf +
+              48 of gaps + the 323 plate cap = 483px before the copy lane gets a character; the lane measured
+              49px wide at 640 @measured 2026-11-11). D227 rules the two surfaces one shape, so they flip at the
+              same breakpoint. */}
+          <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="preview" data-date={next.date}>
           <EventLeaf date={next.date} />
           <div data-copy class="min-w-0 flex-1">
             {filled(next.title) && <h3 class="text-lede font-bold text-ink font-body">{next.title}</h3>}
@@ -318,6 +334,10 @@ const lede = compact
             {copied && (
               <p class="mt-2 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar on {copied}</span></p>
             )}
+            {/* S019/D272: the date a visitor sees on the homepage is the date they want to sign up for, so the
+               per-date cluster belongs here exactly as it does on a /schedule row — same component, same
+               resolver, one rule (D227: one row shape, two surfaces). */}
+            <SignUpLinks item={next} />
           </div>
             <EventArt slug={next.slug} />
           </li>
@@ -414,10 +434,15 @@ const lede = compact
                   <p>
                     If you would rather hear what is being argued about before you go, the chat invite is below.
                   </p>
+                  {/* D276: the roster sentence used to print "280 on the Meetup list - counted Nov 3, 2026".
+                      That is a count of people, and D265 rules that the site prints dates, not attendance. The
+                      slot keeps its source and its date; the number now lives only in content.json's note, and
+                      `scripts/check-rsvp-page.mjs` reads the painted bytes for either form of tally. What a
+                      visitor gets is where the list is and when it was last read. */}
                   {membership && (
                     <p>
-                      {membership} — counted {content.membership.asOf ? formatSince(content.membership.asOf) : 'today'},
-                      and that is the list, not the room.
+                      {membership}, last read {content.membership.asOf ? formatSince(content.membership.asOf) : 'today'} —
+                      the list is not the room.
                     </p>
                   )}
                 </div>

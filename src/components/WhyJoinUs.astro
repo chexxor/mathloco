@@ -100,6 +100,11 @@ const items = threads();
         it). What the page can honestly say is what a meeting costs and what it does not require; what it cannot
         say is how the room will feel to you. That is said plainly instead of guessed at - and the sentence is
         now in one place (this band) rather than two, so the two surfaces cannot drift. D239. */}
+    {/* D273: this sentence used to end "Meetup, where the sign-up is". That is a claim about one platform, and
+        the schedule rows under it answer per date: a date can have a Meetup page, a guild scheduled event on
+        Discord, or neither (src/lib/rsvp.mjs). The band's own link is still the group page - that is the path
+        this band can carry - but the sentence no longer tells a visitor where to sign up, because the row that
+        prints the date does. */}
     <p class="mt-12 max-w-measure text-body leading-prose text-ink-2 font-body">
       Dates and places go up on{' '}
       <a
@@ -107,8 +112,8 @@ const items = threads();
         href={config.URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
-      >Meetup</a>, where the sign-up is. Whether the room is your kind of room is not something a page can tell
-      you.
+      >Meetup</a>, and every date on the schedule links to the page the club posts its sign-up on. Whether the
+      room is your kind of room is not something a page can tell you.
     </p>
   </div>
 </section>

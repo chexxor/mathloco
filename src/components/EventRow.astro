@@ -10,7 +10,24 @@
  *
  * The composition, which is the homepage card's composition (2026-11-07, operator: "the calendar event style
  * on the home page is looking great... ensure the events on the schedule page receive the same design
- * improvement pass"): **leaf · copy · plate**, right-to-left on `sm` and up, stacked below it.
+ * improvement pass"): **leaf · copy · plate**, right-to-left on `lg` and up, stacked below it. The flip is at
+ * `lg` (1024), not `sm` (640), and that is arithmetic the row cannot cheat: the leaf is 112px, the plate cap is
+ * 323px, and the two `lg:gap-6` gaps are 48px, so a horizontal row needs 483px of the card's content box before
+ * the copy lane gets a single character. Content-box widths @measured 2026-11-11 by
+ * `node design/schedule-geometry.mjs --routes /schedule --widths 1240 1024 900 768 700 640`: shipped, the lane is
+ * **633px at 1240** and **417 at 1024** - the two widths where the row is horizontal - and below `lg` it takes the
+ * whole content box: **792 at 900**, **660 at 768**, **592 at 700**, **532 at 640**. The `sm` flip was measured as
+ * the counterfactual: copy the build, move the flip, re-run the probe
+ * (`cp -r dist/client .design/tmp-sm-flip && sed -i 's/lg:flex-row/sm:flex-row/' .design/tmp-sm-flip/schedule/index.html && node design/schedule-geometry.mjs --dist .design/tmp-sm-flip --routes /schedule --widths 900 800 700 640`)
+ * and the lane collapses to **325px at 900**, **225 at 800**, **125 at 700**, **65 at 640** - under the 323px
+ * plate at every width below 1024 - and the rows become **580x617** and **580x646** at 640 against the shipped
+ * **580x509** and **580x480**: **+108px and +166px**, because a squeezed lane wraps every label into a column.
+ * A 65px column is not a copy lane, and since S019/D272 put the sign-up links inside it, that is where an RSVP
+ * label would wrap letter by letter. An earlier version of this comment quoted **49px at 640**, **109 at 700**
+ * and **209 at 800**: those were arithmetic that subtracted the `lg:gap-6` 48px from widths where the markup's
+ * `gap-4` (32px) is what actually applies, and the probe reads the DOM, so 49 is 65. Stacking is not a fallback here, it is the layout the
+ * width can hold: it is the layout already measured at 390 and 320, and the gate measures 640 (stacked) and 1240
+ * (horizontal), so both sides of the new flip are measured even though 1024 itself is not in the matrix.
  *   - `EventLeaf` is the date as a block, not as a sentence — the eye finds the day, then the month, and the
  *     weekday decides whether you can come.
  *   - the copy block is the sentence version of the same fact, which is what an assistive tech reads and
@@ -46,12 +63,29 @@
  *   - the spacing inside a row is the R6 `rows` option the operator ruled (D214, measured as a pair in D220),
  *     kept equal to the card's so one row of a list and the homepage card are visibly the same object.
  *
- * "Visibly the same object" is measured, not intended: at 1240 the homepage's next-date card and a row here are
- * both **1164x188**, both carry a **112x96** leaf, a **633x152** copy lane and a **323x156** plate sitting 24px
- * inside the row's right keyline. At 390 they are 346x516 and 346x492 with the same 112x96 leaf and a plate
- * capped to the column (314x151). @measured 2026-11-07 by `node design/schedule-geometry.mjs`, which prints
- * those boxes for both routes. A row's height moves with its copy (the Nov 11 row is 217 tall) because the copy
- * lane is the part that stretches, not the plate.
+ * "Visibly the same object" is measured, not intended: at 1240 the homepage's next-date card and the taller row
+ * here are both **1164x217**, both carrying a **112x96** leaf, a **633x168** copy lane (the list's second row:
+ * **633x136**, and a **633x164** lane inside its own **1164x196** box) and a **323x185** plate sitting 24px
+ * inside the row's right keyline. At 390 the three boxes are 346x616, 346x560 and 346x504 with the same 112x96
+ * leaf and a plate capped to the column (314x179 / 314x151). @measured 2026-11-11 by
+ * `node design/schedule-geometry.mjs`, which prints those boxes for both routes. On the `lg` row the height is
+ * the taller of the copy lane and the plate plus the row's 32px of padding; below `lg` the three stack: at 1024
+ * the row is **948x224** with a **417x192** lane, at 900 it is **840x481** with a **792x136** lane and the plate
+ * on its own line, at 800 **740x481** with a **692x136** lane, at 768 **708x481**, at 640 **580x509** with a
+ * **532x164** lane. The breakpoint is a rule, not a preference: the row goes horizontal only when the lane left
+ * beside the plate is at least as wide as the plate's cap - 417 ≥ 323 at 1024, while the `sm`-flip counterfactual
+ * measures **225 < 323 at 800**, **193 < 323 at 768**, **125 < 323 at 700**, **65 < 323 at 640**. 900 is the one
+ * width where the arithmetic would allow it (325 ≥ 323) and it is not a Tailwind breakpoint, so the row stacks
+ * there at a measured **481px** against the horizontal counterfactual's **253px** - pricing a `md` flip with a
+ * smaller plate cap is parked for the design round that measures the row at 900 (the render gate already prints
+ * `FLIP WITH NO MEASURED WIDTH: lg(1024) md(768)`). @measured 2026-11-11 by the same probe.
+ * The sign-up cluster costs **+44px of lane height** in every box, and that is not the same as row height: run
+ * the same probe against a copy of the build with every cluster stripped
+ * (`cp -r dist/client .design/tmp-no-cluster`, then remove the `[data-rsvp-cluster]` blocks), @measured 2026-11-11
+ * by `node design/schedule-geometry.mjs --dist .design/tmp-no-cluster --routes / /schedule` - row height grows
+ * **0px at 1240** on the card and the first row, where the plate is already taller than the lane, **8px** on the
+ * row whose plate is short, **7-8px at 1024**, **44px at 900, 768, 700, 640 and 390** where the lane is the
+ * tallest thing in the box, and **80px at 320** where the two labels wrap inside 244px.
  *
  * `data-copy` and `data-date` are probe handles, not styling. `design/schedule-geometry.mjs` measures the copy
  * lane inside the row; `scripts/check-schedule-window.mjs` reads `data-date` off the built page and compares the
@@ -60,11 +94,11 @@
  * re-parses prose breaks the day the prose is rewritten — and D173's rule is that a handle is part of the
  * interface, so it stays written.
  */
-import config from '../config.json';
 import { filled, formatDate, timeSpan } from '../lib/content.ts';
 import type { UpcomingItem } from '../lib/content.ts';
 import EventArt from './EventArt.astro';
 import EventLeaf from './EventLeaf.astro';
+import SignUpLinks from './SignUpLinks.astro';
 
 type Props = {
   item: UpcomingItem;
@@ -73,7 +107,7 @@ type Props = {
 const { item } = Astro.props;
 ---
 
-<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6" data-surface="row" data-date={item.date}>
+<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date}>
   <EventLeaf date={item.date} />
   {/* `data-copy` is a probe handle for `design/schedule-geometry.mjs`, which measures the copy lane against
       the plate and the leaf; `min-w-0` is the load-bearing part (see the header). */}
@@ -89,28 +123,14 @@ const { item } = Astro.props;
     {filled(item.venue) && (
       <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
     )}
-    {/* The row's one way out, and it is the way out the band offers: the Meetup group. The feed also carries a
-        per-event URL (`item.url`, the Mobilizon page for that exact date), and pointing a row at its own event
-        page is tempting and cheap — but the site's own copy tells newcomers the sign-up is on Meetup, and
-        silently moving the row's path to a second platform is a product claim, not a refactor. Asked of the
-        operator in `.notes/NEXT.md`; until it is ruled, `item.url` is unused here.
-        Quiet link, not a control: D139 reserves `data-control` for the band's one primary, and a row of 48px
-        buttons would put the loudest thing in the band under every date in it. */}
-    <p class="mt-2">
-      <a
-        href={config.URLs.meetupGroup}
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-      >
-        Details and sign-up{' '}
-        {/* The visible label stays short (the band's lede says the sign-up is on Meetup), but a link read out
-            of context — a screen reader's link list — has to say where it goes and that it leaves the site.
-            The suffix is for the accessible name only, so it is not painted and not measured. */}
-        <span class="sr-only"> on Meetup, opens in a new tab</span>
-        <span aria-hidden="true">→</span>
-      </a>
-    </p>
+    {/* S019/D272: the row's way out is now per-date rather than one group link, and every destination in it
+        comes from `signUpPaths()` in `src/lib/rsvp.mjs` — the component does not choose the links, the
+        resolver does, so `scripts/check-rsvp-page.mjs` can compare these bytes against that function.
+        The feed's own per-event URL (`item.url`, the Mobilizon page for this date) is deliberately still unused
+        here: D259 rules that a row links to the sign-up page, and Mobilizon is the club of record for dates,
+        not for RSVPs (S017). Quiet links, not controls: D139 reserves `data-control` for the band's one
+        primary, and a row of 48px buttons would out-shout every date in the band. */}
+    <SignUpLinks item={item} />
   </div>
   {/* PS-4 (D190): the club's own event art, mirrored into src/assets/photos/ and resolved by filename, so
       adding art to a row is a file drop plus an `artFor` entry for its ratio and alt (src/lib/event-art.ts).

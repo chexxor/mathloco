@@ -10,6 +10,9 @@
 //   node scripts/gate-cost.mjs --save     write the baseline from the last runs
 //   node scripts/gate-cost.mjs --save --force   save even under a load this rig cannot clear
 //
+// `--force` moves the load bar only. It never freezes a run that was not fully green: a manifest with a
+// failed or skipped step is a different step set (D271), and --force was never meant to mean "ignore that".
+//
 // A set is only saved when its last run was fully green. A manifest with a failed or skipped step is a
 // different step set, and freezing it silently shrinks the baseline (measured 2026-11-10: the browser
 // manifest from a run with "5 ok, 1 failed, 1 skipped" would have replaced a 7-step baseline with 5 steps,
@@ -34,10 +37,15 @@ function read(set) {
   const sm = /([\d.]+)s of work/.exec(text);
   const whenm = /^# gate-run \w+ set, (\S+)/m.exec(text);
   // The load the run ran under (gate-run writes it into the manifest header). A baseline frozen on a contended
-  // box is a bar nobody can clear, so the number travels with the entry rather than being forgotten.
+  // box is a bar nobody can clear, so the number travels with the entry rather than being forgotten. Both ends
+  // are kept: a gate set run 4-way parallel lifts the 1-minute average itself, so the end reading alone
+  // mistakes the repo's own work for someone else's process (measured 2026-11-11, Linux, 16 CPU: a 36.4s
+  // deploy run sampled 4.40 -> 7.72 loadavg while `strata-host` sat at 284% CPU).
   const lm = /load ([\d.]+\/\d+cpu) -> ([\d.]+\/\d+cpu)/.exec(text);
   if (!wm) return null;
-  const counts = /^(\d+) ok, (\d+) failed, (\d+) skipped/m.exec(text);
+  // gate-run writes the counts on a line that starts with "# ", so the anchor must allow the hash.
+  // With `^\d+` the match never fires and the not-fully-green rule below is dead code (found 2026-11-11).
+  const counts = /^#?\s*(\d+) ok, (\d+) failed, (\d+) skipped/m.exec(text);
   const steps = {};
   for (const m of text.matchAll(/^ok\s+(\S+)\s+([\d.]+)s/gm)) steps[m[1]] = Number(m[2]);
   return {
@@ -45,6 +53,7 @@ function read(set) {
     wallSecs: Number(wm[1]),
     workSecs: sm ? Number(sm[1]) : null,
     load: lm ? lm[2] : null,
+    loadStart: lm ? lm[1] : null,
     ok: counts ? Number(counts[1]) : Object.keys(steps).length,
     failed: counts ? Number(counts[2]) : null,
     skipped: counts ? Number(counts[3]) : null,
@@ -93,7 +102,7 @@ if (process.argv.includes('--save')) {
       console.error('      Stop whatever is busy (this rig: `strata-host`) and re-run that set, or pass --force and say why in the commit.');
       continue;
     }
-    if ((v.failed ?? 0) + (v.skipped ?? 0) > 0 && !process.argv.includes('--force')) {
+    if ((v.failed ?? 0) + (v.skipped ?? 0) > 0) {
       const b = base[s];
       console.error(`cost: skipped the ${s} set - its last run was ${v.ok} ok, ${v.failed} failed, ${v.skipped} skipped (${v.measuredAt}).`);
       console.error(`      Freezing it would write ${v.stepCount} steps${b ? ` over a baseline of ${b.stepCount}` : ''}, so the next run of that set has nothing to be compared against. Run the set green, then save.`);
@@ -104,6 +113,7 @@ if (process.argv.includes('--save')) {
       wallSecs: v.wallSecs,
       workSecs: v.workSecs,
       load: v.load,
+      loadStart: v.loadStart,
       steps: v.steps,
       stepCount: v.stepCount,
     };   // the ok/failed/skipped counts stay in the manifest; the baseline records only what the guard compares
@@ -115,7 +125,7 @@ if (process.argv.includes('--save')) {
   const out = {
     ...base,
     ...saving,
-    note: 'tracked baseline for the cost guard in scripts/gate-run.mjs. The comparison is on workSecs - the sum of the time each step took - not wallSecs: wall measures the box, work measures the set (D269). Re-baseline on purpose, in a commit that says why. The `load` field is the 1-minute load average / CPU count at the end of that run: a baseline taken under a high load is a bar the repo cannot clear, so check it before trusting a comparison, and gate-cost.mjs refuses to save above 6/16cpu without --force.',
+    note: 'tracked baseline for the cost guard in scripts/gate-run.mjs. The comparison is on workSecs - the sum of the time each step took - not wallSecs: wall measures the box, work measures the set (D269). Re-baseline on purpose, in a commit that says why. The `load` and `loadStart` fields are the 1-minute load average / CPU count at the end of that run and before it started: a baseline taken under a high load is a bar the repo cannot clear, so check them before trusting a comparison, and gate-cost.mjs refuses to save above 6/16cpu without --force. A fully green run can still end above that bar on a quiet box, because the parallelism of the set itself lifts the 1-minute average (measured 2026-11-11, Linux, 16 CPU: 4.40 -> 7.72 across a 36.4s deploy run); --force is for that case and does not bypass the rule that a run with a failed or skipped step is never frozen (D271).',
   };
   writeFileSync(root + OUT, JSON.stringify(out, null, 2) + '\n');
   console.log(`cost: wrote ${OUT} for: ${Object.keys(saving).join(', ')}` + (Object.keys(current).length !== Object.keys(saving) ? ` (skipped: ${Object.keys(current).filter((s) => !saving[s]).join(', ')})` : ''));

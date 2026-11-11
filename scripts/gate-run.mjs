@@ -90,6 +90,19 @@ const DEPLOY = [
   { name: 'check:copy:selftest', desc: 'the copy gate can still fail (9 plantings, each into a fixture copy)' },
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
+  // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
+  // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
+  // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
+  { name: 'check:rsvp', desc: 'the Meetup snapshot and the Discord guild snapshot are both dated and inside the window, and every printed platform URL carries a stamp under 60 days that answered 2xx/3xx' },
+  { name: 'check:rsvp:selftest', desc: 'the link-map gate can still fail (28 cases: snapshot, config and resolver plantings)' },
+  // The page gate's own defect catalog runs on in-memory fixture pages, not on dist/, so it can fire on a
+  // branch nobody has built yet (D118). 31 cases = 30 plantings plus one clean control page: missing cluster,
+  // wrong date, invented hour, an unsettled hour painted as settled, missing note, a note claiming an absence
+  // the resolver disproves, wrong order, dead rel, closed-platform link, a dropped guild event page, a completed
+  // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
+  // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
+  // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (30 plantings each named, plus a clean control that must pass)' },
   // Runs before `build` on purpose: its fixture tree is its own, so a defect in this class is caught on a branch
   // nobody has built yet, and the artifact half of it is the reason it still belongs in this set.
   { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (25 fixtures: 13 plantings, 11 clean forms, 1 severity case)' },
@@ -121,6 +134,9 @@ const DEPLOY = [
   // The page half of the same rule: `data-date` handles off the built page against `scheduleWindow()`'s plan,
   // plus the requirement that a page hiding dates says so and offers `/events.ics` (D238).
   { name: 'check:schedule-window', desc: '/schedule prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
+  // The other end of the RSVP rule: `check:rsvp` proves the inputs, this proves the bytes. Recomputes each
+  // cluster from `signUpPaths()` and fails a painted page that disagrees with the resolver (D272).
+  { name: 'check:rsvp-page', desc: 'every printed date carries one sign-up cluster, and that cluster matches what signUpPaths() returns for it against both event snapshots; no headcount is painted', needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name
   // written in design prose lands in the stylesheet every visitor downloads. The number is the budget;
   // the baseline makes a new round's invented class names visible the day they are written.
@@ -139,7 +155,7 @@ const BROWSER = [
   // nine internal measurements it already runs JOBS-at-a-time by itself. Two browser pools in one wave buys
   // nothing here — the browser steps are almost all downstream of check:render:dist anyway — and it buys a
   // flake, which is the one thing a gate may not buy.
-  { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the mark', alone: true },
+  { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the mark, the sign-up cluster', alone: true },
   { name: 'check:mark', desc: 'the mark probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
   { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'], alone: true },
   { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'], alone: true },
@@ -154,7 +170,7 @@ const BROWSER = [
   // read-only probes, a mark or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'twelve mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
+  { name: 'check:render:selftest', desc: 'twenty mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
 ];
 
 const args = process.argv.slice(2);

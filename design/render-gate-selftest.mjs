@@ -3,6 +3,7 @@
 //   node design/render-gate-selftest.mjs        # needs a built dist/ and firefox; ~1 s per case
 //   node design/render-gate-selftest.mjs "paint" # a substring picks which cases to run
 //
+//
 // It always passes --no-build: the gate builds by default, and rebuilding would restore the page the
 // mutation just broke, turning every case into a pass that proves nothing.
 //
@@ -147,6 +148,15 @@ const cases = [
   // The leak this rule exists for (D181): the exact bytes a `//` comment produced in the built card on 2026-11-04,
   // re-inserted at the same place. Without this planting, "comments never ship" is a hope, not a check.
   ['leaked // comment in a card', (h) => h.replace(/(<span class="text-label text-ink-3"[^>]*>)/, '$1// One text node, so the render gate sees one measurement'), /begins like source-comment syntax/],
+  // 8. the sign-up cluster (S019, D272). DESIGN.md says the links under a printed date are a quiet label:
+  // 32px tall, label tier, no fill, no keyline, no control role. Those are four numbers a class grep cannot
+  // see, so each is planted here. All three anchors are on `data-rsvp-cluster` / `data-rsvp-platform` rather
+  // than on the class list, for the reason the cases above record (D190): a spacing ruling edits a class,
+  // an attribute is what the component owns.
+  ['sign-up cluster given a fill', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1bg-panel $2$3 data-rsvp-cluster'), /sign-up cluster on .* paints a fill/],
+  ['sign-up cluster given its own ring', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1inset-shadow-rule $2$3 data-rsvp-cluster'), /sign-up cluster on .* carries its own inset ring/],
+  ['sign-up label loses its 32px box', (h) => h.replace('min-h-8 inline-flex items-center gap-1 text-label', 'inline-flex items-center gap-1 text-label'), /sign-up link .* is [\d.]+px tall — the quiet label reserves min-h-8/],
+  ['sign-up label promoted to a control', (h) => h.replace(/ data-rsvp-platform="Meetup"/, ' data-control="primary" data-rsvp-platform="Meetup"'), /primary control .* is 32px tall, not 48/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;

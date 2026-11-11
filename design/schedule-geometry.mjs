@@ -4,6 +4,9 @@
 //   node design/schedule-geometry.mjs                       # / and /schedule at 1240 390 320
 //   node design/schedule-geometry.mjs --widths 1240         # one viewport
 //   node design/schedule-geometry.mjs --routes /schedule    # one page
+//   node design/schedule-geometry.mjs --dist .design/tmp-x  # a mutated copy of the built artifact, so a
+//                                                          # differential (strip a control, measure the delta) is
+//                                                          # a flag rather than a hand-edit of dist/
 //
 // Why this exists separate from `npm run check:space`: the survey ranks *places* (PS-3, PS-4, PS-5) and
 // measures the runs of empty page between blocks of copy. It cannot answer the question the 2026-11-07
@@ -42,7 +45,7 @@ const argList = (flag, dflt) => {
 };
 const routes = argList('--routes', ['/', '/schedule']);
 const widths = argList('--widths', ['1240', '390', '320']).map(Number);
-const dist = resolve('dist/client');
+const dist = resolve(argv.includes('--dist') ? argv[argv.indexOf('--dist') + 1] : 'dist/client');
 const MEASURE = 'design/grill/row-measure.js';
 
 // The plate cap, read off the component that draws it rather than remembered here: `.event-slot`'s max-width

@@ -19,17 +19,23 @@
 //
 //   node scripts/meetup-events.mjs            print what it read, write nothing
 //   node scripts/meetup-events.mjs --write    write data/meetup-events.json
-//   node scripts/meetup-events.mjs --check    exit 1 if the snapshot is stale, empty, or a row has no count
+//   node scripts/meetup-events.mjs --check    exit 1 if the snapshot is stale, empty, or a row this build
+//                                           cannot trust (no id, no date, a URL outside MEETUP_URL_SHAPE)
+//
+// `--check` is not its own rule. It calls `snapshotFindings()` in `src/lib/rsvp.mjs`, the same function
+// `npm run check:rsvp` calls (D272). Two paraphrases of one freshness rule is how a snapshot passes the
+// harvester and fails the gate, or the other way round, with nobody able to say which number moved.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { SNAPSHOT_FRESH_DAYS, openMeetupEvents, snapshotFindings } from '../src/lib/rsvp.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const OUT = root + 'data/meetup-events.json';
 const GROUP = 'minneapolis-mathematics-book-club';
 const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';
-// How old a snapshot may be before the gate calls it stale. Shorter than check:ics's 21-day runway (D188),
-// because a headcount is a claim about people that changes far faster than a date does.
-const MAX_AGE_DAYS = 14;
+// The freshness window is `SNAPSHOT_FRESH_DAYS` in src/lib/rsvp.mjs (14 days @measured 2026-11-10), shorter
+// than check:ics's 21-day runway (D188) because a sign-up page is created and retired faster than a date is.
+// It used to be a second copy of that number here; D272 deleted the copy.
 
 /** One GET of one URL the club publishes. No cookie, no token, one retry, and the byte count is recorded
  *  because the last time a source shape changed under us (D222, the Mobilizon ICS went from bare `Z` to a
@@ -132,22 +138,12 @@ async function main() {
   if (args.includes('--check')) {
     if (!existsSync(OUT)) { console.error('check:rsvp FAIL - data/meetup-events.json does not exist; run node scripts/meetup-events.mjs --write'); return 1; }
     const snap = JSON.parse(readFileSync(OUT, 'utf8'));
-    const problems = [];
-    if (!snap.source?.fetchedAt) problems.push('no fetchedAt - the snapshot does not say when it was read, so nothing printed from it can be dated');
-    else {
-      const ageDays = (Date.now() - Date.parse(snap.source.fetchedAt)) / 86400000;
-      if (ageDays > MAX_AGE_DAYS) problems.push(`snapshot is ${ageDays.toFixed(1)} days old; the limit is ${MAX_AGE_DAYS} (a headcount is not a date)`);
-    }
-    if (!Array.isArray(snap.events) || !snap.events.length) problems.push('no events in the snapshot');
-    for (const e of snap.events ?? []) {
-      if (!e.id) problems.push('an event has no id');
-      if (!e.url || !/^https:\/\/www\.meetup\.com\/[a-z0-9-]+\/events\/[0-9a-z]+\/$/.test(e.url)) problems.push(`event ${e.id} has a url this build cannot trust: ${e.url}`);
-      if (!e.date) problems.push(`event ${e.id} has no local date`);
-      if (e.going !== null && typeof e.going !== 'number') problems.push(`event ${e.id} has a going count that is not a number: ${e.going}`);
-    }
+    const problems = snapshotFindings(snap);
     if (problems.length) { console.log(`check:rsvp FAIL - ${problems.length} problem(s):`); for (const p of problems) console.log('  ' + p); return 1; }
-    const open = (snap.events ?? []).filter((e) => e.status === 'ACTIVE');
-    console.log(`check:rsvp ok - ${snap.events.length} events read ${snap.source.fetchedAt.slice(0, 10)}, ${open.length} still open, ${open.filter((e) => e.going !== null).length} carrying a headcount.`);
+    const open = openMeetupEvents(snap.events);
+    // The headcount is reported HERE, in the harvester's own console, and nowhere else: `snapshotFindings` is
+    // the rule, `meetupView` is the projection that drops `going`, and no count reaches a page (D272).
+    console.log(`check:rsvp ok - ${snap.events.length} events read ${snap.source.fetchedAt.slice(0, 10)}, ${open.length} sign-up pages this build can print (${SNAPSHOT_FRESH_DAYS}-day window), ${open.filter((e) => e.date && e.time).length} with a settled clock.`);
     return 0;
   }
   const snap = await harvest();

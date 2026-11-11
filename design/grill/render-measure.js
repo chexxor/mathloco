@@ -313,6 +313,50 @@
     };
   }).filter(Boolean);
 
+  // Sign-up clusters (S019, D272). DESIGN.md's rule is that the links under a printed date are a **quiet
+  // label**, not a control: the row they sit in is already one boundary (D220), so a fill or a ring drawn
+  // inside it is the same two-box defect the notice rule (D149-3c) prices. The cluster's div is not in SEL
+  // - it carries no bg-, text- or shadow- class - so it is invisible to every probe above unless it is
+  // selected by its own handle. `data-rsvp-cluster` is that handle, the same one scripts/check-rsvp-page.mjs
+  // reads in the bytes; a gate keyed on a class list breaks the day the spacing ruling edits it (D190).
+  const clusters = [...document.querySelectorAll('[data-rsvp-cluster]')].map((el) => {
+    // `text-decoration-thickness` computes to `auto`, so the underline's own width is not a number here;
+    // its grammar is asserted on the bytes by scripts/check-rsvp-page.mjs, and its colour pair is measured
+    // by design/pixel-ground.mjs. What this probe can see is the box: fill, ring, border, height, tier.
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+    const ground = painted(el);                       // transparent box: this is the ground it sits on
+    const ring = (cs.boxShadow === 'none' ? '' : cs.boxShadow).includes('inset');
+    const border = Math.max(...[cs.borderTopWidth, cs.borderBottomWidth, cs.borderLeftWidth, cs.borderRightWidth]
+      .map((x) => parseFloat(x) || 0));
+    return {
+      state: el.getAttribute('data-rsvp-state') || '',
+      date: el.getAttribute('data-rsvp-date') || '',
+      hour: el.getAttribute('data-rsvp-hour') || '',
+      h: +r.height.toFixed(1), w: +r.width.toFixed(1),
+      x: +(r.x + scrollX).toFixed(1), y: +(r.y + scrollY).toFixed(1),
+      cls: (el.getAttribute('class') || '').slice(0, 90),
+      fill: cs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : cs.backgroundColor,
+      ring, border,
+      control: el.getAttribute('data-control') || null,
+      note: (el.querySelector('p') || {}).textContent ? el.querySelector('p').textContent.replace(/\s+/g, ' ').trim().slice(0, 60) : '',
+      noteContrast: (() => { const p = el.querySelector('p'); if (!p) return null; const c = parse(getComputedStyle(p).color); return c && opaque(ground) ? ratio(c, ground) : null; })(),
+      links: [...el.querySelectorAll('a')].map((a) => {
+        const ar = a.getBoundingClientRect(), acs = getComputedStyle(a);
+        return {
+          platform: a.getAttribute('data-rsvp-platform') || '',
+          t: (a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40),
+          h: +ar.height.toFixed(1), w: +ar.width.toFixed(1),
+          fs: acs.fontSize, lh: acs.lineHeight,
+          color: acs.color,
+          contrast: opaque(ground) && parse(acs.color) ? ratio(parse(acs.color), ground) : null,
+          fill: acs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : acs.backgroundColor,
+          ring: (acs.boxShadow === 'none' ? '' : acs.boxShadow).includes('inset'),
+          role: a.getAttribute('data-control') || null,
+        };
+      }),
+    };
+  });
+
   // nav (D100): one row at every width, `flex-wrap: nowrap`, and exactly one type tier per viewport.
   // The shipped nav was flex-col + flex-wrap, which clipped links; that defect is only visible if the
   // measurement looks at row tops rather than at whether the classes exist.
@@ -454,6 +498,7 @@
     controls, bands, keylines, rings, shadows, text,
     fonts: (() => { const a = []; document.fonts.forEach((f) => a.push(`${f.family} ${f.weight} ${f.style} ${f.status}`)); return a; })(),
     notices,
+    clusters,
     nav,
     marks,
     });

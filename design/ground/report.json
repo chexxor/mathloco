@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-09T05:05:59.098Z",
- "siteFp": "63aad7870e",
+ "measuredAt": "2026-11-11T15:19:18.091Z",
+ "siteFp": "0b7617ee15",
  "widths": [
   1240,
   390,
@@ -23,16 +23,16 @@
     250,
     246
    ],
-   "groundExact": 1620134,
-   "groundPct": 76.3,
+   "groundExact": 1618235,
+   "groundPct": 76.37,
    "span": 12.666666666666686,
-   "sd": 2.67,
+   "sd": 2.68,
    "flat": {
-    "x": 256,
-    "y": 16,
+    "x": 0,
+    "y": 80,
     "size": 64,
-    "span": 110,
-    "sd": 13.64
+    "span": 0,
+    "sd": 0
    },
    "surfaces": [
     {
@@ -41,7 +41,7 @@
       250,
       246
      ],
-     "pct": 42.5
+     "pct": 42.1
     },
     {
      "rgb": [
@@ -49,7 +49,7 @@
       245,
       239
      ],
-     "pct": 33.3
+     "pct": 33.8
     },
     {
      "rgb": [
@@ -57,7 +57,7 @@
       57,
       39
      ],
-     "pct": 9.8
+     "pct": 9.7
     },
     {
      "rgb": [
@@ -68,9 +68,9 @@
      "pct": 1
     }
    ],
-   "distinct": 55169,
-   "hairlines": 11,
-   "runs": 11,
+   "distinct": 55488,
+   "hairlines": 13,
+   "runs": 13,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -143,7 +143,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2049,
+     "y": 2077,
      "x": 35,
      "len": 1158,
      "core": [
@@ -158,7 +158,37 @@
      "otherGround": "paper"
     },
     {
-     "y": 2265,
+     "y": 2261,
+     "x": 235,
+     "len": 65,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 2261,
+     "x": 382,
+     "len": 74,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 2293,
      "x": 35,
      "len": 1158,
      "core": [
@@ -173,7 +203,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2274,
+     "y": 2302,
      "x": 51,
      "len": 1125,
      "core": [
@@ -188,7 +218,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2277,
+     "y": 2305,
      "x": 50,
      "len": 1128,
      "core": [
@@ -203,7 +233,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2305,
+     "y": 2333,
      "x": 32,
      "len": 81,
      "core": [
@@ -218,7 +248,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2305,
+     "y": 2333,
      "x": 137,
      "len": 123,
      "core": [
@@ -233,7 +263,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2691,
+     "y": 2719,
      "x": 225,
      "len": 136,
      "core": [
@@ -248,7 +278,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2738,
+     "y": 2766,
      "x": 225,
      "len": 136,
      "core": [
@@ -280,16 +310,16 @@
     250,
     246
    ],
-   "groundExact": 759925,
-   "groundPct": 74.22,
-   "span": 13,
-   "sd": 2.63,
+   "groundExact": 763873,
+   "groundPct": 74.3,
+   "span": 12.333333333333343,
+   "sd": 2.64,
    "flat": {
-    "x": 240,
-    "y": 16,
+    "x": 208,
+    "y": 80,
     "size": 64,
-    "span": 110,
-    "sd": 13.64
+    "span": 0,
+    "sd": 0
    },
    "surfaces": [
     {
@@ -298,7 +328,7 @@
       250,
       246
      ],
-     "pct": 42.8
+     "pct": 42.3
     },
     {
      "rgb": [
@@ -306,7 +336,7 @@
       245,
       239
      ],
-     "pct": 31.2
+     "pct": 31.7
     },
     {
      "rgb": [
@@ -314,7 +344,7 @@
       57,
       39
      ],
-     "pct": 8.9
+     "pct": 8.8
     },
     {
      "rgb": [
@@ -322,12 +352,12 @@
       91,
       76
      ],
-     "pct": 0.8
+     "pct": 0.9
     }
    ],
-   "distinct": 38111,
-   "hairlines": 12,
-   "runs": 12,
+   "distinct": 38123,
+   "hairlines": 14,
+   "runs": 14,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -415,7 +445,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3026,
+     "y": 3083,
      "x": 19,
      "len": 352,
      "core": [
@@ -430,7 +460,37 @@
      "otherGround": "paper"
     },
     {
-     "y": 3550,
+     "y": 3426,
+     "x": 75,
+     "len": 65,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 3426,
+     "x": 222,
+     "len": 74,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 3651,
      "x": 19,
      "len": 352,
      "core": [
@@ -445,7 +505,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3559,
+     "y": 3660,
      "x": 35,
      "len": 319,
      "core": [
@@ -460,7 +520,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3562,
+     "y": 3663,
      "x": 34,
      "len": 322,
      "core": [
@@ -475,7 +535,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3590,
+     "y": 3691,
      "x": 16,
      "len": 81,
      "core": [
@@ -490,7 +550,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3590,
+     "y": 3691,
      "x": 121,
      "len": 123,
      "core": [
@@ -505,7 +565,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4069,
+     "y": 4169,
      "x": 209,
      "len": 136,
      "core": [
@@ -520,7 +580,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4116,
+     "y": 4216,
      "x": 209,
      "len": 136,
      "core": [
@@ -552,16 +612,16 @@
     250,
     246
    ],
-   "groundExact": 697738,
-   "groundPct": 76.73,
+   "groundExact": 732663,
+   "groundPct": 77.27,
    "span": 12.333333333333343,
-   "sd": 2.65,
+   "sd": 2.64,
    "flat": {
-    "x": 240,
-    "y": 16,
+    "x": 208,
+    "y": 80,
     "size": 64,
-    "span": 110,
-    "sd": 13.64
+    "span": 0,
+    "sd": 0
    },
    "surfaces": [
     {
@@ -570,7 +630,7 @@
       250,
       246
      ],
-     "pct": 43.2
+     "pct": 43.6
     },
     {
      "rgb": [
@@ -578,7 +638,7 @@
       245,
       239
      ],
-     "pct": 33.3
+     "pct": 33.4
     },
     {
      "rgb": [
@@ -586,7 +646,7 @@
       57,
       39
      ],
-     "pct": 8.5
+     "pct": 8.1
     },
     {
      "rgb": [
@@ -597,9 +657,9 @@
      "pct": 0.9
     }
    ],
-   "distinct": 27816,
-   "hairlines": 12,
-   "runs": 12,
+   "distinct": 27814,
+   "hairlines": 14,
+   "runs": 14,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -687,7 +747,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3320,
+     "y": 3410,
      "x": 19,
      "len": 282,
      "core": [
@@ -702,7 +762,37 @@
      "otherGround": "paper"
     },
     {
-     "y": 3858,
+     "y": 3805,
+     "x": 75,
+     "len": 65,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 3841,
+     "x": 75,
+     "len": 73,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 4028,
      "x": 19,
      "len": 282,
      "core": [
@@ -717,7 +807,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3867,
+     "y": 4037,
      "x": 35,
      "len": 249,
      "core": [
@@ -732,7 +822,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3870,
+     "y": 4040,
      "x": 34,
      "len": 252,
      "core": [
@@ -747,7 +837,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3898,
+     "y": 4068,
      "x": 16,
      "len": 81,
      "core": [
@@ -762,7 +852,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3898,
+     "y": 4068,
      "x": 121,
      "len": 123,
      "core": [
@@ -777,7 +867,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4493,
+     "y": 4691,
      "x": 19,
      "len": 136,
      "core": [
@@ -792,7 +882,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4540,
+     "y": 4738,
      "x": 19,
      "len": 136,
      "core": [

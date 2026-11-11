@@ -1,0 +1,40 @@
+{
+  "_rule": "A dated snapshot of the club's own Discord guild scheduled events, read by `node scripts/discord-events.mjs --write`. Committed so the build never reaches the network (D73's topology, the same one data/events.json and data/meetup-events.json follow). Guild scheduled events are GuildOnly (privacy_level 2, the only value in API v10), so an event page is visible to server members: a visitor who is not a member is asked to join before they can RSVP. No headcount is stored: `user_count` is never requested, and check:rsvp fails a snapshot that carries one (D265). npm run check:rsvp is what keeps this file from going stale.",
+  "source": {
+    "kind": "discord-api",
+    "guildId": "1170385683379126343",
+    "guildName": "Math Book Club",
+    "endpoint": "https://discord.com/api/v10/guilds/1170385683379126343/scheduled-events",
+    "fetchedAt": "2026-11-11T07:43:10.320Z",
+    "reads": [
+      {
+        "url": "https://discord.com/api/v10/guilds/1170385683379126343/scheduled-events",
+        "status": 200,
+        "bytes": 1582
+      },
+      {
+        "url": "https://discord.com/api/v10/guilds/1170385683379126343",
+        "status": 200,
+        "bytes": 2223
+      }
+    ],
+    "_how": "Authenticated GET with `Bot <token>` (measured 2026-11-11: unauthenticated and `Bearer` both answer 401) and the identifiable User-Agent Discord asks bots to send. `with_user_count` is deliberately not requested."
+  },
+  "events": [
+    {
+      "id": "1569601080235532400",
+      "url": "https://discord.com/events/1170385683379126343/1569601080235532400/",
+      "title": "PILOT TEST Common Denominator - Study Session",
+      "start": "2026-11-12T00:00:00+00:00",
+      "end": null,
+      "date": "2026-11-11",
+      "time": "18:00",
+      "status": 1,
+      "statusName": "scheduled",
+      "entityType": 3,
+      "privacyLevel": 2,
+      "location": null,
+      "channelId": null
+    }
+  ]
+}

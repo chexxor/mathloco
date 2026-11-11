@@ -411,9 +411,20 @@ join band; `/schedule` prints every open date. Both draw it the same way, in thi
   the same date is spelled out in prose beside it, and a screen reader should hear a date once.
 - **copy lane** — `min-w-0 flex-1`. `min-w-0` is load-bearing: without it a long venue string sets the lane's
   minimum width and the plate is pushed out of the row instead of the text wrapping.
-- **plate** — the event's own art, right-aligned on `sm:` and up, capped at **323px** by the single
+- **plate** — the event's own art, right-aligned on `lg:` and up, capped at **323px** by the single
   `.event-slot` rule in `EventArt.astro` (D173). One image per band, and never a placeholder beside real art
   (D152/D154/D224).
+- **The row goes horizontal only when the lane can hold it.** 112 (leaf) + 48 (the two `lg:gap-6`) + 323 (the plate
+  cap) = **483px** before the copy lane gets a character, so the flip sits at `lg` (1024), not `sm` (640): the row
+  is horizontal only when the lane is **at least as wide as the plate beside it** — **417px at 1024**, and the
+  `sm`-flip counterfactual measures **325 at 900, 225 at 800, 193 at 768, 125 at 700, 65 at 640**, i.e. narrower
+  than the 323px cap at every width below 1024 @measured 2026-11-11 by `node design/schedule-geometry.mjs` on
+  `dist/client` and on a copy with the flip moved (`cp -r dist/client .design/tmp-sm-flip && sed -i 's/lg:flex-row/sm:flex-row/' .design/tmp-sm-flip/schedule/index.html`). A 65px lane is not a copy lane, and when S019/D272 put
+  the sign-up cluster in it the RSVP label wraps inside it on a landscape phone. Stacking is not a fallback: it is
+  the layout the width can hold, and `check:render` measures 640 (stacked) and 1240 (horizontal), so both sides of
+  the flip are measured. A line this section used to carry — 309px at 900, 177 at 768, 49 at 640 — was arithmetic
+  that subtracted `lg:gap-6` at widths where the markup's `gap-4` applies; it is deleted because the probe
+  contradicts it, not because the rule changed.
 
 Rules that are not decoration:
 
@@ -435,13 +446,34 @@ Rules that are not decoration:
 - **Singular on the preview, plural on the page.** The compact band says "the next date"; `/schedule` says "these
   dates". An hour the organizer has not settled prints **"time not set"** (`timeSpan`, D169/D172) — never a
   guessed one.
+- **The sign-up cluster is a quiet label, never a control** (S019, D272). Under each printed date sits one cluster
+  of links, ordered **Meetup, Discord, Facebook**: `text-label font-medium text-ink`, underline at
+  `decoration-rule`, `min-h-8` (32px), focus ring — no fill, no keyline, no `data-control`. A row is already one
+  boundary (D220), so a 48px block control inside it is two boxes drawn twice (D149-3c). A platform with no
+verified URL in `src/config.json` is painted nowhere, and `npm run check:rsvp-page` proves that from the built
+bytes rather than from the component's silence. Measured @measured 2026-11-11 by `npm run check:render`: the
+cluster box is **32px** tall at 1240, 640 and 390 and **68px** at 320 where the two labels wrap, its links render
+the label tier **13.3px** at **12.02** contrast on paper — and the gate now asserts all three, because
+`check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of which
+must go red.
 
-Measured, at one viewport on both surfaces @measured 2026-11-07 by `node design/schedule-geometry.mjs`: at 1240
-the homepage card and a schedule row are both **1164x188**, with a **112x96** leaf, a **633x152** copy lane and a
-**323x156** plate whose right edge sits 24px inside the keyline; at 390 they are 346x516 and 346x492 with the same
-**112x96** leaf and a plate capped to the column (**314x151**). Page-level cost of putting the list on its own
-page @measured 2026-11-07 by `npm run check:space`: homepage **4221 → 3180px at 1240**, **5707 → 4725 at 390**,
-**6463 → 5297 at 320**, and `/schedule` **1329px at 1240** with two empty runs totalling 211px (15.9% of the page).
+Measured, at one viewport on both surfaces @measured 2026-11-11 by `node design/schedule-geometry.mjs`: at 1240
+the homepage card and the taller schedule row are both **1164x217**, with a **112x96** leaf, a **633x168** copy
+lane (the list's second row: **633x136**, and **633x164** inside its own **1164x196** box) and a **323x185** plate
+whose right edge sits 24px inside the keyline; at 1024 the row is **948x224** with a **417x192** lane; at 900
+**840x481** with a **792x136** lane; at 768 **708x481** with a **660x136** lane; at 640, stacked, **580x509** with a
+**532x164** lane and the same **323x185** plate on its own line; at 390 the three boxes are 346x616, 346x560 and
+346x504 with the same **112x96** leaf and a plate capped to the column (**314x179** / **314x151**). What the sign-up
+cluster costs, measured by running the same probe against a copy of the built page with every cluster stripped
+@measured 2026-11-11 by `node design/schedule-geometry.mjs --dist .design/tmp-no-cluster`: **+44px on the copy
+lane** in every box, **0px of row height at 1240** where the plate is already taller than the lane, **8px** on the
+row whose plate is short, **7-8px at 1024**, **44px per row from 900 down to 390** where the lane is the tallest
+thing in the box, and **80px at 320** where the two labels wrap. Page totals
+@measured 2026-11-11 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
+same tool on `/` only): homepage **3071px at 1240**, **4597 at 390**, **5132 at 320**; `/schedule` **1200px at
+1240** with three empty runs totalling 330px (27.5% of the page). The list-to-its-own-page saving measured in the
+2026-11-07 pass was **4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history
+and the numbers above as the state.
 Those page numbers come from a two-pass survey (it re-opens the page in a viewport as tall as the document, so
 there is no scrollbar and a capped plate lands on the cap); a single-pass probe of the same build reports a taller
 page and a narrower plate, and that is a viewport difference, not a regression — see D234 before comparing them.

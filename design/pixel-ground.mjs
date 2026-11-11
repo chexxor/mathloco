@@ -258,9 +258,16 @@ async function measureShot(shot, want = PAPER, windowHint = null) {
     outer: for (let y = 0; y + SZ < H; y += 16) {
       for (let x = 0; x + SZ < W; x += 16) {
         if (!near(px(x, y), ground, 3)) continue;
-        let same = 0;
-        for (let dy = 0; dy < SZ; dy += 2) for (let dx = 0; dx < SZ; dx += 2) if (near(px(x + dx, y + dy), ground, 2)) same++;
-        if (same >= (SZ / 2) ** 2 * 0.99) { win = { x, y, size: SZ }; break outer; }
+        // EVERY pixel, not every other one. A stride-2 sample lets a 1px hairline or a glyph row hide in the
+        // gaps: the window then reports sd 13.64 while claiming to be "one colour", and the selftest's
+        // planted texture (sd 2.28 on a clean window) becomes a 0.18 change on top of ink. Measured
+        // 2026-11-11: with the stride, the flat window at x=256 y=16 has span 110; requiring every pixel
+        // finds a window whose span is the grain itself.
+        let flatWin = true;
+        for (let dy = 0; dy < SZ && flatWin; dy++) {
+          for (let dx = 0; dx < SZ; dx++) { if (!near(px(x + dx, y + dy), ground, 2)) { flatWin = false; break; } }
+        }
+        if (flatWin) { win = { x, y, size: SZ }; break outer; }
       }
     }
   }

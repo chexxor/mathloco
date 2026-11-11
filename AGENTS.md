@@ -116,8 +116,11 @@ each of those and requires a named failure. Both are in `verify`.
    `.design/tmp-gate-logs/<set>/<step>.txt`: every step's full output is kept from the last run, pass or
    fail (D144). `npm run check:discord` and
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
-   not in `verify`. Five more scripts sit outside `verify` on purpose, and each now has its reason written
-   down rather than left to inference (D269): `review:render` plants placeholder states, builds, measures them
+   not in `verify`. Six more scripts sit outside `verify` on purpose, and each now has its reason written
+   down rather than left to inference (D269): `check:rsvp:links` is the network probe that *writes* the dated
+   `_verified` stamps `check:rsvp` reads - a deploy gate cannot depend on a live third-party page answering
+   (D73's topology, same class as `check:discord`), so it is run by hand before a milestone review and the
+   stamp is what the gate sees; `review:render` plants placeholder states, builds, measures them
    with the browser gates and restores - it mutates the tree, so it is an instrument for the missing-content
    state (record 0024 found its defects there), not a gate; `check:area`, `check:rhythm` and `check:color` are
    design-round probes that report numbers and never exit non-zero, so in `verify` they would cost a build and

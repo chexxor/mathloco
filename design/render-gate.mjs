@@ -345,7 +345,29 @@ for (const route of routes) {
       }
     }
 
-    // 4c. nav (D100): one row at every width, `flex-wrap: nowrap`, one type tier per viewport, and
+    // 4c. the sign-up cluster (S019, D272): DESIGN.md's quiet label under every printed date. It is NOT a
+    //     control (D140) — the row it sits in is already one boundary (D220), so a fill or a ring drawn
+    //     inside that row is the same two-box defect rule 4b prices for notices. Its box is 32px because it
+    //     reserves `min-h-8`, the same label box D100 accepted for the nav; its tier is read from the token
+    //     block, never remembered, so a ramp move moves this check with it (the D112 lesson).
+    for (const c of j.clusters || []) {
+      const who = `${at} sign-up cluster on ${c.date}`;
+      if (c.fill) fails.push(`${who} paints a fill (${c.fill}) — a quiet label is word + underline on the page's own ground, never a fill (D272)`);
+      if (c.ring) fails.push(`${who} carries its own inset ring — the row is already one boundary, so this draws a second box inside it (D149-3c, D220)`);
+      if (c.border) fails.push(`${who} is bordered ${c.border}px — the ratified keyline is a 1px inset ring and a cluster has no keyline at all (D272)`);
+      if (c.control) fails.push(`${who} declares data-control="${c.control}" — a sign-up cluster is a quiet label, not a control (D140, D272)`);
+      if (!c.links.length) fails.push(`${who} prints no sign-up link and no note — an absent Meetup page is a named state, never a blank (DESIGN.md "States", D272)`);
+      if (c.noteContrast !== null && c.noteContrast < 4.5) fails.push(`${who} note reads ${c.noteContrast} on its ground, under the 4.5 bar (D101)`);
+      for (const l of c.links) {
+        if (l.h < 31) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} (${l.platform}, ${c.date}) is ${l.h}px tall — the quiet label reserves min-h-8 = 32px, the box D100 accepted for a label target`);
+        if (parseFloat(l.fs) !== LABEL) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} renders ${l.fs} at ${w}px, want the label tier ${LABEL} — the tier is read from the token block, not remembered (D112)`);
+        if (l.fill) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} paints a fill (${l.fill}) inside a row that is already one boundary (D220, D272)`);
+        if (l.ring) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} carries its own inset ring (D149-3c)`);
+        if (l.role) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} declares data-control="${l.role}" — the 48px control height rule does not belong to a quiet label (D140, D272)`);
+      }
+    }
+
+    // 4d. nav (D100): one row at every width, `flex-wrap: nowrap`, one type tier per viewport, and
     //     the row must fit. The shipped nav was flex-col + flex-wrap and clipped links; a class grep
     //     cannot see that, row centres can.
     if (j.nav) {
@@ -429,7 +451,7 @@ for (const route of routes) {
       }
     }
 
-    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | rings ${(j.rings || []).length} | notices ${(j.notices || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
+    console.log(`  controls ${j.controls.length} | bands ${j.bands.length} | keylines ${j.keylines.length} | rings ${(j.rings || []).length} | notices ${(j.notices || []).length} | clusters ${(j.clusters || []).length} | nav ${(j.nav?.links ?? []).length} | marks ${(j.marks || []).length} | shadows ${j.shadows.length} | text ${j.text.length}`);
     if (j.nav) console.log(`   nav   ${j.nav.links.map((l) => `${l.fs}/${l.h}px`).join(' ')}  wrap ${j.nav.containers.map((c) => c.wrap).join('/')} gap ${j.nav.containers.map((c) => c.gap).join('/')} needed ${j.nav.row?.needed} of ${j.nav.row?.available}`);
     for (const c of j.controls) {
       console.log(`   ctrl  ${String(c.h).padStart(5)}px ${c.fs.padEnd(6)} lh ${c.lh.padEnd(6)} ${String(c.contrast).padStart(6)}  ${c.tag} ${(c.role || 'NO ROLE').padEnd(10)} ${JSON.stringify(c.t).slice(0, 30)}  ${(c.cls || '').slice(0, 46)}`);
@@ -442,6 +464,9 @@ for (const route of routes) {
     // one ground; unequal means the ring straddles, which D149-3c bans and record 0018 prices at 2.88.
     for (const g of [...new Map((j.rings || []).map((g) => [g.raw + g.inside + g.outside + g.cls, g])).values()]) console.log(`   ring  ${String(g.inset).padStart(3)}px in ${String(g.inside).padStart(5)} out ${String(g.outside).padStart(5)}  ${g.isRule ? 'rule' : g.raw.padEnd(26)}  in ${JSON.stringify(g.innerBytes)} out ${JSON.stringify(g.outerBytes)}  ${(g.cls || '').slice(0, 34)}`);
     for (const n of j.notices || []) console.log(`   notc  ${String(n.h).padStart(5)}px x ${String(n.w).padStart(4)}px  inset ${n.inset}px contrast ${String(n.keylineContrast).padStart(5)}  text ${String(n.textContrast).padStart(5)}  ${n.role} ${JSON.stringify(n.text).slice(0, 34)}`);
+    // The sign-up cluster prints as a pair of numbers: the box, and each label's height/tier/contrast. This
+    // is where DESIGN.md's "32px, label tier, no fill" claim is checked against paint rather than markup.
+    for (const c of j.clusters || []) console.log(`   rsvp  ${String(c.h).padStart(5)}px x ${String(c.w).padStart(4)}px  state ${String(c.state).padEnd(7)} fill ${c.fill || 'none'} ring ${c.ring}  ${c.links.map((l) => `${l.platform} ${l.h}px ${l.fs} ${String(l.contrast)}`).join(' | ')}`);
     for (const b of j.bands) {
       console.log(`   band  ${String(b.h).padStart(5)}px  bg ${b.bg.padEnd(26)} fg ${b.fg.padEnd(24)} ${String(b.contrast).padStart(5)}  ${b.tag} ${(b.cls || '').slice(0, 40)}`);
       for (const l of b.links || []) console.log(`          link ${String(l.h).padStart(4)}px ${l.fs.padEnd(6)} ${String(l.contrast).padStart(6)}  ${JSON.stringify(l.t)}`);

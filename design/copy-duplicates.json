@@ -1,13 +1,14 @@
 {
   "rule": "near-duplicate-surface",
   "gate": "npm run check:content (scripts/check-content.mjs)",
-  "measuredAt": "2026-11-09",
+  "measuredAt": "2026-11-11",
   "howToRegenerate": "node scripts/check-content.mjs --print-baseline  (prints this shape; it never writes it)",
-  "ruleOfExit": "A pair leaves this file when the copy is deleted or a ruling settles it. It is NOT kept with status 'resolved': a signature in this file is an exemption, so keeping a closed pair would let the same duplicate ship again without going red. The three pairs closed by S018/D262 are listed in `resolved` below for provenance only.",
+  "ruleOfExit": "A pair leaves this file when the copy is deleted or a ruling settles it. It is NOT kept with status 'resolved': a signature in this file is an exemption, so keeping a closed pair would let the same duplicate ship again without going red. The pairs closed by S018/D262 and by D273 are listed in `resolved` below for provenance only.",
   "resolved": [
     { "pair": "band's Meetup/chat twin <> hero's date-and-chat line", "closedBy": "S018 (2026-11-09)", "how": "the band's line deleted; the hero keeps the one statement of where dates and discussion live" },
     { "pair": "hero syllabus line <> band's homework line", "closedBy": "S018 (2026-11-09)", "how": "the band's homework line deleted; the hero's syllabus sentence now carries the chat statement too" },
-    { "pair": "hero threads signpost <> 'What we take up' opener", "closedBy": "S018 (2026-11-09)", "how": "the hero signpost became the syllabus line; the section opener kept its sourcing clause, because check:content refuses an unsourced list (D92)" }
+    { "pair": "hero threads signpost <> 'What we take up' opener", "closedBy": "S018 (2026-11-09)", "how": "the hero signpost became the syllabus line; the section opener kept its sourcing clause, because check:content refuses an unsourced list (D92)" },
+    { "pair": "'Details and sign-up on Meetup' on row A <> 'Details and sign-up on Meetup' on row B", "closedBy": "D273 (2026-11-11)", "how": "the row label became a per-platform name ('Sign up on Meetup', 'Sign up on Discord'), so sibling rows no longer print the same sentence; the baseline row was deleted rather than kept as an exemption" }
   ],
   "scores": "content words only; sentences split on terminal punctuation only. A pair is a pair when it shares >=3 content words and (Jaccard >= 0.45 or overlap >= 0.5). Overlap is shared words over the SHORTER sentence, because a paraphrase of a long sentence scores low on Jaccard alone.",
   "statusMeaning": {
@@ -17,15 +18,26 @@
   },
   "pairs": [
     {
-      "signature": "copied from the club's own calendar on nov 6 2026 <> the signup is on meetup and the date above is copied from the club's own calendar",
+      "signature": "copied from the club's own calendar on nov 6 2026 <> the date above is copied from the club's own calendar and it links to the page where you sign up",
       "shared": 4,
-      "jaccard": 0.4,
+      "jaccard": 0.333,
       "overlap": 0.667,
       "status": "deliberate",
+      "ruled": "D273 (the band lede was reworded to say what the date links to)",
+      "surfaces": "section:When We Meet (homepage next-date band lede) <> section:Parallel Learning for Mathematical Minds (the date stamp on the card)",
+      "why": "Both surfaces draw a date from the same snapshot and each states its provenance where the date is painted - the rule the earlier band/row pair was accepted for. The band speaks for the page, the stamp speaks for one date, so a reader who sees only the card still knows where its date came from. Accepted: the repeat is the source line, not decorative copy. It becomes a defect only if one of the two stops carrying a date or a source.",
+      "measuredAt": "2026-11-11"
+    },
+    {
+      "signature": "copied from the club's own calendar on nov 6 2026 <> the club's list of members is its meetup group page last read nov 3 2026 the list is not the room",
+      "shared": 3,
+      "jaccard": 0.214,
+      "overlap": 0.5,
+      "status": "open",
       "ruled": null,
-      "surfaces": "section:When We Meet (homepage compact band) <> section:Parallel Learning for Mathematical Minds (event row)",
-      "why": "Both surfaces draw a date from the same snapshot and each states its provenance where the date is painted - the same rule records 0010/0011 exist for. Accepted: the repeat is the source line, not decorative copy. It becomes a defect only if one of the two stops carrying a date or a source.",
-      "measuredAt": "2026-11-08"
+      "surfaces": "section:Parallel Learning for Mathematical Minds (the date stamp on the card) <> section:How it works (the membership sentence)",
+      "why": "Scored on shared dated-source vocabulary (club, nov, 2026), not on a repeated sentence: overlap reaches 0.5 only because the shorter string is four words. Recorded so the pair stays visible; the exit is a ruling or a stamp that carries its date in different words.",
+      "measuredAt": "2026-11-11"
     },
     {
       "signature": "copied from the club's own calendar on nov 6 2026 <> these dates are copied from the club's own calendar",
@@ -36,17 +48,6 @@
       "ruled": null,
       "surfaces": "section:When We Meet (/schedule) <> section:MPLS Math Club Social (/schedule event row)",
       "why": "The same provenance rule on the schedule page: the page lede and each row that prints a date say where the date came from.",
-      "measuredAt": "2026-11-08"
-    },
-    {
-      "signature": "details and signup on meetup opens in a new tab <> details and signup on meetup opens in a new tab",
-      "shared": 6,
-      "jaccard": 1,
-      "overlap": 1,
-      "status": "template",
-      "ruled": null,
-      "surfaces": "section:Parallel Learning for Mathematical Minds <> section:MPLS Math Club Social",
-      "why": "Not two sentences - one row template rendered for two events. The gate cannot tell row furniture from copy, so the pair is recorded rather than exempted by a special case. If a future round rewords one row, this row goes stale and the pair goes red: that is the coupling enforced, not a false positive.",
       "measuredAt": "2026-11-08"
     }
   ]

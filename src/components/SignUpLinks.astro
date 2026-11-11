@@ -1,0 +1,118 @@
+---
+/**
+ * The sign-up cluster on a schedule row — one quiet link per platform the club actually signs people up on.
+ *
+ * Why this is a component and not a paragraph inside `EventRow.astro` (S019, D272, 2026-11-10). The operator's
+ * ruling is that the site does not hold RSVPs: "the website just needs functionality to make it easy for a
+ * user to rsvp at a site that they prefer to rsvp on". So the affordance is a set of links sitting on the row
+ * that already prints the date, and the only place a row's set of links can come from is `src/lib/rsvp.mjs`.
+ * A component is what makes that import unavoidable: a second copy of the link rule inside the row markup is
+ * the same defect class as a second copy inside a gate (D238, D264), and `check-rsvp-page.mjs` compares the
+ * painted bytes of this component against `signUpPaths()` output — which is only a meaningful assertion if
+ * the markup is generated from that function.
+ *
+ * The grammar is DESIGN.md's **quiet label**, not a control (D139, D140): `text-label font-medium text-ink`,
+ * underline at `decoration-rule`, `min-h-8` (32px), focus ring, **no fill, no keyline, no `data-control`**.
+ * A row is one boundary (its own `inset-shadow-rule`, D220). Putting a 48px filled control inside it would
+ * draw a second box inside the row's ring — the exact defect `check:render` fails on for notices (D149-3c,
+ * design/records/0018) — and four 48px buttons under every date would out-shout the date, which the band is
+ * designed to make the loudest thing on the page.
+ *
+ * Order is not decorative: Meetup first (the club's calendar of record for sign-up, D259), then Discord, then
+ * Facebook. A platform with no **verified** URL is not in the list at all — it is not rendered, and
+ * `scripts/check-rsvp-page.mjs` asserts the absence from the built bytes rather than trusting this file's
+ * silence (S019's open question 3).
+ *
+ * The labels name the platform and the action (D273, 2026-11-11). The operator's ruling was that a visitor
+ * should see several ways in, plainly, rather than one button called "Details and sign-up" that happens to go
+ * to Meetup: "I want to present many options of platforms on which a visitor can use to RSVP... friendly,
+ * informational, open". So each label says which site it opens and what the visitor does there — *Sign up on
+ * Meetup*, *Join the Discord chat*, *Join the Facebook group*. A label that names the platform needs no
+ * hidden " on Meetup" suffix; a label that is an event title (the `several` state) carries it in the
+ * screen-reader text instead, so two lifted-out links are never both called "Proofs".
+ *
+ * Facebook is the one platform the club has no verified home on. Measured 2026-11-10 (Linux native, curl,
+ * browser UA): every candidate group URL this rig can name answers 400 with a login redirect, so
+ * `config.URLs.facebookGroup` is empty and no Facebook link exists. When the operator supplies a group URL
+ * that answers, adding the string to `src/config.json` is the whole change; nothing here needs editing.
+ *
+ * Discord is not just a chat. A guild scheduled event has its own page, `discord.com/events/<guild>/<id>/`,
+ * and that is a sign-up surface (D274). Whether one exists for a printed date is not guessed: it is read from
+ * the guild's own endpoint into `data/discord-events.json` and matched on the same date + wall-clock hour as
+ * a Meetup page. Where the guild has no scheduled event for a date, the Discord link is the invite, labelled
+ * as the chat — the site never tells a visitor to RSVP on a platform that has no page for that date.
+ * Guild scheduled events are `GuildOnly`, so a non-member landing on one is asked to join the server first;
+ * that is why the label is "Sign up on Discord" and not a promise of a one-click attend.
+ *
+ * The date, the hour and the sign-up pages all come from committed snapshots (`data/events.json`,
+ * `data/meetup-events.json`, `data/discord-events.json`) — the build never reaches the network (D73's
+ * topology). Both event snapshots carry headcounts upstream; `meetupView()` and `discordView()` in
+ * `src/lib/rsvp.mjs` are whitelist projections that drop them, so no count can reach this markup (D272).
+ * `check:content` and `check-rsvp-page.mjs` are the two ends of that rule: one stops a count entering the
+ * render path, the other reads the painted page and fails if one got there.
+ *
+ * `data-rsvp-platform`, `data-rsvp-date`, `data-rsvp-hour`, `data-rsvp-state`, `data-rsvp-snapshot`,
+ * `data-rsvp-age`, `data-rsvp-discord-snapshot` and `data-rsvp-discord-age` are probe handles for
+ * `scripts/check-rsvp-page.mjs`, not styling. `data-rsvp-hour` is what lets the gate re-run the resolver from
+ * the painted page alone: the row's own hour is painted as prose ("time not set" when the organizer has not
+ * settled it, D169), and a gate that re-parses prose breaks the day the prose is rewritten (D173).
+ * They are written per link rather than derived from the row's
+ * `data-date` because the homepage's compact card and the `/schedule` list are different containers (D227:
+ * one row shape, two surfaces), and a gate that has to know which container it is inside is a gate that
+ * breaks when the layout moves (D173).
+ */
+import config from '../config.json';
+import meetupSnapshot from '../../data/meetup-events.json';
+import discordSnapshot from '../../data/discord-events.json';
+import { signUpPaths, snapshotAgeDays } from '../lib/rsvp.mjs';
+import type { UpcomingItem } from '../lib/content.ts';
+
+type Props = {
+  item: UpcomingItem;
+};
+
+const { item } = Astro.props;
+const paths = signUpPaths(item, meetupSnapshot.events, config.URLs, discordSnapshot.events);
+// The ages the page gate will see. Stated here so a reader of the built HTML can tell *why* a date has no
+// page: `data-rsvp-snapshot` is the stamp, and `check:rsvp` is the gate that fails a build over it.
+const age = snapshotAgeDays(meetupSnapshot);
+const discordAge = snapshotAgeDays(discordSnapshot);
+---
+
+<div
+  class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1"
+  data-rsvp-cluster
+  data-rsvp-state={paths.state}
+  data-rsvp-date={paths.date}
+  data-rsvp-hour={paths.hour ?? 'unsettled'}
+  data-rsvp-snapshot={meetupSnapshot.source.fetchedAt}
+  data-rsvp-age={age === null ? 'unknown' : age.toFixed(1)}
+  data-rsvp-discord-snapshot={discordSnapshot.source?.fetchedAt ?? 'none'}
+  data-rsvp-discord-age={discordAge === null ? 'unknown' : discordAge.toFixed(1)}
+>
+  {/* An absence is a named state, never a blank (DESIGN.md "States"): the row says plainly that neither
+     calendar has a page for this date, and the link that follows is the group's join page rather than a
+     promise about a meeting page. The line is `ink-3` meta — the same lane the row's "time not set" and the
+     dated line use — so it reads as a fact about the feed, not as a second heading. */}
+  {paths.note && (
+    <p class="text-label text-ink-3">{paths.note}</p>
+  )}
+  {paths.destinations.map((d) => (
+    <a
+      href={d.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      data-rsvp-platform={d.platform}
+      data-rsvp-date={paths.date}
+      class="min-h-8 inline-flex items-center gap-1 text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold hover:decoration-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+    >
+      {d.label}{' '}
+      {/* The visible label already names the platform and the action (D273), so the suffix exists only for the
+         case where it cannot: a link lifted out of context — a screen reader's link list — still needs to say
+         that it leaves the page, and a title-labelled link needs its platform. It is not painted, so
+         `check:render` never measures it as text. */}
+      <span class="sr-only">{d.srOnly}</span>
+      <span aria-hidden="true">→</span>
+    </a>
+  ))}
+</div>

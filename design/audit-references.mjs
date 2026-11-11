@@ -44,7 +44,10 @@ if (!staleOnly || process.argv.includes('-v')) {
 }
 const subjects = (scratch ? walk('design').concat(existsSync('.design') ? walk('.design') : []) : tracked).filter((f) => statSync(f).size > 0);
 
-const ROOTS = ['package.json', 'DESIGN.md', 'AGENTS.md', 'README.md', 'src', 'scripts', '.agents', '.notes', 'design', '.design', '.github'];
+// `docs/` is in the roots because the stage-gate artifacts (G2-G5) live there and code cites them by path.
+// Before MS12 the `docs/` literal in PLAN.md and in src/lib/rsvp.mjs was invisible to this gate: a broken
+// pointer into a wall is exactly what --stale exists to catch (D268).
+const ROOTS = ['package.json', 'DESIGN.md', 'AGENTS.md', 'README.md', 'docs', 'src', 'scripts', '.agents', '.notes', 'design', '.design', '.github'];
 const textExt = /\.(m?js|ts|tsx|json|md|astro|svelte|sh|css|py|yml|txt)$/;
 // Scratch is not a citable source. `.design/` is scratch by rule (design/README.md), and the harness
 // writes `.probe-shot-*` / `.measured-*` / `rendered-*` next to whatever it probes. A scratch log that
@@ -58,7 +61,7 @@ const sources = ROOTS.filter(existsSync)
   .filter(([f, t]) => t && (scratch || !scratchFile(f)));
 
 // every path literal that looks like a repo path, so --stale can resolve it
-const PATHRE = /['"`]((?:design|\.design|src|scripts|public)\/[A-Za-z0-9._/-]*[A-Za-z0-9])['"`]/g;
+const PATHRE = /['"`]((?:design|\.design|docs|src|scripts|public)\/[A-Za-z0-9._/-]*[A-Za-z0-9])['"`]/g;
 
 const KNOWN_GONE = {
   'design/decision-audit.mjs': 'DESIGN.md cites it as the probe written in a session that never committed it; the citation IS the lesson',
@@ -82,8 +85,9 @@ const PENDING = [
   [/^\.design\/tmp-/, 'scratch: producing it is the point of the tool that names it'],
   [/^src\/content\.local$/, 'a gitignored directory that exists only while a REVIEW build is planted: scripts/review-render.mjs creates and removes it, and src/lib/content.ts globs the directory (never a filename) precisely because it may not exist'],
   [/^docs\/(spec\/source-contract\.md|threat-model\.md|adr\/0001[^/]*\.md|fixtures)/, 'the stage gates named by .notes/PLAN.md (G2-G5): the plan names the file that must exist before the stage is entered, and it is written by the milestone that owns the gate (MS06-MS09). Citing it before it exists is the fence, not a broken link - the rule is that no adapter code, no token and no live write lands before it'],
-  [/^scripts\/check-rsvp(-page)?\.mjs$/, 'MS12 (S019): src/lib/rsvp.mjs names the two gates its own milestone row lists as its exit criteria, and the reader in scripts/meetup-events.mjs already carries the snapshot half of check:rsvp. The gate scripts are written by the milestone that owns them. (D268)'],
-  [/^src\/components\/SignUpLinks\.astro$/, 'MS12 (S019): src/lib/rsvp.mjs (host-local WIP, the paused milestone) names the component that prints the sign-up links on a row; the milestone row that owns it lists it as its exit criterion, so citing it before it is written is the fence, not a broken link.'],
+  // The two check-rsvp scripts and SignUpLinks.astro were listed here while MS12 was still unwritten.
+  // They exist now, so an exemption would be a dead exemption: an entry that can never fire is how this
+  // list rots (D268).
 ];
 const pending = (p) => PENDING.find(([re]) => re.test(p));
 
