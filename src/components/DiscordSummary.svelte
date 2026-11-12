@@ -47,8 +47,17 @@
       if (!contentType.includes('application/json')) {
         throw new Error(`/api/discord-summary returned ${contentType} instead of JSON - the API route is not deployed on this host`);
       }
-      data = await response.json();
-      phase = data.channels.length === 0 ? 'empty' : 'live';
+      // `response.json()` is typed `any`, so assigning it straight to `data` (which is `CachedData | null`)
+      // leaves the compiler unable to prove it is not null - the dereference on the next line is the
+      // ts(18047) the LSP sees and `astro check` cannot (D288). Read it into a typed local, prove the shape,
+      // then assign: the check is also the guard against a route that answers 200 JSON with a body this
+      // component has no branch for.
+      const payload: CachedData = await response.json();
+      if (!Array.isArray(payload.channels) || !Array.isArray(payload.messages)) {
+        throw new Error('/api/discord-summary returned a payload with no channels or messages array');
+      }
+      data = payload;
+      phase = payload.channels.length === 0 ? 'empty' : 'live';
     } catch (cause) {
       // The bare `catch {}` here used to discard the reason, which is why a broken preview showed a
       // sentence and nothing else. The visitor gets the plain message; the console gets the cause.
