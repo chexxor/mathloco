@@ -22,9 +22,11 @@
    2. **the links.** Recomputed with `signUpPaths()` from `src/lib/rsvp.mjs` — the same function
       `src/components/SignUpLinks.astro` calls — from both event snapshots, the Meetup pages and the guild's
       own scheduled events. Order (Meetup, Discord, Facebook), one link per destination, the exact href, the
-      accessible suffix, `target="_blank" rel="noopener noreferrer"`, and nothing for a platform whose
-      configured URL is empty (D273: the label is the resolver's label, so a reworded link that no longer
-      names the platform is a painted defect, not a copy choice).
+      accessible suffix, `target="_blank" rel="noopener noreferrer"`, nothing for a platform whose
+      configured URL is empty, and a link for **every** platform the config declares in **every** printed
+      cluster (D273: the label is the resolver's label, so a reworded link that no longer names the platform is
+      a painted defect, not a copy choice; D280: a declared platform is a choice a visitor can make on every
+      date, so a cluster that quietly drops one is the same class of defect as one that invents a platform).
    3. **the counts.** No headcount may reach the page (D265). `meetupView()` in the resolver is the projection
       that drops `going`; this gate is the other end of the rule and reads the bytes a visitor sees.
  *
@@ -39,7 +41,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  LINK_KEYS, PLATFORMS, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths,
+  LINK_KEYS, PLATFORMS, PREF_KEY, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths,
 } from '../src/lib/rsvp.mjs';
 import { dateOf, scheduleWindow, todayInZone } from '../src/lib/event-window.mjs';
 
@@ -65,6 +67,9 @@ const PAGES = [
 const SURFACE_RE = /<li[^>]*data-surface="(row|preview)"[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*>/g;
 /** The cluster the component paints inside it. */
 const CLUSTER_RE = /<div[^>]*data-rsvp-cluster[\s\S]*?<\/div>/g;
+/** An Astro island wrapper. `SignUpLinksCluster` is one (S022, D281): Astro server-renders it, so the bytes
+ *  above come out of the component, and the same wrapper is what lets the browser reorder them. */
+const ISLAND_RE = /<astro-island[^>]*>/g;
 /** A headcount that got painted, in text or in an attribute (D265). Covers the Meetup `going` field, the
  *  Discord `user_count` the harvester never asks for, and any prose tally — an RSVP count can reach the page
  *  as an attribute or as a sentence, and both are the same rule. The second alternative is the form the site
@@ -130,10 +135,11 @@ const surfacesOf = (html) => {
  * The rules, as failures against one page's HTML. Pure: the selftest plants pages in memory and requires a
  * named failure for each defect, which is only possible if the verdict does not touch the filesystem.
  */
-const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetchedAt, age, discordFetchedAt, discordAge, today, pageName }) => {
+const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetchedAt, age, discordFetchedAt, discordAge, today, pageName, chunks = {} }) => {
   const fails = [];
   const surfaces = surfacesOf(html);
-  const clusters = [...html.matchAll(CLUSTER_RE)].map((m) => parseCluster(m[0]));
+  const clustersByIndex = [...html.matchAll(CLUSTER_RE)].map((m) => ({ index: m.index, ...parseCluster(m[0]) }));
+  const clusters = clustersByIndex;
 
   // 1. Every date the page prints gets exactly one cluster, and no cluster floats on a date it printed no row for.
   if (!surfaces.length && clusters.length) {
@@ -234,12 +240,59 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
       if (!urls[LINK_KEYS[key]]) fails.push(`${pageName} cluster on ${s.date} paints a ${platform} link while config.URLs.${LINK_KEYS[key]} is empty (D272: a closed platform is painted nowhere)`);
     }
 
+    // 6b. The mirror of rule 6: a platform the config declares and check:rsvp has stamped must be painted on
+    //     every printed date. A cluster that omits one is not an honest hole — the hole is a *date with no
+    //     page*, and it is named in the note (rule 7). Dropping a chosen platform is a silent subtraction.
+    const paintedPlatforms = new Set(c.links.map((l) => l.attrs['data-rsvp-platform']));
+    for (const [platformKey, urlKey] of Object.entries(LINK_KEYS)) {
+      const platform = PLATFORMS[platformKey];
+      if (!urls[urlKey]) continue;                    // closed platform: rule 6 already forbids painting it
+      if (!paintedPlatforms.has(platform)) {
+        fails.push(`${pageName} cluster on ${s.date} prints no ${platform} link although config.URLs.${urlKey} declares one (D280: a declared platform is a choice a visitor can make on every date)`);
+      }
+    }
+
     // 7. An absence is a named state (DESIGN.md "States"), and the note is the name.
     if (paths.note && !c.text.includes(paths.note)) {
       fails.push(`${pageName} cluster on ${s.date} is state "${paths.state}" but never says "${paths.note}"`);
     }
     if (!paths.note && /no page|no sign-up page|different time/i.test(c.text)) {
       fails.push(`${pageName} cluster on ${s.date} says the Meetup page is missing while the resolver found one`);
+    }
+  }
+
+  // 9. (S022, D281) Every cluster is painted by the island that can honour a remembered platform.
+  //    The reorder is a browser fact, so the build has to prove two things about it: the cluster sits inside an
+  //    Astro island (not plain markup), and the chunk Astro ships for that island is the one that reads
+  //    localStorage. A component that stops being an island, or an island whose client directive is dropped,
+  //    passes every order rule above — the server always paints canonical order — while quietly making the
+  //    preference feature impossible.
+  const islands = [...html.matchAll(ISLAND_RE)];
+  for (const m of clustersByIndex) {
+    const island = islands.filter((i) => i.index < m.index).pop();
+    if (!island) {
+      fails.push(`${pageName} cluster on ${m.attrs['data-rsvp-date'] || '(no date)'} is painted as plain markup, not inside a sign-up island — a cluster with no island can never lead with the platform a visitor keeps using (S022, D281)`);
+      continue;
+    }
+    if (html.indexOf('</astro-island>', island.index) < m.index) {
+      fails.push(`${pageName} cluster on ${m.attrs['data-rsvp-date'] || '(no date)'} is outside the island that opened before it — the cluster is not the island's content`);
+      continue;
+    }
+    const at = attrsOf(island[0]);
+    if (!at.client) {
+      fails.push(`${pageName} sign-up island for ${m.attrs['data-rsvp-date'] || '(no date)'} has no client directive: it is server-rendered only, so no browser ever reorders it (S022)`);
+      continue;
+    }
+    const chunk = at['component-url'] ? chunks[at['component-url']] : undefined;
+    if (chunk === undefined) {
+      fails.push(`${pageName} sign-up island for ${m.attrs['data-rsvp-date'] || '(no date)'} names no shipped chunk (${at['component-url'] || 'none'}) — the island has nothing to hydrate from`);
+      continue;
+    }
+    if (!chunk.includes('localStorage')) {
+      fails.push(`${pageName} sign-up island chunk ${at['component-url']} never touches localStorage, so a remembered platform cannot survive a page load (D281)`);
+    }
+    if (!chunk.includes(PREF_KEY)) {
+      fails.push(`${pageName} sign-up island chunk ${at['component-url']} does not carry the preference key "${PREF_KEY}" — the resolver's key and the shipped key have drifted (D281)`);
     }
   }
 
@@ -259,7 +312,10 @@ if (selftest) {
   const DISFETCHED = '2026-11-10T12:00:00.000Z';
   const DISAGE = 0.2;
   const TODAY = '2026-11-10';
-  const urls = { meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: '' };
+  const urls = { meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/planted' };
+  // The other half of the rule: a platform the club has closed is painted nowhere (rule 6), so the selftest
+  // needs a page built with an empty declaration as well as one built with a declared platform.
+  const closedUrls = { ...urls, facebookGroup: '' };
   const meetup = [
     { id: '1', url: 'https://www.meetup.com/g/events/111/', date: '2026-11-11', time: '18:00', status: 'ACTIVE', title: 'Proofs' },
     { id: '2', url: 'https://www.meetup.com/g/events/222/', date: '2026-11-21', time: '12:00', status: 'ACTIVE', title: 'Puzzles' },
@@ -282,10 +338,16 @@ if (selftest) {
     { start: '2026-11-25T18:00:00', timeConfirmed: false },
     { start: '2026-11-28T18:00:00', timeConfirmed: true },
   ];
+  // The island Astro really emits (measured 2026-11-11 against dist/client/index.html): `component-url` names
+  // the shipped chunk, `client="visible"` is what makes it hydrate, and the props are HTML-escaped JSON.
+  const ISLAND_CHUNK = '/_astro/SignUpLinksCluster.planted.js';
+  const island = (cluster, chunk = ISLAND_CHUNK, client = 'visible') =>
+    `<astro-island uid="planted" component-url="${chunk}" component-export="default" renderer-url="/_astro/client.svelte.planted.js" props="{}" ssr${client ? ` client="${client}"` : ''} opts="{&quot;name&quot;:&quot;SignUpLinksCluster&quot;,&quot;value&quot;:true}" await-children><!--[-->${cluster}<!--]--></astro-island>`;
+  const shippedChunk = `const KEY="${PREF_KEY}"; function reorder(list,p){ return p ? [list.find(d=>d.platform===p), ...list.filter(d=>d.platform!==p)] : list; } localStorage.getItem(KEY);`;
 
   // Byte-faithful to SignUpLinks.astro, so a planting tests the rules and not a paraphrase of the markup.
-  const clusterHtml = (item, mut = {}) => {
-    const p = signUpPaths(item, meetup, urls, discord);
+  const clusterHtml = (item, mut = {}, us = urls) => {
+    const p = signUpPaths(item, meetup, us, discord);
     const a = {
       'data-rsvp-state': mut.state ?? p.state,
       'data-rsvp-date': mut.date ?? p.date,
@@ -307,11 +369,11 @@ if (selftest) {
     const note = (mut.note === null ? '' : p.note) ? `<p class="text-label text-ink-3">${mut.note ?? p.note}</p>` : '';
     return `<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1" data-rsvp-cluster ${attrs}>${note}${links}</div>`;
   };
-  const page = (rows, extra = '') =>
-    `<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${clusterHtml({ date, time: hour })}</div></li>`).join('')}</ul>${extra}</main>`;
+  const page = (rows, extra = '', us = urls) =>
+    `<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${island(clusterHtml({ date, time: hour }, {}, us))}</div></li>`).join('')}</ul>${extra}</main>`;
 
   const clean = page([['2026-11-11', '18:00'], ['2026-11-21', '12:00']]);
-  const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: DISFETCHED, discordAge: DISAGE, today: TODAY, pageName: 'planted page' };
+  const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: DISFETCHED, discordAge: DISAGE, today: TODAY, pageName: 'planted page', chunks: { [ISLAND_CHUNK]: shippedChunk } };
 
   const cases = [
     { name: 'a page the resolver agrees with', html: clean, ctx, want: [] },
@@ -322,29 +384,36 @@ if (selftest) {
     { name: 'the note a missing page must state, stated nowhere', html: page([['2026-11-28', '18:00']]).replace(`<p class="text-label text-ink-3">${signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord).note}</p>`, ''), ctx, want: ['never says']},
     { name: 'a note claiming a missing page where the resolver found one', html: page([['2026-11-21', '12:00']]).replace('data-rsvp-discord-age="0.2">', 'data-rsvp-discord-age="0.2"><p class="text-label text-ink-3">No sign-up page for this date yet — ask in the chat.</p>'), ctx, want: ['says the Meetup page is missing while the resolver found one']},
     { name: 'a state stamp that disagrees with the resolver', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { state: 'none' })), ctx, want: ['state "none" but signUpPaths'] },
-    { name: 'two Meetup pages on one hour printed as a single link', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.slice(0, 1) }); })()), ctx, want: ['paints 1 link(s)', 'returns 3']},
+    { name: 'two Meetup pages on one hour printed as a single link', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.slice(0, 1) }); })()), ctx, want: ['paints 1 link(s)', 'returns 4']},
+    { name: 'the Facebook link quietly dropped from a row', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.filter((d) => d.platform !== PLATFORMS.facebook) }); })()), ctx, want: ['prints no Facebook link although config.URLs.facebookGroup declares one']},
+    { name: 'the Facebook link sent to a group page instead of the group', html: page([['2026-11-11', '18:00']]).replace('https://www.facebook.com/groups/planted', 'https://www.facebook.com/groups/planted/events/999/'), ctx, want: ['Facebook link goes to https://www.facebook.com/groups/planted/events/999/', 'the resolver says https://www.facebook.com/groups/planted']},
     { name: 'the Discord link before the Meetup link', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: [p.destinations[2], ...p.destinations.slice(0, 2)] }); })()), ctx, want: ['order is Meetup, Discord, Facebook']},
     { name: 'a link to a Meetup page on the wrong date', html: page([['2026-11-11', '18:00']]).replace('https://www.meetup.com/g/events/111/', 'https://www.meetup.com/g/events/222/'), ctx, want: ['the resolver says'] },
-    { name: 'a Facebook link painted for an empty config entry', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: [...p.destinations, { platform: 'Facebook', href: 'https://www.facebook.com/groups/g', label: 'Ask in the group', srOnly: ' on Facebook, opens in a new tab' }] }); })()), ctx, want: ['config.URLs.facebookGroup is empty'] },
+    { name: 'a Facebook link painted for a platform the club closed', html: page([['2026-11-11', '18:00']], '', closedUrls).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }, {}, closedUrls), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, closedUrls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: [...p.destinations, { platform: 'Facebook', href: 'https://www.facebook.com/groups/g', label: 'Ask in the group', srOnly: ' on Facebook, opens in a new tab' }] }, closedUrls); })()), ctx: { ...ctx, urls: closedUrls }, want: ['config.URLs.facebookGroup is empty'] },
     { name: 'a link with no accessible name suffix', html: page([['2026-11-11', '18:00']]).replace('<span class="sr-only"> on Meetup, opens in a new tab</span>', ''), ctx, want: ['no accessible name suffix', 'opens in a new tab'] },
     { name: 'a cross-site link without rel="noopener noreferrer"', html: page([['2026-11-11', '18:00']]).replace('rel="noopener noreferrer"', 'rel="noopener"'), ctx, want: ['rel="noopener"'] },
     { name: 'a cluster stamped with a snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-snapshot="2026-11-09T06:42:38.507Z" data-rsvp-age="1.7"', 'data-rsvp-snapshot="2026-10-01T00:00:00.000Z" data-rsvp-age="40.1"'), ctx, want: ['cluster says the snapshot is 2026-10-01T00:00:00.000Z'] },
     { name: 'an age painted 3.7 days off while the snapshot stamp is correct', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-age="1.7"', 'data-rsvp-age="5.4"'), ctx, want: ['says the snapshot is 5.4 days old; the stamp says 1.7']},
-    { name: 'links painted from a snapshot past the freshness window', html: `<main><ul><li class="rounded-card" data-surface="row" data-date="2026-11-11">${clusterHtml({ date: '2026-11-11', time: '18:00' }, { snapshot: '2026-10-01T00:00:00.000Z', age: '40.1' })}</li></ul></main>`, ctx: { ...ctx, fetchedAt: '2026-10-01T00:00:00.000Z', age: 40.1 }, want: ['snapshot 40.1 days old (limit 14'] },
+    { name: 'links painted from a snapshot past the freshness window', html: `<main><ul><li class="rounded-card" data-surface="row" data-date="2026-11-11">${island(clusterHtml({ date: '2026-11-11', time: '18:00' }, { snapshot: '2026-10-01T00:00:00.000Z', age: '40.1' }))}</li></ul></main>`, ctx: { ...ctx, fetchedAt: '2026-10-01T00:00:00.000Z', age: 40.1 }, want: ['snapshot 40.1 days old (limit 14'] },
     { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('Proofs <span class="sr-only">', '12 going <span class="sr-only">'), ctx, want: ['paints a headcount']},
     { name: 'the roster tally the join band used to print, painted again', html: `${clean}<section class="mt-8"><p>280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.</p></section>`, ctx, want: ['paints a headcount', '280 on the Meetup list']},
     { name: 'a member count painted as prose', html: `${clean}<section class="mt-8"><p>The club has 142 members.</p></section>`, ctx, want: ['paints a headcount', '142 members']},
     { name: 'an RSVP tally painted where a Discord link is', html: page([['2026-11-11', '18:00']]).replace('Sign up on Discord', 'Sign up on Discord (14 RSVPs)'), ctx, want: ['paints a headcount', '14 RSVPs']},
     { name: 'a headcount painted in an attribute', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-cluster', 'data-rsvp-cluster data-going="12"'), ctx, want: ['headcount']},
     { name: 'a Discord user_count painted in an attribute', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot', 'data-user-count="7" data-rsvp-discord-snapshot'), ctx, want: ['headcount', 'user-count']},
-    { name: 'the guild event link dropped while the snapshot has one', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.filter((d) => d.platform !== 'Discord') }); })()), ctx, want: ['paints 2 link(s)', 'returns 3']},
+    { name: 'the guild event link dropped while the snapshot has one', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.filter((d) => d.platform !== 'Discord') }); })()), ctx, want: ['paints 3 link(s)', 'returns 4']},
     { name: 'the Discord event page replaced by the bare invite', html: page([['2026-11-11', '18:00']]).replace('https://discord.com/events/111/222/', 'https://discord.com/invite/x'), ctx, want: ['Discord link goes to https://discord.com/invite/x', 'the resolver says https://discord.com/events/111/222/']},
-    { name: 'a completed guild event painted as a sign-up path', html: page([['2026-11-28', '18:00']]).replace(clusterHtml({ date: '2026-11-28', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-28', time: '18:00' }, { links: [...p.destinations, { platform: 'Discord', href: 'https://discord.com/events/111/444/', label: 'Sign up on Discord', srOnly: 'Discord, opens in a new tab' }] }); })()), ctx, want: ['paints 3 link(s)', 'returns 2 (Meetup, Discord)']},
+    { name: 'a completed guild event painted as a sign-up path', html: page([['2026-11-28', '18:00']]).replace(clusterHtml({ date: '2026-11-28', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-28', time: '18:00' }, { links: [...p.destinations, { platform: 'Discord', href: 'https://discord.com/events/111/444/', label: 'Sign up on Discord', srOnly: 'Discord, opens in a new tab' }] }); })()), ctx, want: ['paints 4 link(s)', 'returns 3 (Meetup, Discord, Facebook)']},
     { name: 'a cluster stamped with a Discord snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot="2026-11-10T12:00:00.000Z"', 'data-rsvp-discord-snapshot="2026-10-01T00:00:00.000Z"'), ctx, want: ['Discord snapshot is 2026-10-01T00:00:00.000Z']},
     { name: 'Discord links painted from a guild snapshot past the freshness window', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { discordSnapshot: '2026-10-01T00:00:00.000Z', discordAge: '40.1' })), ctx: { ...ctx, discordFetchedAt: '2026-10-01T00:00:00.000Z', discordAge: 40.1 }, want: ['Discord snapshot 40.1 days old (limit 14']},
     { name: 'the cluster promoted to a control', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-platform="Meetup"', 'data-rsvp-platform="Meetup" data-control="signup"'), ctx, want: ['quiet label, not a control'] },
-    { name: 'a cluster floating with no printed row', html: `<main>${clusterHtml({ date: '2026-11-11', time: '18:00' })}</main>`, ctx, want: ['no printed date to attach it to'] },
+    { name: 'a cluster floating with no printed row', html: `<main>${island(clusterHtml({ date: '2026-11-11', time: '18:00' }))}</main>`, ctx, want: ['no printed date to attach it to'] },
     { name: 'a cluster on a date already past', html: page([['2026-11-01', '18:00']]).replace(/data-rsvp-state="none"/, 'data-rsvp-state="none"'), ctx, want: ['already passed'] },
+    // Rule 9: the island that makes the remembered platform possible (S022, D281).
+    { name: 'the sign-up cluster painted as plain markup, not as an island', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), clusterHtml({ date: '2026-11-11', time: '18:00' })), ctx, want: ['painted as plain markup, not inside a sign-up island'] },
+    { name: 'an island with no client directive', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), island(clusterHtml({ date: '2026-11-11', time: '18:00' }), ISLAND_CHUNK, '')), ctx, want: ['no client directive: it is server-rendered only'] },
+    { name: 'an island whose shipped chunk never reads localStorage', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), island(clusterHtml({ date: '2026-11-11', time: '18:00' }), '/_astro/SignUpLinksCluster.stripped.js')), ctx: { ...ctx, chunks: { '/_astro/SignUpLinksCluster.stripped.js': 'function reorder(list,p){return list}' } }, want: ['never touches localStorage'] },
+    { name: 'an island whose shipped chunk carries a different preference key', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), island(clusterHtml({ date: '2026-11-11', time: '18:00' }), '/_astro/SignUpLinksCluster.oldkey.js')), ctx: { ...ctx, chunks: { '/_astro/SignUpLinksCluster.oldkey.js': 'const KEY="old-rsvp-key"; localStorage.getItem(KEY);' } }, want: ['preference key "matheapolis-rsvp-platform" — the resolver'] },
   ];
 
   let bad = 0;
@@ -354,7 +423,7 @@ if (selftest) {
     if (c.want.length === 0) { bad++; console.log(`FAIL  "${c.name}" should pass but failed: ${fails[0]}`); continue; }
     const hit = fails.find((f) => c.want.every((w) => f.includes(w)));
     if (hit) console.log(`ok    planting "${c.name}" -> ${hit}`);
-    else { bad++; console.log(`FAIL  planting "${c.name}" produced ${fails.length} failure(s), none naming "${c.want.join(' + ')}": ${fails[0] || 'nothing'}`); }
+    else { bad++; console.log(`FAIL  planting "${c.name}" produced ${fails.length} failure(s), none naming "${c.want.join(' + ')}": ${fails.map((f) => `"${f}"`).join(' | ') || 'nothing'}`); }
   }
   console.log(`check:rsvp-page selftest — ${cases.length} cases, ${bad} wrong`);
   process.exit(bad ? 1 : 0);
@@ -393,9 +462,17 @@ for (const page of PAGES) {
     process.exit(1);
   }
   const html = readFileSync(page.file, 'utf8');
+  // The island chunks this page actually references, read from the dist that produced it (rule 9).
+  const chunks = {};
+  for (const m of html.matchAll(ISLAND_RE)) {
+    const url = attrsOf(m[0])['component-url'];
+    if (!url || url in chunks) continue;
+    const file = resolve(DIST, url.replace(/^\/+/, ''));
+    chunks[url] = existsSync(file) ? readFileSync(file, 'utf8') : undefined;
+  }
   const { surfaces, clusters, fails } = pageFindings(html, {
     meetupEvents: meetupSnap.events ?? [], discordEvents: discordSnap.events ?? [], eventRows: events.events ?? [], urls,
-    fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name,
+    fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name, chunks,
   });
   if (fails.length) {
     for (const f of fails) console.log(`FAIL  ${f}`);

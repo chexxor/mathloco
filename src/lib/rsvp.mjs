@@ -58,6 +58,35 @@ export const DISCORD_OPEN_STATUS = [1, 2];
  *  than promising a headcount-free one-click attend. @retrieved 2026-11-11 from the same file. */
 export const DISCORD_GUILD_ONLY = 2;
 
+/** The shape of each **configured platform link** — the group page, the invite, the group. `MEETUP_URL_SHAPE`
+ *  and `DISCORD_EVENT_URL_SHAPE` above are the *per-event page* shapes read from the snapshots; these are the
+ *  hand-written strings in `src/config.json`, and they are different URLs (a group page is not an event page).
+ *  Written here so the gate, the probe and the resolver describe one thing with one pattern (D264).
+ *  @measured 2026-11-11 by `npm run check:rsvp:links` against the three URLs this repo ships.
+ */
+export const MEETUP_GROUP_URL_SHAPE = /^https:\/\/www\.meetup\.com\/[a-z0-9-]+$/;
+export const DISCORD_INVITE_URL_SHAPE = /^https:\/\/discord\.com\/invite\/[A-Za-z0-9-]+$/;
+/** A Facebook group, the only Facebook surface the club signs people up on. A page (`facebook.com/<name>`) is
+ *  not a group, and the gate refuses it: the promise the site makes is "join the group where the dates are
+ *  posted", and a page is a different thing with different rules. */
+export const FACEBOOK_GROUP_URL_SHAPE = /^https:\/\/www\.facebook\.com\/groups\/[A-Za-z0-9][A-Za-z0-9._-]*$/;
+
+export const LINK_SHAPES = {
+  meetupGroup: MEETUP_GROUP_URL_SHAPE,
+  discordInvite: DISCORD_INVITE_URL_SHAPE,
+  facebookGroup: FACEBOOK_GROUP_URL_SHAPE,
+};
+
+/** Keys whose liveness **no rig like this one can measure**. @measured 2026-11-11 (curl, browser UA, redirects
+ *  followed, Linux native, one request each): every anonymous `GET` to `facebook.com` from this box answers 400
+ *  — `https://www.facebook.com/groups/matheapolis`, `https://www.facebook.com/groups/zzzznotarealgroup1234567890`
+ *  (an id that cannot exist) and `https://www.facebook.com/pg/matheapolis` alike. The status therefore proves
+ *  nothing about any particular URL, so for this key the gate does not ask the network a question the network
+ *  cannot answer: it checks the **shape** of the URL and a **dated, named human confirmation** (D280). A 2xx/3xx
+ *  is still accepted as positive evidence when a probe ever gets one, and then no confirmation is required.
+ */
+export const PROBE_BLIND_KEYS = new Set(['facebookGroup']);
+
 /** The age `data/meetup-events.json` may be before the gate calls it stale, in days.
  *  There is one threshold and one failure, because there is one fix: `node scripts/meetup-events.mjs --write`.
  *  The 28-day "expired" tier this module used to carry is deleted (D272): two numbers that both stop the
@@ -129,6 +158,8 @@ export const linkFindings = (config = {}, nowMs = Date.now()) => {
     const url = urls[key];
     if (!url) continue;   // an empty entry paints nothing, so there is nothing to verify
     if (!/^https:\/\/[^\s]+$/.test(url)) problems.push(`URLs.${key} is not a URL a browser can follow: ${url}`);
+    const shape = LINK_SHAPES[key];
+    if (shape && !shape.test(url)) problems.push(`URLs.${key} is not the shape a ${PLATFORMS[platform]} link can have, so a visitor following it lands nowhere: ${url}`);
     const stamp = stamps[key];
     if (!stamp) { problems.push(`URLs.${key} is printed on pages but nothing has ever checked it: add _verified.${key} (npm run check:rsvp:links measures and stamps them)`); continue; }
     const at = Date.parse(stamp.verifiedAt ?? '');
@@ -136,7 +167,25 @@ export const linkFindings = (config = {}, nowMs = Date.now()) => {
     const age = (nowMs - at) / 86400000;
     if (age < 0) problems.push(`_verified.${key} is stamped in the future: ${stamp.verifiedAt}`);
     if (age > LINK_STAMP_DAYS) problems.push(`_verified.${key} was read ${age.toFixed(0)} days ago; the limit is ${LINK_STAMP_DAYS} days (npm run check:rsvp:links re-measures it)`);
-    if (typeof stamp.status !== 'number' || stamp.status >= 400) problems.push(`URLs.${key} last answered ${stamp.status} — a dead link is printed as a way in`);
+    const probeAnswered = typeof stamp.status === 'number' && stamp.status < 400;
+    if (probeAnswered) continue;   // a real request answered: the strongest evidence this rule accepts
+    if (PROBE_BLIND_KEYS.has(key)) {
+      // For a key in PROBE_BLIND_KEYS the status code is not evidence (see the measurement above), so the gate
+      // asks for the other kind: the URL's shape, checked just above, and a named human, dated (D280).
+      const who = String(stamp.confirmedBy ?? '').trim();
+      const when = Date.parse(stamp.confirmedAt ?? '');
+      if (!who) {
+        problems.push(`URLs.${key} is printed on pages, and ${PLATFORMS[platform]} answers ${stamp.status} to every anonymous request from here, so the only evidence a gate can use is a human's: add _verified.${key}.confirmedBy (who said this is the club's page) and confirmedAt (when they said it)`);
+      } else if (!Number.isFinite(when)) {
+        problems.push(`_verified.${key}.confirmedAt is not a date: ${stamp.confirmedAt}`);
+      } else if (when > nowMs) {
+        problems.push(`_verified.${key}.confirmedAt is in the future: ${stamp.confirmedAt}`);
+      } else if ((nowMs - when) / 86400000 > LINK_STAMP_DAYS) {
+        problems.push(`URLs.${key} was confirmed by ${who} ${((nowMs - when) / 86400000).toFixed(0)} days ago; the limit is ${LINK_STAMP_DAYS} days (the operator re-confirms, or npm run check:rsvp:links gets a status a gate can read)`);
+      }
+      continue;
+    }
+    problems.push(`URLs.${key} last answered ${stamp.status} — a dead link is printed as a way in`);
   }
   for (const key of Object.keys(urls)) {
     if (!Object.values(LINK_KEYS).includes(key) && !key.startsWith('_')) problems.push(`config.URLs carries a link no rule knows about: ${key}`);
@@ -371,3 +420,43 @@ export const signUpPaths = (item, meetupEvents = [], urls = {}, discordEvents = 
     note: noteFor(matching, onDate, discordMatching),
   };
 };
+
+/**
+ * The platform this visitor last signed up on, remembered in `localStorage` (D281).
+ *
+ * Why inference instead of a prompt (S022): the operator's ask was "ask the user once which platform they
+ * prefer, then store their answer". A prompt is a modal on a page whose whole design is a quiet label
+ * (D272), and it asks a question the visitor has already answered by clicking. The click *is* the answer:
+ * the first platform a visitor opens on any date is recorded, and every later cluster puts it first. No
+ * dialog, no cookie banner, nothing to dismiss, and a visitor who never clicks is shown the canonical order
+ * the server painted.
+ *
+ * `localStorage`, not a cookie: the preference changes nothing the server sends, so a cookie would put a
+ * per-request read on a static asset for a decision that only the browser makes. `localStorage` is also
+ * the only one of the two that survives in a Cloudflare Pages static response without a Worker touching it.
+ *
+ * The value is one of `PLATFORMS`' values ('Meetup' / 'Discord' / 'Facebook'). Nothing here is read during
+ * the build: `orderByPreference` is called only by the island, in the browser.
+ */
+export const PREF_KEY = 'matheapolis-rsvp-platform';
+
+/**
+ * A stable permutation: the preferred platform first, everything else in the canonical order this function
+ * was given. It never drops an entry and never reorders anything else, and it returns the input unchanged
+ * when the preference is absent, unknown, or already first — so the server-painted bytes and the hydrated
+ * bytes of a first-time visitor are identical (S022, and `check:rsvp-page` asserts the canonical order in
+ * the artifact).
+ *
+ * If the preferred platform is not in this cluster (a date with no Meetup page, for instance), the order is
+ * untouched: a preference for a platform this row does not offer is not a reason to shuffle the row.
+ */
+export const orderByPreference = (destinations, preferred) => {
+  if (!preferred) return destinations;
+  const i = destinations.findIndex((d) => d.platform === preferred);
+  if (i <= 0) return destinations;   // absent (-1) or already first (0): nothing to move
+  return [destinations[i], ...destinations.slice(0, i), ...destinations.slice(i + 1)];
+};
+
+/** The subset of a cluster that a remembered platform can actually be applied to — used by the gates to
+ *  describe what a visitor with a preference sees, without a browser. */
+export const preferredFirst = (destinations, preferred) => orderByPreference(destinations, preferred).map((d) => d.platform);

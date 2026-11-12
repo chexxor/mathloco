@@ -206,6 +206,19 @@ async function measureShot(shot, want = PAPER, windowHint = null) {
   }
   const cs = [];
   const recs = [];
+  /** How much a face of a ring actually varies: the RGB span of a 5x5 block two rows off the ring. A ring's
+   *  contrast number is a single pair of pixels, so a grain that reaches one face and not the other is
+   *  invisible in the contrast alone - the spans are what let the selftest tell "the grain got behind the
+   *  ring" from "the ring is inside something that paints its own fill" (D143).
+   *  @measured 2026-11-12 by `npm run check:ground:selftest`. */
+  const faceSpan = (mid, y, from, to) => {
+    let mn = 255, mx = 0;
+    for (let dy = from; dy <= to; dy++) for (let dx = -2; dx <= 2; dx++) {
+      if (mid + dx < 0 || mid + dx >= W || y + dy < 0 || y + dy >= H) continue;
+      for (const v of px(mid + dx, y + dy)) { if (v < mn) mn = v; if (v > mx) mx = v; }
+    }
+    return mx - mn;
+  };
   for (const [y, x0, len] of lines) {
     const mid = x0 + Math.floor(len / 2);
     const core = px(mid, y), above = px(mid, y - 2), below = px(mid, y + 2);
@@ -219,6 +232,7 @@ async function measureShot(shot, want = PAPER, windowHint = null) {
     const distRule = Math.hypot(core[0] - RULE_BYTES[0], core[1] - RULE_BYTES[1], core[2] - RULE_BYTES[2]);
     recs.push({
       y, x: x0, len, core,
+      aboveSpan: faceSpan(mid, y, -3, -1), belowSpan: faceSpan(mid, y, 1, 3),
       rule: distRule <= 14,
       own: +own.toFixed(2), other: +other.toFixed(2), ownGround: classify(ownGround), otherGround: classify(otherGround),
     });
@@ -392,14 +406,29 @@ console.log(`wrote ${OUT}/report.json — re-run npm run check:ground after any 
 // ---------------------------------------------------------------------------
 // --selftest: prove the instrument can see a background-image at all (D118).
 // A probe nobody can blind is not an instrument. This builds a texture the CSS-string probes cannot see and
-// requires (1) the SAME flat window reports an excursion it did not on the clean page, (2) a ring's measured
-// contrast MOVES when the grain is behind it, (3) the page's own report of that keyline does NOT move — the
-// counterfactual for the blindness — and (4) the ring does NOT move when the grain is planted on `body` alone,
-// because anything that fills itself paints over the page ground. It mutates a COPY of dist; the shipped
-// artifact is never touched.
+// requires (1) the SAME flat window reports an excursion it did not on the clean page, (2) the SET of ring
+// contrasts SPREADS when the grain is behind them, (3) the page's own report of that keyline does NOT move —
+// the counterfactual for the blindness — and (4) with the grain on `body` alone, some ring faces gain grain
+// and others do not, because the face inside a self-painting element is covered by that fill (D143). It
+// mutates a COPY of dist; the shipped artifact is never touched.
+//
+// Two of these assertions were wrong in their first form, and the selftest is what caught them:
+//   - "the median ring contrast moves" cannot be true of a symmetric +-4-level grain: half the rings sit on a
+//     lighter neighbour and half on a darker one, and with an odd count the median lands back on 3.01 while the
+//     same shot's rings measured 2.96..3.11 off bytes @measured 2026-11-12 by `npm run check:ground:selftest`.
+//     The statistic is the spread, not the middle.
+//   - "the ring does not move when the grain is on body alone" is false: the ring on the page ground does move
+//     (y=71, its outside face spans 6 levels clean and 13 planted), while the ring inside a painted card does
+//     not (y=2077, both faces 6 -> 6). The difference between those two is the claim worth testing.
 // ---------------------------------------------------------------------------
-/** the number a ring is judged by in a selftest row (its contrast against its own ground) */
-const m2 = (r) => (r.hairlineMedian === null || r.hairlineMedian === undefined ? null : r.hairlineMedian);
+/** The SPREAD of the rings' contrasts. A symmetric +-4-level grain cannot move a median: half the rings sit
+ *  on a lighter neighbour and half on a darker one, and with an odd count the median lands back on the same
+ *  number. What a grain definitely does is widen the range, so the instrument's "did the grain get behind the
+ *  ring?" test is the range, not the middle
+ *  @measured 2026-11-12 by `npm run check:ground:selftest`, which reported planted 3.01 vs clean 3.01 while
+ *  the same shot's rings measured 2.96..3.11 off bytes. */
+const spreadOf = (r) => (r.hairlineMin === null || r.hairlineMax === null ? null : +(r.hairlineMax - r.hairlineMin).toFixed(2));
+const rangeOf = (r) => (r.hairlineMin === null ? 'none' : `${r.hairlineMin}..${r.hairlineMax} (spread ${spreadOf(r)})`);
 
 if (SELFTEST) {
   const copy = `${SCRATCH}/selftest-dist`;
@@ -437,15 +466,23 @@ if (SELFTEST) {
   // design consequence of D143's paper texture, and the reason a page grain reads only in the gaps.
   const onBody = await shotFor(`body{background-image:${url};background-repeat:repeat}`);
   const claimed2 = claimedKeylines(onSurfaces.report);
+  /** Per ring, whether the grain reached a face: the RGB span of a 5x5 block two rows off the ring, planted
+   *  minus clean. Rings are matched by their geometry, which does not move between the shots. */
+  const cleanM = await measureShot(`${SCRATCH}/ground-root-${w}.png`, PAPER, base.flat);
+  const key = (p) => `${p.y}:${p.x}:${p.len}`;
+  const cleanPairs = new Map((cleanM.pairs || []).map((p) => [key(p), p]));
+  const faceGrowth = (p) => { const q = cleanPairs.get(key(p)); return q ? Math.max(p.aboveSpan - q.aboveSpan, p.belowSpan - q.belowSpan) : 0; };
+  const reached = (onBody.m.pairs || []).filter((p) => faceGrowth(p) > 2);
+  const covered = (onBody.m.pairs || []).filter((p) => faceGrowth(p) <= 2);
   const checks = [
     ['sees-the-texture', !!(onSurfaces.m.flat && base.flat) && onSurfaces.m.flat.sd > base.flat.sd + 0.2,
       `same ${base.flat?.size}x${base.flat?.size} window at x=${base.flat?.x} y=${base.flat?.y}: sd ${onSurfaces.m.flat?.sd} vs clean ${base.flat?.sd}, span ${onSurfaces.m.flat?.span} vs ${base.flat?.span}`],
-    ['moves-the-hairline', m2(onSurfaces.m) !== null && m2(base) !== null && Math.abs(m2(onSurfaces.m) - m2(base)) > 0.01,
-      `ring against its own ground: planted ${m2(onSurfaces.m)} vs clean ${m2(base)}`],
+    ['moves-the-hairline', spreadOf(onSurfaces.m) !== null && spreadOf(base) !== null && spreadOf(onSurfaces.m) > spreadOf(base) + 0.01,
+      `rings against the ground they are drawn on: planted ${rangeOf(onSurfaces.m)} vs clean ${rangeOf(base)} - a symmetric grain spreads the range, it cannot move a median`],
     ['css-never-moved', claimed2.length && base.claimed.length && claimed2[0] === base.claimed[0],
       `the page's own keyline number: planted ${claimed2.join(',')} vs clean ${base.claimed.join(',')} — identical, which is the blindness this probe exists to close`],
-    ['fills-hide-the-grain', m2(onBody.m) !== null && m2(base) !== null && Math.abs(m2(onBody.m) - m2(base)) <= 0.01,
-      `planted on body instead: the ring stays ${m2(onBody.m)} vs clean ${m2(base)} — an element that paints its own fill covers the grain, so a page texture reads only where nothing paints (D143)`],
+    ['fills-hide-the-grain', reached.length > 0 && covered.length > 0,
+      `grain on body alone reaches ${reached.length} ring face(s) (e.g. y=${reached[0].y}: ${reached[0].aboveSpan}/${reached[0].belowSpan} vs clean ${cleanPairs.get(key(reached[0]))?.aboveSpan}/${cleanPairs.get(key(reached[0]))?.belowSpan}) and leaves ${covered.length} ring(s) flat (e.g. y=${covered[0].y}: ${covered[0].aboveSpan}/${covered[0].belowSpan} unchanged) - a texture reads only where nothing paints, and a ring inside a filled surface is not such a place (D143)`],
   ];
   let bad = 0;
   for (const [name2, ok, detail] of checks) {

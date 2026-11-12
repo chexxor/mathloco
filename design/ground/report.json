@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-11T15:19:18.091Z",
- "siteFp": "0b7617ee15",
+ "measuredAt": "2026-11-12T08:40:17.713Z",
+ "siteFp": "1e5129b0d7",
  "widths": [
   1240,
   390,
@@ -23,8 +23,8 @@
     250,
     246
    ],
-   "groundExact": 1618235,
-   "groundPct": 76.37,
+   "groundExact": 1596573,
+   "groundPct": 76.5,
    "span": 12.666666666666686,
    "sd": 2.68,
    "flat": {
@@ -41,7 +41,7 @@
       250,
       246
      ],
-     "pct": 42.1
+     "pct": 41.9
     },
     {
      "rgb": [
@@ -49,7 +49,7 @@
       245,
       239
      ],
-     "pct": 33.8
+     "pct": 34.1
     },
     {
      "rgb": [
@@ -57,7 +57,7 @@
       57,
       39
      ],
-     "pct": 9.7
+     "pct": 9.8
     },
     {
      "rgb": [
@@ -65,12 +65,12 @@
       0,
       0
      ],
-     "pct": 1
+     "pct": 1.8
     }
    ],
-   "distinct": 55488,
-   "hairlines": 13,
-   "runs": 13,
+   "distinct": 52272,
+   "hairlines": 11,
+   "runs": 11,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -84,6 +84,8 @@
      150,
      136
     ],
+    "aboveSpan": 6,
+    "belowSpan": 6,
     "rule": true,
     "own": 3.01,
     "other": 3.01,
@@ -106,6 +108,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -121,6 +125,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -136,6 +142,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -151,6 +159,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -158,7 +168,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2261,
+     "y": 2253,
      "x": 235,
      "len": 65,
      "core": [
@@ -166,6 +176,8 @@
       150,
       136
      ],
+     "aboveSpan": 220,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -173,14 +185,16 @@
      "otherGround": "paper"
     },
     {
-     "y": 2261,
-     "x": 382,
-     "len": 74,
+     "y": 2253,
+     "x": 339,
+     "len": 129,
      "core": [
       132,
       150,
       136
      ],
+     "aboveSpan": 193,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -188,7 +202,24 @@
      "otherGround": "paper"
     },
     {
-     "y": 2293,
+     "y": 2253,
+     "x": 499,
+     "len": 115,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 51,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 2277,
      "x": 35,
      "len": 1158,
      "core": [
@@ -196,21 +227,8 @@
       150,
       136
      ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 2302,
-     "x": 51,
-     "len": 1125,
-     "core": [
-      132,
-      150,
-      136
-     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -219,43 +237,15 @@
     },
     {
      "y": 2305,
-     "x": 50,
-     "len": 1128,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 2333,
      "x": 32,
-     "len": 81,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 2333,
-     "x": 137,
      "len": 123,
      "core": [
       132,
       150,
       136
      ],
+     "aboveSpan": 163,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -263,7 +253,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2719,
+     "y": 2691,
      "x": 225,
      "len": 136,
      "core": [
@@ -271,6 +261,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -278,7 +270,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2766,
+     "y": 2738,
      "x": 225,
      "len": 136,
      "core": [
@@ -286,6 +278,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -294,7 +288,6 @@
     }
    ],
    "claimedKeylineContrast": [
-    3.01,
     3.01,
     3.01,
     3.01,
@@ -310,9 +303,9 @@
     250,
     246
    ],
-   "groundExact": 763873,
-   "groundPct": 74.3,
-   "span": 12.333333333333343,
+   "groundExact": 761818,
+   "groundPct": 74.73,
+   "span": 12.666666666666686,
    "sd": 2.64,
    "flat": {
     "x": 208,
@@ -328,7 +321,7 @@
       250,
       246
      ],
-     "pct": 42.3
+     "pct": 42.5
     },
     {
      "rgb": [
@@ -336,7 +329,7 @@
       245,
       239
      ],
-     "pct": 31.7
+     "pct": 32
     },
     {
      "rgb": [
@@ -348,16 +341,16 @@
     },
     {
      "rgb": [
-      71,
-      91,
-      76
+      0,
+      0,
+      0
      ],
-     "pct": 0.9
+     "pct": 1.6
     }
    ],
-   "distinct": 38123,
-   "hairlines": 14,
-   "runs": 14,
+   "distinct": 35349,
+   "hairlines": 12,
+   "runs": 12,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -371,6 +364,8 @@
      150,
      136
     ],
+    "aboveSpan": 6,
+    "belowSpan": 6,
     "rule": true,
     "own": 3.01,
     "other": 3.01,
@@ -393,6 +388,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -408,6 +405,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -423,6 +422,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -438,6 +439,8 @@
       150,
       136
      ],
+     "aboveSpan": 42,
+     "belowSpan": 90,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -453,6 +456,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -460,7 +465,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3426,
+     "y": 3398,
      "x": 75,
      "len": 65,
      "core": [
@@ -468,6 +473,8 @@
       150,
       136
      ],
+     "aboveSpan": 220,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -475,14 +482,16 @@
      "otherGround": "paper"
     },
     {
-     "y": 3426,
-     "x": 222,
-     "len": 74,
+     "y": 3398,
+     "x": 179,
+     "len": 129,
      "core": [
       132,
       150,
       136
      ],
+     "aboveSpan": 193,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -490,7 +499,24 @@
      "otherGround": "paper"
     },
     {
-     "y": 3651,
+     "y": 3434,
+     "x": 32,
+     "len": 115,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 51,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 3630,
      "x": 19,
      "len": 352,
      "core": [
@@ -498,6 +524,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -505,59 +533,16 @@
      "otherGround": "paper"
     },
     {
-     "y": 3660,
-     "x": 35,
-     "len": 319,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3663,
-     "x": 34,
-     "len": 322,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3691,
+     "y": 3658,
      "x": 16,
-     "len": 81,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 3691,
-     "x": 121,
      "len": 123,
      "core": [
       132,
       150,
       136
      ],
+     "aboveSpan": 163,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -565,7 +550,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4169,
+     "y": 4137,
      "x": 209,
      "len": 136,
      "core": [
@@ -573,6 +558,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -580,7 +567,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4216,
+     "y": 4184,
      "x": 209,
      "len": 136,
      "core": [
@@ -588,6 +575,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -596,7 +585,6 @@
     }
    ],
    "claimedKeylineContrast": [
-    3.01,
     3.01,
     3.01,
     3.01,
@@ -612,9 +600,9 @@
     250,
     246
    ],
-   "groundExact": 732663,
-   "groundPct": 77.27,
-   "span": 12.333333333333343,
+   "groundExact": 731474,
+   "groundPct": 77.59,
+   "span": 13,
    "sd": 2.64,
    "flat": {
     "x": 208,
@@ -630,7 +618,7 @@
       250,
       246
      ],
-     "pct": 43.6
+     "pct": 43.7
     },
     {
      "rgb": [
@@ -638,7 +626,7 @@
       245,
       239
      ],
-     "pct": 33.4
+     "pct": 33.6
     },
     {
      "rgb": [
@@ -646,20 +634,20 @@
       57,
       39
      ],
-     "pct": 8.1
+     "pct": 8.2
     },
     {
      "rgb": [
-      71,
-      91,
-      76
+      0,
+      0,
+      0
      ],
-     "pct": 0.9
+     "pct": 1.1
     }
    ],
-   "distinct": 27814,
-   "hairlines": 14,
-   "runs": 14,
+   "distinct": 25771,
+   "hairlines": 12,
+   "runs": 12,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -673,6 +661,8 @@
      150,
      136
     ],
+    "aboveSpan": 6,
+    "belowSpan": 6,
     "rule": true,
     "own": 3.01,
     "other": 3.01,
@@ -695,6 +685,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -710,6 +702,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -725,6 +719,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -740,6 +736,8 @@
       150,
       136
      ],
+     "aboveSpan": 17,
+     "belowSpan": 61,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -755,6 +753,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -762,7 +762,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3805,
+     "y": 3777,
      "x": 75,
      "len": 65,
      "core": [
@@ -770,6 +770,8 @@
       150,
       136
      ],
+     "aboveSpan": 220,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -777,14 +779,16 @@
      "otherGround": "paper"
     },
     {
-     "y": 3841,
-     "x": 75,
-     "len": 73,
+     "y": 3813,
+     "x": 32,
+     "len": 128,
      "core": [
       132,
       150,
       136
      ],
+     "aboveSpan": 202,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -792,7 +796,24 @@
      "otherGround": "paper"
     },
     {
-     "y": 4028,
+     "y": 3849,
+     "x": 32,
+     "len": 115,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 51,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 4013,
      "x": 19,
      "len": 282,
      "core": [
@@ -800,6 +821,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -807,59 +830,16 @@
      "otherGround": "paper"
     },
     {
-     "y": 4037,
-     "x": 35,
-     "len": 249,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 4040,
-     "x": 34,
-     "len": 252,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 4068,
+     "y": 4041,
      "x": 16,
-     "len": 81,
-     "core": [
-      132,
-      150,
-      136
-     ],
-     "rule": true,
-     "own": 3.01,
-     "other": 3.01,
-     "ownGround": "paper",
-     "otherGround": "paper"
-    },
-    {
-     "y": 4068,
-     "x": 121,
      "len": 123,
      "core": [
       132,
       150,
       136
      ],
+     "aboveSpan": 163,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -867,7 +847,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4691,
+     "y": 4664,
      "x": 19,
      "len": 136,
      "core": [
@@ -875,6 +855,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -882,7 +864,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4738,
+     "y": 4711,
      "x": 19,
      "len": 136,
      "core": [
@@ -890,6 +872,8 @@
       150,
       136
      ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
      "rule": true,
      "own": 3.01,
      "other": 3.01,
@@ -898,7 +882,6 @@
     }
    ],
    "claimedKeylineContrast": [
-    3.01,
     3.01,
     3.01,
     3.01,

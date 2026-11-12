@@ -164,6 +164,12 @@ const BROWSER = [
   // that sees pixels, and the only one that can go red on a texture.
   { name: 'check:ground', desc: 'the painted page ground and the painted hairlines, off screenshot bytes', needs: ['check:render:dist'], alone: true },
   { name: 'check:ground:selftest', desc: 'four plantings the ground probe must tell apart (it copies dist, so it reads only)', needs: ['check:render:dist', 'check:ground'], alone: true },
+  // The browser half of the RSVP rule (S022, D281): check:rsvp-page proves the bytes Astro builds carry an
+  // island and a chunk that mentions localStorage; only a browser can prove the island hydrates and that a
+  // remembered platform actually reorders the row. Six Firefox spawns of ~2.4s each @measured 2026-11-11
+  // (Linux native, Firefox 159.0).
+  { name: 'check:rsvp-preference', desc: 'the sign-up island hydrates over loopback HTTP, leads with the platform localStorage remembers, keeps every platform in the cluster, and syncs across rows on click', needs: ['check:render:dist'], alone: true },
+  { name: 'check:rsvp-preference:selftest', desc: 'six plantings in a copy of dist, each of which the preference gate must name (no island directive, wrong key, no reorder, reorder-as-filter, dead cross-row event, non-canonical painted order)', needs: ['check:render:dist', 'check:rsvp-preference'], alone: true },
   // last: it edits dist/client/index.html and restores it in a finally block
   // Runs LAST, and the needs list is why it is not just 'after check:render:dist': the selftest PLANTS
   // defects in dist/client/index.html to prove check:render can go red (D118). In the same wave as the

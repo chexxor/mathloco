@@ -33,9 +33,9 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  LINK_KEYS, LINK_STAMP_DAYS, PLATFORMS, SNAPSHOT_FRESH_DAYS,
+  LINK_KEYS, LINK_SHAPES, LINK_STAMP_DAYS, PLATFORMS, PREF_KEY, PROBE_BLIND_KEYS, SNAPSHOT_FRESH_DAYS,
   joinUrl, hourOf, linkFindings, openDiscordEvents, openMeetupEvents, discordSnapshotFindings,
-  snapshotAgeDays, snapshotFindings,
+  orderByPreference, preferredFirst, snapshotAgeDays, snapshotFindings,
 } from '../src/lib/rsvp.mjs';
 import { scheduleWindow, todayInZone, dateOf } from '../src/lib/event-window.mjs';
 
@@ -70,19 +70,29 @@ async function stampLinks(config) {
   // hand-edited config with a top-level `_verified` is still checked rather than silently ignored.
   const verified = { ...((urls._verified ?? config._verified) ?? {}) };
   const rows = [];
+  // A probe measures the status; it cannot measure a human's confirmation. Re-stamping must not erase the
+  // evidence the gate needs for a probe-blind key (D280), so the fields the network cannot produce are carried
+  // forward rather than dropped by a rewrite.
+  const carried = (prev) => {
+    const out = {};
+    for (const f of ['confirmedBy', 'confirmedAt', '_note', 'probe']) if (prev?.[f]) out[f] = prev[f];
+    return out;
+  };
   for (const key of Object.values(LINK_KEYS)) {
     const url = urls[key];
     if (!url) {
       // A closed platform paints nothing, so there is nothing to stamp — but the join page it would fall
-      // back to is still worth reading, because that is the link a visitor actually gets.
-      const status = await measure(joinUrl(urls));
-      rows.push(`  ${String(status).padEnd(6)} ${joinUrl(urls)}  (${key} is empty: nothing is painted for that platform)`);
-      verified[key] = { status: Number(status) || 0, verifiedAt: today, ...(verified[key]?._note ? { _note: verified[key]._note } : {}) };
+      // back to is still worth reading, because that is the link a visitor actually gets. The status is
+      // labelled with what was actually fetched so a reader cannot mistake it for a painted link's answer.
+      const target = joinUrl(urls);
+      const status = await measure(target);
+      rows.push(`  ${String(status).padEnd(6)} ${target}  (${key} is empty: nothing is painted for that platform)`);
+      verified[key] = { status: Number(status) || 0, verifiedAt: today, probe: 'anonymous-GET', probeTarget: target, ...carried(verified[key]) };
       continue;
     }
     const status = await measure(url);
-    rows.push(`  ${String(status).padEnd(6)} ${url}`);
-    verified[key] = { status: Number(status) || 0, verifiedAt: today, ...(verified[key]?._note ? { _note: verified[key]._note } : {}) };
+    rows.push(`  ${String(status).padEnd(6)} ${url}${PROBE_BLIND_KEYS.has(key) ? '  (probe-blind: this status is not evidence, see PROBE_BLIND_KEYS in src/lib/rsvp.mjs)' : ''}`);
+    verified[key] = { status: Number(status) || 0, verifiedAt: today, probe: 'anonymous-GET', ...carried(verified[key]) };
   }
   if (!config.URLs) config.URLs = {};
   config.URLs._verified = verified;
@@ -103,7 +113,9 @@ if (selftest) {
   const day = (n) => new Date(NOW - n * 86400000).toISOString();
   const goodSnap = { source: { fetchedAt: day(1) }, events: [{ id: '1', url: 'https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/', date: '2026-11-11', time: '18:00', status: 'ACTIVE', going: 5 }] };
   const goodDiscord = { source: { fetchedAt: day(1), guildId: '1170385683379126343' }, events: [{ id: '1569601080235532400', url: 'https://discord.com/events/1170385683379126343/1569601080235532400/', date: '2026-11-11', time: '18:00', status: 1, title: 'Study Session' }] };
-  const goodConfig = { URLs: { meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club', discordInvite: 'https://discord.com/invite/wx5S7YJSkU', facebookGroup: '' }, _verified: { meetupGroup: { status: 200, verifiedAt: day(1) }, discordInvite: { status: 200, verifiedAt: day(1) }, facebookGroup: { status: 400, verifiedAt: day(1) } } };
+  // The shipped state: the Facebook group is declared, and its stamp carries the human confirmation the gate
+  // requires for a probe-blind key (D280). The empty-entry control below is the same shape with the URL removed.
+  const goodConfig = { URLs: { meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club', discordInvite: 'https://discord.com/invite/wx5S7YJSkU', facebookGroup: 'https://www.facebook.com/groups/matheapolis' }, _verified: { meetupGroup: { status: 200, verifiedAt: day(1) }, discordInvite: { status: 200, verifiedAt: day(1) }, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(1) } } };
 
   const cases = [
     { name: 'both files fit: no finding', snap: goodSnap, config: goodConfig, want: [] },
@@ -117,7 +129,17 @@ if (selftest) {
     { name: 'a platform the resolver knows that config never declared', snap: goodSnap, config: { URLs: { meetupGroup: goodConfig.URLs.meetupGroup, discordInvite: goodConfig.URLs.discordInvite }, _verified: goodConfig._verified }, want: ['no facebookGroup entry'] },
     { name: 'a link in config that no rule knows about', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, meetupSeries: 'https://www.meetup.com/g/events/' } }, want: ['no rule knows about: meetupSeries'] },
     { name: 'a stamp stamped in the future', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 200, verifiedAt: day(-3) } } }, want: ['stamped in the future'] },
-    { name: 'an empty entry with a 400 stamp: the documented closed platform', snap: goodSnap, config: goodConfig, want: [] },
+    { name: 'an empty entry with a 400 stamp: the documented closed platform', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: '' } }, want: [] },
+    { name: "a declared Facebook group whose stamp carries the operator's confirmation", snap: goodSnap, config: goodConfig, want: [] },
+    { name: 'a Facebook page painted as a group URL: the shape gate refuses it', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: 'https://www.facebook.com/matheapolis' } }, want: ['not the shape a Facebook link can have'] },
+    { name: 'a group URL ending in a per-event page is not a group URL', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: 'https://www.facebook.com/groups/matheapolis/events/123' } }, want: ['not the shape a Facebook link can have'] },
+    { name: 'a probe-blind link with no human behind it', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1) } } }, want: ['the only evidence a gate can use is a human', 'confirmedBy'] },
+    { name: 'a named confirmer with no date', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator' } } }, want: ['confirmedAt is not a date'] },
+    { name: 'a confirmation 61 days old', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(61) } } }, want: ['confirmed by operator 61 days ago', '60'] },
+    { name: 'a confirmation dated in the future', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(-3) } } }, want: ['confirmedAt is in the future'] },
+    { name: 'a probe-blind key whose probe eventually answered 200 needs no confirmation', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 200, verifiedAt: day(1) } } }, want: [] },
+    { name: 'a Meetup link that is an event page rather than the group page', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/' } }, want: ['not the shape a Meetup link can have'] },
+    { name: 'a Discord link that is not an invite', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, discordInvite: 'https://discord.com/server/wx5S7YJSkU' } }, want: ['not the shape a Discord link can have'] },
     { name: 'the Discord snapshot 15 days old', snap: goodSnap, discord: { ...goodDiscord, source: { ...goodDiscord.source, fetchedAt: day(15) } }, config: goodConfig, want: ['Discord snapshot is 15.0 days old', '14'] },
     { name: 'the Discord snapshot with no guild named', snap: goodSnap, discord: { ...goodDiscord, source: { fetchedAt: day(1) } }, config: goodConfig, want: ['names no guild'] },
     { name: 'a Discord event whose URL is not an event page', snap: goodSnap, discord: { ...goodDiscord, events: [{ ...goodDiscord.events[0], url: 'https://discord.com/invite/wx5S7YJSkU' }] }, config: goodConfig, want: ['url this build cannot trust'] },
@@ -132,7 +154,7 @@ if (selftest) {
     { id: 'c', url: 'https://www.meetup.com/g/events/333/', date: '2026-12-01', time: '18:00', status: 'PAST', title: 'Old' },
     { id: 'd', url: 'https://www.meetup.com/g/events/not-a-page', date: '2026-11-11', time: '18:00', status: 'ACTIVE', title: 'Bad shape' },
   ];
-  const urls = { meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x' };
+  const urls = { meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/matheapolis' };
   const discordPages = [
     { id: 'd1', url: 'https://discord.com/events/1170385683379126343/1569601080235532400/', date: '2026-11-11', time: '18:00', status: 1, title: 'Study Session' },
     { id: 'd2', url: 'https://discord.com/events/1170385683379126343/1569601080235532401/', date: '2026-11-21', time: '12:00', status: 3, title: 'Already over' },
@@ -146,12 +168,14 @@ if (selftest) {
     { name: 'a raw row without timeConfirmed is an unsettled hour, whatever its start says', item: { start: '2026-11-11T18:00', timeConfirmed: false }, want: (r) => hourOf(r.raw) === null, note: () => 'hourOf' },
     { name: 'a past Meetup record is never a sign-up path', item: { date: '2026-12-01', time: '18:00' }, want: (r) => r.state === 'none' && r.otherOnDate === 0, note: (r) => `${r.state} ${r.otherOnDate}` },
     { name: 'a page on the date at a different hour is named, not called missing', item: { date: '2026-11-11', time: '20:00' }, want: (r) => r.note === 'Meetup has a page for this date at a different time.', note: (r) => String(r.note) },
-    { name: 'the closed platform contributes nothing', item: { date: '2026-11-11', time: '18:00' }, want: (r) => !r.destinations.some((d) => d.platform === PLATFORMS.facebook), note: (r) => r.destinations.map((d) => d.platform).join(',') },
+    { name: 'an empty platform contributes nothing', item: { date: '2026-11-11', time: '18:00' }, urls: { meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: '' }, want: (r) => !r.destinations.some((d) => d.platform === PLATFORMS.facebook), note: (r) => r.destinations.map((d) => d.platform).join(',') },
+    { name: 'a declared Facebook group is painted on every date, including a date with no page', item: { date: '2026-12-01', time: '18:00' }, meetups: [], discord: discordPages, want: (r) => r.state === 'none' && r.destinations.length === 3 && r.destinations[2].platform === PLATFORMS.facebook && r.destinations[2].href === 'https://www.facebook.com/groups/matheapolis' && r.destinations[2].label === 'Join the Facebook group', note: (r) => `${r.state} ${r.destinations.map((d) => d.label).join(' | ')}` },
+    { name: 'the Facebook link is the group, and comes last, on a date that has its own Meetup page', item: { date: '2026-11-11', time: '18:00' }, want: (r) => r.destinations.map((d) => d.platform).join(',') === 'Meetup,Discord,Facebook' && r.destinations[2].label === 'Join the Facebook group', note: (r) => r.destinations.map((d) => `${d.platform}:${d.label}`).join(' | ') },
     { name: 'a guild scheduled event on the date and hour is a sign-up path', item: { date: '2026-11-11', time: '18:00' }, discord: discordPages, want: (r) => r.state === 'meetup' && r.discord.length === 1 && r.destinations.map((d) => d.href).join(' ').includes('discord.com/events/1170385683379126343/1569601080235532400/'), note: (r) => `${r.state} ${r.destinations.map((d) => d.platform).join(',')}` },
-    { name: 'a date with only a Discord page says so, and drops the invite', item: { date: '2026-11-11', time: '18:00' }, discord: [{ id: 'd1', url: 'https://discord.com/events/1170385683379126343/1569601080235532400/', date: '2026-11-11', time: '18:00', status: 2, title: 'Study Session' }], meetups: [], want: (r) => r.state === 'discord' && r.destinations.length === 2 && r.destinations[1].label === 'Sign up on Discord' && !r.destinations.some((d) => d.href.includes('invite')), note: (r) => `${r.state} ${r.destinations.map((d) => d.label).join(' | ')}` },
-    { name: 'a completed Discord event is not a sign-up path', item: { date: '2026-11-21', time: '12:00' }, discord: discordPages, meetups: [], want: (r) => r.state === 'none' && r.discord.length === 0 && r.destinations[1].href === 'https://discord.com/invite/x', note: (r) => `${r.state} ${r.destinations.map((d) => d.href).join(' ')}` },
+    { name: 'a date with only a Discord page says so, and drops the invite', item: { date: '2026-11-11', time: '18:00' }, discord: [{ id: 'd1', url: 'https://discord.com/events/1170385683379126343/1569601080235532400/', date: '2026-11-11', time: '18:00', status: 2, title: 'Study Session' }], meetups: [], want: (r) => r.state === 'discord' && r.destinations.length === 3 && r.destinations[1].label === 'Sign up on Discord' && r.destinations[2].label === 'Join the Facebook group' && !r.destinations.some((d) => d.href.includes('invite')), note: (r) => `${r.state} ${r.destinations.map((d) => d.label).join(' | ')}` },
+    { name: 'a completed Discord event is not a sign-up path', item: { date: '2026-11-21', time: '12:00' }, discord: discordPages, meetups: [], want: (r) => r.state === 'none' && r.discord.length === 0 && r.destinations.length === 3 && r.destinations[1].href === 'https://discord.com/invite/x' && r.destinations[2].platform === PLATFORMS.facebook, note: (r) => `${r.state} ${r.destinations.map((d) => d.href).join(' ')}` },
     { name: 'a Discord page at a different hour is not attached to the row', item: { date: '2026-11-21', time: '12:00' }, discord: discordPages, meetups: [{ id: 'm', url: 'https://www.meetup.com/g/events/666/', date: '2026-11-21', time: '12:00', status: 'ACTIVE', title: 'On time' }], want: (r) => r.state === 'meetup' && r.discord.length === 0, note: (r) => `${r.state} ${r.discord.length}` },
-    { name: 'a date with no page anywhere names the hole and the fallback', item: { date: '2026-12-01', time: '18:00' }, discord: discordPages, meetups: [], want: (r) => r.state === 'none' && r.note === 'No sign-up page for this date yet — ask in the chat and the club will tell you when it is posted.' && r.destinations.map((d) => d.label).join(' | ') === 'Join the Meetup group | Join the Discord chat', note: (r) => `${r.state} ${r.destinations.map((d) => d.label).join(' | ')}` },
+    { name: 'a date with no page anywhere names the hole and the fallback', item: { date: '2026-12-01', time: '18:00' }, discord: discordPages, meetups: [], want: (r) => r.state === 'none' && r.note === 'No sign-up page for this date yet — ask in the chat and the club will tell you when it is posted.' && r.destinations.map((d) => d.label).join(' | ') === 'Join the Meetup group | Join the Discord chat | Join the Facebook group', note: (r) => `${r.state} ${r.destinations.map((d) => d.label).join(' | ')}` },
   ];
 
   let bad = 0;
@@ -169,12 +193,43 @@ if (selftest) {
     }
   }
   for (const c of ruleCases) {
-    const r = signUpPaths(c.item, [...(c.meetups ?? pages), ...(c.extra ?? [])], urls, c.discord ?? []);
+    const r = signUpPaths(c.item, [...(c.meetups ?? pages), ...(c.extra ?? [])], c.urls ?? urls, c.discord ?? []);
     r.raw = c.item;
     if (c.want(r)) console.log(`ok    ${c.name}`);
     else { bad++; console.log(`FAIL  ${c.name}\n      got: ${c.note(r)}`); }
   }
-  console.log(`check:rsvp selftest — ${cases.length + ruleCases.length} cases, ${bad} wrong`);
+
+  // The reorder rule (S022, D281). The island calls this exact function, so a mistake here is a mistake on
+  // every painted row; the two properties that matter are that it is a **permutation** (nothing is dropped)
+  // and that it is a **no-op** when the preference cannot apply (absent, unknown, already first, or not on
+  // this row). Those are the properties `check:rsvp-page` and the browser probe can then assert.
+  const four = signUpPaths({ date: '2026-11-11', time: '18:00' }, pages, urls, discordPages).destinations;
+  const twoMeetups = signUpPaths({ date: '2026-11-11', time: '18:00' }, [...pages, { id: 'e', url: 'https://www.meetup.com/g/events/444/', date: '2026-11-11', time: '18:00', status: 'ACTIVE', title: 'Second' }], urls, discordPages).destinations;
+  const noMeetup = signUpPaths({ date: '2026-12-01', time: '18:00' }, [], { ...urls, meetupGroup: '' }, discordPages).destinations;
+  const prefCases = [
+    { name: 'no preference paints the canonical order', want: 'Meetup,Discord,Facebook', list: four, preferred: null },
+    { name: 'a remembered Facebook puts the group first and leaves the rest in order', want: 'Facebook,Meetup,Discord', list: four, preferred: 'Facebook' },
+    { name: 'a remembered Discord puts the event page first', want: 'Discord,Meetup,Facebook', list: four, preferred: 'Discord' },
+    { name: 'a preference already satisfied changes nothing', want: 'Meetup,Discord,Facebook', list: four, preferred: 'Meetup' },
+    { name: 'a preference for a platform this row does not offer changes nothing', want: 'Meetup,Discord', list: four.filter((d) => d.platform !== 'Facebook'), preferred: 'Facebook' },
+    { name: 'a preference for a platform the club never had', want: 'Meetup,Discord,Facebook', list: four, preferred: 'Mobilizon' },
+    { name: 'an empty string is not a preference', want: 'Meetup,Discord,Facebook', list: four, preferred: '' },
+    { name: 'the reorder never eats a second Meetup page on the same hour', want: 'Facebook,Meetup,Meetup,Discord', list: twoMeetups, preferred: 'Facebook' },
+    { name: 'a remembered Meetup on a date with no Meetup page leaves the row alone', want: 'Discord,Facebook', list: noMeetup, preferred: 'Meetup' },
+    { name: 'every destination survives the permutation', want: 'FOUR', list: four, preferred: 'Facebook' },
+  ];
+  for (const c of prefCases) {
+    const got = preferredFirst(c.list, c.preferred).join(',');
+    if (c.want === 'FOUR') {
+      if (orderByPreference(c.list, c.preferred).length === c.list.length) console.log(`ok    ${c.name}`);
+      else { bad++; console.log(`FAIL  ${c.name}: ${orderByPreference(c.list, c.preferred).length} destinations from ${c.list.length}`); }
+      continue;
+    }
+    if (got === c.want) console.log(`ok    ${c.name} -> ${got}`);
+    else { bad++; console.log(`FAIL  ${c.name}: got ${got}, want ${c.want}`); }
+  }
+  console.log(`ok    the preference key the island writes is the resolver's own: "${PREF_KEY}"`);
+  console.log(`check:rsvp selftest — ${cases.length + ruleCases.length + prefCases.length} cases, ${bad} wrong`);
   process.exit(bad ? 1 : 0);
 }
 
@@ -261,6 +316,11 @@ console.log(`ok    Discord snapshot: ${(discordSnap.events ?? []).length} schedu
 console.log(`ok    ${open.length} open Meetup sign-up page(s), every URL matching MEETUP_URL_SHAPE; ${open.filter((e) => e.time).length} with a settled clock`);
 console.log(`ok    ${openDiscord.length} open Discord event page(s), every URL matching DISCORD_EVENT_URL_SHAPE; no user_count stored (D265)`);
 console.log(`ok    ${configured.length} platform link(s) stamped (oldest: ${oldest.k} ${oldest.at}, answered ${oldest.status}; limit ${LINK_STAMP_DAYS} days)`);
+const human = configured.filter((e) => PROBE_BLIND_KEYS.has(e.key));
+if (human.length) {
+  console.log(`ok    ${human.map((e) => `${e.key} is probe-blind (${PLATFORMS[e.platform]} answers ${stamps[e.key].status} to every anonymous GET from this rig), so it stands on ${stamps[e.key].confirmedBy}'s confirmation of ${stamps[e.key].confirmedAt} and on LINK_SHAPES.${e.key} (D280)`).join('; ')}`);
+  console.log(`ok    every configured link matches its platform's shape: ${configured.map((e) => `${e.key} ${LINK_SHAPES[e.key] ? 'yes' : 'no shape rule'}`).join(', ')}`);
+}
 if (closed.length) console.log(`ok    ${closed.length} platform(s) closed and painted nowhere: ${closed.map((e) => PLATFORMS[e.platform]).join(', ')}`);
 console.log(`ok    ${printNote}`);
 console.log('ok    headcounts stay in the snapshots: meetupView() and discordView() drop `going` and `user_count`, and check:rsvp-page reads the painted bytes (D272)');

@@ -449,28 +449,46 @@ Rules that are not decoration:
 - **The sign-up cluster is a quiet label, never a control** (S019, D272). Under each printed date sits one cluster
   of links, ordered **Meetup, Discord, Facebook**: `text-label font-medium text-ink`, underline at
   `decoration-rule`, `min-h-8` (32px), focus ring — no fill, no keyline, no `data-control`. A row is already one
-  boundary (D220), so a 48px block control inside it is two boxes drawn twice (D149-3c). A platform with no
-verified URL in `src/config.json` is painted nowhere, and `npm run check:rsvp-page` proves that from the built
-bytes rather than from the component's silence. Measured @measured 2026-11-11 by `npm run check:render`: the
-cluster box is **32px** tall at 1240, 640 and 390 and **68px** at 320 where the two labels wrap, its links render
-the label tier **13.3px** at **12.02** contrast on paper — and the gate now asserts all three, because
-`check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of which
-must go red.
+  boundary (D220), so a 48px block control inside it is two boxes drawn twice (D149-3c). A platform the club
+declares in `src/config.json` is painted on **every** printed date; a platform whose entry is empty is painted
+nowhere, and `npm run check:rsvp-page` proves both directions from the built bytes rather than from the
+component's silence. The box is **32px** tall at 1240 and 640 — Meetup, Discord and Facebook all on one line —
+**68px** at 390 where Facebook takes a second line and **104px** at 320 where each label takes its own, each label
+occupying exactly one 32px line box at every width @measured 2026-11-12 by `npm run check:render:dist` and
+`node design/grill/serve-measure.mjs dist/client / design/grill/cluster-measure.js 390 2400` (Linux native, Firefox
+159.0). Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
+because `check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of
+which must go red.
+- **The order is a permutation, never a filter** (S022, D281). The server paints Meetup, Discord, Facebook; the
+  browser leads with the platform this visitor last opened (`localStorage`, `PREF_KEY` in `src/lib/rsvp.mjs`), and
+  every cluster on the page follows. Nothing is hidden, dimmed or removed, and a JavaScript-off visitor, a crawler
+  and a screen reader all get the canonical order the gate asserts. The mechanism costs bytes @measured 2026-11-12
+  by `node design/grill/island-cost.mjs` (Linux native): the four island tags on `/`, `/schedule` and `/chat` are
+  **1927 gzip**, the inline island-runtime scripts **5763 gzip**, and the lazily fetched `SignUpLinksCluster` chunk
+  **1235 gzip** on the two pages that carry a cluster; against an identical copy of the same build with the island
+  mechanism removed the three pages weigh **+815 gzip** in total. The cluster markup a JS-off visitor sees is
+  **2142 gzip** and is byte-identical either way.
 
-Measured, at one viewport on both surfaces @measured 2026-11-11 by `node design/schedule-geometry.mjs`: at 1240
-the homepage card and the taller schedule row are both **1164x217**, with a **112x96** leaf, a **633x168** copy
-lane (the list's second row: **633x136**, and **633x164** inside its own **1164x196** box) and a **323x185** plate
-whose right edge sits 24px inside the keyline; at 1024 the row is **948x224** with a **417x192** lane; at 900
-**840x481** with a **792x136** lane; at 768 **708x481** with a **660x136** lane; at 640, stacked, **580x509** with a
-**532x164** lane and the same **323x185** plate on its own line; at 390 the three boxes are 346x616, 346x560 and
-346x504 with the same **112x96** leaf and a plate capped to the column (**314x179** / **314x151**). What the sign-up
-cluster costs, measured by running the same probe against a copy of the built page with every cluster stripped
-@measured 2026-11-11 by `node design/schedule-geometry.mjs --dist .design/tmp-no-cluster`: **+44px on the copy
-lane** in every box, **0px of row height at 1240** where the plate is already taller than the lane, **8px** on the
-row whose plate is short, **7-8px at 1024**, **44px per row from 900 down to 390** where the lane is the tallest
-thing in the box, and **80px at 320** where the two labels wrap. Page totals
-@measured 2026-11-11 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
-same tool on `/` only): homepage **3071px at 1240**, **4597 at 390**, **5132 at 320**; `/schedule` **1200px at
+Measured, at one viewport on both surfaces @measured 2026-11-12 by `node design/schedule-geometry.mjs --widths 1240 1024 900 768 640 390 320` on
+`dist/client` (Linux native, Firefox 159.0): at 1240 the homepage card is **1164x217** with a **112x96** leaf, a
+**633x168** copy lane and a **323x185** plate whose right edge sits 24px inside the keyline; the list's two rows are
+**1164x217** (**633x136** lane, **323x185** plate) and **1164x196** (**633x164** lane, **323x156** plate). At 1024
+the card is **948x292** with a **417x260** lane and the rows are **948x260** / **948x232** (**417x228** / **417x200**
+lanes); at 900 **840x513** and **840x481** / **840x452** with **792x168**, **792x136** and **792x136** lanes; at 768
+**708x513** and **708x481** / **708x452** (**660x168**, **660x136**); at 640, stacked, **580x541** and **580x509** /
+**580x480** (**532x196**, **532x164**) with the same **323x185** plate on its own line; at 390 the boxes are
+**346x652**, **346x596** and **346x540** with lanes **314x313**, **314x257**, **314x229** and the plate capped to the
+column (**314x179** / **314x151**); at 320 they are **276x672**, **276x616** and **276x570** with lanes **244x373**,
+**244x317**, **244x293** and plates **244x139** / **244x118**. What the sign-up cluster costs, measured by running
+the same probe against a copy of the built page with every cluster stripped
+@measured 2026-11-12 by `node design/grill/strip-clusters.mjs` then `node design/schedule-geometry.mjs --dist .design/tmp-no-cluster`: the copy
+lane gains **+44px** at 1240, 900, 768 and 640, **+80px** at 1024 and 390 and **+116px** at 320, but the *row* only
+grows where the lane is the tallest thing in the box: **0px** on the homepage card at 1240 (the plate is already
+taller), **+8px** on the short list row at 1240, **+43/+44px** from 1024 down to 640, **+80px** at 390 and
+**+116px** at 320 — so three platforms cost **44px** of a row on a desktop and **116px** on the narrowest phone.
+Page totals
+@measured 2026-11-12 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
+same tool on `/` only): homepage **3099px at 1240**, **4661 at 390**, **5287 at 320**; `/schedule` **1200px at
 1240** with three empty runs totalling 330px (27.5% of the page). The list-to-its-own-page saving measured in the
 2026-11-07 pass was **4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history
 and the numbers above as the state.

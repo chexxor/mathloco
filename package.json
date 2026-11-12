@@ -33,6 +33,8 @@
     "check:rsvp:links": "node scripts/check-rsvp.mjs --links",
     "check:rsvp-page": "node scripts/check-rsvp-page.mjs",
     "check:rsvp-page:selftest": "node scripts/check-rsvp-page.mjs --selftest",
+    "check:rsvp-preference": "node scripts/check-rsvp-preference.mjs",
+    "check:rsvp-preference:selftest": "node scripts/check-rsvp-preference.mjs --selftest",
     "events:discord": "node scripts/discord-events.mjs --write",
     "events:discord:check": "node scripts/discord-events.mjs --check",
     "check:schedule-window": "node scripts/check-schedule-window.mjs",

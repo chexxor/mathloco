@@ -19,9 +19,14 @@
  * designed to make the loudest thing on the page.
  *
  * Order is not decorative: Meetup first (the club's calendar of record for sign-up, D259), then Discord, then
- * Facebook. A platform with no **verified** URL is not in the list at all — it is not rendered, and
+ * Facebook. A visitor who keeps opening one platform gets that platform first from then on (S022, D281) — but
+ * the reorder happens in the browser, in `SignUpLinksCluster.svelte`, and the bytes this file builds are still
+ * the canonical order, so the gate's "what the resolver says" comparison is against the server's answer, not
+ * against one visitor's history. A platform with no **verified** URL is not in the list at all — it is not rendered, and
  * `scripts/check-rsvp-page.mjs` asserts the absence from the built bytes rather than trusting this file's
- * silence (S019's open question 3).
+ * silence (S019's open question 3). The same gate asserts the mirror, in the other direction (D280): every
+ * platform `src/config.json` declares must appear in **every** printed cluster, so a component that quietly
+ * drops one is caught as surely as one that invents a platform.
  *
  * The labels name the platform and the action (D273, 2026-11-11). The operator's ruling was that a visitor
  * should see several ways in, plainly, rather than one button called "Details and sign-up" that happens to go
@@ -31,10 +36,15 @@
  * hidden " on Meetup" suffix; a label that is an event title (the `several` state) carries it in the
  * screen-reader text instead, so two lifted-out links are never both called "Proofs".
  *
- * Facebook is the one platform the club has no verified home on. Measured 2026-11-10 (Linux native, curl,
- * browser UA): every candidate group URL this rig can name answers 400 with a login redirect, so
- * `config.URLs.facebookGroup` is empty and no Facebook link exists. When the operator supplies a group URL
- * that answers, adding the string to `src/config.json` is the whole change; nothing here needs editing.
+ * Facebook is the one platform this rig cannot measure. Measured 2026-11-11 (Linux native, curl, browser UA,
+ * redirects followed): Facebook answers **400 to every anonymous GET** from here — the club's group
+ * (`/groups/matheapolis`), a group that does not exist, and a page alike — so a status code is not evidence
+ * for or against any particular URL, and a gate that treated one as such would be checking nothing
+ * (D280). The club's group is public and the operator named it (`.notes/SESSIONS.md`, 2026-11-11), so the
+ * gate holds that key on the two things it *can* read: `FACEBOOK_GROUP_URL_SHAPE` in `src/lib/rsvp.mjs`, and a
+ * dated, named confirmation (`_verified.facebookGroup.confirmedBy` / `confirmedAt`) inside the same 60-day
+ * window the probe stamps use. When a probe that can reach Facebook exists, its 2xx/3xx stamp replaces the
+ * confirmation; nothing in this markup changes, because the component only ever reads `paths.destinations`.
  *
  * Discord is not just a chat. A guild scheduled event has its own page, `discord.com/events/<guild>/<id>/`,
  * and that is a sign-up surface (D274). Whether one exists for a printed date is not guessed: it is read from
@@ -65,6 +75,7 @@ import config from '../config.json';
 import meetupSnapshot from '../../data/meetup-events.json';
 import discordSnapshot from '../../data/discord-events.json';
 import { signUpPaths, snapshotAgeDays } from '../lib/rsvp.mjs';
+import SignUpLinksCluster from '../components/SignUpLinksCluster.svelte';
 import type { UpcomingItem } from '../lib/content.ts';
 
 type Props = {
@@ -79,40 +90,23 @@ const age = snapshotAgeDays(meetupSnapshot);
 const discordAge = snapshotAgeDays(discordSnapshot);
 ---
 
-<div
-  class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1"
-  data-rsvp-cluster
-  data-rsvp-state={paths.state}
-  data-rsvp-date={paths.date}
-  data-rsvp-hour={paths.hour ?? 'unsettled'}
-  data-rsvp-snapshot={meetupSnapshot.source.fetchedAt}
-  data-rsvp-age={age === null ? 'unknown' : age.toFixed(1)}
-  data-rsvp-discord-snapshot={discordSnapshot.source?.fetchedAt ?? 'none'}
-  data-rsvp-discord-age={discordAge === null ? 'unknown' : discordAge.toFixed(1)}
->
-  {/* An absence is a named state, never a blank (DESIGN.md "States"): the row says plainly that neither
-     calendar has a page for this date, and the link that follows is the group's join page rather than a
-     promise about a meeting page. The line is `ink-3` meta — the same lane the row's "time not set" and the
-     dated line use — so it reads as a fact about the feed, not as a second heading. */}
-  {paths.note && (
-    <p class="text-label text-ink-3">{paths.note}</p>
-  )}
-  {paths.destinations.map((d) => (
-    <a
-      href={d.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      data-rsvp-platform={d.platform}
-      data-rsvp-date={paths.date}
-      class="min-h-8 inline-flex items-center gap-1 text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold hover:decoration-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
-    >
-      {d.label}{' '}
-      {/* The visible label already names the platform and the action (D273), so the suffix exists only for the
-         case where it cannot: a link lifted out of context — a screen reader's link list — still needs to say
-         that it leaves the page, and a title-labelled link needs its platform. It is not painted, so
-         `check:render` never measures it as text. */}
-      <span class="sr-only">{d.srOnly}</span>
-      <span aria-hidden="true">→</span>
-    </a>
-  ))}
-</div>
+<!-- The cluster itself lives in `src/components/SignUpLinksCluster.svelte` (S022, D281). This file only
+  decides *what* the row signs people up on; the component decides *in what order* a particular visitor sees
+  it. Astro server-renders the island, so the bytes `check:rsvp-page` reads are produced here at build time in
+  the canonical order (Meetup, Discord, Facebook) — the visitor's remembered platform is applied in the
+  browser, never on the server, so a JavaScript-off visitor, a crawler and a screen reader all get the same
+  order the gate asserts. Everything passed below is a primitive or a plain array because it is serialised
+  into the island tag: the snapshots and the config never leave the server. `client:visible` is the same
+  strategy the /chat page uses for `DiscordSummary.svelte`. -->
+<SignUpLinksCluster
+  client:visible
+  destinations={paths.destinations}
+  note={paths.note}
+  date={paths.date}
+  signupState={paths.state}
+  hour={paths.hour ?? 'unsettled'}
+  meetupSnapshot={meetupSnapshot.source.fetchedAt}
+  meetupAge={age === null ? 'unknown' : age.toFixed(1)}
+  discordSnapshot={discordSnapshot.source?.fetchedAt ?? 'none'}
+  discordAge={discordAge === null ? 'unknown' : discordAge.toFixed(1)}
+/>

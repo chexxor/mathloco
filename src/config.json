@@ -15,18 +15,21 @@
     "image": "/matheapolis-social-share.jpg"
   },
   "URLs": {
-    "_rule": "Every non-empty URL here is printed on a page as a promise about a site this club does not control, so each one carries a dated verification stamp in `_verified` (S019, D272). `npm run check:rsvp:links` re-measures them with one GET each and writes the stamp; `npm run check:rsvp` fails the build when a configured link has no stamp, a stamp older than 60 days, or a stamp that last answered 4xx/5xx. A platform whose entry is empty is not rendered: src/components/SignUpLinks.astro takes its destinations from signUpPaths() in src/lib/rsvp.mjs, and scripts/check-rsvp-page.mjs asserts the absence from the built bytes rather than trusting the component's silence. All four keys must be present, empty or not - an unchosen platform is not the same thing as a closed one.",
+    "_rule": "Every non-empty URL here is printed on a page as a promise about a site this club does not control, so each one carries a dated verification stamp in `_verified` (S019, D272). `npm run check:rsvp:links` re-measures them with one GET each and writes the stamp; `npm run check:rsvp` fails the build when a configured link has no stamp, a stamp older than 60 days, a URL that is not the shape its platform can have (`LINK_SHAPES` in src/lib/rsvp.mjs), or a stamp that last answered 4xx/5xx. One key is an exception, and the exception lives in code, not prose: `facebookGroup` is in `PROBE_BLIND_KEYS` because every anonymous request this rig can make to facebook.com answers 400 whatever the URL is - a group that exists and an id that cannot exist both answer 400 @measured 2026-11-11 by `node scripts/check-rsvp.mjs --links` (Linux native, browser UA, redirects followed) - so a status code there is not evidence. For that key the gate asks the network nothing and asks a human something: the URL must match the group shape and carry `confirmedBy` and a `confirmedAt` inside the same 60-day window (S021, D280). A 2xx/3xx from any future probe still counts as the strongest evidence and makes the confirmation unnecessary. A platform whose entry is empty is not rendered: src/components/SignUpLinks.astro takes its destinations from signUpPaths() in src/lib/rsvp.mjs, and scripts/check-rsvp-page.mjs asserts the absence from the built bytes rather than trusting the component's silence. All four keys must be present, empty or not - an unchosen platform is not the same thing as a closed one.",
     "meetupGroup": "https://www.meetup.com/minneapolis-mathematics-book-club",
     "discordInvite": "https://discord.com/invite/wx5S7YJSkU",
-    "facebookGroup": "",
+    "facebookGroup": "https://www.facebook.com/groups/matheapolis",
     "_verified": {
       "_how": "One anonymous GET each with a browser UA, redirects followed, from the dev rig (Linux, native - no WSL, no Docker). Written by `npm run check:rsvp:links`. The 60-day limit is LINK_STAMP_DAYS in src/lib/rsvp.mjs, the same age rule check:figures applies to a measured number in DESIGN.md (D151).",
       "meetupGroup": { "status": 200, "verifiedAt": "2026-11-10" },
       "discordInvite": { "status": 200, "verifiedAt": "2026-11-10" },
       "facebookGroup": {
         "status": 400,
-        "verifiedAt": "2026-11-10",
-        "_note": "No Facebook group page answers from this rig: /groups/matheapolis, /groups/minneapolis.math.book.club and /minneapolis.math.book.club all answer 400 with a login wall @measured 2026-11-10 by check:rsvp:links. The entry is therefore empty and no Facebook link is painted (S019 open question 3). When the operator supplies a group URL that answers, filling this string is the whole change - nothing in src/components/SignUpLinks.astro or src/lib/rsvp.mjs needs editing."
+        "verifiedAt": "2026-11-11",
+        "probe": "anonymous-GET",
+        "confirmedBy": "operator",
+        "confirmedAt": "2026-11-11",
+        "_note": "The status in this stamp proves nothing about the URL: measured 2026-11-11 (Linux native, curl, browser UA, redirects followed, one request each) facebook.com answers 400 to /groups/matheapolis, /groups/MinneapolisMathBookClub, /matheapolis, /pg/matheapolis and /groups/zzzznotarealgroup1234567890 - an id that cannot exist - identically @measured 2026-11-11 by the same anonymous GET this probe uses. So the evidence for this link is the operator's word, recorded in .notes/SESSIONS.md: the group is public at https://www.facebook.com/groups/matheapolis (S021, D280). Re-confirm within 60 days, or run `npm run check:rsvp:links` again and let a 2xx/3xx replace the confirmation."
       }
     }
   }
