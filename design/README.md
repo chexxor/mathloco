@@ -11,7 +11,7 @@ the operator actually chose from, and the machine records the phases wrote. It i
 | path | tracked | holds |
 | --- | --- | --- |
 | `design/` | **yes** | live tooling (gates, harness, probes), one-shot history, and the evidence a doc cites |
-| `.design/` | no — `.gitignore` names every pattern in it | whatever a run regenerates: `tmp-*`, `render/` (the render gate's raw per-route/width reports), `.probe-shot-*.png`, candidate `fonts/*.woff2` |
+| `.design/` | no — `.gitignore` ignores the whole directory (D286), so a new probe cannot write scratch that `git status` will offer as a commit | whatever a run regenerates: `tmp-*`, `render/` (the render gate's raw per-route/width reports), `rsvp-shot/` screenshots, `.probe-shot-*.png`, candidate `fonts/*.woff2` |
 
 The test for a new file: **if a claim in `DESIGN.md` / `.notes/DECISIONS.md` cites it, or a script runs
 it, it belongs here. If re-running a tool reproduces it and nobody cites the file itself, it belongs in

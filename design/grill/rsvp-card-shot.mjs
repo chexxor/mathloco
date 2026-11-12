@@ -44,9 +44,13 @@ fs.mkdirSync(out, { recursive: true });
 const slug = (route) => (route === '/' ? 'home' : route.replace(/^\/+|\/+$/g, ''));
 
 function runProbe(route, w, h, shot) {
-  const stdout = execFileSync('node', [
-    path.join('design', 'grill', 'serve-measure.mjs'), dist, route, probe, String(w), String(h), shot,
-  ], { encoding: 'utf8' });
+  // The shot argument is appended only when there is one. `execFileSync` stringifies `null` to "null",
+  // and serve-measure.mjs takes the shot as a positional: measured 2026-11-12 the height pass therefore
+  // handed it the string "null", `if (shotOut)` was true, and the probe wrote a 154KB PNG named `null`
+  // in the repo root (D286). Optional positional args are appended, never passed as null.
+  const args = [path.join('design', 'grill', 'serve-measure.mjs'), dist, route, probe, String(w), String(h)];
+  if (shot) args.push(shot);
+  const stdout = execFileSync('node', args, { encoding: 'utf8' });
   const start = stdout.indexOf('{');
   if (start < 0) throw new Error(`${route} @ ${w}: the probe posted nothing`);
   try {

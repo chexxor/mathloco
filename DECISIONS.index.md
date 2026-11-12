@@ -293,5 +293,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D283** (2026-11-12) — A symmetric noise planted behind a hairline spreads its range; it does not move its median (2026-11-12, delegate-decided, reversible; Linux native, Firefox 159.0, Node 24.22.1, `node design/pixel-ground.mjs --selftest`)
 - **D284** (2026-11-12) — A selftest that kills a listener must kill the listener, not the dispatch; and it must assert what the probe sent, not what the DOM reports back (2026-11-12, delegate-decided, reversible; Linux native, Firefox 159.0, Node 24.22.1, `node scripts/check-rsvp-preference.mjs --selftest`)
 - **D285** (2026-11-12) — "Show me the widget" is answered with a re-runnable probe and a URL, not a description of one (2026-11-12, operator request + delegate-decided, reversible; Linux native, Firefox 159.0, Node 24.22.1, `node design/grill/rsvp-card-geometry.mjs`, `node design/grill/rsvp-card-shot.mjs`)
+- **D286** (2026-11-12) — Scratch is ignored by the directory, not by a list of patterns; an optional argument is appended, never passed as null (2026-11-12, delegate-decided, reversible; Linux native, Node 24.22.1, `git status --short -- .`, `node design/grill/rsvp-card-shot.mjs`)
 
-Defined: 285 (D1-D285). Unused ids: none.
+Defined: 286 (D1-D286). Unused ids: none.

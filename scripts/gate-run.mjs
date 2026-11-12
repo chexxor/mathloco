@@ -94,15 +94,15 @@ const DEPLOY = [
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
   // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
   { name: 'check:rsvp', desc: 'the Meetup snapshot and the Discord guild snapshot are both dated and inside the window, and every printed platform URL carries a stamp under 60 days that answered 2xx/3xx' },
-  { name: 'check:rsvp:selftest', desc: 'the link-map gate can still fail (28 cases: snapshot, config and resolver plantings)' },
+  { name: 'check:rsvp:selftest', desc: 'the link-map gate can still fail (50 cases: snapshot, config and resolver plantings)' },
   // The page gate's own defect catalog runs on in-memory fixture pages, not on dist/, so it can fire on a
-  // branch nobody has built yet (D118). 31 cases = 30 plantings plus one clean control page: missing cluster,
+  // branch nobody has built yet (D118). 37 cases = 36 plantings plus one clean control page: missing cluster,
   // wrong date, invented hour, an unsettled hour painted as settled, missing note, a note claiming an absence
   // the resolver disproves, wrong order, dead rel, closed-platform link, a dropped guild event page, a completed
   // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
-  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (30 plantings each named, plus a clean control that must pass)' },
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (36 plantings each named, plus a clean control that must pass)' },
   // Runs before `build` on purpose: its fixture tree is its own, so a defect in this class is caught on a branch
   // nobody has built yet, and the artifact half of it is the reason it still belongs in this set.
   { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (25 fixtures: 13 plantings, 11 clean forms, 1 severity case)' },

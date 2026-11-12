@@ -469,27 +469,39 @@ which must go red.
   mechanism removed the three pages weigh **+815 gzip** in total. The cluster markup a JS-off visitor sees is
   **2142 gzip** and is byte-identical either way.
 
-Measured, at one viewport on both surfaces @measured 2026-11-12 by `node design/schedule-geometry.mjs --widths 1240 1024 900 768 640 390 320` on
-`dist/client` (Linux native, Firefox 159.0): at 1240 the homepage card is **1164x217** with a **112x96** leaf, a
-**633x168** copy lane and a **323x185** plate whose right edge sits 24px inside the keyline; the list's two rows are
-**1164x217** (**633x136** lane, **323x185** plate) and **1164x196** (**633x164** lane, **323x156** plate). At 1024
-the card is **948x292** with a **417x260** lane and the rows are **948x260** / **948x232** (**417x228** / **417x200**
-lanes); at 900 **840x513** and **840x481** / **840x452** with **792x168**, **792x136** and **792x136** lanes; at 768
-**708x513** and **708x481** / **708x452** (**660x168**, **660x136**); at 640, stacked, **580x541** and **580x509** /
-**580x480** (**532x196**, **532x164**) with the same **323x185** plate on its own line; at 390 the boxes are
-**346x652**, **346x596** and **346x540** with lanes **314x313**, **314x257**, **314x229** and the plate capped to the
-column (**314x179** / **314x151**); at 320 they are **276x672**, **276x616** and **276x570** with lanes **244x373**,
-**244x317**, **244x293** and plates **244x139** / **244x118**. What the sign-up cluster costs, measured by running
-the same probe against a copy of the built page with every cluster stripped
-@measured 2026-11-12 by `node design/grill/strip-clusters.mjs` then `node design/schedule-geometry.mjs --dist .design/tmp-no-cluster`: the copy
-lane gains **+44px** at 1240, 900, 768 and 640, **+80px** at 1024 and 390 and **+116px** at 320, but the *row* only
-grows where the lane is the tallest thing in the box: **0px** on the homepage card at 1240 (the plate is already
-taller), **+8px** on the short list row at 1240, **+43/+44px** from 1024 down to 640, **+80px** at 390 and
-**+116px** at 320 — so three platforms cost **44px** of a row on a desktop and **116px** on the narrowest phone.
+Measured, at every shipped viewport on both surfaces @measured 2026-11-12 by `node design/schedule-geometry.mjs
+--widths 1240 1024 900 768 640 390 320` on `dist/client` (Linux native, Firefox 159.0). One row per printed date,
+and the window prints **one** open date today @measured 2026-11-12 by `node scripts/check-schedule-window.mjs`
+(1 of 1 open rows), so `/schedule` has one row to measure.
+
+| width | homepage card | its copy lane | `/schedule` row | its copy lane |
+| --- | --- | --- | --- | --- |
+| 1240 | 1164x228 | 633x196 | 1164x196 | 633x164 |
+| 1024 | 948x264 | 417x232 | 948x232 | 417x200 |
+| 900 | 840x484 | 792x168 | 840x452 | 792x136 |
+| 768 | 708x484 | 660x168 | 708x452 | 660x136 |
+| 640 (stacked) | 580x512 | 532x196 | 580x480 | 532x164 |
+| 390 | 346x596 | 314x285 | 346x540 | 314x229 |
+| 320 | 276x626 | 244x349 | 276x570 | 244x293 |
+
+The leaf is **112x96** in every box. The plate is the cap **323** wide down to 390, where the column is narrower
+than the cap and it paints **314x151** (at 320, **244x118**); at 1240 it paints **323x156** with its right edge 24px
+inside the keyline. **The plate's painted height belongs to the event's art, not to the rule** — the 323 cap is the
+rule, 156 is this date's image, and the box heights above move when the schedule does.
+
+What the sign-up cluster costs, measured by running the same probe against a copy of the built page with every
+cluster stripped @measured 2026-11-12 by `node design/grill/strip-clusters.mjs` then
+`node design/schedule-geometry.mjs --dist .design/tmp-no-cluster`: the copy lane gains **+44px** at 1240, 900, 768
+and 640, **+80px** at 1024 and 390 and **+116px** at 320, but the *row* only grows where the lane is the tallest
+thing in the box: **+40px** on the homepage card at 1240 (228 vs 188 — the lane is 196 and the plate only 156 on
+this date's art), **+76px** at 1024, **+8px** on the `/schedule` row at 1240, **+44px** from 1024 down to 640,
+**+80px** at 390 and **+116px** at 320 — so three platforms cost **44px** of a desktop row and **116px** on the
+narrowest phone. A card's height here was quoted as **+0px** at 1240 in an earlier pass; that was true of a build
+whose plate painted 185px, and it is corrected because the probe contradicts it, not because the rule changed.
 Page totals
 @measured 2026-11-12 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
-same tool on `/` only): homepage **3099px at 1240**, **4661 at 390**, **5287 at 320**; `/schedule` **1200px at
-1240** with three empty runs totalling 330px (27.5% of the page). The list-to-its-own-page saving measured in the
+same tool on `/` only): homepage **3071px at 1240**, **4593 at 390**, **5225 at 320**; `/schedule` **1200px at
+1240** with three empty runs totalling **562px** (46.8% of the page). The list-to-its-own-page saving measured in the
 2026-11-07 pass was **4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history
 and the numbers above as the state.
 Those page numbers come from a two-pass survey (it re-opens the page in a viewport as tall as the document, so

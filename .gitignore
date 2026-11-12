@@ -63,30 +63,21 @@ src/content.local/
 # Design pass. The durable half is TRACKED in `design/` (no dot): the gates and their harness, the
 # probes behind every number DESIGN.md quotes, the specimens, the machine records — see
 # design/README.md and design/records/0009-design-evidence-is-tracked.md.
-# `.design/` (with the dot) is scratch, and only these four things are ignored:
-#  - candidate font binaries: re-fetchable from @fontsource, and the ratified faces arrive as npm
-#    packages in design-apply, so a woff2 there is a scratch copy, not evidence;
-#  - what the render gate measured on this machine, rewritten on every run — the gate's PASS/FAIL line
-#    is the report; those are the raw numbers behind it;
-#  - scratch files (tmp-*);
-#  - harness scratch. page-measure/probe write .probe-shot-<w>.png, .measured-*.html and rendered-*.html
-#    NEXT TO whatever they probe, which can be a specimen inside design/ — so these are basename
-#    patterns with no leading directory, which keeps both directories clean.
-.design/fonts/*.woff2
-.design/render/
-.design/tmp-*
-# The operator's source figure, fetched from Meetup's CDN to read its geometry. Meetup's images are not
-# ours to republish on another domain (.notes/asset-sources.md), so the pixels stay out of git even though the
-# reading of them (DESIGN.md's mark rules, D126) is tracked.
-.design/mark-src/
-# Hand-made snapshots of source files, kept while editing (`.design/keep/*.astro`). The build reads `src/`,
-# so a copy here is inert: editing it changes nothing, and a stale copy is a trap for the next session.
-# Durable versions of these files are in git; this is a scratch duplicate, ignored so `git status` stays
-# honest and nobody mistakes it for a second source tree.
-.design/keep/
-# Ad hoc measurement dumps written by hand at the shell (verify-out.txt, mark-geometry-320.txt). The durable
-# form of any number worth keeping is a JSON under design/ that a script writes and a doc cites.
-.design/*.txt
+# `.design/` (with the dot) is scratch, so the WHOLE directory is ignored (D286): candidate font binaries
+# (re-fetchable from @fontsource), the render gate's raw per-run numbers, `tmp-*` dumps, the operator's
+# Meetup source figure (Meetup's images are not ours to republish on another domain —
+# .notes/asset-sources.md — the reading of them is tracked, in DESIGN.md's mark rules and D126),
+# hand-kept snapshots of source files (a copy here is inert: the build reads `src/`, so a stale one is a
+# trap), and ad hoc measurement dumps. The durable form of any number worth keeping is a JSON under
+# `design/` that a script writes and a doc cites.
+# An earlier version of this block named four patterns and went stale the day a probe wrote PNGs into
+# `.design/rsvp-shot/`: a per-pattern list is a promise every new probe has to remember, and an unignored
+# scratch file shows up in `git status` as a candidate commit. The tracked artifact is the script, never
+# the pixels.
+# The three basename patterns below are NOT redundant with `.design/`: page-measure/probe write
+# .probe-shot-<w>.png, .measured-*.html and rendered-*.html NEXT TO whatever they probe, which can be a
+# specimen inside design/ — so they carry no leading directory, which keeps both directories clean.
+.design/
 .probe-shot-*.png
 .measured-*.html
 rendered-*.html
