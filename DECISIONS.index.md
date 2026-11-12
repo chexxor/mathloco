@@ -294,5 +294,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D284** (2026-11-12) — A selftest that kills a listener must kill the listener, not the dispatch; and it must assert what the probe sent, not what the DOM reports back (2026-11-12, delegate-decided, reversible; Linux native, Firefox 159.0, Node 24.22.1, `node scripts/check-rsvp-preference.mjs --selftest`)
 - **D285** (2026-11-12) — "Show me the widget" is answered with a re-runnable probe and a URL, not a description of one (2026-11-12, operator request + delegate-decided, reversible; Linux native, Firefox 159.0, Node 24.22.1, `node design/grill/rsvp-card-geometry.mjs`, `node design/grill/rsvp-card-shot.mjs`)
 - **D286** (2026-11-12) — Scratch is ignored by the directory, not by a list of patterns; an optional argument is appended, never passed as null (2026-11-12, delegate-decided, reversible; Linux native, Node 24.22.1, `git status --short -- .`, `node design/grill/rsvp-card-shot.mjs`)
+- **D287** (2026-11-12) — A milestone's platform list is a promise, and a promise is compared with the bytes the artifact paints (2026-11-12, delegate-decided, costly; Linux native, Node 24.22.1, `node scripts/check-rsvp-promise.mjs`, `node scripts/check-rsvp-promise.mjs --selftest`, `node scripts/gate-run.mjs --list`)
 
-Defined: 286 (D1-D286). Unused ids: none.
+Defined: 287 (D1-D287). Unused ids: none.

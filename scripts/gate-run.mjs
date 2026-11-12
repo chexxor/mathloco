@@ -103,6 +103,13 @@ const DEPLOY = [
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
   { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (36 plantings each named, plus a clean control that must pass)' },
+  // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
+  // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
+  // a milestone's words with the artifact. This one does: the description cell of every milestone row that
+  // promises sign-up, against the config's declared links and against every `data-rsvp-platform` the built
+  // pages carry. It runs pre-build on purpose — with no dist/ its artifact side is derived from the config, so
+  // a plan-side defect goes red on a branch nobody has built yet (D118).
+  { name: 'check:rsvp-promise:selftest', desc: 'the promise gate can still fail (8 plantings: config emptied, row reworded, painted-but-unpromised, a dropped link, a projection that disagrees, no plan, no artifact, an unknown platform name)' },
   // Runs before `build` on purpose: its fixture tree is its own, so a defect in this class is caught on a branch
   // nobody has built yet, and the artifact half of it is the reason it still belongs in this set.
   { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (25 fixtures: 13 plantings, 11 clean forms, 1 severity case)' },
@@ -137,6 +144,8 @@ const DEPLOY = [
   // The other end of the RSVP rule: `check:rsvp` proves the inputs, this proves the bytes. Recomputes each
   // cluster from `signUpPaths()` and fails a painted page that disagrees with the resolver (D272).
   { name: 'check:rsvp-page', desc: 'every printed date carries one sign-up cluster, and that cluster matches what signUpPaths() returns for it against both event snapshots; no headcount is painted', needs: ['build'] },
+  // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
+  { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name
   // written in design prose lands in the stylesheet every visitor downloads. The number is the budget;
   // the baseline makes a new round's invented class names visible the day they are written.

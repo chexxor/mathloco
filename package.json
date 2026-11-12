@@ -31,6 +31,8 @@
     "check:rsvp": "node scripts/check-rsvp.mjs",
     "check:rsvp:selftest": "node scripts/check-rsvp.mjs --selftest",
     "check:rsvp:links": "node scripts/check-rsvp.mjs --links",
+    "check:rsvp-promise": "node scripts/check-rsvp-promise.mjs",
+    "check:rsvp-promise:selftest": "node scripts/check-rsvp-promise.mjs --selftest",
     "check:rsvp-page": "node scripts/check-rsvp-page.mjs",
     "check:rsvp-page:selftest": "node scripts/check-rsvp-page.mjs --selftest",
     "check:rsvp-preference": "node scripts/check-rsvp-preference.mjs",
