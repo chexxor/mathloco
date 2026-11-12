@@ -244,6 +244,34 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
   branches - both adding an import at the same line - and moving that import to its use site deleted the conflict
   rather than scheduling it (D156).
 
+## Skills and tools you build (and keep true) (`S023`, `D282`)
+
+The operator's standing instruction: build a skill or a tool when a task has research, planning or
+information-gathering in which a guess would cost the project a wrong number or a day of manual steps - and
+**only for something a future session will do again**.
+
+- **Where each kind lives.** A *skill* is `.agents/skills/<name>/SKILL.md` (tracked, repo-specific). A *gate*
+  is `scripts/check-<thing>.mjs` plus a `package.json` script plus an entry in `scripts/gate-run.mjs` - a check
+  that is not in the runner runs only when a human remembers it. A *probe* lives in `design/` (or
+  `design/grill/`) whenever a `DESIGN.md` or `.notes/DECISIONS.md` claim cites it; scratch stays in `.design/`
+  (gitignored). See `design/README.md` before adding, renaming or deleting anything there.
+- **A gate ships with its own selftest.** `check:plan:selftest`, `check:rsvp-page:selftest`,
+  `check:rsvp-preference:selftest`, `check:ground:selftest`, `check:ics` - each plants the defect the check
+  exists to catch and requires a named failure, plus a clean control so a green run means the check is not
+  merely always green. A check without a selftest is an assertion, not a detector.
+- **Before adding a check to `verify`, read** `.agents/skills/add-a-gate/SKILL.md`; its `--audit` lists the
+  scripts that have drifted out of the runner, and every script deliberately outside `verify` carries its
+  reason (D269).
+- **Keep them true in the same commit that makes them stale.** A config change invalidates the config block
+  quoted in `.agents/skills/astro/SKILL.md`; a re-measured number invalidates the number in `DESIGN.md`; a
+  renamed file invalidates every path that cites it - `npm run check:design` (`node design/audit-references.mjs
+  --stale`) exits 1 on exactly that, and `node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --audit`
+  reports a runner step with no script behind it (D282). Vendor skills under `.pi/npm/` are guidance; this
+  repo's code, `AGENTS.md` and `.notes/runbooks/` outrank them.
+- **One home per rule.** If two files can answer the same question, one of them is wrong the next month:
+  `src/lib/rsvp.mjs` is the only place the platform list and URL shapes exist, `scripts/gate-run.mjs` is the
+  only list of gates, `PLAN.md` §Milestones is the only queue.
+
 ## Non-negotiables
 
 - **Ground every claim** in a retrieved passage or a command you actually ran; never assert from memory.
