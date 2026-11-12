@@ -85,11 +85,13 @@ Kept short; the reasoning is in `.notes/DECISIONS.md` and the artifacts in `desi
 - **Gate and instrument work (G1–G3, D144–D146)** — a green gate run leaves every step's output on disk; a
   ground probe reads painted bytes; the width set measures the breakpoints `src/` actually uses.
 - **The sign-up cluster (MS12, S019, D265, D272-D277)** — every date the site prints carries its own sign-up
-  cluster on the row that prints it: **Meetup first, Discord second**, Facebook only when a group URL has been
-  verified by a real request. Labels name the platform and the verb — "Sign up on Meetup", "Join the Discord
-  chat" — and there is no lead-in line. The cluster costs **+44px on the copy lane** and **0-8px on a
-  horizontal row** at 1240/1024, **68px tall at 320** where the two labels wrap
-  (@measured 2026-11-11 by `node design/schedule-geometry.mjs`). Three gates hold it: `check:rsvp` (snapshot
+  cluster on the row that prints it: **Meetup first, Discord second, Facebook third** (S021, D280 — Facebook is
+  probe-blind, so it is gated on URL shape plus a dated, named human confirmation rather than a status code).
+  Labels name the platform and the verb — "Sign up on Meetup", "Join the Discord chat", "Join the Facebook
+  group" — and there is no lead-in line. The cluster costs **+44px on the copy lane** and **0-8px on a
+  horizontal row** at 1240/1024, and is **32px** tall at 1240 and 640, **68px** at 390 where Facebook takes a
+  second line and **104px** at 320 where each label takes its own
+  (@measured 2026-11-12 by `npm run check:render:dist`). Three gates hold it: `check:rsvp` (snapshot
   age, URL shape, a 60-day stamp on every platform URL), `check:rsvp-page` (the painted cluster equals the
   resolver's answer for that date; no count reaches the artifact) and their selftests (50 and 37 cases, @measured 2026-11-12 by `node scripts/check-rsvp.mjs --selftest` and `node scripts/check-rsvp-page.mjs --selftest`).
   Meetup snapshot: 26 records read 2026-11-09, 16 open pages. Discord: 1 guild scheduled event read 2026-11-11.
