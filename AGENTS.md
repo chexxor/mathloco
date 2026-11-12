@@ -224,8 +224,8 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
 - **Every tool call carries a timeout, and none runs longer than 10 minutes.** The shell tool has **no
   default timeout**, so an unbounded command - a build, a browser probe, a `wrangler` call waiting on a
   network - runs until the session does. Guess the wall time first, then pass a timeout a little higher
-  than the guess: `npm run verify` is 35.1s wall / 46.3s work and `verify:browser` 113.7s work
-  @measured 2026-11-11 by `design/gate-cost.json`, so 120s is the honest budget for those two, not 600s.
+  than the guess: `npm run verify` is 25.1s wall / 36.0s work and `verify:browser` 94.1s work (9 steps)
+  @measured 2026-11-12 by `design/gate-cost.json`, so 120s is the honest budget for those two, not 600s.
   Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
   the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
   genuinely cannot finish inside 600s it is not one command: run the gate steps individually, start the
