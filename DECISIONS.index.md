@@ -295,5 +295,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D285** (2026-11-12) — "Show me the widget" is answered with a re-runnable probe and a URL, not a description of one (2026-11-12, operator request + delegate-decided, reversible; Linux native, Firefox 159.0, Node 24.22.1, `node design/grill/rsvp-card-geometry.mjs`, `node design/grill/rsvp-card-shot.mjs`)
 - **D286** (2026-11-12) — Scratch is ignored by the directory, not by a list of patterns; an optional argument is appended, never passed as null (2026-11-12, delegate-decided, reversible; Linux native, Node 24.22.1, `git status --short -- .`, `node design/grill/rsvp-card-shot.mjs`)
 - **D287** (2026-11-12) — A milestone's platform list is a promise, and a promise is compared with the bytes the artifact paints (2026-11-12, delegate-decided, costly; Linux native, Node 24.22.1, `node scripts/check-rsvp-promise.mjs`, `node scripts/check-rsvp-promise.mjs --selftest`, `node scripts/gate-run.mjs --list`)
+- **D288** (2026-11-12) — `astro check` cannot read a `.svelte` file, so a second checker is the gate; and the lint sweep's noise is ruled, not ignored (2026-11-12, delegate-decided, costly; Linux native, Node 24.22.1, `npm run check`, `node scripts/check-svelte.mjs`, `node scripts/check-svelte.mjs --selftest`, `node scripts/gate-run.mjs --list`)
 
-Defined: 287 (D1-D287). Unused ids: none.
+Defined: 288 (D1-D288). Unused ids: none.

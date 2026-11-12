@@ -61,6 +61,12 @@ const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
  */
 const DEPLOY = [
   { name: 'check', desc: 'astro check: types in .astro/.svelte/.ts' },
+  // `astro check` cannot type-check a .svelte file at all: @measured 2026-11-12 it reports 217 files, 0 errors
+  // on a tree whose DiscordSummary.svelte carries a ts(18047) the LSP and svelte-check both report at that line,
+  // and it still reports 0 after a deliberately broken .svelte is copied into src/components (D288). Source-only,
+  // so before `build` (D118). Cost @measured 2026-11-12 by this gate: 6.3s gate, 2.2s selftest.
+  { name: 'check:svelte', desc: 'svelte-check: every .svelte island plus the TS it reaches - the type surface astro check is blind to' },
+  { name: 'check:svelte:selftest', desc: 'the svelte gate can still fail (7 plantings in one fixture run, plus a clean control)' },
   { name: 'check:classes', desc: 'every written class resolves to CSS' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
   // pi-lens can reach `.astro` (19 files - the surface the design handles and probe anchors live on) only

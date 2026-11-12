@@ -18,6 +18,8 @@
     "preview:workerd": "astro build && astro preview",
     "astro": "astro",
     "check": "astro check",
+    "check:svelte": "node scripts/check-svelte.mjs",
+    "check:svelte:selftest": "node scripts/check-svelte.mjs --selftest",
     "check:sanitize": "tsx scripts/check-sanitize.ts",
     "check:copy": "node scripts/check-copy.mjs",
     "check:copy:selftest": "node scripts/check-copy.mjs --selftest",
@@ -144,6 +146,7 @@
     "sass": "^1.107.0",
     "sharp": "^0.35.5",
     "svelte": "^5.57.3",
+    "svelte-check": "^4.7.8",
     "tsx": "^4.23.15",
     "typescript": "^6.0.3"
   },

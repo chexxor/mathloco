@@ -27,6 +27,11 @@ pnpm-debug.log*
 # Astro
 .astro/
 
+# svelte-check's incremental cache: a derived tsconfig, the svelte2tsx mirror of every .svelte and
+# tsbuildinfo.json. `npm run check:svelte` (D288) regenerates it; committing it would freeze a snapshot of a
+# compiler's intermediate output beside the source it came from.
+.svelte-check/
+
 # Skill installs regenerate this mirror of .agents/skills for other agent CLIs.
 .hermes/
 
