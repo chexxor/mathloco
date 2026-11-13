@@ -56,3 +56,16 @@ jobs:
       # Deliberately excluded: check:discord and check:ai - both need credentials and check:ai
       # spends a paid model call, so they belong in a pre-deploy ritual, not in every build.
       - run: npm run verify
+      # The dev rig (E7, D291): gates over the tooling a session uses, not the
+      # bytes a visitor receives. `check:lsp` proves `.pi-lens.json` still
+      # registers astro-ls for `.astro`, keeps format/autofix off, and that the
+      # server answers a real `documentSymbol` (D266, D270); `cost:selftest`
+      # proves the cost guard in scripts/gate-run.mjs can still go red (D290).
+      # A separate SET, so a rig defect is named as a rig defect rather than
+      # hiding inside the deploy gate set - and it still runs here, because a
+      # rig registration rots silently and the only evidence is a session that
+      # lost its code intelligence. Cost @measured 2026-11-13 by
+      # `npm run verify:rig` (Linux native, Node 24.22.1, 16 CPU): 3 steps,
+      # 5.0-5.9s wall / 9.5-11.2s work - check:lsp 5.25s,
+      # check:lsp:selftest 5.86s, cost:selftest 0.12s.
+      - run: npm run verify:rig

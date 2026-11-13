@@ -51,6 +51,9 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, unlink
 import { loadavg, cpus } from 'node:os';
 import { resolve, join } from 'node:path';
 import { distState, staleLine } from '../design/dist-fresh.mjs';
+// The cost guard lives in its own file so it can have a selftest: as arithmetic inside this scheduler it could
+// only be exercised by running the whole 40-step set, which is exactly why it had none (D290).
+import { compareCost } from './cost-guard.mjs';
 
 const NPM = process.platform === 'win32' ? 'npm.cmd' : 'npm';
 
@@ -112,13 +115,13 @@ const DEPLOY = [
   { name: 'check:rsvp', desc: 'the Meetup snapshot and the Discord guild snapshot are both dated and inside the window, and every printed platform URL carries a stamp under 60 days that answered 2xx/3xx' },
   { name: 'check:rsvp:selftest', desc: 'the link-map gate can still fail (50 cases: snapshot, config and resolver plantings)' },
   // The page gate's own defect catalog runs on in-memory fixture pages, not on dist/, so it can fire on a
-  // branch nobody has built yet (D118). 37 cases = 36 plantings plus one clean control page: missing cluster,
+  // branch nobody has built yet (D118). 43 cases = 42 plantings plus one clean control page: missing cluster,
   // wrong date, invented hour, an unsettled hour painted as settled, missing note, a note claiming an absence
   // the resolver disproves, wrong order, dead rel, closed-platform link, a dropped guild event page, a completed
   // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
-  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (36 plantings each named, plus a clean control that must pass)' },
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (42 plantings each named, plus a clean control that must pass)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
   // a milestone's words with the artifact. This one does: the description cell of every milestone row that
@@ -168,6 +171,18 @@ const DEPLOY = [
   { name: 'check:css-utilities', desc: 'utilities in the shipped CSS that no file in src/ writes', needs: ['build'] },
 ];
 
+// The dev rig (E7, D291): checks that measure the TOOLING a session uses rather than the bytes a visitor
+// receives. `check:lsp` proves the pi-lens registration in `.pi-lens.json` still reaches `.astro` - a config
+// that rots silently costs a session its code intelligence, but it changes nothing that ships. It is not in
+// `verify` for that reason, and CI runs it as its own step so a rig defect is named as a rig defect instead
+// of hiding inside the deploy gate set. `npm run verify:rig` is the command; the runner treats it as a gate
+// set like any other, with logs and its own cost comparison.
+const RIG = [
+  { name: 'check:lsp', desc: 'the LSP config registers astro-ls for .astro, sets its tsdk, keeps format/autofix off, and the server answers a real handshake' },
+  { name: 'check:lsp:selftest', desc: 'the LSP config gate can still fail (9 plantings: 7 config, 2 spawn)' },
+  { name: 'cost:selftest', desc: 'the cost guard can still fail (12 planted baseline/load combinations, each with the verdict it must produce)' },
+];
+
 // The browser ritual (D123): everything a human used to type by hand, in one command, over the dist that
 // `verify` just built. It does NOT build first — several of these mutate or re-measure the artifact, and
 // `check:render:dist` is the `--no-build` form precisely so the run measures the thing being tested.
@@ -201,7 +216,7 @@ const BROWSER = [
   // read-only probes, a mark or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'twenty mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
+  { name: 'check:render:selftest', desc: 'twenty-four mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
 ];
 
 const args = process.argv.slice(2);
@@ -210,7 +225,9 @@ const positional = args.filter((a) => !a.startsWith('--'));
 const serial = flag('--serial') || process.env.GATE_JOBS === '1';
 const JOBS = serial ? 1 : Math.max(1, Number(process.env.GATE_JOBS ?? 4));
 
-const set = flag('--browser') ? BROWSER : DEPLOY;
+function pickSet(flagFn) { if (flagFn('--browser')) return BROWSER; if (flagFn('--rig')) return RIG; return DEPLOY; }
+const set = pickSet(flag);
+const setKey = set === BROWSER ? 'browser' : set === RIG ? 'rig' : 'deploy';
 if (positional.length) {
   const unknown = positional.filter((p) => !set.some((s) => s.name === p));
   if (unknown.length) {
@@ -239,7 +256,7 @@ if (set === BROWSER && !existsSync(dist)) {
 if (set === BROWSER) {
   const st = distState();
   if (!st.fresh && !st.allowed) {
-    console.error('gate-run --browser: ' + staleLine(st));
+    console.error(`gate-run --browser: ${staleLine(st)}`);
     process.exit(1);
   }
 }
@@ -249,8 +266,8 @@ if (set === BROWSER) {
 // and do not throw — a silent log failure is the same defect class as no logs at all.
 const LOG_DIR = process.env.GATE_LOG_DIR
   // an override is always a gitignored scratch path (`.design/tmp-*`), so a review build's evidence does not
-  // overwrite the shipped run's — `tmp-gate-logs` is "the last run wins" and those two runs are not the same page
-  || resolve('.design', 'tmp-gate-logs', set === BROWSER ? 'browser' : 'deploy');
+  // overwrite the shipped run's - `tmp-gate-logs` is "the last run wins" and those two runs are not the same page
+  || resolve('.design', 'tmp-gate-logs', setKey);
 let logBroken = null;
 try {
   mkdirSync(LOG_DIR, { recursive: true });
@@ -259,7 +276,7 @@ try {
 const runStarted = new Date().toISOString();
 const writeLog = (name, { code, secs, out, note = '' }) => {
   if (logBroken) return;
-  const head = `# gate-run: ${name}\n# set=${set === BROWSER ? 'browser' : 'deploy'} started=${runStarted} exit=${code} secs=${secs.toFixed(2)}\n# command: npm run --silent ${name}\n`;
+  const head = `# gate-run: ${name}\n# set=${setKey} started=${runStarted} exit=${code} secs=${secs.toFixed(2)}\n# command: npm run --silent ${name}\n`;
   try { writeFileSync(join(LOG_DIR, `${name}.txt`), `${head}${note}\n${out}\n`); }
   catch (e) { logBroken = e.message; }
 };
@@ -340,81 +357,35 @@ try {
   const manifest = [...results.values()]
     .map((r) => `${r.code === 0 ? 'ok  ' : 'FAIL'} ${r.step.name.padEnd(24)} ${r.secs.toFixed(2).padStart(7)}s  -> ${r.step.name}.txt`)
     .join('\n');
-  writeFileSync(join(LOG_DIR, 'manifest.txt'), `# gate-run ${set === BROWSER ? 'browser' : 'deploy'} set, ${runStarted}\n# ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, load ${load0} -> ${loadLine()})\n${manifest}\n`);
+  writeFileSync(join(LOG_DIR, 'manifest.txt'), `# gate-run ${setKey} set, ${runStarted}\n# ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, load ${load0} -> ${loadLine()})\n${manifest}\n`);
 } catch (e) { logBroken ||= e.message; }
-console.log(`\ngate-run: ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, set=${set === BROWSER ? 'browser' : 'deploy'})`);
+  console.log(`\ngate-run: ${ok} ok, ${failed} failed, ${skipped} skipped — ${wall}s wall, ${sum}s of work (jobs=${serial ? 1 : JOBS}, set=${setKey})`);
 console.log(logBroken
   ? `NOTE step output was NOT saved (${logBroken}) — every number above is unverified until you re-run with a writable .design/`
   : `logs  ${LOG_DIR}/ — every step's full output, pass or fail, from this run (gitignored scratch; the last run wins)`);
 
 // The cost of a gate set doubles without anyone deciding it: `verify:browser` went 44.7s -> 85.6s -> 87.8s
 // as the width sets grew (D146) and nobody compared two runs. A gate that takes twice as long is a gate
-// people stop running, so every green run compares itself against a tracked baseline. Only 2x fails: CPU
-// contention on a home rig is real, and a 40% wobble is not a regression.
-//
-// The comparison is on WORK SECONDS - the sum of what each step took - not the wall clock, because wall
-// measures the box and work measures the set (D269). Measured 2026-11-10, Linux native, 16 CPU: the same
-// 30-step set ran 38.0s wall / 36.4s of work while `strata-host` sat at 792% CPU (load 7.6/16) and 23.8s
-// wall / 30.3s of work at load 4.8 -> 5.2/16. The wall number moved 60% with the box; the set did not
-// change. Wall is still printed, with its load, so a contended run is readable rather than mysterious.
+// people stop running, so every green run compares itself against a tracked baseline. The arithmetic - work
+// seconds, normalised for the CPU actually free, with the 2x bar and the WARN at 40% - lives in
+// scripts/cost-guard.mjs and is tested by `npm run cost:selftest` (D290, E6).
 const COST_BASELINE = resolve('design', 'gate-cost.json');
-const costKey = set === BROWSER ? 'browser' : 'deploy';
-const LOAD_LIMIT = Number(process.env.GATE_LOAD_LIMIT || 6);   // 1-minute load average / CPU count - the same limit gate-cost.mjs refuses to save above. Override it with GATE_LOAD_LIMIT to exercise both branches of the guard.
-
-// Two comparisons, because the two ways a gate set gets slow are different (D269):
-//   like-for-like - the steps the baseline knows, now vs then. This is the one that catches a gate that got
-//     slower. A set that grew from 18 steps to 30 does not move it.
-//   whole set - reported so a run is readable, never failed on its own.
-// Neither can tell "the repo changed" from "someone else's process is eating the box", so the FAIL is gated
-// on load: at or below 6/16cpu the guard bites; above it the run is a WARN with the load printed, because
-// `npm run deploy` runs `verify` first and a contended rig must not block a ship step for a reason that is
-// not a defect (D118).
-if (!failed && !skipped && existsSync(COST_BASELINE)) {
+const LOAD_LIMIT = Number(process.env.GATE_LOAD_LIMIT || 6);   // only used when a baseline has no load fields and the comparison cannot be normalised
+if (!failed && !skipped) {
   try {
-    const base = JSON.parse(readFileSync(COST_BASELINE, 'utf8'))[costKey];
-    const baseWork = base ? (base.workSecs ?? base.wallSecs) : null;   // pre-D269 baselines recorded wall only
-    if (baseWork) {
-      const loadStart = Number((load0.split('/')[0] || '0'));
-      const loadEnd = Number((loadLine().split('/')[0] || '0'));
-      const contended = Math.max(loadStart, loadEnd) > LOAD_LIMIT;
-      const baseStepCount = Object.keys(base.steps ?? {}).length;
-      const shared = [...results.values()].filter((r) => base.steps && base.steps[r.step.name] > 0);
-      const sharedNow = shared.reduce((a, r) => a + r.secs, 0);
-      const sharedBase = shared.reduce((a, r) => a + base.steps[r.step.name], 0);
-      const ratio = sharedBase ? sharedNow / sharedBase : Number(sum) / baseWork;
-      const pct = Math.round((ratio - 1) * 100);
-      console.log('cost: ' + costKey + ' ' + sum + 's of work, ' + wall + 's wall, ' + results.size + ' steps (load ' + load0 + ' -> ' + loadLine() + ')');
-      console.log('cost: like-for-like ' + shared.length + ' steps the baseline knows: ' + sharedNow.toFixed(1) + 's now vs ' + sharedBase.toFixed(1) + 's (' + base.measuredAt + ') = ' + (pct >= 0 ? '+' : '') + pct + '%');
-      if (results.size !== baseStepCount) {
-        const unbaselined = [...results.values()].filter((r) => !(base.steps && base.steps[r.step.name] > 0));
-        const extra = unbaselined.reduce((a, r) => a + r.secs, 0).toFixed(1);
-        console.log('cost: the set has ' + results.size + ' steps, the baseline ' + baseStepCount + '; ' + unbaselined.length + ' step(s) it does not know cost ' + extra + 's: ' + unbaselined.map((r) => r.step.name + ' ' + r.secs.toFixed(2) + 's').join(', '));
-      }
-      for (const r of results.values()) {
-        const b = base.steps && base.steps[r.step.name];
-        if (b && r.secs > b * 2) console.log('cost: one step doubled - ' + r.step.name + ' ' + b + 's -> ' + r.secs.toFixed(2) + 's');
-      }
-      if (ratio > 2) {
-        if (contended) {
-          console.log('cost: WARN - 2x the baseline work, but the rig was at load ' + load0 + ' -> ' + loadLine() + '; the guard only fails at or below ' + LOAD_LIMIT + '/16cpu.');
-          console.log('      Time the doubled step on its own (`npm run build`). If it is near its baseline there, the box is');
-          console.log('      contended: stop the busy process, re-run, then `npm run cost:save` from the quiet run.');
-        } else {
-          failed++;
-          console.log('cost: FAIL - over 2x the baseline work on a rig at or below ' + LOAD_LIMIT + '/16cpu. A slower gate is a gate people stop running: fix it, or');
-          console.log('      re-baseline on purpose with `npm run cost:save` and say why in the commit message.');
-          console.log('      before either: time the doubled step on its own (`npm run build`). If it is near its');
-          console.log('      baseline there, the box is contended, and re-baselining freezes someone else\'s CPU in.');
-        }
-      } else if (ratio > 1.4) {
-        console.log('cost: WARN - over 40% more work than the baseline for the steps it knows. Not a failure; the line above names the new steps before you call this normal.');
-      }
-    }
+    const base = existsSync(COST_BASELINE) ? JSON.parse(readFileSync(COST_BASELINE, 'utf8'))[setKey] : null;
+    const res = compareCost(base, {
+      steps: Object.fromEntries([...results.entries()].map(([n, r]) => [n, r.secs])),
+      wallSecs: Number(wall),
+      workSecs: Number(sum),
+      loadStart: load0,
+      loadEnd: loadLine(),
+    }, { costKey: setKey, loadLimit: LOAD_LIMIT });
+    for (const line of res.lines) console.log(line);
+    if (res.fail) failed++;
   } catch (e) {
-    console.log('cost: baseline unreadable (' + e.message + ') - comparison skipped.');
+    console.log(`cost: baseline unreadable (${e.message}) - comparison skipped.`);
   }
-} else if (!failed && !skipped) {
-  console.log('cost: no baseline for ' + costKey + ' (design/gate-cost.json) - `npm run cost:save` after a green run starts one.');
 }
 
 if (failed || skipped) {

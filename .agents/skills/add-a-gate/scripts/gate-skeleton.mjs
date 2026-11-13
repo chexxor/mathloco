@@ -16,17 +16,35 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 
-const root = execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim() + '/';
+const root = `${execFileSync('git', ['rev-parse', '--show-toplevel'], { encoding: 'utf8' }).trim()}/`;
+
+/** Read a file the audit needs, and name the file and the need when it is not there (a bare throw
+ * tells a reader nothing about which wiring is missing). */
+function readText(path, why) {
+  try {
+    return readFileSync(path, 'utf8');
+  } catch (e) {
+    console.error(`add-a-gate: cannot read ${path} (${e.message}) - needed for ${why}`);
+    process.exit(1);
+  }
+}
 
 function packageScripts() {
-  return JSON.parse(readFileSync(root + 'package.json', 'utf8')).scripts ?? {};
+  try {
+    return JSON.parse(readText(`${root}package.json`, 'the list of scripts every gate must exist as')).scripts ?? {};
+  } catch (e) {
+    console.error(`add-a-gate: package.json is not valid JSON (${e.message}) - no gate can be audited against it`);
+    process.exit(1);
+  }
 }
 
 function runnerSteps() {
-  const src = readFileSync(root + 'scripts/gate-run.mjs', 'utf8');
+  const src = readText(`${root}scripts/gate-run.mjs`, 'the gate set the runner actually executes');
   const steps = [];
-  for (const m of src.matchAll(/\{\s*name:\s*'([^']+)'[^}]*\}/g)) {
-    steps.push(m[1]);
+  // Both quote styles: `{ name: "check:rsvp-promise" }` in gate-run.mjs was invisible to the
+  // single-quote-only pattern, so the audit called a step that IS in the set an orphan (found 2026-11-12).
+  for (const m of src.matchAll(/\{\s*name:\s*(['"])([^'"]+)\1[^}]*\}/g)) {
+    steps.push(m[2]);
   }
   return steps;
 }
@@ -34,31 +52,35 @@ function runnerSteps() {
 function audit() {
   const scripts = packageScripts();
   const steps = runnerSteps();
-  const runnerSrc = readFileSync(root + 'scripts/gate-run.mjs', 'utf8');
-  const agents = existsSync(root + 'AGENTS.md') ? readFileSync(root + 'AGENTS.md', 'utf8') : '';
+  const runnerSrc = readText(`${root}scripts/gate-run.mjs`, 'the reason a script is deliberately outside the set');
+  const agents = existsSync(`${root}AGENTS.md`) ? readText(`${root}AGENTS.md`, 'the prose reasons for scripts outside the set') : '';
 
   const hard = steps.filter((s) => !scripts[s]);
   const orphans = Object.keys(scripts).filter((s) => !steps.includes(s) && /^(check|probe|review):/.test(s));
   const undocumented = orphans.filter((s) => !runnerSrc.includes(s) && !agents.includes(s));
-  const withSelftest = steps.filter((s) => scripts[s + ':selftest']);
-  const withoutSelftest = steps.filter((s) => !scripts[s + ':selftest'] && !s.endsWith(':selftest') && /^(check|audit):/.test(s));
+  const withoutSelftest = steps.filter((s) => !scripts[`${s}:selftest`] && !s.endsWith(':selftest') && /^(check|audit):/.test(s));
 
   let baseline = null;
-  if (existsSync(root + 'design/gate-cost.json')) {
-    const b = JSON.parse(readFileSync(root + 'design/gate-cost.json', 'utf8'));
-    baseline = { deploy: b.deploy?.measuredAt, steps: Object.keys(b.deploy?.steps ?? {}).length };
+  if (existsSync(`${root}design/gate-cost.json`)) {
+    let b = null;
+    try {
+      b = JSON.parse(readText(`${root}design/gate-cost.json`, 'the cost baseline the guard compares against'));
+    } catch (e) {
+      console.log(`  cost baseline: design/gate-cost.json is not valid JSON (${e.message}) - the audit cannot report it`);
+    }
+    if (b) baseline = { deploy: b.deploy?.measuredAt, steps: Object.keys(b.deploy?.steps ?? {}).length };
   }
 
   console.log('add-a-gate: audit');
-  console.log('  runner steps: ' + steps.length + '   package scripts: ' + Object.keys(scripts).length);
+  console.log(`  runner steps: ${steps.length}   package scripts: ${Object.keys(scripts).length}`);
   if (hard.length) {
     console.log('  BROKEN - a step the runner will try to run with no script behind it:');
-    for (const s of hard) console.log('    ' + s);
+    for (const s of hard) console.log(`    ${s}`);
   }
   if (orphans.length) {
     console.log('  scripts that exist but are not in the verify set:');
     for (const s of orphans) {
-      console.log('    ' + s + (undocumented.includes(s) ? '   <- no reason given anywhere (gate-run.mjs or AGENTS.md)' : '   <- named in prose somewhere'));
+      console.log(`    ${s}${undocumented.includes(s) ? '   <- no reason given anywhere (gate-run.mjs or AGENTS.md)' : '   <- named in prose somewhere'}`);
     }
   }
   if (withoutSelftest.length) {
@@ -68,7 +90,7 @@ function audit() {
   if (baseline) {
     console.log(`  cost baseline: ${baseline.steps} steps, measured ${baseline.deploy}. If your gate moves the wall clock, run npm run cost:save in the same commit and say why.`);
   }
-  console.log('  exit: ' + (hard.length ? 1 : 0) + ' (only the broken wiring is a failure; the rest is a report)');
+  console.log(`  exit: ${hard.length ? 1 : 0} (only the broken wiring is a failure; the rest is a report)`);
   return hard.length ? 1 : 0;
 }
 

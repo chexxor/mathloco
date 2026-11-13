@@ -27,7 +27,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const OUT = 'design/gate-cost.json';
-const sets = ['deploy', 'browser'];
+const sets = ['deploy', 'browser', 'rig'];
 
 function read(set) {
   const f = `.design/tmp-gate-logs/${set}/manifest.txt`;
@@ -66,7 +66,7 @@ const current = {};
 for (const s of sets) {
   const v = read(s);
   if (v) current[s] = v;
-  else console.log(`cost: no manifest for the ${s} set (.design/tmp-gate-logs/${s}/manifest.txt) - run \`npm run verify${s === 'browser' ? ':browser' : ''}\` first.`);
+  else console.log(`cost: no manifest for the ${s} set (.design/tmp-gate-logs/${s}/manifest.txt) - run \`npm run verify${s === 'browser' ? ':browser' : s === 'rig' ? ':rig' : ''}\` first.`);
 }
 if (!Object.keys(current).length) {
   console.error('cost: nothing to do - no manifests found.');

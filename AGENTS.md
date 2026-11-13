@@ -84,6 +84,11 @@ each of those and requires a named failure. Both are in `verify`.
    embedded TypeScript service's warm-up. The 51ms `documentSymbol` quoted in D266 was a **warm** server inside
    a session, and the first typescript LSP call in a session takes ~10s; the gate pays the warm-up once per run
    instead of assuming it has already been paid.
+   - **The rig gates ride in their own set (S028, D291).** `check:lsp` and `check:lsp:selftest` are **not** in
+     `verify`: a rig-config check proves nothing about what ships, and burying it in the deploy set makes a
+     rig defect look like a product defect. `npm run verify:rig` runs them with `cost:selftest`; CI runs the
+     rig set as its own step. Cost @measured 2026-11-13 by `npm run verify:rig` (Linux native, Node 24.22.1,
+     16 CPU): 3 steps, 3.8s wall / 7.1s work.
    - **A second skill home exists, and it is host-local:** the vendored Cloudflare set from the
      `pi-cloudflare` pi package, at `.pi/npm/node_modules/pi-cloudflare/skills/` (`.pi/` is gitignored, so a
      fresh machine must reinstall the package to have them). 18 skills. They are **vendor** guidance, so this
@@ -109,14 +114,18 @@ each of those and requires a named failure. Both are in `verify`.
    once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
    (the set lives in `scripts/gate-run.mjs`, and `node scripts/gate-run.mjs --list` prints it. It used to be
    enumerated in this file and went stale twice, so the enumeration is gone - read the list rather than trusting
-   this sentence). It is
+   this sentence). There are three sets (S028, D291), and each has its own cost baseline: `verify` is the deploy
+   set - 40 steps, 36.4s wall / 53.4s work; `verify:rig` is the rig set - 3 steps, 3.8s wall / 7.1s work;
+   `verify:browser` is the browser set - 9 steps, 99.0s wall / 99.0s work, all @measured 2026-11-13 by the runner
+   itself (Linux native, Node 24.22.1, 16 CPU).
+   It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
    a chain hides which step broke, run the steps separately - and read
    `.design/tmp-gate-logs/<set>/<step>.txt`: every step's full output is kept from the last run, pass or
    fail (D144). `npm run check:discord` and
    `npm run check:ai` need real credentials (`check:ai` also spends one model call) and are deliberately
-   not in `verify`. Seven more scripts sit outside `verify` on purpose, and each now has its reason written
+   not in `verify`. Ten scripts sit outside `verify` on purpose, and each now has its reason written
    down rather than left to inference (D269): `check:rsvp:links` is the network probe that *writes* the dated
    `_verified` stamps `check:rsvp` reads - a deploy gate cannot depend on a live third-party page answering
    (D73's topology, same class as `check:discord`), so it is run by hand before a milestone review and the
@@ -124,18 +133,23 @@ each of those and requires a named failure. Both are in `verify`.
    with the browser gates and restores - it mutates the tree, so it is an instrument for the missing-content
    state (record 0024 found its defects there), not a gate; `check:area`, `check:rhythm` and `check:color` are
    design-round probes that report numbers and never exit non-zero, so in `verify` they would cost a build and
-   a browser for no verdict; `probe:cpu` deploys a throwaway Worker to measure per-request CPU on the real
+   a browser for no verdict; `check:render` is the build-then-measure form of the render gate, and the runner
+   already builds, so the browser set runs `check:render:dist` (`--no-build`) against the artifact `verify`
+   produced instead of rebuilding it; `probe:cpu` deploys a throwaway Worker to measure per-request CPU on the real
    runtime, which needs Cloudflare credentials and touches live infrastructure; `probe:live` is the only instrument
    here that compares **what a visitor is actually served** against what this tree would ship - every gate in
    `verify` reads `dist/`, so a green gate set says nothing about what is deployed (D245: production ran a
    2026-10-31 artifact for a week while 22 gates stayed green). Run it before reasoning about "the live site".
    `add-a-gate --audit` is what
    keeps this list honest: any script outside the runner with no reason anywhere is reported as drift.
-   The cost guard in `gate-run.mjs` compares **work seconds, like-for-like** against `design/gate-cost.json`
+   The cost guard (`scripts/cost-guard.mjs`, pulled out of `gate-run.mjs` under D290 so it can be tested on its
+   own - `npm run cost:selftest` plants 12 baseline/load combinations and demands the verdict each one must
+   produce) compares **work seconds, like-for-like** against `design/gate-cost.json`
    (the steps the baseline knows; new steps are listed with their cost) and **fails only when the run started
    and ended at or below 6/16cpu** - a contended rig is a WARN with the load printed, not a blocked ship step
    (D269). `npm run cost:save` refuses to freeze a baseline from a run above that load unless you pass
-   `--force` and say why.
+   `--force` and say why. Baselines now exist per set: deploy 40 steps and rig 3 steps frozen 2026-11-13,
+   browser 9 steps frozen 2026-11-12 - the deploy freeze had `check:lsp` in it and no longer does (D290, D291).
 5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
@@ -227,8 +241,9 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
 - **Every tool call carries a timeout, and none runs longer than 10 minutes.** The shell tool has **no
   default timeout**, so an unbounded command - a build, a browser probe, a `wrangler` call waiting on a
   network - runs until the session does. Guess the wall time first, then pass a timeout a little higher
-  than the guess: `npm run verify` is 25.1s wall / 36.0s work and `verify:browser` 94.1s work (9 steps)
-  @measured 2026-11-12 by `design/gate-cost.json`, so 120s is the honest budget for those two, not 600s.
+  than the guess: `npm run verify` is 36.4s wall / 53.4s work, `verify:rig` 3.8s wall / 7.1s work and
+  `verify:browser` 99.0s wall / 99.0s work (9 steps) @measured 2026-11-13 by `design/gate-cost.json`, so the
+  honest budgets are 60s rig, 120s deploy, 180s browser - not 600s.
   Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
   the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
   genuinely cannot finish inside 600s it is not one command: run the gate steps individually, start the
