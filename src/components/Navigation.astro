@@ -31,8 +31,13 @@ const navItems = [
      clears the graphic bar for free in height: 3.01 against the paper it stands on, bar still 1228x72.
      `shadow-e2` paints 1.78 - a layer, not an edge - and is held back until the bar actually moves (sticky,
      parked in PLAN.md §Parked with its trigger). An inset ring is not a border (D103), so check:design's
-     no-border rule still holds. -->
-<header class="bg-paper inset-shadow-rule">
+     no-border rule still holds.
+
+     S027 / D295 (operator ruling B1, 2026-11-13): the bar is chrome by its **ring alone**. `bg-paper` was
+     deleted from the header class - it declared a ground identical to the page behind it (re-measured by
+     `node design/round17.mjs --only shipped`, 2026-11-13), so it painted nothing and invited a future reader
+     to think the bar has a surface of its own. The ring is the whole device; sticky is still parked. -->
+<header class="inset-shadow-rule">
   <nav class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
     <!-- D100 shape B, re-measured on the built artifact by `npm run check:render`: one row at every
          width, `flex-wrap: nowrap`, one type tier (text-label) at every width, 16px gaps, and link

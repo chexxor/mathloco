@@ -123,6 +123,16 @@
       data-rsvp-date={date}
       class="min-h-8 inline-flex items-center gap-1 text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold hover:decoration-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
     >
+      <!-- The platform's own glyph, 16px, before the words (operator ruling F3(b), S026/D294). Three things
+         make it a mark rather than a box: it is `currentColor` (no brand colour exists in the palette, and a
+         brand-blue glyph next to an ink label is an off-paint the design gate prices), it is drawn from a
+         page-level sprite so a schedule with ten rows does not ship the same path ten times, and it carries
+         no fill, keyline or `data-control` of its own — the row it sits in is already one boundary (D220).
+         `aria-hidden` because the link's accessible name is the label text; a screen reader that also
+         described the glyph would say "Meetup" twice. -->
+      <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
+        <use href={`#pm-${d.platform.toLowerCase()}`} />
+      </svg>
       {d.label}{' '}
       <!-- The visible label names the platform and the action (D273); the suffix exists for the case where a
         link is lifted out of context — a screen reader's link list — and has to say it leaves the page. -->

@@ -350,6 +350,9 @@ for (const route of routes) {
     //     inside that row is the same two-box defect rule 4b prices for notices. Its box is 32px because it
     //     reserves `min-h-8`, the same label box D100 accepted for the nav; its tier is read from the token
     //     block, never remembered, so a ramp move moves this check with it (the D112 lesson).
+    //     The mark every label carries (S026, D294, operator ruling F3(b)) is checked four ways, because a
+    //     `<use>` pointing at a symbol the sprite does not have is invisible to every class scanner: the box
+    //     is there, the glyph is not.
     for (const c of j.clusters || []) {
       const who = `${at} sign-up cluster on ${c.date}`;
       if (c.fill) fails.push(`${who} paints a fill (${c.fill}) — a quiet label is word + underline on the page's own ground, never a fill (D272)`);
@@ -364,6 +367,22 @@ for (const route of routes) {
         if (l.fill) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} paints a fill (${l.fill}) inside a row that is already one boundary (D220, D272)`);
         if (l.ring) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} carries its own inset ring (D149-3c)`);
         if (l.role) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} declares data-control="${l.role}" — the 48px control height rule does not belong to a quiet label (D140, D272)`);
+        if (!l.mark) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} (${l.platform}, ${c.date}) paints no platform mark — F3(b) rules one 16px mark before every label (S026, D294)`);
+        else {
+          if (Math.abs(l.mark.w - 16) > 0.5 || Math.abs(l.mark.h - 16) > 0.5) {
+            fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} mark is ${l.mark.w}x${l.mark.h}px, want the 16px mark F3(b) ruled (w-4 h-4, 16px — the same box D100 keeps the nav mark at)`);
+          }
+          if (!l.mark.id) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} mark has no <use href> — an empty svg is decoration, not a platform mark (D294)`);
+          else if (l.mark.id !== `pm-${(l.platform || '').toLowerCase()}`) {
+            fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} is ${l.platform} but its mark points at #${l.mark.id} — the glyph must name the platform it is attached to (D294)`);
+          }
+          if (!l.mark.symbol) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} mark points at #${l.mark.id} and the page's sprite has no such symbol — the glyph paints nothing (D118: geometry in the table is not geometry in the DOM)`);
+          if (l.mark.glyph < 8) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} mark paints a glyph ${l.mark.glyph}px inside a 16px box — an empty square is not a mark (D294)`);
+          if (l.mark.paint && l.colorBytes && (l.mark.paint.r !== l.colorBytes.r || l.mark.paint.g !== l.colorBytes.g || l.mark.paint.b !== l.colorBytes.b)) {
+            fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} mark painted rgb(${l.mark.paint.r},${l.mark.paint.g},${l.mark.paint.b}) while its label is rgb(${l.colorBytes.r},${l.colorBytes.g},${l.colorBytes.b}) — a mark is drawn in currentColor, so it follows the label's gold on hover and never introduces a colour the palette has no token for (D82, D88)`);
+          }
+          if (!l.mark.hidden) fails.push(`${at}: sign-up link ${JSON.stringify(l.t)} mark is not aria-hidden — the label already names the platform, and a glyph the reader hears as well is a duplicated name (D294)`);
+        }
       }
     }
 

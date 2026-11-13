@@ -1,6 +1,6 @@
 {
   "round": 17,
-  "measuredAt": "2026-11-09T05:14:31.155Z",
+  "measuredAt": "2026-11-13T07:51:43.477Z",
   "os": "linux (native, no container - D131)",
   "question": "The club name is painted in the header bar and again as the largest text on the page, and the header bar carries the page ground with a type step smaller than a body line. What makes the bar read as chrome, and what does each way of doing it cost?",
   "widths": [
@@ -42,7 +42,7 @@
         "nameInFirstScreen1240": 2,
         "groundReport": {
           "bytes": "252,250,246",
-          "paintedBy": "header.bg-paper",
+          "paintedBy": "body.bg-paper",
           "oklch": "98.55% 0.0057 84.57",
           "layerVsPage": 1,
           "layerBar": 1.35,
@@ -98,14 +98,14 @@
         "navLabelFs": "13.3px",
         "heroFs": "52.4px",
         "heroOverNavIdentity": 2.98,
-        "headerGround": "252,250,246 from header.bg-paper",
+        "headerGround": "252,250,246 from body.bg-paper",
         "headerBox": "1228x72",
         "headerBorderBottom": "0px solid oklch(0.32 0.045 152)",
         "headerShadow": "oklch(0.655 0.03 152) 0px 0px 0px 1px inset, rgba(0, 0, 0, 0",
         "headerToHeroGap": 96,
         "laneFs": null,
         "rowNeededOfAvailable": "217/1164@1240  217/580@640  217/346@390  217/276@320",
-        "docHeightByWidth": "3071@1240  4432@640  4553@390  5052@320",
+        "docHeightByWidth": "3071@1240  4219@640  4629@390  5225@320",
         "markStrokeFloor": {
           "thinnestStrokeUnits": 1.3,
           "minWidthFor1pxFloorPx": 184.6,
@@ -220,7 +220,7 @@
         },
         "dupPairs": [],
         "foldCopyChars": 734,
-        "howItWorksY": 2369.9
+        "howItWorksY": 2369.6
       },
       "deltas": {
         "docHeightByWidth": "0px@1240  0px@640  0px@390  0px@320",
@@ -303,7 +303,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 5052,
+          "docHeight": 5225,
           "fold": [
             {
               "tag": "h1",
@@ -370,7 +370,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Dates and places go up on , where the sign-up is. Whether the room is your kind of room is not something a page can tell you.",
+                  "own": "Dates and places go up on , and every date on the schedule links to the page the club posts its sign-up on. Whether the room is your kind of room is not something a page can tell you.",
                   "fs": "17.6px"
                 },
                 {
@@ -386,7 +386,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 3216.8,
+              "y": 3273.1,
               "copy": [
                 {
                   "tag": "h2",
@@ -395,7 +395,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
+                  "own": "The date above is copied from the club’s own calendar, and it links to the page where you sign up.",
                   "fs": "21.1px"
                 },
                 {
@@ -405,27 +405,37 @@
                 },
                 {
                   "tag": "p",
-                  "own": "11",
+                  "own": "21",
                   "fs": "30.4px"
                 },
                 {
                   "tag": "p",
-                  "own": "Wed",
+                  "own": "Sat",
                   "fs": "13.3px"
                 },
                 {
                   "tag": "h3",
-                  "own": "Parallel Learning for Mathematical Minds",
+                  "own": "MPLS Math Club Social",
                   "fs": "21.1px"
                 },
                 {
                   "tag": "p",
-                  "own": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+                  "own": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "a",
-                  "own": "All 2 dates",
+                  "own": "Sign up on Meetup",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Discord chat",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Facebook group",
                   "fs": "13.3px"
                 },
                 {
@@ -450,7 +460,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.",
+                  "own": "the club's list of members is its Meetup group page, last read Nov 3, 2026 — the list is not the room.",
                   "fs": "17.6px"
                 },
                 {
@@ -466,7 +476,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 4752.2,
+              "y": 4924.7,
               "copy": [
                 {
                   "tag": "p",
@@ -491,7 +501,7 @@
               ]
             },
             "how-it-works": {
-              "y": 4050.1,
+              "y": 4194.4,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
@@ -572,7 +582,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 4553,
+          "docHeight": 4629,
           "fold": [
             {
               "tag": "h1",
@@ -639,7 +649,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Dates and places go up on , where the sign-up is. Whether the room is your kind of room is not something a page can tell you.",
+                  "own": "Dates and places go up on , and every date on the schedule links to the page the club posts its sign-up on. Whether the room is your kind of room is not something a page can tell you.",
                   "fs": "17.6px"
                 },
                 {
@@ -655,7 +665,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 2889.8,
+              "y": 2917.9,
               "copy": [
                 {
                   "tag": "h2",
@@ -664,7 +674,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
+                  "own": "The date above is copied from the club’s own calendar, and it links to the page where you sign up.",
                   "fs": "21.1px"
                 },
                 {
@@ -674,27 +684,37 @@
                 },
                 {
                   "tag": "p",
-                  "own": "11",
+                  "own": "21",
                   "fs": "30.4px"
                 },
                 {
                   "tag": "p",
-                  "own": "Wed",
+                  "own": "Sat",
                   "fs": "13.3px"
                 },
                 {
                   "tag": "h3",
-                  "own": "Parallel Learning for Mathematical Minds",
+                  "own": "MPLS Math Club Social",
                   "fs": "21.1px"
                 },
                 {
                   "tag": "p",
-                  "own": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+                  "own": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "a",
-                  "own": "All 2 dates",
+                  "own": "Sign up on Meetup",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Discord chat",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Facebook group",
                   "fs": "13.3px"
                 },
                 {
@@ -719,7 +739,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.",
+                  "own": "the club's list of members is its Meetup group page, last read Nov 3, 2026 — the list is not the room.",
                   "fs": "17.6px"
                 },
                 {
@@ -735,7 +755,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 4268.5,
+              "y": 4344.6,
               "copy": [
                 {
                   "tag": "p",
@@ -760,7 +780,7 @@
               ]
             },
             "how-it-works": {
-              "y": 3710.9,
+              "y": 3787,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
@@ -841,7 +861,7 @@
             "position": "static",
             "top": "auto"
           },
-          "docHeight": 4432,
+          "docHeight": 4219,
           "fold": [
             {
               "tag": "h1",
@@ -908,7 +928,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Dates and places go up on , where the sign-up is. Whether the room is your kind of room is not something a page can tell you.",
+                  "own": "Dates and places go up on , and every date on the schedule links to the page the club posts its sign-up on. Whether the room is your kind of room is not something a page can tell you.",
                   "fs": "17.6px"
                 },
                 {
@@ -924,7 +944,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 2677.9,
+              "y": 2706.1,
               "copy": [
                 {
                   "tag": "h2",
@@ -933,7 +953,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
+                  "own": "The date above is copied from the club’s own calendar, and it links to the page where you sign up.",
                   "fs": "21.1px"
                 },
                 {
@@ -943,27 +963,37 @@
                 },
                 {
                   "tag": "p",
-                  "own": "11",
+                  "own": "21",
                   "fs": "30.4px"
                 },
                 {
                   "tag": "p",
-                  "own": "Wed",
+                  "own": "Sat",
                   "fs": "13.3px"
                 },
                 {
                   "tag": "h3",
-                  "own": "Parallel Learning for Mathematical Minds",
+                  "own": "MPLS Math Club Social",
                   "fs": "21.1px"
                 },
                 {
                   "tag": "p",
-                  "own": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+                  "own": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "a",
-                  "own": "All 2 dates",
+                  "own": "Sign up on Meetup",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Discord chat",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Facebook group",
                   "fs": "13.3px"
                 },
                 {
@@ -988,7 +1018,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.",
+                  "own": "the club's list of members is its Meetup group page, last read Nov 3, 2026 — the list is not the room.",
                   "fs": "17.6px"
                 },
                 {
@@ -1004,7 +1034,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 4188,
+              "y": 3974.9,
               "copy": [
                 {
                   "tag": "p",
@@ -1029,7 +1059,7 @@
               ]
             },
             "how-it-works": {
-              "y": 3706.8,
+              "y": 3493.7,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
@@ -1189,7 +1219,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "Dates and places go up on , where the sign-up is. Whether the room is your kind of room is not something a page can tell you.",
+                  "own": "Dates and places go up on , and every date on the schedule links to the page the club posts its sign-up on. Whether the room is your kind of room is not something a page can tell you.",
                   "fs": "17.6px"
                 },
                 {
@@ -1205,7 +1235,7 @@
               ]
             },
             "section:When We Meet": {
-              "y": 1901.7,
+              "y": 1929.9,
               "copy": [
                 {
                   "tag": "h2",
@@ -1214,7 +1244,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "The sign-up is on Meetup, and the date above is copied from the club’s own calendar.",
+                  "own": "The date above is copied from the club’s own calendar, and it links to the page where you sign up.",
                   "fs": "21.1px"
                 },
                 {
@@ -1224,27 +1254,37 @@
                 },
                 {
                   "tag": "p",
-                  "own": "11",
+                  "own": "21",
                   "fs": "30.4px"
                 },
                 {
                   "tag": "p",
-                  "own": "Wed",
+                  "own": "Sat",
                   "fs": "13.3px"
                 },
                 {
                   "tag": "h3",
-                  "own": "Parallel Learning for Mathematical Minds",
+                  "own": "MPLS Math Club Social",
                   "fs": "21.1px"
                 },
                 {
                   "tag": "p",
-                  "own": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+                  "own": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
                   "fs": "17.6px"
                 },
                 {
                   "tag": "a",
-                  "own": "All 2 dates",
+                  "own": "Sign up on Meetup",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Discord chat",
+                  "fs": "13.3px"
+                },
+                {
+                  "tag": "a",
+                  "own": "Join the Facebook group",
                   "fs": "13.3px"
                 },
                 {
@@ -1269,7 +1309,7 @@
                 },
                 {
                   "tag": "p",
-                  "own": "280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.",
+                  "own": "the club's list of members is its Meetup group page, last read Nov 3, 2026 — the list is not the room.",
                   "fs": "17.6px"
                 },
                 {
@@ -1285,7 +1325,7 @@
               ]
             },
             "footer:How it works": {
-              "y": 2827,
+              "y": 2826.8,
               "copy": [
                 {
                   "tag": "p",
@@ -1310,7 +1350,7 @@
               ]
             },
             "how-it-works": {
-              "y": 2369.9,
+              "y": 2369.6,
               "h": 32,
               "fs": "25.3px",
               "own": "How it works",
@@ -1323,7 +1363,7 @@
       "shots": {
         "390": {
           "png": ".design/tmp-round17/shot-shipped-390.png",
-          "docHeight": 4553,
+          "docHeight": 4629,
           "marks": [
             {
               "name": "hero",

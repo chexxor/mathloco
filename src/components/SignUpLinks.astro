@@ -76,6 +76,8 @@ import meetupSnapshot from '../../data/meetup-events.json';
 import discordSnapshot from '../../data/discord-events.json';
 import { signUpPaths, snapshotAgeDays } from '../lib/rsvp.mjs';
 import SignUpLinksCluster from '../components/SignUpLinksCluster.svelte';
+import PlatformMarks from './PlatformMarks.astro';
+import { spriteFor } from '../lib/platform-marks.mjs';
 import type { UpcomingItem } from '../lib/content.ts';
 
 type Props = {
@@ -98,6 +100,7 @@ const discordAge = snapshotAgeDays(discordSnapshot);
   order the gate asserts. Everything passed below is a primitive or a plain array because it is serialised
   into the island tag: the snapshots and the config never leave the server. `client:visible` is the same
   strategy the /chat page uses for `DiscordSummary.svelte`. -->
+{spriteFor(Astro.url.pathname) && <PlatformMarks />}
 <SignUpLinksCluster
   client:visible
   destinations={paths.destinations}

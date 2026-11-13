@@ -38,11 +38,12 @@
  * anchors only; if that ever changes, the cluster regex below stops at the first `</div>` and the
  * "one cluster per printed row" count is what reports it.
  */
-import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { resolve, join } from 'node:path';
 import {
   LINK_KEYS, PLATFORMS, PREF_KEY, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths,
 } from '../src/lib/rsvp.mjs';
+import { MARKS, MARK_COUNT, markId } from '../src/lib/platform-marks.mjs';
 import { dateOf, scheduleWindow, todayInZone } from '../src/lib/event-window.mjs';
 
 const args = process.argv.slice(2);
@@ -63,6 +64,26 @@ const PAGES = [
   { name: '/schedule', file: resolve(DIST, 'schedule/index.html') },
 ];
 
+/** Every `.html` the build emitted. A gate that keeps its own list of pages is a gate that goes stale the day a
+ *  page is added (design/emitted-routes.mjs is the same lesson, applied here): the artifact is the source. */
+function emittedHtml(dir) {
+  const out = [];
+  const stack = [dir];
+  while (stack.length) {
+    const d = stack.pop();
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const p = join(d, e.name);
+      if (e.isDirectory()) stack.push(p);
+      else if (e.name.endsWith('.html')) out.push(p);
+    }
+  }
+  return out.sort();
+}
+const routeOf = (file) => {
+  const rel = file.slice(DIST.length + 1);
+  return rel === 'index.html' ? '/' : `/${rel.replace(/\/index\.html$/, '')}`;
+};
+
 /** A printed row or card: `<li ... data-surface="row|preview" data-date="YYYY-MM-DD">`. */
 const SURFACE_RE = /<li[^>]*data-surface="(row|preview)"[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*>/g;
 /** The cluster the component paints inside it. */
@@ -70,12 +91,32 @@ const CLUSTER_RE = /<div[^>]*data-rsvp-cluster[\s\S]*?<\/div>/g;
 /** An Astro island wrapper. `SignUpLinksCluster` is one (S022, D281): Astro server-renders it, so the bytes
  *  above come out of the component, and the same wrapper is what lets the browser reorder them. */
 const ISLAND_RE = /<astro-island[^>]*>/g;
+/** The platform sprite (S026, D294): the hidden `<svg>` whose `<symbol>`s every mark's `<use>` points at.
+ *  Keyed on the attributes the sprite is built from rather than a class list, so an extra attribute on
+ *  `PlatformMarks.astro` does not make the element invisible to this gate (D190). */
+const SPRITE_RE = /<svg class="hidden" aria-hidden="true">[\s\S]*?<\/symbol>\s*<\/svg>/;
 /** A headcount that got painted, in text or in an attribute (D265). Covers the Meetup `going` field, the
  *  Discord `user_count` the harvester never asks for, and any prose tally — an RSVP count can reach the page
  *  as an attribute or as a sentence, and both are the same rule. The second alternative is the form the site
  *  itself once printed: "280 on the Meetup list" is a count of people with a date attached to it, and a date
  *  on a number does not make it not a headcount (D276). */
 const COUNT_RE = /data-(going|headcount|attendees|user-count|usercount|rsvp-count)|\b\d[\d,.]*\s+(going|people|attendees|members?|rsvp(?:s)?|sign-ups)\b|\b\d[\d,.]*\s+(on|in) the [a-z][a-z ]*list\b/i;
+
+/** (F3(b), D294) A sprite is glyph bytes a page pays for whether or not it draws them. @measured 2026-11-13 by
+ *  `node design/mark-cost.mjs` (Linux native, Node 24.22.1, gzip of the built page): +2,197 gzip on `/` and
+ *  +2,191 on `/schedule`, both of which paint a cluster; a page that paints none would still pay — the
+ *  counterfactual measured on `/chat` is +2,202 gzip, 41.6% of that page's 5,289 gzip bytes.
+ *  Inlining the three glyphs instead costs +2,119/+2,121 gzip on a one-cluster page, so the sprite is the right
+ *  shape for a page with two or more clusters and the wrong shape for a page with none. */
+function spriteFindings(html, pageName) {
+  const out = [];
+  const ships = SPRITE_RE.test(html);
+  const paints = /<use href="#(pm-[a-z0-9-]+)"/.test(html);
+  if (ships && !paints) {
+    out.push(`${pageName} ships the platform sprite and paints none of it — ${MARK_COUNT} glyph(s) of path data the page never draws (D294: the sprite costs +2,197 gzip @measured 2026-11-13 by design/mark-cost.mjs)`);
+  }
+  return out;
+}
 
 /** The age painted on a cluster is computed when the page is built; the gate recomputes it when it runs, so a
  *  build and a gate hours apart cannot agree to one decimal (measured 2026-11-11, Linux: a `dist/client` built
@@ -230,6 +271,17 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
       }
       // A quiet label, not a control (D139): the row is already one boundary.
       if (/data-control/.test(link.tag)) fails.push(`${pageName} ${d.platform} link on ${s.date} carries data-control — the sign-up cluster is DESIGN.md's quiet label, not a control`);
+
+      // 5c. (F3(b), D294) Every painted link carries its own platform's mark, and the mark is the platform
+      //     the link is for. A glyph of the wrong platform is a painted lie: the visitor reads the mark first.
+      //     The browser gate (design/render-gate.mjs rule 4c) proves the mark is 16px and painted in the label's
+      //     colour; this rule proves the identity, which a screenshot cannot.
+      const uses = [...link.raw.matchAll(/<use href="#([a-z0-9-]+)"/g)];
+      if (uses.length !== 1) {
+        fails.push(`${pageName} ${d.platform} link on ${s.date} paints ${uses.length} platform mark(s) — F3(b) rules exactly one, drawn from the sprite (D294)`);
+      } else if (uses[0][1] !== markId(d.platform)) {
+        fails.push(`${pageName} ${d.platform} link on ${s.date} is marked #${uses[0][1]} — a mark must name the platform it points to (F3(b), D294)`);
+      }
     });
 
     // 6. A platform the club has no verified URL for must not appear at all, whatever the component thinks.
@@ -295,6 +347,32 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
       fails.push(`${pageName} sign-up island chunk ${at['component-url']} does not carry the preference key "${PREF_KEY}" — the resolver's key and the shipped key have drifted (D281)`);
     }
   }
+
+  // 9b. (F3(b), D294) The sprite. Marks are path data, and path data is only ever as honest as the source
+  //     that declared it: src/lib/platform-marks.mjs lists every platform the club has a mark for, with its
+  //     source URL and licence. A page that paints a mark whose symbol it never ships is a broken glyph; a
+  //     sprite whose path data drifted from the lib is a mark nobody licensed. Both are byte facts, so both
+  //     are read here rather than eyeballed.
+  const symbols = [...html.matchAll(/<symbol id="([a-z0-9-]+)"[^>]*>(?:\s*<path[^>]*d="([^"]*)"[^>]*>)?/g)];
+  const declared = new Set(symbols.map((s) => s[1]));
+  const paintedMarkIds = new Set([...html.matchAll(/<use href="#([a-z0-9-]+)"/g)].map((m) => m[1]));
+  for (const id of paintedMarkIds) {
+    if (!declared.has(id)) fails.push(`${pageName} paints #${id} but ships no <symbol id="${id}"> — the glyph resolves to nothing (F3(b), D294)`);
+  }
+  if (paintedMarkIds.size) {
+    for (const m of MARKS) {
+      const id = markId(m.platform);
+      if (!declared.has(id)) { fails.push(`${pageName} paints marks but ships no sprite symbol for ${m.platform} (#${id}) although src/lib/platform-marks.mjs declares it (D294)`); continue; }
+      const symbol = symbols.find((s) => s[1] === id);
+      if (symbol[2] !== m.d) fails.push(`${pageName} sprite symbol #${id} carries path data the lib does not declare — the sprite and src/lib/platform-marks.mjs have drifted (D294)`);
+    }
+    if (declared.size !== MARK_COUNT) {
+      fails.push(`${pageName} sprite declares ${declared.size} symbol(s); src/lib/platform-marks.mjs declares ${MARK_COUNT} platform marks (${[...declared].join(', ')})`);
+    }
+  }
+  // 9c. (D294) The sprite only rides pages that draw it. `SignUpLinks.astro` emits it in front of the first
+  //     cluster on the page, so a page with no cluster carries no glyph bytes.
+  fails.push(...spriteFindings(html, pageName));
 
   // 8. No headcount reaches the page, in text or in an attribute (D265).
   const counts = [...html.matchAll(new RegExp(COUNT_RE.source, 'gi'))];
@@ -364,13 +442,15 @@ if (selftest) {
       const rel = d.rel ?? 'noopener noreferrer';
       const target = d.target ?? '_blank';
       const sr = d.srOnly === undefined ? ` on ${platform}, opens in a new tab` : d.srOnly;
-      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}">${d.label ?? 'Details and sign-up'}${sr ? ` <span class="sr-only">${sr}</span>` : ''}<span aria-hidden="true">→</span></a>`;
+      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}"><svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#${markId(platform)}"></use></svg>${d.label ?? 'Details and sign-up'}${sr ? ` <span class="sr-only">${sr}</span>` : ''}<span aria-hidden="true">→</span></a>`;
     }).join('');
     const note = (mut.note === null ? '' : p.note) ? `<p class="text-label text-ink-3">${mut.note ?? p.note}</p>` : '';
     return `<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1" data-rsvp-cluster ${attrs}>${note}${links}</div>`;
   };
+  // The sprite SignUpLinks.astro ships: the same lib, the same ids, the same path data (D294).
+  const sprite = () => `<svg class="hidden" aria-hidden="true">${MARKS.map((m) => `<symbol id="${markId(m.platform)}" viewBox="0 0 24 24"><path d="${m.d}"/></symbol>`).join('')}</svg>`;
   const page = (rows, extra = '', us = urls) =>
-    `<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${island(clusterHtml({ date, time: hour }, {}, us))}</div></li>`).join('')}</ul>${extra}</main>`;
+    `${sprite()}<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${island(clusterHtml({ date, time: hour }, {}, us))}</div></li>`).join('')}</ul>${extra}</main>`;
 
   const clean = page([['2026-11-11', '18:00'], ['2026-11-21', '12:00']]);
   const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: DISFETCHED, discordAge: DISAGE, today: TODAY, pageName: 'planted page', chunks: { [ISLAND_CHUNK]: shippedChunk } };
@@ -407,6 +487,13 @@ if (selftest) {
     { name: 'a cluster stamped with a Discord snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot="2026-11-10T12:00:00.000Z"', 'data-rsvp-discord-snapshot="2026-10-01T00:00:00.000Z"'), ctx, want: ['Discord snapshot is 2026-10-01T00:00:00.000Z']},
     { name: 'Discord links painted from a guild snapshot past the freshness window', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { discordSnapshot: '2026-10-01T00:00:00.000Z', discordAge: '40.1' })), ctx: { ...ctx, discordFetchedAt: '2026-10-01T00:00:00.000Z', discordAge: 40.1 }, want: ['Discord snapshot 40.1 days old (limit 14']},
     { name: 'the cluster promoted to a control', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-platform="Meetup"', 'data-rsvp-platform="Meetup" data-control="signup"'), ctx, want: ['quiet label, not a control'] },
+    // Rule 5c / 9b: the platform mark (F3(b), D294).
+    { name: 'a sign-up link painted without its platform mark', html: page([['2026-11-11', '18:00']]).replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), ctx, want: ['paints 0 platform mark(s)'] },
+    { name: 'the Meetup link marked with the Discord glyph', html: page([['2026-11-11', '18:00']]).replace('<use href="#pm-meetup"></use>', '<use href="#pm-discord"></use>'), ctx, want: ['is marked #pm-discord — a mark must name the platform it points to'] },
+    { name: 'a mark whose symbol the page never ships', html: page([['2026-11-11', '18:00']]).replace('<symbol id="pm-meetup" viewBox="0 0 24 24"><path d="', '<symbol id="pm-unused" viewBox="0 0 24 24"><path d="'), ctx, want: ['paints #pm-meetup but ships no <symbol id="pm-meetup">'] },
+    { name: 'sprite path data that drifted from the lib', html: page([['2026-11-11', '18:00']]).replace(/<symbol id="pm-meetup"[^>]*><path d="[^"]*"/, '<symbol id="pm-meetup" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"'), ctx, want: ['path data the lib does not declare'] },
+    { name: 'a cluster painted with no sprite in the document at all', html: page([['2026-11-11', '18:00']]).replace(/<svg class="hidden" aria-hidden="true">[\s\S]*?<\/symbol>\s*<\/svg>/, ''), ctx, want: ['paints marks but ships no sprite symbol for Meetup'] },
+    { name: 'a sprite shipped to a page that paints no mark', html: `${sprite()}<main><p>Nothing on the calendar yet.</p></main>`, ctx, want: ['ships the platform sprite and paints none of it'] },
     { name: 'a cluster floating with no printed row', html: `<main>${island(clusterHtml({ date: '2026-11-11', time: '18:00' }))}</main>`, ctx, want: ['no printed date to attach it to'] },
     { name: 'a cluster on a date already past', html: page([['2026-11-01', '18:00']]).replace(/data-rsvp-state="none"/, 'data-rsvp-state="none"'), ctx, want: ['already passed'] },
     // Rule 9: the island that makes the remembered platform possible (S022, D281).
@@ -485,6 +572,22 @@ for (const page of PAGES) {
   const window = scheduleWindow(events.events ?? [], today);
   const inWindow = surfaces.filter((s) => window.shown.map(dateOf).includes(s.date)).length;
   console.log(`ok    ${page.name}: ${surfaces.length} printed date(s), ${clusters.length} cluster(s), ${links.length} sign-up link(s) [${links.join(', ') || 'none'}], states ${states.join('/')}; ${inWindow} of them inside the schedule window`);
+}
+
+// (D294) Every other emitted page: the sprite is path data, and path data is only worth shipping on a page that
+// draws it. The two cluster pages above are already read by pageFindings, so this loop covers the rest of the
+// artifact — /chat, /404 and whatever page a future session adds.
+for (const file of emittedHtml(DIST)) {
+  if (PAGES.some((p) => p.file === file)) continue;
+  const html = readFileSync(file, 'utf8');
+  const fails = spriteFindings(html, routeOf(file));
+  if (fails.length) {
+    for (const f of fails) console.log(`FAIL  ${f}`);
+    total += fails.length;
+    continue;
+  }
+  const marks = [...html.matchAll(/<use href="#(pm-[a-z0-9-]+)"/g)].length;
+  console.log(`ok    ${routeOf(file)}: ${marks} mark(s) painted, sprite ${SPRITE_RE.test(html) ? 'present' : 'not needed'}`);
 }
 
 if (total) {

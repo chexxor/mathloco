@@ -188,6 +188,16 @@ future "this shadow makes it a layer" claim has to be measured on the render, no
 The stops are ink-tinted on purpose: a black stop wide enough to read at a wide blur paints a 2.10 grey
 band.
 
+**The header is chrome by its ring alone** (S027, D295 — operator ruling B1, 2026-11-13). `Navigation.astro`
+'s `<header>` carries **no** `bg-*` class: its computed background was the page paper (layer contrast **1.00**,
+OKLab distance 0 @measured 2026-11-13 by `node design/round17.mjs --only shipped`), so `bg-paper` painted nothing
+and only invited a reader to think the bar has a surface of its own. The one device separating it is the
+`inset-shadow-rule` ring at **3.01** on paper. How much of the band actually differs from the page @measured
+2026-11-13 by `node design/header-band.mjs .design/tmp-round17/shot-shipped-1240.png 71` (Linux native,
+Firefox 159.0): **5.00%** of the 1240×72 band — 2.78% the ring's two rows, 2.22% the nav ink. `check:render`'s
+`bands` section only sees elements with a `bg-*` class, so once a surface declares no ground this probe is the
+instrument that still reports it.
+
 **A keyline is a PAIR, and `rule` is solved for two grounds, not for all of them.** `--color-rule`
 measures **3.01** on `paper`, **4.00** on the `ink` band, **2.88** on `panel` and **2.74** on `tint` — so
 on a tint it sits under the 3.0 graphic bar it was solved to clear. That is a measurement, not a
@@ -452,11 +462,11 @@ Rules that are not decoration:
   boundary (D220), so a 48px block control inside it is two boxes drawn twice (D149-3c). A platform the club
 declares in `src/config.json` is painted on **every** printed date; a platform whose entry is empty is painted
 nowhere, and `npm run check:rsvp-page` proves both directions from the built bytes rather than from the
-component's silence. The box is **32px** tall at 1240 and 640 — Meetup, Discord and Facebook all on one line —
-**68px** at 390 where Facebook takes a second line and **104px** at 320 where each label takes its own, each label
-occupying exactly one 32px line box at every width @measured 2026-11-12 by `npm run check:render:dist` and
-`node design/grill/serve-measure.mjs dist/client / design/grill/cluster-measure.js 390 2400` (Linux native, Firefox
-159.0). Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
+component's silence. The box is **32px** tall wherever the lane holds all three labels on one line — 1240 on both
+surfaces, and 640 on `/schedule` — **68px** on the homepage at 640 where Facebook drops to a second line, and
+**104px** at 390 and 320 where each label takes its own (two 4px `gap-y-1` rows between three 32px line boxes).
+Height × width @measured 2026-11-13 by `npm run check:render:dist` (Linux native, Firefox 159.0, 4 routes × 4
+widths): `/` 32x633, 68x532, 104x314, 104x244 and `/schedule` 32x645, 32x544, 104x314, 104x244 for 1240/640/390/320. Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
 because `check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of
 which must go red.
 - **The order is a permutation, never a filter** (S022, D281). The server paints Meetup, Discord, Facebook; the
@@ -468,10 +478,23 @@ which must go red.
   **1235 gzip** on the two pages that carry a cluster; against an identical copy of the same build with the island
   mechanism removed the three pages weigh **+815 gzip** in total. The cluster markup a JS-off visitor sees is
   **2142 gzip** and is byte-identical either way.
+- **The platform mark is a glyph, drawn once per page** (S026, D294). Each link carries a 16px `<use>` into a
+  hidden `<symbol>` sprite whose path data lives in one place, `src/lib/platform-marks.mjs` — the only home of the
+  glyph shapes, so the render gate and the byte gate can compare the same ids. The sprite is emitted by
+  `src/components/SignUpLinks.astro` for the page that claims a cluster, **not** by the layout, because a page that
+  paints no mark should ship no glyph bytes: the counterfactual on `/chat` is **+2,202 gzip**, 41.6% of that page's
+  5,289 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs` (Linux native, Node 24.22.1, gzip of the
+  built page). The sprite itself is 4,307 raw / 1,892 gzip and adds **+2,197 gzip** to `/` and **+2,191** to
+  `/schedule`; inlining the three glyphs into the same pages costs **+2,119** and **+2,121**, so on a one-cluster
+  page the sprite is 70-78 gzip dearer and it breaks even at **two clusters on one page** — which is what
+  `/schedule` becomes as the calendar fills (the re-decision is parked in `PLAN.md` §Parked with that trigger).
+  The glyph is painted in `currentColor`, so a mark is the ink of the label it belongs to and turns gold with it on
+  hover; a mark that carried its own brand colour would be a second colour rule, which the named-roles section
+  forbids.
 
-Measured, at every shipped viewport on both surfaces @measured 2026-11-12 by `node design/schedule-geometry.mjs
+Measured, at every shipped viewport on both surfaces @measured 2026-11-13 by `node design/schedule-geometry.mjs
 --widths 1240 1024 900 768 640 390 320` on `dist/client` (Linux native, Firefox 159.0). One row per printed date,
-and the window prints **one** open date today @measured 2026-11-12 by `node scripts/check-schedule-window.mjs`
+and the window prints **one** open date today @measured 2026-11-13 by `node scripts/check-schedule-window.mjs`
 (1 of 1 open rows), so `/schedule` has one row to measure.
 
 | width | homepage card | its copy lane | `/schedule` row | its copy lane |
@@ -480,8 +503,8 @@ and the window prints **one** open date today @measured 2026-11-12 by `node scri
 | 1024 | 948x264 | 417x232 | 948x232 | 417x200 |
 | 900 | 840x484 | 792x168 | 840x452 | 792x136 |
 | 768 | 708x484 | 660x168 | 708x452 | 660x136 |
-| 640 (stacked) | 580x512 | 532x196 | 580x480 | 532x164 |
-| 390 | 346x596 | 314x285 | 346x540 | 314x229 |
+| 640 (stacked) | 580x548 | 532x232 | 580x516 | 532x200 |
+| 390 | 346x632 | 314x321 | 346x576 | 314x265 |
 | 320 | 276x626 | 244x349 | 276x570 | 244x293 |
 
 The leaf is **112x96** in every box. The plate is the cap **323** wide down to 390, where the column is narrower
@@ -490,14 +513,18 @@ inside the keyline. **The plate's painted height belongs to the event's art, not
 rule, 156 is this date's image, and the box heights above move when the schedule does.
 
 What the sign-up cluster costs, measured by running the same probe against a copy of the built page with every
-cluster stripped @measured 2026-11-12 by `node design/grill/strip-clusters.mjs` then
-`node design/schedule-geometry.mjs --dist .design/tmp-no-cluster`: the copy lane gains **+44px** at 1240, 900, 768
-and 640, **+80px** at 1024 and 390 and **+116px** at 320, but the *row* only grows where the lane is the tallest
-thing in the box: **+40px** on the homepage card at 1240 (228 vs 188 — the lane is 196 and the plate only 156 on
-this date's art), **+76px** at 1024, **+8px** on the `/schedule` row at 1240, **+44px** from 1024 down to 640,
-**+80px** at 390 and **+116px** at 320 — so three platforms cost **44px** of a desktop row and **116px** on the
-narrowest phone. A card's height here was quoted as **+0px** at 1240 in an earlier pass; that was true of a build
-whose plate painted 185px, and it is corrected because the probe contradicts it, not because the rule changed.
+cluster stripped @measured 2026-11-13 by `node design/grill/strip-clusters.mjs` then
+`node design/schedule-geometry.mjs --dist .design/tmp-no-cluster` (the two runs are kept side by side in
+`.design/tmp-geometry-2026-11-13.txt` and `.design/tmp-geometry-nocluster-2026-11-13.txt`): the copy lane gains
+**+44px** at 1240, 900 and 768, **+80px** at 1024 and 640, and **+116px** at 390 and 320, but the *row* only grows
+where the lane is the tallest thing in the box — **+40px** on the homepage card at 1240 (228 vs 188: the lane is 196
+and the plate only 156 on this date's art), **+76px** at 1024, **+44px** at 900 and 768, **+80px** at 640, **+116px**
+at 390 and 320. On `/schedule` the same strip adds **+8/+44/+44/+44/+80/+116/+116px** for 1240→320. So three
+platforms cost **44px** of a desktop row and **116px** on the narrowest phone. Two numbers here carry an artifact:
+the stripped `/schedule` row measured 12px **wider** than the shipped one (1176 vs 1164) with a 645px lane against
+633, so its 1240 delta (+8px) is partly the probe's own box rather than the cluster's. A card's height was quoted
+as **+0px** at 1240 in an earlier pass; that was true of a build whose plate painted 185px, and it is corrected
+because the probe contradicts it, not because the rule changed.
 Page totals
 @measured 2026-11-12 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
 same tool on `/` only): homepage **3071px at 1240**, **4593 at 390**, **5225 at 320**; `/schedule` **1200px at
@@ -1009,9 +1036,14 @@ word in event prose.
   operator has ruled the schedule's source must be **phone-editable**, Mobilizon or an ICS feed, not a repo file:
   see `.notes/roadmap-events.md`) and **copy** (the panel section's **866** characters are six generic cards, and
   the largest copy gap on the page follows the "Current Focus" line). Two of the four are not code. Side finding,
-  given the site rule "a hairline rule at most": the header band is **1240×72** with **1.0%** of its pixels
-  differing from the page behind it (18 characters in it), and the footer is **1240×284** at **1.9%** — the single
-  largest unbroken field on the page. Mass, not weight, is what breaks that rule today, which is why the attribution
+  given the site rule "a hairline rule at most": the header band is **1240×72** and **5.00%** of its pixels differ
+  from the page behind it — 2.78% the inset ring's two rows, 2.22% the nav ink (4,462 of 89,280) @measured
+  2026-11-13 by `node design/header-band.mjs .design/tmp-round17/shot-shipped-1240.png 71`; the **1.0%** this
+  sentence carried was shot before the inset ring was part of the bar, so it is superseded, not corrected. The
+  survey's own per-surface row reads the header as **1.3%** painted rows @measured 2026-11-13 by
+  `node design/whitespace-survey.mjs --routes /` (a row counts as painted at ≥40 ink px, so a 1px ring does not
+  register there), and the footer as **1240×284** at **1.7%** painted rows — the single largest unbroken field on
+  the page. Mass, not weight, is what breaks that rule today, which is why the attribution
   line went into the footer rather than being another band.
 - **Body line spacing is now 1.36, and that is a ruling waiting to happen.** `text-body` 17.6px with the
   derived 24px line box is a ratio of 1.36; serif prose writes `leading-prose` (1.6 → 28.2px) and is fine, but

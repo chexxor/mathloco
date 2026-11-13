@@ -1,0 +1,41 @@
+---
+/**
+ * The platform sprite (S026, D294): every sign-up mark's path data, painted once per page.
+ *
+ * Why a sprite and not three inline `<svg>`s: a `/schedule` page prints one cluster per open date, and each
+ * cluster carries one link per platform. Inlining the glyphs would ship the Meetup path (2,356 characters @measured
+ * 2026-11-13 by `curl -sL https://cdn.simpleicons.org/meetup | wc -c`) once per link — nine links on a nine-row
+ * page, nine copies of the same drawing. A `<symbol>` in a hidden sprite plus a `<use href="#pm-meetup">` in
+ * each link ships the path data once and the references cost ~22 bytes each.
+ *
+ * The trade is measured, not assumed (`node design/mark-cost.mjs`, @measured 2026-11-13, Linux native, Node
+ * 24.22.1, gzip bytes of the built page): the sprite costs **+2,197 gzip** on `/` and **+2,191** on `/schedule`,
+ * while inlining the three glyphs into those same pages costs **+2,119** and **+2,121**. So on a one-cluster page
+ * the sprite is 70-78 gzip dearer than inlining, and it pays that back at **two clusters on a page** — which is
+ * what the schedule becomes as the calendar fills. Two consequences the gates enforce: the sprite is emitted by
+ * `SignUpLinks.astro` for the page that paints a cluster, never by the layout, so a page painting no mark ships
+ * no glyph bytes (the counterfactual: `/chat` would pay **+2,202 gzip** for drawings it never paints — 41.6% of
+ * that page's 5,289 gzip bytes); and the sprite is printed once per page, because two sprites on one page is two
+ * sets of the same ids.
+ *
+ * `class="hidden"` is load-bearing in the boring sense: a sprite with no symbols painted is still a document
+ * node, and an `<svg>` with no width would add nothing to the layout anyway — but a *display:none* element is
+ * the one thing that provably cannot overlap anything, which is why the sprite is not given a size. The
+ * `<use>` references resolve regardless of the sprite's own visibility; that is how the technique works.
+ *
+ * `SignUpLinks.astro` renders it for the page that claims a cluster (`spriteFor` claims one sprite per pathname),
+ * so a page with no cluster never asks for it — and
+ * `design/render-gate.mjs` (rule 4c) checks the symbol is really in the document for every mark a link
+ * references, because a broken `href` paints an empty 16px box that looks, to a class scanner, exactly like a
+ * mark.
+ */
+import { MARKS, markId } from '../lib/platform-marks.mjs';
+---
+
+<svg class="hidden" aria-hidden="true">
+  {MARKS.map((m) => (
+    <symbol id={markId(m.platform)} viewBox="0 0 24 24">
+      <path d={m.d} />
+    </symbol>
+  ))}
+</svg>

@@ -342,12 +342,34 @@
       noteContrast: (() => { const p = el.querySelector('p'); if (!p) return null; const c = parse(getComputedStyle(p).color); return c && opaque(ground) ? ratio(c, ground) : null; })(),
       links: [...el.querySelectorAll('a')].map((a) => {
         const ar = a.getBoundingClientRect(), acs = getComputedStyle(a);
+        // The platform mark (S026, D294). Three numbers matter: the box the svg occupies, the extent of the
+        // glyph that actually painted inside it, and the bytes it painted with. A `<use>` whose target symbol
+        // is not in the document renders nothing, and a class scanner cannot see that — the box is still 16x16,
+        // so only the glyph extent and the symbol lookup can tell a mark from an empty square (same lesson as
+        // D118's mark-shape count: geometry in the table is not geometry in the DOM).
+        const svg = a.querySelector('svg');
+        const mark = svg ? (() => {
+          const mr = svg.getBoundingClientRect(), mcs = getComputedStyle(svg);
+          const use = svg.querySelector('use');
+          const id = ((use ? use.getAttribute('href') : '') || '').replace(/^#/, '');
+          const gr = use ? use.getBoundingClientRect() : { width: 0, height: 0 };
+          return {
+            id,
+            w: +mr.width.toFixed(1), h: +mr.height.toFixed(1),
+            glyph: +Math.max(gr.width, gr.height).toFixed(1),
+            paint: paintBytes(mcs.fill),
+            symbol: !!document.getElementById(id),
+            hidden: svg.getAttribute('aria-hidden') === 'true',
+          };
+        })() : null;
         return {
           platform: a.getAttribute('data-rsvp-platform') || '',
           t: (a.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40),
           h: +ar.height.toFixed(1), w: +ar.width.toFixed(1),
           fs: acs.fontSize, lh: acs.lineHeight,
           color: acs.color,
+          colorBytes: paintBytes(acs.color),
+          mark,
           contrast: opaque(ground) && parse(acs.color) ? ratio(parse(acs.color), ground) : null,
           fill: acs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : acs.backgroundColor,
           ring: (acs.boxShadow === 'none' ? '' : acs.boxShadow).includes('inset'),

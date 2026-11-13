@@ -157,6 +157,16 @@ const cases = [
   ['sign-up cluster given its own ring', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1inset-shadow-rule $2$3 data-rsvp-cluster'), /sign-up cluster on .* carries its own inset ring/],
   ['sign-up label loses its 32px box', (h) => h.replace('min-h-8 inline-flex items-center gap-1 text-label', 'inline-flex items-center gap-1 text-label'), /sign-up link .* is [\d.]+px tall — the quiet label reserves min-h-8/],
   ['sign-up label promoted to a control', (h) => h.replace(/ data-rsvp-platform="Meetup"/, ' data-control="primary" data-rsvp-platform="Meetup"'), /primary control .* is 32px tall, not 48/],
+  // 8b. the platform mark (S026, D294). Four defects the byte gate cannot see and this one can: the mark is
+  // gone, the mark is the wrong size, the mark points at a symbol the sprite never declared (an EMPTY 16px
+  // square — the D118 lesson, in SVG), and the mark painted a colour of its own instead of currentColor.
+  // The size planting drops the Tailwind classes rather than writing `w-6`, because Tailwind's CSS is generated
+  // by scanning src at build time and never saw `w-6` (the D110 coupling, in reverse): presentation attributes
+  // are what the browser paints.
+  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), /paints no platform mark/],
+  ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/],
+  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-meetup"', '<symbol id="pm-meetupX"'), /sprite has no such symbol/],
+  ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\) while its label is rgb\(32,57,39\)/],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;
