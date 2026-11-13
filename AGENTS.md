@@ -242,8 +242,10 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
 - **Every tool call carries a timeout, and none runs longer than 10 minutes.** The shell tool has **no
   default timeout**, so an unbounded command - a build, a browser probe, a `wrangler` call waiting on a
   network - runs until the session does. Guess the wall time first, then pass a timeout a little higher
-  than the guess: `npm run verify` is 36.4s wall / 53.4s work, `verify:rig` 3.8s wall / 7.1s work and
-  `verify:browser` 99.0s wall / 99.0s work (9 steps) @measured 2026-11-13 by `design/gate-cost.json`, so the
+  than the guess, taken from the frozen baselines the runner compares against: `verify` 40 steps / 45.8s of
+  work (32.4s wall), `verify:rig` 3 steps / 6.9s (3.6s wall), `verify:browser` 9 steps / 98.8s (98.8s wall)
+  @measured 2026-11-13 by `design/gate-cost.json`; today's runs of the same sets came in at 32.5s/46.3s and
+  36.4s/53.1s wall/work for `verify` (Linux native, Node 24.22.1, 16 CPU), so the
   honest budgets are 60s rig, 120s deploy, 180s browser - not 600s.
   Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
   the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
