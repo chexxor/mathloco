@@ -185,17 +185,25 @@ function selftest() {
   const ms12Plan = rowOf(plan, 'MS12');
   const ms12Proj = rowOf(projection, 'MS12');
   const FB_PHRASE = /and the club's Facebook group \(S021\)/;
+  // A clone has no plan, so the promise it can be checked against lives in the tracked projection. Planting
+  // a plan-side defect into a string that is not there is a no-op, and a no-op planted as a failure is a
+  // selftest that reports a defect it never created @measured 2026-11-12 by `npm run verify` in a fresh clone.
+  const inClone = !plan;
+  const srcText = inClone ? projection : plan;
+  const srcRow = inClone ? ms12Proj : ms12Plan;
+  const srcKey = inClone ? 'projectionText' : 'planText';
+  const dropPhrase = (re, rep) => ({ [srcKey]: srcText.replace(srcRow, srcRow.replace(re, rep)) });
 
   const plantings = [
     { label: 'the row promises Facebook while the config declares none',
       urls: { ...urls, facebookGroup: '' }, painted: controlPaint, want: ['declares no URL for them'] },
     { label: 'the row names only Meetup and Discord while the artifact paints three',
-      planText: plan.replace(ms12Plan, ms12Plan.replace(FB_PHRASE, '(S021)')), painted: controlPaint, want: ['never names it'] },
+      ...dropPhrase(FB_PHRASE, '(S021)'), painted: controlPaint, want: ['never names it'] },
     { label: 'the Facebook link is painted but never promised',
-      planText: plan.replace(ms12Plan, ms12Plan.replace(/Facebook group/g, 'group')), painted: controlPaint, want: ['no ruling ratified', 'does not name it'] },
+      ...dropPhrase(/Facebook group/g, 'group'), painted: controlPaint, want: ['no ruling ratified', 'does not name it'] },
     { label: 'the built page drops the Discord link while the row still names it',
       painted: { set: new Set(['Meetup', 'Facebook']), missing: [], read: 2 }, want: ['promises Discord'] },
-    { label: 'the projection omits the platform the plan names',
+    { label: 'the projection omits the platform the plan names', needsPlan: true,
       projectionText: projection.replace(ms12Proj, ms12Proj.replace(FB_PHRASE, '(S021)')), painted: controlPaint, want: ['PLAN.md and'] },
     { label: 'a clone with no plan and no projection',
       planText: '', projectionText: '', painted: controlPaint, want: ['no milestone row names any sign-up platform'] },
@@ -211,7 +219,7 @@ function selftest() {
   for (const c of cases) {
     // The plan-vs-projection planting needs both files; a clone has only the projection, so that class of
     // defect cannot exist there and the planting is skipped rather than silently reported as passing.
-    if (c.projectionText && !plan) { skipped++; continue; }
+    if (c.needsPlan && !plan) { skipped++; continue; }   // the plan-vs-projection class cannot exist without a plan
     const data = {
       planText: c.planText ?? plan,
       projectionText: c.projectionText ?? projection,

@@ -71,7 +71,7 @@ const hasTrigger = (row) => /trigger|unblock|resume|until|closes|when |headroom/
 
 // Parked rows: the second column is the trigger. A blank trigger is the D148 failure mode in table form.
 const parkedRows = (plan) => sectionText(plan, 'Parked').split('\n')
-  .filter((l) => /^\|/.test(l) && !/^\|\s*(-{3,}\s*\|)+-?\s*\|$/.test(l) && !/^\|\s*parked\s*\|/.test(l))
+  .filter((l) => /^\|/.test(l) && !/^\|[\s|-]*\|$/.test(l) && !/^\|\s*parked\s*\|/.test(l))   // a separator row is not a parked item (the old regex let `|---|---|` through)
   .map((l) => rowCells(l));
 
 const definedRulings = (plan) => new Set([...sectionText(plan, 'Rulings').matchAll(/\*\*S(\d{3})\b/g)].map((m) => Number(m[1])));
@@ -201,26 +201,41 @@ function rewriteRow(text, id, which, value) {
 
 function selftest(base) {
   const [plan, proj, next, cites] = base;
+  const inClone = !plan;                       // CI's checkout has no .notes/ (D151's two-mode rule)
+  // Which file carries the milestone rows in this mode, and which cell holds the status. Planting into a
+  // file that does not exist proves nothing, so a plan-side defect is planted into the projection in a clone.
+  const rows = inClone ? proj : plan;
+  const src = inClone ? 'proj' : 'plan';
+  const statusCell = inClone ? 3 : 4;
+  const drop = (text, id) => text.split('\n').filter((l) => !l.includes('**' + id + '**')).join('\n');
+  // [name, mutation, acceptable wording, does this class of defect exist in a clone at all?]
   const plantings = [
-    ['plan section deleted', () => ({ plan: plan.replace(/^## Gates[\s\S]*?(?=\n## )/m, '') }), 'plan section missing'],
-    ['exit gate removed', () => ({ plan: rewriteRow(plan, 'MS01', 2, 'make the planning nicer') }), 'no exit gate'],
-    ['status outside the vocabulary', () => ({ plan: rewriteRow(plan, 'MS01', 4, '**ongoing**') }), 'outside the vocabulary'],
-    ['paused with no trigger', () => ({ plan: rewriteRow(plan, 'MS03', 4, '**paused**') }), 'no resume trigger'],
-    ['blocked with no trigger', () => ({ plan: rewriteRow(plan, 'MS05', 4, '**blocked**') }), 'no resume trigger'],
-    ['projection disagrees', () => ({ proj: rewriteRow(proj, 'MS02', 3, '**queued**') }), 'disagrees'],
-    ['projection missing a milestone', () => ({ proj: proj.split('\n').filter((l) => !l.includes('**MS11**')).join('\n') }), 'does not carry MS11'],
-    ['milestone id skipped', () => ({ plan: plan.split('\n').filter((l) => !l.includes('**MS07**')).join('\n') }), 'MS07 is missing'],
-    ['two milestones active at once', () => ({ plan: rewriteRow(plan, 'MS04', 4, '**active**') }), 'milestones are "active"'],
-    ['fourth open question', () => ({ plan: plan.replace('## Open questions (capped at three)', '## Open questions (capped at three)\n4. **A fourth one.** Something nobody has answered yet.') }), 'open questions'],
-    ['queue put back in NEXT', () => ({ next: '| **MS11** | an item in the entry point | a command | **queued** |\n\n' + next }), 'milestone table'],
-    ['park row with no trigger', () => ({ plan: plan.split('\n').map((l) => /^\| mark surface identity \(R1\) \|/.test(l) ? '| mark surface identity (R1) | |' : l).join('\n') }), 'un-park trigger'],
-    ['milestone row with no owner', () => ({ plan: rewriteRow(plan, 'MS11', 3, '') }), 'no named owner'],
-    ['milestone row truncated to two columns', () => ({ plan: plan.split('\n').map((l) => /^\| \*\*MS11\*\* \|/.test(l) ? '| ' + rowCells(l).slice(0, 2).join(' | ') + ' |' : l).join('\n') }), 'columns'],
-    ['projection row with an extra column', () => ({ proj: proj.split('\n').map((l) => /^\| \*\*MS02\*\* \|/.test(l) ? l.replace(/ \| \*\*active\*\*/, ' | delegate | **active**') : l).join('\n') }), 'columns'],
-    ['ruling id with no entry', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.S.set(777, ['AGENTS.md']); return { cites: c }; }, 'no ruling register'],
+    ['plan section deleted', () => ({ plan: plan.replace(/^## Gates[\s\S]*?(?=\n## )/m, '') }), ['plan section missing'], false],
+    ['exit gate removed', () => ({ [src]: rewriteRow(rows, 'MS01', 2, 'make the planning nicer') }), ['no exit gate'], true],
+    ['status outside the vocabulary', () => ({ [src]: rewriteRow(rows, 'MS01', statusCell, '**ongoing**') }), ['outside the vocabulary'], true],
+    ['paused with no trigger', () => ({ [src]: rewriteRow(rows, 'MS03', statusCell, '**paused**') }), ['no resume trigger'], true],
+    ['blocked with no trigger', () => ({ [src]: rewriteRow(rows, 'MS05', statusCell, '**blocked**') }), ['no resume trigger'], true],
+    ['projection disagrees', () => ({ proj: rewriteRow(proj, 'MS02', 3, '**queued**') }), ['disagrees'], false],
+    ['projection missing a milestone', () => ({ proj: drop(proj, 'MS11') }), ['is missing', 'does not carry'], true],
+    ['milestone id skipped', () => ({ [src]: drop(rows, 'MS07') }), ['is missing'], true],
+    ['two milestones active at once', () => ({ [src]: rewriteRow(rows, 'MS04', statusCell, '**active**') }), ['milestones are "active"'], true],
+    ['fourth open question', () => ({ plan: plan.replace('## Open questions (capped at three)', '## Open questions (capped at three)\n4. **A fourth one.** Something nobody has answered yet.') }), ['open questions'], false],
+    ['queue put back in NEXT', () => ({ next: '| **MS11** | an item in the entry point | a command | **queued** |\n\n' + next }), ['milestone table'], false],
+    // The parked table is edited by hand, so the planting finds a live row rather than trusting a literal:
+    // a test pinned to one row's exact markup goes dead the day someone rewords it (D268's dead-exemption rule).
+    ['park row with no trigger', () => {
+      const live = parkedRows(plan).find((c) => c.length >= 2 && c[1]);
+      if (!live) throw new Error('the Parked table has no row with a trigger - nothing to plant into');
+      return { plan: plan.replace('| ' + live.join(' | ') + ' |', '| ' + live[0] + ' | |') };
+    }, ['un-park trigger'], false],
+    ['milestone row with no owner', () => ({ plan: rewriteRow(plan, 'MS11', 3, '') }), ['no named owner'], false],
+    ['milestone row truncated to two columns', () => ({ plan: plan.split('\n').map((l) => /^\| \*\*MS11\*\* \|/.test(l) ? '| ' + rowCells(l).slice(0, 2).join(' | ') + ' |' : l).join('\n') }), ['columns'], false],
+    ['projection row with an extra column', () => ({ proj: proj.split('\n').map((l) => /^\| \*\*MS02\*\* \|/.test(l) ? l.replace(/ \| \*\*active\*\*/, ' | delegate | **active**') : l).join('\n') }), ['columns'], true],
+    ['ruling id with no entry', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.S.set(777, ['AGENTS.md']); return { cites: c }; }, ['no ruling register'], false],
+    ['milestone id cited with no row', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.MS.set(99, ['AGENTS.md']); return { cites: c }; }, ['no such milestone'], true],
     // CI mode: the clone has no plan, so the projection alone is audited - and it must still catch a bad row.
-    ['clone: plan gone, projection row with no exit gate', () => ({ plan: '', proj: rewriteRow(proj, 'MS02', 2, 'make production match the repo') }), 'no exit gate'],
-    ['clone: plan and projection both gone', () => ({ plan: '', proj: '' }), 'no milestone rows'],
+    ['clone: projection row with no exit gate', () => ({ proj: rewriteRow(proj, 'MS02', 2, 'make production match the repo') }), ['no exit gate'], true],
+    ['clone: plan and projection both gone', () => ({ plan: '', proj: '' }), ['no milestone rows'], true],
   ];
   const control = audit(plan, proj, next, cites);
   if (control.problems.length) {
@@ -228,19 +243,21 @@ function selftest(base) {
     for (const p of control.problems) console.log('  ' + p);
     return 1;
   }
-  let bad = 0;
-  for (const [name, mutate, expected] of plantings) {
+  let bad = 0, skipped = 0;
+  for (const [name, mutate, wants, cloneApplies] of plantings) {
+    if (inClone && !cloneApplies) { skipped++; continue; }   // the file the defect lives in is not in a clone
     const p = { plan, proj, next, cites };
     Object.assign(p, mutate());
     const { problems, clone } = audit(p.plan, p.proj, p.next, p.cites);
-    const hit = problems.find((x) => x.toLowerCase().includes(expected.toLowerCase()));
+    const hit = problems.find((x) => wants.some((w) => x.toLowerCase().includes(w.toLowerCase())));
     if (hit) console.log(`  selftest ok   - ${name}${clone ? ' [clone mode]' : ''}: caught "${hit.slice(0, 92)}"`);
     else { bad++; console.log(`  selftest FAIL - ${name}: planted a defect the gate did not see (${problems.length} problems reported)`); }
   }
-  console.log(`check:plan:selftest - ${plantings.length} plantings, ${bad ? bad + ' undetected' : 'all detected'}; control clean (${milestoneRows(plan).length} milestones).`);
+  if (!inClone && skipped) { console.log('check:plan:selftest FAIL - ' + skipped + ' plantings were skipped outside a clone: a skipped planting proves nothing'); return 1; }
+  if (inClone && plantings.length - skipped < 8) { console.log('check:plan:selftest FAIL - fewer than 8 clone-mode plantings: the projection is audited with no detector'); return 1; }
+  console.log(`check:plan:selftest - ${plantings.length - skipped} plantings${inClone ? ' [clone mode: ' + skipped + ' plan-side classes skipped, no ' + PLAN + ' in a clone; every projection-side class planted]' : ''}, ${bad ? bad + ' undetected' : 'all detected'}; control clean (${(inClone ? milestoneRows(proj) : milestoneRows(plan)).length} milestones).`);
   return bad ? 1 : 0;
 }
-
 const args = process.argv.slice(2);
 if (!existsSync(root + PLAN) && !existsSync(root + PROJ)) {
   console.error('check:plan FAIL - neither .notes/PLAN.md nor MILESTONES.md exists: this repo has no roadmap at all.');

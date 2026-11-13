@@ -382,10 +382,14 @@ Secrets and variables are read through `import { env } from 'cloudflare:workers'
   `npx wrangler preview secret put DISCORD_TOKEN --name <branch>`. `npm run cf:secrets:list:preview`
   and `:preview-base` show what is actually set. A Preview with missing secrets boots and serves 500s
   rather than refusing to deploy, so check the list before debugging the code.
-- **Old Pages project (still serving the apex today):** its secrets were set with
+- **Old Pages project (deleted — measured 2026-11-08: `npx wrangler pages project list --json` → `[]`, and
+  `dig mathloco.pages.dev @1.1.1.1` answers nothing; this line used to say "still serving the apex today", and
+  the runbook line that told you not to delete it is corrected the same day):** its secrets were set with
   `npx wrangler pages secret put … --project-name <project>`. Those do **not** carry over to a Worker —
   a Worker's secrets are a different resource. Re-set them with the Worker commands above; do not
-  assume the dashboard value followed the migration.
+  assume the dashboard value followed the migration. D58 asked for two things when the project went: delete it,
+  and rotate `CLAUDE_API_KEY` (the project stored it as `plain_text`, not `secret_text`). The deletion is now
+  measured; the rotation is not recorded here, so it is an open question rather than a completed item.
 - `DISCORD_GUILD_ID` is in **three** places in `wrangler.toml` on purpose — `[vars]` (production),
   `[previews.vars]` (branch Previews) and `[env.preview.vars]` (the named `--env preview` config).
   Wrangler does not inherit `vars` into Previews or named environments; its own schema says each must

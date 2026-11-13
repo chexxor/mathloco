@@ -86,6 +86,12 @@ const DEPLOY = [
   { name: 'check:plan:selftest', desc: 'the plan gate can still fail (18 plantings, incl. the CI clone case)' },
   { name: 'check:decisions', desc: 'the tracked decision index matches the log, and no D-id citation dangles' },
   { name: 'check:figures', desc: 'a measured number in DESIGN.md carries a date, and that date is not stale' },
+  // Tracked prose is a contract, and a markdown table row with the wrong cell count still renders: the extra or
+  // missing cell becomes an unnamed column at the right edge. `MILESTONES.md` carried one such row (A2, three
+  // cells under a four-column header) and one in the parked table, both introduced by hand-resolved merges,
+  // and both invisible in a diff @measured 2026-11-08.
+  { name: 'check:tables', desc: 'every markdown table row in the tracked prose has its header\'s cell count' },
+  { name: 'check:tables:selftest', desc: 'the table gate can still fail (3 plantings: an extra cell, a missing cell, a short header; 4 clean forms)' },
   { name: 'check:social', desc: 'the committed share card against its painted report' },
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
@@ -94,7 +100,11 @@ const DEPLOY = [
   // tree sat 2-of-3 for a day with every gate green. Reads source, so it runs before `build` (D118's rule).
   { name: 'check:copy', desc: 'the club descriptor: three slots, one phrase, no superseded form, no date' },
   { name: 'check:copy:selftest', desc: 'the copy gate can still fail (9 plantings, each into a fixture copy)' },
-  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes' },
+  // `check:ics` reads `dist/client/events.ics` (scripts/check-ics.mjs:31-32), so it belongs in the artifact
+  // wave. It was scheduled before `build` @measured 2026-11-12: a fresh clone - CI, or anyone's first checkout -
+  // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step
+  // in the wave passed. The selftest plants in-memory clones of the committed snapshot, so it needs nothing.
+  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes', needs: ['build'] },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
   // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
