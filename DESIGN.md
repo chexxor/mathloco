@@ -481,13 +481,19 @@ which must go red.
 - **The platform mark is a glyph, drawn once per page** (S026, D294). Each link carries a 16px `<use>` into a
   hidden `<symbol>` sprite whose path data lives in one place, `src/lib/platform-marks.mjs` — the only home of the
   glyph shapes, so the render gate and the byte gate can compare the same ids. The sprite is emitted by
-  `src/components/SignUpLinks.astro` for the page that claims a cluster, **not** by the layout, because a page that
-  paints no mark should ship no glyph bytes: the counterfactual on `/chat` is **+2,202 gzip**, 41.6% of that page's
-  5,289 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs` (Linux native, Node 24.22.1, gzip of the
-  built page). The sprite itself is 4,307 raw / 1,892 gzip and adds **+2,197 gzip** to `/` and **+2,191** to
-  `/schedule`; inlining the three glyphs into the same pages costs **+2,119** and **+2,121**, so on a one-cluster
-  page the sprite is 70-78 gzip dearer and it breaks even at **two clusters on one page** — which is what
+  `src/components/SignUpLinks.astro` for the render that claims a cluster — `spriteFor(Astro.locals)` claims one
+  sprite per render, never per path, because a claim keyed on `Astro.url.pathname` lives in a module loaded once
+  per process, so the second request for `/` would paint three `<use>` refs and no symbols (D297) — and **not** by
+  the layout, because a page that paints no mark should ship no glyph bytes: the counterfactual on `/chat` is
+  **+2,201 gzip**, 41.3% of that page's 5,327 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs`
+  (Linux native, Node 24.22.1, gzip of the built page). The sprite itself is 4,307 raw / 1,892 gzip and adds
+  **+2,195 gzip** to `/` and **+2,190** to `/schedule`; inlining the three glyphs into the same pages costs
+  **+2,117** and **+2,121**, so on a one-cluster page the sprite is 69-78 gzip dearer and it breaks even at **two
+  clusters on one page** — which is what
   `/schedule` becomes as the calendar fills (the re-decision is parked in `PLAN.md` §Parked with that trigger).
+  No live route prints two clusters yet, so the one-sprite-per-render rule was measured on a fixture that renders
+  the cluster twice: 3 `<symbol>` defs, 6 `<use>` refs, three requests in a row @measured 2026-11-13 by
+  `node design/sprite-claim.mjs` (fixture deleted after the run; D297).
   The glyph is painted in `currentColor`, so a mark is the ink of the label it belongs to and turns gold with it on
   hover; a mark that carried its own brand colour would be a second colour rule, which the named-roles section
   forbids.

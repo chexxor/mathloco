@@ -304,5 +304,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D294** (2026-11-13) — F3(b) + F3(d): the platform marks come from one sprite, emitted only by the component that draws them, painted in `currentColor` (2026-11-13, operator ruling F3, delegate decision under the `costly` rule, reported to the operator, `costly`; Linux native, Node 24.22.1, `node design/mark-cost.mjs`, `npm run check:render`, `npm run check:rsvp-page`)
 - **D295** (2026-11-13) — B1: the header is chrome by its ring alone; sticky stays parked (2026-11-13, operator ruling B1, delegate decision, `costly`; Linux native, Node 24.22.1, `node design/header-band.mjs`, `npm run check:render`, `npm run check:ground`)
 - **D296** (2026-11-13) — cost baselines are per set, and a set's composition change re-freezes its baseline in the same commit (2026-11-13, delegate decision, `reversible`; Linux native, Node 24.22.1, `npm run cost:save`, `node scripts/cost-guard.mjs --list`, `design/gate-cost.json`)
+- **D297** (2026-11-13) — the sprite claim is keyed on the render, not the path; the gate that can see it is a source gate, and the behaviour is a probe (2026-11-13, delegate decision, `reversible`; Linux native, Node 24.22.1, `node design/sprite-claim.mjs`, `npm run check:sprite-claim`)
 
-Defined: 296 (D1-D296). Unused ids: none.
+Defined: 297 (D1-D297). Unused ids: none.

@@ -72,16 +72,6 @@ const DEPLOY = [
   { name: 'check:svelte:selftest', desc: 'the svelte gate can still fail (7 plantings in one fixture run, plus a clean control)' },
   { name: 'check:classes', desc: 'every written class resolves to CSS' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
-  // pi-lens can reach `.astro` (19 files - the surface the design handles and probe anchors live on) only
-  // through a custom server entry in `.pi-lens.json` (D266), and every way that entry rots is silent: delete
-  // it and the .astro files simply stop answering, drop the tsdk init option and astro-ls registers no type
-  // service at all (it still answers initialize - measured 2026-11-10), switch autoformat or autofix on and a
-  // gate set that compares bytes starts seeing files rewritten on every edit. Since D270 the gate also spawns
-  // the server and requires a handshake, because a config that reads perfectly can register a deaf server.
-  // Needs no artifact, so it still runs before `build` (D118); it costs 3.3s of work-seconds inside a wave
-  // whose max is `build` at 17.75s (@measured 2026-11-10 by this gate).
-  { name: 'check:lsp', desc: 'the LSP config registers astro-ls for .astro, sets its tsdk, keeps format/autofix off, and the server answers a real handshake' },
-  { name: 'check:lsp:selftest', desc: 'the LSP config gate can still fail (9 plantings: 7 config, 2 spawn)' },
   // The roadmap is one file (.notes/PLAN.md, host-local) and MILESTONES.md is its tracked projection. Two
   // files claiming "what is next" drift, and the drift is invisible in a table cell (S015). Reads prose, so
   // it runs before build; the selftest plants each defect class and requires a named failure.
@@ -122,6 +112,15 @@ const DEPLOY = [
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
   { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (42 plantings each named, plus a clean control that must pass)' },
+  // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a mark. Keyed
+  // on anything that outlives a render - a path, a counter - a warm process answers every request after the
+  // first with `<use>` refs and no symbols: three empty 16px boxes @measured 2026-11-13 by
+  // `node design/sprite-claim.mjs --base http://localhost:4322` (request 2 of `/`: 0 symbols, 5,270 bytes
+  // smaller than request 1). Every route here is `prerender = true`, so dist-based gates (check:rsvp-page 5c/9b/9c,
+  // check:render 4c) read a page rendered once and cannot see it (D297). Source-only, so before `build` (D118);
+  // cost @measured 2026-11-13 by this gate: 0.15s gate, 0.16s selftest.
+  { name: 'check:sprite-claim', desc: 'the sprite claim is keyed on the render (Astro.locals in a WeakSet), not on the path, and is asked for by every component that paints it' },
+  { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
   // a milestone's words with the artifact. This one does: the description cell of every milestone row that
@@ -177,6 +176,15 @@ const DEPLOY = [
 // `verify` for that reason, and CI runs it as its own step so a rig defect is named as a rig defect instead
 // of hiding inside the deploy gate set. `npm run verify:rig` is the command; the runner treats it as a gate
 // set like any other, with logs and its own cost comparison.
+//
+// Why the LSP gate checks what it checks: pi-lens can reach `.astro` (19 files - the surface the design
+// handles and probe anchors live on) only through a custom server entry in `.pi-lens.json` (D266), and every
+// way that entry rots is silent: delete it and the .astro files simply stop answering, drop the tsdk init
+// option and astro-ls registers no type service at all (it still answers initialize - measured 2026-11-10),
+// switch autoformat or autofix on and a gate set that compares bytes starts seeing files rewritten on every
+// edit. Since D270 the gate also spawns the server and requires a handshake, because a config that reads
+// perfectly can register a deaf server. It needs no artifact, so it runs before `build` (D118); cost
+// @measured 2026-11-13 by this gate: 3.2s gate, 3.8s selftest, inside the rig set.
 const RIG = [
   { name: 'check:lsp', desc: 'the LSP config registers astro-ls for .astro, sets its tsdk, keeps format/autofix off, and the server answers a real handshake' },
   { name: 'check:lsp:selftest', desc: 'the LSP config gate can still fail (9 plantings: 7 config, 2 spawn)' },

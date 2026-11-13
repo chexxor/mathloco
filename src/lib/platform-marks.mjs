@@ -59,7 +59,7 @@ export const MARK_COUNT = MARKS.length;
  *  gets no mark — and `check:rsvp-page` fails a build that paints one anyway. */
 export const MARKED_PLATFORMS = MARKS.map((m) => m.platform);
 
-/** One sprite per page, claimed by the first cluster that renders on it.
+/** One sprite per page render, claimed by the first cluster that renders in it.
  *
  *  Why a claim instead of a page list: the sprite is only ever read by a cluster, so the component that paints
  *  a cluster is the component that knows whether the glyph bytes are wanted. A list of "pages with clusters"
@@ -67,14 +67,30 @@ export const MARKED_PLATFORMS = MARKS.map((m) => m.platform);
  *  (D238). Astro renders a page's components in one synchronous pass, so the first cluster emits the sprite in
  *  front of itself and every later `<use>` on that page resolves to it.
  *
- *  Keyed by path because a build renders many pages in the same process. @measured 2026-11-13 by
- *  `node design/mark-cost.mjs` (Linux native, Node 24.22.1): the sprite's marginal cost on a page is +2,210
- *  gzip on `/`, +2,213 on `/schedule` and +2,208 on `/chat`, which paints no mark at all.
+ *  The key is the render, never the path. This module is loaded once per process and `output: 'server'`
+ *  (astro.config.mjs) means one process serves many requests: a claim keyed on `Astro.url.pathname` answered
+ *  the *first* request for `/` and every request after it, so a long-running dev server - and any Worker warm
+ *  from a previous request - painted three `<use>` references pointing at a sprite that was never emitted,
+ *  i.e. three empty 16px boxes. The built pages are each rendered once, so every dist-based gate saw a correct
+ *  page and could not see it (D297). `Astro.locals` is the request-scoped object Astro creates per request and
+ *  shares with every component in that render @measured 2026-11-13 by `node design/sprite-claim.mjs` (Linux
+ *  native, Node 24.22.1, `astro dev`): three consecutive requests to `/` each carry 3 `<symbol>` defs and 3
+ *  `<use>` refs. The two-cluster case was measured on a throwaway fixture page rendering two clusters in one render:
+ *  3 `<symbol>` defs and 6 `<use>` refs, on three requests in a row - one sprite, never two. The fixture was
+ *  deleted after the measurement; the rule it proved is held by `check:sprite-claim`.
+ *
+ *  The sprite is worth its bytes: @measured 2026-11-13 by `node design/mark-cost.mjs` (Linux native, Node
+ *  24.22.1) it adds +2,195 gzip to `/` and +2,190 to `/schedule` against +2,117 / +2,121 for inlining the same
+ *  three glyphs, so it breaks even at two clusters on a page - which is what `/schedule` becomes as the
+ *  calendar fills (D294). A page that paints no mark asks for no sprite: `/chat` would pay +2,201 gzip, 41.3%
+ *  of its 5,327 gzip bytes, for drawings it never paints.
  */
-const spriteClaimed = new Set();
-export function spriteFor(pathname) {
-  const key = String(pathname || '');
-  if (spriteClaimed.has(key)) return false;
-  spriteClaimed.add(key);
+const spriteClaims = new WeakSet();
+export function spriteFor(locals) {
+  // No render object to key on means we cannot know whether this render already emitted a sprite; emitting is
+  // the safe answer, because a missing sprite is an invisible glyph and a duplicate one is only wasted bytes.
+  if (!locals || typeof locals !== 'object') return true;
+  if (spriteClaims.has(locals)) return false;
+  spriteClaims.add(locals);
   return true;
 }

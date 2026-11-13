@@ -38,6 +38,8 @@
     "check:rsvp-promise:selftest": "node scripts/check-rsvp-promise.mjs --selftest",
     "check:rsvp-page": "node scripts/check-rsvp-page.mjs",
     "check:rsvp-page:selftest": "node scripts/check-rsvp-page.mjs --selftest",
+    "check:sprite-claim": "node scripts/check-sprite-claim.mjs",
+    "check:sprite-claim:selftest": "node scripts/check-sprite-claim.mjs --selftest",
     "check:rsvp-preference": "node scripts/check-rsvp-preference.mjs",
     "check:rsvp-preference:selftest": "node scripts/check-rsvp-preference.mjs --selftest",
     "events:discord": "node scripts/discord-events.mjs --write",

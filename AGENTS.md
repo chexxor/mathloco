@@ -115,8 +115,8 @@ each of those and requires a named failure. Both are in `verify`.
    (the set lives in `scripts/gate-run.mjs`, and `node scripts/gate-run.mjs --list` prints it. It used to be
    enumerated in this file and went stale twice, so the enumeration is gone - read the list rather than trusting
    this sentence). There are three sets (S028, D291), and each has its own cost baseline: `verify` is the deploy
-   set - 40 steps, 36.4s wall / 53.4s work; `verify:rig` is the rig set - 3 steps, 3.8s wall / 7.1s work;
-   `verify:browser` is the browser set - 9 steps, 99.0s wall / 99.0s work, all @measured 2026-11-13 by the runner
+   set - 40 steps, 32.4s wall / 45.8s work; `verify:rig` is the rig set - 3 steps, 3.6s wall / 6.9s work;
+   `verify:browser` is the browser set - 9 steps, 98.8s wall / 98.8s work, all @measured 2026-11-13 by the runner
    itself (Linux native, Node 24.22.1, 16 CPU).
    It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
@@ -149,7 +149,8 @@ each of those and requires a named failure. Both are in `verify`.
    and ended at or below 6/16cpu** - a contended rig is a WARN with the load printed, not a blocked ship step
    (D269). `npm run cost:save` refuses to freeze a baseline from a run above that load unless you pass
    `--force` and say why. Baselines now exist per set: deploy 40 steps and rig 3 steps frozen 2026-11-13,
-   browser 9 steps frozen 2026-11-12 - the deploy freeze had `check:lsp` in it and no longer does (D290, D291).
+   browser 9 steps also frozen 2026-11-13 - the deploy freeze had `check:lsp` in it and no longer does
+   (@measured 2026-11-13 by `node scripts/gate-cost.mjs`: 40 steps, 45.8s work, load 2.9/16cpu; D290, D291).
 5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before

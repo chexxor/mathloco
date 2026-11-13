@@ -96,16 +96,22 @@ Kept short; the reasoning is in `.notes/DECISIONS.md` and the artifacts in `desi
   the box (@measured 2026-11-13 by `node design/grill/strip-clusters.mjs` then `node design/schedule-geometry.mjs --dist`).
   Each label carries the platform's own glyph, drawn **once per page** in a sprite emitted by
   `src/components/SignUpLinks.astro` only for pages that claim a cluster, painted in `currentColor` (S026, D294):
-  the sprite is 4,307 raw / 1,892 gzip and costs **+2,197 gzip** on `/` and **+2,191** on `/schedule`; inlining the
-  three glyphs costs **+2,119** and **+2,121**, so the sprite is 70-78 gzip dearer on today's one-cluster pages and
-  breaks even at **two clusters on one page** (@measured 2026-11-13 by `node design/mark-cost.mjs`). Four gates
+  the sprite is 4,307 raw / 1,892 gzip and costs **+2,195 gzip** on `/` and **+2,190** on `/schedule`; inlining the
+  three glyphs costs **+2,117** and **+2,121**, so the sprite is 69-78 gzip dearer on today's one-cluster pages and
+  breaks even at **two clusters on one page** (@measured 2026-11-13 by `node design/mark-cost.mjs`). Five gates
   hold it: `check:rsvp` (snapshot age, URL shape, a 60-day stamp on every platform URL), `check:rsvp-page` (the
   painted cluster equals the resolver's answer for that date; no count reaches the artifact; every glyph the
   cluster points at is in the page's sprite), `check:rsvp-promise` (the row's named platforms == `src/config.json`
-  == the `data-rsvp-platform` attributes the pages paint), and `check:render` (the mark is 16px, drawn in the
-  label's own colour, pointing at a symbol the sprite has). Their selftests run 50, 43 (42 plantings + a clean
-  control) and 9 cases, and the render selftest 24 mutations, 4 of them about the marks
-  (@measured 2026-11-13 by `node scripts/check-rsvp.mjs --selftest`, `node scripts/check-rsvp-page.mjs --selftest`, `node scripts/check-rsvp-promise.mjs --selftest` and `node design/render-gate-selftest.mjs`).
+  == the `data-rsvp-platform` attributes the pages paint), `check:render` (the mark is 16px, drawn in the
+  label's own colour, pointing at a symbol the sprite has), and `check:sprite-claim` (the sprite is claimed once per
+  render off `Astro.locals`, never off the path, and only by the component that paints a mark — never by the
+  layout; it also runs the claim's arithmetic: one sprite per render, a fresh one for a fresh render, no render
+  skipped) (S026, D297); the two-cluster case, which no live route prints yet, was measured on a fixture page
+  rendering the cluster twice: 3 defs + 6 refs on three requests in a row (@measured 2026-11-13 by
+  `node design/sprite-claim.mjs`). Their selftests run 50, 43 (42 plantings + a clean
+  control) and 9 cases, the render selftest 24 mutations, 4 of them about the marks, and the sprite-claim selftest
+  6 plantings plus a clean control
+  (@measured 2026-11-13 by `node scripts/check-rsvp.mjs --selftest`, `node scripts/check-rsvp-page.mjs --selftest`, `node scripts/check-rsvp-promise.mjs --selftest`, `node design/render-gate-selftest.mjs` and `node scripts/check-sprite-claim.mjs --selftest`).
   Meetup snapshot: 26 records read 2026-11-09, 16 open pages. Discord: the guild lists **0** scheduled events
   (@measured 2026-11-13 by `node scripts/discord-events.mjs`) while the committed mirror carries one read
   2026-11-11; under S031/D293 the mirror is a dated, human-authored record the build never fetches, so

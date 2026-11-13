@@ -53,9 +53,10 @@ import Navigation from '../components/Navigation.astro';
   <body class="bg-paper text-ink">
     <!-- No sprite here. The glyph data behind every sign-up mark (S026, D294) is printed by
          src/components/SignUpLinks.astro in front of the first cluster on the page, so a page that paints no
-         mark ships no glyph bytes: inserting the sprite here would cost +2,202 gzip @measured 2026-11-13 by
-         `node design/mark-cost.mjs` - 41.6% of /chat's 5,289 gzip bytes - for drawings that page never
-         paints. src/components/PlatformMarks.astro holds the arithmetic that decides sprite vs inline. -->
+         mark ships no glyph bytes: inserting the sprite here would cost +2,201 gzip @measured 2026-11-13 by
+         `node design/mark-cost.mjs` - 41.3% of /chat's 5,327 gzip bytes - for drawings that page never
+         paints. src/components/PlatformMarks.astro holds the arithmetic that decides sprite vs inline, and
+         scripts/check-sprite-claim.mjs is the gate that keeps the sprite out of this shell (D297). -->
     <Navigation />
     <slot />
     <style lang="scss" is:global>
