@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Footer from '../components/Footer.astro';
 import { URLs } from '../config.json';
 
 // Cloudflare Pages serves the root page for any path that is not a static asset **unless a
@@ -57,4 +58,8 @@ export const prerender = true;
       > lists every session.
     </p>
   </main>
+  {/* The exit band on the not-found page too (D115, check:page-exit): the page already lists paths out, but a
+     visitor who typed a wrong address is the one who most needs the band's schedule / chat / ways-in links and
+     the identity line that says whose site they are on. */}
+  <Footer />
 </Layout>

@@ -379,6 +379,13 @@ freshness.
     at the size of the word beside it, `gold-on-ink`, `aria-hidden`, and **static**.
   - **Small print** carries place and date only. No frequency (D92), and the old "All rights reserved"
     boilerplate went with the band it lived in.
+  - **Every page the build emits ends with this band** (D307, 2026-11-14). `check:render` enforces the band's rules
+    for a page that has one, and nothing asked whether a page has one at all: `/chat`, `/join` and `/404` ended on
+    their last paragraph, so a visitor arriving from a shared link had the nav above and nothing below. `check:page-exit`
+    walks the routes read off `dist/client` (`design/emitted-routes.mjs`, never a remembered list, D117) and requires
+    the band, on the ratified ground, offering at least two paths out — 5 built pages, 5 with the band
+    @measured 2026-11-14 by `npm run check:page-exit`. A route that is genuinely exempt has to say so here and in the
+    gate's own list, not by omission.
 - **Photo-free by construction**: no surface may require a photograph, because none of the club's
   existing images contains a person (D86/D94). The hero motif may be derived from the operator's own
   sphere diagram only.
@@ -390,24 +397,32 @@ freshness.
   stays, and only on the ink band, where `gold-on-ink` is the hue the contrast oracle allows.) It is the home path, and
   its `aria-label` carries the name. D100 rejected a 13px target, so do
   not shave the padding.
-- **The label set is the mark plus `Chat`.** `Schedule` and `Members` were dropped on 2026-11-02 (D117):
-  the build emits `index.html`, `chat/index.html` and `404.html` only, and `public/` has no redirect rules,
-  so those two labels were links to the 404 page — on `main` as well as here. A nav item requires a page.
-  Measured with the probe `check:render` runs at every width @measured 2026-11-07 by check:render: the row **needs 217px** against a container
-  that offers 276 at a 320 viewport. (The line said **176px** from 2026-11-03, when the mark was `MPLS Math Club`; the
-  rename is the only thing that has changed in the row since, but the delta is not attributed to it — re-run the probe
-  before quoting a nav figure. A doc figure a probe contradicts is a doc bug; quote the probe's line.) `--breakpoint-nav-narrow` (370px) and the narrow
-  `text-micro` nav tier went with the dead labels — a tier that fits everywhere is not a tier. An
-  arbitrary `min-[…]:` / `max-[…]:` bracket in live markup is banned outright, because the gates read
-  tokens and a bracket writes nothing to any token.
-- **Headroom for the schedule page, re-measured and now negative:** `Schedule` is 57.6px at this tier, so adding it
-  back puts the row at **~291** (217 + 57.6 + a 16px gap) — **over** the 276px a 320 viewport offers by ~15px. The old
-  line here said "inside 276 by ~26px", and it stopped being true when the row grew to 217 @measured 2026-11-07 by
-  check:render. So a `Schedule` nav item is not free at the floor: it needs a shorter label, a smaller tier, or the
-  floor itself re-argued. One more path, not two, and the probe says so the moment it stops fitting.
+- **The label set is the mark plus `Dates`, `Chat` and `Ways in`.** `Schedule` and `Members` were dropped on
+  2026-11-02 (D117): the build then emitted `index.html`, `chat/index.html` and `404.html` only, and `public/` has
+  no redirect rules, so those two labels were links to the 404 page — on `main` as well as here. A nav item requires
+  a page, and each label now has one: the schedule page landed 2026-11-07, the join page 2026-11-13 (MS14). At the
+  320 floor the row **needs 257px** against a container that offers **276** — 19px of slack — and every number in it
+  is a measurement, not arithmetic: mark 97, `Dates` 36, `Chat` 29, `Ways in` 47, three 16px gaps
+  @measured 2026-11-14 by `node design/nav-fit.mjs --no-build` (Linux native, Firefox 159.0, faces settled, the same
+  needed-vs-available arithmetic `check:render` runs). Earlier lines here said **176px** (2026-11-03, when the mark
+  was `MPLS Math Club`) and **217px** (2026-11-07, two labels); both were true of the row that existed then and are
+  kept as history, not as a figure to quote. `--breakpoint-nav-narrow` (370px) and the narrow `text-micro` nav tier
+  went with the dead labels — a tier that fits everywhere is not a tier. An arbitrary `min-[…]:` / `max-[…]:` bracket
+  in live markup is banned outright, because the gates read tokens and a bracket writes nothing to any token.
+- **A fourth label is paid for, not squeezed in.** `design/nav-fit.mjs` prices every candidate against the floor,
+  one word per row @measured 2026-11-14 (Linux native, Firefox 159.0): `Join` 24, `Visit` 28, `Meet` 32, `Attend` 42,
+  `Ways in` 47, `Connect` 52, `Meet us` 50, `Get here` 54, `Say hello` 57, `Come along` 74, `Get involved` 77. With
+  `Schedule` kept, `Ways in` needs 280 — **4px over** the floor, and `flex-nowrap` means that becomes a failed probe,
+  not a wrap. `Attend` fits by 1px and is not shippable. So the join label is paid for by shortening the schedule
+  label: `Schedule` (59) → `Dates` (36) buys 23px and leaves 19px of slack, the same slack `Join` would have had, for
+  a label that says what the page is. `Dates · Chat · Attend` fits by 24px, so the swap is not a one-off rescue: it is
+  the row shape that has room for a third path. If the operator prefers `Join`, it is one line in
+  `src/components/Navigation.astro` and the gate re-measures it the next run — the probe prints both rows side by
+  side, so the choice is visible rather than argued.
 - **The site's floor is 320px** (D114, operator ruling 2026-11-02), and `check:render` refuses to run a
   default width set that has dropped 320. What sets the floor changed with D117: it used to be the nav
-  (3px of margin at 320); the nav now clears the floor by 59px (needs 217, offered 276), and the binding constraint is the hero
+  (3px of margin at 320); the nav clears the floor by 19px (needs 257, offered 276) @measured 2026-11-14 by
+  `node design/nav-fit.mjs --no-build`, and the binding constraint is the hero
   primary control, which measures 48px at 310 and wraps to 64px at 300 — breaking the control grammar.
   Below the floor the gate says so rather than hiding it. Ask for the sub-floor widths any time with
   `RENDER_WIDTHS=1240,640,390,375,360,320,310,300 node design/render-gate.mjs /`. The **default** set is

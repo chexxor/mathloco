@@ -131,6 +131,10 @@ const DEPLOY = [
   // start printing one and only `check:content`'s prose rules would ever look. Its fixtures are in memory, so it
   // runs before `build` (D118).
   { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (5 plantings: an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled route missing from the build; 4 clean controls incl. an empty calendar and an age; plus the route-walker case)' },
+  // The band half of D115 ("at most one dark band per screen, and the band is the site's EXIT") was only ever
+  // half-checked: `check:render` counts dark regions on a page that HAS a band and never asked whether a page
+  // has one. In-memory fixtures, so before `build` (D118). Cost @measured 2026-11-14 by this step: 0.20s.
+  { name: 'check:page-exit:selftest', desc: 'the page-exit gate can still fail (7 cases: no band, a band on the wrong ground, a band with no paths, a band with one path, plus two clean controls and a swapped-class control)' },
   { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
@@ -186,6 +190,10 @@ const DEPLOY = [
   // set a ruling names. It reads `dist/`, so it waits for `build` (D118).
   { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/schedule` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included', needs: ['build'] },
   { name: 'check:join', desc: 'every way in on /join is a channel joinChannels() returns, in canonical order under its kind, named in visible words, at a stamped URL, and the page prints no date; no invented channel, no empty kind heading, no blind link past 60 days', needs: ['build'] },
+  // The artifact half of the same rule: every route the build emits (read off `dist/`, never remembered, D117)
+  // closes with the band, on the ratified ground, offering at least two paths out. It reads `dist/`, so it waits
+  // for `build` (D118). Cost @measured 2026-11-14 by this step: 0.21s.
+  { name: 'check:page-exit', desc: 'every page the build emits ends with the exit band on the ink ground and at least two paths out — /chat, /join and /404 included', needs: ['build'] },
   // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
   { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name

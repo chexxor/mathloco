@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.svelte';
+import Footer from '../components/Footer.astro';
 import config from '../config.json';
 
 // Nothing here is per-request: the island fetches /api/discord-summary in the browser, and the rest
@@ -53,4 +54,8 @@ const DISCORD_URL = config.URLs.discordInvite;
       </div>
     </div>
   </main>
+  {/* Every page the build emits closes with the exit band (D115, enforced by check:page-exit). This page has
+     one island and one CTA; without the band a visitor who arrives here from a shared link has the nav above
+     and nothing below. */}
+  <Footer />
 </Layout>

@@ -43,6 +43,8 @@
     "check:join:selftest": "node scripts/check-join-page.mjs --selftest",
     "check:dated-surfaces": "node scripts/check-dated-surfaces.mjs",
     "check:dated-surfaces:selftest": "node scripts/check-dated-surfaces.mjs --selftest",
+    "check:page-exit": "node scripts/check-page-exit.mjs",
+    "check:page-exit:selftest": "node scripts/check-page-exit.mjs --selftest",
     "check:sprite-claim": "node scripts/check-sprite-claim.mjs",
     "check:sprite-claim:selftest": "node scripts/check-sprite-claim.mjs --selftest",
     "check:rsvp-preference": "node scripts/check-rsvp-preference.mjs",

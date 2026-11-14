@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import config from '../config.json';
+import Footer from '../components/Footer.astro';
 import { JOIN_KIND_COPY, joinChannels, paintedKinds } from '../lib/rsvp.mjs';
 
 // One action on the homepage lands here (S033, D303): the page's job is the commitment decision — which
@@ -122,4 +123,8 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
       </p>
     </section>
   </main>
+  {/* The exit band on the join page: the ways in are the whole subject of the page, so the band repeats the
+     paths a reader reached by scrolling past them, and it is the same band every other emitted page carries
+     (D115, check:page-exit). */}
+  <Footer />
 </Layout>

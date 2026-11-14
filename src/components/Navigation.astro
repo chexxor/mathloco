@@ -3,22 +3,31 @@
 // index.html, chat/index.html and 404.html only, and public/ has no redirect rules — so "Schedule" and
 // "Members" rendered the 404 page in production, on main as well as here. The operator ruled: drop them.
 //
-// What the row costs now (measured by `npm run check:render`, which prints needed-of-available at every
-// width it runs): the mark plus Chat needs **171px**, against a container that offers 276 at a 320
-// viewport and 256 even at 300. That is why the narrow type tier went away — see
-// --breakpoint-nav-narrow's retirement in src/styles/global.css and D117: with this label set the wide
-// tier fits everywhere, so a second tier bought nothing.
+// What the row costs now, measured on the built page by `node design/nav-fit.mjs` — the same needed-vs-
+// available arithmetic `check:render` runs, per label @measured 2026-11-14 (Linux native, Firefox 159.0,
+// faces settled): the mark is 97px, `Schedule` 59, `Chat` 29, `Dates` 36, `Join` 24, `Attend` 42,
+// `Ways in` 47, `Sign up` 47, `Meet` 32, `Visit` 28, `Get involved` 77. A row at the 320px floor (D114)
+// has 276px of content box and 16px gaps, so the label set needs 217px and has 59px of headroom: a fourth
+// label costs a gap plus a word no wider than 43px. `Schedule` + `Chat` + `Ways in` is 280 — four pixels
+// over the floor, and `flex-nowrap` means that shows up as a failed probe rather than a silent wrap.
+// Keeping `Ways in` therefore means paying for it with `Schedule` -> `Dates`: 97 + 36 + 29 + 47 + 3 gaps
+// = 257, 19px inside the floor.
 //
-// Headroom, measured before the schedule page existed: "Schedule" is 57.6px at this tier, so adding it
-// back puts the row at 245 (171 + a 16px gap + 57.6) — inside 276. A third link would not fit at the
-// floor. So the row carries ONE more real path, not two, and the probe says so the moment it does not.
-// 2026-11-07: that one path is spent on `Schedule`, because `src/pages/schedule.astro` now emits
-// `dist/client/schedule/index.html` (D117's rule — a label needs a page behind it, and this is the page
-// the homepage's next-date card points at). `Members` stays out: there is still no members page, and the
-// arithmetic says a third label would clip at the 320 floor anyway.
+// Headroom, as it was measured before the schedule page existed, kept so a later reader does not re-argue it:
+// the row was the mark plus `Chat` (171px of the 276 the floor offers), and `Schedule` at 57.6px would have
+// fitted. It did, and 2026-11-07 spent that room on it (`src/pages/schedule.astro` emits
+// `dist/client/schedule/index.html`) while `Members` stayed out for the reason D117 gives - no members page -
+// not for lack of width. What the old note got wrong is the count: the floor had room for one more path, and
+// the probe now says so every run.
+// 2026-11-14 (S034, D308): the third path is the join page. The label is the page's own heading - "Ways in" -
+// and `Schedule` came down to `Dates` to pay for it, because the floor cannot hold both words and the shorter
+// candidates (`Join` 24, `Visit` 28, `Meet` 32, `Attend` 42 at 1px of margin) say less than the page does.
+// Every label behind it is a page the build emits (D117), and `check:render` reports the shipped row at
+// **257 needed of 276 offered** at 320 @measured 2026-11-14.
 const navItems = [
-  { href: '/schedule', label: 'Schedule' },
+  { href: '/schedule', label: 'Dates' },
   { href: '/chat', label: 'Chat' },
+  { href: '/join', label: 'Ways in' },
 ];
 ---
 

@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-14T04:20:52.322Z",
- "siteFp": "f247d9d94f",
+ "measuredAt": "2026-11-14T05:39:31.060Z",
+ "siteFp": "abc73c4ed5",
  "widths": [
   1240,
   390,
@@ -23,7 +23,7 @@
     250,
     246
    ],
-   "groundExact": 1417031,
+   "groundExact": 1416893,
    "groundPct": 77.12,
    "span": 12.666666666666686,
    "sd": 2.7,
@@ -68,7 +68,7 @@
      "pct": 1.1
     }
    ],
-   "distinct": 48290,
+   "distinct": 48289,
    "hairlines": 9,
    "runs": 9,
    "notKeyline": [],
@@ -269,8 +269,8 @@
     250,
     246
    ],
-   "groundExact": 617308,
-   "groundPct": 76.22,
+   "groundExact": 617170,
+   "groundPct": 76.21,
    "span": 7.666666666666686,
    "sd": 2.67,
    "flat": {
@@ -532,8 +532,8 @@
     250,
     246
    ],
-   "groundExact": 591325,
-   "groundPct": 78.71,
+   "groundExact": 591187,
+   "groundPct": 78.7,
    "span": 7.666666666666686,
    "sd": 2.67,
    "flat": {
@@ -550,7 +550,7 @@
       250,
       246
      ],
-     "pct": 40.3
+     "pct": 40.2
     },
     {
      "rgb": [
@@ -566,7 +566,7 @@
       57,
       39
      ],
-     "pct": 8.7
+     "pct": 8.6
     },
     {
      "rgb": [
