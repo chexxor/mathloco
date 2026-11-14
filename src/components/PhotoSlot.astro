@@ -45,6 +45,14 @@ type Props = {
   ratio: string;
   /** What the shot has to be, in the shot list's words. Only ever drawn in placeholder mode. */
   caption?: string;
+  /**
+   * Where the picture came from, in a visible line under it (2026-11-14, MS04 read). A plate's provenance -
+   * "Slaught & Lennes, 1910, leaf 122" - is a fact about the file, not a description of what a visitor sees,
+   * and D170's rule is that alt text quotes the picture page rather than invent a scene. So the description
+   * goes in `alt` and the source goes here. `scripts/check-alt.mjs` fails an `alt` that still carries a
+   * year-and-publisher or a leaf number with no caption under it.
+   */
+  provenance?: string;
   class?: string;
 };
 
@@ -78,14 +86,23 @@ if (photo && !Astro.props.alt) {
 
 {
   photo ? (
-    <Image
-      src={photo as never}
-      alt={Astro.props.alt!}
-      loading="eager"
-      decoding="async"
-      class={`w-full block object-cover ${Astro.props.class ?? ''}`}
-      style={`aspect-ratio: ${ratio};`}
-    />
+    /* A plate with a source is a figure. The wrapper costs one line of `--micro` type and nothing else:
+       Tailwind's preflight zeroes `figure`'s margin, so the box that `check:space` measures is the image plus
+       the caption's own `mt-2`, and `check:space`/`check:render` re-measure it every run.
+       (D312.) */
+    <figure>
+      <Image
+        src={photo as never}
+        alt={Astro.props.alt!}
+        loading="eager"
+        decoding="async"
+        class={`w-full block object-cover ${Astro.props.class ?? ''}`}
+        style={`aspect-ratio: ${ratio};`}
+      />
+      {Astro.props.provenance && (
+        <figcaption class="mt-2 text-micro leading-prose text-ink-3 font-body">{Astro.props.provenance}</figcaption>
+      )}
+    </figure>
   ) : placeholders ? (
     /* One ground, one edge (D149-3c). This used to be `bg-tint inset-shadow-rule`, and the review build
        measures what that actually paints: a 1px `rule` ring with the tint (224,245,229) on its inside and

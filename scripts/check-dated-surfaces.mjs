@@ -13,6 +13,12 @@
 // own the day the snapshot moves — the class `check:schedule-window` and `check:rsvp-page` catch only for the
 // pages they know. This gate knows every page the build emits, because it walks `dist/client`.
 //
+// Chrome (2026-11-14, D311): the nav now carries the next date as a subordinate chip, on EVERY emitted page.
+// That is a date on a page that is not on the ruled list, so it is allowed only as chrome, and only as a copy of
+// the page of record: the chip must carry `data-nav-date`, and its value must equal the first `data-date` the
+// schedule page actually prints. A nav date with no handle, or one that disagrees with the schedule, is a
+// second calendar — the thing this gate exists to prevent.
+//
 // What counts as a date: a month-and-day ("Nov 21", "Saturday, Nov 21"), a month-and-day with a year ("Copied from
 // the club's own calendar on Nov 13, 2026"), or an ISO date, in text a visitor reads. The year-bearing form was out
 // of scope in this gate's first version, on the argument that a provenance stamp is not a schedule date — and the
@@ -43,9 +49,12 @@ export const RULED = new Map([
 
 /** A month-and-day a visitor could read, with no year attached. The year is the discriminator: "Nov 21" is a
  *  date on a schedule, "Nov 13, 2026" is a stamp about a source (see the note at the top). */
-const DATE_TEXT = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b(?:,?\s*\d{4}\b)?|\b\d{4}-\d{2}-\d{2}\b/;
+const DATE_TEXT = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b(?:,?\s*\d{4}\b)?|\b\d{1,2}\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?(?:,?\s*\d{4}\b)?|\b\d{4}-\d{2}-\d{2}\b/;
 /** The machine-readable handle `Schedule.astro` and `EventRow.astro` put on every date they paint (D173). */
 const DATE_HANDLE = /data-date="\d{4}-\d{2}-\d{2}"/;
+/** The nav's subordinate date chip (D311). Its text is chrome, so it is stripped before the prose scan and
+ *  audited separately against the page of record. */
+const NAV_CHIP = /<span[^>]*data-nav-date="(\d{4}-\d{2}-\d{2})"[^>]*>[\s\S]*?<\/span>/g;
 
 export const visibleText = (html) =>
   html
@@ -73,8 +82,33 @@ const routesUnder = (dir, prefix = '') => {
 export const datedSurfaceFindings = (pages, ruled = RULED) => {
   const fails = [];
   const dated = [];
+  // What the page of record actually prints, in document order. The nav chip is judged against this, not
+  // against a clock: a gate that re-derives "today" would disagree with the build on the other side of
+  // midnight, and the rule we can prove is that the two surfaces agree.
+  const record = pages.find((p) => p.route === '/schedule');
+  const recordDates = record ? [...record.html.matchAll(/data-date="(\d{4}-\d{2}-\d{2})"/g)].map((m) => m[1]) : [];
   for (const { route, html } of pages) {
-    const text = visibleText(html);
+    const chips = [...html.matchAll(NAV_CHIP)].map((m) => m[1]);
+    const chromeStripped = html.replace(NAV_CHIP, ' ');
+    if (chips.length) {
+      if (recordDates.length === 0) {
+        fails.push({
+          rule: 'nav-date-with-no-dates',
+          detail: `${route}'s nav carries data-nav-date="${chips[0]}" but /schedule prints no date at all (an empty calendar is a designed state, D311). Drop the chip in the frontmatter — it is derived from the same window call, so an empty page means an empty chip.`,
+        });
+      } else if (chips[0] !== recordDates[0]) {
+        fails.push({
+          rule: 'nav-date-mismatch',
+          detail: `${route}'s nav says the next date is ${chips[0]} while the page of record prints ${recordDates[0]} first. The chip must come from the same scheduleWindow() call the rows do (D311).`,
+        });
+      }
+    } else if (/data-nav-date="[^"]*"/.test(html)) {
+      fails.push({
+        rule: 'nav-date-unhandled',
+        detail: `${route}'s nav prints a date whose element carries no ISO handle, so no gate can compare it with the schedule page. Give the chip data-nav-date="YYYY-MM-DD".`,
+      });
+    }
+    const text = visibleText(chromeStripped);
     const m = DATE_TEXT.exec(text);
     if (!m) continue;
     dated.push({ route, sample: m[0] });
@@ -128,6 +162,11 @@ if (selftest) {
     { name: 'a year-bearing provenance stamp on an unruled page', pages: [{ route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Copied from the club\u2019s own calendar on Nov 13, 2026</p>') }], want: ['dated-surface-unruled'] },
     { name: 'clean control: an age is not a date', pages: [{ route: '/schedule', html: schedule }, { route: '/', html: page('<p>last read 11 days ago</p>') }], want: [] },
     { name: 'clean control: a date inside an HTML comment is not painted', pages: [{ route: '/schedule', html: schedule }, { route: '/join', html: page('<!-- measured Nov 21 --><p>Ways in</p>') }], want: [] },
+    // D311: the nav chip is chrome, and its whole legitimacy is that it copies the page of record.
+    { name: 'clean control: the nav chip repeats the page of record\u2019s first date', pages: [{ route: '/', html: page('<header><a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a></header>') }, { route: '/schedule', html: schedule }], want: [] },
+    { name: 'the nav chip disagrees with the schedule page', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-12-05">5 Dec</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-mismatch'] },
+    { name: 'a nav date with no ISO handle', pages: [{ route: '/', html: page('<a href="/schedule">Dates 21 Nov</a>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-unruled'] },
+    { name: 'a nav chip while the calendar is empty', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: page('<p>No date is on the calendar yet.</p>') }], want: ['nav-date-with-no-dates'] },
   ];
   let bad = 0;
   for (const c of cases) {

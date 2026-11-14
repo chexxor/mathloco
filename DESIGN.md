@@ -120,12 +120,19 @@ two section-intro ledes (they sit in a 1164px box at 1240) and to the 404/chat l
 `max-w-2xl` — a 672px cap that meant 77 characters at the old lede size and 70 at the new one, i.e. a rule
 whose meaning moved with the ramp.
 
-**Measured line length after round 8 (`npm run lines:measure`, reports in `.design/render/`):** the widest
-prose line on the landing page is **69 characters** (was 76); the two section intros now sit in a **675px** box
-at **69 and 64**; hero ledes are 67/69/49; card copy runs 29-38 at 1240, and at 320 the body box is **225-256px**
-at 26-31 characters. Most prose on this site still sits **under** the 40-75 character band, because the boxes
+**Measured line length (`npm run lines:measure`, reports in `.design/render/`):** the widest prose line on the
+landing page is **72 characters** @measured 2026-11-14 by `node design/line-length.mjs / 1240 1440 --no-build`
+(it was 76 before round 8's ramp and 69 after it — the number moves with the boxes, so it is re-taken, not
+remembered): the two hero ledes sit in **672px/675px** boxes at **71 and 72**, the Meetup/Discord paragraph in a
+**563px** box at **72**, and the probe's own verdict line reads `outside the 40-75 ch band: none` at both
+widths. Card copy runs 29-38 at 1240, and at 320 the body box is **225-256px** at 26-31 characters (round 8,
+`design/records/0021-vertical-rhythm-is-three-numbers-that-disagree.md`). Most prose on this site still sits **under** the 40-75 character band, because the boxes
 are narrow — that is the standing finding, and it is the reason a size raise was safe here but a *wider box*
-would not be.
+would not be. **The schedule row's prose was the uncapped exception** (D313): `data-copy-prose` now carries
+`max-w-measure`, so the wrapper — inheriting 16px — caps at **512px** and the paragraph inside it lands on the cap;
+longest measured row line **58 characters** at 1240 (a venue line at 17.6px in that 512px box) and **42** at 320
+@measured 2026-11-14 by `node design/line-length.mjs /schedule 1240 1024 640 320 --no-build`. The `/schedule` "Add to a calendar" paragraph, also capped, sits in a
+**563px** box at **72** characters.
 
 **The two faces are 4% apart in x-height** (PT Serif 0.50 em, Public Sans 0.52 em,
 `design/fonts/metrics.json`), so "the serif reads smaller" is not an x-height claim. What differs is the
@@ -419,6 +426,16 @@ freshness.
   the row shape that has room for a third path. If the operator prefers `Join`, it is one line in
   `src/components/Navigation.astro` and the gate re-measures it the next run — the probe prints both rows side by
   side, so the choice is visible rather than argued.
+- **The nav may carry the next date, subordinate to the label, and only where the row has room for it** (D311,
+  2026-11-14). The chip is a `data-nav-date` span inside the same anchor, taken from the same
+  `scheduleWindow(upcoming(), todayIn())` call the schedule page makes, `hidden sm:inline` because the row with it
+  painted needs **311px** and the 320 floor offers **276** @measured 2026-11-14 by `npm run check:render:dist`
+  (PASS at 1240: 311 of 1164; 640: 311 of 580; 390: 257 of 346 with the chip hidden; 320: 257 of 276). A date in the
+  nav is chrome, not a dated surface: `check:dated-surfaces` fails a chip whose date is not the first date
+  `/schedule` prints, and a chip when the page prints no date.
+- **One name per page** (D309, 2026-11-14): the nav label is the page's name, and the `<title>` stem, the exit-band
+  label and the page's own opening block must carry that word. `npm run check:naming` is the detector; aliases in
+  prose ("When We Meet", "All 5 dates →") are counted and reported, not failed, because they do a different job.
 - **The site's floor is 320px** (D114, operator ruling 2026-11-02), and `check:render` refuses to run a
   default width set that has dropped 320. What sets the floor changed with D117: it used to be the nav
   (3px of margin at 320); the nav clears the floor by 19px (needs 257, offered 276) @measured 2026-11-14 by
@@ -439,8 +456,10 @@ points at this page and prints none; the row below is what `/schedule` prints, i
 
 - **leaf** — month, day number, weekday, stacked, `bg-tint` **fill**, `EventLeaf.astro`. It is `aria-hidden`:
   the same date is spelled out in prose beside it, and a screen reader should hear a date once.
-- **copy lane** — `min-w-0 flex-1`. `min-w-0` is load-bearing: without it a long venue string sets the lane's
-  minimum width and the plate is pushed out of the row instead of the text wrapping.
+- **copy lane** — `min-w-0 flex-1`, and inside it three groups (D313, 2026-11-14): `data-head` is the date said as a
+  sentence and the title; `data-copy-prose` is the series and venue lines, capped at `max-w-measure`; the sign-up
+  cluster is the way out. `min-w-0` is load-bearing: without it a long venue string sets the lane's minimum width
+  and the plate is pushed out of the row instead of the text wrapping.
 - **plate** — the event's own art, right-aligned on `lg:` and up, capped at **323px** by the single
   `.event-slot` rule in `EventArt.astro` (D173). One image per band, and never a placeholder beside real art
   (D152/D154/D224).
@@ -520,8 +539,8 @@ which must go red.
   hover; a mark that carried its own brand colour would be a second colour rule, which the named-roles section
   forbids.
 
-Measured, at every shipped viewport on both surfaces @measured 2026-11-13 by `node design/schedule-geometry.mjs
---widths 1240 1024 900 768 640 390 320` on `dist/client` (Linux native, Firefox 159.0). One row per printed date,
+Measured, at every shipped viewport @measured 2026-11-14 by `node design/schedule-geometry.mjs
+--routes /schedule --widths 1240 1024 900 768 640 390 320` on `dist/client` (Linux native, Firefox 159.0). One row per printed date,
 and the window prints **five** open dates @measured 2026-11-13 by `node scripts/check-schedule-window.mjs`
 (5 of 5 open rows, 2026-11-13 + 8 weeks, cap 8, hidden 0), so `/schedule` has five rows to measure — two shapes,
 because the art differs (socials 323x156, study sessions 323x185).
@@ -531,16 +550,18 @@ column below gives the **social** row first and the **study-session** row second
 
 | width | `/schedule` row | its copy lane |
 | --- | --- | --- |
-| 1240 | 1164x196 / 1164x217 | 633x164 / 633x136 |
+| 1240 | 1164x196 / 1164x217 | 633x164 (both) |
 | 1024 | 948x232 (all five) | 417x200 |
-| 900 | 840x452 / 840x481 | 792x136 |
-| 768 | 708x452 / 708x481 | 660x136 |
+| 900 | 840x480 / 840x509 | 792x164 (both) |
+| 768 | 708x480 / 708x509 | 660x164 (both) |
 | 640 (stacked) | 580x516 / 580x545 | 532x200 |
 | 390 | 346x576 / 346x632 | 314x265 / 314x293 |
 | 320 | 276x570 / 276x616 | 244x293 / 244x317 |
 
 The homepage card this table used to carry a column for (1164x228 at 1240, 276x626 at 320) is history with the card
-(D306); `/schedule`'s numbers did not move, because they were always this page's.
+(D306). The desktop rows did not move when the row became three zones (D313); **900 and 768 are 28px taller** than
+the 2026-11-13 table recorded (452→480, 481→509) because the row's prose now wraps inside `max-w-measure` instead of
+running the full 792px column.
 
 The leaf is **112x96** in every box. The plate is the cap **323** wide down to 390, where the column is narrower
 than the cap and it paints **314x151** (study sessions **314x179**; at 320, **244x118** and **244x139**); at 1240 it
@@ -557,10 +578,13 @@ runs are kept side by side in `.design/tmp-geometry-2026-11-13.txt` and
 plate, not the lane, is the tallest thing in the box, so the cluster costs nothing there until the column gets
 narrow. Three platforms therefore cost **40px** of a desktop row and **88-116px** on a phone.
 Page totals
-@measured 2026-11-14 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the same
-tool on `/` only): homepage **2859px at 1240** (painted 9.1%), **4013 at 390**, **4591 at 320** — **232px shorter at
-1240** than the card build this section used to quote (3091px, 10.2%), which is the date card and its deck;
-`/schedule` **1765px at 1240** (painted 15.7%), **3744 at 390**, **3872 at 320**. `/schedule` is 565px taller than the one-row build it replaced, which is
+@measured 2026-11-14 by `node design/whitespace-survey.mjs --routes / /schedule --widths 1240 390 320` (`npm run
+check:space` runs the same tool on `/` only): homepage **2938px at 1240** (painted 9.0%), **4048 at 390**, **4684 at
+320** — **153px shorter at 1240** than the card build this section used to quote (3091px, 10.2%), which is the date
+card and its deck; `/schedule` **1835px at 1240** (painted 15.1%), **3760 at 390**, **3928 at 320**. The captions the
+three horizon plates now carry are part of that: the band measures **236px** tall at 1240 against the **194px** of
+its tallest plate alone @measured 2026-11-14 by the same survey — a caption is a line of `--micro` type under a
+figure, and D312 decided it should be there. `/schedule` is 565px taller than the one-row build it replaced, which is
 the four new rows, not a layout change. The list-to-its-own-page saving measured in the 2026-11-07 pass was
 **4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history and the numbers above
 as the state.
@@ -655,13 +679,33 @@ a PDF, a flyer PNG — is invisible to `check:classes` and `check:render`, becau
 needs its own pixel gate in `verify`, its numbers read off the committed file, and a selftest that proves
 the gate can fail.
 
+**The tab mark now has that gate (D310).** `public/favicon.svg` had none, and it showed: the mark shipped
+Tailwind's default `#3b82f6` ground with a `white` glyph — a colour in no token and a pair measuring **3.68**
+against the 4.5 text bar, in the tree since the Init commit and untouched by the design round @measured
+2026-11-14 by `node design/grill/okcolor.mjs` (the repo's one OKLab implementation). It now paints
+`--color-ink` (#203927) ground with a `--color-paper` (#fcfaf6) glyph, **12.02**, the same pair the band and
+`::selection` use, and `rx 6` is `--radius-control`. `npm run check:favicon` asserts four things from the
+committed bytes: every fill is a token, at most two colours in the mark, the pair clears 4.5, and no
+`--color-path-*` hue appears in it (round 3b reserves those hues for channels the visitor leaves for).
+`check:favicon:selftest` plants each of those defects — a named colour, a Tailwind hex, a 3.01 pair, three
+hues, a channel hue, an empty mark, a missing file — with three clean controls @measured 2026-11-14 by the
+selftest: **10 cases, 0 wrong**; the gate runs in **0.18s**, its selftest **0.18s**, both in `verify`.
+
 ## Graphics — the club's own diagram, drawn, one source of truth
 
 The site's graphic language is the club's diagram (D86): routes arriving at one point on a sphere. **No
 stock people photography, ever** (D94: no photograph of this club exists, so a photo of strangers is a
-false statement about who attends), and `ratify-check.mjs` enforces it structurally — no live source under
-`src/` may import a raster. The only rasters in the repo are generated (`public/matheapolis-social-share.jpg`)
-or third-party brand marks in `public/` that are never imported.
+false statement about who attends). The rule is about **photographs of people**, not about pixels: round 10
+(2026-11-02) ruled in historical plates, so eleven PNGs under `src/assets/photos/` are live in the artifact
+(hero, three horizon leaves, seven event thumbs), each one built by `npm run plates` from a quarantined scan
+and each one's provenance written in that directory's README. What `ratify-check.mjs` checks is the
+structural version of that: **every raster a live source imports comes from `src/assets/photos/`** — an image
+imported from anywhere else is an unprovenanced file in the artifact @measured 2026-11-14 by
+`node design/ratify-check.mjs`. The rule used to be stated as "no live source under `src/` may import a
+raster", which that tool has been reporting as a FAILURE against `HorizonBand.astro` ever since the plates
+shipped — a check asserting something the tree contradicts is an assertion, not a detector (D282's class).
+Note also: `ratify-check.mjs` is a **design-round tool, not a step in `verify`**, so nothing runs it on a
+ship commit; `check:classes`, `check:design` and `check:favicon` are the tracked enforcement today.
 
 The mark lives in **one file**: `src/lib/brand-mark.mjs` exports `MARK` (viewBox 240x150 — the surface ring,
 the two halves of the equator, the two routes, the two right-angle marks, the meeting point — with

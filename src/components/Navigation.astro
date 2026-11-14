@@ -24,8 +24,27 @@
 // candidates (`Join` 24, `Visit` 28, `Meet` 32, `Attend` 42 at 1px of margin) say less than the page does.
 // Every label behind it is a page the build emits (D117), and `check:render` reports the shipped row at
 // **257 needed of 276 offered** at 320 @measured 2026-11-14.
+// The nav's subordinate date (2026-11-14, S036/D311): the commissioned read asked for "the next date in the
+// nav". It is taken from the SAME call `/schedule` makes - `scheduleWindow(upcoming(), todayIn())` - so the
+// chip cannot disagree with the page it points at; there is no second calendar in this file. `shown[0]` is the
+// first date inside the window, which is exactly the first row the page paints.
+//
+// Width, measured on the built row by `node design/nav-fit.mjs --no-build` (Linux native, Firefox 159.0):
+// `Dates` 36px, the chip `21 Nov` 41px, and the pair inside one anchor 80px. At the 320px floor (D114, 276px of
+// content box, 16px gaps) the shipped row needs 257px; with the chip it needs 301px - 25px OVER the floor, and
+// `flex-nowrap` means that is a failed probe, not a wrap. So the chip is `hidden sm:inline`: it paints at 640
+// and above, where the row needs 301 of 580 (279px of slack), and the floor keeps the bare label.
+import { upcoming, dateParts, formatDate } from '../lib/content.ts';
+import { todayIn } from '../lib/events.mjs';
+import { scheduleWindow } from '../lib/event-window.mjs';
+
+const window = scheduleWindow(upcoming(), todayIn());
+// `null` when the calendar is empty or every open date is past the window: the nav then says nothing it cannot
+// back up, and no `data-nav-date` is emitted for check:dated-surfaces to audit.
+const nextDate = window.shown[0]?.date ?? null;
+
 const navItems = [
-  { href: '/schedule', label: 'Dates' },
+  { href: '/schedule', label: 'Dates', date: nextDate },
   { href: '/chat', label: 'Chat' },
   { href: '/join', label: 'Ways in' },
 ];
@@ -70,9 +89,19 @@ const navItems = [
           <a
             href={item.href}
             class="whitespace-nowrap py-2 text-label text-ink font-medium hover:text-gold"
-            aria-label={`Navigate to ${item.label}`}
+            aria-label={item.date ? `Navigate to ${item.label}: the next date is ${formatDate(item.date, 'wide')}` : `Navigate to ${item.label}`}
           >
             {item.label}
+            {/* The subordinate date, not a second nav item. `data-nav-date` is the handle
+                scripts/check-dated-surfaces.mjs reads: a chrome date is allowed only when it equals the first
+                date the window says the schedule page prints (D311), so the nav can never print a stale date
+                the page of record does not. Hidden below `sm` for the measured 25px the pair needs at the
+                320px floor. */}
+            {item.date && (
+              <span data-nav-date={item.date} class="hidden sm:inline ml-2 text-label text-ink-3 tabular-nums">
+                {dateParts(item.date).day} {dateParts(item.date).month}
+              </span>
+            )}
           </a>
         ))}
       </div>

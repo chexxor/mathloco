@@ -186,13 +186,18 @@ else if (!/data-mark=["']card["']/.test(cardComposer)) fail('the share-card comp
 else ok('both surfaces opt in to the mark probe (data-mark="hero" / "card"), so both pixel gates read the same shape');
 if (/MARK_SHAPE_COUNT/.test(heroFile) === false && !/MARK\.shapes\.map/.test(heroStripped)) fail('HeroSection.astro does not draw MARK.shapes — the mark has been re-typed by hand instead of read from the geometry table');
 else ok(`the hero draws the shared table (${MARK_SHAPE_COUNT} shapes expected)`);
-// Photo-free by construction (D94), now enforced rather than remembered: the hero held a stock crowd shot
-// for two years while the ruling said otherwise, so the rule that lives only in a .md is the rule that
-// silently comes back (D120). A raster IMPORT is how a photo gets into the artifact at all — a string
-// `src={'/x.png'}` skips astro:assets entirely (see .agents/skills/astro/SKILL.md).
-const raster = liveFiles.filter(([, t]) => /import\s+[A-Za-z_$][\w$]*\s+from\s+['"][^'"]*\.(png|jpe?g|webp|avif|gif)['"]/.test(t)).map(([f]) => f);
-if (raster.length) fail(`${raster.length} live src file(s) import a raster image (${raster.join(', ')}) — the site is photo-free by construction (D94/D120); the drawn mark in src/lib/brand-mark.mjs is the graphic`);
-else ok('clean: no live src file imports a raster image — photo-free by construction (D94/D120) is gated, not remembered');
+// Photo-free by construction (D94) means no PHOTOGRAPH of the club: none exists, so a photo of strangers is
+// a false statement about who attends. It was never "no rasters" — round 10 (2026-11-02) ruled in historical
+// plates, and this check has been reporting a FAILURE against HorizonBand.astro since they shipped
+// @measured 2026-11-14. The structural rule that IS true and checkable: every raster a live source imports
+// comes from src/assets/photos/, the directory whose README records where each file came from and which
+// `npm run plates` writes. A raster imported from anywhere else is an unprovenanced file in the artifact.
+// A raster IMPORT is how an image gets into the artifact at all — a string `src={'/x.png'}` skips
+// astro:assets entirely (see .agents/skills/astro/SKILL.md).
+const rasterImports = liveFiles.flatMap(([f, t]) => [...t.matchAll(/import\s+[A-Za-z_$][\w$]*\s+from\s+['"]([^'"]*\.(?:png|jpe?g|webp|avif|gif))['"]/g)].map((m) => [f, m[1]]));
+const strays = rasterImports.filter(([, p]) => !p.includes('assets/photos'));
+if (strays.length) fail(`${strays.length} live src file(s) import a raster from outside src/assets/photos/ (${strays.map(([f, p]) => `${f} -> ${p}`).join(', ')}) — every image the artifact carries has a provenance record in that directory's README (D94/D120); an import from anywhere else has none`);
+else ok(`${rasterImports.length} raster import(s), all from src/assets/photos/ (${[...new Set(rasterImports.map(([, p]) => p.split('/').pop()))].join(', ')}) — plates are provenance-recorded, and no unprovenanced image is in the artifact (D94/D120)`);
 
 // ---------------- 1f. the ramp satisfies its own documented derivation ----------------------
 // DESIGN.md states how every line box in the ramp is produced, and round 8 (2026-11-02) is the reason

@@ -32,11 +32,14 @@ const year = new Date().getFullYear();
       aria-label="Where to next"
       class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2"
     >
+      <!-- 2026-11-14 (D309): the band says the word the nav says. This link used to read "Schedule"
+           while the nav read "Dates", which is the alias defect `check:naming` now fails: the band is the
+           site's map, and two names for one page is a map with two entries for one place. -->
       <a
         href='/schedule'
         class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
-        Schedule
+        Dates
       </a>
       <a
         href='/chat'
@@ -49,6 +52,16 @@ const year = new Date().getFullYear();
         class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Ways in
+      </a>
+      <!-- The feed was the one path the site's own map did not carry: /events.ics appeared on `/schedule`
+           and on the homepage, and nowhere in the band every page ends with (2026-11-14, the commissioned
+           read's footer finding). It is an internal file, so it wears the band's own text colour, not a
+           path hue — the `--color-path-*-*-on-ink` steps mark paths that LEAVE the site. -->
+      <a
+        href='/events.ics'
+        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+      >
+        Add to a calendar
       </a>
       <a
         href={`${config.URLs.meetupGroup}/join`}

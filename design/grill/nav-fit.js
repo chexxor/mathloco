@@ -25,6 +25,21 @@
     [['/schedule', 'Dates'], ['/chat', 'Chat'], ['/join', 'Attend']],
     [['/schedule', 'Schedule'], ['/join', 'Ways in']],
     [['/schedule', 'Schedule'], ['/join', 'Join']],
+    // 2026-11-14: the commissioned read's item 2a asks for the NEXT DATE in the nav instead of the page
+    // name. A label like `Sat 21 Nov` is the widest thing the row could carry, so it is priced here rather
+    // than argued about in prose; the day it names is irrelevant to the width.
+    [['/schedule', 'Sat 21 Nov'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    [['/schedule', 'Sat Nov 21'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    [['/schedule', '21 Nov'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    [['/schedule', 'Next date'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    // The compound label is the one that keeps D309's rule (the nav label still carries the page's name)
+    // while putting the date in the row, so it is priced against the bare date and against the shipped set.
+    [['/schedule', 'Dates 21 Nov'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    [['/schedule', 'Dates, 21 Nov'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    [['/schedule', 'Next 21 Nov'], ['/chat', 'Chat'], ['/join', 'Ways in']],
+    [['/schedule', 'Dates'], ['/chat', 'Chat'], ['/join', 'Ways in'], ['/events.ics', 'Feed']],
+    [['/schedule', 'Sat 21 Nov'], ['/chat', 'Chat'], ['/join', 'Join']],
+    [['/schedule', 'Dates'], ['/chat', 'Chat'], ['/join', 'Ways in'], ['/schedule', '21 Nov']],
   ];
 
   const LABEL_CLASS = 'whitespace-nowrap py-2 text-label text-ink font-medium hover:text-gold';

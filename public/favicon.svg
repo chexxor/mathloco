@@ -1,4 +1,12 @@
+<!-- The tab a visitor sees is the site's smallest rendered artifact, and it was the only one still
+     painted in a colour nothing else on the site uses: Tailwind's default blue #3b82f6 with a white
+     glyph (contrast 3.68, under the 4.5 text bar), sitting in the repo since the Init commit and
+     untouched by the design pass. 2026-11-14 (D310): the band's ground and the band's text — ink
+     oklch(32% 0.045 152) = #203927 under paper oklch(98.5% 0.006 85) = #fcfaf6, 12.02
+     @measured 2026-11-14 by node scripts/check-favicon.mjs (OKLab->linear sRGB, WCAG relative
+     luminance; the same arithmetic design/palette-math.mjs uses). rx 6 is --radius-control.
+     The glyph is the club's summand, the same one the footer wordmark carries. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#3b82f6"/>
-  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="22" font-weight="bold" fill="white">∑</text>
+  <rect width="32" height="32" rx="6" fill="#203927"/>
+  <text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="serif" font-size="22" font-weight="bold" fill="#fcfaf6">∑</text>
 </svg>

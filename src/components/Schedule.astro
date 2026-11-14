@@ -175,9 +175,11 @@ const copied = copiedOn();
 // The heading is the page's own h1 on /schedule and a section h2 on the homepage, where the hero owns the h1.
 const headingId = 'when-we-meet';
 const Heading = compact ? 'h2' : 'h1';
-// The eyebrow is the compact width's locator. It used to read "Next date", under a card that printed one; since
-// the homepage prints no date (D306) it names the section's subject instead, and the date lives one click away.
-const eyebrow = 'The calendar';
+// The eyebrow is the section's locator. On the homepage the compact band reads "The calendar": it points at the
+// page of record and prints no date (D306). On `/schedule` it is the page's own name, because `check:naming`
+// (D309, 2026-11-14) requires the word the nav uses to appear in the page's opening block: the h1 keeps its
+// voice ("When We Meet"), the eyebrow carries the name the visitor clicked.
+const eyebrow = compact ? 'The calendar' : 'Dates';
 // The compact lede used to be the join band's sentence, kept verbatim when the bands merged (D228): "One place to
 // say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether
 // this is your kind of room." The operator asked for the join copy rewritten (2026-11-07), and the clause that did
@@ -217,7 +219,7 @@ const lede = compact
 <section class="bg-paper py-12" aria-labelledby={headingId}>
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
-      {compact && <p class="text-label uppercase tracking-wide text-ink-3">{eyebrow}</p>}
+      <p class="text-label uppercase tracking-wide text-ink-3">{eyebrow}</p>
       {/* Written out rather than assembled with `class:list={[...]}`: `check:classes` reads the literal word
           `list` out of that syntax and reports it as a class that generates no CSS, so the assembled form
           buys a false failure. A conditional template string keeps every token literal in the source the
@@ -410,7 +412,7 @@ const lede = compact
           https link either opens a client or downloads a file a client opens, and a scheme that some browsers
           refuse would be a promise this page cannot keep. */}
       {!compact && items.length > 0 && (
-        <p class="mt-6 text-body leading-prose text-ink-2 font-body">
+        <p class="mt-6 max-w-measure text-body leading-prose text-ink-2 font-body">
           {omittedText}
           Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Add the club calendar</a> —
           Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.

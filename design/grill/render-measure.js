@@ -53,6 +53,13 @@
     return v;
   };
 
+  // Ottosson's Oklab -> linear sRGB, the SAME constants as design/grill/okcolor.mjs (whose --selftest
+  // re-derives the ratios DESIGN.md quotes). This path is only reached when the canvas cannot paint the
+  // string, so it is dormant in a normal run — which is exactly why a wrong row here is dangerous: it is
+  // never exercised, and the copy in this file had a mis-keyed third row (-0.3686629590 where the matrix
+  // says -0.0041960863) that makes oklch(1 0 0) come out as RGB 255,255,162 instead of white @measured
+  // 2026-11-14 by running both rows in node. If the canvas path ever fails, contrast numbers would come
+  // from arithmetic that is quietly off, and nobody would see it.
   const oklchToLinear = (L, C, H) => {
     const hr = (H * Math.PI) / 180, a = C * Math.cos(hr), b = C * Math.sin(hr);
     const l_ = L + 0.3963377774 * a + 0.2158037573 * b;
@@ -60,9 +67,9 @@
     const s_ = L - 0.0894841775 * a - 1.2914855480 * b;
     const l3 = l_ ** 3, m3 = m_ ** 3, s3 = s_ ** 3;
     return {
-      lr: 4.0767416621 * l3 - 3.3077115913 * m3 + 0.2309699292 * s3,
-      lg: -1.2684380046 * l3 + 2.6097574011 * m3 - 0.3413193965 * s3,
-      lb: -0.3686629590 * l3 - 0.7034586147 * m3 + 1.7073575029 * s3,
+      lr: 4.0767416621 * l3 - 3.307718152 * m3 + 0.2309699292 * s3,
+      lg: -1.2684380046 * l3 + 2.6092572011 * m3 - 0.3413193965 * s3,
+      lb: -0.0041960863 * l3 - 0.7034118309 * m3 + 1.707614701 * s3,
       lin: true,
     };
   };

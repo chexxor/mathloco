@@ -87,6 +87,14 @@ const DEPLOY = [
   { name: 'check:tables:selftest', desc: 'the table gate can still fail (3 plantings: an extra cell, a missing cell, a short header; 4 clean forms)' },
   { name: 'check:social', desc: 'the committed share card against its painted report' },
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
+  // The tab glyph is the other committed image artifact, and until 2026-11-14 it had no gate at all: it
+  // shipped Tailwind's default #3b82f6 with a `white` glyph (3.68, under the 4.5 text bar) from the Init
+  // commit through the whole design pass, because check:classes scans src/ utility writes, check:design
+  // audits design/, and check:render measures pages in a browser that never paints a favicon (D310).
+  // Source-only, so it can go red before anyone builds (D118). Cost @measured 2026-11-14 by this step:
+  // 0.11s gate, 0.13s selftest.
+  { name: 'check:favicon', desc: 'the tab mark paints only @theme tokens, at most two of them, none a reserved join-path hue, and the pair clears 4.5' },
+  { name: 'check:favicon:selftest', desc: 'the favicon gate can still fail (10 cases: 6 plantings — a named colour, a Tailwind hex, a 3.01 pair, three hues, a channel hue, an empty mark — plus 3 clean controls and a missing file)'},
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
   // The descriptor is one phrase in three files (`const locator`, `seo.title`, the page `<Layout title>`), and the
@@ -135,6 +143,12 @@ const DEPLOY = [
   // half-checked: `check:render` counts dark regions on a page that HAS a band and never asked whether a page
   // has one. In-memory fixtures, so before `build` (D118). Cost @measured 2026-11-14 by this step: 0.20s.
   { name: 'check:page-exit:selftest', desc: 'the page-exit gate can still fail (7 cases: no band, a band on the wrong ground, a band with no paths, a band with one path, plus two clean controls and a swapped-class control)' },
+  // One page, one name (2026-11-14, the commissioned UX read's finding 1, D309). `/schedule` answered to five
+  // names depending on where the visitor stood: nav "Dates", title "Schedule", h1 "When We Meet", band
+  // "Schedule", homepage button "View Schedule". Every one is fine alone; together they are an alias map the
+  // reader has to hold. The verdict here runs on in-memory fixtures, so the rule can go red on a branch nobody
+  // has built yet (D118). Cost @measured 2026-11-14 by this step: 0.13s.
+  { name: 'check:naming:selftest', desc: 'the naming gate can still fail (15 cases: 8 plantings — nav/title drift, band drift, a page that never names itself, the name only in a comment, a nav label with no page, a title with no site name, two pages labelling one route differently, a date glued to a nav label — and 7 clean controls, incl. a subordinate date chip and prose that describes without naming)' },
   { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
@@ -188,12 +202,24 @@ const DEPLOY = [
   // nothing is painted that the resolver does not have. It reads `dist/`, so it waits for `build` (D118).
   // The artifact side of the same rule: walk every emitted page, and require the set that prints a date to be the
   // set a ruling names. It reads `dist/`, so it waits for `build` (D118).
-  { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/schedule` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included', needs: ['build'] },
+  { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/schedule` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included; the nav’s subordinate date is chrome and must equal the first date /schedule prints (D311)', needs: ['build'] },
   { name: 'check:join', desc: 'every way in on /join is a channel joinChannels() returns, in canonical order under its kind, named in visible words, at a stamped URL, and the page prints no date; no invented channel, no empty kind heading, no blind link past 60 days', needs: ['build'] },
   // The artifact half of the same rule: every route the build emits (read off `dist/`, never remembered, D117)
   // closes with the band, on the ratified ground, offering at least two paths out. It reads `dist/`, so it waits
   // for `build` (D118). Cost @measured 2026-11-14 by this step: 0.21s.
   { name: 'check:page-exit', desc: 'every page the build emits ends with the exit band on the ink ground and at least two paths out — /chat, /join and /404 included', needs: ['build'] },
+  // The name surfaces of every emitted page: the nav label is the chosen name, and the <title>, the exit-band
+  // link and the page's own opening block have to say it too (D309). Routes are read off `dist/`, never
+  // remembered (D117). It also prints an alias census - every other label the artifact attaches to an internal
+  // route - as information, because prose is allowed to describe a page without naming it.
+  { name: 'check:naming', desc: 'one name per page in the four surfaces a visitor navigates by: nav, title, exit band and the page’s own opening block; a nav label with no page behind it fails', needs: ['build'] },
+  // What an alt says, and where the source goes (2026-11-14, the MS04 read, D312). Before this gate the three
+  // horizon plates' alts ran 22, 21 and 24 words and each opened with a book title, a year and a leaf number -
+  // a citation in the place a description belongs - with nothing on the page carrying a caption. Selftest runs
+  // on in-memory fixtures, so the rule can go red before anyone builds (D118). Cost @measured 2026-11-14 by
+  // this step: 0.16s selftest, 0.14s gate.
+  { name: 'check:alt:selftest', desc: 'the alt gate can still fail (9 cases: 5 plantings — a bare img, an empty alt, a 22-word alt, a citation in an alt with no figcaption, 19 words — plus 4 clean controls, incl. an 18-word alt exactly at the cap)' },
+  { name: 'check:alt', desc: 'every img in the artifact has an alt, no alt runs past 18 words, and no alt carries a book/year/leaf citation with no figcaption under the image', needs: ['build'] },
   // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
   { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name

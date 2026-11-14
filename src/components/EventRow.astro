@@ -10,7 +10,7 @@
  * `data/events.json` rather than in `src/content.json`.
  *
  * The composition (2026-11-07, operator: "the calendar event style on the home page is looking great... ensure
- * the events on the schedule page receive the same design improvement pass"): **leaf · copy · plate**,
+ * the events on the schedule page receive the same design improvement pass"): **date rail · copy · plate**,
  * right-to-left on `lg` and up, stacked below it. The homepage card that ruling was written against prints no
  * date since 2026-11-14 (D306), so this row is now the only thing that draws the composition; the ruling's
  * substance - one shape, one drawing - survives its second surface. The flip is at
@@ -112,21 +112,43 @@ const { item } = Astro.props;
 ---
 
 <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date}>
+  {/* The date rail (2026-11-14, D313, from the MS04 read). Before this the row stacked seven separate things:
+     leaf, title, date sentence, series line, venue line, three links. Below `lg` the visitor met the date twice
+     with the title in between - leaf above, sentence under the title - so the two drawings of one fact were three
+     elements apart. The row is now three zones: this rail answers "when", the copy zone answers "what", the
+     plate answers "what it looks like". The rail is the leaf alone, and that is a measured decision, not a
+     shortcut: putting the sentence in the rail too (a 238px wide line beside a 112px leaf) leaves the copy lane
+     507px at 1240 and **291px at 1024** - narrower than the 323px plate beside it, which is exactly the
+     condition D273 exists to prevent @measured 2026-11-14 by `node design/schedule-geometry.mjs
+     --widths 1240 1024`. So the sentence lives at the top of the copy zone, directly beside the leaf, and the
+     lane keeps the width the probe measured. */}
   <EventLeaf date={item.date} />
   {/* `data-copy` is a probe handle for `design/schedule-geometry.mjs`, which measures the copy lane against
-      the plate and the leaf; `min-w-0` is the load-bearing part (see the header). */}
+      the plate and the leaf; `min-w-0` is the load-bearing part (see the header). Inside it the seven parts are
+      grouped as head (date sentence + title), prose (series + venue, capped at the measure) and the way out
+      (the cluster). */}
   <div data-copy class="min-w-0 flex-1">
-    {filled(item.title) && <h3 class="text-lede font-bold text-ink font-body">{item.title}</h3>}
-    {/* The class list on this span is exactly `text-label text-ink-3` and nothing more — the same handle the
-        compact card writes, so the two surfaces keep matching the probe that anchors on it (D173). It is the
-        date said as a sentence, which is the version a screen reader hears and the version worth quoting. */}
-    <p class="mt-1 tabular-nums"><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}</span></p>
-    {filled(item.series) && (
-      <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.series}</p>
-    )}
-    {filled(item.venue) && (
-      <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
-    )}
+    <div data-head>
+      {/* The class list on this span is exactly `text-label text-ink-3` and nothing more — the same handle the
+          old homepage card wrote, so the probe that anchors on it still finds it (D173). It is the date said as
+          a sentence, which is the version a screen reader hears (the leaf is aria-hidden) and the only place the
+          hour appears at all. */}
+      <p class="tabular-nums"><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}</span></p>
+      {filled(item.title) && <h3 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h3>}
+    </div>
+    {/* `max-w-measure` (32em) is the MS04 copy-lane fix: uncapped, a row's prose ran the whole lane -
+       633px at 1240, ~145 characters of PT Serif - past the 75-character reading band. `data-copy-prose` is
+       the handle the probe reads the real characters-per-line off: `node design/line-length.mjs
+       /schedule 1240 320 --no-build` (design/grill/line-length-measure.js counts a line's words with
+       Range rects, so the number is measured, not estimated). */}
+    <div data-copy-prose class="max-w-measure">
+      {filled(item.series) && (
+        <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.series}</p>
+      )}
+      {filled(item.venue) && (
+        <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
+      )}
+    </div>
     {/* S019/D272: the row's way out is now per-date rather than one group link, and every destination in it
         comes from `signUpPaths()` in `src/lib/rsvp.mjs` — the component does not choose the links, the
         resolver does, so `scripts/check-rsvp-page.mjs` can compare these bytes against that function.

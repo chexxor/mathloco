@@ -35,20 +35,23 @@ const plates = [
     // its surrounding text: "Octahedron. Dodecahedron. Icosahedron. 30. A parallelepiped is a solid figure…".
     // What the drawing is was **guessed wrong here for an hour** (a "Book VI figure on a right triangle", inferred
     // from the book's title and the id's numbers) — an invented alt is the D92 defect class in an attribute.
-    alt: 'A figure from The elements of Euclid for the use of schools and colleges (1903), leaf 297 — the octahedron, the dodecahedron and the icosahedron, drawn as solids in line work',
+    alt: 'The octahedron, the dodecahedron and the icosahedron drawn as solids, in line work',
+    provenance: 'The elements of Euclid for the use of schools and colleges (1903), leaf 297',
   },
   {
     src: euler1910,
     // "euler1910" is our **slot key** from D149-2b (the line-work diagram that decision asked for), not a claim
     // about who drew it — the book is Slaught & Lennes 1910. The page's own text: "with center O tangent to the four
     // arcs as shown. Suggestion. Take X so that DX = XB. With centers A and B and radius AX draw arcs meeting at O."
-    alt: 'A construction from Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122 — arcs cut from two centres, and a circle tangent to the four arcs',
+    alt: 'Arcs cut from two centres, with a circle tangent to all four',
+    provenance: 'Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122',
   },
   {
     src: radio1922,
     // The page's own caption text: "Antenna Current in radiotelephony Transmitting the Sound of a as in father.
     // Modulates a radio-frequency Wave which can be received with Simple Detector … Beat Reception is Required."
-    alt: 'A diagram from The principles underlying radio communication (National Bureau of Standards, 1922), leaf 514 — antenna current in radiotelephony: a radio-frequency wave modulated by a spoken sound, received with a simple detector',
+    alt: 'A radio-frequency wave modulated by a spoken sound, received with a simple detector',
+    provenance: 'The principles underlying radio communication (National Bureau of Standards, 1922), leaf 514',
   },
 ];
 ---
@@ -71,7 +74,13 @@ const plates = [
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-6 flex">
     <div class="horizon" data-slot="PS-5">
       {plates.map((p) => (
-        <Image src={p.src} alt={p.alt} class="horizon__plate" loading="lazy" decoding="async" />
+        // A plate with a source is a figure (D312, 2026-11-14): the description is the `alt`, the source is the
+        // caption. D170's rule is that alt text is quoted from the picture page, never inferred; putting the book,
+        // year and leaf in the caption lets the alt say what a visitor sees instead of where the file came from.
+        <figure class="horizon__plate">
+          <Image src={p.src} alt={p.alt} class="horizon__img" loading="lazy" decoding="async" />
+          <figcaption class="mt-2 text-micro leading-prose text-ink-3 font-body">{p.provenance}</figcaption>
+        </figure>
       ))}
     </div>
   </div>
@@ -88,6 +97,10 @@ const plates = [
     align-items: flex-end;
   }
   .horizon__plate {
+    display: block;
+    width: 100%;
+  }
+  .horizon__img {
     display: block;
     width: 100%;
     height: auto;
