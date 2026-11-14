@@ -485,13 +485,17 @@ which must go red.
   sprite per render, never per path, because a claim keyed on `Astro.url.pathname` lives in a module loaded once
   per process, so the second request for `/` would paint three `<use>` refs and no symbols (D297) — and **not** by
   the layout, because a page that paints no mark should ship no glyph bytes: the counterfactual on `/chat` is
-  **+2,201 gzip**, 41.3% of that page's 5,327 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs`
+  **+2,201 gzip**, 41.0% of that page's 5,372 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs`
   (Linux native, Node 24.22.1, gzip of the built page). The sprite itself is 4,307 raw / 1,892 gzip and adds
-  **+2,195 gzip** to `/` and **+2,190** to `/schedule`; inlining the three glyphs into the same pages costs
-  **+2,117** and **+2,121**, so on a one-cluster page the sprite is 69-78 gzip dearer and it breaks even at **two
-  clusters on one page** — which is what
-  `/schedule` becomes as the calendar fills (the re-decision is parked in `PLAN.md` §Parked with that trigger).
-  No live route prints two clusters yet, so the one-sprite-per-render rule was measured on a fixture that renders
+  **+2,195 gzip** to `/` (one cluster) and **+2,207** to `/schedule` (five clusters); inlining the three glyphs into
+  the same pages costs **+2,118** and **+2,305**. So the one-cluster homepage pays **77 gzip** more for the sprite
+  and `/schedule` saves **98** with it. The crossover is measured, not divided out: the probe repeats one cluster
+  1-8 times on a mark-stripped copy of each page and compares gzip — sprite cheaper from **3 clusters** on
+  (2,488 vs 2,522 on a homepage-shaped page; 2,545 vs 2,566 on a schedule-shaped one), dearer at 2 (2,462 vs
+  2,448) @measured 2026-11-13 by `node design/mark-cost.mjs --sweep-only`. D294's "breaks even at two clusters"
+  divided a gzip-deduplicated total by the cluster count and is superseded by **D300**; the parked row in
+  `PLAN.md` §Parked is closed by that measurement.
+  The one-sprite-per-render rule was measured on a fixture that renders
   the cluster twice: 3 `<symbol>` defs, 6 `<use>` refs, three requests in a row @measured 2026-11-13 by
   `node design/sprite-claim.mjs` (fixture deleted after the run; D297).
   The glyph is painted in `currentColor`, so a mark is the ink of the label it belongs to and turns gold with it on
@@ -500,43 +504,47 @@ which must go red.
 
 Measured, at every shipped viewport on both surfaces @measured 2026-11-13 by `node design/schedule-geometry.mjs
 --widths 1240 1024 900 768 640 390 320` on `dist/client` (Linux native, Firefox 159.0). One row per printed date,
-and the window prints **one** open date today @measured 2026-11-13 by `node scripts/check-schedule-window.mjs`
-(1 of 1 open rows), so `/schedule` has one row to measure.
+and the window prints **five** open dates @measured 2026-11-13 by `node scripts/check-schedule-window.mjs`
+(5 of 5 open rows, 2026-11-13 + 8 weeks, cap 8, hidden 0), so `/schedule` has five rows to measure — two shapes,
+because the art differs (socials 323x156, study sessions 323x185).
+
+Rows are printed in date order; the five shipped rows take two shapes because their art differs. `/schedule`'s
+column below gives the **social** row first and the **study-session** row second where they differ.
 
 | width | homepage card | its copy lane | `/schedule` row | its copy lane |
 | --- | --- | --- | --- | --- |
-| 1240 | 1164x228 | 633x196 | 1164x196 | 633x164 |
-| 1024 | 948x264 | 417x232 | 948x232 | 417x200 |
-| 900 | 840x484 | 792x168 | 840x452 | 792x136 |
-| 768 | 708x484 | 660x168 | 708x452 | 660x136 |
-| 640 (stacked) | 580x548 | 532x232 | 580x516 | 532x200 |
-| 390 | 346x632 | 314x321 | 346x576 | 314x265 |
-| 320 | 276x626 | 244x349 | 276x570 | 244x293 |
+| 1240 | 1164x228 | 633x196 | 1164x196 / 1164x217 | 633x164 / 633x136 |
+| 1024 | 948x264 | 417x232 | 948x232 (all five) | 417x200 |
+| 900 | 840x484 | 792x168 | 840x452 / 840x481 | 792x136 |
+| 768 | 708x484 | 660x168 | 708x452 / 708x481 | 660x136 |
+| 640 (stacked) | 580x548 | 532x232 | 580x516 / 580x545 | 532x200 |
+| 390 | 346x632 | 314x321 | 346x576 / 346x632 | 314x265 / 314x293 |
+| 320 | 276x626 | 244x349 | 276x570 / 276x616 | 244x293 / 244x317 |
 
 The leaf is **112x96** in every box. The plate is the cap **323** wide down to 390, where the column is narrower
-than the cap and it paints **314x151** (at 320, **244x118**); at 1240 it paints **323x156** with its right edge 24px
-inside the keyline. **The plate's painted height belongs to the event's art, not to the rule** — the 323 cap is the
-rule, 156 is this date's image, and the box heights above move when the schedule does.
+than the cap and it paints **314x151** (study sessions **314x179**; at 320, **244x118** and **244x139**); at 1240 it
+paints **323x156** for the socials and **323x185** for the study sessions, with its right edge 24px inside the
+keyline. **The plate's painted height belongs to the event's art, not to the rule** — the 323 cap is the rule, 156
+and 185 are these dates' images, and the box heights above move when the schedule does.
 
 What the sign-up cluster costs, measured by running the same probe against a copy of the built page with every
 cluster stripped @measured 2026-11-13 by `node design/grill/strip-clusters.mjs` then
-`node design/schedule-geometry.mjs --dist .design/tmp-no-cluster` (the two runs are kept side by side in
-`.design/tmp-geometry-2026-11-13.txt` and `.design/tmp-geometry-nocluster-2026-11-13.txt`): the copy lane gains
-**+44px** at 1240, 900 and 768, **+80px** at 1024 and 640, and **+116px** at 390 and 320, but the *row* only grows
-where the lane is the tallest thing in the box — **+40px** on the homepage card at 1240 (228 vs 188: the lane is 196
-and the plate only 156 on this date's art), **+76px** at 1024, **+44px** at 900 and 768, **+80px** at 640, **+116px**
-at 390 and 320. On `/schedule` the same strip adds **+8/+44/+44/+44/+80/+116/+116px** for 1240→320. So three
-platforms cost **44px** of a desktop row and **116px** on the narrowest phone. Two numbers here carry an artifact:
-the stripped `/schedule` row measured 12px **wider** than the shipped one (1176 vs 1164) with a 645px lane against
-633, so its 1240 delta (+8px) is partly the probe's own box rather than the cluster's. A card's height was quoted
-as **+0px** at 1240 in an earlier pass; that was true of a build whose plate painted 185px, and it is corrected
-because the probe contradicts it, not because the rule changed.
+`node design/schedule-geometry.mjs --dist .design/tmp-no-cluster --widths 1240 1024 900 768 640 390 320` (the two
+runs are kept side by side in `.design/tmp-geometry-2026-11-13.txt` and
+`.design/tmp-geometry-nocluster-2026-11-13.txt`, both on the five-row build): the homepage card grows **+40px** at
+1240 (228 vs 188 — the lane is 196 and the plate only 156 on this date's art) and **+76/+44/+44/+80/+116/+116px** at
+1024/900/768/640/390/320. On `/schedule` the same strip adds **+40/+0/+0/+0/+0/+88/+116px** for
+1240→320 (per-row socials: 196→156, 232→232, 452→452, 452→452, 516→516, 576→488, 570→454): at 1024 and below the
+plate, not the lane, is the tallest thing in the box, so the cluster costs nothing there until the column gets
+narrow. Three platforms therefore cost **40px** of a desktop row and **88-116px** on a phone.
 Page totals
-@measured 2026-11-12 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
-same tool on `/` only): homepage **3071px at 1240**, **4593 at 390**, **5225 at 320**; `/schedule` **1200px at
-1240** with three empty runs totalling **562px** (46.8% of the page). The list-to-its-own-page saving measured in the
-2026-11-07 pass was **4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history
-and the numbers above as the state.
+@measured 2026-11-13 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
+same tool on `/` only): homepage **3091px at 1240** (painted 10.2%, 8 empty runs ≥60px totalling **754px**, 24.4%),
+**4649 at 390**, **5245 at 320**; `/schedule` **1765px at 1240** (painted 15.7%, 2 empty runs totalling **212px**,
+12.0%), **3800 at 390**, **3928 at 320**. `/schedule` is 565px taller than the one-row build it replaced, which is
+the four new rows, not a layout change. The list-to-its-own-page saving measured in the 2026-11-07 pass was
+**4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history and the numbers above
+as the state.
 Those page numbers come from a two-pass survey (it re-opens the page in a viewport as tall as the document, so
 there is no scrollbar and a capped plate lands on the cap); a single-pass probe of the same build reports a taller
 page and a narrower plate, and that is a viewport difference, not a regression — see D234 before comparing them.

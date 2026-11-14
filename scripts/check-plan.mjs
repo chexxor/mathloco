@@ -218,7 +218,13 @@ function selftest(base) {
     ['projection disagrees', () => ({ proj: rewriteRow(proj, 'MS02', 3, '**queued**') }), ['disagrees'], false],
     ['projection missing a milestone', () => ({ proj: drop(proj, 'MS11') }), ['is missing', 'does not carry'], true],
     ['milestone id skipped', () => ({ [src]: drop(rows, 'MS07') }), ['is missing'], true],
-    ['two milestones active at once', () => ({ [src]: rewriteRow(rows, 'MS04', statusCell, '**active**') }), ['milestones are "active"'], true],
+    // The "at most one active" rule is planted into whichever row is *not* already active, so the
+    // planting survives the plan's statuses changing (D268's dead-exemption rule).
+    ['two milestones active at once', () => {
+      const live = milestoneRows(rows).find((r) => statusOf(r) !== 'active');
+      if (!live) throw new Error('no milestone row is inactive - there is no row to make active');
+      return { [src]: rewriteRow(rows, live.id, statusCell, '**active**') };
+    }, ['milestones are "active"'], true],
     ['fourth open question', () => ({ plan: plan.replace('## Open questions (capped at three)', '## Open questions (capped at three)\n4. **A fourth one.** Something nobody has answered yet.') }), ['open questions'], false],
     ['queue put back in NEXT', () => ({ next: '| **MS11** | an item in the entry point | a command | **queued** |\n\n' + next }), ['milestone table'], false],
     // The parked table is edited by hand, so the planting finds a live row rather than trusting a literal:
@@ -230,7 +236,15 @@ function selftest(base) {
     }, ['un-park trigger'], false],
     ['milestone row with no owner', () => ({ plan: rewriteRow(plan, 'MS11', 3, '') }), ['no named owner'], false],
     ['milestone row truncated to two columns', () => ({ plan: plan.split('\n').map((l) => /^\| \*\*MS11\*\* \|/.test(l) ? '| ' + rowCells(l).slice(0, 2).join(' | ') + ' |' : l).join('\n') }), ['columns'], false],
-    ['projection row with an extra column', () => ({ proj: proj.split('\n').map((l) => /^\| \*\*MS02\*\* \|/.test(l) ? l.replace(/ \| \*\*active\*\*/, ' | delegate | **active**') : l).join('\n') }), ['columns'], true],
+    // Extra column is inserted in the middle of a live projection row: the status cell stays parseable,
+    // so the only complaint is the column count - and no literal status word is pinned (D268).
+    ['projection row with an extra column', () => {
+      const live = milestoneRows(proj).find((r) => r.cells.length === 4);
+      if (!live) throw new Error('the projection has no 4-column row - nothing to insert a column into');
+      const cells = [...live.cells];
+      cells.splice(3, 0, 'delegate');
+      return { proj: proj.split('\n').map((l) => (isRow(l) && l.includes(live.id) ? '| ' + cells.join(' | ') + ' |' : l)).join('\n') };
+    }, ['columns'], true],
     ['ruling id with no entry', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.S.set(777, ['AGENTS.md']); return { cites: c }; }, ['no ruling register'], false],
     ['milestone id cited with no row', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.MS.set(99, ['AGENTS.md']); return { cites: c }; }, ['no such milestone'], true],
     // CI mode: the clone has no plan, so the projection alone is audited - and it must still catch a bad row.
@@ -247,7 +261,15 @@ function selftest(base) {
   for (const [name, mutate, wants, cloneApplies] of plantings) {
     if (inClone && !cloneApplies) { skipped++; continue; }   // the file the defect lives in is not in a clone
     const p = { plan, proj, next, cites };
-    Object.assign(p, mutate());
+    let delta;
+    try { delta = mutate(); } catch (e) { bad++; console.log(`  selftest FAIL - ${name}: nothing to plant into (${e.message})`); continue; }
+    // A planting that changes nothing cannot be detected, and a green run would then be a lie: the
+    // status-pinned plantings rotted exactly this way when MS04 opened and MS02 was blocked (D268).
+    if (Object.entries(delta).every(([k, v]) => v === p[k])) {
+      bad++; console.log(`  selftest FAIL - ${name}: the mutation is a no-op on the current plan/projection, so it plants no defect`);
+      continue;
+    }
+    Object.assign(p, delta);
     const { problems, clone } = audit(p.plan, p.proj, p.next, p.cites);
     const hit = problems.find((x) => wants.some((w) => x.toLowerCase().includes(w.toLowerCase())));
     if (hit) console.log(`  selftest ok   - ${name}${clone ? ' [clone mode]' : ''}: caught "${hit.slice(0, 92)}"`);

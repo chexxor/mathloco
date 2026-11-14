@@ -9,13 +9,16 @@
  * each link ships the path data once and the references cost ~22 bytes each.
  *
  * The trade is measured, not assumed (`node design/mark-cost.mjs`, @measured 2026-11-13, Linux native, Node
- * 24.22.1, gzip bytes of the built page): the sprite costs **+2,195 gzip** on `/` and **+2,190** on `/schedule`,
- * while inlining the three glyphs into those same pages costs **+2,117** and **+2,121**. So on a one-cluster page
- * the sprite is 69-78 gzip dearer than inlining, and it pays that back at **two clusters on a page** — which is
- * what the schedule becomes as the calendar fills. Two consequences the gates enforce: the sprite is emitted by
+ * 24.22.1, gzip bytes of the built page): the sprite costs **+2,195 gzip** on `/` (1 cluster) and **+2,207** on
+ * `/schedule` (5 clusters), while inlining the three glyphs into those same pages costs **+2,118** and **+2,305**.
+ * So a one-cluster page pays **77 gzip** more for the sprite, and a five-cluster page saves **98**. The probe
+ * repeats one cluster 1-8 times to find the crossover: sprite wins at **3 clusters** (2,488 vs 2,522 gzip on a
+ * homepage-shaped page; 2,545 vs 2,566 on a schedule-shaped one) and loses at 2 (2,462 vs 2,448) — an earlier
+ * "breaks even at two clusters" figure divided a gzip-deduplicated total and is deleted, not restated (D300).
+ * Two consequences the gates enforce: the sprite is emitted by
  * `SignUpLinks.astro` for the page that paints a cluster, never by the layout, so a page painting no mark ships
- * no glyph bytes (the counterfactual: `/chat` would pay **+2,201 gzip** for drawings it never paints — 41.3% of
- * that page's 5,327 gzip bytes); and the sprite is printed once per page render, because two sprites on one page
+ * no glyph bytes (the counterfactual: `/chat` would pay **+2,201 gzip** for drawings it never paints — 41.0% of
+ * that page's 5,372 gzip bytes); and the sprite is printed once per page render, because two sprites on one page
  * is two sets of the same ids.
  *
  * `class="hidden"` is load-bearing in the boring sense: a sprite with no symbols painted is still a document

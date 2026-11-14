@@ -26,6 +26,7 @@ import { MARKS, markId } from '../src/lib/platform-marks.mjs';
 
 const argv = process.argv.slice(2);
 const json = argv.includes('--json');
+const sweepOnly = argv.includes('--sweep-only');
 const dist = resolve(argv.find((a) => !a.startsWith('--')) || 'dist/client');
 
 const PAGES = ['index.html', 'schedule/index.html', 'chat/index.html'];
@@ -39,6 +40,39 @@ const SPRITE = /<svg class="hidden" aria-hidden="true">[\s\S]*?<\/symbol>\s*<\/s
 // (S026/D294). A page with no cluster is measured against this insertion so the prose claim "a markless page
 // pays for glyph bytes it never paints" is a number the probe produces, not a remembered figure.
 const BODY_OPEN = /<body class="bg-paper text-ink">/;
+
+// One sign-up cluster as the build emits it: three platform links in one container.
+const CLUSTER = /<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1" data-rsvp-cluster="[\s\S]*?<\/div>/g;
+const MARK_USE = /<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#(pm-[a-z]+)"><\/use><\/svg>/g;
+
+const pathOf = (id) => (MARKS.find((x) => markId(x.platform) === id) || {}).d || '';
+
+/** The sprite-vs-inline crossover, measured rather than divided.
+ *
+ * The sprite's cost is fixed and inlining grows with the number of clusters, so `spriteDelta / (inlineDelta /
+ * clusters)` is not a break-even: on a five-cluster page it divides a total that already includes gzip's
+ * deduplication of repeated path data, and reports "wins at 5 clusters" on a page where the sprite is already
+ * cheaper. MS04 is the first milestone where a page prints more than one cluster, so the probe builds the same
+ * page with 1..8 copies of one cluster - once with `<use>` refs, once with the path written per link - and reads
+ * the crossover off the table. `node design/mark-cost.mjs --sweep-only` prints just this.
+ */
+function clusterSweep(html, sprite) {
+  const blocks = html.match(CLUSTER);
+  if (!blocks || !blocks.length) return null;
+  const block = blocks[0];
+  const inlinedBlock = block.replace(MARK_USE, (_full, id) => `<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="${pathOf(id)}"/></svg>`);
+  const base = html.replace(SPRITE, '').replace(CLUSTER, '');
+  const points = [];
+  for (let k = 1; k <= 8; k++) {
+    points.push({
+      clusters: k,
+      spriteGzip: gz(base + sprite + block.repeat(k)) - gz(base),
+      inlineGzip: gz(base + inlinedBlock.repeat(k)) - gz(base),
+    });
+  }
+  const crossover = points.find((p) => p.spriteGzip <= p.inlineGzip);
+  return { clustersBuilt: blocks.length, points, crossover: crossover ? crossover.clusters : null };
+}
 
 const rows = [];
 let spriteText = null;   // the sprite as the build actually emits it, taken from a page that ships one
@@ -63,7 +97,6 @@ for (const page of PAGES) {
   spriteText = sprite;
 
   const links = [...html.matchAll(/<use href="#(pm-[a-z]+)"/g)];
-  const pathOf = (id) => (MARKS.find((x) => markId(x.platform) === id) || {}).d || '';
 
   // The counterfactual: same page, no sprite, each <use> replaced by its own inline <path>.
   const inlined = html.replace(SPRITE, '').replace(
@@ -83,16 +116,23 @@ for (const page of PAGES) {
     inlineGzip: gz(inlined),
     inlineDelta: gz(inlined) - gz(html.replace(SPRITE, '')),
     spriteCheaperBy: gz(inlined) - gz(html),
-    // The sprite's cost is fixed; inlining costs one copy of the path per link. The number that decides
-    // which is smaller is the break-even cluster count, so the probe prints it instead of leaving it to a
-    // reader's arithmetic.
+    // The sprite's cost is fixed; inlining costs one copy of the path per link, and gzip dedupes those copies.
+    // The number that decides which is smaller is the crossover cluster count, so it is measured (see
+    // clusterSweep) rather than left to a reader's division.
     clusters: links.length / MARKS.length,
-    inlinePerCluster: links.length ? (gz(inlined) - gz(html.replace(SPRITE, ''))) / (links.length / MARKS.length) : 0,
+    sweep: clusterSweep(html, sprite),
   });
 }
 
 if (json) {
   console.log(JSON.stringify({ measuredAt: new Date().toISOString(), dist, pages: rows }, null, 1));
+} else if (sweepOnly) {
+  console.log(`crossover, measured from ${dist} (Linux native, Node ${process.version})`);
+  for (const r of rows.filter((x) => x.sweep)) {
+    const s = r.sweep;
+    console.log(`  ${r.page}: ${s.clustersBuilt} cluster(s) in the build | sprite vs inline gzip delta at k clusters: ${s.points.map((p) => `${p.clusters}:${p.spriteGzip}/${p.inlineGzip}`).join('  ')}`);
+    console.log(`  ${r.page}: sprite cheaper from ${s.crossover === null ? '>8 (not within the sweep)' : s.crossover} cluster(s)`);
+  }
 } else {
   console.log(`sprite cost, measured from ${dist} (Linux native, Node ${process.version})`);
   for (const r of rows) {
@@ -102,7 +142,11 @@ if (json) {
   console.log(`  path data per glyph: ${MARKS.map((m) => `${m.platform} ${m.d.length} chars`).join(', ')}`);
   const withClusters = rows.filter((r) => r.spriteRaw && r.marks > 0);
   for (const r of withClusters) {
-    console.log(`  ${r.page.padEnd(22)} ${r.marks} link(s) in ${r.clusters} cluster(s): sprite ${r.spriteDelta} gzip fixed vs inlining ${r.inlineDelta} gzip = ${r.inlinePerCluster.toFixed(0)} gzip per cluster -> sprite wins at ${Math.ceil(r.spriteDelta / r.inlinePerCluster)} clusters on this page`);
+    console.log(`  ${r.page.padEnd(22)} ${r.marks} link(s) in ${r.clusters} cluster(s): sprite +${r.spriteDelta} gzip fixed vs inlining +${r.inlineDelta} gzip at that many clusters`);
+    if (r.sweep) {
+      console.log(`    sweep (one cluster repeated, gzip delta over the page with no marks): ${r.sweep.points.map((p) => `${p.clusters}: sprite ${p.spriteGzip} / inline ${p.inlineGzip}`).join('  |  ')}`);
+      console.log(`    measured crossover: sprite becomes the cheaper option at ${r.sweep.crossover === null ? '>8 (never within the sweep)' : r.sweep.crossover} cluster(s) on a page of this shape`);
+    }
   }
   const carriers = withClusters.filter((r) => r.spriteCheaperBy > 0).map((r) => r.page);
   const lose = withClusters.filter((r) => r.spriteCheaperBy <= 0).map((r) => `${r.page} (${r.spriteCheaperBy} gzip)`);
