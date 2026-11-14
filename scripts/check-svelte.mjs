@@ -33,6 +33,14 @@ const root = fileURLToPath(new URL('..', import.meta.url));
 const CHECKER = 'node_modules/svelte-check/dist/src/index.js';
 const FIXTURE = '.design/tmp-svelte-selftest';
 
+// A ceiling, not a budget. `svelte-check` walks ~1,725 files: @measured 2026-11-12 on an idle rig that is 6.0s
+// of work; at load 117/16cpu the same run passes 90s, and the old 90,000ms cap killed it. `spawnSync` kills
+// with `status: null` and whatever it had written so far, which reached this gate as an empty log and the
+// verdict "output format changed" - a false FAIL and a lie about its cause @measured 2026-11-14 by the
+// `verify` run whose check:svelte step logged `exit=1 secs=94.29` and no output. So the cap is wide enough for
+// a contended rig, and hitting it is now its own named failure instead of a parser accusation.
+const TIMEOUT_MS = 300_000;
+
 /** svelte-check's machine format is `<ts> LEVEL "file" line:col "message"`, plus START and COMPLETED lines. */
 function verdict(text) {
   const findings = [];
@@ -64,14 +72,33 @@ function runCheck(workspace, tsconfig) {
   }
   const args = [root + CHECKER, '--output', 'machine', '--no-color', '--tsconfig', tsconfig];
   if (workspace) args.push('--workspace', workspace);
-  const r = spawnSync(process.execPath, args, { cwd: root, encoding: 'utf8', timeout: 90000 });
-  return { code: r.status ?? 1, out: (r.stdout ?? '') + (r.stderr ?? '') };
+  const r = spawnSync(process.execPath, args, { cwd: root, encoding: 'utf8', timeout: TIMEOUT_MS });
+  return {
+    code: r.status ?? 1,
+    out: (r.stdout ?? '') + (r.stderr ?? ''),
+    // Two different accidents: our ceiling killed it, or the kernel did. Naming the wrong one sends the next
+    // session after a format change that never happened.
+    timedOut: r.error?.code === 'ETIMEDOUT',
+    signal: r.status === null ? (r.signal ?? null) : null,
+  };
 }
 
 function runGate() {
-  const { code, out } = runCheck(null, 'tsconfig.json');
+  const { code, out, timedOut, signal } = runCheck(null, 'tsconfig.json');
   const v = verdict(out);
   if (code === 127) { console.error(out); return 1; }
+  // A timeout is not a finding, and saying so is the difference between a session that re-runs and one that
+  // spends an hour hunting a format change that never happened.
+  if (timedOut || signal) {
+    console.error(
+      timedOut
+        ? `check:svelte: svelte-check did not finish inside ${TIMEOUT_MS / 1000}s - the rig was contended, not the code.`
+        : `check:svelte: svelte-check was killed by ${signal} before it reported - the rig ran out of memory or was signalled, not the code.`,
+    );
+    console.error('  The whole-tree run is 6.0s on an idle box @measured 2026-11-12; check `uptime` and re-run,');
+    console.error('  or raise TIMEOUT_MS in this file with a measurement that justifies the new number.');
+    return 1;
+  }
   // A non-zero exit with nothing parsed is the parser being blind, not the code being clean.
   if (code !== 0 && v.findings.length === 0) {
     console.error(`check:svelte: svelte-check exited ${code} but no finding was parsed - output format changed:`);
