@@ -503,7 +503,11 @@ if (selftest) {
     // plantings track the shipped artifact rather than a stale copy of it.
     { name: 'Z-on-a-confirmed-instant', text: (t) => t.replace('DTSTART;TZID=America/Chicago:20261107T120000', 'DTSTART:20261107T120000Z'), rule: 'zone-on-instants' },
     { name: 'floating-confirmed-instant', text: (t) => t.replace('DTSTART;TZID=America/Chicago:20261107T120000', 'DTSTART:20261107T120000'), rule: 'zone-on-instants' },
-    { name: 'zero-length-instant-span', text: (t) => t.replace('DTEND;TZID=America/Chicago:20261107T140000', 'DTEND;TZID=America/Chicago:20261107T120000'), rule: 'date-span' },
+    // Anchored on the SHAPE, not on a date: a literal like `20261107T140000` is a snapshot of one row, and the
+    // harvest re-dates rows (D174's confirmed instants), so a date-keyed planting stops measuring the day the
+    // feed moves - which is exactly how this one went silent on 2026-11-13. The planting copies whichever
+    // DTSTART the renderer emits first into that row's own DTEND, so the span is zero whatever the row is.
+    { name: 'zero-length-instant-span', text: (t) => t.replace(/DTSTART;TZID=America\/Chicago:(\d{8}T\d{6})\r\nDTEND;TZID=America\/Chicago:\d{8}T\d{6}/, (m, start) => 'DTSTART;TZID=America/Chicago:' + start + '\r\nDTEND;TZID=America/Chicago:' + start), rule: 'date-span' },
     { name: 'artifact-drift', text: (t) => `${t}BEGIN:VEVENT\r\nUID:ghost\r\nEND:VEVENT\r\n`, rule: 'envelope' },
     // The runway gate (A8, D188). Each of these is a way a published calendar goes quietly stale; the last is
     // an assertion of SILENCE, because a hatch that never works is as wrong as a gate that never fires.

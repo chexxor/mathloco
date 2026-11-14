@@ -33,7 +33,7 @@
 // slots holding a claim with no source yet. Those are known holes with names; failing a build for a hole
 // the operator has not filled yet is the "make the build fail so someone notices" answer they rejected
 // (record 0010).
-import { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { openSlots, unsourcedSlots } from '../src/lib/content-slots.mjs';
 import { join, resolve } from 'node:path';
 
@@ -144,13 +144,42 @@ const plain = (frag) => frag.replace(/<[^>]+>/g, ' ').replace(/&amp;/g, '&').rep
 const contentWords = (t) => new Set(t.toLowerCase().replace(/[.,;:!?\u2013\u2014\u2019'()\[\]]/g, ' ').split(' ').filter((w) => w.length > 2 && !STOP.has(w)));
 // A signature, not an index: a baseline row must survive a reword of the sentence beside it, and it must not match
 // a different pair that happens to share three words.
-const dupSignature = (a, b) => [a, b].map((t) => t.toLowerCase().replace(/[^a-z0-9' ]/g, '').replace(/\s+/g, ' ').trim()).sort().join(' <> ');
+//
+// The date stamp is stripped before anything else, because a signature that carries a stamp's date is an
+// exemption with an expiry. `npm run events:harvest` rewrites "Copied from the club's own calendar on <date>"
+// every time the feed is read, and a harvest that changes nobody's copy can retire every exemption built on it:
+// @measured 2026-11-13 by this gate — one harvest moved the stamp from Nov 6 to Nov 13 and made all 3 baseline
+// rows stale, each of them a FAIL for a sentence nobody touched. The pair is the pair whatever today is; the
+// date is data the page prints, not the shape of the sentence.
+const DATE_STAMP = /\b(?:on|read|dated|as of)\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{1,2},? \d{4}\b|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{1,2},? \d{4}\b|\b\d{4}-\d{2}-\d{2}\b/g;
+const normSentence = (t) => t.toLowerCase().replace(DATE_STAMP, '').replace(/[^a-z0-9' ]/g, '').replace(/\s+/g, ' ').trim();
+const dupSignature = (a, b) => [normSentence(a), normSentence(b)].sort().join(' <> ');
+
+/** The rows the schedule builds from the snapshot are `<li data-surface="row">` (EventRow.astro); the homepage's
+ *  next-date card is `data-surface="preview"` (Schedule.astro). Only the rows count as furniture: a venue line
+ *  printed in three sibling rows is ONE string rendered three times, which is coupling, not duplication — D273
+ *  closed the row-label pair on exactly that reasoning. A sentence that appears in a row AND in a section
+ *  paragraph is still two surfaces saying the same thing, and that still goes red; rows that paraphrase each other
+ *  still go red. The exemption is only for the identical string, and only when both ends are inside a row.
+ *
+ *  `</li>` without a nested one is checked, not assumed: no schedule row contains a nested list (verified on the
+ *  built /schedule, 2026-11-13: 5 `data-surface="row"` <li>, 0 <li> inside them). If a row ever grows a nested
+ *  list this helper must be re-anchored, same rule as D173. */
+function rowRanges(html) {
+  const ranges = [];
+  for (const m of html.matchAll(/<li\b[^>]*data-surface="row"[^>]*>/g)) {
+    const end = html.indexOf('</li>', m.index);
+    ranges.push([m.index, end < 0 ? html.length : end]);
+  }
+  return ranges;
+}
 
 /** Every sentence of page copy, tagged with the surface a reader would name it by. Surfaces come from the
  *  document's own structure — the enclosing section id and the heading the copy sits under — because the ruling is
  *  about WHICH surface keeps a sentence, and "the hero" versus "the join band" is the whole ruling. */
 function surfaceSentences(html) {
   const out = [];
+  const rows = rowRanges(html);
   let heading = '';
   let section = 'page';
   // `\b` after `<p` and `<h` is not decoration: `<p[^>]*>` also matches `<path`, and the sphere mark's SVG is
@@ -168,7 +197,10 @@ function surfaceSentences(html) {
     for (const part of text.split(/(?<=[.!?])\s+/)) {
       const t = part.trim();
       if (contentWords(t).size < 4) continue;
-      out.push({ own: t.slice(0, 200), surface: `${section}:${heading}`, words: contentWords(t) });
+      out.push({
+        own: t.slice(0, 200), surface: `${section}:${heading}`, words: contentWords(t),
+        inRow: rows.some(([s, e]) => m.index >= s && m.index < e),
+      });
     }
   }
   return out;
@@ -177,13 +209,23 @@ function surfaceSentences(html) {
 function scanDuplicates(built, baseline) {
   const failSeen = new Map();
   const openSeen = new Map();
+  const furnitureSeen = new Map();
   const known = new Set((baseline.pairs || []).map((p) => p.signature));
   for (const [file, html] of built) {
     const sents = surfaceSentences(html);
+    // Count the identical strings inside the rows first, so the report can say how many rows print them.
+    for (const s of sents) {
+      if (!s.inRow) continue;
+      const k = normSentence(s.own);
+      const e = furnitureSeen.get(k);
+      if (e) e.count++;
+      else furnitureSeen.set(k, { key: k, count: 1, text: s.own, file, surface: s.surface });
+    }
     for (let i = 0; i < sents.length; i++) {
       for (let j = i + 1; j < sents.length; j++) {
         const a = sents[i], b = sents[j];
         if (a.surface === b.surface) continue;
+        if (a.inRow && b.inRow && normSentence(a.own) === normSentence(b.own)) continue; // row furniture, reported below
         const shared = [...a.words].filter((w) => b.words.has(w));
         const union = new Set([...a.words, ...b.words]).size;
         const jaccard = shared.length / union;
@@ -204,7 +246,11 @@ function scanDuplicates(built, baseline) {
       }
     }
   }
-  return { fails: [...failSeen.values()], opens: [...openSeen.values()] };
+  return {
+    fails: [...failSeen.values()],
+    opens: [...openSeen.values()],
+    furniture: [...furnitureSeen.values()].filter((f) => f.count > 1),
+  };
 }
 
 function scanPage(html, file, emitted, distDir) {
@@ -258,7 +304,7 @@ function checkConfig(trackedJson, builtHtml) {
   }
   const cadence = trackedJson.cadence;
   const cadenceHits = new Map();
-  for (const [file, html] of builtHtml) {
+  for (const [, html] of builtHtml) {
     // Meta descriptions are a claim the site publishes even though no eye reads them on the page — the
     // `seo.description` sentence says "Monthly meetups", and `visibleText` strips tags, so it is picked up
     // here rather than silently escaping the D92 rule.
@@ -297,7 +343,7 @@ function run(distDir, srcDir, tracked) {
     ...dup.fails,
   ];
   const { cadenceHits } = checkConfig(tracked, built);
-  return { fails, built, cadenceHits, emitted, dupOpens: dup.opens, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
+  return { fails, built, cadenceHits, emitted, dupOpens: dup.opens, dupFurniture: dup.furniture, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
 }
 
 // ---- selftest: can this gate fail? (D118 — a gate whose failure mode is a green line is no gate) ----
@@ -329,6 +375,31 @@ if (selftest) {
     // The near-miss that must NOT fire: shared vocabulary is not the same defect when the surfaces say different
     // things. Without this planting the rule drifts into noise and gets the whole gate switched off.
     { name: 'shared-words-not-a-duplicate', negative: true, html: clean.replace('</body>', '<section id="how"><h2>How it works</h2><p>Meetup holds the calendar and the chat holds the arguments, which is why the schedule page copies its dates from the club calendar.</p></section></body>') },
+    // Sibling schedule rows that print the SAME string are furniture (coupling), not duplication — the
+    // exemption has to be scoped as tightly as the ruling that earned it, so two plants here prove both edges:
+    // identical in two rows is green, identical in a row and a section paragraph is red.
+    {
+      name: 'row-furniture-not-a-duplicate', rule: 'near-duplicate-surface', negative: true, furniture: 2,
+      html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><ul><li data-surface="row" data-date="2026-11-21"><h3>MPLS Math Club Social</h3><p>Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota</p></li><li data-surface="row" data-date="2026-12-05"><h3>Matheapolis - Bimonthly Social</h3><p>Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota</p></li></ul></section></body></html>`,
+    },
+    {
+      name: 'row-sentence-in-a-section-paragraph', rule: 'near-duplicate-surface',
+      html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><p>Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota</p><ul><li data-surface="row" data-date="2026-11-21"><h3>MPLS Math Club Social</h3><p>Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota</p></li></ul></section></body></html>`,
+    },
+    // Two rows that say the same thing in different words are not furniture: the string differs, so the coupling
+    // is not the mechanism and the duplicate is real.
+    {
+      name: 'rows-that-paraphrase', rule: 'near-duplicate-surface',
+      html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><ul><li data-surface="row"><h3>Session A</h3><p>The social is an hour at the bakery with no agenda.</p></li><li data-surface="row"><h3>Session B</h3><p>An hour at the bakery with no agenda and no sign-up.</p></li></ul></section></body></html>`,
+    },
+    // The signature must survive a harvest. This pair is recorded with the stamp as it read on Nov 6 and the
+    // page prints Nov 13: without DATE_STAMP normalisation the exemption expires on its own and the page goes
+    // red for a sentence nobody edited.
+    {
+      name: 'stamp-date-moves-baseline-still-matches', rule: 'near-duplicate-surface',
+      baseline: [{ signature: dupSignature('Copied from the club\u2019s own calendar on Nov 6, 2026', 'These dates are copied from the club\u2019s own calendar.') }],
+      html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><p>These dates are copied from the club\u2019s own calendar.</p><ul><li data-surface="row"><h3>MPLS Math Club Social</h3><p>Copied from the club\u2019s own calendar on Nov 13, 2026</p></li></ul></section></body></html>`,
+    },
     // The exemption has to be load-bearing, not decorative: the identical pair, with its signature in the baseline,
     // must go GREEN and still be reported. If `known` were ignored the shipped page would be red; if the gate only
     // ever printed baseline rows, nobody would notice a rule that had stopped firing. `recorded: true` builds the
@@ -351,15 +422,17 @@ if (selftest) {
     if (p.name === 'unsourced-cadence') fails = [...fails, ...checkConfig(trackedNoSource, html).fails];
     let dup = null;
     if (p.rule === 'near-duplicate-surface') {
-      const baseline = p.recorded ? { pairs: scanDuplicates(html, { pairs: [] }).fails.map((f) => ({ signature: f.signature })) } : { pairs: [] };
+      const baseline = p.recorded
+        ? { pairs: scanDuplicates(html, { pairs: [] }).fails.map((f) => ({ signature: f.signature })) }
+        : { pairs: p.baseline || [] };
       dup = scanDuplicates(html, baseline);
       fails = [...fails, ...dup.fails];
     }
-    const caught = p.recorded
-      ? dup.fails.length === 0 && dup.opens.length === 1
-      : p.negative
-        ? !fails.some((f) => f.rule === 'near-duplicate-surface')
-        : fails.some((f) => f.rule === (p.rule ?? p.name));
+    let caught;
+    if (p.furniture) caught = dup.fails.length === 0 && dup.furniture.length === 1 && dup.furniture[0].count === p.furniture;
+    else if (p.recorded) caught = dup.fails.length === 0 && dup.opens.length === 1;
+    else if (p.negative) caught = !fails.some((f) => f.rule === 'near-duplicate-surface');
+    else caught = fails.some((f) => f.rule === (p.rule ?? p.name));
     console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(34)} ${p.recorded ? `green, reported as open (${dup.opens.length})` : fails.map((f) => f.rule).join(',') || 'nothing'}`);
     if (!caught) bad++;
   }
@@ -408,7 +481,7 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-const { fails, built, cadenceHits, dupOpens, staleBaseline } = run(distDir, srcDir, tracked);
+const { fails, built, cadenceHits, dupOpens, dupFurniture, staleBaseline } = run(distDir, srcDir, tracked);
 
 // `--print-baseline` is a paste helper, not a write. A baseline row means "this repeat is known and ruled", and an
 // gate that can write its own exemptions is a gate that eventually has none.
@@ -438,6 +511,10 @@ if (uns.length) {
 if (dupOpens.length) {
   console.log(`\n  near-duplicate surface copy, already in the baseline (${dupOpens.length}) — known, not yet ruled:`);
   for (const d of dupOpens) console.log(`   ~ ${d.file.split('/').pop()}  shared ${d.shared} (${d.sharedWords})  jaccard ${d.jaccard} overlap ${d.overlap}\n       ${d.detail}`);
+}
+if (dupFurniture.length) {
+  console.log(`\n  row furniture (${dupFurniture.length}) — one string printed in more than one schedule row. That is coupling, not duplication (D273): if the row changes, every sibling changes with it. Reported, never failed.`);
+  for (const f of dupFurniture) console.log(`   · ${f.file.split('/').slice(-2).join('/')}  ${f.surface}  x${f.count}  "${f.text}"`);
 }
 if (staleBaseline.length) {
   console.log(`\n  baseline rows that no longer match anything on the page (${staleBaseline.length}) — the copy was fixed or reworded; delete the row so the pair stays visible if it comes back:`);

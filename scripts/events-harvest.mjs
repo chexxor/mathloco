@@ -21,12 +21,28 @@
  *    cannot be assumed to behave one way for every row, and no blanket `Z` → local rewrite is safe. The
  *    harvest therefore stores the wall clock it saw, records the verbatim value under `source.rawStart`, and
  *    leaves `timeConfirmed: false`; `src/lib/ics.mjs` then publishes a DATE and `check:ics` fails anyone who
- *    publishes that instant as a real one (D169). A human flips `timeConfirmed` once the organizer says the hour.
+ *    publishes that instant as a real one (D169).
+ *
+ *    **A zone on the wire is the organizer's own statement of the hour.** Ruled 2026-11-13 (D298), answering
+ *    the operator's ask that the schedule stop printing "time not set": when BOTH `DTSTART` and `DTEND` carry
+ *    an explicit `TZID=` (the instance writes `TZID=America/Chicago:20261121T120000` on every row it carries
+ *    today, @measured 2026-11-13 by this tool), `timeConfirmed` is set true, because the source is declaring
+ *    the zone and the clock in it rather than dumping an instant. A bare `Z` with no TZID is still quarantined
+ *    (D169) and still needs a human. Precedent: the Nov 21 row's own `_times` note already said "timeConfirmed
+ *    is therefore set true on the source's own declaration", which is what A9 ruling 4(a) (D223) asked the
+ *    organizer to do. The rule is on by default; `--no-confirm-hours` keeps the old behaviour for a dry run.
  * 2. **It does not invent display copy.** `summary` is quoted from the organizer. `series`, and any rewording
  *    a page needs, stays a human field (D92: publish series names and real dates, never an inferred frequency).
  * 3. **It does not delete rows.** A UID that vanishes from the feed is reported, never dropped: a cancelled
  *    meeting has to be *announced* as cancelled (`STATUS:CANCELLED`) or a subscriber keeps it forever
  *    (D72). Upstream cancel behaviour is still unverified (MILESTONES A6 input 6), so the tool asks a human.
+ * 4. **It never un-cancels a published cancellation silently.** On 2026-11-13 this instance re-announced UID
+ *    649bf59a - the row this repo had published `STATUS:CANCELLED` on 2026-11-06 - carrying a different date
+ *    and hour (@measured 2026-11-13: feed 6,912 octets, 5 VEVENTs, DTSTAMP 20261113T164548Z, and the event page
+ *    for that UUID serving "Nov 21, 2026, 12:00:00 PM - GMT-06:00"). RFC 5545 identifies an object by UID,
+ *    so a calendar cannot hold both the cancellation and the re-instatement. A merge would quietly rewrite the
+ *    dead row's date, its slug and therefore its art key (D223). The harvest prints the collision by name and
+ *    changes nothing; the human decides which row lives (D299).
  *
  * Sequence numbers move automatically: if a mechanical field on an existing UID changed, `SEQUENCE`
  * increments, because RFC 5545 (lines 6267-6272) makes UID+SEQUENCE the only way a subscriber learns that
@@ -42,6 +58,7 @@ const argOne = (f, d) => {
   return i < 0 ? d : args[i + 1];
 };
 const OUT = resolve(argOne('--out', 'data/events.json'));
+const confirmOff = flag('--no-confirm-hours');
 const FROM = argOne('--from', null);
 const snapshot = JSON.parse(readFileSync(OUT, 'utf8'));
 const FEED_URL = argOne('--url', snapshot.source?.url);
@@ -145,6 +162,27 @@ const changes = [];
 const slugify = (s) =>
   String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 48);
 
+/** An instant the source itself zones: both ends are DATE-TIME and both name a TZID. A bare `Z` is not this
+ *  (D169), and a DATE is not this either - there is no hour to confirm. */
+const declaredHour = (start, end) =>
+  Boolean(start.tz && start.tz !== 'DATE' && end.tz && end.tz !== 'DATE');
+
+/** A venue the organizer writes as one string arrives as `raw` only. `name`/`street`/`city` are a human's
+ *  split (rule 2: the harvest does not invent copy), so a new row reuses the split of an existing row whose
+ *  raw string is byte-identical rather than guessing one. */
+const venueFrom = (raw) => {
+  if (!raw) return { raw: '' };
+  const twin = (snapshot.events ?? []).find((e) => e.venue?.raw === raw && e.venue?.name);
+  if (!twin) return { raw };
+  return {
+    name: twin.venue.name,
+    street: twin.venue.street,
+    city: twin.venue.city,
+    raw,
+    _split: `name/street/city copied from row ${twin.uid}, whose LOCATION string is byte-identical (@measured ${fetchedAt}); the split itself is a human field the harvest cannot author`,
+  };
+};
+
 for (const ev of feed.events) {
   const uid = ev.UID?.value ?? null;
   if (!uid) { notes.push('a VEVENT with no UID — skipped (RFC 5545 requires one; a row nobody can update is a row nobody can cancel)'); continue; }
@@ -169,6 +207,15 @@ for (const ev of feed.events) {
   };
 
   const existing = (snapshot.events ?? []).find((e) => e.uid === uid);
+  if (existing && String(existing.status ?? '').toUpperCase() === 'CANCELLED' && row.status !== 'CANCELLED') {
+    notes.push(
+      `COLLISION  ${uid}: the feed re-announces a UID this snapshot has published as CANCELLED (${existing.start} -> ${row.start}) ` +
+      `and the harvest refuses to merge it (rule 4, D299). Decide which row lives, then hand-edit data/events.json: ` +
+      "the live row needs a slug that is not '-cancelled' (D223's event-<slug>.png key) and its art mirrored " +
+      "under that slug; the retired one keeps the UID with SEQUENCE raised so subscribers drop it (D72)."
+    );
+    continue;
+  }
   if (!existing) {
     const created = {
       uid,
@@ -177,8 +224,8 @@ for (const ev of feed.events) {
       series: row.summary,
       start: row.start,
       end: row.end,
-      timeConfirmed: false,
-      venue: { raw: row.venueRaw },
+      timeConfirmed: declaredHour(start, end) && !confirmOff,
+      venue: venueFrom(row.venueRaw),
       geo: row.geo,
       blurb: row.blurb,
       url: row.url,
@@ -210,7 +257,19 @@ for (const ev of feed.events) {
   } else {
     changes.push(`  ${uid} "${row.summary}" — unchanged`);
   }
+  if (!confirmOff && declaredHour(start, end) && !existing.timeConfirmed) {
+    existing.timeConfirmed = true;
+    notes.push(`${uid}: DTSTART and DTEND both carry TZID=${start.tz ?? end.tz} — the source declares the hour, so timeConfirmed is set (D298)`);
+  }
   existing.source = { ...existing.source, feed: FEED_URL, uid, fetchedAt, dtstamp: ev.DTSTAMP?.value ?? null, rawStart: start.raw, rawEnd: end.raw };
+  // A row created before its venue was split (the harvest writes `raw` only) gets the split from a row whose
+  // LOCATION string is byte-identical, so a new date at a known venue prints a venue line instead of nothing.
+  if (row.venueRaw && !existing.venue?.name) {
+    existing.venue = { ...existing.venue, ...venueFrom(row.venueRaw) };
+    if (existing.venue.name) {
+      notes.push(`${uid}: venue "${row.venueRaw.slice(0, 24)}..." has no name/street/city split; copied from the row that already has one (rule 2 - the split is a human field, this only reuses one)`);
+    }
+  }
 }
 
 for (const e of snapshot.events ?? []) {
@@ -220,6 +279,21 @@ for (const e of snapshot.events ?? []) {
 }
 
 snapshot.source = { ...snapshot.source, url: FEED_URL, software, fetchedAt };
+
+// Every published row's DTSTAMP derives from this run's stamp, not from the row's last harvest.
+// `src/lib/ics.mjs` reads `row.source.fetchedAt` per row, and `check:ics`'s dtstamp rule asserts every
+// published DTSTAMP equals the calendar-level harvest stamp (docs/spec/source-contract.md: "DTSTAMP derives
+// from the committed source.fetchedAt, not the build clock"). A row left in the snapshot because it is past
+// or gone from the feed would otherwise keep an older stamp and turn the gate red — which is exactly what a
+// harvest that re-stamps only the rows it touched produced on 2026-11-13. The row's own upstream stamp stays
+// in `source.dtstamp` and its raw instants in `source.rawStart`/`rawEnd`, so provenance is not lost; only the
+// published stamp is normalised to the run.
+for (const e of snapshot.events ?? []) {
+  if (e.source && e.source.fetchedAt !== fetchedAt) {
+    notes.push(`${e.uid} "${e.summary}": published DTSTAMP moves from ${e.source.fetchedAt} to the run stamp ${fetchedAt} (one stamp per published calendar; D225's churn consequence)`);
+    e.source.fetchedAt = fetchedAt;
+  }
+}
 
 // ------------------------------------------------------------------ report
 

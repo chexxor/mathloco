@@ -1,9 +1,10 @@
 {
   "rule": "near-duplicate-surface",
   "gate": "npm run check:content (scripts/check-content.mjs)",
-  "measuredAt": "2026-11-11",
+  "measuredAt": "2026-11-13",
   "howToRegenerate": "node scripts/check-content.mjs --print-baseline  (prints this shape; it never writes it)",
   "ruleOfExit": "A pair leaves this file when the copy is deleted or a ruling settles it. It is NOT kept with status 'resolved': a signature in this file is an exemption, so keeping a closed pair would let the same duplicate ship again without going red. The pairs closed by S018/D262 and by D273 are listed in `resolved` below for provenance only.",
+  "signatureNote": "A signature has its date stamps removed before anything else (DATE_STAMP in scripts/check-content.mjs). `npm run events:harvest` rewrites \"Copied from the club's own calendar on <date>\" each time the feed is read, and a signature that carries the stamp's date is an exemption with an expiry: @measured 2026-11-13 by this gate, one harvest moved the stamp from Nov 6 to Nov 13 and made all 3 baseline rows stale — three FAILs for sentences nobody edited. The date the page prints is data, not the shape of the sentence.",
   "resolved": [
     { "pair": "band's Meetup/chat twin <> hero's date-and-chat line", "closedBy": "S018 (2026-11-09)", "how": "the band's line deleted; the hero keeps the one statement of where dates and discussion live" },
     { "pair": "hero syllabus line <> band's homework line", "closedBy": "S018 (2026-11-09)", "how": "the band's homework line deleted; the hero's syllabus sentence now carries the chat statement too" },
@@ -16,39 +17,48 @@
     "deliberate": "the repeat is the point of the surface - a source line or a ruling says so, in why",
     "template": "identical row furniture on sibling rows: one string rendered twice. Coupling, not duplication - if one row changes, both must"
   },
+  "rowFurniture": {
+    "what": "Strings printed in more than one schedule row (`<li data-surface=\"row\">`). The gate computes them from the artifact every run and reports them; it never reads this list, so this is provenance, not an exemption. A row and a section paragraph printing the same sentence still FAILS, and two rows that paraphrase each other still FAILS - the exemption is only for the identical string in two rows (proven by `check:content:selftest`, plants `row-furniture-not-a-duplicate`, `row-sentence-in-a-section-paragraph`, `rows-that-paraphrase`).",
+    "ruledBy": "D273 (row furniture is coupling, not duplication)",
+    "measuredAt": "2026-11-13",
+    "strings": [
+      { "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota", "printed": 3, "on": "schedule/index.html rows Nov 21, Dec 5, Dec 19" },
+      { "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota", "printed": 2, "on": "schedule/index.html rows Nov 25, Dec 9" }
+    ]
+  },
   "pairs": [
     {
-      "signature": "copied from the club's own calendar on nov 6 2026 <> the date above is copied from the club's own calendar and it links to the page where you sign up",
+      "signature": "copied from the club's own calendar <> the date above is copied from the club's own calendar and it links to the page where you sign up",
       "shared": 4,
       "jaccard": 0.333,
       "overlap": 0.667,
       "status": "deliberate",
       "ruled": "D273 (the band lede was reworded to say what the date links to)",
-      "surfaces": "section:When We Meet (homepage next-date band lede) <> section:Parallel Learning for Mathematical Minds (the date stamp on the card)",
+      "surfaces": "section:When We Meet (homepage next-date band lede) <> section:MPLS Math Club Social (the date stamp inside the preview card)",
       "why": "Both surfaces draw a date from the same snapshot and each states its provenance where the date is painted - the rule the earlier band/row pair was accepted for. The band speaks for the page, the stamp speaks for one date, so a reader who sees only the card still knows where its date came from. Accepted: the repeat is the source line, not decorative copy. It becomes a defect only if one of the two stops carrying a date or a source.",
-      "measuredAt": "2026-11-11"
+      "measuredAt": "2026-11-13"
     },
     {
-      "signature": "copied from the club's own calendar on nov 6 2026 <> the club's list of members is its meetup group page last read nov 3 2026 the list is not the room",
+      "signature": "copied from the club's own calendar <> the club's list of members is its meetup group page last the list is not the room",
       "shared": 3,
       "jaccard": 0.214,
       "overlap": 0.5,
       "status": "open",
       "ruled": null,
-      "surfaces": "section:Parallel Learning for Mathematical Minds (the date stamp on the card) <> section:How it works (the membership sentence)",
-      "why": "Scored on shared dated-source vocabulary (club, nov, 2026), not on a repeated sentence: overlap reaches 0.5 only because the shorter string is four words. Recorded so the pair stays visible; the exit is a ruling or a stamp that carries its date in different words.",
-      "measuredAt": "2026-11-11"
+      "surfaces": "section:MPLS Math Club Social (the date stamp on the preview card) <> section:How it works (the membership sentence)",
+      "why": "Scored on shared dated-source vocabulary (club, calendar, meetup, page), not on a repeated sentence: overlap reaches 0.5 only because the shorter string is four words. Recorded so the pair stays visible; the exit is a ruling or a stamp that carries its date in different words.",
+      "measuredAt": "2026-11-13"
     },
     {
-      "signature": "copied from the club's own calendar on nov 6 2026 <> these dates are copied from the club's own calendar",
+      "signature": "copied from the club's own calendar <> these dates are copied from the club's own calendar",
       "shared": 4,
       "jaccard": 0.5,
       "overlap": 0.667,
       "status": "deliberate",
       "ruled": null,
-      "surfaces": "section:When We Meet (/schedule) <> section:MPLS Math Club Social (/schedule event row)",
-      "why": "The same provenance rule on the schedule page: the page lede and each row that prints a date say where the date came from.",
-      "measuredAt": "2026-11-08"
+      "surfaces": "section:When We Meet (/schedule page lede) <> section:Matheapolis - Bimonthly Social (the list stamp, printed after the last row - it inherits that row's heading because the stamp line has no heading of its own)",
+      "why": "The same provenance rule on the schedule page: the page lede and the list stamp each say where the dates came from. D218 keeps the stamp once for the list rather than once per row.",
+      "measuredAt": "2026-11-13"
     }
   ]
 }

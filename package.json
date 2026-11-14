@@ -29,6 +29,7 @@
     "check:escapes": "node scripts/check-escapes.mjs",
     "check:escapes:selftest": "node scripts/check-escapes.mjs --selftest",
     "events:harvest": "node scripts/events-harvest.mjs",
+    "harvest:selftest": "node scripts/events-harvest-selftest.mjs",
     "check:ics": "node scripts/check-ics.mjs",
     "check:ics:selftest": "node scripts/check-ics.mjs --selftest",
     "check:rsvp": "node scripts/check-rsvp.mjs",

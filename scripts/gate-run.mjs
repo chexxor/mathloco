@@ -76,7 +76,7 @@ const DEPLOY = [
   // files claiming "what is next" drift, and the drift is invisible in a table cell (S015). Reads prose, so
   // it runs before build; the selftest plants each defect class and requires a named failure.
   { name: 'check:plan', desc: 'the plan, its tracked projection and NEXT.md agree; every milestone has an exit gate' },
-  { name: 'check:plan:selftest', desc: 'the plan gate can still fail (18 plantings, incl. the CI clone case)' },
+  { name: 'check:plan:selftest', desc: 'the plan gate can still fail (19 plantings, incl. the CI clone case)' },
   { name: 'check:decisions', desc: 'the tracked decision index matches the log, and no D-id citation dangles' },
   { name: 'check:figures', desc: 'a measured number in DESIGN.md carries a date, and that date is not stale' },
   // Tracked prose is a contract, and a markdown table row with the wrong cell count still renders: the extra or
@@ -136,6 +136,12 @@ const DEPLOY = [
   // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
   // assumed (that is what the live form of the same command is for), and it costs 1.4s @measured 2026-11-05.
   { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: generators, invariants, 71 tests, the import checker' },
+  // `data/events.json` is written by one tool, and its four rules (never un-cancel a published CANCELLED UID,
+  // reuse a venue split only on a byte-identical raw string, a TZID on both ends declares the hour, never delete
+  // a row that dropped out of the feed) are invisible in a diff. 15 offline fixtures, no network, no live feed
+  // touched @measured 2026-11-13 by this step: 0.45s. Planting each rule in a copy of the harvester names the
+  // failure (D290's reasoning, applied to a tool rather than a gate).
+  { name: 'harvest:selftest', desc: "the calendar harvester's four rules, proven on 15 offline fixtures (cancelled-UID guard, venue-split reuse, TZID hour confirmation, rows never deleted)" },
   // Which dates `/schedule` is allowed to print, checked against the rule module rather than a copy of it. Runs
   // before `build` because it opens no artifact (D118 again: a gate that can go red before anyone builds is a
   // gate that catches the defect on the branch that introduced it).

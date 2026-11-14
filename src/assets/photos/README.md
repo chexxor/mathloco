@@ -18,15 +18,19 @@ computed `display`), not chosen. They are in CSS px at a 1240 viewport; the reco
 | `horizon-radio1922.png` (**shipped 2026-11-04**) | PS-5 | last leaf | same band | nothing: **768x358** from a 1024x478 scan |
 | `join.<ext>` | PS-3 | join card media column, above the buttons | 532x128 at 1240 / 310x245 at 390 | 532x128 (4.15:1 - a wide band; a taller photo grows the card by the difference) |
 | `venue.<ext>` | PS-2 | *proposed* full-width strip, not built | would be 1192x320 at 1240, 358x230 at 390 | 1192x320 (3.73:1, hard crop from 4:3) |
-| `event-<slug>.<ext>` (**three shipped**: `event-2026-11-07-club-social.png`, `event-2026-11-11-parallel-learning.png` and `event-2026-11-21-club-social.png`, the club's own event art - D190, D223, D225) | PS-4 | event-card thumb, inside the schedule row; the row is `flex flex-col` so the survey can see the box | **323x184.6** once and **323x155.8** twice at 1240; **256x146.3** and **256x123.4** twice at 320 — capped at 323 CSS px in `.event-slot` because these rows are full-width strips: uncapped, the 954px file rendered **1132x546** at 1240 (+558px of page, 11.28% of its pixels in one img) - @measured 2026-11-06 by check:space | nothing: each box is its **file's own aspect** (1321/755 and 954/460), uncropped (D168, D223). The old 323x110 definition would have cut 30% of the social's height |
+| `event-<slug>.<ext>` (**seven shipped**: `event-2026-11-07-club-social.png`, `event-2026-11-11-parallel-learning.png`, `event-2026-11-21-club-social.png` from round 10, plus the four MS04 rows `event-2026-11-25-common-denominator-study-session.png`, `event-2026-12-05-matheapolis-bimonthly-social.png`, `event-2026-12-09-common-denominator-study-session.png`, `event-2026-12-19-matheapolis-bimonthly-social.png` - D190, D223, D225) | PS-4 | event-card thumb, inside the schedule row; the row is `flex flex-col` so the survey can see the box | **323x185** twice and **323x156** three times at 1240; **256x146** twice and **256x123** three times at 320 — five rows on `/schedule`, five boxes, two distinct files. Capped at 323 CSS px in `.event-slot` because these rows are full-width strips: uncapped, the 954px file rendered **1132x546** at 1240 (+558px of page, 11.28% of its pixels in one img) @measured 2026-11-06 by check:space | nothing: each box is its **file's own aspect** (1321/755 and 954/460), uncropped (D168, D223). The old 323x110 definition would have cut 30% of the social's height |
+
+**The boxes, as of MS04** @measured 2026-11-13 by `node design/whitespace-survey.mjs --routes /schedule --widths 1240 320` (Linux native, Node 24.22.1): five rows print, each with art — two study-session thumbs at **323x185** (2.72% of the page each) and three social thumbs at **323x156** (2.30% each), **270,221px²** of the page painted by event art in total. At 320 the same rows are 256x146 and 256x123. The figures this row carried before (`323x184.6` once, `323x155.8` twice) counted three rows, which is what the page printed on 2026-11-06; the page prints five now.
 
 **How a plate gets here**: `npm run plates` (`scripts/plate-asset.mjs`) re-crops a quarantined plate from
 `design/assets/photos/<key>.png` through `design/grill/plate-crop.mjs` — the one recipe the review rounds measure
 their specimens with — and writes the file the page imports. Nothing is copied by hand, so the page and the specimen
 cannot show different crops. Today: hero `47518a39c1` (**377kB**, was 493kB before the crop learned to cap at the
-scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB), the two socials' event art
-(127kB each, byte-identical, `1f54c290`) and Parallel Learning's (94kB, `0e26aa4894`) - seven PNGs,
-**1,511,215 bytes** of tracked binary. @measured 2026-11-06 by `ls -l src/assets/photos/*.png`. (This line said
+scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB) — those four ids are **sha1**
+prefixes (`sha1sum src/assets/photos/hero.png src/assets/photos/horizon-*.png`), not git blob ids and not sha256; say
+the algorithm every time one is quoted. Then the seven event thumbs: four socials at 127,098 B each (byte-identical,
+sha256 `1f54c290…`) and three study sessions at 93,921 B each (byte-identical, sha256 `0e26aa4894…`) — eleven PNGs,
+**1,953,253 bytes** of tracked binary. @measured 2026-11-13 by `ls -l src/assets/photos/*.png`. (This line said
 **1.46MB** for five files and then **1,384,117** for six; the sum of the files actually on disk contradicts both, so
 the sum is what ships.) `src/assets/` is gitignored apart from this
 directory, so these files are the binaries this repo tracks and the size the design gates' numbers depend on;
@@ -62,7 +66,8 @@ file that carried them.
   named colour, native 1024x478. https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212
 
 PS-2 is a definition only: it needs a venue photograph, and the archive is books, not rooms.
-PS-4 is filled for the rows that have art - three of them today. A row with no art renders **no box at all** - the
+PS-4 is filled for every row `/schedule` prints today - **five rows, seven files**, because two posters cover them.
+A row with no art renders **no box at all** - the
 wrapper is conditional, so the un-photographed row keeps the geometry it had, and a designed absence is the
 absence of a box rather than an empty one (DESIGN.md "States"). The `STATUS:CANCELLED` row is the current example:
 it has no `SLOT_ART` entry and `upcomingEvents()` drops it, so its slug names no file and paints no box anywhere.
@@ -76,25 +81,43 @@ organizer's own media rather than linked: the site never 404s on a visitor over 
 | `event-2026-11-07-club-social.png` | `https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png` (the same media the 2026-11-21 row serves; fetched 2026-11-04, refetched and `cmp`-verified 2026-11-06) | **954x460**, 127,098 bytes, `sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c` |
 | `event-2026-11-21-club-social.png` | `https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png` (fetched 2026-11-04, refetched 2026-11-06) | **954x460**, 127,098 bytes, `sha256 1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c` |
 | `event-2026-11-11-parallel-learning.png` | `https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png` (fetched and re-fetched 2026-11-06) | **1321x755**, 93,921 bytes, `sha256 0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec` |
+| `event-2026-11-25-common-denominator-study-session.png` | `https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png` | **1321x755**, 93,921 bytes, sha256 as above — `cmp`-identical to the 2026-11-11 file |
+| `event-2026-12-05-matheapolis-bimonthly-social.png` | `https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png` | **954x460**, 127,098 bytes, sha256 as above — `cmp`-identical to the 2026-11-07 file |
+| `event-2026-12-09-common-denominator-study-session.png` | `https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png` | **1321x755**, 93,921 bytes — `cmp`-identical to the 2026-11-11 file |
+| `event-2026-12-19-matheapolis-bimonthly-social.png` | `https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png` | **954x460**, 127,098 bytes — `cmp`-identical to the 2026-11-07 file |
+
+All four MS04 mirrors were fetched on 2026-11-13 and `cmp`-verified against the file they were named for
+(`curl -sL <media url> > .design/tmp-art-verify/social.png; cmp -s .design/tmp-art-verify/social.png
+src/assets/photos/event-2026-12-05-matheapolis-bimonthly-social.png`) — identity checked by hashing the fetch, never
+by the filename.
 
 - **Provenance is content-addressed, not remembered:** in both cases `sha256sum` of the mirrored file **is** the path
   segment Mobilizon serves it under, and re-fetching the URL in `data/events.json`'s `image` field gives bytes
   `cmp` reports identical (`cmp /tmp/pl-recheck.png src/assets/photos/event-2026-11-11-parallel-learning.png`,
   2026-11-06). A filename can be re-pointed at other bytes; a hash cannot. Re-verify with
   `sha256sum src/assets/photos/event-*.png`.
-- **The social's art is one image for two rows, and the file identity is the hash.** Both socials serve the same
-  media (`1f54c290…`), so there are two PNGs here with identical bytes and one upstream file. `cmp` reports them
-  identical; the build hashes both to the **same asset URL** (`event-2026-11-07-club-social.Bx3seRvs_Z1djt4s.webp`
-  appears twice in `dist/client/index.html`), so a visitor downloads it once and only the repo pays the duplicate.
+- **The posters repeat, and the file identity is the hash.** Four rows serve the social's media (`1f54c290…`) and
+  three serve the study session's (`0e26aa4894…`), so seven PNGs here come from two upstream files. `cmp` reports each
+  group identical; the build hashes each group to **one asset URL**, so a visitor downloads two images however many
+  rows print (`event-2026-11-07-club-social.Bx3seRvs_Z1djt4s.webp` three times and
+  `event-2026-11-11-parallel-learning.M0sOoDoF_GhAIn.webp` twice in `dist/client/schedule/index.html`).
+  The repo pays the duplicate twice over in name only: `git hash-object` returns a single blob
+  (`0135e3ba5fa422cad3d7011ede56d025a6bf8b1a` for the four socials, `3c6983792be276c2e00b3c100bcb8f1cc1d2e124` for the
+  three study sessions), so the tracked bytes are stored once. @measured 2026-11-13 by `git hash-object`.
   Naming follows the row, not the bytes: the slug is the filename key (`event-<slug>.png`, D190), so when the
   organizer re-issued the 2026-11-07 social under a fresh UID (D225), the live row kept the natural slug and the file
-  it names, and the retired row moved to `2026-11-07-club-social-cancelled` - which names no file at all. Whether the
+  it names, and the retired row carries the `-cancelled` suffix. After the 2026-11-13 harvest that dead key is
+  `2026-11-21-club-social-cancelled`: the UID that held it until then (649bf59a) came back in the feed as a Nov 21
+  meeting and took the natural key `2026-11-21-club-social`, so the suffix moved to the UID that went quiet (D299).
+  Whether the
   same poster should be *shown* twice on one page is asked of the operator; the wiring ships what the source supplies.
-- **Which rows have art (re-read live 2026-11-06, `https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics`):**
-  all three upcoming rows carry an `ATTACH`. The 2026-11-11 row gained `parallel_studies.png`, which the 2026-11-04
-  snapshot did not have (`picture: null` then), and that is why the Parallel Learning card showed no image on the
-  preview and shows one now. The `SLOT_ART` map in `src/components/Schedule.astro` being keyed by slug is not
-  decoration - art is a property of the row, and it can arrive after the row does.
+- **Which rows have art (re-read live 2026-11-13, `https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics`):**
+the feed is **6,912 octets, 5 VEVENTs**, and every one carries an `ATTACH` - only two media hashes appear in it.
+The 2026-11-11 snapshot's lesson still holds: the 2026-11-11 row gained `parallel_studies.png` the 2026-11-04
+snapshot did not have (`picture: null` then), so art is a property of the row that can arrive after the row does.
+That is why the `SLOT_ART` map lives in `src/lib/event-art.ts` keyed by slug (it left `Schedule.astro` when the
+schedule grew a second surface - two files holding the same table is two calendars), and why adding a row means
+adding an entry, not editing a template.
 - **A `?name=` in a media URL is a label, not identity.** The same `1f54c290…` media was served as
   `?name=bimonthly_social.png` on two dates; a URL-only diff would call that a new image. Compare hashes, and note
   that `curl`'s cache here keys on the URL, so a changed `?name=` silently re-downloads identical bytes.
