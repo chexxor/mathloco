@@ -124,7 +124,7 @@ const DEPLOY = [
   // them with what the built page paints, so a channel added to the config without a row - or a row naming a
   // platform the resolver does not have - fails on the branch that did it. Its fixtures are in memory, so it can
   // fire before anyone builds (D118).
-  { name: 'check:join:selftest', desc: 'the join gate can still fail (12 plantings plus 2 parser assertions, each named, with a clean control)' },
+  { name: 'check:join:selftest', desc: 'the join gate can still fail (14 plantings plus 2 parser assertions, each named, with two clean controls: a correct page, and a date that lives only in an HTML comment)' },
   { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
@@ -176,7 +176,7 @@ const DEPLOY = [
   // The page half of the join rule (S033, D303): every channel the resolver lists is painted on /join, in
   // canonical order, under a heading for its kind, at a URL its platform can have, with a stamp under 60 days;
   // nothing is painted that the resolver does not have. It reads `dist/`, so it waits for `build` (D118).
-  { name: 'check:join', desc: 'every way in on /join is a channel joinChannels() returns, in canonical order under its kind, at a stamped URL; no invented channel, no empty kind heading, no blind link past 60 days', needs: ['build'] },
+  { name: 'check:join', desc: 'every way in on /join is a channel joinChannels() returns, in canonical order under its kind, named in visible words, at a stamped URL, and the page prints no date; no invented channel, no empty kind heading, no blind link past 60 days', needs: ['build'] },
   // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
   { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name

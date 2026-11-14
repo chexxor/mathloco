@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// check:join — the `/join` page prints exactly the channels the resolver says the club has.
+// check:join — the `/join` page prints exactly the channels the resolver says the club has, names each one
+// in visible words, and prints no date.
 //
 //   npm run check:join            # over the built dist/client/join/index.html
 //   npm run check:join:selftest   # plant each defect, require each to FAIL (D118)
@@ -34,10 +35,14 @@ const PAGE = argOne('--page', 'dist/client/join/index.html');
 const CONFIG = argOne('--config', 'src/config.json');
 const DIST = argOne('--dist', 'dist/client');
 
-/** A join anchor, with the four things a gate can compare to the resolver: its kind, its platform, its href
- *  and its painted text. The page prints no nested anchor, so a non-greedy match to the first `</a>` is the
- *  whole control; if that ever stops being true the text comparison fails loudly rather than silently. */
-const ANCHOR_RE = /<a\b([^>]*\bdata-join-kind="([a-z]+)"[^>]*)>([\s\S]*?)<\/a>/g;
+/** A join row, with the five things a gate can compare to the resolver: its kind, its platform, its href, the
+ *  text of its control, and the clause printed under it. The page emits one `<li>` per channel, an anchor and a
+ *  `<p>` of `gives`; a non-greedy match to the first `</li>` is the whole row, so a row that grows a third
+ *  element is still read (and a row whose clause the resolver does not have fails the text comparison loudly
+ *  rather than silently). */
+const ANCHOR_RE = /<a\b([^>]*\bdata-join-kind="([a-z]+)"[^>]*)>([\s\S]*?)<\/a>/;
+const ROW_RE = /<li\b[^>]*>([\s\S]*?)<\/li>/g;
+const PARA_RE = /<p\b[^>]*>([\s\S]*?)<\/p>/g;
 const attr = (attrs, name) => new RegExp(`${name}="([^"]*)"`).exec(attrs)?.[1] ?? null;
 const text = (html) =>
   html
@@ -47,6 +52,17 @@ const text = (html) =>
     .replace(/&quot;/g, '"')
     .replace(/\s+/g, ' ')
     .trim();
+
+/** What a sighted reader sees: comments and scripts removed, then tags. The design comments in `Layout.astro`
+ *  carry dates and a `@measured` stamp, and they are not painted, so a date rule that read the raw file would
+ *  fail every page whose shell is documented. */
+export const visibleText = (html) =>
+  text(html.replace(/<!--[\s\S]*?-->/g, ' ').replace(/<script\b[\s\S]*?<\/script>/gi, ' '));
+
+/** A date a visitor could read: a month-and-day, an ISO date, or a numeric slash date. Weekdays are excluded on
+ *  purpose - "an ordinary Saturday" is a sentence, not a schedule. */
+const DATE_RE =
+  /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b|\b\d{4}-\d{2}-\d{2}\b|\b\d{1,2}\/\d{1,2}(?:\/\d{2,4})?\b/i;
 
 /** A JSON file this gate cannot work without, read with its reason attached: a missing or malformed artifact
  *  says which file and why in one line instead of dying on a stack trace. This is the `readJson(path, why)`
@@ -71,8 +87,18 @@ const parseDay = (s) => {
 /** Every channel the page paints, in document order. */
 export const paintedChannels = (html) => {
   const out = [];
-  for (const m of html.matchAll(ANCHOR_RE)) {
-    out.push({ kind: m[2], platform: attr(m[1], 'data-join-platform'), href: attr(m[1], 'href'), text: text(m[3]) });
+  for (const block of html.matchAll(ROW_RE)) {
+    const inner = block[1];
+    const a = ANCHOR_RE.exec(inner);
+    if (!a) continue;
+    const gives = [...inner.matchAll(PARA_RE)].map((m) => text(m[1])).pop() ?? '';
+    out.push({
+      kind: a[2],
+      platform: attr(a[1], 'data-join-platform'),
+      href: attr(a[1], 'href'),
+      text: text(a[3]),
+      gives,
+    });
   }
   return out;
 };
@@ -86,7 +112,7 @@ export const paintedKindHeadings = (html) =>
  * The findings. `painted` and `headings` are what the artifact contains; the resolver and the config are
  * what it should contain. Pure, so the selftest can plant into it without a build or a network.
  */
-export const joinFindings = (painted, headings, urls = {}, { today = new Date(), pagePath = PAGE, dist = DIST } = {}) => {
+export const joinFindings = (painted, headings, urls = {}, { today = new Date(), pagePath = PAGE, dist = DIST, pageText = null } = {}) => {
   const fails = [];
   const expect = joinChannels(urls);
   const fail = (rule, detail) => fails.push({ rule, file: pagePath, detail });
@@ -109,6 +135,25 @@ export const joinFindings = (painted, headings, urls = {}, { today = new Date(),
     if (!want.some((w) => w.kind === g.kind && w.platform === g.platform && w.href === g.href)) {
       fail('join-channel-invented', `the page paints a ${g.kind}/${g.platform} channel at ${g.href} that the resolver does not have — a link the config never declared`);
     }
+  }
+
+  // 1b. Every row NAMES the platform that delivers it, in text a reader or a screen reader hears. The attribute
+  // alone is machine-readable, which is exactly the failure this rule exists for: the rsvp row shipped with
+  // `data-join-platform="Meetup"` and the words "See the dates" beside it (2026-11-14 audit).
+  for (const w of want) {
+    const g = got.find((c) => c.kind === w.kind && c.platform === w.platform && c.href === w.href);
+    if (!g) continue;
+    const words = `${g.text} ${g.gives ?? ''}`.trim();
+    if (!words.toLowerCase().includes(String(w.platform).toLowerCase())) {
+      fail('join-row-names-platform', `the ${w.kind}/${w.platform} row prints "${words}" and never names ${w.platform} — the platform that delivers a kind has to be visible, not only in data-join-platform (S033)`);
+    }
+  }
+
+  // 1c. The page prints no date. `/schedule` is the surface that does (D218), and a second copy of a date is a
+  // copy that can be stale while the schedule beside it is right.
+  if (pageText) {
+    const m = DATE_RE.exec(pageText);
+    if (m) fail('join-date-painted', `/join paints the date "${m[0]}" — /schedule is where dates live (D218); a join page that repeats one goes stale on its own`);
   }
   const order = (list) => list.map((c) => `${c.kind}/${c.platform}`).join(',');
   if (got.length && order(got) !== order(want.filter((w) => got.some((g) => g.kind === w.kind && g.platform === w.platform && g.href === w.href)))) {
@@ -182,10 +227,10 @@ if (selftest) {
   const today = new Date('2026-11-13T00:00:00Z');
   const opts = { today, pagePath: `${FIX}/join/index.html`, dist: FIX };
   const good = [
-    { kind: 'social', platform: 'Meetup', href: urls.meetupGroup, text: 'Join the Meetup group Meetup, opens in a new tab' },
-    { kind: 'social', platform: 'Facebook', href: urls.facebookGroup, text: 'Join the Facebook group Facebook, opens in a new tab' },
-    { kind: 'rsvp', platform: 'Meetup', href: '/schedule', text: 'See the dates' },
-    { kind: 'chat', platform: 'Discord', href: urls.discordInvite, text: 'Join the chat on Discord Discord, opens in a new tab' },
+    { kind: 'social', platform: 'Meetup', href: urls.meetupGroup, text: 'Join the Meetup group Meetup, opens in a new tab', gives: "The club's member list, and where a date gets announced." },
+    { kind: 'social', platform: 'Facebook', href: urls.facebookGroup, text: 'Join the Facebook group Facebook, opens in a new tab', gives: "The club's page on Facebook, for people who already read it there." },
+    { kind: 'rsvp', platform: 'Meetup', href: '/schedule', text: 'See the dates', gives: "Meetup's own page for each meeting, one click from the date." },
+    { kind: 'chat', platform: 'Discord', href: urls.discordInvite, text: 'Join the chat on Discord Discord, opens in a new tab', gives: 'The conversation that runs between meetings.' },
   ];
   const goodHeadings = ['social', 'rsvp', 'chat'];
   const cases = [
@@ -201,10 +246,15 @@ if (selftest) {
     { name: 'the order swapped', painted: [good[1], good[0], good[2], good[3]], headings: goodHeadings, urls, want: ['join-order'] },
     { name: 'a route the build does not emit', painted: good.map((c) => (c.kind === 'rsvp' ? { ...c, href: '/when' } : c)), headings: goodHeadings, urls, want: ['join-channel-invented', 'join-channel-missing', 'join-order'] },
     { name: 'a blind link with no human confirmation', painted: good, headings: goodHeadings, urls: { ...urls, _verified: { ...urls._verified, facebookGroup: { status: 400, verifiedAt: '2026-11-11' } } }, want: ['join-blind-link-unconfirmed'] },
+    // The two rules the 2026-11-14 audit found missing: the row named its platform only in the attribute, and
+    // nothing checked that the page prints no date at all.
+    { name: 'a row that never names its platform', painted: good.map((c) => (c.kind === 'rsvp' ? { ...c, gives: 'Each meeting, one click from the date.' } : c)), headings: goodHeadings, urls, want: ['join-row-names-platform'] },
+    { name: 'a date printed on the page', painted: good, headings: goodHeadings, urls, pageText: 'Your first one is Nov 21, at a bakery.', want: ['join-date-painted'] },
+    { name: 'a date only in a comment', painted: good, headings: goodHeadings, urls, pageText: visibleText('<!-- measured 2026-11-14 --><p>Your first one is soon.</p>'), want: [] },
   ];
   let bad = 0;
   for (const c of cases) {
-    const got = joinFindings(c.painted, c.headings, c.urls, opts).map((f) => f.rule);
+    const got = joinFindings(c.painted, c.headings, c.urls, { ...opts, pageText: c.pageText ?? null }).map((f) => f.rule);
     const miss = c.want.filter((w) => !got.includes(w));
     const extra = got.filter((g) => !c.want.includes(g));
     const ok = miss.length === 0 && extra.length === 0;
@@ -213,9 +263,9 @@ if (selftest) {
   }
   // The page's own painted bytes must be read by the same parser the selftest plants into: the fixture below
   // is the shape `join.astro` emits (attributes in any order, an sr-only span inside the anchor).
-  const fixture = `<h2 id="join-social">Follow</h2><a href="${urls.meetupGroup}" target="_blank" data-control="primary" data-join-kind="social" data-join-platform="Meetup">Join the Meetup group<span class="sr-only"> Meetup, opens in a new tab</span></a>`;
+  const fixture = `<h2 id="join-social">Follow</h2><ul><li><a href="${urls.meetupGroup}" target="_blank" data-control="primary" data-join-kind="social" data-join-platform="Meetup">Join the Meetup group<span class="sr-only"> Meetup, opens in a new tab</span></a><p class="mt-2">The club's member list.</p></li></ul>`;
   const parsed = paintedChannels(fixture);
-  const parseOk = parsed.length === 1 && parsed[0].kind === 'social' && parsed[0].platform === 'Meetup' && parsed[0].text === 'Join the Meetup group Meetup, opens in a new tab';
+  const parseOk = parsed.length === 1 && parsed[0].kind === 'social' && parsed[0].platform === 'Meetup' && parsed[0].text === 'Join the Meetup group Meetup, opens in a new tab' && parsed[0].gives === "The club's member list.";
   console.log(`${parseOk ? 'ok   parsed' : 'FAIL parsed'}  the parser reads what the page emits   ${JSON.stringify(parsed[0] ?? null)}`);
   if (!parseOk) bad++;
   const headsOk = paintedKindHeadings(fixture).join(',') === 'social';
@@ -234,12 +284,12 @@ if (!existsSync(PAGE)) {
 }
 const html = readFileSync(PAGE, 'utf8');
 const config = readJson(CONFIG, 'the stamped URLs every painted channel must come from');
-const fails = joinFindings(paintedChannels(html), paintedKindHeadings(html), config.URLs, { pagePath: PAGE, today: new Date() });
+const fails = joinFindings(paintedChannels(html), paintedKindHeadings(html), config.URLs, { pagePath: PAGE, today: new Date(), pageText: visibleText(html) });
 
 const channels = joinChannels(config.URLs);
 console.log(`check:join — ${PAGE}`);
 console.log(`  ${channels.length} channel(s) in the resolver: ${channels.map((c) => `${c.kind}/${c.platform}`).join(', ')}`);
 console.log(`  ${paintedChannels(html).length} painted, ${paintedKindHeadings(html).length} group heading(s): ${paintedKindHeadings(html).join(', ')}`);
 for (const f of fails) console.log(`  FAIL ${f.rule}  ${f.detail}`);
-console.log(fails.length ? `\n${fails.length} finding(s).` : '\nEvery way in on /join is a channel the resolver has, at a URL its platform can have, with a stamp inside 60 days.');
+console.log(fails.length ? `\n${fails.length} finding(s).` : '\nEvery way in on /join is a channel the resolver has, named in words, at a URL its platform can have, with a stamp inside 60 days; the page prints no date.');
 process.exit(fails.length ? 1 : 0);

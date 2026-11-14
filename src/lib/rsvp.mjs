@@ -541,7 +541,11 @@ export const joinChannels = (urls = {}) => {
       external: false,
       label: 'See the dates',
       srOnly: null,
-      gives: "Each meeting's own page, one click from the date.",
+      // The platform is named in the visible clause, not just in `data-join-platform`: the row's destination is
+      // the club's own /schedule, so the label must not promise a new site - but the visitor is still choosing a
+      // platform, and a kind that never says which one delivers it leaves the reader to find out after the click
+      // (the 2026-11-14 audit's objection; `check:join` now requires the platform's name in every row's text).
+      gives: "Meetup's own page for each meeting, one click from the date.",
     },
     {
       kind: 'chat',
