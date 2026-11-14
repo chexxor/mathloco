@@ -14,6 +14,9 @@
 //     "**entirely invented placeholder content**".
 //   - "weekly" in four places, one of them `grep -c "Weekly Meetups"` → 1 on the live site, for two years
 //     (D92; the copy rule: publish series names and real dates, never a frequency).
+//   - "Bimonthly" on `/schedule` twice, 2026-11-13: the harvester copies the organizer's `SUMMARY` into a new
+//     row's `series`, and this gate printed `bimonthly x2 — source: Monthly is more generally correct…` and
+//     passed, because a source that names ONE cadence was accepted as a source for every cadence (D301).
 //   - `Schedule` and `Members` in the nav pointing at pages the build does not emit — 404 links on prod
 //     (D117: a path needs a page).
 // DESIGN.md's Copy rule already says how to write the fix — "[YEAR], [CADENCE], [N], [verbatim] stay
@@ -24,7 +27,8 @@
 //
 // What FAILS: a bracketed placeholder in built HTML; a placeholder photo fill (`data-placeholder`) in a
 // build whose tracked `src/content.json` has placeholders off, or a tracked config that turns them on; a
-// retired fabricated string; a cadence word with no `source` beside it; `Math.random()` in copy generation;
+// retired fabricated string; a cadence word with no `source` beside it, or one whose word the source does
+// not name (D301); `Math.random()` in copy generation;
 // an internal link to a route the build does not emit; a cross-surface near-duplicate sentence that
 // `design/copy-duplicates.json` does not already record (see the rule block above the scanner).
 //
@@ -35,6 +39,7 @@
 // (record 0010).
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
 import { openSlots, unsourcedSlots } from '../src/lib/content-slots.mjs';
+import { cadenceWords, sourceNamesWord } from '../src/lib/cadence.mjs';
 import { join, resolve } from 'node:path';
 
 const args = process.argv.slice(2);
@@ -60,8 +65,9 @@ const walk = (dir, exts, out = []) => {
 const BRACKET = /\[([^\]\n<>]{1,48})\]/g;
 const looksLikePlaceholder = (s) => /^[A-Z][A-Z0-9 '’\-]{1,}$/.test(s.trim()) || /^\{.*\}$/.test(s.trim());
 
-// D92's frequency words. Allowed only with a named `cadence.source` in src/content.json.
-const CADENCE = /\b(weeklyn?|weekly|monthly|daily|nightly|biweekly|bimonthly|fortnightly|every other week|every week|every month|each week|twice a month|most months)\b/gi;
+// D92's frequency words live in `src/lib/cadence.mjs`, because the harvester warns with the same list: two
+// copies of this alternation would be two opinions about one rule, and the gate's copy is the one that
+// would rot. Allowed only when `cadence.source` in src/content.json names that exact word (D301).
 
 // Strings this repo measured as fabricated, or that the operator says the club never claimed. If one comes
 // back, someone pasted a placeholder or a template's benefit grid back into copy.
@@ -312,19 +318,33 @@ function checkConfig(trackedJson, builtHtml) {
       .map((m) => /content="([^"]*)"/i.exec(m[0])?.[1] ?? '')
       .filter(Boolean)
       .join(' ');
-    for (const m of (visibleText(html) + ' ' + meta).matchAll(CADENCE)) {
-      const w = m[1].toLowerCase();
-      cadenceHits.set(w, (cadenceHits.get(w) ?? 0) + 1);
+    for (const [w, n] of cadenceWords(visibleText(html) + ' ' + meta)) {
+      cadenceHits.set(w, (cadenceHits.get(w) ?? 0) + n);
     }
   }
-  if (cadenceHits.size && !cadence?.source) {
+  const source = String(cadence?.source ?? '');
+  const printed = [...cadenceHits].map(([w, n]) => `${w} x${n}`).join(', ');
+  if (cadenceHits.size && !source) {
     fails.push({
       rule: 'unsourced-cadence',
       file: 'src/content.json',
-      detail: `cadence word in built HTML (${[...cadenceHits].map(([w, n]) => `${w} x${n}`).join(', ')}) with no cadence.source — D92: publish series names and real dates, or name where the ruling came from`,
+      detail: `cadence word in built HTML (${printed}) with no cadence.source — D92: publish series names and real dates, or name where the ruling came from`,
     });
+  } else if (cadenceHits.size) {
+    // A source is not a licence for every cadence word: it has to NAME the one the visitor reads. On
+    // 2026-11-13 the page printed "Bimonthly" twice while `cadence.source` named "Monthly", and the rule
+    // above ("is there a source at all?") passed it — a sourced claim about one rhythm cannot stand in for
+    // a different rhythm (D301).
+    const unnamed = [...cadenceHits].filter(([w]) => !sourceNamesWord(source, w));
+    if (unnamed.length) {
+      fails.push({
+        rule: 'unsourced-cadence',
+        file: 'src/content.json',
+        detail: `cadence word in built HTML the source does not name (${unnamed.map(([w, n]) => `${w} x${n}`).join(', ')}; source reads "${source.slice(0, 80)}…", which names ${[...cadenceHits.keys()].filter((w) => sourceNamesWord(source, w)).join(', ') || 'none of them'}) — D92/D301: a sourced claim about one rhythm is not a source for a different one; the page must print the series' name, and the frequency word stays in the feed as a quotation (D189)`,
+      });
+    }
   }
-  return { fails, warns, cadenceHits };
+  return { fails, warns, cadenceHits, cadenceSource: source };
 }
 
 /** The operator's punch list: which facts are still holes, and what each hole is waiting for. The walks
@@ -337,13 +357,19 @@ function run(distDir, srcDir, tracked) {
   const srcFiles = walk(srcDir, ['.astro', '.svelte', '.ts', '.tsx', '.mjs', '.js']).filter((f) => !f.endsWith('content.ts'));
   const baseline = existsSync(BASELINE_PATH) ? JSON.parse(readFileSync(BASELINE_PATH, 'utf8')) : { pairs: [] };
   const dup = scanDuplicates(built, baseline);
+  // `checkConfig`'s failures belong in `fails`, and for a while they did not: this destructured only
+  // `cadenceHits` out of it, so both of its rules (a tracked placeholders switch, an unsourced or
+  // wrongly-sourced cadence word) could print a hit and still exit 0. The selftest never saw it because it
+  // calls `checkConfig` directly, so the parts passed while the gate did not — which is how /schedule shipped
+  // the organizer's frequency word twice on 2026-11-13 with a green gate (D301, D302).
+  const cfg = checkConfig(tracked, built);
   const fails = [
     ...built.flatMap(([f, h]) => scanPage(h, f, emitted, distDir)),
     ...scanSource(srcFiles),
+    ...cfg.fails,
     ...dup.fails,
   ];
-  const { cadenceHits } = checkConfig(tracked, built);
-  return { fails, built, cadenceHits, emitted, dupOpens: dup.opens, dupFurniture: dup.furniture, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
+  return { fails, built, cadenceHits: cfg.cadenceHits, emitted, dupOpens: dup.opens, dupFurniture: dup.furniture, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
 }
 
 // ---- selftest: can this gate fail? (D118 — a gate whose failure mode is a green line is no gate) ----
@@ -360,7 +386,22 @@ if (selftest) {
     // catchable as an invented venue, or the retired list only remembers the last round's mistakes
     { name: 'retired-marketing-grid', rule: 'retired-fabrication', html: clean.replace('</body>', '<h3>Expert Guidance</h3><p>Learn from experienced mathematicians and educators</p></body>') },
     { name: 'dead-path', html: clean.replace('</body>', '<a href="/schedule">Schedule</a></body>') },
-    { name: 'unsourced-cadence', html: clean.replace('</body>', '<p>Monthly meetups</p></body>') },
+    { name: 'unsourced-cadence', tracked: { cadence: { value: 'Monthly', source: null }, photos: { placeholders: false } }, html: clean.replace('</body>', '<p>Monthly meetups</p></body>') },
+    // A source is not a licence for a different cadence. This is the defect the page shipped on 2026-11-13:
+    // `cadence.source` names "Monthly", the organiser's title said "Bimonthly", and the rule above ("is there
+    // a source at all?") passed it while printing the hit (D301). The pair is planted together with its
+    // control below, because a gate that simply banned every word in the list would fail the control instead
+    // of passing it.
+    {
+      name: 'cadence-word-not-named-by-source', rule: 'unsourced-cadence',
+      tracked: { cadence: { value: 'Monthly', source: 'operator ruling, 2026-10-31: Monthly is more generally correct; actual rhythm is ~every other week, occasionally skipped' }, photos: { placeholders: false } },
+      html: clean.replace('</body>', '<h3>Matheapolis - Bimonthly Social</h3></body>'),
+    },
+    {
+      name: 'cadence-word-named-by-source', rule: 'unsourced-cadence', negative: true,
+      tracked: { cadence: { value: 'Monthly', source: 'operator ruling, 2026-10-31: Monthly is more generally correct; actual rhythm is ~every other week, occasionally skipped' }, photos: { placeholders: false } },
+      html: clean.replace('</body>', '<p>Monthly meetups</p></body>'),
+    },
     { name: 'invented-number', html: clean, src: 'Join our active community of ' + '${Math.random()}+ members.' },
     // Two surfaces, one statement, different vocabulary — the shape the operator actually found on the page. It is
     // planted against an EMPTY baseline (below) because the baseline is what makes the shipped pairs non-failures,
@@ -410,7 +451,6 @@ if (selftest) {
       html: `<html><body><main><h1>Matheapolis</h1><p>Dates go up on Meetup; most of the arguing happens in the chat between meetings.</p></main><section id="when-we-meet"><h2>When We Meet</h2><p>A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.</p></section></body></html>`,
     },
   ];
-  const trackedNoSource = { cadence: { value: 'Monthly', source: null }, photos: { placeholders: false } };
   let bad = 0;
   for (const p of plants) {
     const dir = `${FIX}/plant-${p.name.replace(/[^a-z]/g, '')}`;
@@ -419,7 +459,7 @@ if (selftest) {
     if (p.src) writeFileSync(`${dir}/src/Fake.astro`, p.src);
     const html = [[`${dir}/index.html`, p.html]];
     let fails = [...scanPage(p.html, `${dir}/index.html`, ['/', '/chat'], dir), ...scanSource(p.src ? [`${dir}/src/Fake.astro`] : [])];
-    if (p.name === 'unsourced-cadence') fails = [...fails, ...checkConfig(trackedNoSource, html).fails];
+    if (p.tracked) fails = [...fails, ...checkConfig(p.tracked, html).fails];
     let dup = null;
     if (p.rule === 'near-duplicate-surface') {
       const baseline = p.recorded
@@ -431,7 +471,7 @@ if (selftest) {
     let caught;
     if (p.furniture) caught = dup.fails.length === 0 && dup.furniture.length === 1 && dup.furniture[0].count === p.furniture;
     else if (p.recorded) caught = dup.fails.length === 0 && dup.opens.length === 1;
-    else if (p.negative) caught = !fails.some((f) => f.rule === 'near-duplicate-surface');
+    else if (p.negative) caught = !fails.some((f) => f.rule === (p.rule ?? 'near-duplicate-surface'));
     else caught = fails.some((f) => f.rule === (p.rule ?? p.name));
     console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(34)} ${p.recorded ? `green, reported as open (${dup.opens.length})` : fails.map((f) => f.rule).join(',') || 'nothing'}`);
     if (!caught) bad++;
@@ -461,7 +501,20 @@ if (selftest) {
   console.log(`${holesOk ? 'ok   caught' : 'FAIL missed'}  open-placeholder-walk`);
   if (!holesOk) bad++;
 
-  console.log(`\ncheck:content selftest: ${plants.length + 5 - bad}/${plants.length + 5} planted defects caught`);
+  // The gate's WIRING, not another part: `run()` is what a real build calls, and it once returned only
+  // `cadenceHits` from `checkConfig`, so both config rules could report a hit and pass. Plant the bytes that
+  // actually shipped: a schedule row printing the organizer's title (D302).
+  const composedTracked = {
+    cadence: { value: 'Monthly', source: 'operator ruling, 2026-10-31: Monthly is more generally correct; actual rhythm is ~every other week, occasionally skipped' },
+    photos: { placeholders: false },
+  };
+  const composedDir = `${FIX}/plant-cadencewordnotnamedbysource`;
+  const composed = run(composedDir, `${composedDir}/src`, composedTracked).fails.filter((f) => f.rule === 'unsourced-cadence');
+  const composedOk = composed.length === 1;
+  console.log(`${composedOk ? 'ok   caught' : 'FAIL missed'}  config-fails-reach-run()        ${composedOk ? 'run() carries checkConfig failures into fails' : 'checkConfig is called but its fails are dropped'}`);
+  if (!composedOk) bad++;
+
+  console.log(`\ncheck:content selftest: ${plants.length + 6 - bad}/${plants.length + 6} planted defects caught`);
   process.exit(bad ? 1 : 0);
 }
 
@@ -494,7 +547,10 @@ if (args.includes('--print-baseline')) {
 console.log(`check:content — ${built.length} built page(s) over ${walk(srcDir, ['.astro', '.svelte', '.ts']).length} source file(s)`);
 console.log(`  built HTML: ${built.map(([f]) => f.split('/').slice(-2).join('/')).join(', ')}`);
 if (cadenceHits.size) {
-  console.log(`  cadence words in what a visitor reads: ${[...cadenceHits].map(([w, n]) => `${w} x${n}`).join(', ')} — source: ${tracked.cadence?.source ? tracked.cadence.source.slice(0, 72) + '…' : 'NONE (that is a failure)'}`);
+  const src = tracked.cadence?.source ?? '';
+  const named = [...cadenceHits.keys()].filter((w) => sourceNamesWord(src, w));
+  const unnamed = [...cadenceHits].filter(([w]) => !sourceNamesWord(src, w));
+  console.log(`  cadence words in what a visitor reads: ${[...cadenceHits].map(([w, n]) => `${w} x${n}`).join(', ')} — source: ${src ? src.slice(0, 72) + '…' : 'NONE (that is a failure)'}${src ? ` — names: ${named.join(', ') || 'none of them'}` : ''}${unnamed.length ? ` — NOT NAMED: ${unnamed.map(([w, n]) => `${w} x${n}`).join(', ')} (that is a failure, D301)` : ''}`);
 }
 
 const holes = openSlots(tracked);

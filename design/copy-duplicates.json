@@ -4,7 +4,7 @@
   "measuredAt": "2026-11-13",
   "howToRegenerate": "node scripts/check-content.mjs --print-baseline  (prints this shape; it never writes it)",
   "ruleOfExit": "A pair leaves this file when the copy is deleted or a ruling settles it. It is NOT kept with status 'resolved': a signature in this file is an exemption, so keeping a closed pair would let the same duplicate ship again without going red. The pairs closed by S018/D262 and by D273 are listed in `resolved` below for provenance only.",
-  "signatureNote": "A signature has its date stamps removed before anything else (DATE_STAMP in scripts/check-content.mjs). `npm run events:harvest` rewrites \"Copied from the club's own calendar on <date>\" each time the feed is read, and a signature that carries the stamp's date is an exemption with an expiry: @measured 2026-11-13 by this gate, one harvest moved the stamp from Nov 6 to Nov 13 and made all 3 baseline rows stale — three FAILs for sentences nobody edited. The date the page prints is data, not the shape of the sentence.",
+  "signatureNote": "A signature has its date stamps removed before anything else (DATE_STAMP in scripts/check-content.mjs). `npm run events:harvest` rewrites \"Copied from the club's own calendar on <date>\" each time the feed is read, and a signature that carries the stamp's date is an exemption with an expiry: @measured 2026-11-13 by this gate, one harvest moved the stamp from Nov 6 to Nov 13 and made all 3 baseline rows stale — three FAILs for sentences nobody edited. The date the page prints is data, not the shape of the sentence. A signature is also NOT derived from a section heading: on 2026-11-13 a row's `surfaces` prose named a heading that was the harvester's copy of the organizer's title, and the heading had to be corrected (D301) while the signature stayed valid.",
   "resolved": [
     { "pair": "band's Meetup/chat twin <> hero's date-and-chat line", "closedBy": "S018 (2026-11-09)", "how": "the band's line deleted; the hero keeps the one statement of where dates and discussion live" },
     { "pair": "hero syllabus line <> band's homework line", "closedBy": "S018 (2026-11-09)", "how": "the band's homework line deleted; the hero's syllabus sentence now carries the chat statement too" },
@@ -56,8 +56,8 @@
       "overlap": 0.667,
       "status": "deliberate",
       "ruled": null,
-      "surfaces": "section:When We Meet (/schedule page lede) <> section:Matheapolis - Bimonthly Social (the list stamp, printed after the last row - it inherits that row's heading because the stamp line has no heading of its own)",
-      "why": "The same provenance rule on the schedule page: the page lede and the list stamp each say where the dates came from. D218 keeps the stamp once for the list rather than once per row.",
+      "surfaces": "section:When We Meet (/schedule page lede) <> section:MPLS Math Club Social (the list stamp, printed after the last row - it inherits that row's heading because the stamp line has no heading of its own)",
+      "why": "The same provenance rule on the schedule page: the page lede and the list stamp each say where the dates came from. D218 keeps the stamp once for the list rather than once per row. Corrected 2026-11-13: this row's `surfaces` used to read `section:Matheapolis - Bimonthly Social`, because it was measured against rows whose page title was the harvester's copy of the organizer's SUMMARY. The title is D189's ruled name again (`MPLS Math Club Social`) and the cadence word lives only in the feed (D301), so the heading this stamp inherits no longer contains one. The signature is unchanged - it was never derived from the heading - and `check:content` now fails any page that prints a cadence word its source does not name.",
       "measuredAt": "2026-11-13"
     }
   ]

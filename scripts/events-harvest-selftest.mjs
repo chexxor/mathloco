@@ -8,14 +8,16 @@
  * un-cancel a published cancellation (rule 4, D299), it reuses a venue split only when the raw string is
  * byte-identical (rule 2, D92), it treats a TZID on both ends as the source declaring the hour (rule 1,
  * D298), and it never deletes a row that dropped out of the feed (rule 3, D72). A rule nobody plants is a
- * rule nobody knows works — the same reasoning as every `check:*:selftest` in this repo (D290).
+ * rule nobody knows works — the same reasoning as every `check:*:selftest` in this repo (D290). Two cases
+ * cover the one thing a created row cannot get right by itself: its page name (`series`) is a hand field, so
+ * the run has to say when the title it copied carries a frequency word the page may not print (D301).
  *
  * No network: every case writes a fixture snapshot and a fixture feed into `.design/tmp-harvest-selftest/`
  * (gitignored) and runs the real harvester on them with `--from`. Nothing here touches `data/events.json`,
  * so a green run says nothing about the live feed and a red run names the rule that broke.
  *
- * OS: Linux native, Node 24.22.1 @measured 2026-11-13. Cost of the whole set: 1.2s @measured 2026-11-13
- * by this script's own exit (15 cases, each one a `node` spawn of the real harvester).
+ * OS: Linux native, Node 24.22.1 @measured 2026-11-13. The test count is printed by the runner rather than
+ * written here, because a count in a doc is a number that rots — read the last line.
  */
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
@@ -170,6 +172,23 @@ const cases = [
         r?.venue?.street === '8100 Minnetonka Boulevard' ? null : 'street not copied',
         r?.venue?.city === 'Saint Louis Park' ? null : 'city not copied',
         typeof r?.venue?._split === 'string' ? null : 'the copied split carries no provenance note (D92: a reader must know the harvest copied it)',
+        // the control for the D301 case below: a title with no frequency word must not raise a cadence warning
+        has(o.out, 'D301') ? 'a cadence warning fired on a title that carries no cadence word' : null,
+        typeof r?._series === 'string' ? null : 'a created row carries no note saying its page name is a hand field',
+      ].filter(Boolean);
+    },
+  },
+  {
+    name: 'a-new-row-names-the-series-it-owes',
+    events: [vevent('new-30', 'Matheapolis - Bimonthly Social', ['20261219T120000', CHICAGO], ['20261219T130000', CHICAGO], ANGEL, 'CONFIRMED')],
+    check: (o) => {
+      const r = find(o.snap, 'new-30');
+      return [
+        r?.series === r?.summary ? null : `the created row's page name is not the organizer's title (${r?.series})`,
+        typeof r?._series === 'string' && /D301/.test(r._series) ? null : 'the created row carries no note saying the title holds a frequency word the page may not print (D301)',
+        has(o.out, 'D301') ? null : 'the run did not name the cadence defect it is about to publish',
+        has(o.out, 'A human still owes it') ? null : 'the run stopped saying a series name is owed',
+        has(o.out, 'bimonthly') ? null : 'the run did not name WHICH cadence word the title carries',
       ].filter(Boolean);
     },
   },

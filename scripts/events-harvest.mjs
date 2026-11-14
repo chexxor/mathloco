@@ -50,6 +50,7 @@
  */
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { cadenceWords } from '../src/lib/cadence.mjs';
 
 const args = process.argv.slice(2);
 const flag = (f) => args.includes(f);
@@ -217,11 +218,20 @@ for (const ev of feed.events) {
     continue;
   }
   if (!existing) {
+    // A created row's `series` is the organizer's `SUMMARY`, because only a person can name a series (D92,
+    // D189) and the page prints `series`. That placeholder is safe for a title with no frequency word and
+    // is a defect waiting for a gate when the title carries one: on 2026-11-13 two rows created this way
+    // put "Bimonthly" on /schedule while nothing failed (D301). So the run says which word it is about to
+    // publish, and the row carries the note that says the page's name is still owed.
+    const cadenceInTitle = [...cadenceWords(row.summary).keys()];
     const created = {
       uid,
       slug: `${row.start.slice(0, 10)}-${slugify(row.summary)}`,
       summary: row.summary,
       series: row.summary,
+      _series: cadenceInTitle.length
+        ? `PLACEHOLDER, and this one must not ship: the organizer's SUMMARY verbatim, because a harvest cannot author a series name (D92). It carries ${cadenceInTitle.map((w) => `"${w}"`).join(', ')} — a frequency word a page may not print — so check:content fails the build until a human replaces this with the series' published name (D301; the ruled name for the social is in D189).`
+        : `PLACEHOLDER: the organizer's SUMMARY verbatim, because a harvest cannot author a series name (D92, D189). No frequency word in it, so it is safe to print, but a human still owes the series' published name.`,
       start: row.start,
       end: row.end,
       timeConfirmed: declaredHour(start, end) && !confirmOff,
@@ -235,7 +245,7 @@ for (const ev of feed.events) {
       source: { feed: FEED_URL, uid, fetchedAt, dtstamp: ev.DTSTAMP?.value ?? null, rawStart: start.raw, rawEnd: end.raw },
     };
     snapshot.events = [...(snapshot.events ?? []), created];
-    changes.push(`+ ${uid} ${row.start.slice(0, 10)} "${row.summary}" — new row; SEQUENCE 0. A human still owes it: series name${row.venueRaw ? ', venue split into name/street/city' : ''}, and the hour ruling.`);
+    changes.push(`+ ${uid} ${row.start.slice(0, 10)} "${row.summary}" — new row; SEQUENCE 0. A human still owes it: series name${cadenceInTitle.length ? ` (this title carries ${cadenceInTitle.map((w) => `"${w}"`).join(', ')} — a cadence word check:content will not let a page print, so the build is red until the name is set, D301)` : ''}${row.venueRaw ? ', venue split into name/street/city' : ''}, and the hour ruling.`);
     continue;
   }
 
