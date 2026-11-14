@@ -465,14 +465,17 @@ const lede = compact
           </div>
 
           <div class="mt-6 flex flex-wrap gap-3">
+            {/* Was the page's second primary, labelled "Join on Meetup" and pointing at the group: two
+                primaries on one surface and both of them Meetup is the defect D303 names. It is the same
+                action as the hero's now — the club's own route, which explains the three kinds of joining —
+                so it is a secondary here and the homepage keeps exactly one primary. The platform-specific
+                pair that used to live here is one click further in, on /join. */}
             <a
-              href={config.URLs.meetupGroup}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-control="primary"
-              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+              href="/join"
+              data-control="secondary"
+              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
             >
-              Join on Meetup
+              Join the club
               <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                 <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
               </svg>

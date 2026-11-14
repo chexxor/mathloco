@@ -33,7 +33,8 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  LINK_KEYS, LINK_SHAPES, LINK_STAMP_DAYS, PLATFORMS, PREF_KEY, PROBE_BLIND_KEYS, SNAPSHOT_FRESH_DAYS,
+  CHANNEL_KINDS, LINK_KEYS, LINK_SHAPES, LINK_STAMP_DAYS, PLATFORMS, PREF_KEY, PROBE_BLIND_KEYS,
+  SNAPSHOT_FRESH_DAYS, joinChannels,
   joinUrl, hourOf, linkFindings, openDiscordEvents, openMeetupEvents, discordSnapshotFindings,
   orderByPreference, preferredFirst, snapshotAgeDays, snapshotFindings,
 } from '../src/lib/rsvp.mjs';
@@ -228,8 +229,44 @@ if (selftest) {
     if (got === c.want) console.log(`ok    ${c.name} -> ${got}`);
     else { bad++; console.log(`FAIL  ${c.name}: got ${got}, want ${c.want}`); }
   }
+  // The join channels (S033, D303; and D304 for the order). `/join` is the one page a visitor reaches with
+  // `Join Our Group`, so the rows it paints are compared against this list by its own gate — the properties
+  // worth planting here are the ones a page cannot check for itself: the canonical kind order, no dead row
+  // for a platform the config left empty, and an internal rsvp row that never pretends to be an external URL.
+  const joinCases = [
+    {
+      name: 'join channels paint the kinds in canonical order',
+      want: () => joinChannels({ meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/g' }).map((c) => c.kind).join(','),
+      expect: 'social,social,rsvp,chat',
+    },
+    {
+      name: 'a platform the config leaves empty paints no row',
+      want: () => joinChannels({ meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: '' }).filter((c) => c.kind === 'social').length,
+      expect: 1,
+    },
+    {
+      name: 'the rsvp row is the club\'s own schedule, not an external URL',
+      want: () => { const r = joinChannels({ meetupGroup: 'https://www.meetup.com/g' }).find((c) => c.kind === 'rsvp'); return `${r.href}|${r.external}`; },
+      expect: '/schedule|false',
+    },
+    {
+      name: 'every channel kind is one the list declares',
+      want: () => joinChannels({ meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/g' }).every((c) => CHANNEL_KINDS.includes(c.kind)),
+      expect: true,
+    },
+    {
+      name: 'an empty config still paints the club\'s own rsvp row',
+      want: () => joinChannels({}).map((c) => c.kind).join(','),
+      expect: 'rsvp',
+    },
+  ];
+  for (const c of joinCases) {
+    const got = c.want();
+    if (JSON.stringify(got) === JSON.stringify(c.expect)) console.log(`ok    ${c.name} -> ${got}`);
+    else { bad++; console.log(`FAIL  ${c.name}: got ${JSON.stringify(got)}, want ${JSON.stringify(c.expect)}`); }
+  }
   console.log(`ok    the preference key the island writes is the resolver's own: "${PREF_KEY}"`);
-  console.log(`check:rsvp selftest — ${cases.length + ruleCases.length + prefCases.length} cases, ${bad} wrong`);
+  console.log(`check:rsvp selftest — ${cases.length + ruleCases.length + prefCases.length + joinCases.length} cases, ${bad} wrong`);
   process.exit(bad ? 1 : 0);
 }
 

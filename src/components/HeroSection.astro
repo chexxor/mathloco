@@ -170,10 +170,12 @@ const focus = value(content.focus);
       <div>
         <div class='mt-6 sm:mt-8 sm:flex sm:justify-center lg:justify-start'>
           <div>
+            {/* The one action on the page, and it is the club's own route rather than Meetup's join page: the
+                page it lands on is where the three kinds of joining are explained (S033, D303, D304). The
+                label is unchanged, so the control a returning visitor knows still says what it said; only its
+                destination moved, and `check:content`'s dead-path rule now requires `/join` to exist. */}
             <a
-              href={`${config.URLs.meetupGroup}/join`}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/join"
               data-control="primary"
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
               >Join Our Group</a

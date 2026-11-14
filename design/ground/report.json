@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-14T00:22:36.478Z",
- "siteFp": "a6312b6fcf",
+ "measuredAt": "2026-11-14T03:24:13.390Z",
+ "siteFp": "a59fb33d50",
  "widths": [
   1240,
   390,
@@ -23,8 +23,8 @@
     250,
     246
    ],
-   "groundExact": 1615652,
-   "groundPct": 76.51,
+   "groundExact": 1623220,
+   "groundPct": 76.71,
    "span": 12.666666666666686,
    "sd": 2.68,
    "flat": {
@@ -41,7 +41,7 @@
       250,
       246
      ],
-     "pct": 42.2
+     "pct": 42.4
     },
     {
      "rgb": [
@@ -57,7 +57,7 @@
       57,
       39
      ],
-     "pct": 9.7
+     "pct": 9.5
     },
     {
      "rgb": [
@@ -69,8 +69,8 @@
     }
    ],
    "distinct": 52272,
-   "hairlines": 16,
-   "runs": 16,
+   "hairlines": 18,
+   "runs": 18,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -339,8 +339,25 @@
     },
     {
      "y": 2711,
-     "x": 225,
-     "len": 136,
+     "x": 35,
+     "len": 156,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 2711,
+     "x": 209,
+     "len": 137,
      "core": [
       132,
       150,
@@ -356,8 +373,25 @@
     },
     {
      "y": 2758,
-     "x": 225,
-     "len": 136,
+     "x": 35,
+     "len": 156,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 2758,
+     "x": 209,
+     "len": 137,
      "core": [
       132,
       150,
@@ -378,6 +412,7 @@
     3.01,
     3.01,
     3.01,
+    3.01,
     3.01
    ],
    "bytesMinusCss": 0
@@ -390,10 +425,10 @@
     250,
     246
    ],
-   "groundExact": 781229,
-   "groundPct": 74.9,
+   "groundExact": 788797,
+   "groundPct": 75.32,
    "span": 12.666666666666686,
-   "sd": 2.64,
+   "sd": 2.63,
    "flat": {
     "x": 208,
     "y": 80,
@@ -408,7 +443,7 @@
       250,
       246
      ],
-     "pct": 43.1
+     "pct": 43.5
     },
     {
      "rgb": [
@@ -424,7 +459,7 @@
       57,
       39
      ],
-     "pct": 8.7
+     "pct": 8.3
     },
     {
      "rgb": [
@@ -436,8 +471,8 @@
     }
    ],
    "distinct": 35349,
-   "hairlines": 17,
-   "runs": 17,
+   "hairlines": 19,
+   "runs": 19,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -723,8 +758,25 @@
     },
     {
      "y": 4217,
-     "x": 209,
-     "len": 136,
+     "x": 19,
+     "len": 156,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 4217,
+     "x": 193,
+     "len": 137,
      "core": [
       132,
       150,
@@ -740,8 +792,25 @@
     },
     {
      "y": 4264,
-     "x": 209,
-     "len": 136,
+     "x": 19,
+     "len": 156,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 4264,
+     "x": 193,
+     "len": 137,
      "core": [
       132,
       150,
@@ -762,6 +831,7 @@
     3.01,
     3.01,
     3.01,
+    3.01,
     3.01
    ],
    "bytesMinusCss": 0
@@ -774,8 +844,8 @@
     250,
     246
    ],
-   "groundExact": 735906,
-   "groundPct": 77.56,
+   "groundExact": 743505,
+   "groundPct": 78.01,
    "span": 13,
    "sd": 2.64,
    "flat": {
@@ -792,7 +862,7 @@
       250,
       246
      ],
-     "pct": 43.8
+     "pct": 44.3
     },
     {
      "rgb": [
@@ -808,7 +878,7 @@
       57,
       39
      ],
-     "pct": 8.1
+     "pct": 7.7
     },
     {
      "rgb": [
@@ -820,8 +890,8 @@
     }
    ],
    "distinct": 25772,
-   "hairlines": 17,
-   "runs": 17,
+   "hairlines": 19,
+   "runs": 19,
    "notKeyline": [],
    "hairlineMin": 3.01,
    "hairlineMedian": 3.01,
@@ -1106,6 +1176,40 @@
      "otherGround": "paper"
     },
     {
+     "y": 4624,
+     "x": 19,
+     "len": 156,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
+     "y": 4671,
+     "x": 19,
+     "len": 156,
+     "core": [
+      132,
+      150,
+      136
+     ],
+     "aboveSpan": 6,
+     "belowSpan": 6,
+     "rule": true,
+     "own": 3.01,
+     "other": 3.01,
+     "ownGround": "paper",
+     "otherGround": "paper"
+    },
+    {
      "y": 4684,
      "x": 19,
      "len": 136,
@@ -1141,6 +1245,7 @@
     }
    ],
    "claimedKeylineContrast": [
+    3.01,
     3.01,
     3.01,
     3.01,

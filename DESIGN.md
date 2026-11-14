@@ -221,10 +221,12 @@ the number**. What that means when choosing a token:
 - `panel` is 1.04 against `paper` (a tint, not a layer: the layer bar is 1.35), so a tint was never
   doing the separation a ring does. Taking the ring off a tinted box costs no readable edge.
 
-`check:render` measures both sides of every inset ring on all three routes and fails a straddle or a
-ring under the bar; `check:ground` fails the same pair off painted bytes, where a background image
-could move the pixels and not the stylesheet. `design/records/0018-a-hairline-on-a-tint-is-under-its-
-own-bar.md` is the finding; `design/records/0024-*` is the fix.
+`check:render` measures both sides of every inset ring on every route the build emits and fails a straddle or a
+ring under the bar (`design/emitted-routes.mjs` derives the set, so a new page is measured without being added to a
+list; the literal `['/', '/404', '/chat']` this sentence used to name went stale the day `/schedule` landed);
+`check:ground` fails the same pair off painted bytes, where a background image could move the pixels and not the
+stylesheet. `design/records/0018-a-hairline-on-a-tint-is-under-its-own-bar.md` is the finding; `design/records/0024-*`
+is the fix.
 
 **Never** use a `border` for a keyline — it adds 2px and silently breaks the control-height
 arithmetic. **Never** put a shadow on a card, or on a hovered card: cards are part of the page.
@@ -465,8 +467,8 @@ nowhere, and `npm run check:rsvp-page` proves both directions from the built byt
 component's silence. The box is **32px** tall wherever the lane holds all three labels on one line — 1240 on both
 surfaces, and 640 on `/schedule` — **68px** on the homepage at 640 where Facebook drops to a second line, and
 **104px** at 390 and 320 where each label takes its own (two 4px `gap-y-1` rows between three 32px line boxes).
-Height × width @measured 2026-11-13 by `npm run check:render:dist` (Linux native, Firefox 159.0, 4 routes × 4
-widths): `/` 32x633, 68x532, 104x314, 104x244 and `/schedule` 32x645, 32x544, 104x314, 104x244 for 1240/640/390/320. Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
+Height × width @measured 2026-11-13 by `npm run check:render:dist` (Linux native, Firefox 159.0, 4 widths on
+every emitted route — re-measured 2026-11-14 after `/join` landed: PASS, **5 routes × 4 widths**, 10.35s): `/` 32x633, 68x532, 104x314, 104x244 and `/schedule` 32x645, 32x544, 104x314, 104x244 for 1240/640/390/320. Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
 because `check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of
 which must go red.
 - **The order is a permutation, never a filter** (S022, D281). The server paints Meetup, Discord, Facebook; the
@@ -891,12 +893,16 @@ npm run verify                  # the browser-free CI gate set (everything above
 ```
 
 **These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
-assumed.** @measured 2026-11-03 by `npm run verify:browser` — re-run it to refresh these. Measured on the dev rig (Linux, 16 CPU, Firefox 159.0, native, 2026-11-03): one page at one width
-**0.9–3s**, `check:render:dist` over its **12 cells** (4 widths × 3 routes) **36.6s**, `check:mark` **3.8s**,
-`check:space` **9.3s**, `check:ground` **8.7s** and `check:ground:selftest` **15.7s**, the render selftest **12.3s**,
-`check:social:live` **1.5s** — `npm run verify:browser` end to end is **87.8s** (it was 44.7s before the width sets
-grew, D146). Every step's full output is written even when it passes, under `.design/tmp-gate-logs/` (**D144**), so a
-green run leaves the evidence rather than the word "ok". `verify` stays browser-free
+assumed.** @measured 2026-11-14 by `npm run verify:browser` (Linux native, 16 CPU, Firefox 159.0, load 2.9 →
+9.0/16cpu; re-run it to refresh these): `check:render:dist` over its **20 cells** (4 widths × 5 routes: `/`,
+`/schedule`, `/join`, `/chat`, `/404`) **8.94s**, `check:mark` **7.63s**, `check:space` **8.37s**, `check:ground`
+**8.82s** and `check:ground:selftest` **16.19s**, the render selftest **46.06s** (it grew as the mark, cluster and
+ring plantings landed — 24 cases, record 0022/0024), `check:social:live` **1.42s**, `check:rsvp-preference`
+**8.15s** with its selftest **15.01s** — `npm run verify:browser` end to end is **122.4s of work** (it was 87.8s at
+three routes and 44.7s before the width sets grew, D146; the browser `workSecs` baseline in
+`design/gate-cost.json` is what the 2x cost guard compares against, D269). Every step's full output is written
+even when it passes, under `.design/tmp-gate-logs/` (**D144**), so a green run leaves the evidence rather than the
+word "ok". `verify` stays browser-free
 because the runner has no Firefox, which means `check:render`, `check:render:dist`,
 `check:mark`, `check:space`, `check:ground`, `check:ground:selftest`, `design/render-gate-selftest.mjs` and
 `check:social:live` currently run on human ritual before a deploy, not on

@@ -460,3 +460,109 @@ export const orderByPreference = (destinations, preferred) => {
 /** The subset of a cluster that a remembered platform can actually be applied to — used by the gates to
  *  describe what a visitor with a preference sees, without a browser. */
 export const preferredFirst = (destinations, preferred) => orderByPreference(destinations, preferred).map((d) => d.platform);
+
+/**
+ * The kinds of relationship the club offers, in the order `/join` paints them (S033, D303).
+ *
+ * A **kind** is the row and a platform is a value inside it. That is the whole reason this is data: a second
+ * `rsvp` platform (Eventbrite) or a future dimension for **other groups** the club has a relationship with
+ * (MAA/AMS/SIAM) is a row added here plus a stamped URL in `src/config.json`, not a page rewritten. A kind
+ * with no configured channel paints nothing — `joinChannels()` simply has fewer rows.
+ *
+ * The order is canonical and is NOT reordered by the remembered platform: `/join` is the page that explains
+ * the choice, so its shape must not change under a returning visitor (D304).
+ */
+export const CHANNEL_KINDS = ['social', 'rsvp', 'chat'];
+
+/** What each kind is, in the visitor's terms. The heading and the one-line answer are copy, so they live
+ *  beside the list they describe rather than being re-typed in the page (D118's one-table rule). No cadence
+ *  word, no headcount and no promise about a platform the club does not have (D92, D265). */
+export const JOIN_KIND_COPY = {
+  social: {
+    heading: 'Follow the club',
+    line: 'A feed you already read, where the club can put a date.',
+  },
+  rsvp: {
+    heading: 'Come to a meeting',
+    line: 'Pick a date that works and sign up for that one.',
+  },
+  chat: {
+    heading: 'Talk with us now',
+    line: 'The people, on an ordinary day.',
+  },
+};
+
+/**
+ * The `joinChannels()` rows: what a visitor is choosing on `/join`, one row per channel, grouped by kind.
+ *
+ * Each row is `{kind, platform, href, label, srOnly, gives, external}`:
+ *   - `kind`   — one of `CHANNEL_KINDS`; the page paints one group per kind that has a row.
+ *   - `platform` — the platform that DELIVERS the channel today (`PLATFORMS`), so a renamed platform is a
+ *                one-line change here instead of a string in a page.
+ *   - `href`   — an external URL for a platform channel, or the club's own route for the `rsvp` kind, whose
+ *                per-date pages belong to `signUpPaths()`. `external` says which, so a gate knows whether to
+ *                apply `LINK_SHAPES` and the stamp rule or the emitted-route rule.
+ *   - `label`  — the visible string; it names the platform and the verb (D273).
+ *   - `srOnly` — the mode of opening, for a link that leaves the site. Null for an internal route, because a
+ *                visitor can go back from it.
+ *   - `gives`  — one clause of what the visitor gets. Every one of these is a claim with a source:
+ *                Meetup's group is "the club's list of members" (`src/content.json` membership.value),
+ *                Facebook's group is public at the URL the operator named (S021/D280), and the chat is where
+ *                "most of the arguing happens … between meetings" (the hero's own sourced sentence).
+ *
+ * A platform whose config URL is empty is omitted rather than painted as a dead link — `src/config.json`'s
+ * rule is that an empty entry is an unchosen platform, and `SignUpLinks.astro` already treats it that way.
+ */
+export const joinChannels = (urls = {}) => {
+  const external = (u) => String(u ?? '').trim();
+  const rows = [
+    {
+      kind: 'social',
+      platform: PLATFORMS.meetup,
+      href: external(urls.meetupGroup),
+      external: true,
+      label: 'Join the Meetup group',
+      srOnly: `${PLATFORMS.meetup}, opens in a new tab`,
+      gives: "The club's member list, and where a date gets announced.",
+    },
+    {
+      kind: 'social',
+      platform: PLATFORMS.facebook,
+      href: external(urls.facebookGroup),
+      external: true,
+      label: 'Join the Facebook group',
+      srOnly: `${PLATFORMS.facebook}, opens in a new tab`,
+      gives: "The club's page on Facebook, for people who already read it there.",
+    },
+    {
+      kind: 'rsvp',
+      platform: PLATFORMS.meetup,
+      href: '/schedule',
+      external: false,
+      label: 'See the dates',
+      srOnly: null,
+      gives: "Each meeting's own page, one click from the date.",
+    },
+    {
+      kind: 'chat',
+      platform: PLATFORMS.discord,
+      href: external(urls.discordInvite),
+      external: true,
+      label: 'Join the chat on Discord',
+      srOnly: `${PLATFORMS.discord}, opens in a new tab`,
+      gives: 'The conversation that runs between meetings.',
+    },
+  ];
+  // Canonical order: the kinds in `CHANNEL_KINDS` order, and within a kind the order above. Sorting is
+  // stable on purpose — a page whose rows move between builds is a page `check:rsvp-page`-style gates cannot
+  // compare against the resolver.
+  const order = (c) => CHANNEL_KINDS.indexOf(c.kind);
+  return rows
+    .filter((c) => c.href)
+    .map((c, i) => ({ c, i }))
+    .sort((a, b) => order(a.c) - order(b.c) || a.i - b.i)
+    .map(({ c }) => c);
+};
+
+/** The kinds that actually have a channel, in canonical order — what the page paints headings for. */
+export const paintedKinds = (channels = []) => CHANNEL_KINDS.filter((k) => channels.some((c) => c.kind === k));

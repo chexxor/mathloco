@@ -1,0 +1,125 @@
+---
+import Layout from '../layouts/Layout.astro';
+import config from '../config.json';
+import { JOIN_KIND_COPY, joinChannels, paintedKinds } from '../lib/rsvp.mjs';
+
+// One action on the homepage lands here (S033, D303): the page's job is the commitment decision — which
+// KIND of relationship the visitor wants — so the rows are grouped by kind and the platforms are values
+// inside a group, not the structure itself. `joinChannels()` owns the list, the labels and the clause each
+// row carries; this file owns only their arrangement, so `src/lib/rsvp.mjs` stays the one home for which
+// platforms the club has and where each one goes (D264, D118).
+//
+// No island, and the canonical order is the painted order (D304): the page's shape is the explanation, so
+// it must not change under a returning visitor. The remembered platform still leads every per-date cluster
+// on `/` and `/schedule` (D281) — that is a different question, asked on a different page.
+export const prerender = true;
+
+const channels = joinChannels(config.URLs);
+const kinds = paintedKinds(channels);
+// `JOIN_KIND_COPY` is a literal object in a `.mjs` module, so TypeScript narrows it to exactly the three keys
+// it declares, while `kinds` is a `string[]`; indexing one with the other is `ts(7053)` at `astro check`. The
+// annotation is the widest honest type - the literal is still key-checked where it is written (2026-11-14).
+const copy: Record<string, { heading: string; line: string }> = JOIN_KIND_COPY;
+// Exactly one filled control on the page: the club's own member list is the one channel a source names as
+// the member list (src/content.json `membership.value`), so it leads, and every other channel is a 48px
+// secondary — the same two heights DESIGN.md fixes (D139), no third tier.
+const lead = channels[0];   // identity, not href: two channels may one day share a destination
+---
+
+<Layout title="Join - Matheapolis" path="/join">
+  <main class="mx-auto max-w-4xl px-4 py-8">
+    <div class="text-label uppercase tracking-wide mb-4">
+      <span class="text-ink-3">Join the club</span>
+    </div>
+
+    <h1 class="text-display-1 font-extrabold text-ink">Ways in</h1>
+
+    <p class="mt-4 max-w-measure text-lede leading-prose text-ink-2 font-body">
+      Each way in is a different kind of thing, and you only need one to start: somewhere to follow along,
+      something to turn up to, or somebody to talk to.
+    </p>
+
+    {
+      kinds.map((kind) => {
+        const rows = channels.filter((c) => c.kind === kind);
+        const id = `join-${kind}`;
+        return (
+          <section class="mt-12" aria-labelledby={id}>
+            <h2 id={id} class="text-heading font-bold text-ink">
+              {copy[kind].heading}
+            </h2>
+            <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{copy[kind].line}</p>
+            <ul class="mt-6 flex flex-col gap-4">
+              {rows.map((c) => (
+                <li>
+                  <a
+                    href={c.href}
+                    target={c.external ? '_blank' : undefined}
+                    rel={c.external ? 'noopener noreferrer' : undefined}
+                    data-control={c === lead ? 'primary' : 'secondary'}
+                    data-join-kind={c.kind}
+                    data-join-platform={c.platform}
+                    class={
+                      c === lead
+                        ? 'inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
+                        : 'inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
+                    }
+                  >
+                    {c.label}{c.srOnly && <span class="sr-only">{` ${c.srOnly}`}</span>}
+                  </a>
+                  {/* What the visitor gets. Every clause is the resolver's, and every clause has a source
+                      named in `joinChannels()` — the member list (src/content.json), the public Facebook
+                      group (S021/D280), the per-date page (S019/D273), the chat between meetings (the
+                      homepage lede's own sentence). No cadence word, no headcount, no price (D92, D265). */}
+                  <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{c.gives}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        );
+      })
+    }
+
+    <section class="mt-12" aria-labelledby="join-what-we-do">
+      <h2 id="join-what-we-do" class="text-heading font-bold text-ink">What we do</h2>
+      {/* The two things the club actually runs, in the organizer's own terms from the calendar feed, and
+          without a frequency word: "we gather … to work in parallel" and "study independently, side by
+          side" are the study session's DESCRIPTION, and the social is the row's own title plus the
+          homepage's "around a table in a coffee shop or a brewery". No dates here — `/schedule` paints
+          them, and it is the only surface that does (D218). */}
+      <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
+        A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.
+        A study session: an evening working side by side on whatever each person is learning, with help
+        when someone asks for it.
+      </p>
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
+        The next ones are on the
+        <a
+          href="/schedule"
+          class="text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          >schedule</a
+        >.
+      </p>
+    </section>
+
+    <section class="mt-12" aria-labelledby="first-meeting">
+      <h2 id="first-meeting" class="text-heading font-bold text-ink">Your first one</h2>
+      {/* Sourced, and deliberately not the homepage's sentences: the hero says "There is no syllabus, no
+          reading list to keep up with" and "Bring a question; you don't need a field", and this page says
+          the same things in its own words so `check:content`'s near-duplicate rule does not see one surface
+          copying the other (and so a reader who lands here first still gets them). */}
+      <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
+        Nothing to prepare and nothing to read first. Come with a question if you have one, or come and
+        listen; no subject is assumed and no background is required.
+      </p>
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
+        Want to ask something before you turn up? Somebody from the club reads
+        <a
+          href="/chat"
+          class="text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          >the messages we post there</a
+        >.
+      </p>
+    </section>
+  </main>
+</Layout>
