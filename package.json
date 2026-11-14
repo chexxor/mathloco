@@ -49,6 +49,8 @@
     "check:naming:selftest": "node scripts/check-naming.mjs --selftest",
     "check:alt": "node scripts/check-alt.mjs",
     "check:alt:selftest": "node scripts/check-alt.mjs --selftest",
+    "check:row-geometry": "node scripts/check-row-geometry.mjs",
+    "check:row-geometry:selftest": "node scripts/check-row-geometry.mjs --selftest",
     "check:sprite-claim": "node scripts/check-sprite-claim.mjs",
     "check:sprite-claim:selftest": "node scripts/check-sprite-claim.mjs --selftest",
     "check:rsvp-preference": "node scripts/check-rsvp-preference.mjs",

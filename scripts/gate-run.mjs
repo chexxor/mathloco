@@ -138,7 +138,7 @@ const DEPLOY = [
   // time, and nothing compared the pages that print a date with the rulings that allow it - so a new page could
   // start printing one and only `check:content`'s prose rules would ever look. Its fixtures are in memory, so it
   // runs before `build` (D118).
-  { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (5 plantings: an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled route missing from the build; 4 clean controls incl. an empty calendar and an age; plus the route-walker case)' },
+  { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (15 cases: 9 plantings — an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled route missing from the build, a nav date written as bare prose, a nav date on the wrong element so the chip has no handle (nav-date-unhandled), a nav chip disagreeing with the schedule, a chip on an empty calendar; 5 clean controls incl. an empty calendar, an age, a commented date, the shipped chip and the page of record; plus the route-walker case)' },
   // The band half of D115 ("at most one dark band per screen, and the band is the site's EXIT") was only ever
   // half-checked: `check:render` counts dark regions on a page that HAS a band and never asked whether a page
   // has one. In-memory fixtures, so before `build` (D118). Cost @measured 2026-11-14 by this step: 0.20s.
@@ -214,12 +214,25 @@ const DEPLOY = [
   // route - as information, because prose is allowed to describe a page without naming it.
   { name: 'check:naming', desc: 'one name per page in the four surfaces a visitor navigates by: nav, title, exit band and the page’s own opening block; a nav label with no page behind it fails', needs: ['build'] },
   // What an alt says, and where the source goes (2026-11-14, the MS04 read, D312). Before this gate the three
-  // horizon plates' alts ran 22, 21 and 24 words and each opened with a book title, a year and a leaf number -
+  // horizon plates' alts ran 30, 28 and 32 words @measured 2026-11-14 by
+  // `git show HEAD:src/components/HorizonBand.astro | grep -o "alt: '[^']*'" | awk '{print NF-2}'` and each opened
+  // with a book title, a year and a leaf number -
   // a citation in the place a description belongs - with nothing on the page carrying a caption. Selftest runs
   // on in-memory fixtures, so the rule can go red before anyone builds (D118). Cost @measured 2026-11-14 by
   // this step: 0.16s selftest, 0.14s gate.
   { name: 'check:alt:selftest', desc: 'the alt gate can still fail (9 cases: 5 plantings — a bare img, an empty alt, a 22-word alt, a citation in an alt with no figcaption, 19 words — plus 4 clean controls, incl. an 18-word alt exactly at the cap)' },
   { name: 'check:alt', desc: 'every img in the artifact has an alt, no alt runs past 18 words, and no alt carries a book/year/leaf citation with no figcaption under the image', needs: ['build'] },
+  // A schedule row's shape is a rule, not a preference (2026-11-14, the commissioned read's item 4, D313, S037).
+  // The restructure was measured - `design/schedule-geometry.mjs` prints the rail/lane/plate boxes and
+  // `design/line-length.mjs` prints characters per line - but both are diagnostics: they exit 0 whatever they
+  // measure, so the shape lived only in DESIGN.md prose. Delete the head div, drop `max-w-measure` from the prose
+  // wrapper, move the date sentence under the title or put the plate before the copy, and every gate stays green.
+  // This gate is the detector, and the cap is checked against DESIGN.md's 40-75 character band using the
+  // measured 0.455 em per serif character (32em = ~70 @measured 2026-11-14 by
+  // `node design/line-length.mjs /schedule 1240 1024 640 320 --no-build`). Selftest is in-memory (D118).
+  // Cost @measured 2026-11-14 by this step: 0.03s selftest, 0.05s gate.
+  { name: 'check:row-geometry:selftest', desc: 'the row-geometry gate can still fail (11 cases: 7 plantings — head deleted, prose uncapped, date sentence after the title, plate before the copy, measure token gone, cap widened to 60em, cap cut to 12em — plus 3 clean controls and the parser assertion that a shipped row parses as one row)' },
+  { name: 'check:row-geometry', desc: 'every date row in the artifact is three zones in order — leaf, copy (head + capped prose + cluster), plate — with the date sentence in the head above the title, and the emitted --container-measure inside DESIGN.md’s 40-75 character band (D313)', needs: ['build'] },
   // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
   { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name

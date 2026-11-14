@@ -54,7 +54,10 @@ const art = artFor(slug);
      954px art rendered **1132x546** at 1240, which is a 1.19x upscale of the file, one image painting 11.28%
      of the page, and **+558px** of document. Capped, each plate keeps **its own** aspect ratio, uncropped per
      D168: 323x155.8 for the 954x460 social art and 323x184.6 for the 1321x755 Parallel Learning art at 1240, and
-     256x123.4 / 256x146.3 at 320. @measured 2026-11-06 by check:space.
+     244x118 / 244x139 at 320 @measured 2026-11-14 by `node design/schedule-geometry.mjs --routes /schedule
+     --widths 320`. The 256x123.4 / 256x146.3 figures `check:space` recorded on 2026-11-06 are the slot's wrapper
+     box, not the painted image: at 320 the wrapper measures 256 and the img inside it 244 @measured 2026-11-14,
+     a 12px difference whose cause is not established here — quote the probe that reads the box you mean.
      The width lives here rather than in a `w-[323px]` class because 323px is a measured slot, not a spacing
      step, and `check:classes` is right to treat a one-off bracket value as a smell. */
   .event-slot {

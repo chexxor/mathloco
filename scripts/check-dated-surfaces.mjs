@@ -165,7 +165,10 @@ if (selftest) {
     // D311: the nav chip is chrome, and its whole legitimacy is that it copies the page of record.
     { name: 'clean control: the nav chip repeats the page of record\u2019s first date', pages: [{ route: '/', html: page('<header><a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a></header>') }, { route: '/schedule', html: schedule }], want: [] },
     { name: 'the nav chip disagrees with the schedule page', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-12-05">5 Dec</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-mismatch'] },
-    { name: 'a nav date with no ISO handle', pages: [{ route: '/', html: page('<a href="/schedule">Dates 21 Nov</a>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-unruled'] },
+    { name: 'a nav date written as bare prose with no chip element', pages: [{ route: '/', html: page('<a href="/schedule">Dates 21 Nov</a>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-unruled'] },
+    // The chip's element must be the one the gate can read: an attribute on the wrong element carries the date
+    // without the handle, so no gate can compare it with the schedule page (D311).
+    { name: 'a nav date whose element has the attribute but is not the chip shape', pages: [{ route: '/', html: page('<a href="/schedule">Dates <div data-nav-date="2026-11-21" class="chip">the next one</div></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-unhandled'] },
     { name: 'a nav chip while the calendar is empty', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: page('<p>No date is on the calendar yet.</p>') }], want: ['nav-date-with-no-dates'] },
   ];
   let bad = 0;

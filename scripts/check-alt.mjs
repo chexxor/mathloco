@@ -8,7 +8,8 @@
 // Why this gate exists (2026-11-14, MS04 read, D312). `PhotoSlot.astro` already refuses to build a picture
 // with no alt, and D170 rules that alt text is quoted from the picture's own page rather than invented. What
 // nothing checked was the OTHER half: the alt was carrying the provenance instead of the description. On the
-// built page before this change the three horizon plates' alts were 22, 21 and 24 words, and each one opened
+// built page before this change the three horizon plates' alts were 30, 28 and 32 words @measured 2026-11-14 by
+// `git show HEAD:src/components/HorizonBand.astro | grep -o "alt: '[^']*'" | awk '{print NF-2}'`, and each one opened
 // with a book title, a year and a leaf number — a citation — while the sentence describing what the drawing
 // actually shows sat at the end of it. A screen reader announces the citation first, and a sighted reader has
 // no caption to look at, so the fact "this is a 1903 scan of a 1903 book" is stated in the place meant for

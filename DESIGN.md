@@ -130,7 +130,9 @@ widths. Card copy runs 29-38 at 1240, and at 320 the body box is **225-256px** a
 are narrow — that is the standing finding, and it is the reason a size raise was safe here but a *wider box*
 would not be. **The schedule row's prose was the uncapped exception** (D313): `data-copy-prose` now carries
 `max-w-measure`, so the wrapper — inheriting 16px — caps at **512px** and the paragraph inside it lands on the cap;
-longest measured row line **58 characters** at 1240 (a venue line at 17.6px in that 512px box) and **42** at 320
+longest measured row line **58 characters** at 1240 (a venue line at 17.6px in that 512px box); at 320 the lane is
+244px, so the longest line inside it is **36** characters (the date sentence) and the venue lines break at **27** —
+the "42 at 320" this doc carried is the page-wide figure, not a line inside a row
 @measured 2026-11-14 by `node design/line-length.mjs /schedule 1240 1024 640 320 --no-build`. The `/schedule` "Add to a calendar" paragraph, also capped, sits in a
 **563px** box at **72** characters.
 
@@ -559,7 +561,10 @@ column below gives the **social** row first and the **study-session** row second
 | 320 | 276x570 / 276x616 | 244x293 / 244x317 |
 
 The homepage card this table used to carry a column for (1164x228 at 1240, 276x626 at 320) is history with the card
-(D306). The desktop rows did not move when the row became three zones (D313); **900 and 768 are 28px taller** than
+(D306). The shape is gated, not remembered: `npm run check:row-geometry` (11-case selftest, 0 wrong, both steps in
+`verify`) reads every emitted row's `data-head`, its `max-w-measure` prose wrapper, the plate after the copy zone,
+and the emitted `--container-measure` against the 40-75 band, and it failed on the audit's question — before it
+existed, deleting the head or the cap changed nothing any gate could see (D314, S038). The desktop rows did not move when the row became three zones (D313); **900 and 768 are 28px taller** than
 the 2026-11-13 table recorded (452→480, 481→509) because the row's prose now wraps inside `max-w-measure` instead of
 running the full 792px column.
 
