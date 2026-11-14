@@ -1,0 +1,161 @@
+#!/usr/bin/env node
+// check:dated-surfaces — the pages that print a calendar date are the ones a ruling names, and a page cannot
+// start printing one without joining that list.
+//
+//   npm run check:dated-surfaces            # over the built dist/client
+//   npm run check:dated-surfaces:selftest   # plant each defect, require each to FAIL, with clean controls
+//
+// Why this gate exists (2026-11-14, the operator's `/join` objective: "/schedule stays the only surface that
+// prints dates, and no page grows a second source of truth for links, dates or claims"). Every ruling that put a
+// date on the site was made one page at a time (D218 made `/schedule` the page of record; D227 put ONE date and a
+// pointer on the homepage), and nothing compared the set of dated surfaces with the set of rulings. A new page
+// that prints a date is a second copy of a fact whose source is `data/events.json`, and a copy goes stale on its
+// own the day the snapshot moves — the class `check:schedule-window` and `check:rsvp-page` catch only for the
+// pages they know. This gate knows every page the build emits, because it walks `dist/client`.
+//
+// What counts as a date: a month-and-day with no year ("Nov 21", "Saturday, Nov 21"), or an ISO date, in text a
+// visitor reads. A year-bearing stamp ("Copied from the club's own calendar on Nov 13, 2026") is provenance about
+// when a source was read, not a schedule date, and is deliberately out of scope — its rule is D276's ("name where
+// it came from, and carry the date"), and a page may carry it without being a dated surface.
+//
+// Findings name the fix, not the fact:
+//   dated-surface-unruled    this page prints a date and no ruling has put one there
+//   dated-surface-unmarked   this page prints a date but carries no `data-date` handle, so no gate can key on it
+//   dated-surface-stale      this page is on the ruled list and prints no date (the entry no longer earns its place)
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+const args = process.argv.slice(2);
+const selftest = args.includes('--selftest');
+const DIST = (() => {
+  const i = args.indexOf('--dist');
+  return resolve(i < 0 ? 'dist/client' : args[i + 1]);
+})();
+
+/** The pages a ruling has given a date to, and the ruling that owns each. Adding a row is the whole act of
+ *  putting a date on a new surface, so the diff that prints one has to touch this file and say which decision
+ *  allows it. */
+export const RULED = new Map([
+  ['/', 'D227 — the homepage carries ONE next date and a pointer at the page of record'],
+  ['/schedule', 'D218 — the page of record: every open date inside the window'],
+]);
+
+/** A month-and-day a visitor could read, with no year attached. The year is the discriminator: "Nov 21" is a
+ *  date on a schedule, "Nov 13, 2026" is a stamp about a source (see the note at the top). */
+const DATE_TEXT = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b(?!\s*,?\s*\d{4})|\b\d{4}-\d{2}-\d{2}\b/;
+/** The machine-readable handle `Schedule.astro` and `EventRow.astro` put on every date they paint (D173). */
+const DATE_HANDLE = /data-date="\d{4}-\d{2}-\d{2}"/;
+
+export const visibleText = (html) =>
+  html
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+const routesUnder = (dir, prefix = '') => {
+  const out = [];
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = resolve(dir, entry.name);
+    if (entry.isDirectory()) out.push(...routesUnder(full, `${prefix}/${entry.name}`));
+    else if (entry.name === 'index.html') out.push(prefix === '' ? '/' : `${prefix}/`.replace(/\/$/, ''));
+  }
+  return out;
+};
+
+/** Pure verdict over `[{route, html}]`, so the selftest plants pages without a build or a disk. */
+export const datedSurfaceFindings = (pages, ruled = RULED) => {
+  const fails = [];
+  const dated = [];
+  for (const { route, html } of pages) {
+    const text = visibleText(html);
+    const m = DATE_TEXT.exec(text);
+    if (!m) continue;
+    dated.push({ route, sample: m[0] });
+    if (!ruled.has(route)) {
+      fails.push({
+        rule: 'dated-surface-unruled',
+        detail: `${route} prints the date "${m[0]}" and no ruling has put a date on it. Either remove it — /schedule is the page of record (D218) — or add it to RULED in this file with the decision that allows it.`,
+      });
+      continue;
+    }
+    if (!DATE_HANDLE.test(html)) {
+      fails.push({
+        rule: 'dated-surface-unmarked',
+        detail: `${route} prints the date "${m[0]}" with no data-date handle. Every painted date carries the handle (D173) so check:rsvp-page and this gate can key on it; a text-only date is one no gate can find.`,
+      });
+    }
+  }
+  for (const [route, why] of ruled) {
+    if (!dated.some((d) => d.route === route)) {
+      fails.push({
+        rule: 'dated-surface-stale',
+        detail: `${route} is on the ruled list ("${why}") and prints no date. Either the page moved its dates (move the ruling with it) or the entry is spent — delete it.`,
+      });
+    }
+  }
+  return { fails, dated };
+};
+
+if (selftest) {
+  const FIX = resolve('.design', 'tmp-dated-surfaces');
+  rmSync(FIX, { recursive: true, force: true });
+  mkdirSync(FIX, { recursive: true });
+  const ruled = new Map([['/', 'fixture: the homepage'], ['/schedule', 'fixture: the page of record']]);
+  const page = (body) => `<html><body>${body}</body></html>`;
+  const home = page('<p class="italic">Nov 21</p><div data-date="2026-11-21">MPLS Math Club Social</div>');
+  const schedule = page('<ul><li data-date="2026-11-21">Saturday, Nov 21 — MPLS Math Club Social</li></ul>');
+  const cases = [
+    { name: 'clean control: the two ruled surfaces print dates with handles', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/join', html: page('<p>Ways in</p>') }], want: [] },
+    { name: 'a page that is not ruled starts printing a date', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Come on Nov 21</p><div data-date="2026-11-21"></div>') }], want: ['dated-surface-unruled'] },
+    { name: 'a ruled page prints a date with no handle', pages: [{ route: '/', html: page('<p>Nov 21</p>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-unmarked'] },
+    { name: 'a ruled surface that stopped printing dates', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-stale'] },
+    // The discriminator: a provenance stamp carries a year and is not a schedule date (D276).
+    { name: 'clean control: a year-bearing provenance stamp is not a dated surface', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Copied from the club’s own calendar on Nov 13, 2026</p>') }], want: [] },
+    { name: 'clean control: a date inside an HTML comment is not painted', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/join', html: page('<!-- measured Nov 21 --><p>Ways in</p>') }], want: [] },
+  ];
+  let bad = 0;
+  for (const c of cases) {
+    const got = datedSurfaceFindings(c.pages, ruled).fails.map((f) => f.rule);
+    const miss = c.want.filter((w) => !got.includes(w));
+    const extra = got.filter((g) => !c.want.includes(g));
+    const ok = miss.length === 0 && extra.length === 0;
+    if (!ok) bad++;
+    console.log(`${ok ? 'ok   caught' : 'FAIL missed'}  ${c.name.padEnd(62)} ${got.join(',') || 'nothing'}${miss.length ? ` — missing: ${miss.join(',')}` : ''}${extra.length ? ` — unexpected: ${extra.join(',')}` : ''}`);
+  }
+  // The parser the real run uses must be the one the fixtures were read by.
+  const dir = resolve(FIX, 'walk', 'schedule');
+  mkdirSync(dir, { recursive: true });
+  writeFileSync(resolve(FIX, 'walk', 'index.html'), home);
+  writeFileSync(resolve(dir, 'index.html'), schedule);
+  const routes = routesUnder(resolve(FIX, 'walk')).sort();
+  const walkOk = routes.join(',') === '/,/schedule';
+  console.log(`${walkOk ? 'ok   walked' : 'FAIL walked'}  the route walker reads index.html as "/" and a directory as its route   ${routes.join(',')}`);
+  if (!walkOk) bad++;
+  rmSync(FIX, { recursive: true, force: true });
+  console.log(`\ncheck:dated-surfaces selftest — ${cases.length + 1} cases, ${bad} wrong`);
+  process.exit(bad ? 1 : 0);
+}
+
+// ------------------------------------------------------------------ the real run
+
+if (!existsSync(DIST)) {
+  console.error(`check:dated-surfaces: ${DIST} missing — this gate reads the artifact, so build first (npm run build).`);
+  process.exit(1);
+}
+const pages = [];
+for (const route of routesUnder(DIST).sort()) {
+  const file = resolve(DIST, route === '/' ? 'index.html' : `${route.replace(/^\//, '')}/index.html`);
+  if (statSync(file).isFile()) pages.push({ route, html: readFileSync(file, 'utf8') });
+}
+const { fails, dated } = datedSurfaceFindings(pages);
+console.log(`check:dated-surfaces — ${pages.length} built page(s), ${dated.length} printing a date`);
+for (const d of dated) console.log(`  ${d.route.padEnd(12)} ${d.sample}${RULED.has(d.route) ? `   (${RULED.get(d.route)})` : ''}`);
+for (const f of fails) console.log(`  FAIL ${f.rule}  ${f.detail}`);
+console.log(fails.length ? `\n${fails.length} finding(s).` : `\nDates are printed only where a ruling put them: ${[...RULED.keys()].join(', ')}.`);
+process.exit(fails.length ? 1 : 0);

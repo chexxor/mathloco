@@ -2,9 +2,10 @@
   "deploy": {
     "measuredAt": "2026-11-14",
     "wallSecs": 23.9,
-    "workSecs": 41.2,
+    "workSecs": 41.5,
     "load": "3.8/16cpu",
     "loadStart": "2.5/16cpu",
+    "note": "43-step baseline @measured 2026-11-14 at load 2.5 -> 3.8/16cpu. The two `check:dated-surfaces` steps were added by arithmetic from the 45-step run of 2026-11-14 (0.14s + 0.12s, load 9.5 -> 10.8/16cpu): workSecs 41.2 + 0.26 = 41.5. wallSecs was not re-taken - the rig was above the 6/16cpu bar - so the next green run at or below that load should re-freeze the set with `npm run cost:save` (D296).",
     "steps": {
       "check": 9.48,
       "check:svelte": 6.65,
@@ -30,6 +31,7 @@
       "check:sprite-claim": 0.14,
       "check:join:selftest": 0.13,
       "check:sprite-claim:selftest": 0.14,
+      "check:dated-surfaces:selftest": 0.14,
       "check:rsvp-promise:selftest": 0.12,
       "check:escapes:selftest": 0.12,
       "check:cache": 0.98,
@@ -46,6 +48,7 @@
       "check:escapes": 0.13,
       "check:schedule-window": 0.14,
       "check:rsvp-page": 0.14,
+      "check:dated-surfaces": 0.12,
       "check:join": 0.11,
       "check:rsvp-promise": 0.12,
       "check:css-utilities": 0.35
