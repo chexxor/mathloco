@@ -416,8 +416,11 @@ freshness.
 
 ## A date is one object: leaf · copy · plate (ruled 2026-11-07, D231)
 
-The schedule has **two surfaces and one shape**. The homepage prints one date — the next open one — inside the
-join band; `/schedule` prints every open date. Both draw it the same way, in this order:
+The schedule has **one dated surface**. Until 2026-11-14 the homepage printed the next open date inside its join
+band and drew it with the same three parts; that card (and the sign-up cluster inside it) was removed on the
+operator's `/join` objective — "`/schedule` stays the only surface that prints dates" — recorded as **D306** and
+enforced by `check:dated-surfaces`, which fails any built page that prints a date without a ruling. The homepage now
+points at this page and prints none; the row below is what `/schedule` prints, in this order:
 
 - **leaf** — month, day number, weekday, stacked, `bg-tint` **fill**, `EventLeaf.astro`. It is `aria-hidden`:
   the same date is spelled out in prose beside it, and a screen reader should hear a date once.
@@ -444,10 +447,10 @@ Rules that are not decoration:
   it is a **fill**, never a second keyline. A keylined leaf inside a keylined row puts two boundaries in one
   component, and `check:render` measures both sides of every ring and fails a keyline that straddles two grounds
   (D149-3c).
-- **"There are more dates" is drawn, not said** (D229). Under the homepage card sit up to two 4px-tall inset-ring
-  hairlines, inset 16px and 32px, 8px below the card and 4px apart. No gradient fade, no "see more" button, no
-  carousel. The count stays in the **link text** (`All 3 dates →`), which is where assistive tech reads it; the
-  deck itself is `aria-hidden`.
+- **"There are more dates" is said once, in the link** (D229, revised by D306). The homepage used to draw a deck of
+  up to two 4px hairline edges under its preview card; the card and the deck went together, because a deck under a
+  pointer is a picture of dates the page no longer shows. What survives is the part that was always the accessible
+  one: the **link text** (`Next 8 dates →`), which is where assistive tech reads the count.
 - **The plate cap is one number, read from the drawing code.** `node design/schedule-geometry.mjs` parses the
   323px out of `EventArt.astro`'s scoped style rather than remembering it, so a cap change cannot leave a probe
   reporting a number nothing decides (same reasoning as the route lists in D230).
@@ -455,20 +458,18 @@ Rules that are not decoration:
   `source.fetchedAt`, which is what every published `DTSTAMP` in `/events.ics` derives from, so the page and a
   subscriber's calendar client cannot name different days. `builtOn()` belongs to the empty state, where the
   build date is the honest fact.
-- **Singular on the preview, plural on the page.** The compact band says "the next date"; `/schedule` says "these
-  dates". An hour the organizer has not settled prints **"time not set"** (`timeSpan`, D169/D172) — never a
-  guessed one.
+- **An hour the organizer has not settled prints "time not set"** (`timeSpan`, D169/D172) — never a guessed one.
 - **The sign-up cluster is a quiet label, never a control** (S019, D272). Under each printed date sits one cluster
   of links, ordered **Meetup, Discord, Facebook**: `text-label font-medium text-ink`, underline at
   `decoration-rule`, `min-h-8` (32px), focus ring — no fill, no keyline, no `data-control`. A row is already one
   boundary (D220), so a 48px block control inside it is two boxes drawn twice (D149-3c). A platform the club
 declares in `src/config.json` is painted on **every** printed date; a platform whose entry is empty is painted
 nowhere, and `npm run check:rsvp-page` proves both directions from the built bytes rather than from the
-component's silence. The box is **32px** tall wherever the lane holds all three labels on one line — 1240 on both
-surfaces, and 640 on `/schedule` — **68px** on the homepage at 640 where Facebook drops to a second line, and
-**104px** at 390 and 320 where each label takes its own (two 4px `gap-y-1` rows between three 32px line boxes).
-Height × width @measured 2026-11-13 by `npm run check:render:dist` (Linux native, Firefox 159.0, 4 widths on
-every emitted route — re-measured 2026-11-14 after `/join` landed: PASS, **5 routes × 4 widths**, 10.35s): `/` 32x633, 68x532, 104x314, 104x244 and `/schedule` 32x645, 32x544, 104x314, 104x244 for 1240/640/390/320. Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
+component's silence. The box is **32px** tall wherever the lane holds all three labels on one line — 1240 and 640 on
+`/schedule` — and **104px** at 390 and 320 where each label takes its own (two 4px `gap-y-1` rows between three
+32px line boxes). Height × width @measured 2026-11-14 by `npm run check:render:dist` (Linux native, Firefox 159.0,
+PASS, **5 routes × 4 widths**): `/schedule` 32x645, 32x544, 104x314, 104x244 for 1240/640/390/320 — the homepage's
+half of this line (32x633, 68x532, 104x314, 104x244) is history with its card (D306). Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
 because `check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of
 which must go red.
 - **The order is a permutation, never a filter** (S022, D281). The server paints Meetup, Discord, Facebook; the
@@ -488,13 +489,13 @@ which must go red.
   per process, so the second request for `/` would paint three `<use>` refs and no symbols (D297) — and **not** by
   the layout, because a page that paints no mark should ship no glyph bytes: the counterfactual on `/chat` is
   **+2,201 gzip**, 41.0% of that page's 5,372 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs`
-  (Linux native, Node 24.22.1, gzip of the built page). The sprite itself is 4,307 raw / 1,892 gzip and adds
-  **+2,195 gzip** to `/` (one cluster) and **+2,207** to `/schedule` (five clusters); inlining the three glyphs into
-  the same pages costs **+2,118** and **+2,305**. So the one-cluster homepage pays **77 gzip** more for the sprite
-  and `/schedule` saves **98** with it. The crossover is measured, not divided out: the probe repeats one cluster
-  1-8 times on a mark-stripped copy of each page and compares gzip — sprite cheaper from **3 clusters** on
-  (2,488 vs 2,522 on a homepage-shaped page; 2,545 vs 2,566 on a schedule-shaped one), dearer at 2 (2,462 vs
-  2,448) @measured 2026-11-13 by `node design/mark-cost.mjs --sweep-only`. D294's "breaks even at two clusters"
+  (Linux native, Node 24.22.1, gzip of the built page). @measured 2026-11-14 by `node design/mark-cost.mjs`:
+  `/` and `/join` paint no mark and ship **no sprite at all** (`index.html: no sprite element found in the built
+  page`), `/chat` the same, and `/schedule` is the one page that draws glyphs — the sprite is 4,307 raw / 1,892
+  gzip, **+2,207 gzip** there against **+2,304** for inlining the three glyphs, so the sprite saves **97** on the
+  page that has clusters. The crossover is measured, not divided out: the probe repeats one cluster 1-8 times on a
+  mark-stripped copy and compares gzip — sprite cheaper from **3 clusters** on (2,542 vs 2,564 at 3 on a
+  schedule-shaped page), dearer at 1 (2,489 vs 2,416). D294's "breaks even at two clusters"
   divided a gzip-deduplicated total by the cluster count and is superseded by **D300**; the parked row in
   `PLAN.md` §Parked is closed by that measurement.
   The one-sprite-per-render rule was measured on a fixture that renders
@@ -513,15 +514,18 @@ because the art differs (socials 323x156, study sessions 323x185).
 Rows are printed in date order; the five shipped rows take two shapes because their art differs. `/schedule`'s
 column below gives the **social** row first and the **study-session** row second where they differ.
 
-| width | homepage card | its copy lane | `/schedule` row | its copy lane |
-| --- | --- | --- | --- | --- |
-| 1240 | 1164x228 | 633x196 | 1164x196 / 1164x217 | 633x164 / 633x136 |
-| 1024 | 948x264 | 417x232 | 948x232 (all five) | 417x200 |
-| 900 | 840x484 | 792x168 | 840x452 / 840x481 | 792x136 |
-| 768 | 708x484 | 660x168 | 708x452 / 708x481 | 660x136 |
-| 640 (stacked) | 580x548 | 532x232 | 580x516 / 580x545 | 532x200 |
-| 390 | 346x632 | 314x321 | 346x576 / 346x632 | 314x265 / 314x293 |
-| 320 | 276x626 | 244x349 | 276x570 / 276x616 | 244x293 / 244x317 |
+| width | `/schedule` row | its copy lane |
+| --- | --- | --- |
+| 1240 | 1164x196 / 1164x217 | 633x164 / 633x136 |
+| 1024 | 948x232 (all five) | 417x200 |
+| 900 | 840x452 / 840x481 | 792x136 |
+| 768 | 708x452 / 708x481 | 660x136 |
+| 640 (stacked) | 580x516 / 580x545 | 532x200 |
+| 390 | 346x576 / 346x632 | 314x265 / 314x293 |
+| 320 | 276x570 / 276x616 | 244x293 / 244x317 |
+
+The homepage card this table used to carry a column for (1164x228 at 1240, 276x626 at 320) is history with the card
+(D306); `/schedule`'s numbers did not move, because they were always this page's.
 
 The leaf is **112x96** in every box. The plate is the cap **323** wide down to 390, where the column is narrower
 than the cap and it paints **314x151** (study sessions **314x179**; at 320, **244x118** and **244x139**); at 1240 it
@@ -533,17 +537,15 @@ What the sign-up cluster costs, measured by running the same probe against a cop
 cluster stripped @measured 2026-11-13 by `node design/grill/strip-clusters.mjs` then
 `node design/schedule-geometry.mjs --dist .design/tmp-no-cluster --widths 1240 1024 900 768 640 390 320` (the two
 runs are kept side by side in `.design/tmp-geometry-2026-11-13.txt` and
-`.design/tmp-geometry-nocluster-2026-11-13.txt`, both on the five-row build): the homepage card grows **+40px** at
-1240 (228 vs 188 — the lane is 196 and the plate only 156 on this date's art) and **+76/+44/+44/+80/+116/+116px** at
-1024/900/768/640/390/320. On `/schedule` the same strip adds **+40/+0/+0/+0/+0/+88/+116px** for
+`.design/tmp-geometry-nocluster-2026-11-13.txt`, both on the five-row build): on `/schedule` the strip adds **+40/+0/+0/+0/+0/+88/+116px** for
 1240→320 (per-row socials: 196→156, 232→232, 452→452, 452→452, 516→516, 576→488, 570→454): at 1024 and below the
 plate, not the lane, is the tallest thing in the box, so the cluster costs nothing there until the column gets
 narrow. Three platforms therefore cost **40px** of a desktop row and **88-116px** on a phone.
 Page totals
-@measured 2026-11-13 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the
-same tool on `/` only): homepage **3091px at 1240** (painted 10.2%, 8 empty runs ≥60px totalling **754px**, 24.4%),
-**4649 at 390**, **5245 at 320**; `/schedule` **1765px at 1240** (painted 15.7%, 2 empty runs totalling **212px**,
-12.0%), **3800 at 390**, **3928 at 320**. `/schedule` is 565px taller than the one-row build it replaced, which is
+@measured 2026-11-14 by `node design/whitespace-survey.mjs --routes / /schedule` (`npm run check:space` runs the same
+tool on `/` only): homepage **2859px at 1240** (painted 9.1%), **4013 at 390**, **4591 at 320** — **232px shorter at
+1240** than the card build this section used to quote (3091px, 10.2%), which is the date card and its deck;
+`/schedule` **1765px at 1240** (painted 15.7%), **3744 at 390**, **3872 at 320**. `/schedule` is 565px taller than the one-row build it replaced, which is
 the four new rows, not a layout change. The list-to-its-own-page saving measured in the 2026-11-07 pass was
 **4221 → 3180px at 1240**; the homepage has been edited since, so read that pair as history and the numbers above
 as the state.

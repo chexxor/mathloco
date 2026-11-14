@@ -29,6 +29,13 @@ const page = resolve('dist/client/index.html');
 if (!existsSync(page)) { console.error('dist/client/index.html missing — run npm run build first'); process.exit(1); }
 const original = readFileSync(page, 'utf8');
 if (!/data-mark="hero"/.test(original)) { console.error('the built page has no data-mark="hero" — nothing for these cases to mutate'); process.exit(1); }
+// Two targets since 2026-11-14 (D306): the hero mark, the controls and the ring plantings live on `/`, and the
+// sign-up cluster and its platform marks live on the page of record, because the homepage prints no date and
+// therefore carries no cluster. A case names its target as a fourth element; the default is the homepage.
+const SCHEDULE = resolve('dist/client/schedule/index.html');
+const scheduleHtml = existsSync(SCHEDULE) ? readFileSync(SCHEDULE, 'utf8') : null;
+if (!scheduleHtml) { console.error('dist/client/schedule/index.html missing — the cluster cases need the page of record'); process.exit(1); }
+const target = (name) => (name === 'schedule' ? { file: SCHEDULE, html: scheduleHtml, route: '/schedule' } : { file: page, html: original, route: '/' });
 
 // Optional case-name substrings as arguments run a subset — each case is a firefox run, so iterating on
 // one case should not cost five.
@@ -144,29 +151,29 @@ const cases = [
   // utility to `space-y-4`, which is the same failure mode as the cid bug one line up — the class list is
   // exactly what a spacing ruling edits. `data-art-cap` is the schedule list's intentional handle (the same
   // attribute `design/grill/rhythm-variants.mjs` selects on), so anchor here and keep mutating the class.
-  ['ring on a tint', (h) => h.replace(/<ul class="([^"]*"[^>]*data-art-cap="323")/, '<ul class=" bg-panel $1'), /under the 3\.0 graphic bar/],
+  ['ring on a tint', (h) => h.replace(/<ul class="([^"]*"[^>]*data-art-cap="323")/, '<ul class=" bg-panel $1'), /under the 3\.0 graphic bar/, 'schedule'],
   // The leak this rule exists for (D181): the exact bytes a `//` comment produced in the built card on 2026-11-04,
   // re-inserted at the same place. Without this planting, "comments never ship" is a hope, not a check.
-  ['leaked // comment in a card', (h) => h.replace(/(<span class="text-label text-ink-3"[^>]*>)/, '$1// One text node, so the render gate sees one measurement'), /begins like source-comment syntax/],
+  ['leaked // comment in a card', (h) => h.replace(/(<span class="text-label text-ink-3"[^>]*>)/, '$1// One text node, so the render gate sees one measurement'), /begins like source-comment syntax/, 'schedule'],
   // 8. the sign-up cluster (S019, D272). DESIGN.md says the links under a printed date are a quiet label:
   // 32px tall, label tier, no fill, no keyline, no control role. Those are four numbers a class grep cannot
   // see, so each is planted here. All three anchors are on `data-rsvp-cluster` / `data-rsvp-platform` rather
   // than on the class list, for the reason the cases above record (D190): a spacing ruling edits a class,
   // an attribute is what the component owns.
-  ['sign-up cluster given a fill', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1bg-panel $2$3 data-rsvp-cluster'), /sign-up cluster on .* paints a fill/],
-  ['sign-up cluster given its own ring', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1inset-shadow-rule $2$3 data-rsvp-cluster'), /sign-up cluster on .* carries its own inset ring/],
-  ['sign-up label loses its 32px box', (h) => h.replace('min-h-8 inline-flex items-center gap-1 text-label', 'inline-flex items-center gap-1 text-label'), /sign-up link .* is [\d.]+px tall — the quiet label reserves min-h-8/],
-  ['sign-up label promoted to a control', (h) => h.replace(/ data-rsvp-platform="Meetup"/, ' data-control="primary" data-rsvp-platform="Meetup"'), /primary control .* is 32px tall, not 48/],
+  ['sign-up cluster given a fill', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1bg-panel $2$3 data-rsvp-cluster'), /sign-up cluster on .* paints a fill/, 'schedule'],
+  ['sign-up cluster given its own ring', (h) => h.replace(/(<div class=")([^"]*)(" data-rsvp-cluster)/, '$1inset-shadow-rule $2$3 data-rsvp-cluster'), /sign-up cluster on .* carries its own inset ring/, 'schedule'],
+  ['sign-up label loses its 32px box', (h) => h.replace('min-h-8 inline-flex items-center gap-1 text-label', 'inline-flex items-center gap-1 text-label'), /sign-up link .* is [\d.]+px tall — the quiet label reserves min-h-8/, 'schedule'],
+  ['sign-up label promoted to a control', (h) => h.replace(/ data-rsvp-platform="Meetup"/, ' data-control="primary" data-rsvp-platform="Meetup"'), /primary control .* is 32px tall, not 48/, 'schedule'],
   // 8b. the platform mark (S026, D294). Four defects the byte gate cannot see and this one can: the mark is
   // gone, the mark is the wrong size, the mark points at a symbol the sprite never declared (an EMPTY 16px
   // square — the D118 lesson, in SVG), and the mark painted a colour of its own instead of currentColor.
   // The size planting drops the Tailwind classes rather than writing `w-6`, because Tailwind's CSS is generated
   // by scanning src at build time and never saw `w-6` (the D110 coupling, in reverse): presentation attributes
   // are what the browser paints.
-  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), /paints no platform mark/],
-  ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/],
-  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-meetup"', '<symbol id="pm-meetupX"'), /sprite has no such symbol/],
-  ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\) while its label is rgb\(32,57,39\)/],
+  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), /paints no platform mark/, 'schedule'],
+  ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/, 'schedule'],
+  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-meetup"', '<symbol id="pm-meetupX"'), /sprite has no such symbol/, 'schedule'],
+  ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\) while its label is rgb\(32,57,39\)/, 'schedule'],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;
@@ -178,9 +185,9 @@ if (!selected.length) { console.error(`no case matches ${only.join(' ')}. cases:
 // page rather than at the probe). A planting that matches nothing does not prove the rule can fail, so it is fatal
 // here rather than a note - and the fix is to re-read the built HTML, never to delete the case.
 const rotted = [];
-for (const [name, mutate] of selected) {
+for (const [name, mutate, , where] of selected) {
   try {
-    if (mutate(original) === original) rotted.push(name);
+    if (mutate(target(where).html) === target(where).html) rotted.push(name);
   } catch (e) {
     rotted.push(`${name} (the mutation threw: ${e.message})`);
   }
@@ -196,18 +203,19 @@ console.log(`selftest preflight: ${selected.length} case(s), every anchor presen
 const lines = [];
 let ok = true;
 try {
-  for (const [name, mutate, want] of selected) {
-    const mutated = mutate(original);
-    if (mutated === original) {
+  for (const [name, mutate, want, where] of selected) {
+    const t = target(where);
+    const mutated = mutate(t.html);
+    if (mutated === t.html) {
       ok = false;
       lines.push(`  FAIL  selftest "${name}": the mutation matched nothing in the built page, so this case proves nothing (the markup moved — re-read the built HTML)`);
       continue;
     }
-    writeFileSync(page, mutated);
+    writeFileSync(t.file, mutated);
     let out = '';
     let failed = false;
     try {
-      out = execFileSync(process.execPath, ['design/render-gate.mjs', '/', '--no-build'], {
+      out = execFileSync(process.execPath, ['design/render-gate.mjs', t.route, '--no-build'], {
         encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], timeout: 180000,
         env: { ...process.env, RENDER_WIDTHS: '1240' },
       });
@@ -229,6 +237,7 @@ try {
   }
 } finally {
   writeFileSync(page, original);
+  writeFileSync(SCHEDULE, scheduleHtml);
 }
 
 console.log('\n== can check:render\'s mark and control checks fail? (mutated built page) ==');

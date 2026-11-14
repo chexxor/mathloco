@@ -2,9 +2,9 @@
 /**
  * check:rsvp-preference — the remembered platform reorders the cluster in a real browser.
  *
- *   npm run check:rsvp-preference              # dist/client, routes / and /schedule
+ *   npm run check:rsvp-preference              # dist/client, route /schedule (the only one with clusters since D306)
  *   npm run check:rsvp-preference:selftest     # plant each defect, require each to FAIL (D118)
- *   node scripts/check-rsvp-preference.mjs --dist dist/client --routes /,/schedule
+ *   node scripts/check-rsvp-preference.mjs --dist dist/client --routes /schedule
  *
  * Why this gate exists on top of `check:rsvp-page` (S022, D281). The page gate proves the bytes Astro
  * builds: every printed date carries a cluster, the cluster sits inside an island, the shipped chunk
@@ -56,7 +56,9 @@ const readJson = (path) => {
 };
 
 const DIST = resolve(argOne('--dist', 'dist/client'));
-const ROUTES = (argOne('--routes', '/,/schedule')).split(',').filter(Boolean);
+// Since D306 the homepage prints no date and carries no cluster, so the rule's only surface is the page of
+// record; a route with no cluster would make every seed vacuous rather than prove anything.
+const ROUTES = (argOne('--routes', '/schedule')).split(',').filter(Boolean);
 const SCRATCH = resolve('.design', 'tmp-rsvp-preference');
 /** Astro writes a route as <route>/index.html; the homepage is index.html itself. `join('/schedule',
  * 'index.html')` is absolute, so it must be stripped before joining onto the dist directory - a trap
@@ -387,8 +389,12 @@ if (!selftest) {
   }
   // The declared-platform rule, checked in the browser rather than in the bytes: a cluster can carry every
   // platform in the markup and still lose one after the island runs (D280 + D281 together).
-  const homeClusters = clustersIn(readFileSync(resolve(DIST, 'index.html'), 'utf8'), meetupEvents, urls, discordEvents);
-  const absent = Object.values(PLATFORMS).filter((p) => !homeClusters.some((c) => c.platforms.includes(p)));
+  // Reads the routes this gate walks, not the homepage: since D306 the homepage prints no date and carries no
+  // cluster, so a rule keyed on `index.html` would report every declared platform absent on every run.
+  const printed = ROUTES.flatMap((route) =>
+    clustersIn(readFileSync(resolve(DIST, pageRel(route)), 'utf8'), meetupEvents, urls, discordEvents),
+  );
+  const absent = Object.values(PLATFORMS).filter((p) => !printed.some((c) => c.platforms.includes(p)));
   if (absent.length) {
     fails.push(`no printed cluster offers ${absent.join(', ')} - src/config.json declares platforms the page never paints (D280)`);
   }

@@ -36,8 +36,7 @@ const DIST = (() => {
  *  putting a date on a new surface, so the diff that prints one has to touch this file and say which decision
  *  allows it. */
 export const RULED = new Map([
-  ['/', 'D227 — the homepage carries ONE next date and a pointer at the page of record'],
-  ['/schedule', 'D218 — the page of record: every open date inside the window'],
+  ['/schedule', "D218 — the page of record: every open date inside the window. Since D306 it is the ONLY one: the homepage's one-date band was removed on the operator's `/join` objective, and its entry here was deleted in the same commit that stopped printing the date (2026-11-14)."],
 ]);
 
 /** A month-and-day a visitor could read, with no year attached. The year is the discriminator: "Nov 21" is a
@@ -106,18 +105,19 @@ if (selftest) {
   const FIX = resolve('.design', 'tmp-dated-surfaces');
   rmSync(FIX, { recursive: true, force: true });
   mkdirSync(FIX, { recursive: true });
-  const ruled = new Map([['/', 'fixture: the homepage'], ['/schedule', 'fixture: the page of record']]);
+  const ruled = new Map([['/schedule', 'fixture: the page of record']]);
   const page = (body) => `<html><body>${body}</body></html>`;
   const home = page('<p class="italic">Nov 21</p><div data-date="2026-11-21">MPLS Math Club Social</div>');
   const schedule = page('<ul><li data-date="2026-11-21">Saturday, Nov 21 — MPLS Math Club Social</li></ul>');
   const cases = [
-    { name: 'clean control: the two ruled surfaces print dates with handles', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/join', html: page('<p>Ways in</p>') }], want: [] },
-    { name: 'a page that is not ruled starts printing a date', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Come on Nov 21</p><div data-date="2026-11-21"></div>') }], want: ['dated-surface-unruled'] },
-    { name: 'a ruled page prints a date with no handle', pages: [{ route: '/', html: page('<p>Nov 21</p>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-unmarked'] },
-    { name: 'a ruled surface that stopped printing dates', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-stale'] },
+    { name: 'clean control: the page of record prints dates with handles', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: schedule }, { route: '/join', html: page('<p>Ways in</p>') }], want: [] },
+    { name: 'a page that is not ruled starts printing a date', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Come on Nov 21</p><div data-date="2026-11-21"></div>') }], want: ['dated-surface-unruled'] },
+    { name: 'the homepage starts printing a date again', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }], want: ['dated-surface-unruled'] },
+    { name: 'a ruled page prints a date with no handle', pages: [{ route: '/schedule', html: page('<p>Nov 21</p>') }], want: ['dated-surface-unmarked'] },
+    { name: 'a ruled surface that stopped printing dates', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: page('<p>No dates yet</p>') }], want: ['dated-surface-stale'] },
     // The discriminator: a provenance stamp carries a year and is not a schedule date (D276).
-    { name: 'clean control: a year-bearing provenance stamp is not a dated surface', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Copied from the club’s own calendar on Nov 13, 2026</p>') }], want: [] },
-    { name: 'clean control: a date inside an HTML comment is not painted', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }, { route: '/join', html: page('<!-- measured Nov 21 --><p>Ways in</p>') }], want: [] },
+    { name: 'clean control: a year-bearing provenance stamp is not a dated surface', pages: [{ route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Copied from the club’s own calendar on Nov 13, 2026</p>') }], want: [] },
+    { name: 'clean control: a date inside an HTML comment is not painted', pages: [{ route: '/schedule', html: schedule }, { route: '/join', html: page('<!-- measured Nov 21 --><p>Ways in</p>') }], want: [] },
   ];
   let bad = 0;
   for (const c of cases) {

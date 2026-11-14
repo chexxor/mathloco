@@ -60,8 +60,11 @@ const EVENTS_SNAP = resolve(argOne('--events', 'data/events.json'));
 const CONFIG = resolve(argOne('--config', 'src/config.json'));
 
 const PAGES = [
-  { name: 'homepage', file: resolve(DIST, 'index.html') },
-  { name: '/schedule', file: resolve(DIST, 'schedule/index.html') },
+  // `dates: false` is a contract, not a description: since D306 the homepage prints no date (its one date moved
+  // off the pitch when the operator's `/join` objective made `/schedule` the only dated surface), and a homepage
+  // that starts printing one again fails here as well as in `check:dated-surfaces`.
+  { name: 'homepage', file: resolve(DIST, 'index.html'), dates: false },
+  { name: '/schedule', file: resolve(DIST, 'schedule/index.html'), dates: true },
 ];
 
 /** Every `.html` the build emitted. A gate that keeps its own list of pages is a gate that goes stale the day a
@@ -176,7 +179,7 @@ const surfacesOf = (html) => {
  * The rules, as failures against one page's HTML. Pure: the selftest plants pages in memory and requires a
  * named failure for each defect, which is only possible if the verdict does not touch the filesystem.
  */
-const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetchedAt, age, discordFetchedAt, discordAge, today, pageName, chunks = {} }) => {
+const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetchedAt, age, discordFetchedAt, discordAge, today, pageName, dates = true, chunks = {} }) => {
   const fails = [];
   const surfaces = surfacesOf(html);
   const clustersByIndex = [...html.matchAll(CLUSTER_RE)].map((m) => ({ index: m.index, ...parseCluster(m[0]) }));
@@ -188,8 +191,13 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
   } else if (surfaces.length && clusters.length !== surfaces.length) {
     fails.push(`${pageName} prints ${surfaces.length} date(s) and ${clusters.length} sign-up cluster(s) — a printed date must have exactly one, not zero and not two`);
   }
-  if (!surfaces.length && !clusters.length) {
+  if (!surfaces.length && !clusters.length && dates) {
     fails.push(`${pageName} prints no date and no cluster: either the schedule is empty or its rows lost their data-surface/data-date handles`);
+  }
+  // A page that must not print a date: the homepage since D306. A date here is a second copy of a fact whose
+  // source is `data/events.json`, and the copy goes stale while `/schedule` stays right.
+  if (!dates && surfaces.length) {
+    fails.push(`${pageName} prints ${surfaces.length} date(s) and must not print a date: /schedule is the page of record (D306, \`check:dated-surfaces\`)`);
   }
 
   for (const s of surfaces) {
@@ -457,6 +465,7 @@ if (selftest) {
 
   const cases = [
     { name: 'a page the resolver agrees with', html: clean, ctx, want: [] },
+    { name: 'a page that must not print a date printing two', html: clean, ctx: { ...ctx, dates: false }, want: ['must not print a date'] },
     { name: 'a printed row with no cluster at all', html: clean.replace(clusterHtml({ date: '2026-11-21', time: '12:00' }), ''), ctx, want: ['sign-up cluster'] },
     { name: 'a row whose cluster carries a different date', html: clean.replace(clusterHtml({ date: '2026-11-21', time: '12:00' }), clusterHtml({ date: '2026-11-11', time: '12:00' }, { date: '2026-11-11' })), ctx, want: ['cluster stamped'] },
     { name: 'a cluster whose hour the feed never confirmed', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { hour: '20:00' })), ctx, want: ['claims hour 20:00'] },
@@ -559,7 +568,7 @@ for (const page of PAGES) {
   }
   const { surfaces, clusters, fails } = pageFindings(html, {
     meetupEvents: meetupSnap.events ?? [], discordEvents: discordSnap.events ?? [], eventRows: events.events ?? [], urls,
-    fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name, chunks,
+    fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name, dates: page.dates, chunks,
   });
   if (fails.length) {
     for (const f of fails) console.log(`FAIL  ${f}`);

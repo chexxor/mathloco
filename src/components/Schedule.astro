@@ -1,15 +1,11 @@
 ---
 import config from '../config.json';
-import EventArt from './EventArt.astro';
-import EventLeaf from './EventLeaf.astro';
 import EventRow from './EventRow.astro';
-import SignUpLinks from './SignUpLinks.astro';
 import PhotoSlot from './PhotoSlot.astro';
 import {
-  content, upcoming, value, filled, copiedOn, formatDate, timeSpan, formatSince, builtOn,
+  content, upcoming, value, filled, copiedOn, formatDate, formatSince, builtOn,
   scheduleConfigured,
 } from '../lib/content.ts';
-import type { UpcomingItem } from '../lib/content.ts';
 // The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
 // can compare it against the same rule rather than a copy of it (D238).
 import { todayIn } from '../lib/events.mjs';
@@ -64,10 +60,10 @@ import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs
  *     variant lists is `HORIZON_WEEKS` weeks ahead, at most `MAX_ROWS` rows, both from
  *     `src/lib/event-window.mjs`, and the page says out loud what it left out. `/events.ics` stays uncapped:
  *     the limit is a page-layout rule, not a fact about the club's calendar.
- *   - `variant="compact"` (the homepage, `src/pages/index.astro`) shows the **ONE next date** and points at the
- *     page of record. One row, because D224 priced a second art-bearing row at **+197px of page and 0px less
- *     empty run** on the homepage; that cost is worth paying once, for the date that matters most, and not at
- *     all for the rest — the rest belongs on a page whose whole job is dates.
+ *   - `variant="compact"` (the homepage, `src/pages/index.astro`) prints **no date at all** and points at the page
+ *     of record. Since 2026-11-14 that is the operator's rule, not a layout choice: the `/join` objective says
+ *     "`/schedule` stays the only surface that prints dates", and `check:dated-surfaces` enforces it on every
+ *     built page (D306 supersedes the date half of D227; the join mechanics D228 absorbed here stay).
  *   - `limit` is the prop that says how many rows, so the two call sites read the same `upcoming()` and
  *     cannot drift into two calendars. `check:ics` and `check:content` are what keep the page and
  *     `/events.ics` honest about the dates themselves.
@@ -108,7 +104,7 @@ import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs
  * `WhyJoinUs.astro` named).
  */
 type Props = {
-  /** `compact` = the homepage's card of the next date, merged with the join band. `full` = `/schedule`. */
+  /** `compact` = the homepage's join band and a pointer at the page of record, printing no date. `full` = `/schedule`. */
   variant?: 'full' | 'compact';
   /** How many rows to render. Unset means the full variant's windowed list (`HORIZON_WEEKS`, `MAX_ROWS`, D238). */
   limit?: number;
@@ -117,14 +113,14 @@ type Props = {
 const { variant = 'full', limit } = Astro.props;
 const compact = variant === 'compact';
 
-// The homepage takes the next date and nothing else; the schedule page takes the windowed list. Both read one
-// `upcoming()` call, which reads `data/events.json`, which is what `/events.ics` publishes.
+// The schedule page takes the windowed list; the homepage points at it and prints no date (D306). Both read one
+// `upcoming()` call, which reads `data/events.json`, which is what `/events.ics` publishes — so the homepage's
+// count of remaining dates and `/schedule`'s rows cannot drift apart.
 const all = upcoming();
 // `todayIn()` supplies the snapshot's own zone, so the window is measured from the same "today" the rows are
 // compared against (D188: a page and its gate reading different clocks is how a date goes missing).
 const win = scheduleWindow(all, todayIn());
 const items = typeof limit === 'number' ? all.slice(0, limit) : win.shown;
-const next: UpcomingItem | null = items[0] ?? null;
 // How many open dates the compact card is NOT showing. Counted off the same call, so the mark that says
 // "there is more" cannot outrun the snapshot it came from.
 const hidden = Math.max(0, all.length - items.length);
@@ -144,17 +140,6 @@ if (win.hiddenCap > 0) {
   omitted.push(`It lists at most ${MAX_ROWS} dates, and ${win.hiddenCap} more ${win.hiddenCap === 1 ? 'is' : 'are'} inside that window.`);
 }
 const omittedText = omitted.join(' ');
-/**
- * How many edges to draw under the card: one per date the card is not showing, at most two.
- *
- * This is the continuation said as a mark instead of a sentence. The card is the top card of a deck, and the
- * deck shows through under it; the earlier version spent eleven words ("That is the next one. 2 more dates
- * are on the schedule page") on the same fact, which is the sentence a preview should not have to say.
- * Capped at two because a third stops reading as a deck and starts reading as a ruler. The number itself is
- * not lost — it is in the link's text, where it is also an instruction rather than a description.
- */
-const peeks = Math.min(hidden, 2);
-
 const empty = content.schedule?.empty;
 const venueLine = value(empty?.venueLine);
 // The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
@@ -191,10 +176,9 @@ const copied = copiedOn();
 // The heading is the page's own h1 on /schedule and a section h2 on the homepage, where the hero owns the h1.
 const headingId = 'when-we-meet';
 const Heading = compact ? 'h2' : 'h1';
-// The eyebrow is the compact width's locator. The lede used to read "These dates are copied from the club's
-// own calendar" on a page that showed one date \u2014 a plural about a singular, which is what a reader meets
-// first on the landing page \u2014 so the compact copy is written for one date and the full copy for many.
-const eyebrow = items.length ? 'Next date' : 'The calendar';
+// The eyebrow is the compact width's locator. It used to read "Next date", under a card that printed one; since
+// the homepage prints no date (D306) it names the section's subject instead, and the date lives one click away.
+const eyebrow = 'The calendar';
 // The compact lede used to be the join band's sentence, kept verbatim when the bands merged (D228): "One place to
 // say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether
 // this is your kind of room." The operator asked for the join copy rewritten (2026-11-07), and the clause that did
@@ -222,11 +206,11 @@ const eyebrow = items.length ? 'Next date' : 'The calendar';
 // claim the band can back up is the one the resolver decides per date: each printed date links to whatever
 // sign-up page the club has posted for it.
 const lede = compact
-  // The clause about the date above the lede exists only when there is one. On the empty state this band renders a
-  // notice instead of a date, and a lede that said "the date above" would be pointing at nothing - the same class
-  // of defect as the plural-about-a-singular above.
+  // No clause about "the date above": the homepage prints none (D306, `check:dated-surfaces`). What it can say is
+  // where the dates are and what a reader will find there — the same facts `/schedule`'s own lede carries, in the
+  // singular, because the reader is about to follow one link.
   ? (items.length
-      ? 'The date above is copied from the club\u2019s own calendar, and it links to the page where you sign up.'
+      ? 'The next date, where the club meets, and where to sign up for it are all on the schedule.'
       : 'The club\u2019s dates come from its own calendar.')
   : 'These dates are copied from the club\u2019s own calendar. Each one links to the page the club posts its sign-up on.';
 ---
@@ -287,84 +271,6 @@ const lede = compact
         </div>
       )}
 
-      {compact && next && (
-        /* A one-item list, which is the whole point of the compact width: one date, not a short list. The
-           `<ul data-art-cap="323">` handle is carried over from the full width deliberately. It is the handle
-           `design/render-gate-selftest.mjs` (its "ring on a tint" planting) and
-           `design/grill/rhythm-variants.mjs` select the schedule band by, and it is true here: the art inside
-           this card is PS-4, capped at the same 323px. If this band's markup moves again, those two probes get
-           re-anchored in the same commit (D173).
-
-           The preview card itself: its one edge is the ratified inset ring (D220's `edges`), so the date leaf inside
-           it is a FILL (`bg-tint`) and not a second box: a keylined leaf inside a keylined card is two
-           boundaries in one component, and `check:render` measures both sides of every ring and fails a
-           keyline that straddles two grounds (D149-3c). `tint` is a fill that carries `ink` at 10.96, so the
-           leaf gets its own block without getting an edge.
-           The leaf is `aria-hidden` because the same date is spelled out in prose beside it — a screen reader
-           hears it once. Its three lines come from `dateParts`, which parses the ISO date the same UTC way
-           `formatDate` does; a leaf built by a second parser is a second chance to print yesterday's date.
-           The three children of this flex row are the leaf, the copy and PS-4, and `flex` is load-bearing
-           rather than cosmetic: `check:space` records a `data-slot` box only for the child of a flex or grid
-           container (measured 2026-11-03 for PS-5, same mechanism). */
-        <ul class="space-y-4" data-art-cap="323">
-          {/* `data-date` here is the same handle the row carries (D173): the homepage card is one row of the
-             same list, and a gate that has to treat the two surfaces differently is a gate that will be wrong
-             the day one of them moves. */}
-          {/* `lg:flex-row`, not `sm:flex-row`, for the arithmetic EventRow.astro's header carries (112 leaf +
-              48 of gaps + the 323 plate cap = 483px before the copy lane gets a character; the lane measured
-              49px wide at 640 @measured 2026-11-11). D227 rules the two surfaces one shape, so they flip at the
-              same breakpoint. */}
-          <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="preview" data-date={next.date}>
-          <EventLeaf date={next.date} />
-          <div data-copy class="min-w-0 flex-1">
-            {filled(next.title) && <h3 class="text-lede font-bold text-ink font-body">{next.title}</h3>}
-            {/* The date twice on purpose: the leaf is the shape, this line is the sentence a reader scans and
-                an assistive tech reads once. `formatDate` in wide style, then the hour the organizer set. */}
-            {/* The class list on this span is exactly `text-label text-ink-3` and nothing more, because the
-                selftest's "leaked // comment in a card" planting anchors on that attribute pair: D173's rule is
-                that a planting gets re-anchored when markup moves, never deleted, and an anchor is only an
-                anchor if the component keeps writing it. A handle is part of the interface. */}
-            <p class="mt-1 tabular-nums"><span class="text-label text-ink-3">{formatDate(next.date, 'wide')} · {timeSpan(next)}</span></p>
-            {filled(next.venue) && (
-              <p class="mt-2 text-body leading-prose text-ink-2 font-body">{next.venue}</p>
-            )}
-            {/* D218: the dated line sits inside the band, under the date it answers for, because "is this
-                current?" is asked at the date and answered nowhere else on the page. The stamp is the feed's
-                own (`copiedOn`), not the build's, so it matches the DTSTAMP of every row in /events.ics. */}
-            {copied && (
-              <p class="mt-2 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar on {copied}</span></p>
-            )}
-            {/* S019/D272: the date a visitor sees on the homepage is the date they want to sign up for, so the
-               per-date cluster belongs here exactly as it does on a /schedule row — same component, same
-               resolver, one rule (D227: one row shape, two surfaces). */}
-            <SignUpLinks item={next} />
-          </div>
-            <EventArt slug={next.slug} />
-          </li>
-        </ul>
-      )}
-
-      {/* The deck showing through under the card, and the two ways out of the preview.
-
-          `peeks` hairlines, each one the ratified 1px inset `--color-rule` ring (D220's `edges`), inset one
-          step further than the one above it, so the stack reads as "more of these" and the card stays the top
-          of it. 8px below the card and 4px apart: at 4px the card's own bottom ring and the first hairline
-          read as one double line (measured 2026-11-07 at 1240: card bottom 2344, hairline 2348), and at 8px
-          they read as two objects. They are rings and not fills because a fill cannot say this: `panel` and `tint` measure
-          1.04-1.10 against `paper` (DESIGN.md's colour round: "a tint is never doing the separation the ring
-          does"), and a painted `border`/`outline` hairline is precisely what `check:render`'s keyline rule
-          exists to fail. On the page's own ground the ring measures 3.01 on both sides (design/records/0018),
-          so it clears the 3.0 graphic bar with ONE ground, which is what D149-3c requires.
-
-          `aria-hidden`, because the fact belongs to the link: a screen reader hears "All 3 dates", and the
-          stack is that fact drawn for the eye. No `role`, so the notice grammar (D136) is not in play. */}
-      {compact && peeks > 0 && (
-        <div aria-hidden="true" class="mt-2 space-y-1">
-          {Array.from({ length: peeks }, (_, i) => (
-            <div class={`h-1 rounded-b-card inset-shadow-rule ${i === 0 ? 'mx-4' : 'mx-8'}`} />
-          ))}
-        </div>
-      )}
 
       {/* Two quiet links, not a paragraph. D139 keeps `data-control` for the band's one primary: a second 48px
           control under the date would compete with the date itself, which is the loudest thing in the band by
