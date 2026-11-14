@@ -130,7 +130,7 @@
     "@paralleldrive/cuid2": "^3.3.0",
     "@tailwindcss/typography": "^0.5.20",
     "@tailwindcss/vite": "^4.3.3",
-    "astro": "^7.4.4",
+    "astro": "^7.4.12",
     "drizzle-orm": "^0.45.4",
     "tailwindcss": "^4.3.3",
     "wrangler": "^4.155.0"
