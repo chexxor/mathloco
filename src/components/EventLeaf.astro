@@ -2,10 +2,9 @@
 /**
  * The date leaf: month, day, weekday, stacked — a calendar page torn off and stood up on its end.
  *
- * It is a component because the schedule has two surfaces (D227) and a leaf written out twice is a date
- * printed twice. That is the same reason the rows themselves moved into `EventRow.astro` and the dates into
- * `data/events.json`: two copies of how a date looks is two chances to print different ones. The homepage's
- * preview card and every row on `/schedule` call this.
+ * It is a component because a leaf written out twice is a date printed twice (D227's rule; the second drawing
+ * surface, the homepage's preview card, came off in D306) — the same reason the rows moved into `EventRow.astro`
+ * and the dates into `data/events.json`: two copies of how a date looks is two chances to print different ones.
  *
  * Why each line is there:
  *   - `aria-hidden` — the same date is spelled out in prose beside the leaf (`formatDate(date, 'wide')`), so

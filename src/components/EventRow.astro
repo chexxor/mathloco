@@ -1,16 +1,19 @@
 ---
 /**
- * One event row — the same object the homepage's next-date card is, at the width of a list.
+ * One event row — the object `/schedule` draws for every open date.
  *
- * There is deliberately **no `variant` prop here** (D227): the row is one shape, and the two schedule
- * surfaces differ only in *how many* rows they print and *what leads them*. The homepage prints one of these
- * inside a preview card; `/schedule` prints every open one. Two components holding two copies of "what a
- * date looks like" is how a site ends up with two calendars that disagree — the same reason the dates live in
+ * There is deliberately **no `variant` prop here** (D227): the row is one shape, and a second surface would differ
+ * only in *how many* rows it prints and *what leads them*. The homepage did exactly that inside a preview card
+ * until 2026-11-14 (D306), when `/schedule` became the only surface that prints a date; the reason for one row
+ * component outlives the surface, because two components holding two copies of "what a date looks like" is how a
+ * site ends up with two calendars that disagree.
  * `data/events.json` rather than in `src/content.json`.
  *
- * The composition, which is the homepage card's composition (2026-11-07, operator: "the calendar event style
- * on the home page is looking great... ensure the events on the schedule page receive the same design
- * improvement pass"): **leaf · copy · plate**, right-to-left on `lg` and up, stacked below it. The flip is at
+ * The composition (2026-11-07, operator: "the calendar event style on the home page is looking great... ensure
+ * the events on the schedule page receive the same design improvement pass"): **leaf · copy · plate**,
+ * right-to-left on `lg` and up, stacked below it. The homepage card that ruling was written against prints no
+ * date since 2026-11-14 (D306), so this row is now the only thing that draws the composition; the ruling's
+ * substance - one shape, one drawing - survives its second surface. The flip is at
  * `lg` (1024), not `sm` (640), and that is arithmetic the row cannot cheat: the leaf is 112px, the plate cap is
  * 323px, and the two `lg:gap-6` gaps are 48px, so a horizontal row needs 483px of the card's content box before
  * the copy lane gets a single character. Content-box widths @measured 2026-11-11 by
@@ -61,7 +64,8 @@
  *   - `min-w-0` on the copy lane: without it a long venue string sets the lane's minimum width and the plate
  *     gets pushed out of the row instead of the text wrapping.
  *   - the spacing inside a row is the R6 `rows` option the operator ruled (D214, measured as a pair in D220),
- *     kept equal to the card's so one row of a list and the homepage card are visibly the same object.
+ *     and it is the same spacing the removed homepage card used, which is what made the two surfaces read as one
+ *     object while both existed (D306).
  *
  * "Visibly the same object" is measured, not intended: at 1240 the homepage's next-date card and the taller row
  * here are both **1164x217**, both carrying a **112x96** leaf, a **633x168** copy lane (the list's second row:

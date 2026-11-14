@@ -19,13 +19,13 @@ export const prerender = true;
   <HeroSection />
   <WhyJoinUs />
   <HorizonBand />
-  {/* D227: the homepage carries the ONE next date, not the calendar, and `limit={1}` is the whole split —
-      the card's facts come from the same `upcoming()` the `/schedule` page's rows and `/events.ics` read, so
-      no two surfaces can drift apart. D228: this one call is also the landing page's join band (its heading,
-      "How it works", the two paths out), which used to be a separate `JoinCommunity.astro` section below the
-      fold; it is the same band now, because a date and how you come to it are one question.
-      `sections.showSchedule` gates this band only: turning it off hides the homepage's date and the join
-      mechanics, and does not un-publish `/schedule`. */}
+  {/* D306 (2026-11-14, superseding the date half of D227): the homepage prints NO date — `/schedule` is the only
+      surface that does, and `check:dated-surfaces` fails any other page that prints one. What this band carries is
+      the join mechanics D228 merged into it (heading, "How it works", the roster sentence and its age, the photo
+      slot) plus a pointer at the page of record, and `limit={1}` still comes from the same `upcoming()` that
+      `/schedule`'s rows and `/events.ics` read, so the count it prints cannot drift from the list behind it.
+      `sections.showSchedule` gates this band only: turning it off hides the join mechanics and the pointer, and
+      does not un-publish `/schedule`. */}
   {sections.showSchedule && <Schedule variant="compact" limit={1} />}
   <Footer />
 </Layout>

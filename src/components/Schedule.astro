@@ -3,7 +3,7 @@ import config from '../config.json';
 import EventRow from './EventRow.astro';
 import PhotoSlot from './PhotoSlot.astro';
 import {
-  content, upcoming, value, filled, copiedOn, formatDate, formatSince, builtOn,
+  content, upcoming, value, filled, copiedOn, formatDate, ageSince, builtOn,
   scheduleConfigured,
 } from '../lib/content.ts';
 // The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
@@ -347,7 +347,10 @@ const lede = compact
                       visitor gets is where the list is and when it was last read. */}
                   {membership && (
                     <p>
-                      {membership}, last read {content.membership.asOf ? formatSince(content.membership.asOf) : 'today'} —
+                      {/* D306: an AGE, not the calendar date. "last read Nov 3, 2026" was the last visible date on
+                          `/` after the card came off, and the 2026-11-14 audit named it. `check:dated-surfaces` now
+                          refuses a date on any page it does not list, year-bearing provenance included. */}
+                      {membership}, last read {content.membership.asOf ? ageSince(content.membership.asOf) : 'recently'} —
                       the list is not the room.
                     </p>
                   )}

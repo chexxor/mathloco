@@ -11,9 +11,9 @@
 // Why this exists separate from `npm run check:space`: the survey ranks *places* (PS-3, PS-4, PS-5) and
 // measures the runs of empty page between blocks of copy. It cannot answer the question the 2026-11-07
 // schedule work actually turned on — the operator ruled that `/schedule` gets the same design pass the
-// homepage card got ("leaf · copy · plate"), and "the same" is a claim about the boxes inside a row. Two
-// surfaces that both claim to draw a date one way drift the moment one of them is edited, and nothing in the
-// deploy gate set measures a box inside a row.
+// homepage card got ("leaf · copy · plate"), and "the same" is a claim about the boxes inside a row. The homepage
+// card is gone since 2026-11-14 (D306), so that comparison has no second side; what this probe still measures is
+// the row's own boxes against the numbers DESIGN.md quotes, which is the half of the claim that survives.
 //
 // This is a survey, not a gate: it prints, it does not fail. The numbers it prints are what the comments in
 // `src/components/EventRow.astro`, `EventLeaf.astro` and `Schedule.astro` cite, and a comment that quotes a
@@ -21,8 +21,8 @@
 // contradicts is corrected in the same commit).
 //
 // It reads dist/client through design/grill/dist-measure.mjs at a 900px-tall viewport. The handles it selects
-// on are published by the markup: [data-surface] ("preview" on the homepage card, "row" on a list row),
-// [data-leaf], [data-copy], [data-slot="PS-4"].
+// on are published by the markup: [data-surface] ("row" on a list row; "preview" was the homepage card's, and no
+// page emits it since D306), [data-leaf], [data-copy], [data-slot="PS-4"].
 //
 // Its page height is NOT the number check:space prints, and the difference is not a bug in either. The survey
 // probes twice: pass 1 learns the page height, pass 2 re-opens the page in a viewport as tall as the whole

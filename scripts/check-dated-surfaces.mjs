@@ -13,10 +13,12 @@
 // own the day the snapshot moves — the class `check:schedule-window` and `check:rsvp-page` catch only for the
 // pages they know. This gate knows every page the build emits, because it walks `dist/client`.
 //
-// What counts as a date: a month-and-day with no year ("Nov 21", "Saturday, Nov 21"), or an ISO date, in text a
-// visitor reads. A year-bearing stamp ("Copied from the club's own calendar on Nov 13, 2026") is provenance about
-// when a source was read, not a schedule date, and is deliberately out of scope — its rule is D276's ("name where
-// it came from, and carry the date"), and a page may carry it without being a dated surface.
+// What counts as a date: a month-and-day ("Nov 21", "Saturday, Nov 21"), a month-and-day with a year ("Copied from
+// the club's own calendar on Nov 13, 2026"), or an ISO date, in text a visitor reads. The year-bearing form was out
+// of scope in this gate's first version, on the argument that a provenance stamp is not a schedule date — and the
+// 2026-11-14 audit found exactly that hole: `/` still printed "last read Nov 3, 2026" after its card came off, while
+// the record said the homepage printed no date. A date a visitor reads is a date; provenance on an unruled page is
+// expressed as an age (`ageSince()`), which carries the freshness without the string.
 //
 // Findings name the fix, not the fact:
 //   dated-surface-unruled    this page prints a date and no ruling has put one there
@@ -41,7 +43,7 @@ export const RULED = new Map([
 
 /** A month-and-day a visitor could read, with no year attached. The year is the discriminator: "Nov 21" is a
  *  date on a schedule, "Nov 13, 2026" is a stamp about a source (see the note at the top). */
-const DATE_TEXT = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b(?!\s*,?\s*\d{4})|\b\d{4}-\d{2}-\d{2}\b/;
+const DATE_TEXT = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b(?:,?\s*\d{4}\b)?|\b\d{4}-\d{2}-\d{2}\b/;
 /** The machine-readable handle `Schedule.astro` and `EventRow.astro` put on every date they paint (D173). */
 const DATE_HANDLE = /data-date="\d{4}-\d{2}-\d{2}"/;
 
@@ -116,7 +118,10 @@ if (selftest) {
     { name: 'a ruled page prints a date with no handle', pages: [{ route: '/schedule', html: page('<p>Nov 21</p>') }], want: ['dated-surface-unmarked'] },
     { name: 'a ruled surface that stopped printing dates', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: page('<p>No dates yet</p>') }], want: ['dated-surface-stale'] },
     // The discriminator: a provenance stamp carries a year and is not a schedule date (D276).
-    { name: 'clean control: a year-bearing provenance stamp is not a dated surface', pages: [{ route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Copied from the club’s own calendar on Nov 13, 2026</p>') }], want: [] },
+    // The hole the 2026-11-14 audit found: a year-bearing provenance stamp is still a date a visitor reads, so an
+    // unruled page that prints one fails. The ruled page may carry its own stamp.
+    { name: 'a year-bearing provenance stamp on an unruled page', pages: [{ route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Copied from the club\u2019s own calendar on Nov 13, 2026</p>') }], want: ['dated-surface-unruled'] },
+    { name: 'clean control: an age is not a date', pages: [{ route: '/schedule', html: schedule }, { route: '/', html: page('<p>last read 11 days ago</p>') }], want: [] },
     { name: 'clean control: a date inside an HTML comment is not painted', pages: [{ route: '/schedule', html: schedule }, { route: '/join', html: page('<!-- measured Nov 21 --><p>Ways in</p>') }], want: [] },
   ];
   let bad = 0;

@@ -4,7 +4,8 @@
  * This table used to live inside `Schedule.astro`. It moved here on the day the schedule grew a second
  * surface (a homepage card of the next date and a `/schedule` page of every date): a table of art keyed by
  * slug that exists in two files is two calendars, and the whole point of the split is that the two surfaces
- * cannot disagree about a row. `EventRow.astro` is now the only caller.
+ * cannot disagree about a row. The homepage card is gone since 2026-11-14 (D306), so `EventRow.astro` is the
+ * only caller and this table has one reader again - the reason it moved still holds for any future surface.
  *
  * Keyed by slug, because the file in `src/assets/photos/` is named after the row (`event-<slug>.png`,
  * D190's filename rule) and `PhotoSlot` resolves it by filename prefix. The `ratio` is **the art's own**,

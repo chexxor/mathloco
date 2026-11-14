@@ -4,7 +4,8 @@ import Schedule from '../components/Schedule.astro';
 import Footer from '../components/Footer.astro';
 
 /**
- * The schedule page — the page of record for the club's dates (D227).
+ * The schedule page — the page of record for the club's dates (D218, built by D227's split; the only surface that
+ * prints a date since D306).
  *
  * Why a page at all: the homepage used to print up to four rows, and `/events.ics` was the only other place
  * dates existed. That left the one question a newcomer actually has — "what else is coming?" — with one
@@ -20,7 +21,7 @@ import Footer from '../components/Footer.astro';
  *
  * It renders `<Schedule />` with no `variant` and no `limit`: the full width, and the windowed list — the next
  * `HORIZON_WEEKS` weeks, at most `MAX_ROWS` rows, both from `src/lib/event-window.mjs` (D238). The rows come from
- * `upcoming()` -> `data/events.json` — the same source the homepage card and `/events.ics` read, so no two
+ * `upcoming()` -> `data/events.json` — the same source `/events.ics` and the homepage's date count read, so no two
  * surfaces can disagree about a date (D223). What is windowed is this page's length, never the feed: a subscriber
  * who follows `/events.ics` gets every date the organizer has made, however far out — which is why the page names
  * what it left out rather than letting the calendar look short.

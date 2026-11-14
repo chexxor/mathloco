@@ -532,7 +532,9 @@ export const joinChannels = (urls = {}) => {
       external: true,
       label: 'Join the Facebook group',
       srOnly: `${PLATFORMS.facebook}, opens in a new tab`,
-      gives: "The club's page on Facebook, for people who already read it there.",
+      // "group", not "page": FACEBOOK_GROUP_URL_SHAPE rejects a page URL, so the noun must not promise one; and the
+      // clause says what the visitor gets (another place the club posts), not who the visitor is.
+      gives: 'The club\'s own Facebook group, where what gets posted here also gets posted.',
     },
     {
       kind: 'rsvp',
@@ -545,7 +547,11 @@ export const joinChannels = (urls = {}) => {
       // the club's own /schedule, so the label must not promise a new site - but the visitor is still choosing a
       // platform, and a kind that never says which one delivers it leaves the reader to find out after the click
       // (the 2026-11-14 audit's objection; `check:join` now requires the platform's name in every row's text).
-      gives: "Meetup's own page for each meeting, one click from the date.",
+      // No "for each meeting": `signUpPaths()` may have no per-date Meetup page for a date and fall back to the
+      // group's join page (or offer only the chat), so a per-date quantifier here would be a claim this module
+      // decides and the resolver can disprove - the 2026-11-14 audit's objection. The clause states the practice
+      // and where the answer lives, and names the platform so a reader knows what they are choosing.
+      gives: 'Sign-ups are posted on Meetup, one click from each date. The date\'s page says where it was posted.',
     },
     {
       kind: 'chat',

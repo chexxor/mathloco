@@ -66,10 +66,10 @@
  * `scripts/check-rsvp-page.mjs`, not styling. `data-rsvp-hour` is what lets the gate re-run the resolver from
  * the painted page alone: the row's own hour is painted as prose ("time not set" when the organizer has not
  * settled it, D169), and a gate that re-parses prose breaks the day the prose is rewritten (D173).
- * They are written per link rather than derived from the row's
- * `data-date` because the homepage's compact card and the `/schedule` list are different containers (D227:
- * one row shape, two surfaces), and a gate that has to know which container it is inside is a gate that
- * breaks when the layout moves (D173).
+ * They are written per link rather than derived from the row's `data-date` because a cluster can sit in more than
+ * one container and a gate that has to know which one it is inside is a gate that breaks when the layout moves
+ * (D173). Since D306 (2026-11-14) the only container is the `/schedule` row - the homepage's compact card, which
+ * was the second one when this note was written, prints no date and carries no cluster.
  */
 import config from '../config.json';
 import meetupSnapshot from '../../data/meetup-events.json';

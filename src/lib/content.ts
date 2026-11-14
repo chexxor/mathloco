@@ -228,6 +228,28 @@ export const formatSince = (iso: string): string => {
     .format(new Date(Date.UTC(y, m - 1, d)));
 };
 
+/**
+ * How long ago a stamp was taken, in words: "today", "yesterday", "11 days ago", "3 months ago".
+ *
+ * Why an age and not the date (D306, 2026-11-14): the operator's `/join` objective makes `/schedule` the only surface
+ * that prints a date, and `check:dated-surfaces` now refuses ANY date-shaped string on a page it does not list -
+ * year-bearing provenance included, which is the hole the 2026-11-14 audit found ("last read Nov 3, 2026" on the
+ * homepage). An age keeps the freshness a sourced claim owes its reader without putting a calendar date on the page.
+ */
+export const ageSince = (iso: string, now: Date = new Date()): string => {
+  const [y, m, d] = iso.split('-').map(Number);
+  if (!y || !m || !d) return 'recently';
+  const days = Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - Date.UTC(y, m - 1, d)) / 86_400_000);
+  if (!Number.isFinite(days) || days < 0) return 'recently';
+  if (days === 0) return 'today';
+  if (days === 1) return 'yesterday';
+  if (days < 45) return `${days} days ago`;
+  const months = Math.round(days / 30.44);
+  if (months < 18) return `${months} month${months === 1 ? '' : 's'} ago`;
+  const years = Math.round(days / 365.25);
+  return `${years} year${years === 1 ? '' : 's'} ago`;
+};
+
 /** The build's own date, for the dated lane of a prerendered page. The only age a static page can compute (D103). */
 export const builtOn = (): string => formatSince(new Date().toISOString().slice(0, 10));
 
