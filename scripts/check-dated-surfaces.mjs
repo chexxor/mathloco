@@ -23,7 +23,7 @@
 // Findings name the fix, not the fact:
 //   dated-surface-unruled    this page prints a date and no ruling has put one there
 //   dated-surface-unmarked   this page prints a date but carries no `data-date` handle, so no gate can key on it
-//   dated-surface-stale      this page is on the ruled list and prints no date (the entry no longer earns its place)
+//   dated-surface-missing    a page on the ruled list is not in the build at all (a deleted route, not a quiet one)
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -92,11 +92,14 @@ export const datedSurfaceFindings = (pages, ruled = RULED) => {
       });
     }
   }
+  // A ruled page that prints NO date is legitimate: an upcoming-only calendar is empty some weeks (record 0010's
+  // designed empty state), and the 2026-11-14 audit found this rule calling that state a spent allowlist entry. What
+  // is not legitimate is a ruled ROUTE disappearing from the build, which is what this checks instead.
   for (const [route, why] of ruled) {
-    if (!dated.some((d) => d.route === route)) {
+    if (!pages.some((p) => p.route === route)) {
       fails.push({
-        rule: 'dated-surface-stale',
-        detail: `${route} is on the ruled list ("${why}") and prints no date. Either the page moved its dates (move the ruling with it) or the entry is spent — delete it.`,
+        rule: 'dated-surface-missing',
+        detail: `${route} is on the ruled list ("${why}") and the build emits no such page. Move the ruling with the page, or delete the row.`,
       });
     }
   }
@@ -116,7 +119,9 @@ if (selftest) {
     { name: 'a page that is not ruled starts printing a date', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: schedule }, { route: '/chat', html: page('<p>Come on Nov 21</p><div data-date="2026-11-21"></div>') }], want: ['dated-surface-unruled'] },
     { name: 'the homepage starts printing a date again', pages: [{ route: '/', html: home }, { route: '/schedule', html: schedule }], want: ['dated-surface-unruled'] },
     { name: 'a ruled page prints a date with no handle', pages: [{ route: '/schedule', html: page('<p>Nov 21</p>') }], want: ['dated-surface-unmarked'] },
-    { name: 'a ruled surface that stopped printing dates', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: page('<p>No dates yet</p>') }], want: ['dated-surface-stale'] },
+    // An empty calendar is a designed state, not a spent allowlist row (2026-11-14 audit's third finding).
+    { name: 'a ruled page with an empty calendar stays green', pages: [{ route: '/', html: page('<p>See the schedule</p>') }, { route: '/schedule', html: page('<p>No date is on the calendar yet.</p>') }], want: [] },
+    { name: 'a ruled route missing from the build', pages: [{ route: '/', html: page('<p>See the schedule</p>') }], want: ['dated-surface-missing'] },
     // The discriminator: a provenance stamp carries a year and is not a schedule date (D276).
     // The hole the 2026-11-14 audit found: a year-bearing provenance stamp is still a date a visitor reads, so an
     // unruled page that prints one fails. The ruled page may carry its own stamp.

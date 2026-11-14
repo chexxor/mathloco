@@ -130,6 +130,13 @@ export const joinFindings = (painted, headings, urls = {}, { today = new Date(),
     if (g.text !== wantText) {
       fail('join-label-mismatch', `${w.kind}/${w.platform} paints "${g.text}" but the resolver's label is "${wantText}" (D273: the resolved label is the painted label, and the gate compares bytes)`);
     }
+    // The clause under the control is a claim, not decoration: it is compared with the resolver's own `gives`, so a
+    // page cannot print a promise the resolver does not make, and the resolver cannot be edited into a false claim
+    // without this gate going red on the same branch (2026-11-14 audit: the gate compared labels only).
+    const wantGives = text(String(w.gives ?? ''));
+    if ((g.gives ?? '') !== wantGives) {
+      fail('join-gives-mismatch', `${w.kind}/${w.platform} paints "${g.gives ?? ''}" under its control but the resolver's clause is "${wantGives}" — every painted claim comes from joinChannels(), and this gate compares the bytes`);
+    }
   }
   for (const g of got) {
     if (!want.some((w) => w.kind === g.kind && w.platform === g.platform && w.href === g.href)) {
@@ -226,12 +233,16 @@ if (selftest) {
   };
   const today = new Date('2026-11-13T00:00:00Z');
   const opts = { today, pagePath: `${FIX}/join/index.html`, dist: FIX };
-  const good = [
-    { kind: 'social', platform: 'Meetup', href: urls.meetupGroup, text: 'Join the Meetup group Meetup, opens in a new tab', gives: "The club's member list, and where a date gets announced." },
-    { kind: 'social', platform: 'Facebook', href: urls.facebookGroup, text: 'Join the Facebook group Facebook, opens in a new tab', gives: "The club's page on Facebook, for people who already read it there." },
-    { kind: 'rsvp', platform: 'Meetup', href: '/schedule', text: 'See the dates', gives: "Meetup's own page for each meeting, one click from the date." },
-    { kind: 'chat', platform: 'Discord', href: urls.discordInvite, text: 'Join the chat on Discord Discord, opens in a new tab', gives: 'The conversation that runs between meetings.' },
-  ];
+  // Derived from the resolver rather than typed out: a fixture that hard-codes a clause stops matching the
+  // resolver the day the resolver changes, and then the clean control fails for the wrong reason. These are the
+  // bytes `joinChannels()` says the page should paint.
+  const good = joinChannels(urls).map((c) => ({
+    kind: c.kind,
+    platform: c.platform,
+    href: c.href,
+    text: `${c.label}${c.srOnly ? ` ${c.srOnly}` : ''}`,
+    gives: c.gives,
+  }));
   const goodHeadings = ['social', 'rsvp', 'chat'];
   const cases = [
     { name: 'clean control', painted: good, headings: goodHeadings, urls, want: [] },
@@ -248,7 +259,10 @@ if (selftest) {
     { name: 'a blind link with no human confirmation', painted: good, headings: goodHeadings, urls: { ...urls, _verified: { ...urls._verified, facebookGroup: { status: 400, verifiedAt: '2026-11-11' } } }, want: ['join-blind-link-unconfirmed'] },
     // The two rules the 2026-11-14 audit found missing: the row named its platform only in the attribute, and
     // nothing checked that the page prints no date at all.
-    { name: 'a row that never names its platform', painted: good.map((c) => (c.kind === 'rsvp' ? { ...c, gives: 'Each meeting, one click from the date.' } : c)), headings: goodHeadings, urls, want: ['join-row-names-platform'] },
+    { name: 'a row that never names its platform', painted: good.map((c) => (c.kind === 'rsvp' ? { ...c, gives: 'Each meeting, one click from the date.' } : c)), headings: goodHeadings, urls, want: ['join-row-names-platform', 'join-gives-mismatch'] },
+    // The 2026-11-14 audit's first finding: the painted clause was a claim the resolver could disprove, and the gate
+    // compared the label only. Replacing one word must now fail.
+    { name: 'a clause the resolver does not carry', painted: good.map((c) => (c.kind === 'rsvp' ? { ...c, gives: c.gives.replace('a Meetup page', 'always a Meetup page') } : c)), headings: goodHeadings, urls, want: ['join-gives-mismatch'] },
     { name: 'a date printed on the page', painted: good, headings: goodHeadings, urls, pageText: 'Your first one is Nov 21, at a bakery.', want: ['join-date-painted'] },
     { name: 'a date only in a comment', painted: good, headings: goodHeadings, urls, pageText: visibleText('<!-- measured 2026-11-14 --><p>Your first one is soon.</p>'), want: [] },
   ];

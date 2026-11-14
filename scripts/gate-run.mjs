@@ -124,13 +124,13 @@ const DEPLOY = [
   // them with what the built page paints, so a channel added to the config without a row - or a row naming a
   // platform the resolver does not have - fails on the branch that did it. Its fixtures are in memory, so it can
   // fire before anyone builds (D118).
-  { name: 'check:join:selftest', desc: 'the join gate can still fail (13 plantings plus 2 parser assertions, each named, with two clean controls: a correct page, and a date that lives only in an HTML comment)' },
+  { name: 'check:join:selftest', desc: 'the join gate can still fail (14 plantings plus 2 parser assertions, each named, with two clean controls: a correct page, and a date that lives only in an HTML comment)' },
   // The dated surfaces, asserted as a SET (2026-11-14, the operator's /join objective: "no page grows a second
   // source of truth for links, dates or claims"). Every ruling that put a date on the site did it one page at a
   // time, and nothing compared the pages that print a date with the rulings that allow it - so a new page could
   // start printing one and only `check:content`'s prose rules would ever look. Its fixtures are in memory, so it
   // runs before `build` (D118).
-  { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (5 plantings: an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled entry that stopped printing; 3 clean controls plus the route-walker case)' },
+  { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (5 plantings: an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled route missing from the build; 4 clean controls incl. an empty calendar and an age; plus the route-walker case)' },
   { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared

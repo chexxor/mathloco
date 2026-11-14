@@ -532,9 +532,11 @@ export const joinChannels = (urls = {}) => {
       external: true,
       label: 'Join the Facebook group',
       srOnly: `${PLATFORMS.facebook}, opens in a new tab`,
-      // "group", not "page": FACEBOOK_GROUP_URL_SHAPE rejects a page URL, so the noun must not promise one; and the
-      // clause says what the visitor gets (another place the club posts), not who the visitor is.
-      gives: 'The club\'s own Facebook group, where what gets posted here also gets posted.',
+      // "group", not "page": FACEBOOK_GROUP_URL_SHAPE rejects a page URL, so the noun must not promise one. The
+      // clause states only what S021/D280 records - the operator named this group and it is public - because the
+      // earlier draft ("where what gets posted here also gets posted") was a cross-posting claim with no source
+      // behind it (2026-11-14 audit).
+      gives: 'The club\'s own public Facebook group.',
     },
     {
       kind: 'rsvp',
@@ -547,11 +549,13 @@ export const joinChannels = (urls = {}) => {
       // the club's own /schedule, so the label must not promise a new site - but the visitor is still choosing a
       // platform, and a kind that never says which one delivers it leaves the reader to find out after the click
       // (the 2026-11-14 audit's objection; `check:join` now requires the platform's name in every row's text).
-      // No "for each meeting": `signUpPaths()` may have no per-date Meetup page for a date and fall back to the
-      // group's join page (or offer only the chat), so a per-date quantifier here would be a claim this module
-      // decides and the resolver can disprove - the 2026-11-14 audit's objection. The clause states the practice
-      // and where the answer lives, and names the platform so a reader knows what they are choosing.
-      gives: 'Sign-ups are posted on Meetup, one click from each date. The date\'s page says where it was posted.',
+      // Nothing per-date here. `signUpPaths()` has three states - a Meetup page, a chat page, or nothing yet - and
+      // it falls back to the group's join page when the club has posted none, so any claim of the form "each
+      // meeting has a Meetup page" is a claim this module cannot keep and that page can disprove (2026-11-14
+      // audit, twice). What IS provable is what the schedule carries, which is also what the row sends you to:
+      // every date, and whatever the club has posted for it. It still names the platform, so the reader knows
+      // what they are choosing, and `check:join` compares this clause with the painted bytes byte for byte.
+      gives: 'The schedule lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.',
     },
     {
       kind: 'chat',

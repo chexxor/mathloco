@@ -3,12 +3,12 @@ import config from '../config.json';
 import EventRow from './EventRow.astro';
 import PhotoSlot from './PhotoSlot.astro';
 import {
-  content, upcoming, value, filled, copiedOn, formatDate, ageSince, builtOn,
+  content, upcoming, value, filled, copiedOn, formatDate, ageSince,
   scheduleConfigured,
 } from '../lib/content.ts';
 // The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
 // can compare it against the same rule rather than a copy of it (D238).
-import { todayIn } from '../lib/events.mjs';
+import { todayIn, snapshot } from '../lib/events.mjs';
 import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs';
 
 /**
@@ -72,14 +72,12 @@ import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs
  * (`JoinCommunity.astro`, "Come once / How it works"), which is deleted. Why merged rather than left beside
  * it: the two bands answered one question in two places — one said "here is a date", the other said "here is
  * how you come to a date" — with the horizon band between them, so a reader met the promise and its mechanics
- * three screens apart. The landing page now runs hero → what we take up → the horizon → **come once, with the
- * next date inside it** → footer. That is a rhythm change and it has not been priced: `npm run check:rhythm`
- * owes it a number before anyone claims one (asked in `.notes/NEXT.md` with A3).
+ * three screens apart. The landscape is now hero → what we take up → the horizon → **come once, and here is the
+ * page where the dates are** → footer: D306 took the date out of this band on 2026-11-14, so what the merge
+ * bought (the mechanics, in the place a reader is deciding to come) is what remains.
  *
- * The compact card is deliberately NOT the full width's row. One row of list markup would read as a
- * truncated list, which is what the old homepage was; the card draws the date the way a calendar draws a
- * date — month, day number, weekday, in a filled leaf — and the leaf is the sign that this surface is a
- * preview of a page rather than a short list. The full width's rows stay ruled strips (D220's `edges`),
+ * The compact width no longer draws a card, a leaf or a cluster (D306): `/schedule` is the only surface that
+ * prints a date, and the homepage points at it. The full width's rows stay ruled strips (D220's `edges`),
  * because there the dates, not one date, are the thing.
  *
  * The rhythm inside the full width is R6's `rows` option, ruled 2026-11-05 (D214; the pair's measurement is
@@ -154,7 +152,8 @@ if (beyondWindow) {
   // `beyondWindow` cannot be true with no open date, so `firstOpen` is read through a local rather than a `!`.
   const far = win.firstOpen;
   status = 'Past this page’s window';
-  emptyTitle = `The next date is ${formatDate(far?.date ?? '', 'wide')}.`;
+  // Date-free on purpose: this block also renders on the homepage, which prints no date at all (D306).
+  emptyTitle = 'The next date is past the window this page shows.';
   emptyBody = `That is more than ${HORIZON_WEEKS} weeks out, and this page lists the ${HORIZON_WEEKS} weeks it can show at once. The calendar file carries every date the organizer has made, however far out.`;
 }
 
@@ -167,7 +166,7 @@ const venues = value(content.venues);
 const membership = value(content.membership);
 const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.length : null;
 
-// D117: a path needs a page, and it has one now, so the compact card may point at it.
+// D117: a path needs a page, and it has one now, so the compact band may point at it.
 const scheduleHref = '/schedule';
 // When the copy was taken. This is the same stamp every published `DTSTAMP` derives from (`check:ics`'s
 // dtstamp rule asserts it), so the sentence under a date and the calendar file a subscriber holds cannot
@@ -246,7 +245,10 @@ const lede = compact
             <h3 class="mt-1 text-lede font-bold text-ink font-body">{emptyTitle}</h3>
             <p class="mt-2 text-body leading-prose text-ink-2 font-body">{emptyBody}</p>
             {venueLine && <p class="mt-2 text-body leading-prose text-ink-2 font-body">{venueLine}</p>}
-            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {builtOn()}{copied ? `, and the club’s calendar was last read ${copied}.` : '; no calendar source is wired to it yet.'}</p>
+            {/* D306: an empty calendar still renders this block on both widths, so it must not print a date either -
+                that was the 2026-11-14 audit's third finding (with no open date, `/` would have painted "built Nov 14,
+                2026" and `/schedule` a provenance date with no `data-date` handle). Ages carry the same freshness. */}
+            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {ageSince(new Date().toISOString().slice(0, 10))}{snapshot.source?.fetchedAt ? `, and the club’s calendar was last read ${ageSince(String(snapshot.source.fetchedAt).slice(0, 10))}.` : '; no calendar source is wired to it yet.'}</p>
           </div>
           {/* The primary button belongs to the band, and the compact band has one below with the chat path
               beside it. Printing it in the notice too would put two `data-control="primary"` controls in one
