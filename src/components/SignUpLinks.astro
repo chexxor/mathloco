@@ -1,6 +1,15 @@
 ---
 /**
- * The sign-up cluster on a schedule row — one quiet link per platform the club actually signs people up on.
+ * The club's **standing** sign-up paths — the chat, the group, the calendar file — rendered ONCE per page
+ * under a lead-in, not once per row.
+ *
+ * **2026-11-15 (round-4 design brief §6, ruling D-B): this is no longer "the sign-up cluster on a schedule
+ *  row". A row carries one action — the per-date sign-up page, painted in `EventRow.astro` from
+ *  `splitPaths(paths).row` — and everything the resolver returns besides that is a property of the club,
+ *  so it prints once after the last row. The file keeps its name (D173's rule for a handle: a probe handle
+ *  does not follow the copy), and every rule below about the resolver, the island, the stamps and the
+ *  canonical order still holds; what changed is *how many* pages carry it and which half of the resolver's
+ *  destinations is in it.**
  *
  * Why this is a component and not a paragraph inside `EventRow.astro` (S019, D272, 2026-11-10). The operator's
  * ruling is that the site does not hold RSVPs: "the website just needs functionality to make it easy for a
@@ -74,42 +83,80 @@
 import config from '../config.json';
 import meetupSnapshot from '../../data/meetup-events.json';
 import discordSnapshot from '../../data/discord-events.json';
-import { signUpPaths, snapshotAgeDays } from '../lib/rsvp.mjs';
+import { signUpPaths, splitPaths, snapshotAgeDays } from '../lib/rsvp.mjs';
 import SignUpLinksCluster from '../components/SignUpLinksCluster.svelte';
 import PlatformMarks from './PlatformMarks.astro';
 import { spriteFor } from '../lib/platform-marks.mjs';
 import type { UpcomingItem } from '../lib/content.ts';
 
 type Props = {
+  /** The date the standing row is stamped with — the FIRST date the page prints. The stamps (hour, state,
+     snapshot age) describe a date the page actually shows, so the freshness a reader sees under the last row
+     is the freshness the rows above were built from, and `check:rsvp-page` can still key the cluster on a
+     printed date. */
   item: UpcomingItem;
+  /** The page's own words for the standing row, so a page that wants a different lead-in does not fork the
+     component. Defaults to the schedule's. */
+  lead?: string;
 };
 
-const { item } = Astro.props;
+const { item, lead = 'Between meetings:' } = Astro.props;
 const paths = signUpPaths(item, meetupSnapshot.events, config.URLs, discordSnapshot.events);
+// Round-4 brief §6, ruling D-B (2026-11-15): the row's ONE action stayed in the row; everything else the
+// resolver returns is a **standing** resource — the chat, the group, the calendar file — and it belongs to
+// the club, not to a date. So this component renders it once per page, after the last row, and the split
+// happens in `src/lib/rsvp.mjs` (`splitPaths`) rather than here: the gate that compares painted bytes against
+// `signUpPaths()` must see the same split the page makes, or it would be comparing the wrong thing (D264).
+const standing = splitPaths(paths).standing;
 // The ages the page gate will see. Stated here so a reader of the built HTML can tell *why* a date has no
 // page: `data-rsvp-snapshot` is the stamp, and `check:rsvp` is the gate that fails a build over it.
 const age = snapshotAgeDays(meetupSnapshot);
 const discordAge = snapshotAgeDays(discordSnapshot);
 ---
 
-<!-- The cluster itself lives in `src/components/SignUpLinksCluster.svelte` (S022, D281). This file only
-  decides *what* the row signs people up on; the component decides *in what order* a particular visitor sees
-  it. Astro server-renders the island, so the bytes `check:rsvp-page` reads are produced here at build time in
-  the canonical order (Meetup, Discord, Facebook) — the visitor's remembered platform is applied in the
-  browser, never on the server, so a JavaScript-off visitor, a crawler and a screen reader all get the same
-  order the gate asserts. Everything passed below is a primitive or a plain array because it is serialised
-  into the island tag: the snapshots and the config never leave the server. `client:visible` is the same
-  strategy the /chat page uses for `DiscordSummary.svelte`. -->
+<!-- Round-4 brief §6 and §4, rulings D-B and D341 (2026-11-15): the standing row. Same island, same resolver,
+  same canonical order, same remembered-platform reorder — one instance per page instead of one per row, so
+  `/schedule` pays five sign-up links plus this row rather than fifteen. The lead-in is prose, the platform
+  labels are the resolver's (D273: a label that names the platform needs no hidden suffix), and the calendar
+  file is the club's own route, so it carries no `target`, no new tab, and no qualifier (`check:ext-links`
+  S041: an internal route is not an exit). The arrow the cluster used to paint after every label is gone
+  from the island, not styled away: §4 called fifteen of them "decoration pretending to be affordance", and
+  the affordance is the underline plus the sr-only qualifier.
+  This file still only decides *what* the row signs people up on; `SignUpLinksCluster.svelte` decides *in what
+  order* a particular visitor sees it. Astro server-renders the island, so the bytes `check:rsvp-page` reads
+  are produced here at build time in the canonical order (Discord, Facebook) — the visitor's remembered
+  platform is applied in the browser, never on the server, so a JavaScript-off visitor, a crawler and a
+  screen reader all get the order the gate asserts. Everything passed below is a primitive or a plain array
+  because it is serialised into the island tag: the snapshots and the config never leave the server. -->
 {spriteFor(Astro.locals) && <PlatformMarks />}
-<SignUpLinksCluster
-  client:visible
-  destinations={paths.destinations}
-  note={paths.note}
-  date={paths.date}
-  signupState={paths.state}
-  hour={paths.hour ?? 'unsettled'}
-  meetupSnapshot={meetupSnapshot.source.fetchedAt}
-  meetupAge={age === null ? 'unknown' : age.toFixed(1)}
-  discordSnapshot={discordSnapshot.source?.fetchedAt ?? 'none'}
-  discordAge={discordAge === null ? 'unknown' : discordAge.toFixed(1)}
-/>
+<div class="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+  <p class="text-label text-ink-3">{lead}</p>
+  <SignUpLinksCluster
+    client:visible
+    destinations={standing}
+    note={paths.note}
+    date={paths.date}
+    signupState={paths.state}
+    hour={paths.hour ?? 'unsettled'}
+    meetupSnapshot={meetupSnapshot.source.fetchedAt}
+    meetupAge={age === null ? 'unknown' : age.toFixed(1)}
+    discordSnapshot={discordSnapshot.source?.fetchedAt ?? 'none'}
+    discordAge={discordAge === null ? 'unknown' : discordAge.toFixed(1)}
+  />
+  {/* The calendar file, in the standing row rather than in a second paragraph below it: one path to one file,
+      and the sentence under it is about that path. `check:dated-surfaces` and `check:ics` own the bytes of
+      the file itself; this is only the way to it. */}
+  <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add to a calendar</a>
+</div>
+<p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
+  Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
+</p>
+
+<!-- One standing row per page, and one island per standing row. The cluster itself lives in
+  `src/components/SignUpLinksCluster.svelte` (S022, D281): this file decides *what* the standing row offers,
+  that component decides *in what order* a particular visitor sees it. Astro server-renders the island, so the
+  bytes `check:rsvp-page` reads come out of this file in the canonical order (Discord, Facebook after the split
+  in `splitPaths`), and the remembered platform is applied only in the browser — a JavaScript-off visitor, a
+  crawler and a screen reader all get the order the gate asserts. Everything passed below is a primitive or a
+  plain array because it is serialised into the island tag; the snapshots and the config never leave the server.
+  `client:visible` is the same strategy the /chat page uses for `DiscordSummary.svelte`. -->

@@ -30,6 +30,9 @@
 //   dated-surface-unruled    this page prints a date and no ruling has put one there
 //   dated-surface-unmarked   this page prints a date but carries no `data-date` handle, so no gate can key on it
 //   dated-surface-missing    a page on the ruled list is not in the build at all (a deleted route, not a quiet one)
+//   next-meeting-mismatch    the home hero's computed next meeting disagrees with the nav chip, or with the
+//                            page of record (D340, round-4 §5: "if they disagree, the build fails" — D311's
+//                            rule extended to a second surface, which is the brief's wording, not a new gate)
 import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -45,6 +48,7 @@ const DIST = (() => {
  *  allows it. */
 export const RULED = new Map([
   ['/schedule', "D218 — the page of record: every open date inside the window. Since D306 it is the ONLY one: the homepage's one-date band was removed on the operator's `/join` objective, and its entry here was deleted in the same commit that stopped printing the date (2026-11-14)."],
+  ['/', "D340 — one computed next meeting in the home hero, from the same scheduleWindow(upcoming(), todayIn()) call the nav chip makes (round-4 §5, D-A). This reverses D306's blanket \"`/schedule` is the only surface that prints dates\": D306 removed a band that DUPLICATED the schedule's five dates; this is one date, stated as the answer to \"when is the next meeting?\", and gated against the page of record by `next-meeting-mismatch` so it cannot drift into a second calendar."],
 ]);
 
 /** A month-and-day a visitor could read, with no year attached. The year is the discriminator: "Nov 21" is a
@@ -55,6 +59,11 @@ const DATE_HANDLE = /data-date="\d{4}-\d{2}-\d{2}"/;
 /** The nav's subordinate date chip (D311). Its text is chrome, so it is stripped before the prose scan and
  *  audited separately against the page of record. */
 const NAV_CHIP = /<span[^>]*data-nav-date="(\d{4}-\d{2}-\d{2})"[^>]*>[\s\S]*?<\/span>/g;
+/** The hero's computed next-meeting block (D340, round-4 §5). The rule reads the block's opening tag, because
+ *  the tag is what carries the handle: a block that claims to be the next meeting without an ISO date on it is
+ *  prose wearing a surface name, and no gate could key on it. */
+const NEXT_MEETING_TAG = /<div[^>]*data-surface="next-meeting"[^>]*>/;
+const ISO_DATE = /\d{4}-\d{2}-\d{2}/;
 /** The anchor the chip sits in (D311, and the 2026-11-14 read §2/§5.2). The chip's visible text is the short
  *  form — "21 Nov" — because the measured 320px floor cannot hold the weekday (D311: `Sat 21 Nov` needs 286px
  *  of 276). The weekday has to be in the accessible name, which costs no pixels, or the screen-reader user gets
@@ -127,6 +136,30 @@ export const datedSurfaceFindings = (pages, ruled = RULED) => {
         });
       }
     }
+    // D340 (round-4 §5, decision D-A): the home hero now ANSWERS "when is the next meeting?" instead of
+    // pointing at the page that does. Two surfaces claiming to be "the next one" is the same second-calendar
+    // defect D311 was built for, so the chip's rule extends here: hero, chip and the page of record name one
+    // date, and a hero that disagrees is a build failure rather than a visitor meeting two answers.
+    const heroTag = NEXT_MEETING_TAG.exec(html);
+    if (heroTag) {
+      const heroDate = ISO_DATE.exec(heroTag[0])?.[0];
+      if (!heroDate) {
+        fails.push({
+          rule: 'next-meeting-mismatch',
+          detail: `${route}'s hero opens a data-surface="next-meeting" block whose element carries no ISO date, so the block claims a date a visitor can read and nothing can compare. Put data-date="YYYY-MM-DD" on the block element (D173), the same handle the rows carry.`,
+        });
+      } else if (chips.length && chips[0] !== heroDate) {
+        fails.push({
+          rule: 'next-meeting-mismatch',
+          detail: `${route}'s hero says the next meeting is ${heroDate} while the same page's nav chip says ${chips[0]}. The brief's rule for this pair is that disagreeing fails the build (D340, extending D311): both come from the one scheduleWindow(upcoming(), todayIn()) call, so one of them is not coming from it.`,
+        });
+      } else if (!recordDates.length || recordDates[0] !== heroDate) {
+        fails.push({
+          rule: 'next-meeting-mismatch',
+          detail: `${route}'s hero says the next meeting is ${heroDate} while the page of record prints ${recordDates[0] ?? 'no date at all'} first. The hero must be the same computed fact the rows are (D340); a hero restating an old date is a second calendar wearing a bolder hat than the first.`,
+        });
+      }
+    }
     const text = visibleText(chromeStripped);
     const m = DATE_TEXT.exec(text);
     if (!m) continue;
@@ -164,6 +197,9 @@ if (selftest) {
   rmSync(FIX, { recursive: true, force: true });
   mkdirSync(FIX, { recursive: true });
   const ruled = new Map([['/schedule', 'fixture: the page of record']]);
+  // D340 puts ONE computed date on home, so the fixture's home page needs a ruling of its own; cases that
+  // paint a hero pass this map instead of the unruled one, which is what the real RULED row says.
+  const heroRuled = new Map([['/schedule', 'fixture: the page of record'], ['/', 'fixture: D340 puts one computed date on home']]);
   const page = (body) => `<html><body>${body}</body></html>`;
   const home = page('<p class="italic">Nov 21</p><div data-date="2026-11-21">MPLS Math Club Social</div>');
   const schedule = page('<ul><li data-date="2026-11-21">Saturday, Nov 21 — MPLS Math Club Social</li></ul>');
@@ -192,10 +228,15 @@ if (selftest) {
     // without the handle, so no gate can compare it with the schedule page (D311).
     { name: 'a nav date whose element has the attribute but is not the chip shape', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates, next meeting Saturday, Nov 21">Dates <div data-nav-date="2026-11-21" class="chip">the next one</div></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-unhandled'] },
     { name: 'a nav chip while the calendar is empty', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates, next meeting Saturday, Nov 21">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: page('<p>No date is on the calendar yet.</p>') }], want: ['nav-date-with-no-dates'] },
+    // D340 (round-4 §5): the hero block is a second surface for the next date, and it must agree.
+    { name: 'clean control: the hero, the chip and the record name one date', ruled: heroRuled, pages: [{ route: '/', html: page('<div data-surface="next-meeting" data-date="2026-11-21"><p><time datetime="2026-11-21">Next meeting: Saturday, Nov 21</time></p></div><a href="/schedule" aria-label="Dates, next meeting Saturday, Nov 21">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: schedule }], want: [] },
+    { name: 'the hero states a date the page of record does not print first', ruled: heroRuled, pages: [{ route: '/', html: page('<div data-surface="next-meeting" data-date="2026-12-05"><p><time datetime="2026-12-05">Next meeting: Wednesday, Dec 5</time></p></div>') }, { route: '/schedule', html: schedule }], want: ['next-meeting-mismatch'] },
+    { name: 'the hero and the nav chip disagree on the next meeting', ruled: heroRuled, pages: [{ route: '/', html: page('<div data-surface="next-meeting" data-date="2026-11-21"><p><time datetime="2026-11-21">Next meeting: Saturday, Nov 21</time></p></div><a href="/schedule" aria-label="Dates, next meeting Wednesday, Dec 5">Dates <span data-nav-date="2026-12-05">5 Dec</span></a>') }, { route: '/schedule', html: page('<ul><li data-date="2026-12-05">Wednesday, Dec 5 — Study session</li></ul>') }], want: ['next-meeting-mismatch'] },
+    { name: 'a hero block whose element carries no date handle', ruled: heroRuled, pages: [{ route: '/', html: page('<div data-surface="next-meeting"><p><time datetime="2026-11-21">Next meeting: Saturday, Nov 21</time></p></div>') }, { route: '/schedule', html: schedule }], want: ['next-meeting-mismatch', 'dated-surface-unmarked'] },
   ];
   let bad = 0;
   for (const c of cases) {
-    const got = datedSurfaceFindings(c.pages, ruled).fails.map((f) => f.rule);
+    const got = datedSurfaceFindings(c.pages, c.ruled ?? ruled).fails.map((f) => f.rule);
     const miss = c.want.filter((w) => !got.includes(w));
     const extra = got.filter((g) => !c.want.includes(g));
     const ok = miss.length === 0 && extra.length === 0;

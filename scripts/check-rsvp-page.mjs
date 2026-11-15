@@ -19,9 +19,12 @@
       confirmed hour of a row on that date, or `unsettled` when no row on that date has one (D169). Reading the
       hour back out of the row's prose ("time not set") is exactly what D173 forbids, so the check goes to the
       snapshot instead of to the sentence.
-   2. **the links.** Recomputed with `signUpPaths()` from `src/lib/rsvp.mjs` — the same function
-      `src/components/SignUpLinks.astro` calls — from both event snapshots, the Meetup pages and the guild's
-      own scheduled events. Order (Meetup, Discord, Facebook), one link per destination, the exact href, the
+   2. **the links.** Recomputed with `signUpPaths()` from `src/lib/rsvp.mjs` — the same function the
+      components call — from both event snapshots, the Meetup pages and the guild's own scheduled events, and
+      then **split** the way the components split it (D-B, round-4 §6, `splitPaths` in that module): a printed
+      row carries the per-date half (`splitPaths(p).row`, one anchor) and the page carries the standing half
+      (`splitPaths(p).standing`) exactly once, after the last row. Order in the standing row is Discord then
+      Facebook; the exact href, the
       accessible suffix, `target="_blank" rel="noopener noreferrer"`, nothing for a platform whose
       configured URL is empty, and a link for **every** platform the config declares in **every** printed
       cluster (D273: the label is the resolver's label, so a reworded link that no longer names the platform is
@@ -36,12 +39,13 @@
  *
  * Assumption written down: the cluster contains no nested `<div>`. `SignUpLinks.astro` emits spans and
  * anchors only; if that ever changes, the cluster regex below stops at the first `</div>` and the
- * "one cluster per printed row" count is what reports it.
+ * "exactly one standing cluster per page" count is what reports it.
  */
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import {
   LINK_KEYS, PLATFORMS, PREF_KEY, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths, newTabQualifier,
+  ROW_PRIMARY_PLATFORM, splitPaths,
 } from '../src/lib/rsvp.mjs';
 import { MARKS, MARK_COUNT, markId } from '../src/lib/platform-marks.mjs';
 import { dateOf, scheduleWindow, todayInZone } from '../src/lib/event-window.mjs';
@@ -87,8 +91,12 @@ const routeOf = (file) => {
   return rel === 'index.html' ? '/' : `/${rel.replace(/\/index\.html$/, '')}`;
 };
 
-/** A printed row or card: `<li ... data-surface="row|preview" data-date="YYYY-MM-DD">`. */
-const SURFACE_RE = /<li[^>]*data-surface="(row|preview)"[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*>/g;
+/** A printed row or card, as its **whole element** (D-B, round-4 §6): the region a row owns is its own
+ *  `</li>`, not everything up to the next row. Before the split, a cluster lived inside the row and the
+ *  slice-to-next-row parser was fine; now the standing cluster sits after the last `</li>` and the old slice
+ *  would read it as the last row's. Same element span `scripts/check-row-geometry.mjs` matches, so the two
+ *  gates cannot disagree about what a row is (D264). */
+const SURFACE_RE = /<li\b[^>]*data-surface="(row|preview)"[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*>[\s\S]*?<\/li>/g;
 /** The cluster the component paints inside it. */
 const CLUSTER_RE = /<div[^>]*data-rsvp-cluster[\s\S]*?<\/div>/g;
 /** An Astro island wrapper. `SignUpLinksCluster` is one (S022, D281): Astro server-renders it, so the bytes
@@ -140,18 +148,24 @@ const attrsOf = (tag) => {
   return out;
 };
 
+/** A sign-up anchor — the row's primary or one of the standing row's — parsed the same way wherever it is
+ *  found, so the row rules and the cluster rules cannot disagree about one anchor (D264). */
+const ANCHOR_RE = /<a[^>]*data-rsvp-platform[^>]*>[\s\S]*?<\/a>/g;
+const linkOf = (a) => {
+  const tag = a.slice(0, a.indexOf('>') + 1);
+  return {
+    raw: a,
+    tag,
+    attrs: attrsOf(tag),
+    text: a.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
+  };
+};
+const linksOf = (html) => [...html.matchAll(ANCHOR_RE)].map((m) => linkOf(m[0]));
+
 /** Split one cluster into its attributes, its links, and the text the cluster paints. */
 const parseCluster = (clusterHtml) => {
   const open = clusterHtml.slice(0, clusterHtml.indexOf('>') + 1);
-  const links = [...clusterHtml.matchAll(/<a[^>]*data-rsvp-platform[^>]*>[\s\S]*?<\/a>/g)].map((m) => {
-    const tag = m[0].slice(0, m[0].indexOf('>') + 1);
-    return {
-      raw: m[0],
-      tag,
-      attrs: attrsOf(tag),
-      text: m[0].replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim(),
-    };
-  });
+  const links = linksOf(clusterHtml);
   return {
     attrs: attrsOf(open),
     links,
@@ -159,17 +173,18 @@ const parseCluster = (clusterHtml) => {
   };
 };
 
-/** Every printed surface on a page, with the clusters inside it. */
+/** Every printed surface on a page: its own element, the clusters inside it (D-B: none), its anchors. */
 const surfacesOf = (html) => {
   const found = [...html.matchAll(SURFACE_RE)];
-  return found.map((m, i) => {
-    const start = m.index;
-    const end = i + 1 < found.length ? found[i + 1].index : html.length;
-    const region = html.slice(start, end);
+  return found.map((m) => {
+    const region = m[0];
+    const tag = region.slice(0, region.indexOf('>') + 1);
     return {
       surface: m[1],
       date: m[2],
-      attrs: attrsOf(m[0]),
+      attrs: attrsOf(tag),
+      region,
+      anchors: linksOf(region),
       clusters: [...region.matchAll(CLUSTER_RE)].map((c) => parseCluster(c[0])),
     };
   });
@@ -185,87 +200,73 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
   const clustersByIndex = [...html.matchAll(CLUSTER_RE)].map((m) => ({ index: m.index, ...parseCluster(m[0]) }));
   const clusters = clustersByIndex;
 
-  // 1. Every date the page prints gets exactly one cluster, and no cluster floats on a date it printed no row for.
+  // 1. (D-B, round-4 §6) The **standing** cluster renders ONCE per page, after the last row; each printed row
+  //    carries its OWN one primary action and no cluster of its own. Before this rule was rewritten a printed
+  //    date owned a cluster of every platform the club declares, so `/schedule` painted 5 dates x 3 links =
+  //    15 anchors and 15 arrows (§4: "Fifteen arrows on one page is decoration pretending to be affordance";
+  //    §6: "Five rows should scan as five dates, not fifteen links"). One cluster per page and one primary
+  //    per row is the shape this rule asserts, and the count is what stops a fifth row re-inventing a
+  //    cluster of its own the next time the markup moves.
   if (!surfaces.length && clusters.length) {
     fails.push(`${pageName} paints a sign-up cluster with no printed date to attach it to`);
-  } else if (surfaces.length && clusters.length !== surfaces.length) {
-    fails.push(`${pageName} prints ${surfaces.length} date(s) and ${clusters.length} sign-up cluster(s) — a printed date must have exactly one, not zero and not two`);
+  } else if (surfaces.length && clusters.length !== 1) {
+    fails.push(`${pageName} prints ${surfaces.length} row(s) and ${clusters.length} standing cluster(s) — the standing cluster renders once per page (D-B, round-4 §6), not once per row and not twice`);
   }
   if (!surfaces.length && !clusters.length && dates) {
     fails.push(`${pageName} prints no date and no cluster: either the schedule is empty or its rows lost their data-surface/data-date handles`);
   }
-  // A page that must not print a date: the homepage since D306. A date here is a second copy of a fact whose
-  // source is `data/events.json`, and the copy goes stale while `/schedule` stays right.
+  // A page that must not print a date: the homepage since D306 — until D340, which put ONE computed date
+  // back on it under a ruling `check:dated-surfaces` now carries in its RULED set. A whole row is still a
+  // second calendar, and `/schedule` is still the page of record.
   if (!dates && surfaces.length) {
     fails.push(`${pageName} prints ${surfaces.length} date(s) and must not print a date: /schedule is the page of record (D306, \`check:dated-surfaces\`)`);
   }
 
+  // 2. The row's ONE action (D-B §6), resolved against `splitPaths(p).row` — the per-date half of the
+  //    resolver, the same split `EventRow.astro` renders from. Comparing a row against the whole cluster
+  //    would compare the gate against the wrong thing after the split moved (D264).
   for (const s of surfaces) {
-    if (s.clusters.length !== 1) {
-      fails.push(`${pageName} row for ${s.date} has ${s.clusters.length} clusters (a printed date carries exactly one)`);
+    if (s.clusters.length) {
+      fails.push(`${pageName} row for ${s.date} carries ${s.clusters.length} cluster(s) — the standing cluster renders once per page after the last row, not inside a row (D-B, round-4 §6)`);
       continue;
     }
-    const c = s.clusters[0];
-    const at = c.attrs;
-
-    // 2. The cluster belongs to the row that carries it.
-    if (at['data-rsvp-date'] !== s.date) {
-      fails.push(`${pageName} row ${s.date} carries a cluster stamped ${at['data-rsvp-date'] || '(no date)'} — the cluster must say the date of the row it is in`);
+    const standing = s.anchors.filter((l) => l.attrs['data-rsvp-platform'] !== ROW_PRIMARY_PLATFORM);
+    if (standing.length) {
+      fails.push(`${pageName} row for ${s.date} carries ${standing.length} link(s) for a standing platform (${standing.map((l) => `${l.attrs['data-rsvp-platform']}: ${l.attrs.href}`).join('; ')}) — one action per row; the club's standing resources render once per page (D-B, round-4 §6)`);
     }
-    if (at['data-rsvp-date'] < today) {
-      fails.push(`${pageName} cluster on ${at['data-rsvp-date']} is a date that has already passed (today is ${today})`);
+    const primary = s.anchors.filter((l) => l.attrs['data-rsvp-platform'] === ROW_PRIMARY_PLATFORM);
+    if (!primary.length) {
+      fails.push(`${pageName} row for ${s.date} carries no primary action — a printed date must offer the sign-up page the club posted for that date (D-B, round-4 §6)`);
+      continue;
     }
-
-    // 3. The hour is the feed's hour, not the component's guess.
+    // The hour is no longer painted on the row (the standing row carries it), so the gate reads the hour the
+    // row was built from off `data/events.json` — the same rows `EventRow.astro` renders. A date whose feed
+    // settles two hours is resolved for each of them and the painted set must be one of those answers, so
+    // the gate never picks whichever hour it happened to try first (D169: an unsettled hour is not a guess).
     const hoursOnDate = [...new Set(eventRows.filter((r) => dateOf(r) === s.date).map(hourOf).filter(Boolean))];
-    const paintedHour = at['data-rsvp-hour'];
-    if (!hoursOnDate.length) {
-      if (paintedHour !== 'unsettled') fails.push(`${pageName} cluster on ${s.date} claims hour ${paintedHour} but no row on that date has a confirmed time (D169: an unsettled hour is painted "unsettled")`);
-    } else if (!hoursOnDate.includes(paintedHour)) {
-      fails.push(`${pageName} cluster on ${s.date} claims hour ${paintedHour || '(missing data-rsvp-hour)'}; the feed confirms ${hoursOnDate.join(' / ')}`);
+    const tries = (hoursOnDate.length ? hoursOnDate : [null]).map((h) => {
+      const p = signUpPaths({ date: s.date, time: h }, meetupEvents, urls, discordEvents);
+      return { state: p.state, want: splitPaths(p).row };
+    });
+    const t = tries.find((x) => x.want.length === primary.length && x.want.map((d) => d.href).join('|') === primary.map((l) => l.attrs.href).join('|')) ?? tries[0];
+    const want = t.want;
+    if (want.length !== primary.length) {
+      fails.push(`${pageName} row for ${s.date} paints ${primary.length} primary link(s); the resolver returns ${want.length} (${want.map((d) => d.platform).join(', ') || 'none'}) for that date`);
     }
-
-    // 4. Freshness, stated on the page and checked against the snapshot the build read.
-    if (at['data-rsvp-snapshot'] !== fetchedAt) {
-      fails.push(`${pageName} cluster says the snapshot is ${at['data-rsvp-snapshot'] || '(unstamped)'}; data/meetup-events.json says ${fetchedAt}`);
+    if (primary.length > 1 && t.state !== 'several') {
+      fails.push(`${pageName} row for ${s.date} carries ${primary.length} primary actions (one per row, D-B round-4 §6); only the resolver's "several" state may offer more than one page for a date, and it says so`);
     }
-    if (age !== null && !withinAge(at['data-rsvp-age'], age)) {
-      fails.push(`${pageName} cluster says the snapshot is ${at['data-rsvp-age']} days old; the stamp says ${age.toFixed(1)}`);
-    }
-    if (age === null || age > SNAPSHOT_FRESH_DAYS) {
-      fails.push(`${pageName} paints sign-up links from a snapshot ${age === null ? 'with no date' : `${age.toFixed(1)} days old`} (limit ${SNAPSHOT_FRESH_DAYS})`);
-    }
-    // The Discord half of the same rule (D274): a guild scheduled event is a page that appears and disappears
-    // on the club's own schedule, so its snapshot ages under the identical 14-day limit.
-    if (at['data-rsvp-discord-snapshot'] !== discordFetchedAt) {
-      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-snapshot'] || '(unstamped)'}; data/discord-events.json says ${discordFetchedAt}`);
-    }
-    if (discordAge !== null && !withinAge(at['data-rsvp-discord-age'], discordAge)) {
-      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-age']} days old; the stamp says ${discordAge.toFixed(1)}`);
-    }
-    if (discordAge === null || discordAge > SNAPSHOT_FRESH_DAYS) {
-      fails.push(`${pageName} paints sign-up links from a Discord snapshot ${discordAge === null ? 'with no date' : `${discordAge.toFixed(1)} days old`} (limit ${SNAPSHOT_FRESH_DAYS})`);
-    }
-
-    // 5. The destinations, recomputed from the resolver.
-    const paths = signUpPaths({ date: s.date, time: paintedHour === 'unsettled' ? null : paintedHour }, meetupEvents, urls, discordEvents);
-    if (at['data-rsvp-state'] !== paths.state) {
-      fails.push(`${pageName} cluster on ${s.date} is stamped state "${at['data-rsvp-state']}" but signUpPaths() returns "${paths.state}"`);
-    }
-    if (c.links.length !== paths.destinations.length) {
-      fails.push(`${pageName} cluster on ${s.date} paints ${c.links.length} link(s); signUpPaths() returns ${paths.destinations.length} (${paths.destinations.map((d) => d.platform).join(', ') || 'none'})`);
-    }
-    paths.destinations.forEach((d, i) => {
-      const link = c.links[i];
-      if (!link) return;   // the count failure above already names it
+    primary.forEach((link, i) => {
+      const d = want[i];
+      if (!d) return;   // the count failure above already names it
       if (link.attrs['data-rsvp-platform'] !== d.platform) {
-        fails.push(`${pageName} cluster on ${s.date}: link ${i + 1} is "${link.attrs['data-rsvp-platform']}", expected ${d.platform} (order is Meetup, Discord, Facebook)`);
+        fails.push(`${pageName} row for ${s.date}: its primary link is "${link.attrs['data-rsvp-platform']}", expected ${d.platform} (the per-date action is the ${ROW_PRIMARY_PLATFORM} one, D-B)`);
       }
       if (link.attrs.href !== d.href) {
-        fails.push(`${pageName} cluster on ${s.date}: ${d.platform} link goes to ${link.attrs.href}, the resolver says ${d.href}`);
+        fails.push(`${pageName} row for ${s.date}: its primary link goes to ${link.attrs.href}, the resolver says ${d.href}`);
       }
       if (link.attrs['data-rsvp-date'] !== s.date) {
-        fails.push(`${pageName} cluster on ${s.date}: the ${d.platform} link is stamped ${link.attrs['data-rsvp-date'] || '(no date)'} — every link in a cluster carries that cluster's date`);
+        fails.push(`${pageName} row for ${s.date}: its primary link is stamped ${link.attrs['data-rsvp-date'] || '(no date)'} — a row's action carries that row's date`);
       }
       if (link.attrs.target !== '_blank') fails.push(`${pageName} ${d.platform} link on ${s.date} has no target="_blank"`);
       if (!/noopener/.test(link.attrs.rel) || !/noreferrer/.test(link.attrs.rel)) {
@@ -277,47 +278,159 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
       if (!link.text.includes(d.label)) {
         fails.push(`${pageName} ${d.platform} link on ${s.date} paints "${link.text}" rather than the resolver's label "${d.label}"`);
       }
-      // A quiet label, not a control (D139): the row is already one boundary.
-      if (/data-control/.test(link.tag)) fails.push(`${pageName} ${d.platform} link on ${s.date} carries data-control — the sign-up cluster is DESIGN.md's quiet label, not a control`);
+      if (/data-control/.test(link.tag)) fails.push(`${pageName} ${d.platform} link on ${s.date} carries data-control — the sign-up link is DESIGN.md's quiet label, not a control`);
+      // The row's way out is typographic (D-B §6, D-D §7.1): the underline and the words carry it, and a
+      // glyph in every row would paint five for one fact. The marks belong to the standing row, below.
+      const uses = [...link.raw.matchAll(/<use href="#([a-z0-9-]+)"/g)];
+      if (uses.length) {
+        fails.push(`${pageName} row for ${s.date} paints ${uses.length} platform mark(s) on its primary link — the marks belong to the standing row; a row is typographic (D-B, D-D, round-4 §6/§7.1)`);
+      }
+    });
+  }
 
-      // 5c. (F3(b), D294) Every painted link carries its own platform's mark, and the mark is the platform
-      //     the link is for. A glyph of the wrong platform is a painted lie: the visitor reads the mark first.
-      //     The browser gate (design/render-gate.mjs rule 4c) proves the mark is 16px and painted in the label's
-      //     colour; this rule proves the identity, which a screenshot cannot.
+  // 3. The standing row (D-B §6), once per page. Its stamps describe a date the page actually prints — the
+  //    FIRST one, so the freshness a reader sees under the last row is the freshness the rows above were
+  //    built from, and D311's "two surfaces of one fact must agree" rule extends to this pair.
+  for (const c of clusters) {
+    const at = c.attrs;
+    const date = at['data-rsvp-date'] || '(no date)';
+
+    // 3a. The cluster belongs to a date the page prints, and to the first of them.
+    if (surfaces.length && !surfaces.some((x) => x.date === at['data-rsvp-date'])) {
+      fails.push(`${pageName} cluster on ${date} is stamped a date the page prints no row for — the standing row describes a meeting the page shows (D-B, round-4 §6)`);
+    } else if (surfaces.length && at['data-rsvp-date'] !== surfaces[0].date) {
+      fails.push(`${pageName} cluster on ${date} is stamped a date other than the page's first printed date (${surfaces[0].date}) — SignUpLinks takes the first item, so the stamps and the rows come from one window call (D311's rule, extended to this surface)`);
+    }
+    if (at['data-rsvp-date'] < today) {
+      fails.push(`${pageName} cluster on ${date} is a date that has already passed (today is ${today})`);
+    }
+
+    // 3b. The hour is the feed's, not the component's guess.
+    const hoursOnDate = [...new Set(eventRows.filter((r) => dateOf(r) === at['data-rsvp-date']).map(hourOf).filter(Boolean))];
+    const paintedHour = at['data-rsvp-hour'];
+    if (!hoursOnDate.length) {
+      if (paintedHour !== 'unsettled') fails.push(`${pageName} cluster on ${date} claims hour ${paintedHour} but no row on that date has a confirmed time (D169: an unsettled hour is painted "unsettled")`);
+    } else if (!hoursOnDate.includes(paintedHour)) {
+      fails.push(`${pageName} cluster on ${date} claims hour ${paintedHour || '(missing data-rsvp-hour)'}; the feed confirms ${hoursOnDate.join(' / ')}`);
+    }
+
+    // 3c. Freshness, stated on the page and checked against the snapshot the build read.
+    if (at['data-rsvp-snapshot'] !== fetchedAt) {
+      fails.push(`${pageName} cluster on ${date} says the snapshot is ${at['data-rsvp-snapshot'] || '(unstamped)'}; data/meetup-events.json says ${fetchedAt}`);
+    }
+    if (age !== null && !withinAge(at['data-rsvp-age'], age)) {
+      fails.push(`${pageName} cluster on ${date} says the snapshot is ${at['data-rsvp-age']} days old; the stamp says ${age.toFixed(1)}`);
+    }
+    if (age === null || age > SNAPSHOT_FRESH_DAYS) {
+      fails.push(`${pageName} paints sign-up links from a snapshot ${age === null ? 'with no date' : `${age.toFixed(1)} days old`} (limit ${SNAPSHOT_FRESH_DAYS})`);
+    }
+    if (at['data-rsvp-discord-snapshot'] !== discordFetchedAt) {
+      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-snapshot'] || '(unstamped)'}; data/discord-events.json says ${discordFetchedAt}`);
+    }
+    if (discordAge !== null && !withinAge(at['data-rsvp-discord-age'], discordAge)) {
+      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-age']} days old; the stamp says ${discordAge.toFixed(1)}`);
+    }
+    if (discordAge === null || discordAge > SNAPSHOT_FRESH_DAYS) {
+      fails.push(`${pageName} paints sign-up links from a Discord snapshot ${discordAge === null ? 'with no date' : `${discordAge.toFixed(1)} days old`} (limit ${SNAPSHOT_FRESH_DAYS})`);
+    }
+
+    // 3d. The destinations, recomputed from the resolver — the STANDING half (D-B). Meetup is not in this
+    //     row any more; it is in every row above, and rule 2 is what proves it there.
+    const paths = signUpPaths({ date: at['data-rsvp-date'], time: paintedHour === 'unsettled' ? null : paintedHour }, meetupEvents, urls, discordEvents);
+    const want = splitPaths(paths).standing;
+    if (at['data-rsvp-state'] !== paths.state) {
+      fails.push(`${pageName} cluster on ${date} is stamped state "${at['data-rsvp-state']}" but signUpPaths() returns "${paths.state}"`);
+    }
+    if (c.links.length !== want.length) {
+      fails.push(`${pageName} cluster on ${date} paints ${c.links.length} link(s); signUpPaths() returns ${want.length} standing link(s) (${want.map((d) => d.platform).join(', ') || 'none'})`);
+    }
+    want.forEach((d, i) => {
+      const link = c.links[i];
+      if (!link) return;   // the count failure above already names it
+      if (link.attrs['data-rsvp-platform'] !== d.platform) {
+        fails.push(`${pageName} cluster on ${date}: link ${i + 1} is "${link.attrs['data-rsvp-platform']}", expected ${d.platform} (the standing row's canonical order is Discord, Facebook — D-B keeps Meetup in the rows)`);
+      }
+      if (link.attrs.href !== d.href) {
+        fails.push(`${pageName} cluster on ${date}: ${d.platform} link goes to ${link.attrs.href}, the resolver says ${d.href}`);
+      }
+      if (link.attrs['data-rsvp-date'] !== at['data-rsvp-date']) {
+        fails.push(`${pageName} cluster on ${date}: the ${d.platform} link is stamped ${link.attrs['data-rsvp-date'] || '(no date)'} — every link in a cluster carries that cluster's date`);
+      }
+      if (link.attrs.target !== '_blank') fails.push(`${pageName} ${d.platform} link on ${date} has no target="_blank"`);
+      if (!/noopener/.test(link.attrs.rel) || !/noreferrer/.test(link.attrs.rel)) {
+        fails.push(`${pageName} ${d.platform} link on ${date} leaves the site with rel="${link.attrs.rel || ''}" — a cross-site link needs rel="noopener noreferrer"`);
+      }
+      if (!link.raw.includes(`<span class="sr-only">${d.srOnly}</span>`)) {
+        fails.push(`${pageName} ${d.platform} link on ${date} has no accessible name suffix "${d.srOnly}" (D273: a link whose visible label is an event title still has to name its platform to a screen reader)`);
+      }
+      if (!link.text.includes(d.label)) {
+        fails.push(`${pageName} ${d.platform} link on ${date} paints "${link.text}" rather than the resolver's label "${d.label}"`);
+      }
+      // A quiet label, not a control (D139): the standing row is prose with an underline, not a band of buttons.
+      if (/data-control/.test(link.tag)) fails.push(`${pageName} ${d.platform} link on ${date} carries data-control — the sign-up link is DESIGN.md's quiet label, not a control`);
+
+      // 3e. (F3(b), D294) Every standing link carries its own platform's mark, and the mark is the platform
+      //     the link is for. The row's primary carries none — rule 2 above is what proves that.
       const uses = [...link.raw.matchAll(/<use href="#([a-z0-9-]+)"/g)];
       if (uses.length !== 1) {
-        fails.push(`${pageName} ${d.platform} link on ${s.date} paints ${uses.length} platform mark(s) — F3(b) rules exactly one, drawn from the sprite (D294)`);
+        fails.push(`${pageName} ${d.platform} link on ${date} paints ${uses.length} platform mark(s) — F3(b) rules exactly one on a standing link, drawn from the sprite (D294)`);
       } else if (uses[0][1] !== markId(d.platform)) {
-        fails.push(`${pageName} ${d.platform} link on ${s.date} is marked #${uses[0][1]} — a mark must name the platform it points to (F3(b), D294)`);
+        fails.push(`${pageName} ${d.platform} link on ${date} is marked #${uses[0][1]} — a mark must name the platform it points to (F3(b), D294)`);
       }
     });
 
-    // 6. A platform the club has no verified URL for must not appear at all, whatever the component thinks.
+    // 3f. A platform the club has closed must not appear at all, whatever the component thinks (D272).
     for (const link of c.links) {
       const platform = link.attrs['data-rsvp-platform'];
       const key = Object.keys(LINK_KEYS).find((k) => PLATFORMS[k] === platform);
-      if (!key) { fails.push(`${pageName} cluster on ${s.date} paints a link for platform "${platform}", which src/lib/rsvp.mjs has no key for`); continue; }
-      if (!urls[LINK_KEYS[key]]) fails.push(`${pageName} cluster on ${s.date} paints a ${platform} link while config.URLs.${LINK_KEYS[key]} is empty (D272: a closed platform is painted nowhere)`);
+      if (!key) { fails.push(`${pageName} cluster on ${date} paints a link for platform "${platform}", which src/lib/rsvp.mjs has no key for`); continue; }
+      if (!urls[LINK_KEYS[key]]) fails.push(`${pageName} cluster on ${date} paints a ${platform} link while config.URLs.${LINK_KEYS[key]} is empty (D272: a closed platform is painted nowhere)`);
     }
 
-    // 6b. The mirror of rule 6: a platform the config declares and check:rsvp has stamped must be painted on
-    //     every printed date. A cluster that omits one is not an honest hole — the hole is a *date with no
-    //     page*, and it is named in the note (rule 7). Dropping a chosen platform is a silent subtraction.
+    // 3g. The mirror, for the standing half: a platform the config declares and the resolver puts in the
+    //     standing row must be painted in it (D280). Dropping one is a silent subtraction.
     const paintedPlatforms = new Set(c.links.map((l) => l.attrs['data-rsvp-platform']));
     for (const [platformKey, urlKey] of Object.entries(LINK_KEYS)) {
       const platform = PLATFORMS[platformKey];
-      if (!urls[urlKey]) continue;                    // closed platform: rule 6 already forbids painting it
+      if (!urls[urlKey]) continue;                    // closed platform: rule 3f already forbids painting it
+      if (platform === ROW_PRIMARY_PLATFORM) continue;  // the rows carry it; rule 2 is what proves it there
       if (!paintedPlatforms.has(platform)) {
-        fails.push(`${pageName} cluster on ${s.date} prints no ${platform} link although config.URLs.${urlKey} declares one (D280: a declared platform is a choice a visitor can make on every date)`);
+        fails.push(`${pageName} cluster on ${date} prints no ${platform} link although config.URLs.${urlKey} declares one (D280: a declared platform is a choice a visitor can make)`);
       }
     }
 
-    // 7. An absence is a named state (DESIGN.md "States"), and the note is the name.
+    // 3h. An absence is a named state (DESIGN.md "States"), and the note is the name.
     if (paths.note && !c.text.includes(paths.note)) {
-      fails.push(`${pageName} cluster on ${s.date} is state "${paths.state}" but never says "${paths.note}"`);
+      fails.push(`${pageName} cluster on ${date} is state "${paths.state}" but never says "${paths.note}"`);
     }
     if (!paths.note && /no page|no sign-up page|different time/i.test(c.text)) {
-      fails.push(`${pageName} cluster on ${s.date} says the Meetup page is missing while the resolver found one`);
+      fails.push(`${pageName} cluster on ${date} says the Meetup page is missing while the resolver found one`);
+    }
+  }
+
+  // 6. A platform the club has closed is painted NOWHERE on the page — not in the standing row and not in a
+  //    row (D272). The two halves used to be one list; D-B split the destinations across two surfaces, so the
+  //    page is the thing that owns "nowhere".
+  const pageLinks = clusters.flatMap((c) => c.links).concat(surfaces.flatMap((s) => s.anchors));
+  for (const link of pageLinks) {
+    const platform = link.attrs['data-rsvp-platform'];
+    const key = Object.keys(LINK_KEYS).find((k) => PLATFORMS[k] === platform);
+    if (!key) { fails.push(`${pageName} paints a link for platform "${platform}", which src/lib/rsvp.mjs has no key for`); continue; }
+    if (!urls[LINK_KEYS[key]]) fails.push(`${pageName} paints a ${platform} link while config.URLs.${LINK_KEYS[key]} is empty (D272: a closed platform is painted nowhere)`);
+  }
+
+  // 6b. And the mirror at the page's level: every platform the config declares must reach a visitor
+  //     somewhere on the page (D280). Under D-B, Meetup reaches them from every row and Discord/Facebook from
+  //     the standing row, so the assertion is on the union of the two, not on a per-row cluster.
+  // The mirror only applies to a page that owns the standing row: the homepage paints no sign-up anchor at
+  // all (its ways in are `joinChannels()` rows, stamped `data-join-platform`), and asserting a platform is
+  // clickable on a page that never claimed it is a different rule — `check:join` owns that one.
+  const paintedHere = new Set(pageLinks.map((l) => l.attrs['data-rsvp-platform']));
+  for (const [platformKey, urlKey] of Object.entries(LINK_KEYS)) {
+    const platform = PLATFORMS[platformKey];
+    if (!urls[urlKey] || !clusters.length) continue;
+    if (!paintedHere.has(platform)) {
+      fails.push(`${pageName} paints no ${platform} link anywhere although config.URLs.${urlKey} declares one (D280: a declared platform is a choice a visitor can make)`);
     }
   }
 
@@ -444,21 +557,38 @@ if (selftest) {
       'data-rsvp-discord-age': mut.discordAge ?? DISAGE.toFixed(1),
     };
     const attrs = Object.entries(a).map(([k, v]) => `${k}="${v}"`).join(' ');
-    const links = (mut.links ?? p.destinations).map((d) => {
+    // D-B (round-4 §6): the cluster that exists now is the **standing** one, so the fixture's default links
+    // are the standing half of the resolver — the same `splitPaths()` the component calls.
+    const links = (mut.links ?? splitPaths(p).standing).map((d) => {
       const platform = d.platform ?? '';
       const href = d.href ?? 'https://example.com/';
       const rel = d.rel ?? 'noopener noreferrer';
       const target = d.target ?? '_blank';
       const sr = d.srOnly === undefined ? newTabQualifier(d.label ?? '', platform) : d.srOnly;
-      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}"><svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#${markId(platform)}"></use></svg>${d.label ?? 'Details and sign-up'}${sr ? `<span class="sr-only">${sr}</span>` : ''}<span aria-hidden="true">→</span></a>`;
+      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}"><svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#${markId(platform)}"></use></svg>${d.label ?? 'Details and sign-up'}${sr ? `<span class="sr-only">${sr}</span>` : ''}</a>`;
     }).join('');
     const note = (mut.note === null ? '' : p.note) ? `<p class="text-label text-ink-3">${mut.note ?? p.note}</p>` : '';
     return `<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1" data-rsvp-cluster ${attrs}>${note}${links}</div>`;
   };
   // The sprite SignUpLinks.astro ships: the same lib, the same ids, the same path data (D294).
   const sprite = () => `<svg class="hidden" aria-hidden="true">${MARKS.map((m) => `<symbol id="${markId(m.platform)}" viewBox="0 0 24 24"><path d="${m.d}"/></symbol>`).join('')}</svg>`;
+  // Byte-faithful to `EventRow.astro` after D-B: the row's ONE way out, drawn from the resolver's per-date
+  // half, label and qualifier adjacent (D341), and carrying neither a platform glyph nor an arrow.
+  const rowAnchor = (item, mut = {}, us = urls) => {
+    const p = signUpPaths(item, meetup, us, discord);
+    return (mut.links ?? splitPaths(p).row).map((d) => {
+      const platform = d.platform ?? '';
+      const href = d.href ?? 'https://example.com/';
+      const rel = d.rel ?? 'noopener noreferrer';
+      const target = d.target ?? '_blank';
+      const sr = d.srOnly === undefined ? newTabQualifier(d.label ?? '', platform) : d.srOnly;
+      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}" class="min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2">${d.label ?? 'Sign up on Meetup'}${sr ? `<span class="sr-only">${sr}</span>` : ''}</a>`;
+    }).join('');
+  };
+  // One standing cluster per page, after the last row, stamped with the FIRST date the page prints — the shape
+  // `Schedule.astro` builds by handing `SignUpLinks` the first item.
   const page = (rows, extra = '', us = urls) =>
-    `${sprite()}<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${island(clusterHtml({ date, time: hour }, {}, us))}</div></li>`).join('')}</ul>${extra}</main>`;
+    `${sprite()}<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${rowAnchor({ date, time: hour }, {}, us)}</div></li>`).join('')}</ul>${rows.length ? island(clusterHtml({ date: rows[0][0], time: rows[0][1] }, {}, us)) : ''}${extra}</main>`;
 
   const clean = page([['2026-11-11', '18:00'], ['2026-11-21', '12:00']]);
   const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: DISFETCHED, discordAge: DISAGE, today: TODAY, pageName: 'planted page', chunks: { [ISLAND_CHUNK]: shippedChunk } };
@@ -466,44 +596,48 @@ if (selftest) {
   const cases = [
     { name: 'a page the resolver agrees with', html: clean, ctx, want: [] },
     { name: 'a page that must not print a date printing two', html: clean, ctx: { ...ctx, dates: false }, want: ['must not print a date'] },
-    { name: 'a printed row with no cluster at all', html: clean.replace(clusterHtml({ date: '2026-11-21', time: '12:00' }), ''), ctx, want: ['sign-up cluster'] },
-    { name: 'a row whose cluster carries a different date', html: clean.replace(clusterHtml({ date: '2026-11-21', time: '12:00' }), clusterHtml({ date: '2026-11-11', time: '12:00' }, { date: '2026-11-11' })), ctx, want: ['cluster stamped'] },
+    { name: 'a printed row with no primary action at all', html: clean.replace(rowAnchor({ date: '2026-11-21', time: '12:00' }), ''), ctx, want: ['carries no primary action'] },
+    { name: 'the standing cluster stamped with the LAST printed date instead of the first', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-21', time: '12:00' })), ctx, want: ["other than the page's first printed date"] },
+    { name: 'a row that carries the standing cluster inside it (the shape before D-B)', html: clean.replace(rowAnchor({ date: '2026-11-21', time: '12:00' }), island(clusterHtml({ date: '2026-11-21', time: '12:00' }))), ctx, want: ['not inside a row (D-B, round-4 §6)'] },
+    { name: 'two standing clusters on one page', html: `${clean}${island(clusterHtml({ date: '2026-11-21', time: '12:00' }))}`, ctx, want: ['standing cluster(s)', 'renders once per page'] },
+    { name: 'a row that keeps a standing link inside it, as well as its primary', html: clean.replace(rowAnchor({ date: '2026-11-21', time: '12:00' }), `${rowAnchor({ date: '2026-11-21', time: '12:00' })}<a href="https://www.facebook.com/groups/planted" target="_blank" rel="noopener noreferrer" data-rsvp-platform="Facebook" data-rsvp-date="2026-11-21">Join the Facebook group</a>`), ctx, want: ['one action per row; the club'] },
+    { name: 'a row whose primary link sprouts a platform glyph', html: clean.replace(rowAnchor({ date: '2026-11-21', time: '12:00' }), rowAnchor({ date: '2026-11-21', time: '12:00' }).replace('>Sign up on Meetup', '><svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>Sign up on Meetup')), ctx, want: ['paints 1 platform mark(s) on its primary link'] },
     { name: 'a cluster whose hour the feed never confirmed', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { hour: '20:00' })), ctx, want: ['claims hour 20:00'] },
     { name: 'an unsettled hour painted as a settled one', html: page([['2026-11-25', '18:00']]), ctx, want: ['no row on that date has a confirmed time'] },
     { name: 'the note a missing page must state, stated nowhere', html: page([['2026-11-28', '18:00']]).replace(`<p class="text-label text-ink-3">${signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord).note}</p>`, ''), ctx, want: ['never says']},
     { name: 'a note claiming a missing page where the resolver found one', html: page([['2026-11-21', '12:00']]).replace('data-rsvp-discord-age="0.2">', 'data-rsvp-discord-age="0.2"><p class="text-label text-ink-3">No sign-up page for this date yet — ask in the chat.</p>'), ctx, want: ['says the Meetup page is missing while the resolver found one']},
     { name: 'a state stamp that disagrees with the resolver', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { state: 'none' })), ctx, want: ['state "none" but signUpPaths'] },
-    { name: 'two Meetup pages on one hour printed as a single link', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.slice(0, 1) }); })()), ctx, want: ['paints 1 link(s)', 'returns 4']},
-    { name: 'the Facebook link quietly dropped from a row', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.filter((d) => d.platform !== PLATFORMS.facebook) }); })()), ctx, want: ['prints no Facebook link although config.URLs.facebookGroup declares one']},
+    { name: 'two Meetup pages on one hour printed as a single row link', html: page([['2026-11-11', '18:00']]).replace(rowAnchor({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return rowAnchor({ date: '2026-11-11', time: '18:00' }, { links: splitPaths(p).row.slice(0, 1) }); })()), ctx, want: ['paints 1 primary link(s)', 'the resolver returns 2 (Meetup, Meetup)']},
+    { name: 'the Facebook link quietly dropped from the standing row', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: splitPaths(p).standing.filter((d) => d.platform !== PLATFORMS.facebook) }); })()), ctx, want: ['prints no Facebook link although config.URLs.facebookGroup declares one']},
     { name: 'the Facebook link sent to a group page instead of the group', html: page([['2026-11-11', '18:00']]).replace('https://www.facebook.com/groups/planted', 'https://www.facebook.com/groups/planted/events/999/'), ctx, want: ['Facebook link goes to https://www.facebook.com/groups/planted/events/999/', 'the resolver says https://www.facebook.com/groups/planted']},
-    { name: 'the Discord link before the Meetup link', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: [p.destinations[2], ...p.destinations.slice(0, 2)] }); })()), ctx, want: ['order is Meetup, Discord, Facebook']},
+    { name: 'the Facebook link before the Discord link', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); const st = splitPaths(p).standing; return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: [st[1], st[0]] }); })()), ctx, want: ["the standing row's canonical order is Discord, Facebook"]},
     { name: 'a link to a Meetup page on the wrong date', html: page([['2026-11-11', '18:00']]).replace('https://www.meetup.com/g/events/111/', 'https://www.meetup.com/g/events/222/'), ctx, want: ['the resolver says'] },
     { name: 'a Facebook link painted for a platform the club closed', html: page([['2026-11-11', '18:00']], '', closedUrls).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }, {}, closedUrls), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, closedUrls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: [...p.destinations, { platform: 'Facebook', href: 'https://www.facebook.com/groups/g', label: 'Ask in the group', srOnly: ' on Facebook, opens in a new tab' }] }, closedUrls); })()), ctx: { ...ctx, urls: closedUrls }, want: ['config.URLs.facebookGroup is empty'] },
     { name: 'a link with no accessible name suffix', html: page([['2026-11-11', '18:00']]).replace('<span class="sr-only"> on Meetup, opens in a new tab</span>', ''), ctx, want: ['no accessible name suffix', 'opens in a new tab'] },
     { name: 'a cross-site link without rel="noopener noreferrer"', html: page([['2026-11-11', '18:00']]).replace('rel="noopener noreferrer"', 'rel="noopener"'), ctx, want: ['rel="noopener"'] },
-    { name: 'a cluster stamped with a snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-snapshot="2026-11-09T06:42:38.507Z" data-rsvp-age="1.7"', 'data-rsvp-snapshot="2026-10-01T00:00:00.000Z" data-rsvp-age="40.1"'), ctx, want: ['cluster says the snapshot is 2026-10-01T00:00:00.000Z'] },
+    { name: 'a cluster stamped with a snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-snapshot="2026-11-09T06:42:38.507Z" data-rsvp-age="1.7"', 'data-rsvp-snapshot="2026-10-01T00:00:00.000Z" data-rsvp-age="40.1"'), ctx, want: ['says the snapshot is 2026-10-01T00:00:00.000Z'] },
     { name: 'an age painted 3.7 days off while the snapshot stamp is correct', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-age="1.7"', 'data-rsvp-age="5.4"'), ctx, want: ['says the snapshot is 5.4 days old; the stamp says 1.7']},
     { name: 'links painted from a snapshot past the freshness window', html: `<main><ul><li class="rounded-card" data-surface="row" data-date="2026-11-11">${island(clusterHtml({ date: '2026-11-11', time: '18:00' }, { snapshot: '2026-10-01T00:00:00.000Z', age: '40.1' }))}</li></ul></main>`, ctx: { ...ctx, fetchedAt: '2026-10-01T00:00:00.000Z', age: 40.1 }, want: ['snapshot 40.1 days old (limit 14'] },
     // The anchor here is the arrow glyph, not a label word. This planting used to be `replace('Proofs <span class="sr-only">', ...)` -
     // a label - and it went dead on 2026-11-14 when the cluster's copy changed, producing 0 failures and a
     // selftest that looked green for a rule that had stopped being exercised (D265, S041). Markup the
     // cluster emits on every link is the stable anchor.
-    { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('<span aria-hidden="true">→</span>', '12 going<span aria-hidden="true">→</span>'), ctx, want: ['paints a headcount']},
+    { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-age="0.2">', 'data-rsvp-discord-age="0.2"><p>12 going</p>'), ctx, want: ['paints a headcount']},
     { name: 'the roster tally the join band used to print, painted again', html: `${clean}<section class="mt-8"><p>280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.</p></section>`, ctx, want: ['paints a headcount', '280 on the Meetup list']},
     { name: 'a member count painted as prose', html: `${clean}<section class="mt-8"><p>The club has 142 members.</p></section>`, ctx, want: ['paints a headcount', '142 members']},
     { name: 'an RSVP tally painted where a Discord link is', html: page([['2026-11-11', '18:00']]).replace('Sign up on Discord', 'Sign up on Discord (14 RSVPs)'), ctx, want: ['paints a headcount', '14 RSVPs']},
     { name: 'a headcount painted in an attribute', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-cluster', 'data-rsvp-cluster data-going="12"'), ctx, want: ['headcount']},
     { name: 'a Discord user_count painted in an attribute', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot', 'data-user-count="7" data-rsvp-discord-snapshot'), ctx, want: ['headcount', 'user-count']},
-    { name: 'the guild event link dropped while the snapshot has one', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: p.destinations.filter((d) => d.platform !== 'Discord') }); })()), ctx, want: ['paints 3 link(s)', 'returns 4']},
+    { name: 'the guild event link dropped from the standing row', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: splitPaths(p).standing.filter((d) => d.platform !== 'Discord') }); })()), ctx, want: ['paints 1 link(s)', 'returns 2 standing link(s) (Discord, Facebook)']},
     { name: 'the Discord event page replaced by the bare invite', html: page([['2026-11-11', '18:00']]).replace('https://discord.com/events/111/222/', 'https://discord.com/invite/x'), ctx, want: ['Discord link goes to https://discord.com/invite/x', 'the resolver says https://discord.com/events/111/222/']},
-    { name: 'a completed guild event painted as a sign-up path', html: page([['2026-11-28', '18:00']]).replace(clusterHtml({ date: '2026-11-28', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-28', time: '18:00' }, { links: [...p.destinations, { platform: 'Discord', href: 'https://discord.com/events/111/444/', label: 'Sign up on Discord', srOnly: 'Discord, opens in a new tab' }] }); })()), ctx, want: ['paints 4 link(s)', 'returns 3 (Meetup, Discord, Facebook)']},
+    { name: 'a completed guild event painted as a standing link', html: page([['2026-11-28', '18:00']]).replace(clusterHtml({ date: '2026-11-28', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-28', time: '18:00' }, { links: [...splitPaths(p).standing, { platform: 'Discord', href: 'https://discord.com/events/111/444/', label: 'Sign up on Discord', srOnly: ', opens in a new tab' }] }); })()), ctx, want: ['paints 3 link(s)', 'returns 2 standing link(s) (Discord, Facebook)']},
     { name: 'a cluster stamped with a Discord snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot="2026-11-10T12:00:00.000Z"', 'data-rsvp-discord-snapshot="2026-10-01T00:00:00.000Z"'), ctx, want: ['Discord snapshot is 2026-10-01T00:00:00.000Z']},
     { name: 'Discord links painted from a guild snapshot past the freshness window', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { discordSnapshot: '2026-10-01T00:00:00.000Z', discordAge: '40.1' })), ctx: { ...ctx, discordFetchedAt: '2026-10-01T00:00:00.000Z', discordAge: 40.1 }, want: ['Discord snapshot 40.1 days old (limit 14']},
     { name: 'the cluster promoted to a control', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-platform="Meetup"', 'data-rsvp-platform="Meetup" data-control="signup"'), ctx, want: ['quiet label, not a control'] },
     // Rule 5c / 9b: the platform mark (F3(b), D294).
-    { name: 'a sign-up link painted without its platform mark', html: page([['2026-11-11', '18:00']]).replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), ctx, want: ['paints 0 platform mark(s)'] },
-    { name: 'the Meetup link marked with the Discord glyph', html: page([['2026-11-11', '18:00']]).replace('<use href="#pm-meetup"></use>', '<use href="#pm-discord"></use>'), ctx, want: ['is marked #pm-discord — a mark must name the platform it points to'] },
-    { name: 'a mark whose symbol the page never ships', html: page([['2026-11-11', '18:00']]).replace('<symbol id="pm-meetup" viewBox="0 0 24 24"><path d="', '<symbol id="pm-unused" viewBox="0 0 24 24"><path d="'), ctx, want: ['paints #pm-meetup but ships no <symbol id="pm-meetup">'] },
+    { name: 'a standing link painted without its platform mark', html: page([['2026-11-11', '18:00']]).replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-discord"></use></svg>', ''), ctx, want: ['paints 0 platform mark(s)'] },
+    { name: 'the Discord link marked with the Facebook glyph', html: page([['2026-11-11', '18:00']]).replace('<use href="#pm-discord"></use>', '<use href="#pm-facebook"></use>'), ctx, want: ['is marked #pm-facebook — a mark must name the platform it points to'] },
+    { name: 'a mark whose symbol the page never ships', html: page([['2026-11-11', '18:00']]).replace('<symbol id="pm-discord" viewBox="0 0 24 24"><path d="', '<symbol id="pm-unused" viewBox="0 0 24 24"><path d="'), ctx, want: ['paints #pm-discord but ships no <symbol id="pm-discord">'] },
     { name: 'sprite path data that drifted from the lib', html: page([['2026-11-11', '18:00']]).replace(/<symbol id="pm-meetup"[^>]*><path d="[^"]*"/, '<symbol id="pm-meetup" viewBox="0 0 24 24"><path d="M0 0h24v24H0z"'), ctx, want: ['path data the lib does not declare'] },
     { name: 'a cluster painted with no sprite in the document at all', html: page([['2026-11-11', '18:00']]).replace(/<svg class="hidden" aria-hidden="true">[\s\S]*?<\/symbol>\s*<\/svg>/, ''), ctx, want: ['paints marks but ships no sprite symbol for Meetup'] },
     { name: 'a sprite shipped to a page that paints no mark', html: `${sprite()}<main><p>Nothing on the calendar yet.</p></main>`, ctx, want: ['ships the platform sprite and paints none of it'] },
@@ -580,11 +714,11 @@ for (const page of PAGES) {
     console.log(`check:rsvp-page: ${page.name} — ${fails.length} failure(s)`);
     continue;
   }
-  const states = surfaces.map((s) => s.clusters[0]?.attrs['data-rsvp-state'] ?? '?');
-  const links = clusters.flatMap((c) => c.links.map((l) => l.attrs['data-rsvp-platform']));
+  const states = clusters.map((c) => c.attrs['data-rsvp-state'] ?? '?');
+  const links = clusters.flatMap((c) => c.links).concat(surfaces.flatMap((s) => s.anchors)).map((l) => l.attrs['data-rsvp-platform']);
   const window = scheduleWindow(events.events ?? [], today);
   const inWindow = surfaces.filter((s) => window.shown.map(dateOf).includes(s.date)).length;
-  console.log(`ok    ${page.name}: ${surfaces.length} printed date(s), ${clusters.length} cluster(s), ${links.length} sign-up link(s) [${links.join(', ') || 'none'}], states ${states.join('/')}; ${inWindow} of them inside the schedule window`);
+  console.log(`ok    ${page.name}: ${surfaces.length} printed date(s), ${clusters.length} standing cluster(s), ${links.length} sign-up link(s) [${links.join(', ') || 'none'}], states ${states.join('/')}; ${inWindow} of them inside the schedule window`);
 }
 
 // (D294) Every other emitted page: the sprite is path data, and path data is only worth shipping on a page that

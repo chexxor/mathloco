@@ -36,7 +36,7 @@
 import { existsSync, readFileSync, cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { PLATFORMS, PREF_KEY, signUpPaths, preferredFirst } from '../src/lib/rsvp.mjs';
+import { PLATFORMS, PREF_KEY, signUpPaths, splitPaths, preferredFirst } from '../src/lib/rsvp.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -84,7 +84,11 @@ const attrsOf = (tag) => {
 };
 
 /** The clusters a page paints, with the canonical order the resolver says they should have.
- *  `canonical` is the destination objects (what `orderByPreference` takes); `platforms` is the same list
+ *  Since D342 (round-4 D-B) a cluster is the page's ONE standing row, so its canonical list is `splitPaths()`'
+ *  **standing** subset — Discord and Facebook — and not `signUpPaths().destinations`, which still carries the
+ *  per-date primary that lives in the row instead. Asking a two-link cluster to permute a three-link list is
+ *  the same defect class the gate exists to name, one level up: it would report every clean page as broken.
+ *  `canonical` stays destination objects (what `orderByPreference` takes); `platforms` is the same list
  *  flattened to names, which is what the painted `data-rsvp-platform` attributes are compared against.
  *  Keeping both is deliberate: passing the flat names to `orderByPreference` silently returns the input
  *  unchanged, because it looks for `d.platform` @measured 2026-11-12 by `node scripts/check-rsvp-preference.mjs`. */
@@ -94,10 +98,10 @@ const clustersIn = (html, meetupEvents, urls, discordEvents) =>
     const attrs = attrsOf(open);
     const painted = [...m[0].matchAll(/<a[^>]*data-rsvp-platform="([^"]*)"/g)].map((x) => x[1]);
     const hour = attrs['data-rsvp-hour'];
-    const canonical = signUpPaths(
-      { date: attrs['data-rsvp-date'], time: hour && hour !== 'unsettled' ? hour : null },
-      meetupEvents, urls, discordEvents,
-    ).destinations;
+    const canonical = splitPaths(
+      signUpPaths({ date: attrs['data-rsvp-date'], time: hour && hour !== 'unsettled' ? hour : null },
+        meetupEvents, urls, discordEvents),
+    ).standing;
     return {
       date: attrs['data-rsvp-date'] || '(no date)',
       attrs,
@@ -177,7 +181,7 @@ const verdict = (probe, clusters, pageName, seed) => {
   for (const c of clusters) {
     const where = `${pageName} cluster for ${c.date}`;
     if (c.painted.join(', ') !== c.platforms.join(', ')) {
-      say(`${where} is painted in the order ${c.painted.join(', ')} but signUpPaths() says ${c.platforms.join(', ')} - the component is no longer ordering from the resolver`);
+      say(`${where} is painted in the order ${c.painted.join(', ')} but splitPaths().standing says ${c.platforms.join(', ')} - the component is no longer ordering from the resolver`);
     }
     if (!c.platforms.length) {
       say(`${where} offers no platform, but the resolver's destinations for that date are empty while the row is printed - check src/config.json (D280)`);
@@ -335,7 +339,7 @@ const plantings = (home, pageFile, chunkName, chunk) => {
     {
       name: 'the reorder is a filter (only the preferred platform survives)',
       files: { [chunkKey]: reorderMatch ? chunk.replace(reorderMatch[0], `${reorderName}=(a,b)=>{if(!b)return a;let i=a.findIndex(a=>a.platform===b);return i<=0?a:[a[i]]}`) : chunk },
-      want: 'lost Meetup, Discord',
+      want: 'lost Discord',
     },
     {
       /* Every occurrence, not the first one. `String.prototype.replace` with a string pattern hits ONE
@@ -389,12 +393,15 @@ if (!selftest) {
   }
   // The declared-platform rule, checked in the browser rather than in the bytes: a cluster can carry every
   // platform in the markup and still lose one after the island runs (D280 + D281 together).
-  // Reads the routes this gate walks, not the homepage: since D306 the homepage prints no date and carries no
-  // cluster, so a rule keyed on `index.html` would report every declared platform absent on every run.
+  // Since D342 (round-4 D-B) the cluster is the page's standing row and carries only the standing platforms,
+  // so this counts every `data-rsvp-platform` the page paints — the cluster's links AND the per-row primaries —
+  // because "declared but painted nowhere" is the defect, and the primary is now painted in a row, not a cluster.
+  // Reads the routes this gate walks, not the homepage: a rule keyed on `index.html` would report every declared
+  // platform absent on every run, since the homepage's ways in are joinChannels rows, not sign-up clusters.
   const printed = ROUTES.flatMap((route) =>
-    clustersIn(readFileSync(resolve(DIST, pageRel(route)), 'utf8'), meetupEvents, urls, discordEvents),
+    [...readFileSync(resolve(DIST, pageRel(route)), 'utf8').matchAll(/data-rsvp-platform="([^"]*)"/g)].map((m) => m[1]),
   );
-  const absent = Object.values(PLATFORMS).filter((p) => !printed.some((c) => c.platforms.includes(p)));
+  const absent = Object.values(PLATFORMS).filter((p) => !printed.includes(p));
   if (absent.length) {
     fails.push(`no printed cluster offers ${absent.join(', ')} - src/config.json declares platforms the page never paints (D280)`);
   }

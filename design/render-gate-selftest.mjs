@@ -191,9 +191,15 @@ const cases = [
   // The size planting drops the Tailwind classes rather than writing `w-6`, because Tailwind's CSS is generated
   // by scanning src at build time and never saw `w-6` (the D110 coupling, in reverse): presentation attributes
   // are what the browser paints.
-  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), /paints no platform mark/, 'schedule'],
+  // Re-pointed 2026-11-15 (D342, round-4 D-B): the marks moved surfaces. A row's primary is now a quiet
+  // typographic label with no mark (D341), so `#pm-meetup` is painted by nothing and the two cases that
+  // anchored on it rotted — the gate's own preflight said so, and "the mutation matched nothing" is the only
+  // honest failure a planting can have. The marks the built page still paints live in the standing cluster,
+  // so both cases anchor there now: `grep -o '<svg[^>]*><use href="#[^"]*"[^>]*></use></svg>'
+  // dist/client/schedule/index.html` @measured 2026-11-15 returns exactly `#pm-discord` and `#pm-facebook`.
+  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-discord"></use></svg>', ''), /paints no platform mark/, 'schedule'],
   ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/, 'schedule'],
-  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-meetup"', '<symbol id="pm-meetupX"'), /sprite has no such symbol/, 'schedule'],
+  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-discord"', '<symbol id="pm-discordX"'), /sprite has no such symbol/, 'schedule'],
   // The expected string names only the planted mark colour: the label's own rgb moved with the palette round
   // (D316), so a case that pinned `rgb(32,57,39)` went red on a page whose only defect was the mark.
   ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\)/, 'schedule'],

@@ -312,6 +312,24 @@ export const snapshotFindings = (snap, nowMs = Date.now()) => {
   return problems;
 };
 
+/** Round-4 brief §6, ruling D-B (2026-11-15): a schedule row carries ONE action — the per-date sign-up —
+ *  and the club's standing resources (the chat, the group, the calendar file) are a property of the club,
+ *  not of the meeting, so they render once per page rather than once per row. `PLATFORMS.meetup` is the
+ *  per-date half because a sign-up page belongs to a date; the Discord invite and the Facebook group belong
+ *  to the club and are the same three links under every date the page prints. Written here, not in a
+ *  component, so `scripts/check-rsvp-page.mjs` and the page cannot disagree about which half is which
+ *  (D264: a rule written twice is a rule that drifts).
+ */
+export const ROW_PRIMARY_PLATFORM = PLATFORMS.meetup;
+
+/** The destinations of one cluster split into the row's action and the page's standing row. One call to
+ *  `signUpPaths()` feeds both, so the two surfaces cannot drift into two link sets.
+ */
+export const splitPaths = (paths) => ({
+  row: paths.destinations.filter((d) => d.platform === ROW_PRIMARY_PLATFORM),
+  standing: paths.destinations.filter((d) => d.platform !== ROW_PRIMARY_PLATFORM),
+});
+
 /** How many of the open pages printed on this date the record's own clock settles. The same function serves
  *  both calendars, because the contract's key is the same for both: date + wall-clock hour. A settled hour
  *  matches exactly; an unsettled one may only match when the date has exactly one page, so a link is never

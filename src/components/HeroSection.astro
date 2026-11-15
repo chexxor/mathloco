@@ -2,7 +2,9 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
-import { content, value } from '../lib/content.ts';
+import { content, value, upcoming, formatDate, timeSpan } from '../lib/content.ts';
+import { todayIn } from '../lib/events.mjs';
+import { scheduleWindow } from '../lib/event-window.mjs';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
 // 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
@@ -82,6 +84,24 @@ const locator = 'Minneapolis math club';
 // sourced slot says, and an empty slot renders no line — the section below (What we take up) is what carries
 // a subject on the page now, undated by design (src/content.json `threads._rule`).
 const focus = value(content.focus);
+// 2026-11-15 (round-4 design brief §5, ruling D340): **the home page states the next meeting**, and the
+// statement lives here rather than in the schedule band below the horizon, because the brief's acceptance test is
+// a stranger on a phone asking "when is the next meeting?" and the answer must be visible without scrolling past
+// the hero (D-A; it reverses the blanket half of D306 — one *computed* date on the homepage, not a band that
+// duplicated `/schedule`). The three rules that make it one fact and not a second calendar:
+//   - It is computed from **the same `scheduleWindow(upcoming(), todayIn())` call the nav chip makes** (`src/
+//     components/Navigation.astro`), so there is no third place a date can come from. If the two ever disagree,
+//     `check:dated-surfaces` fails the build — D311's rule, extended to this surface, and the reason the handle
+//     here is `data-date` rather than prose alone.
+//   - `Central` appears **once per page** (D327's rule, read §5.1): this is the only other surface on the home
+//     page that says it, and the same gate counts it.
+//   - The `<time>` element wraps the **whole date phrase**, so an assistive tech hears a sentence rather than a
+//     bare number, and the machine-readable value is the same ISO date the `data-date` handle carries (D173,
+//     D327 — the same shape `EventRow.astro` writes).
+// The sentence this replaces — "The next date, where the club meets, and where to sign up for it are all on the
+// schedule." — is deleted in `Schedule.astro`, not reworded: a page that says where the answer is, instead of
+// what the answer is, has not answered.
+const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
 ---
 
 {/* The hero's own air is **64px top and bottom at every width**, which is a ruling rather than a tidy
@@ -167,6 +187,20 @@ const focus = value(content.focus);
         >
           {focus}
         </p>
+      )}
+
+      {/* D340 (round-4 §5, 2026-11-15): the answer to "when is the next meeting?", above the fold, computed —
+          and the one thing this block is NOT is a second calendar: `nextMeeting` comes from the same
+          `scheduleWindow(upcoming(), todayIn())` call the nav chip makes, the `data-date` handle is what lets
+          `check:dated-surfaces` compare the two, and the `<time>` element carries the same ISO value so a screen
+          reader hears a sentence rather than "21". `tabular-nums` is the same device the schedule page's dated
+          line uses; the two paragraphs are the meeting's own two facts — when, and where. No link here: the
+          page's one primary control is below, and a second way in from the hero is the defect D303 names. */}
+      {nextMeeting && (
+        <div data-surface="next-meeting" data-date={nextMeeting.date} class="mt-6 sm:mt-8 max-w-measure">
+          <p class="tabular-nums"><time datetime={nextMeeting.date}><span class="text-label text-ink-3">Next meeting: {formatDate(nextMeeting.date, 'wide')} · {timeSpan(nextMeeting)} Central</span></time></p>
+          {nextMeeting.venue && <p class="mt-1 text-body leading-prose text-ink-2 font-body">{nextMeeting.venue}</p>}
+        </div>
       )}
 
       <div>

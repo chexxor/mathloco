@@ -412,7 +412,7 @@ console.log(`wrote ${OUT}/report.json — re-run npm run check:ground after any 
 // and others do not, because the face inside a self-painting element is covered by that fill (D143). It
 // mutates a COPY of dist; the shipped artifact is never touched.
 //
-// Two of these assertions were wrong in their first form, and the selftest is what caught them:
+// Three of these assertions were wrong in their first form, and the selftest is what caught them:
 //   - "the median ring contrast moves" cannot be true of a symmetric +-4-level grain: half the rings sit on a
 //     lighter neighbour and half on a darker one, and with an odd count the median lands back on 3.01 while the
 //     same shot's rings measured 2.96..3.11 off bytes @measured 2026-11-12 by `npm run check:ground:selftest`.
@@ -420,6 +420,14 @@ console.log(`wrote ${OUT}/report.json — re-run npm run check:ground after any 
 //   - "the ring does not move when the grain is on body alone" is false: the ring on the page ground does move
 //     (y=71, its outside face spans 6 levels clean and 13 planted), while the ring inside a painted card does
 //     not (y=2077, both faces 6 -> 6). The difference between those two is the claim worth testing.
+//   - "the SPREAD widens" is not the statistic either, and a real markup pass made it false. `staging` measured
+//     clean 3.66..3.85 and planted 3.56..3.79 (spread 0.23 > 0.19, green); `design-critique-round-4` measured
+//     the SAME clean set and planted 3.59..3.75 (0.16 < 0.19, red) @measured 2026-11-15 by running
+//     `npm run check:ground:selftest` on each, the staging build made in a `git worktree` under
+//     `.design/tmp-staging-build` (since deleted). A +-4 tile of 64x64 noise moves each ring by whatever
+//     phase the tile lands on, and inserting two lines in the hero moves every ring's y below it. The per-ring
+//     delta against the SAME rings matched by geometry — the match `fills-hide-the-grain` already uses — is the
+//     claim that survives, so that is what the case asserts and the spread is now only printed.
 // ---------------------------------------------------------------------------
 /** The SPREAD of the rings' contrasts. A symmetric +-4-level grain cannot move a median: half the rings sit
  *  on a lighter neighbour and half on a darker one, and with an odd count the median lands back on the same
@@ -474,11 +482,16 @@ if (SELFTEST) {
   const faceGrowth = (p) => { const q = cleanPairs.get(key(p)); return q ? Math.max(p.aboveSpan - q.aboveSpan, p.belowSpan - q.belowSpan) : 0; };
   const reached = (onBody.m.pairs || []).filter((p) => faceGrowth(p) > 2);
   const covered = (onBody.m.pairs || []).filter((p) => faceGrowth(p) <= 2);
+  /** Rings whose LOCAL contrast moved when the grain went behind every painted surface. Matched by geometry
+   *  against the clean shot of the same copy, so a phase shift down the page cannot void the comparison. */
+  const ruleRings = (onSurfaces.m.pairs || []).filter((p) => p.rule && cleanPairs.get(key(p)));
+  const ringMoves = ruleRings.filter((p) => Math.abs(p.own - cleanPairs.get(key(p)).own) > 0.01);
+  const ringDelta = ruleRings.map((p) => Math.abs(p.own - cleanPairs.get(key(p)).own)).reduce((a, b) => Math.max(a, b), 0);
   const checks = [
     ['sees-the-texture', !!(onSurfaces.m.flat && base.flat) && onSurfaces.m.flat.sd > base.flat.sd + 0.2,
       `same ${base.flat?.size}x${base.flat?.size} window at x=${base.flat?.x} y=${base.flat?.y}: sd ${onSurfaces.m.flat?.sd} vs clean ${base.flat?.sd}, span ${onSurfaces.m.flat?.span} vs ${base.flat?.span}`],
-    ['moves-the-hairline', spreadOf(onSurfaces.m) !== null && spreadOf(base) !== null && spreadOf(onSurfaces.m) > spreadOf(base) + 0.01,
-      `rings against the ground they are drawn on: planted ${rangeOf(onSurfaces.m)} vs clean ${rangeOf(base)} - a symmetric grain spreads the range, it cannot move a median`],
+    ['moves-the-hairline', ringMoves.length > 0,
+      `${ringMoves.length} of ${ruleRings.length} keyline rings moved their own-side contrast by over 0.01 (max ${ringDelta.toFixed(2)}) once the grain went behind them; the sets are planted ${rangeOf(onSurfaces.m)} vs clean ${rangeOf(base)} — the spread is printed, not asserted: the tile's phase against rings that sit at different y on different pages is what moves each number, and a markup pass moves those y. The claim that survives is per ring, against the SAME rings matched by geometry.`],
     ['css-never-moved', claimed2.length && base.claimed.length && claimed2[0] === base.claimed[0],
       `the page's own keyline number: planted ${claimed2.join(',')} vs clean ${base.claimed.join(',')} — identical, which is the blindness this probe exists to close`],
     ['fills-hide-the-grain', reached.length > 0 && covered.length > 0,

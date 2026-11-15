@@ -2,6 +2,13 @@
 /**
  * One event row — the object `/schedule` draws for every open date.
  *
+ * **2026-11-15 (round-4 design brief §6 and §7.1, rulings D-B and D-D): the row today is TWO zones — the
+ *  date rail and the copy zone — and the copy zone carries exactly one way out, the per-date sign-up link.
+ *  The per-row plate (`data-slot="PS-4"`, `event-*.webp`) is gone, so every sentence below about the plate,
+ *  the 323px cap, PS-4, or "three art-bearing rows" describes the row as it shipped up to that date. Those
+ *  measurements are history and keep their dates; the shape they describe is not what `dist/` paints, and
+ *  `check:row-geometry` was rewritten in the same commit to fail a row that paints a plate again.**
+ *
  * There is deliberately **no `variant` prop here** (D227): the row is one shape, and a second surface would differ
  * only in *how many* rows it prints and *what leads them*. The homepage did exactly that inside a preview card
  * until 2026-11-14 (D306), when `/schedule` became the only surface that prints a date; the reason for one row
@@ -100,9 +107,12 @@
  */
 import { filled, formatDate, timeSpan } from '../lib/content.ts';
 import type { UpcomingItem } from '../lib/content.ts';
-import EventArt from './EventArt.astro';
+import config from '../config.json';
+import meetupSnapshot from '../../data/meetup-events.json';
+import discordSnapshot from '../../data/discord-events.json';
+import { signUpPaths, splitPaths, PLATFORMS } from '../lib/rsvp.mjs';
+import { newTabQualifier } from '../lib/links.mjs';
 import EventLeaf from './EventLeaf.astro';
-import SignUpLinks from './SignUpLinks.astro';
 
 type Props = {
   item: UpcomingItem;
@@ -117,6 +127,20 @@ const { item, first = false } = Astro.props;
 // tzid rule is what keeps it true in the published feed (D188). A visitor in another zone reading
 // "12:00 – 1:00" has no clock to hang it on; on the first row the cost of saying so is one word.
 const zone = first ? ' Central' : '';
+// Round-4 brief §6, ruling D-B (2026-11-15): a row carries ONE action. The per-date sign-up page belongs to
+// the date, so it belongs to the row; the chat, the group and the calendar file belong to the club, so they
+// moved out of the row and render once per page, after the last row, in `Schedule.astro`. Same resolver,
+// same destinations, split in `src/lib/rsvp.mjs` (`splitPaths`) rather than re-derived here — a component
+// that picked its own way out would be a second link rule, and the gate that compares painted bytes against
+// `signUpPaths()` would then be comparing the wrong thing (D264).
+const paths = signUpPaths(item, meetupSnapshot.events, config.URLs, discordSnapshot.events);
+const primary = splitPaths(paths).row[0] ?? null;
+// The label already names the platform, so the suffix is the mode of opening only — and it is glued to the
+// label with no whitespace between the two. The round-4 brief §4 quoted the built page as
+// "Sign up on Meetup , opens in a new tab": Astro keeps the newline and indent between two expressions,
+// so a label on its own line and its qualifier on the next paints a space before the comma. One line,
+// adjacent expressions, one sentence (S041's wording, D317's rule, round-4's grammar).
+const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS.meetup);
 ---
 
 <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date}>
@@ -132,9 +156,9 @@ const zone = first ? ' Central' : '';
      lane keeps the width the probe measured. */}
   <EventLeaf date={item.date} />
   {/* `data-copy` is a probe handle for `design/schedule-geometry.mjs`, which measures the copy lane against
-      the plate and the leaf; `min-w-0` is the load-bearing part (see the header). Inside it the seven parts are
-      grouped as head (date sentence + title), prose (series + venue, capped at the measure) and the way out
-      (the cluster). */}
+      the plate and the leaf; `min-w-0` is the load-bearing part (see the header). Inside it the parts are
+      grouped as head (the date said as a sentence + the title), prose (series + venue, capped at the measure),
+      and the one way out (the row's primary sign-up link). */}
   <div data-copy class="min-w-0 flex-1">
     <div data-head>
       {/* The class list on this span is exactly `text-label text-ink-3` and nothing more — the same handle the
@@ -165,21 +189,26 @@ const zone = first ? ' Central' : '';
         <p class="mt-2 text-body leading-prose text-ink-2 font-body">{item.venue}</p>
       )}
     </div>
-    {/* S019/D272: the row's way out is now per-date rather than one group link, and every destination in it
-        comes from `signUpPaths()` in `src/lib/rsvp.mjs` — the component does not choose the links, the
-        resolver does, so `scripts/check-rsvp-page.mjs` can compare these bytes against that function.
-        The feed's own per-event URL (`item.url`, the Mobilizon page for this date) is deliberately still unused
-        here: D259 rules that a row links to the sign-up page, and Mobilizon is the club of record for dates,
-        not for RSVPs (S017). Quiet links, not controls: D139 reserves `data-control` for the band's one
-        primary, and a row of 48px buttons would out-shout every date in the band. */}
-    <SignUpLinks item={item} />
+    {/* Round-4 brief §6 + §4, rulings D-B and D341 (2026-11-15): ONE way out per row, and it is the per-date
+        one — the sign-up page the club posted for THIS date, which is what `signUpPaths()` returns and what
+        `scripts/check-rsvp-page.mjs` re-computes from the same call. The standing resources moved out of the
+        row (D-B); the arrow moved off the qualifier (§4: "Fifteen arrows on one page is decoration pretending
+        to be affordance" — deleted, not styled away); the label and its sr-only qualifier sit on one line so
+        the accessible name reads one sentence, not "Sign up on Meetup , opens in a new tab" (§4's grammar,
+        whose clean form is the one /join and /chat already carried).
+        Still a quiet label, not a control: D139 reserves `data-control` for the band's one primary, and a
+        row of 48px buttons would out-shout every date in the band. */}
+    {primary && <a href={primary.href} target="_blank" rel="noopener noreferrer" data-rsvp-platform={primary.platform} data-rsvp-date={item.date} class="min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{primary.label}<span class="sr-only">{srOnly}</span></a>}
   </div>
-  {/* PS-4 (D190): the club's own event art, mirrored into src/assets/photos/ and resolved by filename, so
-      adding art to a row is a file drop plus an `artFor` entry for its ratio and alt (src/lib/event-art.ts).
-      The wrapper renders ONLY for a row with art, so a row without art keeps the geometry it had before this
-      change byte for byte — a designed absence is the absence of a box, not an empty one (DESIGN.md "States").
-      Capped at `.event-slot`'s 323px, the declared slot width, and never upscaled. Same cap as the homepage
-      card, so the same poster is the same size on both surfaces. Re-measure with `npm run check:space`
-      (`.design/tmp-whitespace/space-root-{1240,320}.json`) before quoting a plate size. */}
-  <EventArt slug={item.slug} />
+  {/* Round-4 brief §7.1, ruling D-D (2026-11-15): the per-row plate is GONE, and the rows are typographic.
+      The brief's rationale survives the "declared decorative" defence: `event-2026-11-07-club-social.webp`
+      is painted on rows dated Nov 21, Dec 5 and Dec 19 — a decorative image whose *name* is a false claim is
+      still a false claim, one asset rename away from being a visible one. No replacement image (the brief
+      forbids a stock substitute, and D86/D94 already rule a stock crowd photo out). The row is now two zones
+      — the rail answers "when", the copy zone answers "what" and holds the way out — and `check:row-geometry`
+      was rewritten in this commit to say so: a row that paints `data-slot="PS-4"` again now fails, so the
+      art cannot come back with every gate green (D301's "a part that reports is not a part that gates").
+      `src/lib/event-art.ts` and `EventArt.astro` stay: the art files are a source the site still harvests
+      and mirrors, and deleting a source because no surface paints it is a different change with its own
+      sweep. Nothing else paints them. */}
 </li>

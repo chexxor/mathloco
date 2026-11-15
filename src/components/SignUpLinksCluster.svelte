@@ -114,6 +114,12 @@
     <p class="text-label text-ink-3">{note}</p>
   {/if}
   {#each ordered as d, index (d.platform + ':' + index)}
+    <!-- Round-4 brief §4, ruling D341 (2026-11-15): the label and its sr-only qualifier are on ONE line, with no
+      whitespace between the two. Svelte keeps the text node between two expressions on separate lines, so the
+      built page used to read "Sign up on Meetup , opens in a new tab" - a space before a comma, inside the
+      accessible name. And the arrow span that used to close every anchor is DELETED, not styled away: the brief
+      calls fifteen arrows on one page "decoration pretending to be affordance", and the affordance is the
+      underline plus the qualifier (S041, D317). -->
     <a
       href={d.href}
       target="_blank"
@@ -133,13 +139,7 @@
       <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
         <use href={`#pm-${d.platform.toLowerCase()}`} />
       </svg>
-      {d.label}
-      <!-- The visible label names the platform and the action (D273); the suffix exists for the case where a
-        link is lifted out of context — a screen reader's link list — and has to say it leaves the page.
-        No space between the label and the span: `srOnly` already carries its own punctuation (S041), so a
-        space here would paint "Sign up on Meetup , opens in a new tab" in the accessible name. -->
-      <span class="sr-only">{d.srOnly}</span>
-      <span aria-hidden="true">→</span>
+      {d.label}<span class="sr-only">{d.srOnly}</span>
     </a>
   {/each}
 </div>

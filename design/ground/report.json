@@ -1,6 +1,6 @@
 {
- "measuredAt": "2026-11-15T10:29:47.094Z",
- "siteFp": "64af8ed582",
+ "measuredAt": "2026-11-15T22:17:33.977Z",
+ "siteFp": "4a6e96fcca",
  "widths": [
   1240,
   390,
@@ -23,8 +23,8 @@
     246,
     236
    ],
-   "groundExact": 1482436,
-   "groundPct": 76.69,
+   "groundExact": 1468230,
+   "groundPct": 76.62,
    "span": 14,
    "sd": 3,
    "flat": {
@@ -41,7 +41,7 @@
       246,
       236
      ],
-     "pct": 42.6
+     "pct": 42.3
     },
     {
      "rgb": [
@@ -49,7 +49,7 @@
       252,
       243
      ],
-     "pct": 33.8
+     "pct": 34
     },
     {
      "rgb": [
@@ -68,7 +68,7 @@
      "pct": 1.1
     }
    ],
-   "distinct": 48098,
+   "distinct": 48433,
    "hairlines": 10,
    "runs": 10,
    "notKeyline": [],
@@ -117,7 +117,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 600,
+     "y": 716,
      "x": 247,
      "len": 144,
      "core": [
@@ -134,7 +134,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 647,
+     "y": 763,
      "x": 247,
      "len": 144,
      "core": [
@@ -151,7 +151,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 1319,
+     "y": 1392,
      "x": 32,
      "len": 124,
      "core": [
@@ -168,7 +168,7 @@
      "otherGround": "panel"
     },
     {
-     "y": 2047,
+     "y": 2036,
      "x": 32,
      "len": 81,
      "core": [
@@ -185,7 +185,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2047,
+     "y": 2036,
      "x": 137,
      "len": 123,
      "core": [
@@ -202,7 +202,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2433,
+     "y": 2422,
      "x": 35,
      "len": 156,
      "core": [
@@ -219,7 +219,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2433,
+     "y": 2422,
      "x": 209,
      "len": 137,
      "core": [
@@ -236,7 +236,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2480,
+     "y": 2469,
      "x": 35,
      "len": 156,
      "core": [
@@ -253,7 +253,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2480,
+     "y": 2469,
      "x": 209,
      "len": 137,
      "core": [
@@ -286,8 +286,8 @@
     246,
     236
    ],
-   "groundExact": 721733,
-   "groundPct": 70.08,
+   "groundExact": 728025,
+   "groundPct": 70.21,
    "span": 14,
    "sd": 2.99,
    "flat": {
@@ -304,7 +304,7 @@
       246,
       236
      ],
-     "pct": 40.6
+     "pct": 40.9
     },
     {
      "rgb": [
@@ -312,7 +312,7 @@
       252,
       243
      ],
-     "pct": 28.9
+     "pct": 28.8
     },
     {
      "rgb": [
@@ -320,7 +320,7 @@
       19,
       12
      ],
-     "pct": 8.2
+     "pct": 8.1
     },
     {
      "rgb": [
@@ -331,7 +331,7 @@
      "pct": 1.5
     }
    ],
-   "distinct": 45927,
+   "distinct": 45916,
    "hairlines": 11,
    "runs": 11,
    "notKeyline": [],
@@ -380,7 +380,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 848,
+     "y": 981,
      "x": 19,
      "len": 352,
      "core": [
@@ -397,7 +397,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 895,
+     "y": 1028,
      "x": 19,
      "len": 352,
      "core": [
@@ -414,7 +414,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 1451,
+     "y": 1583,
      "x": 174,
      "len": 42,
      "core": [
@@ -431,7 +431,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2443,
+     "y": 2575,
      "x": 16,
      "len": 124,
      "core": [
@@ -448,7 +448,7 @@
      "otherGround": "panel"
     },
     {
-     "y": 3659,
+     "y": 3674,
      "x": 16,
      "len": 81,
      "core": [
@@ -465,7 +465,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3659,
+     "y": 3674,
      "x": 121,
      "len": 123,
      "core": [
@@ -482,7 +482,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4137,
+     "y": 4152,
      "x": 19,
      "len": 156,
      "core": [
@@ -499,7 +499,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4137,
+     "y": 4152,
      "x": 193,
      "len": 137,
      "core": [
@@ -516,7 +516,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4184,
+     "y": 4199,
      "x": 19,
      "len": 156,
      "core": [
@@ -533,7 +533,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4184,
+     "y": 4199,
      "x": 193,
      "len": 137,
      "core": [
@@ -566,8 +566,8 @@
     246,
     236
    ],
-   "groundExact": 672990,
-   "groundPct": 73.51,
+   "groundExact": 675047,
+   "groundPct": 73.53,
    "span": 14,
    "sd": 3,
    "flat": {
@@ -592,7 +592,7 @@
       252,
       243
      ],
-     "pct": 31
+     "pct": 30.9
     },
     {
      "rgb": [
@@ -611,7 +611,7 @@
      "pct": 1
     }
    ],
-   "distinct": 35014,
+   "distinct": 35023,
    "hairlines": 11,
    "runs": 11,
    "notKeyline": [],
@@ -660,7 +660,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 983,
+     "y": 1144,
      "x": 19,
      "len": 282,
      "core": [
@@ -677,7 +677,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 1030,
+     "y": 1191,
      "x": 19,
      "len": 282,
      "core": [
@@ -694,7 +694,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 1518,
+     "y": 1678,
      "x": 139,
      "len": 42,
      "core": [
@@ -711,7 +711,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 2669,
+     "y": 2830,
      "x": 16,
      "len": 124,
      "core": [
@@ -728,7 +728,7 @@
      "otherGround": "panel"
     },
     {
-     "y": 3821,
+     "y": 3864,
      "x": 16,
      "len": 81,
      "core": [
@@ -745,7 +745,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 3821,
+     "y": 3864,
      "x": 121,
      "len": 123,
      "core": [
@@ -762,7 +762,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4384,
+     "y": 4428,
      "x": 19,
      "len": 156,
      "core": [
@@ -779,7 +779,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4431,
+     "y": 4475,
      "x": 19,
      "len": 156,
      "core": [
@@ -796,7 +796,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4444,
+     "y": 4488,
      "x": 19,
      "len": 136,
      "core": [
@@ -813,7 +813,7 @@
      "otherGround": "paper"
     },
     {
-     "y": 4491,
+     "y": 4535,
      "x": 19,
      "len": 136,
      "core": [

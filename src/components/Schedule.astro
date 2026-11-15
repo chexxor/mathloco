@@ -10,6 +10,7 @@ import {
 // can compare it against the same rule rather than a copy of it (D238).
 import { todayIn, snapshot } from '../lib/events.mjs';
 import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs';
+import SignUpLinks from './SignUpLinks.astro';
 import { PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
 
@@ -96,6 +97,21 @@ import { newTabQualifier } from '../lib/links.mjs';
  * `events.ics` keeps it with its UID and a raised SEQUENCE so a subscriber's client retires its copy (D223,
  * and D72's rule that a cancelled meeting is announced rather than deleted). The 2026-11-07 social is the first
  * row this happened to, and it is why the preview that showed a Nov 7 meetup no longer does.
+ *
+ * 2026-11-15 (round-4 design brief §5, §6, rulings D-B and D340): two rules in this file changed shape, and
+ *  every sentence below that predates that date describes what shipped **up to** it.
+ *   - The full width used to print three sign-up links inside every row; a row now carries **one action** — the
+ *     per-date sign-up, painted by `EventRow.astro` — and the club's standing resources (the chat, the group,
+ *     the calendar file) render **once per page**, after the last row, through this file's one
+ *     `<SignUpLinks item={…} />`. `src/lib/rsvp.mjs`'s `splitPaths` is the split, so the page and
+ *     `scripts/check-rsvp-page.mjs` cannot disagree about which half is which (D-B).
+ *   - The compact width used to open with a sentence about where the answer lives; the homepage now states the
+ *     answer itself, in `src/components/HeroSection.astro`, from the same `scheduleWindow(upcoming(), todayIn())`
+ *     call the nav chip makes (D340, which reverses D306's blanket "`/schedule` is the only surface that prints
+ *     a date" for one computed statement on the home page). The sentence this replaces is deleted here rather
+ *     than reworded, so the compact band prints no lede while it has rows.
+ *   - `data-art-cap="323"` stays on the `<ul>` as a probe handle for `design/schedule-geometry.mjs`; no row
+ *     paints a plate any more (D-D), which is what `check:row-geometry` now fails a painted `PS-4` on.
  *
  * The file name stays `Schedule.astro` even though the compact width now carries the join band, and the
  * section's id stays `when-we-meet` even though the heading beside it now reads "Come once": both are probe
@@ -221,11 +237,15 @@ const headingText = compact ? 'When we meet' : 'Dates';
 // claim the band can back up is the one the resolver decides per date: each printed date links to whatever
 // sign-up page the club has posted for it.
 const lede = compact
-  // No clause about "the date above": the homepage prints none (D306, `check:dated-surfaces`). What it can say is
-  // where the dates are and what a reader will find there — the same facts `/schedule`'s own lede carries, in the
-  // singular, because the reader is about to follow one link.
+  // 2026-11-15 (D340, round-4 §5): the sentence that used to live here — "The next date, where the club meets,
+  // and where to sign up for it are all on the schedule." — is DELETED, not reworded. A page that says where the
+  // answer is, instead of what the answer is, has not answered (the brief's own words). The answer now lives
+  // above the fold, in `HeroSection.astro`, computed from the same window call the nav chip makes; the band
+  // keeps its two quiet paths, because "there is more" and "here is the file" are still this band's job.
+  // Null with rows, so the <p> renders nothing rather than an empty paragraph; the empty-state branch keeps its
+  // own sentence, which is a claim about a calendar with no dates in it.
   ? (items.length
-      ? 'The next date, where the club meets, and where to sign up for it are all on the schedule.'
+      ? null
       : 'The club\u2019s dates come from its own calendar.')
   : 'These dates are copied from the club\u2019s own calendar. Each one links to the page the club posts its sign-up on.';
 ---
@@ -238,7 +258,9 @@ const lede = compact
           buys a false failure. A conditional template string keeps every token literal in the source the
           gate reads. */}
       <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'text-heading' : 'text-display-1'}`}>{headingText}</Heading>
-      <p class={`mt-4 leading-prose text-ink-2 font-body max-w-measure mx-auto ${compact ? 'text-lede' : 'text-body'}`}>{lede}</p>
+      {/* D340 (2026-11-15): the compact band has no lede while it has rows, so the paragraph is conditional —
+          an empty <p> under a heading is a hole the reader pays for and `check:render` would measure. */}
+      {lede && <p class={`mt-4 leading-prose text-ink-2 font-body max-w-measure mx-auto ${compact ? 'text-lede' : 'text-body'}`}>{lede}</p>}
     </div>
 
     <div class="mt-6">
@@ -330,6 +352,18 @@ const lede = compact
           {copied && (
             <p class="mt-3 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar {copied}</span></p>
           )}
+          {/* What the window hid, as its own paragraph now that the standing row owns the calendar path. */}
+          {omittedText && (
+            <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{omittedText}</p>
+          )}
+          {/* Round-4 brief §6, ruling D-B (2026-11-15): the standing row, ONCE per page, after the last row.
+              The chat, the group and the calendar file are properties of the club, not of a date, so they used to
+              be paid five times on this page (15 outbound links) and are now paid once (5 row primaries + Discord
+              + Facebook + the club's own /events.ics). `items[0]` is the first date the page prints, so the
+              stamps under the last row describe a date the rows above were built from, and `check:rsvp-page`
+              still keys the cluster on a printed date. `/events.ics` lives in this row rather than in a second
+              paragraph below it: one path to one file, and the sentence under it is about that path. */}
+          <SignUpLinks item={items[0]} />
         </>
       )}
 
@@ -428,18 +462,10 @@ const lede = compact
         </>
       )}
 
-      {/* One path out, in prose rather than a second button (D139 prices an in-sentence path at its 24px
-          line). The link is the feed itself: a person pastes that URL into Google Calendar, Apple Calendar or
-          Outlook and the dates follow the club from then on. Deliberately not a `webcal://` shortcut — an
-          https link either opens a client or downloads a file a client opens, and a scheme that some browsers
-          refuse would be a promise this page cannot keep. */}
-      {!compact && items.length > 0 && (
-        <p class="mt-6 max-w-measure text-body leading-prose text-ink-2 font-body">
-          {omittedText}
-          Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add the club calendar</a> —
-          Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
-        </p>
-      )}
+      {/* 2026-11-15 (round-4 §6, D-B): this paragraph is gone. It carried the second `/events.ics` path on the
+          page and the sentence about Google, Apple and Outlook, and both moved into the standing row — one path
+          to one file, one sentence about it, rendered once after the last row. What stayed here is the window's
+          own confession about what it hid, now its own paragraph above that row (D238, D150). */}
     </div>
   </div>
 </section>
