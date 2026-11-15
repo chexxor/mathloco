@@ -17,10 +17,15 @@
  * `?? '954 / 460'` would have quietly distorted the second image. A `SLOT_ART` entry is therefore a claim
  * about a specific file.
  *
- * The `alt` states only what the file's role proves. It does **not** describe the frame: this session's model
- * takes no images, and D170's rule ("alt text and provenance are quoted from the picture page, not inferred")
- * is exactly the rule that forbids writing what nobody read. The organizer's own sentence for either image is
- * asked for in `.notes/NEXT.md`; when it arrives it replaces these strings verbatim.
+ * The `alt` is **empty**, and the plate is declared decorative (D324, 2026-11-14, superseding the strings this
+ * table used to carry: "The club's own event image for this social", 8 words that described the file rather
+ * than the picture). Nobody has seen the frame - the club's feed serves no caption for it - and D170 forbids
+ * inventing one, so the honest options were a description or a declaration. WCAG's rule for an image whose
+ * information is already in the adjacent text is `alt=""`: the row beside this plate already prints the date,
+ * the title, the series and the venue, and the poster repeats them. `check:alt` fails an empty alt that does
+ * not declare itself (`data-decorative="true"` on the wrapper, written by EventArt.astro), so a decorative
+ * plate is a decision on the page, not a gap. When the organizer supplies a sentence for either image (asked
+ * for in `.notes/NEXT.md`), it replaces the empty alt and the declaration goes away.
  *
  * A row with no entry renders NO box at all: `PhotoSlot`'s fallback is its own `<slot />`, which is empty
  * here. That is a designed absence, not a hole — DESIGN.md's states rule bars a "photo coming" box, and the
@@ -43,37 +48,40 @@
  */
 export type EventArt = { ratio: string; alt: string };
 
+/** Every entry's alt is empty on purpose (D324); see the header. One string, so no row can re-word it. */
+const DECORATIVE_ALT = '';
+
 export const SLOT_ART: Record<string, EventArt> = {
   '2026-11-07-club-social': {
     ratio: '954 / 460',
-    alt: 'The club\u2019s own event image for this social',
+    alt: DECORATIVE_ALT,
   },
   '2026-11-21-club-social': {
     ratio: '954 / 460',
-    alt: 'The club\u2019s own event image for this social',
+    alt: DECORATIVE_ALT,
   },
   '2026-11-11-parallel-learning': {
     ratio: '1321 / 755',
-    alt: 'The club\u2019s own event image for this study session',
+    alt: DECORATIVE_ALT,
   },
   // MS04: the four rows the operator added on 2026-11-13. Each entry is a claim about a specific file, so
   // every ratio below is read from that file's IHDR, not copied from the row it resembles (@measured
   // 2026-11-13 by reading the IHDR of each mirrored PNG; the fetch is `cmp`-identical to the file).
   '2026-11-25-common-denominator-study-session': {
     ratio: '1321 / 755',
-    alt: 'The club\u2019s own event image for this study session',
+    alt: DECORATIVE_ALT,
   },
   '2026-12-05-matheapolis-bimonthly-social': {
     ratio: '954 / 460',
-    alt: 'The club\u2019s own event image for this social',
+    alt: DECORATIVE_ALT,
   },
   '2026-12-09-common-denominator-study-session': {
     ratio: '1321 / 755',
-    alt: 'The club\u2019s own event image for this study session',
+    alt: DECORATIVE_ALT,
   },
   '2026-12-19-matheapolis-bimonthly-social': {
     ratio: '954 / 460',
-    alt: 'The club\u2019s own event image for this social',
+    alt: DECORATIVE_ALT,
   },
 };
 

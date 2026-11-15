@@ -31,6 +31,10 @@
  * same thing from the other end, on the painted bytes.
  */
 import { dateOf } from './event-window.mjs';
+import { newTabQualifier } from './links.mjs';
+// The wording of the outbound-link qualifier lives in `src/lib/links.mjs` (S041); it is re-exported here so
+// the gates that already read this module read the same string the components paint.
+export { NEW_TAB_QUALIFIER, newTabQualifier } from './links.mjs';
 
 /** A Meetup event URL this build is willing to print. Measured 2026-11-09 (`scripts/meetup-events.mjs`):
  *  both the numeric id form and the series-occurrence token form answer 200. Written once, here. */
@@ -57,6 +61,11 @@ export const DISCORD_OPEN_STATUS = [1, 2];
  *  member is asked to join the server before the RSVP, which is why the label says *sign up on Discord* rather
  *  than promising a headcount-free one-click attend. @retrieved 2026-11-11 from the same file. */
 export const DISCORD_GUILD_ONLY = 2;
+
+/** The accessible-name suffix every link that leaves the site carries, in an sr-only span inside the anchor.
+ *  Written once, in `src/lib/links.mjs`, because the 2026-11-14 commissioned read (§5.5) found the same
+ *  qualifier spelled four ways and painted inside the visible text on some paths. `check:ext-links` asserts
+ *  the shape on the built artifact; this is the only place the wording is written (S041, D317). */
 
 /** The shape of each **configured platform link** — the group page, the invite, the group. `MEETUP_URL_SHAPE`
  *  and `DISCORD_EVENT_URL_SHAPE` above are the *per-event page* shapes read from the snapshots; these are the
@@ -371,42 +380,37 @@ export const signUpPaths = (item, meetupEvents = [], urls = {}, discordEvents = 
 
   const destinations = [];
   // A label that already names the platform needs only the mode of opening; a label that is an event title
-  // has to carry the platform too, or a screen reader hears two identical-looking links (D273).
-  const named = (platform) => `${platform}, opens in a new tab`;
-  const titled = (platform) => ` on ${platform}, opens in a new tab`;
+  // has to carry the platform too, or a screen reader hears two identical-looking links (D273). The
+  // derivation lives in `newTabQualifier` so no page can re-word it by hand (S041).
+  const sr = (label, platform) => newTabQualifier(label, platform);
 
   if (matching.length) {
     // One page: the short label the row already carries. Several: the event's own title, so a visitor is
     // not asked to trust a guess about which of the two is the meeting.
     for (const e of matching) {
-      destinations.push({
-        platform: PLATFORMS.meetup,
-        href: e.url,
-        label: matching.length === 1 ? 'Sign up on Meetup' : e.title || 'Sign up on Meetup',
-        srOnly: matching.length === 1 ? named(PLATFORMS.meetup) : titled(PLATFORMS.meetup),
-      });
+      const label = matching.length === 1 ? 'Sign up on Meetup' : e.title || 'Sign up on Meetup';
+      destinations.push({ platform: PLATFORMS.meetup, href: e.url, label, srOnly: sr(label, PLATFORMS.meetup) });
     }
   } else if (urls?.meetupGroup) {
     // The hole is a named state, not a blank (DESIGN.md "States"): the date has no page yet, so the path is
     // the group's join page, and the row says plainly which one it is.
-    destinations.push({ platform: PLATFORMS.meetup, href: joinUrl(urls), label: 'Join the Meetup group', srOnly: named(PLATFORMS.meetup) });
+    const label = 'Join the Meetup group';
+    destinations.push({ platform: PLATFORMS.meetup, href: joinUrl(urls), label, srOnly: sr(label, PLATFORMS.meetup) });
   }
 
   if (discordMatching.length) {
     for (const e of discordMatching) {
-      destinations.push({
-        platform: PLATFORMS.discord,
-        href: e.url,
-        label: discordMatching.length === 1 ? 'Sign up on Discord' : e.title || 'Sign up on Discord',
-        srOnly: discordMatching.length === 1 ? named(PLATFORMS.discord) : titled(PLATFORMS.discord),
-      });
+      const label = discordMatching.length === 1 ? 'Sign up on Discord' : e.title || 'Sign up on Discord';
+      destinations.push({ platform: PLATFORMS.discord, href: e.url, label, srOnly: sr(label, PLATFORMS.discord) });
     }
   } else if (urls?.discordInvite) {
-    destinations.push({ platform: PLATFORMS.discord, href: urls.discordInvite, label: 'Join the Discord chat', srOnly: named(PLATFORMS.discord) });
+    const label = 'Join the Discord chat';
+    destinations.push({ platform: PLATFORMS.discord, href: urls.discordInvite, label, srOnly: sr(label, PLATFORMS.discord) });
   }
 
   if (urls?.facebookGroup) {
-    destinations.push({ platform: PLATFORMS.facebook, href: urls.facebookGroup, label: 'Join the Facebook group', srOnly: named(PLATFORMS.facebook) });
+    const label = 'Join the Facebook group';
+    destinations.push({ platform: PLATFORMS.facebook, href: urls.facebookGroup, label, srOnly: sr(label, PLATFORMS.facebook) });
   }
 
   return {
@@ -503,7 +507,8 @@ export const JOIN_KIND_COPY = {
  *                per-date pages belong to `signUpPaths()`. `external` says which, so a gate knows whether to
  *                apply `LINK_SHAPES` and the stamp rule or the emitted-route rule.
  *   - `label`  — the visible string; it names the platform and the verb (D273).
- *   - `srOnly` — the mode of opening, for a link that leaves the site. Null for an internal route, because a
+ *   - `srOnly` — derived from the label by `newTabQualifier()` (S041), never written by hand: the mode of
+ *                opening for a link that leaves the site. Null for an internal route, because a
  *                visitor can go back from it.
  *   - `gives`  — one clause of what the visitor gets. Every one of these is a claim with a source:
  *                Meetup's group is "the club's list of members" (`src/content.json` membership.value),
@@ -522,7 +527,7 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.meetupGroup),
       external: true,
       label: 'Join the Meetup group',
-      srOnly: `${PLATFORMS.meetup}, opens in a new tab`,
+      // srOnly is derived below, not written here: one derivation, so no row can carry a hand-typed suffix
       gives: "The club's member list, and where a date gets announced.",
     },
     {
@@ -531,7 +536,7 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.facebookGroup),
       external: true,
       label: 'Join the Facebook group',
-      srOnly: `${PLATFORMS.facebook}, opens in a new tab`,
+      // derived, see below
       // "group", not "page": FACEBOOK_GROUP_URL_SHAPE rejects a page URL, so the noun must not promise one. The
       // clause states only what S021/D280 records - the operator named this group and it is public - because the
       // earlier draft ("where what gets posted here also gets posted") was a cross-posting claim with no source
@@ -544,7 +549,7 @@ export const joinChannels = (urls = {}) => {
       href: '/schedule',
       external: false,
       label: 'See the dates',
-      srOnly: null,
+      // internal route: no suffix (derived below from `external`)
       // The platform is named in the visible clause, not just in `data-join-platform`: the row's destination is
       // the club's own /schedule, so the label must not promise a new site - but the visitor is still choosing a
       // platform, and a kind that never says which one delivers it leaves the reader to find out after the click
@@ -563,7 +568,7 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.discordInvite),
       external: true,
       label: 'Join the chat on Discord',
-      srOnly: `${PLATFORMS.discord}, opens in a new tab`,
+      // derived, see below
       gives: 'The conversation that runs between meetings.',
     },
   ];
@@ -575,7 +580,7 @@ export const joinChannels = (urls = {}) => {
     .filter((c) => c.href)
     .map((c, i) => ({ c, i }))
     .sort((a, b) => order(a.c) - order(b.c) || a.i - b.i)
-    .map(({ c }) => c);
+    .map(({ c }) => ({ ...c, srOnly: c.external ? newTabQualifier(c.label, c.platform) : null }));
 };
 
 /** The kinds that actually have a channel, in canonical order — what the page paints headings for. */

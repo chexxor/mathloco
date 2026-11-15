@@ -2,7 +2,11 @@
 import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.svelte';
 import Footer from '../components/Footer.astro';
+import ThreadFigure from '../components/ThreadFigure.astro';
+import { threads } from '../lib/content.ts';
 import config from '../config.json';
+import { PLATFORMS } from '../lib/rsvp.mjs';
+import { newTabQualifier } from '../lib/links.mjs';
 
 // Nothing here is per-request: the island fetches /api/discord-summary in the browser, and the rest
 // of the page is static markup. Prerendering turns /chat into a static asset (no Worker CPU, no cold
@@ -13,17 +17,24 @@ export const prerender = true;
 // path out that the CTA does (D108: a designed state names where the content lives) — and the footer
 // band names the same destination. That one place is `URLs.discordInvite` in src/config.json.
 const DISCORD_URL = config.URLs.discordInvite;
+// The full thread list lives here (S042, read §5.4): the home page shows six and links "the rest of the
+// list ->" to this page, so the cap does not delete anything. Same `threads()` call, same source in
+// `src/content.json` - one data home, so the two pages cannot drift (the "one home per rule" rule).
+const items = threads();
 ---
 
 <Layout title="Discord Chat - Matheapolis" path="/chat">
   <main class="mx-auto max-w-4xl px-4 py-8">
-    <div class="text-label uppercase tracking-wide mb-4">
-      <span class="text-ink-3">Community Chat</span>
-    </div>
-
-    <h1 class="text-display-1 font-extrabold text-ink mb-12">
+    {/* No eyebrow above the h1 (S040, second design read §1, 2026-11-14): the page's name is its h1, and the
+        line under it says what the page holds. "Community Chat" above the heading was a locator the nav already
+        supplies - `check:naming` (D309) holds nav, title, band and heading to one word, and the new rule in the
+        same gate fails any text between `<main>` and the first heading. The air is unchanged: mb-4 + mb-8 is
+        the same 48px the h1's mb-12 spent, and both steps are on DESIGN.md's ladder — `mb-10` (40px) was not,
+        and `npm run check:scale` (S042, D321) now fails any spacing write off it. */}
+    <h1 class="text-display-1 font-extrabold text-ink mb-4">
       Summaries from the chat
     </h1>
+    <p class="text-label uppercase tracking-wide text-ink-3 mb-8">Written by our bot, after the noise settles</p>
 
     <!-- `visible`, not `load`: the summary block is below the fold on phones, and this island
          drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the
@@ -31,23 +42,47 @@ const DISCORD_URL = config.URLs.discordInvite;
          the API fetch entirely for visitors who never scroll to it. -->
     <DiscordSummary client:visible discordUrl={DISCORD_URL} />
 
+    {/* The threads, in full (S042). `id="threads"` is the anchor the home page's "the rest of the list ->"
+        link points at; a link that lands on a page with no list is the D273 defect class, so the anchor and
+        the list are added together, not one before the other. The rhythm is DESIGN.md's ruled one (8px row
+        padding, 16px between rows, 32px between columns) and the two columns start at `md` (768px) - the
+        read's 900px is not adopted as a new breakpoint because no gate here measures 900. */}
+    {items.length > 0 && (
+      <section class="mt-16 max-w-measure" id="threads" aria-labelledby="threads-heading">
+        <h2 id="threads-heading" class="text-heading font-bold text-ink mb-4">What the club is pulling on</h2>
+        <p class="text-lede leading-prose text-ink-2 mb-6 font-body">
+          The threads the home page lists, in full. Any of them can be dropped mid-sentence, and none of
+          them is a prerequisite for arriving.
+        </p>
+        <ul class="grid grid-cols-1 gap-x-8 md:grid-cols-2">
+          {items.map(({ label, gloss }) => (
+            <li class="py-2 text-body leading-prose font-body">
+              <span class="font-semibold text-ink">{label}</span>
+              {gloss && <span class="text-ink-2"> — {gloss}</span>}
+            </li>
+          ))}
+        </ul>
+        <ThreadFigure />
+      </section>
+    )}
+
     <div class="mt-16 bg-panel rounded-card p-8">
       <div class="text-center">
         <h2 class="text-heading font-bold text-ink mb-4">The chat itself</h2>
         <p class="text-lede leading-prose text-ink-2 mb-6 max-w-measure mx-auto">
-          What is above is what our bot writes from the channel after the noise settles. The channel is
-          where the club actually talks — what it is pulling on, what it is arguing about, where and when
-          it is next meeting. The invite is the button below.
+          The summaries above are the bot's reading of the channel. The channel itself is where the club
+          talks — what it is pulling on, what it is arguing about, where and when it is next meeting. The
+          invite is the button below.
         </p>
         <a
           href={DISCORD_URL}
           target="_blank"
           rel="noopener noreferrer"
           data-control="primary"
-          class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+          class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
         >
-          Join the chat
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor">
+          Join the chat<span class="sr-only">{newTabQualifier('Join the chat', PLATFORMS.discord)}</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
             <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
           </svg>
         </a>

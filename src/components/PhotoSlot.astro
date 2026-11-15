@@ -46,6 +46,12 @@ type Props = {
   /** What the shot has to be, in the shot list's words. Only ever drawn in placeholder mode. */
   caption?: string;
   /**
+   * Declare that the picture carries no information the page does not already print (D324, 2026-11-14). An
+   * empty `alt` is allowed only with this flag: `scripts/check-alt.mjs` fails `alt=""` on any image whose
+   * wrapper does not say `data-decorative="true"`, so a plate is silent by decision rather than by accident.
+   */
+  decorative?: boolean;
+  /**
    * Where the picture came from, in a visible line under it (2026-11-14, MS04 read). A plate's provenance -
    * "Slaught & Lennes, 1910, leaf 122" - is a fact about the file, not a description of what a visitor sees,
    * and D170's rule is that alt text quotes the picture page rather than invent a scene. So the description
@@ -76,10 +82,11 @@ const placeholders = content.photos?.placeholders === true;
 // An invented or placeholder alt is the same defect as an invented photograph, and it is the kind that
 // ships silently because nothing renders it visually. So the build refuses instead: when a photo lands in
 // src/assets/photos/, the call site has to say what it shows.
-if (photo && !Astro.props.alt) {
+if (photo && !Astro.props.alt && !Astro.props.decorative) {
   throw new Error(
     `PhotoSlot "${Astro.props.slot}": ${found} needs an alt describing what the photograph shows — ` +
-      `an invented or missing alt asserts something the picture does not support`,
+      `an invented or missing alt asserts something the picture does not support. A plate that genuinely ` +
+      `carries no information the page does not already print says so with decorative: true (D324).`,
   );
 }
 ---
@@ -90,10 +97,10 @@ if (photo && !Astro.props.alt) {
        Tailwind's preflight zeroes `figure`'s margin, so the box that `check:space` measures is the image plus
        the caption's own `mt-2`, and `check:space`/`check:render` re-measure it every run.
        (D312.) */
-    <figure>
+    <figure data-decorative={Astro.props.decorative ? 'true' : undefined}>
       <Image
         src={photo as never}
-        alt={Astro.props.alt!}
+        alt={Astro.props.alt ?? ''}
         loading="eager"
         decoding="async"
         class={`w-full block object-cover ${Astro.props.class ?? ''}`}
@@ -105,22 +112,24 @@ if (photo && !Astro.props.alt) {
     </figure>
   ) : placeholders ? (
     /* One ground, one edge (D149-3c). This used to be `bg-tint inset-shadow-rule`, and the review build
-       measures what that actually paints: a 1px `rule` ring with the tint (224,245,229) on its inside and
-       the page's ground on its outside — 2.74 inside / 3.01 outside at PS-1, and 2.74 / 2.88 at PS-3, where
-       the join card is `bg-panel`. Two grounds, and both numbers sit at or under the 3.0 graphic bar
-       (`--color-rule` is solved for `paper`: 3.01 there, 2.74 on `tint`, 2.88 on `panel` — record 0018).
+       measures what that actually paints: a 1px `rule` ring with a tint fill on its inside and the page's
+       ground on its outside — 2.74 inside / 3.01 outside at PS-1, 2.74 / 2.88 at PS-3, where the join card
+       is `bg-panel` (record 0018, on the palette before D316). Two grounds is the failure; at that time one
+       side was also under the 3.0 graphic bar. D316's `rule` measures 3.66 on paper, 3.85 on panel and 3.10
+       on tint @measured 2026-11-14 by node design/grill/palette-remap.mjs, so the number stopped being the
+       problem and the straddle is all that is left of the rule.
        `check:render`'s ring rule now fails exactly this, and it is the only gate that ever saw it: this state
        is unreachable in a shipped build (`check:content` fails any HTML containing `data-placeholder`), so no
        browser gate looks at the real dist page. See design/records/0024-* for the review-build recipe.
-       The fill is the half that goes: a tint is 1.04-1.10 against its neighbours, so it was never doing the
-       separation the ring does. The edge is `inset-shadow-gold` rather than `rule` because a `rule` ring is
-       illegal inside a tinted region at ANY placement: inside the join card it reads 2.88 on both sides,
-       under the bar. Gold reads 4.82 on paper and 4.61 on panel, and either way the ring has ONE ground on
-       both sides. Gold is this system's caution grammar, and that is the honest claim here: the box says
-       "this page is missing content", which is a caution about the page rather than a decoration. */
+       The fill is the half that goes: `tint vs paper` is 1.18, a `flat` pair in the probe above, so a tint is
+       deliberately not a layer and was never doing the separation the ring does. The edge is
+       `inset-shadow-accent` rather than `rule` for grammar, not for contrast — the accent is this system's
+       caution colour (DESIGN.md "Notices"), and this box says "this page is missing content", which is a
+       claim about the page rather than a decoration. With no fill the ring has ONE ground on both sides
+       wherever it stands: 5.77 on paper, 6.07 on the join card @measured 2026-11-14 by the same probe. */
     <div
       data-placeholder={Astro.props.slot}
-      class={`inset-shadow-gold rounded-control flex items-end p-3 ${Astro.props.class ?? ''}`}
+      class={`inset-shadow-accent rounded-control flex items-end p-3 ${Astro.props.class ?? ''}`}
       style={`aspect-ratio: ${ratio};`}
     >
       <p class="text-micro uppercase tracking-wide text-ink-3">

@@ -3,13 +3,15 @@ import config from '../config.json';
 import EventRow from './EventRow.astro';
 import PhotoSlot from './PhotoSlot.astro';
 import {
-  content, upcoming, value, filled, copiedOn, formatDate, ageSince,
+  content, upcoming, value, filled, copiedOn, formatDate, provenanceStamp,
   scheduleConfigured,
 } from '../lib/content.ts';
 // The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
 // can compare it against the same rule rather than a copy of it (D238).
 import { todayIn, snapshot } from '../lib/events.mjs';
 import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs';
+import { PLATFORMS } from '../lib/rsvp.mjs';
+import { newTabQualifier } from '../lib/links.mjs';
 
 /**
  * When we meet — the schedule, in two widths of one component.
@@ -175,11 +177,15 @@ const copied = copiedOn();
 // The heading is the page's own h1 on /schedule and a section h2 on the homepage, where the hero owns the h1.
 const headingId = 'when-we-meet';
 const Heading = compact ? 'h2' : 'h1';
-// The eyebrow is the section's locator. On the homepage the compact band reads "The calendar": it points at the
-// page of record and prints no date (D306). On `/schedule` it is the page's own name, because `check:naming`
-// (D309, 2026-11-14) requires the word the nav uses to appear in the page's opening block: the h1 keeps its
-// voice ("When We Meet"), the eyebrow carries the name the visitor clicked.
-const eyebrow = compact ? 'The calendar' : 'Dates';
+// 2026-11-14 (S040, second design read §1): the eyebrow is gone from both surfaces. `check:naming` (D309) used
+// to require the nav's word in the opening block, and the eyebrow was how this section satisfied it - the h1
+// keeps its voice ("When We Meet") and the eyebrow carried the name. Two things changed: the read's rule is that
+// nothing sits above an h1, and the gate now enforces that, so the eyebrow cannot come back. On `/schedule` the
+// lede under the heading already says "These dates are copied from the club's own calendar", which names the
+// page in the same block; on the homepage the band's heading IS the nav's word, "Dates", so a visitor who
+// clicked "Dates" finds a heading that says "Dates" - and `check:naming`'s new alias rule (a page may not use
+// another page's h1 as its own h2) is exactly what this band was violating.
+const headingText = compact ? 'Dates' : 'When We Meet';
 // The compact lede used to be the join band's sentence, kept verbatim when the bands merged (D228): "One place to
 // say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether
 // this is your kind of room." The operator asked for the join copy rewritten (2026-11-07), and the clause that did
@@ -219,12 +225,11 @@ const lede = compact
 <section class="bg-paper py-12" aria-labelledby={headingId}>
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
-      <p class="text-label uppercase tracking-wide text-ink-3">{eyebrow}</p>
       {/* Written out rather than assembled with `class:list={[...]}`: `check:classes` reads the literal word
           `list` out of that syntax and reports it as a class that generates no CSS, so the assembled form
           buys a false failure. A conditional template string keeps every token literal in the source the
           gate reads. */}
-      <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'mt-1 text-heading' : 'text-display-1'}`}>{'When We Meet'}</Heading>
+      <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'text-heading' : 'text-display-1'}`}>{headingText}</Heading>
       <p class={`mt-4 leading-prose text-ink-2 font-body max-w-measure mx-auto ${compact ? 'text-lede' : 'text-body'}`}>{lede}</p>
     </div>
 
@@ -250,7 +255,11 @@ const lede = compact
             {/* D306: an empty calendar still renders this block on both widths, so it must not print a date either -
                 that was the 2026-11-14 audit's third finding (with no open date, `/` would have painted "built Nov 14,
                 2026" and `/schedule` a provenance date with no `data-date` handle). Ages carry the same freshness. */}
-            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {ageSince(new Date().toISOString().slice(0, 10))}{snapshot.source?.fetchedAt ? `, and the club’s calendar was last read ${ageSince(String(snapshot.source.fetchedAt).slice(0, 10))}.` : '; no calendar source is wired to it yet.'}</p>
+            {/* D322 (2026-11-14 design read §D6): one provenance format for the whole site - an age inside 30
+                days, the calendar date beyond it. `allowDate: !compact` is not a second format; it is D306's
+                rule expressed as an argument, because `check:dated-surfaces` refuses any date-shaped string on
+                `/` and lists `/schedule` as the one surface that may carry one. */}
+            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {provenanceStamp(new Date().toISOString().slice(0, 10), { allowDate: !compact })}{snapshot.source?.fetchedAt ? `, and the club’s calendar was last read ${provenanceStamp(String(snapshot.source.fetchedAt).slice(0, 10), { allowDate: !compact })}.` : '; no calendar source is wired to it yet.'}</p>
           </div>
           {/* The primary button belongs to the band, and the compact band has one below with the chat path
               beside it. Printing it in the notice too would put two `data-control="primary"` controls in one
@@ -262,14 +271,14 @@ const lede = compact
                 target="_blank"
                 rel="noopener noreferrer"
                 data-control="primary"
-                class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+                class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
               >
-                Join on Meetup
+                Join on Meetup<span class="sr-only">{newTabQualifier('Join on Meetup', PLATFORMS.meetup)}</span>
               </a>
             </div>
           )}
           <p class="mt-3 text-body leading-prose text-ink-2 font-body">
-            Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Ask in the chat</a> —
+            Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Ask in the chat</a> —
             someone from the club reads it.
           </p>
         </div>
@@ -285,14 +294,14 @@ const lede = compact
       {compact && items.length > 0 && (
         <div class="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2">
           {hidden > 0 && (
-            <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+            <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
               {/* The label has to match what the target page actually lists: `/schedule` shows a window, not the
                   whole future, so promising "All 14 dates" on a page that prints 8 would be a link that lies
                   about its own destination (D238). */}
               {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All ${win.shown.length} dates`} <span aria-hidden="true">→</span>
             </a>
           )}
-          <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">
+          <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
             Add to a calendar <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -301,14 +310,17 @@ const lede = compact
       {!compact && items.length > 0 && (
         <>
           <ul class="space-y-4" data-art-cap="323">
-            {items.map((item) => <EventRow item={item} />)}
+            {/* `first` is positional, not a property of the date: the zone word belongs to the first row the
+               page paints and to nothing else (D327, second design read §5.1). `check:row-geometry` counts rows
+               in page order, so a row that moves carries the word with it. */}
+            {items.map((item, i) => <EventRow item={item} first={i === 0} />)}
           </ul>
           {/* D218's dated line, once for the list rather than once per row: "is this current?" is asked of the
               calendar, not of a row. The stamp is the feed's own `source.fetchedAt` (`copiedOn()`), which is
               what every published `DTSTAMP` in `/events.ics` derives from \u2014 so the page and the file a
               subscriber holds cannot disagree about when the club was last read. */}
           {copied && (
-            <p class="mt-3 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar on {copied}</span></p>
+            <p class="mt-3 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar {copied}</span></p>
           )}
         </>
       )}
@@ -318,10 +330,12 @@ const lede = compact
           one dark region (the footer). PS-3 stays named here for the same reason PS-4 stays named in the
           rows: `check:space` ranks the reserved places by `data-slot`, and `npm run round13`/`round14`
           refuse to run once the page stops naming its own photo places.
-          The two paths out stand BELOW the card, on the page's own ground, and that is a measurement rather
-          than a taste: the secondary is `bg-paper inset-shadow-rule`, so its ring has its own `paper` fill on
-          one side and whatever it stands on on the other; inside this card it would stand on `panel`, where
-          `--color-rule` measures 2.88 — under the 3.0 graphic bar (D149-3c, design/records/0018). */}
+          The two paths out stand BELOW the card, on the page's own ground, and that is a ruling rather than
+          a taste: the secondary is `bg-paper inset-shadow-rule`, so its ring has its own `paper` fill (3.66)
+          on one side and whatever it stands on on the other; inside this card it would stand on `panel`
+          (3.85) @measured 2026-11-14 by node design/grill/palette-remap.mjs — two grounds, which D149-3c
+          forbids whatever the numbers say. The 2.88 design/records/0018 measured was the pre-D316 `rule`; the
+          straddle is the half of that record that still applies. */}
       {compact && (
         <>
           <div class="mt-8 bg-panel rounded-card p-6 sm:p-8">
@@ -354,7 +368,7 @@ const lede = compact
                       {/* D306: an AGE, not the calendar date. "last read Nov 3, 2026" was the last visible date on
                           `/` after the card came off, and the 2026-11-14 audit named it. `check:dated-surfaces` now
                           refuses a date on any page it does not list, year-bearing provenance included. */}
-                      {membership}, last read {content.membership.asOf ? ageSince(content.membership.asOf) : 'recently'} —
+                      {membership}, last read {content.membership.asOf ? provenanceStamp(content.membership.asOf, { allowDate: !compact }) : 'recently'} —
                       the list is not the room.
                     </p>
                   )}
@@ -386,7 +400,7 @@ const lede = compact
             <a
               href="/join"
               data-control="secondary"
-              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
             >
               Join the club
               <svg class="ml-2 -mr-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -398,9 +412,9 @@ const lede = compact
               target="_blank"
               rel="noopener noreferrer"
               data-control="secondary"
-              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+              class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
             >
-              Join the chat
+              Join the chat<span class="sr-only">{newTabQualifier('Join the chat', PLATFORMS.discord)}</span>
             </a>
           </div>
         </>
@@ -414,7 +428,7 @@ const lede = compact
       {!compact && items.length > 0 && (
         <p class="mt-6 max-w-measure text-body leading-prose text-ink-2 font-body">
           {omittedText}
-          Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold">Add the club calendar</a> —
+          Want them in your own calendar? <a href="/events.ics" class="text-ink underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add the club calendar</a> —
           Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
         </p>
       )}

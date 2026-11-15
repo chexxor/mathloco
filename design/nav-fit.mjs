@@ -48,14 +48,22 @@ for (const w of widths) {
     json = JSON.parse(execFileSync(process.execPath,
       ['design/grill/dist-measure.mjs', dist, '/', 'design/grill/nav-fit.js', w, h], { encoding: 'utf8' }));
   }
-  out.push({ width: w, gap: json.gap, rows: json.rows, fonts: json.fonts.filter((f) => /PT Serif/.test(f)) });
+  out.push({ width: w, gap: json.gap, rows: json.rows, lockups: json.lockups || [], fonts: json.fonts.filter((f) => /PT Serif/.test(f)) });
 }
 
-for (const { width, gap, rows, fonts } of out) {
+for (const { width, gap, rows, lockups, fonts } of out) {
   console.log(`\n@ ${width}px viewport — container content box ${rows[0].available}px, gap ${gap}px, faces: ${fonts.join(', ') || 'none matched'}`);
   for (const r of rows) {
     const verdict = r.slack >= 0 ? `fits by ${r.slack}px` : `OVERFLOWS by ${-r.slack}px`;
     console.log(`  ${r.labels.join(' · ').padEnd(28)} needs ${String(r.needed).padStart(6)}  ${verdict.padEnd(20)}  [${r.perLabel.join(' ')}]  tier ${r.tier.join('/')} ${r.family}`);
+  }
+  // The wordmark lockup, priced against the set that is actually shipped (read §6.5).
+  if (lockups.length) {
+    console.log(`  wordmark lockup, shipped labels:`);
+    for (const l of lockups) {
+      const verdict = l.slack >= 0 ? `fits by ${l.slack}px` : `OVERFLOWS by ${-l.slack}px`;
+      console.log(`    ${JSON.stringify(l.text).padEnd(20)} mark ${String(l.mark).padStart(4)}px  row needs ${String(l.needed).padStart(4)}  ${verdict}`);
+    }
   }
 }
 console.log('\nD100: the row is nowrap, so a set that does not fit fails check:render at that width — it does not wrap.');

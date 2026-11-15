@@ -28,6 +28,12 @@
 import tracked from '../content.json';
 import { isObj, openSlots as openTree, unsourcedSlots as unsourcedTree } from './content-slots.mjs';
 import { asUpcomingItems, snapshot } from './events.mjs';
+// The provenance rule is a plain-JS module, not a TS one, so `scripts/check-provenance.mjs` can read the
+// SAME arithmetic the site renders (D238's split: a gate that re-implements the rule it checks is the
+// drift the gate is supposed to prevent). Re-exported here so every component keeps importing from
+// `content.ts` and there is still one name for the rule.
+import { ageSince, formatSince, daysSince, provenanceStamp } from './provenance.mjs';
+export { ageSince, formatSince, daysSince, provenanceStamp };
 
 export type Slot = {
   value: string | null;
@@ -219,39 +225,22 @@ export const timeSpan = (row: { time?: string | null; endTime?: string | null })
   return end ? `${start} \u2013 ${end}` : start;
 };
 
-/** "Nov 3, 2026" from an ISO calendar date — the dated lane for a fact a human wrote down. Parsed as a
- *  calendar date, never as an instant, so a build running in UTC cannot print the day before. */
-export const formatSince = (iso: string): string => {
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return iso;
-  return new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
-    .format(new Date(Date.UTC(y, m - 1, d)));
-};
-
-/**
- * How long ago a stamp was taken, in words: "today", "yesterday", "11 days ago", "3 months ago".
- *
- * Why an age and not the date (D306, 2026-11-14): the operator's `/join` objective makes `/schedule` the only surface
- * that prints a date, and `check:dated-surfaces` now refuses ANY date-shaped string on a page it does not list -
- * year-bearing provenance included, which is the hole the 2026-11-14 audit found ("last read Nov 3, 2026" on the
- * homepage). An age keeps the freshness a sourced claim owes its reader without putting a calendar date on the page.
- */
-export const ageSince = (iso: string, now: Date = new Date()): string => {
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return 'recently';
-  const days = Math.floor((Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()) - Date.UTC(y, m - 1, d)) / 86_400_000);
-  if (!Number.isFinite(days) || days < 0) return 'recently';
-  if (days === 0) return 'today';
-  if (days === 1) return 'yesterday';
-  if (days < 45) return `${days} days ago`;
-  const months = Math.round(days / 30.44);
-  if (months < 18) return `${months} month${months === 1 ? '' : 's'} ago`;
-  const years = Math.round(days / 365.25);
-  return `${years} year${years === 1 ? '' : 's'} ago`;
-};
+// `formatSince`, `ageSince`, `daysSince` and `provenanceStamp` are re-exported from `src/lib/provenance.mjs`
+// (D322). They stay importable from here because every component and gate that reads provenance imports
+// this module, and the point of D322 is that there is exactly one implementation to import.
+//
+// Why an age and not the date (D306, 2026-11-14): the operator's `/join` objective made `/schedule` the only
+// surface that prints a date, and `check:dated-surfaces` refuses ANY date-shaped string on a page it does not
+// list - year-bearing provenance included, which is the hole the 2026-11-14 audit found ("last read Nov 3,
+// 2026" on the homepage). An age keeps the freshness a sourced claim owes its reader without putting a
+// calendar date on the page; past `WINDOW` (30) days the same rule switches to the date, because a stamp a
+// month old says *when* more usefully than *how stale*.
 
 /** The build's own date, for the dated lane of a prerendered page. The only age a static page can compute (D103). */
 export const builtOn = (): string => formatSince(new Date().toISOString().slice(0, 10));
+
+// The provenage itself is `provenanceStamp` in `src/lib/provenance.mjs`; `WINDOW` is the 30-day threshold
+// that gate and site both read. Nothing here recomputes it.
 
 /**
  * The day the club's own calendar was last read — "6 Nov 2026", or null when the snapshot does not say.
@@ -264,7 +253,7 @@ export const builtOn = (): string => formatSince(new Date().toISOString().slice(
  */
 export const copiedOn = (): string | null => {
   const f = snapshot.source?.fetchedAt;
-  return typeof f === 'string' && f.length >= 10 ? formatSince(f.slice(0, 10)) : null;
+  return typeof f === 'string' && f.length >= 10 ? provenanceStamp(f.slice(0, 10)) : null;
 };
 
 /**

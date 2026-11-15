@@ -132,7 +132,10 @@ emptiness and two thirds of the reader-named colour were missing at the floor wi
 
 - `decisions.json` — the machine record of every ratified answer; `state.json` — the design-system skill's
   pipeline state, including which round-N specimen answered which round.
-- `drift.json` — phase 1's census of every spacing/type/colour value the CSS computes, with counts.
+- `drift.json` — phase 1's census of every spacing/type/colour value the CSS computes, with counts. It is a
+  **snapshot from a design round**, not a gate output: nothing regenerates it when the tree changes, so a file it
+  names may have been deleted since (the four `src/components/icons/*.astro` it lists are gone as of 2026-11-15).
+  Treat its numbers as dated evidence, never as an inventory.
 - `token-map.md` — generated apply worklist (regenerate, never hand-edit).
 - `card-page.json` — painted-bytes report for the committed share card, the input `check:social` compares
   the shipped JPEG against (regenerate with `npm run assets:social`).

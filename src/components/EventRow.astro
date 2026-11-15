@@ -106,9 +106,17 @@ import SignUpLinks from './SignUpLinks.astro';
 
 type Props = {
   item: UpcomingItem;
+  /** The row the page paints first. Only that row names the zone (D327, second design read §5.1). */
+  first?: boolean;
 };
 
-const { item } = Astro.props;
+const { item, first = false } = Astro.props;
+// The zone is named once, on the first date the page prints (the read §5.1: "append 'Central' to the first
+// time shown on each page, once"). The word is not a guess: every row in `data/events.json` carries
+// `DTSTART;TZID=America/Chicago`, the harvester confirms that hour before writing a row, and `check:ics`'s
+// tzid rule is what keeps it true in the published feed (D188). A visitor in another zone reading
+// "12:00 – 1:00" has no clock to hang it on; on the first row the cost of saying so is one word.
+const zone = first ? ' Central' : '';
 ---
 
 <li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date}>
@@ -133,8 +141,16 @@ const { item } = Astro.props;
           old homepage card wrote, so the probe that anchors on it still finds it (D173). It is the date said as
           a sentence, which is the version a screen reader hears (the leaf is aria-hidden) and the only place the
           hour appears at all. */}
-      <p class="tabular-nums"><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}</span></p>
-      {filled(item.title) && <h3 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h3>}
+      {/* One element per date (D327, read §5.1): the date used to be loose text in a span. `<time datetime="…">`
+          is the machine-readable form and carries the same value the row's `data-date` handle carries, so a
+          screen reader and a gate can both read it. `check:row-geometry` fails a row whose date sentence is not
+          inside a `<time>`, or whose `datetime` disagrees with `data-date` — semantics that cannot rot back
+          into prose. */}
+      <p class="tabular-nums"><time datetime={item.date}><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}{zone}</span></time></p>
+      {/* h2, not h3 (S040 §7 D8, 2026-11-14): `/schedule` is h1 then rows, so an h3 row title skipped a level,
+          which is what `npm run check:outline` now fails the build on. The row is a direct child of the page's
+          one heading; there is no section between them to level down to. */}
+      {filled(item.title) && <h2 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h2>}
     </div>
     {/* `max-w-measure` (32em) is the MS04 copy-lane fix: uncapped, a row's prose ran the whole lane -
        633px at 1240, ~145 characters of PT Serif - past the 75-character reading band. `data-copy-prose` is

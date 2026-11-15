@@ -29,10 +29,9 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
 
 <Layout title="Ways in - Matheapolis" path="/join">
   <main class="mx-auto max-w-4xl px-4 py-8">
-    <div class="text-label uppercase tracking-wide mb-4">
-      <span class="text-ink-3">Join the club</span>
-    </div>
-
+    {/* The eyebrow is deleted rather than moved: this page's h1 is its name ("Ways in", the phrase the site
+       is best at) and the paragraph under it is already the subtitle the read asks for. S040, second design
+       read §1, 2026-11-14; `check:naming` now fails any text between `<main>` and the first heading. */}
     <h1 class="text-display-1 font-extrabold text-ink">Ways in</h1>
 
     <p class="mt-4 max-w-measure text-lede leading-prose text-ink-2 font-body">
@@ -62,11 +61,11 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
                     data-join-platform={c.platform}
                     class={
                       c === lead
-                        ? 'inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
-                        : 'inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
+                        ? 'inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
+                        : 'inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
                     }
                   >
-                    {c.label}{c.srOnly && <span class="sr-only">{` ${c.srOnly}`}</span>}
+                    {c.label}{c.srOnly && <span class="sr-only">{c.srOnly}</span>}
                   </a>
                   {/* What the visitor gets. Every clause is the resolver's, and every clause has a source
                       named in `joinChannels()` — the member list (src/content.json), the public Facebook
@@ -97,7 +96,7 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
         The next ones are on the
         <a
           href="/schedule"
-          class="text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >schedule</a
         >.
       </p>
@@ -117,7 +116,7 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
         Want to ask something before you turn up? Somebody from the club reads
         <a
           href="/chat"
-          class="text-ink underline decoration-rule underline-offset-2 hover:text-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >the messages we post there</a
         >.
       </p>

@@ -50,7 +50,7 @@
 //     first pixel. Nothing in the figure read as PARALLEL, which is the whole surprise;
 //   - a THIRD line ran straight down the middle into the meeting point (`M120 20 L120 128`). The source has no
 //     such line; it is what made the figure read as an arrow / Y;
-//   - the two gold segments were mirrored arcs (`M62 118 C…`, `M178 118 C…`), also not in the source;
+//   - the two accent segments were mirrored arcs (`M62 118 C…`, `M178 118 C…`), also not in the source;
 //   - the equator — the reference line the two lines leave at right angles, the thing that ESTABLISHES that they
 //     are parallel — was absent. Without it "parallel lines meeting" cannot be seen at all.
 // The lesson ships with the fix: a mark derived from a source image has to be checked against the source image.
@@ -65,8 +65,9 @@
 // source. So composer and verifier read one table (D118's rule, applied to geometry instead of colour). One table
 // is also why this correction moved the hero, the card and both gates together.
 //
-// WHAT IS NOT HERE: colour. Which token a role takes depends on the ground it sits on — `gold` on paper (4.82)
-// vs `gold-on-ink` on the band (5.80), because `gold` on ink is 2.50 and banned (DESIGN.md "Colour"). The role->
+// WHAT IS NOT HERE: colour. Which token a role takes depends on the ground it sits on — `accent` on paper (5.77)
+// vs `accent-on-ink` on the band (5.69), because `accent` on ink is 2.97 and banned (DESIGN.md "Colour", D316);
+// every number here is the token pair, @measured 2026-11-14 by node design/grill/palette-remap.mjs. The role->
 // token maps are `MARK_COLOURS` below; each surface turns a token into whatever its renderer understands (a
 // Tailwind class on the page, `var(--color-…)` in the card document, which has no Tailwind).
 //
@@ -135,9 +136,10 @@ export const MARK = {
 export const MARK_SHAPE_COUNT = MARK.shapes.length + 1;   // + the filled meeting point
 
 // role -> token name (the `--color-<name>` in @theme) per ground. `rule` is the lightest line the
-// system has and lands exactly on the graphic bar on paper (3.01 measured, D116): a `rule` retune that
+// system has and clears the graphic bar on paper (3.66 token pair @measured 2026-11-14 by
+// design/grill/palette-remap.mjs, D316 — it was 3.01 before the palette round): a `rule` retune that
 // goes lighter than 3.0 on paper is supposed to break the hero mark, and `check:render` says so.
 export const MARK_COLOURS = {
-  paper: { sphere: 'rule', route: 'ink', accent: 'gold' },
-  ink: { sphere: 'band-text', route: 'band-text', accent: 'gold-on-ink' },
+  paper: { sphere: 'rule', route: 'ink', accent: 'accent' },
+  ink: { sphere: 'band-text', route: 'band-text', accent: 'accent-on-ink' },
 };

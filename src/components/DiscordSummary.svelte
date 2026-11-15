@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { CachedData, ChannelSummary } from '../types/discord';
   import { parseSummaryBlocks } from '../lib/sanitize';
+  import { NEW_TAB_QUALIFIER } from '../lib/links.mjs';
 
   let { discordUrl = '' } = $props();
 
@@ -87,7 +88,7 @@
       <p class="text-body text-ink">The channel summaries have not loaded.</p>
       <p class="text-label text-ink-2">
         They are written by our bot from recent channel activity. Read the same thing where it is
-        posted: <a class="underline hover:text-gold" href={discordUrl}>Discord</a>.
+        posted: <a class="underline hover:text-accent" href={discordUrl} target="_blank" rel="noopener noreferrer">Discord<span class="sr-only">{NEW_TAB_QUALIFIER}</span></a>.
       </p>
     </div>
   {:else if phase === 'failed'}
@@ -104,13 +105,13 @@
       </p>
       <div class="mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
         <button
-          class="inline-flex items-center min-h-8 text-label font-medium text-ink underline decoration-rule underline-offset-4 hover:text-gold hover:decoration-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+          class="inline-flex items-center min-h-8 text-label font-medium text-ink underline decoration-rule underline-offset-4 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           onclick={() => void fetchSummary()}
         >
           Try again
         </button>
         <span class="text-label text-ink-3">
-          or read it where it is posted: <a class="underline hover:text-gold" href={discordUrl}>Discord</a>.
+          or read it where it is posted: <a class="underline hover:text-accent" href={discordUrl} target="_blank" rel="noopener noreferrer">Discord<span class="sr-only">{NEW_TAB_QUALIFIER}</span></a>.
         </span>
       </div>
     </div>
@@ -126,7 +127,7 @@
       <!-- One boundary (see the failed branch): the path out is a sentence with a link in it, not a
            keylined box inside the notice's own ring. -->
       <p class="mt-2 text-body leading-prose text-ink-2 font-body">
-        Read the same thing where it is posted: <a class="underline hover:text-gold" href={discordUrl}>the
+        Read the same thing where it is posted: <a class="underline hover:text-accent" href={discordUrl}>the
         Discord channel</a>.
       </p>
       {#if lastUpdatedLabel}
@@ -151,13 +152,16 @@
       {#each data?.channels ?? [] as channel (channel.id)}
         {@const summary = summaries.get(channel.id)}
         <!-- One ground, one edge (D149-3c, record 0018): this card used to carry BOTH a `panel` fill and an
-             `inset-shadow-rule` ring, which puts 2.88 (`rule` on panel) on the inside of the ring and 3.01
-             (`rule` on paper) on the outside - a keyline straddling two grounds. `check:render` now measures
-             both sides of every inset ring, and this branch is exactly what it cannot see: the channel cards
-             only exist once the Discord fetch succeeds, so the gate's dist page never renders them. The fill
-             is the half that goes, because the ring is this component's own grammar - the pending and failed
-             states above are ring-and-no-fill notices measured at 3.01 - and a tint that is not a layer (panel
-             is 1.04 against paper) was never doing the separation. -->
+             `inset-shadow-rule` ring, which put the ring on two grounds at once - `rule` against panel on the
+             inside and `rule` against paper on the outside. Record 0018 measured that pair as 2.88 / 3.01 on the
+             palette before D316, and the same two grounds now measure 3.85 / 3.66 @measured 2026-11-14 by
+             node design/grill/palette-remap.mjs, so the numbers cleared and the straddle is all the rule is
+             about now. `check:render` measures both sides of every inset ring, and this branch is exactly what
+             it cannot see: the channel cards only exist once the Discord fetch succeeds, so the gate's dist page
+             never renders them. The fill is the half that goes, because the ring is this component's own grammar -
+             the pending and failed states above are ring-and-no-fill notices measured at 3.66 on paper
+             @measured 2026-11-14 by `npm run check:contrast` - and a ground that is not a layer (panel is 1.05
+             against paper, under the 1.35 flat bar) was never doing the separation. -->
         <div class="rounded-card overflow-hidden inset-shadow-rule">
           <div class="px-4 py-3">
             <span class="text-label font-medium text-ink">#{channel.name}</span>

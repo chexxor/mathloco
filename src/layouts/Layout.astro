@@ -61,7 +61,8 @@ import Navigation from '../components/Navigation.astro';
     <slot />
     <style lang="scss" is:global>
       /* `::selection` is the one place this file paints, and the pair is measured: paper on ink =
-         12.02, asserted in design/grill/contrast/gen-ratify-cfg.mjs. The retired amber pair measured
+         17.15 @measured 2026-11-14 by node design/grill/palette-remap.mjs (12.02 before D316 moved the ink
+         and the paper). The retired amber pair measured
          2.06, under the 4.5 bar; the amber is delta-OKLab 0.019 from Amazon orange #FF9900 (D82/D88),
          which is why the token went, not just this rule. The amber also used to sit in
          src/config.json as `theme.color`, still declaring a colour nothing read — that key is gone

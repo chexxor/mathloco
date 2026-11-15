@@ -11,8 +11,10 @@
  *     a screen reader hears it once, as a sentence. A leaf that is read out is a date read twice.
  *   - `bg-tint` is a **fill, not a boundary** (D149-3c: one edge per component). The card and the row each
  *     carry the section's only keyline for that date; a keylined leaf inside a keylined card is two
- *     boundaries in one object, and `check:render` measures both sides of every ring — a `--color-rule` ring
- *     inside a `tint` reads 2.74, under the 3.0 graphic bar (design/records/0018). So the leaf gets its block
+ *     boundaries in one object, and `check:render` measures both sides of every ring. Before D316 a `--color-rule`
+ *     ring inside a `tint` read 2.74, under the 3.0 graphic bar (design/records/0018); the re-solved rule measures
+ *     3.10 there @measured 2026-11-14 by `npm run check:contrast`, so the number no longer decides this — the
+ *     two-boundaries-in-one-object rule does. So the leaf gets its block
  *     by colour and the card gets it by hairline.
  *   - `tabular-nums` on the numeral, so "7" and "21" hold the same width and a column of leaves lines up.
  *   - Three lines, not one: the month names the block, the numeral is what you scan for, the weekday is the

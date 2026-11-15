@@ -21,7 +21,7 @@
  *
  * They are drawn in `currentColor`, never in a brand colour: DESIGN.md's role rule (D82/D88 — no off-palette
  * colour painted on the site) does not care who owns the logo, and a brand-blue Discord glyph next to an
- * ink label is a colour the palette has no token for. `currentColor` also makes the mark turn gold on hover
+ * ink label is a colour the palette has no token for. `currentColor` also makes the mark turn accent on hover
  * with the label, for free.
  *
  * The ids are `pm-` + the lower-cased platform name (`pm-meetup`), and `markId()` is the only place that

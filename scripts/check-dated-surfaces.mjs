@@ -55,6 +55,14 @@ const DATE_HANDLE = /data-date="\d{4}-\d{2}-\d{2}"/;
 /** The nav's subordinate date chip (D311). Its text is chrome, so it is stripped before the prose scan and
  *  audited separately against the page of record. */
 const NAV_CHIP = /<span[^>]*data-nav-date="(\d{4}-\d{2}-\d{2})"[^>]*>[\s\S]*?<\/span>/g;
+/** The anchor the chip sits in (D311, and the 2026-11-14 read §2/§5.2). The chip's visible text is the short
+ *  form — "21 Nov" — because the measured 320px floor cannot hold the weekday (D311: `Sat 21 Nov` needs 286px
+ *  of 276). The weekday has to be in the accessible name, which costs no pixels, or the screen-reader user gets
+ *  a bare number with no sentence around it. */
+const NAV_ANCHOR = /<a\b([^>]*)>([\s\S]*?)<\/a>/g;
+const WEEKDAY = /\b(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday)\b/i;
+const MONTH_DAY = /\b(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\.?\s+\d{1,2}\b/i;
+const attrOf = (attrs, name) => new RegExp(`\\b${name}="([^"]*)"`).exec(attrs)?.[1] ?? '';
 
 export const visibleText = (html) =>
   html
@@ -107,6 +115,17 @@ export const datedSurfaceFindings = (pages, ruled = RULED) => {
         rule: 'nav-date-unhandled',
         detail: `${route}'s nav prints a date whose element carries no ISO handle, so no gate can compare it with the schedule page. Give the chip data-nav-date="YYYY-MM-DD".`,
       });
+    }
+    // The chip's accessible name (S041/S040 chrome rule): a sentence, not a bare label or a bare number.
+    for (const a of html.matchAll(NAV_ANCHOR)) {
+      if (!/data-nav-date="\d{4}-\d{2}-\d{2}"/.test(a[2])) continue;
+      const label = attrOf(a[1], 'aria-label');
+      if (!label || !WEEKDAY.test(label) || !MONTH_DAY.test(label)) {
+        fails.push({
+          rule: 'nav-chip-name-thin',
+          detail: `${route}'s nav chip carries a date but its accessible name is ${label ? `"${label}"` : 'nothing'} — the visible chip is the short form (D311), so the weekday and the month-and-day have to be in the aria-label, e.g. "Dates, next meeting Saturday, Nov 21".`,
+        });
+      }
     }
     const text = visibleText(chromeStripped);
     const m = DATE_TEXT.exec(text);
@@ -163,13 +182,16 @@ if (selftest) {
     { name: 'clean control: an age is not a date', pages: [{ route: '/schedule', html: schedule }, { route: '/', html: page('<p>last read 11 days ago</p>') }], want: [] },
     { name: 'clean control: a date inside an HTML comment is not painted', pages: [{ route: '/schedule', html: schedule }, { route: '/join', html: page('<!-- measured Nov 21 --><p>Ways in</p>') }], want: [] },
     // D311: the nav chip is chrome, and its whole legitimacy is that it copies the page of record.
-    { name: 'clean control: the nav chip repeats the page of record\u2019s first date', pages: [{ route: '/', html: page('<header><a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a></header>') }, { route: '/schedule', html: schedule }], want: [] },
-    { name: 'the nav chip disagrees with the schedule page', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-12-05">5 Dec</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-mismatch'] },
+    { name: 'clean control: the nav chip repeats the page of record\u2019s first date', pages: [{ route: '/', html: page('<header><a href="/schedule" aria-label="Dates, next meeting Saturday, Nov 21">Dates <span data-nav-date="2026-11-21">21 Nov</span></a></header>') }, { route: '/schedule', html: schedule }], want: [] },
+    { name: 'the nav chip disagrees with the schedule page', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates, next meeting Saturday, Dec 5">Dates <span data-nav-date="2026-12-05">5 Dec</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-mismatch'] },
+    { name: 'a nav chip whose accessible name is the bare label', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-chip-name-thin'] },
+    { name: 'a nav chip with no accessible name of its own', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-chip-name-thin'] },
+    { name: 'a nav chip whose name has the day but not the weekday', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates, next meeting Nov 21">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: schedule }], want: ['nav-chip-name-thin'] },
     { name: 'a nav date written as bare prose with no chip element', pages: [{ route: '/', html: page('<a href="/schedule">Dates 21 Nov</a>') }, { route: '/schedule', html: schedule }], want: ['dated-surface-unruled'] },
     // The chip's element must be the one the gate can read: an attribute on the wrong element carries the date
     // without the handle, so no gate can compare it with the schedule page (D311).
-    { name: 'a nav date whose element has the attribute but is not the chip shape', pages: [{ route: '/', html: page('<a href="/schedule">Dates <div data-nav-date="2026-11-21" class="chip">the next one</div></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-unhandled'] },
-    { name: 'a nav chip while the calendar is empty', pages: [{ route: '/', html: page('<a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: page('<p>No date is on the calendar yet.</p>') }], want: ['nav-date-with-no-dates'] },
+    { name: 'a nav date whose element has the attribute but is not the chip shape', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates, next meeting Saturday, Nov 21">Dates <div data-nav-date="2026-11-21" class="chip">the next one</div></a>') }, { route: '/schedule', html: schedule }], want: ['nav-date-unhandled'] },
+    { name: 'a nav chip while the calendar is empty', pages: [{ route: '/', html: page('<a href="/schedule" aria-label="Dates, next meeting Saturday, Nov 21">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>') }, { route: '/schedule', html: page('<p>No date is on the calendar yet.</p>') }], want: ['nav-date-with-no-dates'] },
   ];
   let bad = 0;
   for (const c of cases) {

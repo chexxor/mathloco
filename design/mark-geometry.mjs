@@ -22,7 +22,7 @@
 //   1. the GEOMETRY TABLE (src/lib/brand-mark.mjs, or `--table path` to test another reading of the mark —
 //      which is how the control run proves this probe can fail: point it at the pre-fix table from git);
 //   2. the PAINTED PIXELS inside the mark's box in a screenshot of the built page, split into the three roles
-//      by colour cluster (dark = routes, warm = gold accents/pole, light = surface and equator) the way
+//      by colour cluster (dark = routes, warm = accent marks/pole, light = surface and equator) the way
 //      scripts/check-social-card.mjs and mark-pixels.mjs cluster.
 // A table that says parallel and a page that paints converging lines is exactly the drift this repo keeps
 // finding, so a mismatch is a failure, not a note.
@@ -32,6 +32,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
+import { oklchFromRgb, oklchToRgb } from './grill/okcolor.mjs';   // the repo's one OKLab implementation (D101)
 
 const argv = process.argv.slice(2);
 process.stdout.on('error', () => process.exit(0));      // this report gets piped into `head`; a closed pipe is not a crash
@@ -149,7 +150,7 @@ const x0 = Math.max(0, Math.round(m.x)), x1 = Math.min(width - 1, Math.round(m.x
 const y0 = Math.max(0, Math.round(m.y)), y1 = Math.min(height - 1, Math.round(m.y + m.h));
 
 // cluster the ink the way the card verifier does, then pick three ANCHORS by what they are: the highest-contrast
-// cluster is the route ink, the warmest is the gold, the lightest that still has real contrast is the surface
+// cluster is the route ink, the warmest is the accent, the lightest that still has real contrast is the surface
 // line. Anti-aliasing means most pixels are blends, so pixels are classified by nearest anchor, not by cluster
 // identity — the first version of this probe compared cluster identity and found zero crossings.
 const inks = [];
@@ -157,7 +158,7 @@ for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const c = at(x, 
 const clusters = [];
 for (const [, , c] of inks) {
   const hit = clusters.find((cl) => dist3(cl.c, c) < 40);
-  if (hit) { hit.n++; hit.sum = hit.sum.map((v, i) => v + c[i]); hit.c = hit.sum.map((v, i) => v / hit.n); } else clusters.push({ c: [...c], sum: [...c], n: 1 });
+  if (hit) { hit.n++; hit.sum = hit.sum.map((v, i) => v + c[i]); hit.c = hit.sum.map((v) => v / hit.n); } else clusters.push({ c: [...c], sum: [...c], n: 1 });
 }
 clusters.sort((a, b) => b.n - a.n);
 
@@ -168,31 +169,67 @@ clusters.sort((a, b) => b.n - a.n);
 // cluster identity found no crossings at phone width (a 1.6px stroke is mostly anti-aliased blends), and a
 // luminance cut read the SURFACE stroke as route ink, because a pair of 3.01 is luminance 0.28 — the ring IS
 // dark-ish. The fix is not a better guess, it is to take the numbers the page reports.
+//
+// THE WARM TEST USED TO BE `R - B >= 25`, and the 2026-11-14 palette broke it (D316): `rule` is now
+// oklch(60% 0.04 86.6), a warm tan whose every painted pixel measures R-B 38, so the RING was classified as the
+// accent and the pole check had no ring to measure it against (@measured 2026-11-14 by this probe, 320px run:
+// ring column ink 164,154,132 = R-B 32). The report carries each shape's paint as an oklch() triple, so the two
+// hues that matter are read off the page too, and the cut is the midpoint between them. Hue survives blending:
+// accent at 30% of paper is still H 45.0, rule at 50% is still H 86.9 (node design/grill/okcolor.mjs).
 const rp = m.shapes || [];
-const roleOfShape = (s) => (s.role === 'route' ? 'route' : s.role === 'accent' ? 'gold' : 'line');
-const refs = { line: [], route: [], gold: [] };
+const roleOfShape = (s) => (s.role === 'route' ? 'route' : s.role === 'accent' ? 'accent' : 'line');
+const refs = { line: [], route: [], accent: [] };
+const paint = { line: null, route: null, accent: null };         // the exact bytes each role paints, from the report
+const paintBytes = (spec) => {
+  const n = String(spec || '').match(/-?\d+(\.\d+)?/g);
+  if (!n || n.length < 3) return null;
+  const L = Number(n[0]) > 1 ? Number(n[0]) / 100 : Number(n[0]);   // the report writes 0.6, the token writes 60%
+  return oklchToRgb(L, Number(n[1]), Number(n[2])).bytes;
+};
 if (rp.length === MARK.shapes.length + 1) {
-  MARK.shapes.forEach((s, i) => { const k = rp[i].strokeContrast ?? rp[i].fillContrast; if (k) refs[roleOfShape(s)].push(k); });
-  const dk = rp[MARK.shapes.length].fillContrast ?? rp[MARK.shapes.length].strokeContrast;
-  if (dk) refs.gold.push(dk);
+  MARK.shapes.forEach((s, i) => {
+    const role = roleOfShape(s);
+    const k = rp[i].strokeContrast ?? rp[i].fillContrast;
+    if (k) refs[role].push(k);
+    const spec = rp[i].stroke && rp[i].stroke !== 'none' ? rp[i].stroke : rp[i].fill;
+    const b = paintBytes(spec);
+    if (b && !paint[role]) paint[role] = b;
+  });
+  const dot = rp[MARK.shapes.length];                             // the pole dot is not in the table; it is painted
+  const dk = dot.fillContrast ?? dot.strokeContrast;
+  if (dk) refs.accent.push(dk);
+  const db = paintBytes(dot.fill && dot.fill !== 'none' ? dot.fill : dot.stroke);
+  if (db && !paint.accent) paint.accent = db;
 }
 const medOf = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[s.length >> 1] : null; };
-const kLine = medOf(refs.line), kRoute = medOf(refs.route), kGold = medOf(refs.gold);
+const kLine = medOf(refs.line), kRoute = medOf(refs.route), kAccent = medOf(refs.accent);
 if (!kLine || !kRoute) {
   console.error(`${jsonFile} reports ${rp.length} shape(s) against a table of ${MARK.shapes.length} — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles`);
   process.exit(1);
 }
-const warmCut = 25;                                    // R-B: the gold family is the only warm paint in the mark
+const ang = (a, b) => { const d = Math.abs(((a - b) % 360 + 360) % 360); return d > 180 ? 360 - d : d; };
+const pol = (c) => oklchFromRgb(c[0], c[1], c[2]);
+if (!paint.line || !paint.accent) {
+  console.error(`${jsonFile} reports no paint for the surface line (${paint.line}) or the accent (${paint.accent}) — the figure cannot be split into its roles, so a hue cut would be a guess`);
+  process.exit(1);
+}
+const hLine = pol(paint.line).h, hAccent = pol(paint.accent).h;
+if (ang(hLine, hAccent) < 20) {
+  console.error(`the surface line (${paint.line.join(',')} H ${hLine.toFixed(1)}) and the accent (${paint.accent.join(',')} H ${hAccent.toFixed(1)}) are ${ang(hLine, hAccent).toFixed(1)} degrees apart — the mark's roles cannot be told apart by hue, so this probe cannot tell the ring from the pole. Two roles that paint the same colour are the same role.`);
+  process.exit(1);
+}
+const chromaCut = 0.5 * Math.min(pol(paint.line).C, pol(paint.accent).C);   // below this a pixel is paper, not paint
 const neutralCut = Math.sqrt(kLine * kRoute);           // midpoint in log space between surface pair and route pair
 const roleAt = (c) => {
   const k = contrast(c, ground);
   if (k < 1.4) return null;
-  if (c[0] - c[2] >= warmCut) return 'gold';
+  const p = pol(c);
+  if (p.C >= chromaCut && ang(p.h, hAccent) < ang(p.h, hLine)) return 'accent';   // the accent is the only warm paint
   return k < neutralCut ? 'line' : 'route';
 };
 // what each role actually painted (median of its own pixels) — for the header line, so a reader can see the
 // calibration is the page's, and spot a role with almost no pixels in it
-const seen = { line: [], route: [], gold: [] };
+const seen = { line: [], route: [], accent: [] };
 for (const [, , c] of inks) { const r = roleAt(c); if (r) seen[r].push(c); }
 const anchor = (role, ref) => {
   const a = seen[role];
@@ -232,7 +269,7 @@ const uy = (py) => (py - m.y) / scale;
 
 if (!inks.length) { console.error('no ink in the measured box — the shot does not contain the mark (see mark-pixels.mjs header for the window-height trap)'); process.exit(1); }
 console.log(`mark "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${scale}) in a ${width}x${height} shot; ${inks.length} ink pixels, ${clusters.length} colour clusters`);
-console.log(`  role calibration, from the page's own per-shape numbers: ${anchor('line', kLine)} | ${anchor('route', kRoute)} | ${anchor('gold', kGold)}; neutral cut at pair ${neutralCut.toFixed(2)}, warm cut at R-B ${warmCut}`);
+console.log(`  role calibration, from the page's own per-shape numbers: ${anchor('line', kLine)} | ${anchor('route', kRoute)} | ${anchor('accent', kAccent)}; neutral cut at pair ${neutralCut.toFixed(2)}, hue cut at ${((hLine + hAccent) / 2).toFixed(1)}deg (surface ${hLine.toFixed(1)}, accent ${hAccent.toFixed(1)}, chroma floor ${chromaCut.toFixed(3)})`);
 
 // 1. the surface reads as CURVED: down the figure's vertical centre line, the surface-colour ink must cross twice
 // INSIDE the ring, at roughly equal distances above and below the centre — that pair of bows is the ellipse, and
@@ -307,26 +344,26 @@ if (sphere) {
   const s = probe.map((p) => p.sep).filter((x) => x !== null);
   const collapsing = s.length >= 2 && s.every((v, i) => i === 0 || v < s[i - 1]);
   check('the two lines converge to one crossing', collapsing, probe.map((p) => `y ${p.vy}: ${p.n} crossing(s), separation ${p.sep === null ? '-' : p.sep.toFixed(1)}`).join(' | '));
-  // 4. the pole: the gold blob sits at the ring's radius from the ring's centre, measured, not asserted.
+  // 4. the pole: the accent dot sits at the ring's radius from the ring's centre, measured, not asserted.
   // The ring's horizontal extent AT its own centre height gives centre and radius; the vertical radius comes from
   // the TOP rim, because the bottom rim is where the pole dot is drawn — measuring the bottom rim would measure
   // the dot twice and let "is the pole on the surface" pass by construction.
   const ringRow = runs(sphere.cy, 'line');
   const down2 = runsAtX(sphere.cx, 'line').map((r) => uy(r.cy));
   const top = down2.filter((y) => Math.abs((sphere.cy - y) - sphere.r) <= 0.25 * sphere.r);
-  const goldRuns = [];
-  for (let vy = sphere.cy + sphere.r - 6; vy <= sphere.cy + sphere.r + 6; vy += 1) goldRuns.push(...runs(vy, 'gold').map((r) => ({ cx: ux(r.cx), cy: vy })));
-  if (ringRow.length >= 2 && top.length && goldRuns.length) {
+  const accentRuns = [];
+  for (let vy = sphere.cy + sphere.r - 6; vy <= sphere.cy + sphere.r + 6; vy += 1) accentRuns.push(...runs(vy, 'accent').map((r) => ({ cx: ux(r.cx), cy: vy })));
+  if (ringRow.length >= 2 && top.length && accentRuns.length) {
     const cxU = ux((ringRow[0].x0 + ringRow[ringRow.length - 1].x1) / 2);
     const rU = toUnits((ringRow[ringRow.length - 1].x1 - ringRow[0].x0) / 2);
     const cyU = sphere.cy;                            // the row the ring was measured across IS its centre height
     const rV = cyU - Math.min(...top);
-    const gx = goldRuns.reduce((a, b) => a + b.cx, 0) / goldRuns.length;
-    const gyy = goldRuns.reduce((a, b) => a + b.cy, 0) / goldRuns.length;
+    const gx = accentRuns.reduce((a, b) => a + b.cx, 0) / accentRuns.length;
+    const gyy = accentRuns.reduce((a, b) => a + b.cy, 0) / accentRuns.length;
     const d = Math.hypot(gx - cxU, gyy - cyU);
     check('the ring is drawn round', Math.abs(rU - rV) <= 1.5, `measured radius ${rU.toFixed(1)} units across, ${rV.toFixed(1)} up to the top rim — a squashed ring reads as a disc in perspective, not a sphere`);
-    check('the pole sits on the surface', Math.abs(gx - cxU) <= 3 && Math.abs(d - rU) <= 3, `painted ring: centre ${cxU.toFixed(1)},${cyU.toFixed(1)}, radius ${rU.toFixed(1)}; the gold at the bottom centres at ${gx.toFixed(1)},${gyy.toFixed(1)} — ${d.toFixed(1)} units from the centre, ${Math.abs(d - rU) <= 3 ? 'on the surface' : `${(rU - d).toFixed(1)} units inside it, which reads as a point in space rather than a meeting on the surface`}`);
-  } else check('the pole sits on the surface', false, `ring crossings: ${ringRow.length} across, ${top.length} top rim; gold pixels near the pole: ${goldRuns.length} — cannot measure where the lines meet`);
+    check('the pole sits on the surface', Math.abs(gx - cxU) <= 3 && Math.abs(d - rU) <= 3, `painted ring: centre ${cxU.toFixed(1)},${cyU.toFixed(1)}, radius ${rU.toFixed(1)}; the accent dot at the bottom centres at ${gx.toFixed(1)},${gyy.toFixed(1)} — ${d.toFixed(1)} units from the centre, ${Math.abs(d - rU) <= 3 ? 'on the surface' : `${(rU - d).toFixed(1)} units inside it, which reads as a point in space rather than a meeting on the surface`}`);
+  } else check('the pole sits on the surface', false, `ring crossings: ${ringRow.length} across, ${top.length} top rim; accent pixels near the pole: ${accentRuns.length} — cannot measure where the lines meet`);
 }
 
 // ---------- report ----------
@@ -335,7 +372,7 @@ if (JSONOUT) console.log(JSON.stringify({
   mark: m.name, box: { x: m.x, y: m.y, w: m.w, h: m.h, scale },
   table: tablePath.replace(process.cwd() + '/', ''),
   checks: rows.map(([ok, name, detail]) => ({ ok, name, detail })),
-  roles: { surfacePair: kLine, routePair: kRoute, goldPair: kGold, neutralCut: +neutralCut.toFixed(2), pixelCounts: { line: seen.line.length, route: seen.route.length, gold: seen.gold.length } },
+  roles: { surfacePair: kLine, routePair: kRoute, accentPair: kAccent, neutralCut: +neutralCut.toFixed(2), hueCut: +(((hLine + hAccent) / 2)).toFixed(1), surfaceHue: +hLine.toFixed(1), accentHue: +hAccent.toFixed(1), pixelCounts: { line: seen.line.length, route: seen.route.length, accent: seen.accent.length } },
 }));
 if (fails.length) { console.error(`MARK GEOMETRY: ${fails.length} failure(s)\n  ${fails.join('\n  ')}`); process.exit(1); }
 console.log('MARK GEOMETRY: PASS — two lines that start parallel, cross at the pole, and the pole is on the surface');

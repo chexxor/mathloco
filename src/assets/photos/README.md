@@ -146,3 +146,19 @@ Rules that come with a shot (all ruled, see `design/records/0013`):
   `height` attribute inert, and an undeclared ratio reflows the document on decode — measured here as a
   112px jump.
 - Every photo gets an `alt` in the club's own words. Never assert something the frame does not support.
+
+## The one drawing this site owns is not a file in this directory
+
+The only image on the site that is not a scan or a mirror is the line figure under the thread list on `/chat`
+(the read §6.6, **D323**, **S042**): nine hairline paths, inline, in `src/components/ThreadFigure.astro`, keyed
+`data-line-art="undoable-steps"`. It has no bytes here because it has no file — the drawing is emitted by the
+component, which is why `npm run check:line-art` measures the figure's bytes **in the built page** rather than a
+committed asset: **622 bytes, 9 strokes**, against a ruled cap of 1200 bytes and a 12-word label
+@measured 2026-11-14 by `node scripts/check-line-art.mjs`.
+
+Two rules decide where it lives rather than what it looks like. D92 says a picture needs provenance that can be
+quoted, and an original drawing has no upstream page to quote — so its provenance is its `<figcaption>` ("drawn
+for this site in the plates' line language ... Not a scan of a book") and this paragraph, and it is deliberately
+undated: `check:dated-surfaces` rules `/schedule` the only page that prints a date (D218), and a date under a
+figure on `/chat` reads to a visitor as a meeting date (D325). And `design/ratify-check.mjs` fails an import from
+outside this directory, so a drawing that is not a photograph must not pretend to be one.

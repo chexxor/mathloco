@@ -169,19 +169,22 @@ export function hueWindows(reserved, minGap = 40) {
 if (import.meta.main && process.argv.includes('--selftest')) {
   const css = (await import('node:fs')).readFileSync(new URL('../../src/styles/global.css', import.meta.url), 'utf8');
   const tok = (name) => { const m = new RegExp(`--color-${name}:\\s*([^;/]+);`).exec(css); if (!m) throw new Error(`no --color-${name}`); return parseOklch(m[1].trim()); };
-  const P = tok('paper'), I = tok('ink'), R = tok('rule'), G = tok('gold'), GI = tok('gold-on-ink'), BT = tok('band-text');
+  const P = tok('paper'), I = tok('ink'), R = tok('rule'), A = tok('accent'), AI = tok('accent-on-ink'), BT = tok('band-text');
   const PD = tok('path-discord'), PDO = tok('path-discord-on-ink');
   const rows = [
-    // [what, measured-here, expected (the value DESIGN.md / D116 / D88 quote), tolerance]
-    ['ink on paper', contrastTriple(I, P), 12.02, 0.15],
-    ['rule on paper', contrastTriple(R, P), 3.01, 0.06],
-    ['gold on paper', contrastTriple(G, P), 4.82, 0.06],
-    ['gold-on-ink on ink', contrastTriple(GI, I), 5.80, 0.15],
-    ['band-text on ink', contrastTriple(BT, I), 10.19, 0.15],
-    ['path-discord-on-ink on ink', contrastTriple(PDO, I), 4.59, 0.15],
-    ['gold distance to Target red (D88: 0.135)', dist(G, '#CC0000'), 0.135, 0.005],
-    ['ink distance to Amazon navy (round 7: 0.063)', dist(I, '#232F3E'), 0.063, 0.005],
-    ['gold to path-discord hue gap (round 3b)', hueGap(G, PD), 27, 1],
+    // [what, measured-here, expected (the value DESIGN.md / D116 / D88 / D316 quote), tolerance]
+    // Every number below is the one the 2026-11-14 palette round (D316) shipped: the read's hexes mapped
+    // onto the role names, re-solved where a role's own bar disagreed. `npm run check:contrast` re-derives
+    // the same pairs from the same file, so a nudge to a token goes red in two places, not one.
+    ['ink on paper', contrastTriple(I, P), 17.15, 0.15],
+    ['rule on paper', contrastTriple(R, P), 3.66, 0.06],
+    ['accent on paper', contrastTriple(A, P), 5.77, 0.06],
+    ['accent-on-ink on ink', contrastTriple(AI, I), 5.69, 0.15],
+    ['band-text on ink', contrastTriple(BT, I), 16.43, 0.15],
+    ['path-discord-on-ink on ink', contrastTriple(PDO, I), 5.41, 0.15],
+    ['accent distance to Target red (D88 bar 0.135; D316 ships 0.091, escalated)', dist(A, '#CC0000'), 0.091, 0.005],
+    ['ink distance to Amazon ink (round 7 was 0.063 to Amazon navy; the new ink is 0.046 from Amazon ink)', dist(I, '#141A24'), 0.046, 0.005],
+    ['accent to path-discord hue gap (round 3b, re-homed in D316)', hueGap(A, PD), 134, 1],
     // the pixel-side helper must be the same metric as the token-side one, or a census and a contrast table
     // are measuring different things while both calling it 0.05
     // The tolerance is wider than the others on purpose: a rendered sRGB byte pair is not the authored

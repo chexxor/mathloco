@@ -4,11 +4,12 @@
  *
  *   npm run harvest:selftest
  *
- * `scripts/events-harvest.mjs` has four rules that a reader cannot see firing in a diff: it refuses to
+ * `scripts/events-harvest.mjs` has five rules that a reader cannot see firing in a diff: it refuses to
  * un-cancel a published cancellation (rule 4, D299), it reuses a venue split only when the raw string is
  * byte-identical (rule 2, D92), it treats a TZID on both ends as the source declaring the hour (rule 1,
- * D298), and it never deletes a row that dropped out of the feed (rule 3, D72). A rule nobody plants is a
- * rule nobody knows works — the same reasoning as every `check:*:selftest` in this repo (D290). Two cases
+ * D298), it never deletes a row that dropped out of the feed (rule 3, D72), and it logs every row the
+ * grouping supersedes instead of publishing it (rule 5, D318). A rule nobody plants is a rule nobody knows
+ * works — the same reasoning as every `check:*:selftest` in this repo (D290). Two cases
  * cover the one thing a created row cannot get right by itself: its page name (`series`) is a hand field, so
  * the run has to say when the title it copied carries a frequency word the page may not print (D301).
  *
@@ -97,10 +98,12 @@ const matchingFeed = () => [
   vevent('past-01', 'Study Night', ['20261101T180000', CHICAGO], ['20261101T200000', CHICAGO], ANGEL, 'CONFIRMED'),
 ];
 
-const run = (events, args = []) => {
+const run = (events, args = [], extra = []) => {
   const snapPath = resolve(SCRATCH, 'snapshot.json');
   const feedPath = resolve(SCRATCH, 'feed.ics');
-  writeFileSync(snapPath, `${JSON.stringify(snapshot(), null, 2)}\n`);
+  const base = snapshot();
+  base.events.push(...extra);
+  writeFileSync(snapPath, `${JSON.stringify(base, null, 2)}\n`);
   writeFileSync(feedPath, feed(events));
   const r = spawnSync(process.execPath, [HARVESTER, '--from', feedPath, '--out', snapPath, '--write', ...args], { encoding: 'utf8' });
   if (r.status !== 0) throw new Error(`harvester exited ${r.status}: ${r.stderr || r.stdout}`);
@@ -271,6 +274,52 @@ const cases = [
     ].filter(Boolean),
   },
   {
+    name: 'a-cancelled-twin-of-a-live-row-is-superseded-not-published',
+    events: [
+      ...matchingFeed(),
+      // The Nov 21 shape the live instance actually held on 2026-11-13: same date, same venue string, the
+      // organizer's other name for the same series, one hour longer, CANCELLED (D318).
+      vevent('ghost-21', 'MPLS Math Club - Bimonthly Social', ['20261121T120000', CHICAGO], ['20261121T140000', CHICAGO], ANGEL, 'CANCELLED'),
+    ],
+    check: (o) => {
+      const log = o.snap.superseded ?? [];
+      return [
+        count(o.snap) === 5 ? null : `the merge changed the row count to ${count(o.snap)} (rule 3: nothing is deleted)`,
+        has(o.out, 'superseded ghost-21') ? null : 'the run never named the UID it is superseding (D318: every dropped UID is logged)',
+        log.length === 1 ? null : `superseded holds ${log.length} entries, expected 1`,
+        log[0]?.uid === 'ghost-21' ? null : `the log names ${log[0]?.uid} instead of ghost-21`,
+        log[0]?.kept?.includes('live-21') ? null : `the log does not say which row won (kept: ${JSON.stringify(log[0]?.kept)})`,
+        has(o.out, '4 publishable (1 superseded)') ? null : 'the summary line does not report how many rows are publishable and how many were superseded',
+      ].filter(Boolean);
+    },
+  },
+  {
+    name: 'a-group-of-only-cancellations-publishes-the-highest-sequence',
+    events: [vevent('live-21', 'MPLS Math Club Social', ['20261121T120000', CHICAGO], ['20261121T130000', CHICAGO], ANGEL, 'CONFIRMED')],
+    extra: [
+      row('cancel-low', '2026-11-14-math-circle-cancelled-low', 'Math Circle', '2026-11-14T18:00', '2026-11-14T20:00', 'CANCELLED', KOWALSKI, { sequence: 1 }),
+      row('cancel-high', '2026-11-14-math-circle-cancelled-high', 'Math Circle', '2026-11-14T18:00', '2026-11-14T20:00', 'CANCELLED', KOWALSKI, { sequence: 4 }),
+    ],
+    check: (o) => {
+      const log = o.snap.superseded ?? [];
+      const dropped = log.map((d) => d.uid);
+      return [
+        dropped.includes('cancel-low') ? null : 'the lower-SEQUENCE cancellation was left publishable (D318: UID+SEQUENCE is the current announcement)',
+        dropped.includes('cancelled-14') ? null : 'the middle-SEQUENCE cancellation was left publishable',
+        dropped.includes('cancel-high') ? 'the highest SEQUENCE was dropped — that is the row a subscriber should keep' : null,
+        has(o.out, 'only cancellations') ? null : 'the run did not say why it kept one cancellation out of three',
+      ].filter(Boolean);
+    },
+  },
+  {
+    name: 'clean-control: nothing is superseded when every row is its own meeting',
+    events: matchingFeed(),
+    check: (o) => [
+      (o.snap.superseded ?? []).length === 0 ? null : `the control superseded ${(o.snap.superseded ?? []).length} row(s) (D318: grouping is a decision, not a default)`,
+      has(o.out, '0 superseded') ? null : 'the run did not report zero supersessions for a feed with no duplicates',
+    ].filter(Boolean),
+  },
+  {
     name: 'a-VEVENT-with-no-UID-is-skipped',
     events: ['BEGIN:VEVENT', 'SUMMARY:Orphan', 'DTSTART;TZID=America/Chicago:20261212T120000', `LOCATION:${ANGEL}`, 'END:VEVENT'],
     check: (o) => [
@@ -320,7 +369,7 @@ const started = Date.now();
 for (const c of cases) {
   let o;
   try {
-    o = run(c.events, c.args ?? []);
+    o = run(c.events, c.args ?? [], c.extra ?? []);
   } catch (err) {
     console.log(`FAIL ${c.name}: the harvester could not run (${err.message})`);
     failed += 1;

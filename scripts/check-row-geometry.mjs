@@ -19,6 +19,12 @@
 //   row-prose-uncapped          prose paragraphs sit in the copy lane with no `max-w-measure` wrapper
 //   row-date-out-of-head        the date sentence is not inside the head, or comes after the title (the row then
 //                               shows the date twice with the title between, which is the stack the read flagged)
+//   row-date-not-time           the date sentence is loose text rather than `<time datetime="…">`, so no tool
+//                               (a screen reader, a calendar importer, the next gate) can read the date as a date
+//   row-date-time-disagrees     the `<time datetime>` value is not the row's own `data-date` handle (D173: a
+//                               handle is part of the interface, so two copies of one date must agree)
+//   zone-not-stated / zone-not-on-first-row / zone-repeated  the page of record names its zone once, on the
+//                               first row it prints (D327, the second read §5.1)
 //   row-zone-order              leaf, copy, plate — the order `design/schedule-geometry.mjs` measures against
 //   measure-token-missing       the emitted CSS has no `--container-measure`, so `max-w-measure` resolves to nothing
 //   measure-out-of-band         the cap, converted to characters with the measured 0.455 em/character advance of
@@ -45,10 +51,13 @@ const DIST = (() => {
 const EM_PER_CHAR = 0.455;
 const BAND = [40, 75]; // DESIGN.md: the reading band prose is kept inside.
 
-const ROW = /<li\b[^>]*data-surface="row"[^>]*>([\s\S]*?)<\/li>/g;
+const ROW = /<li\b[^>]*data-surface="row"[\s\S]*?<\/li>/g;
 const HEAD = /<div data-head>([\s\S]*?)<\/div>/;
 const PROSE = /<div data-copy-prose([^>]*)>([\s\S]*?)<\/div>/;
 const DATE_SENTENCE = /<span class="text-label text-ink-3">/;
+const TIME_EL = /<time\b[^>]*datetime="(\d{4}-\d{2}-\d{2})"/;
+const DATA_DATE = /data-date="(\d{4}-\d{2}-\d{2})"/;
+const ZONE_WORD = /\bCentral\b/;
 const PLATE = 'data-slot="PS-4"';
 const LEAF = 'data-leaf';
 const MEASURE_TOKEN = /--container-measure:\s*([0-9.]+)(em|px)/g;
@@ -81,11 +90,28 @@ export const rowFindings = (rows, css) => {
       // commissioned read flagged: the date painted, then the title, then the date again in prose.
       const headBody = head[1];
       const dateIdx = headBody.search(DATE_SENTENCE);
-      const titleIdx = headBody.indexOf('<h3');
+      // h2 since S040 (the row title is a direct child of the page's h1, so an h3 skipped a level). Matching
+      // both levels is deliberate: a gate pinned to `<h3` stops testing the day the level changes, which is
+      // the "planting that quietly stopped testing anything" trap (D268).
+      const titleIdx = headBody.search(/<h[23]\b/);
       if (dateIdx === -1 || (titleIdx !== -1 && dateIdx > titleIdx)) {
         fails.push({
           rule: 'row-date-out-of-head',
-          detail: `row ${i + 1} puts the date sentence outside the head or after the title, so a stacked visitor meets the date twice with the title between (D313). The sentence belongs in data-head, above the h3.`,
+          detail: `row ${i + 1} puts the date sentence outside the head or after the title, so a stacked visitor meets the date twice with the title between (D313). The sentence belongs in data-head, above the heading.`,
+        });
+      }
+      // The date has to be a date, not just words that look like one (D327, the second read §5.1).
+      const timeMatch = TIME_EL.exec(row);
+      const dataDate = DATA_DATE.exec(row.slice(0, row.indexOf('>') + 1));
+      if (!timeMatch) {
+        fails.push({
+          rule: 'row-date-not-time',
+          detail: `row ${i + 1} paints its date as loose text: no <time datetime="YYYY-MM-DD"> wraps the sentence. A screen reader hears a string, a calendar importer sees nothing, and the row's own data-date handle is the only machine-readable copy (D327, D173).`,
+        });
+      } else if (dataDate && timeMatch[1] !== dataDate[1]) {
+        fails.push({
+          rule: 'row-date-time-disagrees',
+          detail: `row ${i + 1} says data-date="${dataDate[1]}" but the <time> element says "${timeMatch[1]}". Two copies of one date that disagree is the same defect class as a nav chip disagreeing with the schedule (D311).`,
         });
       }
     }
@@ -120,46 +146,111 @@ export const rowFindings = (rows, css) => {
   return fails;
 };
 
+/** Zone naming is a property of a PAGE, not of a row: the read §5.1 asks for the zone once, on the first time
+ * the page shows. Rows are grouped by page so the rule counts in page order. */
+export const zoneFindings = (pages) => {
+  const out = [];
+  for (const page of pages) {
+    const rows = page.rows.filter((r) => DATE_SENTENCE.test(r));
+    if (!rows.length) continue;
+    const hits = rows.map((r) => ZONE_WORD.test(r)).map((h, i) => (h ? i : -1)).filter((i) => i >= 0);
+    if (hits.length === 0) {
+      out.push({
+        rule: 'zone-not-stated',
+        detail: `${page.route} prints ${rows.length} time(s) and names no zone. Every row carries DTSTART;TZID=America/Chicago, so "12:00 – 1:00" is a fact a visitor in another zone cannot place on a clock (D327).`,
+      });
+    } else if (hits.length === 1 && hits[0] === 0) {
+      // exactly the shipped shape: one word, on the first row.
+    } else if (hits.length === 1) {
+      out.push({
+        rule: 'zone-not-on-first-row',
+        detail: `${page.route} names the zone on row ${hits[0] + 1}, not the first row the visitor meets (D327).`,
+      });
+    } else {
+      out.push({
+        rule: 'zone-repeated',
+        detail: `${page.route} names the zone on ${hits.length} rows (rows ${hits.map((h) => h + 1).join(', ')}). The ruling is once per page; five rows repeating one word is the noise the read §5.1 was objecting to (D327).`,
+      });
+    }
+  }
+  return out;
+};
+
 if (selftest) {
-  const row = (inner) => `<li class="rounded-card px-4 flex flex-col" data-surface="row" data-date="2026-11-21">${inner}</li>`;
+  const row = (inner, date = '2026-11-21') => `<li class="rounded-card px-4 flex flex-col" data-surface="row" data-date="${date}">${inner}</li>`;
+  const head = (date, zone = ' Central') => `<div data-head><p class="tabular-nums"><time datetime="${date}"><span class="text-label text-ink-3">Saturday, November 21 &middot; 12:00 – 1:00${zone}</span></time></p><h2 class="text-lede">MPLS Math Club Social</h2></div>`;
   const shipped = row(`
     <div aria-hidden="true" data-leaf class="bg-tint"><p class="text-label">Nov</p><p class="text-heading">21</p></div>
     <div data-copy class="min-w-0 flex-1">
-      <div data-head><p class="tabular-nums"><span class="text-label text-ink-3">Saturday, Nov 21 &middot; 12:00 pm</span></p><h3 class="text-lede">MPLS Math Club Social</h3></div>
+      ${head('2026-11-21')}
       <div data-copy-prose class="max-w-measure"><p class="mt-2 text-body leading-prose">Angel Food Bakery</p></div>
       <div data-rsvp-cluster><a href="/x">Meetup</a></div>
     </div>
     <div data-slot="PS-4"><img alt="a poster" src="/p.webp"></div>
   `);
   const CSS = '--container-measure:32em';
+  const verdict = (rows, css, pages) => rowFindings(rows, css).concat(zoneFindings(pages ?? [{ route: '/fixture', rows }]));
   const cases = [
     { name: 'clean control: the shipped row, three zones and a capped lane', rows: [shipped], css: CSS, want: [] },
-    { name: 'the head div is deleted', rows: [row(`
+    { name: 'the head div is deleted, and the zone word with it', rows: [row(`
       <div data-leaf></div>
-      <div data-copy><p class="tabular-nums"><span class="text-label text-ink-3">Saturday, Nov 21</span></p><h3>Title</h3><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
-      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-head-missing'] },
+      <div data-copy><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Saturday, Nov 21 · 12:00 – 1:00</span></time></p><h2>Title</h2><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-head-missing', 'zone-not-stated'] },
     { name: 'the prose wrapper loses max-w-measure', rows: [row(`
       <div data-leaf></div>
-      <div data-copy><div data-head><span class="text-label text-ink-3">Nov 21</span><h3>Title</h3></div><div data-copy-prose><p class="text-body">venue</p></div></div>
-      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-prose-uncapped'] },
+      <div data-copy><div data-head><span class="text-label text-ink-3">Nov 21 Central</span><h2>Title</h2></div><div data-copy-prose><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-prose-uncapped', 'row-date-not-time'] },
     { name: 'the date sentence moves below the title', rows: [row(`
       <div data-leaf></div>
-      <div data-copy><div data-head><h3>Title</h3><span class="text-label text-ink-3">Nov 21</span></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-copy><div data-head><h2>Title</h2><time datetime="2026-11-21"><span class="text-label text-ink-3">Nov 21 Central</span></time></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
       <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-date-out-of-head'] },
     { name: 'the plate is moved above the copy zone', rows: [row(`
       <div data-leaf></div>
       <div data-slot="PS-4"><img alt="poster"></div>
-      <div data-copy><div data-head><span class="text-label text-ink-3">Nov 21</span><h3>Title</h3></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`) ], css: CSS, want: ['row-zone-order'] },
+      <div data-copy><div data-head><time datetime="2026-11-21"><span class="text-label text-ink-3">Nov 21 Central</span></time><h2>Title</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`) ], css: CSS, want: ['row-zone-order'] },
     { name: 'the measure token is gone from the CSS', rows: [shipped ? [shipped] : []], css: '--container-lead: 32em', want: ['measure-token-missing'] },
     { name: 'the cap is widened to 60em (132 characters)', rows: [shipped], css: '--container-measure:60em', want: ['measure-out-of-band'] },
     { name: 'the cap is cut to 12em (26 characters)', rows: [shipped], css: '--container-measure:12em', want: ['measure-out-of-band'] },
+    { name: 'the date is loose text again — the <time> wrapper is gone', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><span class="text-label text-ink-3">Saturday, November 21 Central</span></p><h2>Title</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-date-not-time'] },
+    { name: 'the <time> value disagrees with the data-date handle', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-28"><span class="text-label text-ink-3">Saturday, November 21 Central</span></time></p><h2>Title</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['row-date-time-disagrees'] },
+    { name: 'the zone word is dropped from the first row', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Saturday, November 21 · 12:00 – 1:00</span></time></p><h2>Title</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`) ], css: CSS, want: ['zone-not-stated'] },
+    { name: 'every row repeats the zone word', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`, '2026-11-21'), row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00 Central</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`, '2026-12-05')], css: CSS, want: ['zone-repeated'] },
+    { name: 'the zone word sits on the second row only', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`, '2026-11-21'), row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00 Central</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`, '2026-12-05')], css: CSS, want: ['zone-not-on-first-row'] },
+    { name: 'clean control: two rows, the zone named on the first only', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`, '2026-11-21'), row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
+      <div data-slot="PS-4"><img alt="poster"></div>`, '2026-12-05')], css: CSS, want: [] },
     { name: 'clean control: the widest cap still inside the band (34em ~ 75)', rows: [shipped], css: '--container-measure:34em', want: [] },
     { name: 'clean control: an empty calendar paints no rows', rows: [], css: CSS, want: [] },
   ];
 
   let bad = 0;
   for (const c of cases) {
-    const got = rowFindings(c.rows, c.css).map((f) => f.rule);
+    const got = verdict(c.rows, c.css).map((f) => f.rule);
     const miss = c.want.filter((w) => !got.includes(w));
     const extra = got.filter((g) => !c.want.includes(g));
     const ok = miss.length === 0 && extra.length === 0;
@@ -168,7 +259,7 @@ if (selftest) {
   }
   // The extractor must find the rows the shipped markup actually paints, or the gate is green on a page it
   // cannot see (the D301 lesson: prove the parser meets the artifact).
-  const real = rowFindings([shipped], CSS);
+  const real = verdict([shipped], CSS);
   const shapeOk = real.length === 0;
   console.log(`${shapeOk ? 'ok   parsed' : 'FAIL parsed'}  the row extractor reads a shipped row as one row with head, prose and plate   ${shapeOk ? '0 findings' : real.map((f) => f.rule).join(',')}`);
   if (!shapeOk) bad++;
@@ -183,18 +274,17 @@ if (!existsSync(DIST)) {
   process.exit(1);
 }
 const pages = emittedRoutes(DIST).map((route) => ({ route, html: readFileSync(resolvePage(route), 'utf8') }));
-const rows = [];
-for (const { route, html } of pages) {
-  for (const m of html.matchAll(ROW)) rows.push({ route, html: m[1] });
-}
+const pagesWithRows = pages.map((p) => ({ route: p.route, rows: [...p.html.matchAll(ROW)].map((m) => m[0]) }));
+const rows = pagesWithRows.flatMap((p) => p.rows);
 const cssFiles = readdirSync(DIST, { recursive: true }).map((f) => String(f)).filter((f) => f.endsWith('.css'));
 const css = cssFiles.map((f) => readFileSync(resolve(DIST, f), 'utf8')).join('\n');
 
-const fails = rowFindings(rows.map((r) => r.html), css);
+const fails = rowFindings(rows, css).concat(zoneFindings(pagesWithRows));
 const tokens = [...new Set([...css.matchAll(MEASURE_TOKEN)].map((m) => `${m[1]}${m[2]}`))];
-console.log(`check:row-geometry — ${rows.length} row(s) across ${pages.filter((p) => ROW.test(p.html)).length} page(s); measure ${tokens.join(', ') || 'MISSING'} = ~${Math.round(parseFloat(tokens[0]) / EM_PER_CHAR)} characters of serif prose at 0.455 em/char`);
+const zonePages = pagesWithRows.filter((p) => p.rows.some((r) => ZONE_WORD.test(r)));
+console.log(`check:row-geometry — ${rows.length} row(s) across ${pages.filter((p) => ROW.test(p.html)).length} page(s); measure ${tokens.join(', ') || 'MISSING'} = ~${Math.round(parseFloat(tokens[0]) / EM_PER_CHAR)} characters of serif prose at 0.455 em/char; zone named on ${zonePages.length} page(s), first row only (${zonePages.map((p) => p.route).join(', ') || 'none'})`);
 for (const f of fails) console.log(`  FAIL ${f.rule}  ${f.detail}`);
-console.log(fails.length ? `\n${fails.length} finding(s).` : '\nEvery row is a rail, a capped copy zone and a plate, in that order.');
+console.log(fails.length ? `\n${fails.length} finding(s).` : '\nEvery row is a rail, a capped copy zone and a plate, in that order, its date a <time>, and its zone named once.');
 process.exit(fails.length ? 1 : 0);
 
 function resolvePage(route) {

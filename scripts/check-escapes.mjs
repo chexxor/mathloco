@@ -23,6 +23,11 @@
 // What FAILS:
 //   literal-escape        an escape-shaped sequence (`\uXXXX`, `\xHH`, `\n`, `\t`, `\r`, `\'`, `\"`, `\\`,
 //                         `\/`, `` \` ``) in text an emitted page paints, or in a `<meta content>` string
+//   painted-comment-text  a line of source comment painted as page text: Astro has no `//` in a template, so
+//                         a `//` between tags is literal text the visitor reads (D325 - nine such lines reached
+//                         the homepage in one build)
+//   stray-attribute-text  an element's attribute written *after* its tag closed: the parser takes the closed
+//                         element and reads the rest as a text node, so the attribute is painted as prose
 //   double-escaped-entity an entity-looking string (`&#39;`, `&#x2019;`, `&amp;`) still present in page text
 //                         AFTER one decode pass — i.e. the source wrote `&amp;#39;` and the reader sees `&#39;`
 //   template-literal-escape the same escape-shaped sequence in the rendered-text context of a `.astro` or
@@ -54,6 +59,21 @@ const ESCAPE = /\\(?:u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|[nrtbfv'"`\\/])/g;
 
 /** An entity that survived one decode pass: the reader sees the ampersand form. */
 const ENTITY_TEXT = /&(?:#\d{1,5}|#[xX][0-9a-fA-F]{1,4}|[a-zA-Z]{2,6});/g;
+
+/** Source syntax that reached a reader as prose. `// ` (two slashes then a space) is a comment written where
+ *  Astro expects markup; a URL is `//host`, with a letter, never a space, so the space is what separates a
+ *  leaked comment from a link. The 12 shipped pages contain no `// ` at all @measured 2026-11-14 by
+ *  `node scripts/check-escapes.mjs`, so this rule has no exceptions to carry. */
+const PAINTED_SLASH_COMMENT = /\/\/[ \t]/g;
+
+/** Markup syntax that became prose. An attribute that follows an element the parser already closed is not an
+ *  attribute: Astro builds the element and then emits the leftover line as a text node. `src/components/
+ *  EventArt.astro` shipped exactly this on `/schedule` - five rows painting `class=rounded-control event-art />`
+ *  @measured 2026-11-14 by `node scripts/check-escapes.mjs` against the built artifact - the same defect class
+ *  as a painted `//` (D325), a different syntax. Anchoring on the `>` that closed the element is what keeps the
+ *  rule quiet: `<meta name="viewport" content="width=device-width">` has a quote before `width=`, so a real
+ *  attribute never matches, and prose like "12 = a dozen" has no element name before the `=`. */
+const STRAY_ATTRIBUTE = /(?:\/>|<\/[a-zA-Z][\w:-]*>)[ \t]*(?:\n[ \t]*)?(?:class|alt|src|href|style|width|height|slot|ratio|decorative)=/g;
 
 /** A backslash in page text that is NOT escape-shaped. Reported, not failed — see the header. */
 const BARE_BACKSLASH = /\\(?!(?:u[0-9a-fA-F]{4}|x[0-9a-fA-F]{2}|[nrtbfv'"`\\/]))/g;
@@ -118,6 +138,12 @@ function scanArtifact(html, file) {
     if (ALLOW.has(seq)) continue;
     fails.push({ rule: 'literal-escape', file, detail: `"${seq}" is painted as those characters — in HTML text a backslash escape is not an escape (found near: "${snippet(text, m.index, 34)}")` });
   }
+  for (const m of text.matchAll(PAINTED_SLASH_COMMENT)) {
+    fails.push({ rule: 'painted-comment-text', file, detail: `a source comment is page text: "${snippet(text, m.index, 60)}" — Astro templates have no // comment; write {/* … */} or <!-- … -->` });
+  }
+  for (const m of html.matchAll(STRAY_ATTRIBUTE)) {
+    fails.push({ rule: 'stray-attribute-text', file, detail: `an attribute is painted as page text: "${snippet(html, m.index, 40)}" — the element closed before it, so this is a text node a reader sees` });
+  }
   const decoded = decodeOnce(text);
   for (const m of decoded.matchAll(ENTITY_TEXT)) {
     fails.push({ rule: 'double-escaped-entity', file, detail: `"${m[0]}" is what a reader sees after the HTML is decoded once — the source wrote it doubled (near: "${snippet(decoded, m.index, 34)}")` });
@@ -146,6 +172,9 @@ const FRONTMATTER = /^---[ \t]*$/m;
  *  require that. Cheap, and it makes `{a < b}` stay code. */
 function looksLikeJsxTag(src, i) {
   if (src[i] !== '<') return false;
+  // `<>` is a fragment: everything after it is markup text, which is exactly where a // line turns into
+  // page text (D325). Without this the region machine stays in "code" and the leak is invisible.
+  if (src[i + 1] === '>') return true;
   const m = /^<\/?([a-zA-Z][\w:.-]*)/.exec(src.slice(i, i + 40));
   if (!m) return false;
   const name = m[1];
@@ -194,7 +223,7 @@ function templateRegions(src, kind) {
       if (c === '>') {
         const open = src.slice(tagStart, i + 1);
         const tagName = /^<\s*([a-zA-Z][\w:-]*)/.exec(open)?.[1] ?? '';
-        const isClose = /^<\s*\//.test(open);
+        const isClose = /^<\s*\//.test(open); // `</>` closes a fragment the same way
         const selfClosing = src[i - 1] === '/';
         i++;
         if (!isClose && !selfClosing && /^(script|style)$/i.test(tagName)) {
@@ -239,7 +268,25 @@ function templateRegions(src, kind) {
 function scanTemplate(file, src) {
   const kind = file.endsWith('.astro') ? 'astro' : 'svelte';
   const fails = [];
+  for (const m of src.matchAll(STRAY_ATTRIBUTE)) {
+    fails.push({
+      rule: 'stray-attribute-markup',
+      file,
+      line: lineOf(src, m.index),
+      detail: `"${m[0].trim()}" follows a closed element, so it is markup text, not an attribute (the tag ended on the line before it)`,
+    });
+  }
   for (const [start, end] of templateRegions(src, kind)) {
+    // A `//` line between tags is not a comment in Astro or Svelte markup; it is text, and the page paints it.
+    for (const m of src.slice(start, end).matchAll(PAINTED_SLASH_COMMENT)) {
+      const at = start + m.index;
+      fails.push({
+        rule: 'template-comment-in-markup',
+        file,
+        line: lineOf(src, at),
+        detail: `"//" written as a comment between tags — Astro paints it as page text (write {/* … */}) (near: "${snippet(src.slice(start, end), m.index, 60)}")`,
+      });
+    }
     for (const m of src.slice(start, end).matchAll(ESCAPE)) {
       const at = start + m.index;
       const line = src.slice(0, at).split('\n').length;
@@ -281,6 +328,14 @@ if (selftest) {
     { name: 'literal-escape-attr-ics', rule: 'literal-escape', html: '<img alt="Joe\\nBar meetup photo" src="/x.png">' },
     { name: 'literal-escape-in-meta', rule: 'literal-escape', html: '<meta name="description" content="the club\\u2019s calendar">' },
     { name: 'double-escaped-entity-numeric', rule: 'double-escaped-entity', html: '<p>the club&amp;#39;s calendar</p>' },
+    // the D325 class: a // note in a fragment that Astro parsed as text, shipped on the homepage
+    { name: 'painted-slash-comment', rule: 'painted-comment-text', html: '<p>the club // is a room, not a schedule</p>' },
+    { name: 'painted-slash-comment-in-attr', rule: 'painted-comment-text', html: '<img alt="the club // its poster" src="/x.png">' },
+    { name: 'painted-slash-comment-in-meta', rule: 'painted-comment-text', html: '<meta name="description" content="the club // the calendar">' },
+    { name: 'template-astro-slash-comment', rule: 'template-comment-in-markup', astro: '{items.length > 0 && (\n  <>\n  // the list and the link are one node\n  <ul><li>one</li></ul>\n  </>\n)}' },
+    // the EventArt defect, byte for byte: the attribute left behind after a self-closing call
+    { name: 'painted-stray-attribute', rule: 'stray-attribute-text', html: '<figure><img alt="art" src="/x.png"/></figure>class=rounded-control event-art /></div>' },
+    { name: 'template-stray-attribute', rule: 'stray-attribute-markup', astro: '<PhotoSlot\n  slot="event-a"\n  ratio="954 / 460"\n/>\n  class={`rounded-control event-art ${extra ?? ""}`}\n/>' },
     { name: 'double-escaped-entity-named', rule: 'double-escaped-entity', html: '<p>meetup&amp;amp;discord</p>' },
     { name: 'template-astro-text', rule: 'template-literal-escape', astro: '<p>Copied from the club\\u2019s own calendar</p>' },
     { name: 'template-astro-nested-jsx', rule: 'template-literal-escape', astro: '{copied && (\n  <p>the club\\u2019s calendar</p>\n)}' },
@@ -318,6 +373,10 @@ if (selftest) {
     { name: 'clean-escape-in-script', html: '<script>const t = "club\\u2019s calendar"; document.title = t;</script><p>fine</p>' },
     { name: 'clean-escape-in-style', html: '<style>.x::before{content:"\\2019"}</style><p>fine</p>' },
     { name: 'clean-attr-entity', html: '<img alt="R &amp; Q meetup, the club‘s bar" src="/x.png">' },
+    { name: 'clean-url-double-slash', html: '<p>Read the source at https://www.internetarchive.org/books and the feed at /events.ics</p>' },
+    { name: 'clean-slashes-in-prose', html: '<p>Bring a pencil / eraser; the room is 12/14 and the time 6 / 7 pm</p>' },
+    { name: 'clean-attributes-in-tags', html: '<figure><img alt="a wave" src="/x.png" class="w-full block object-cover" width="954" height="460"></figure><meta name="viewport" content="width=device-width, initial-scale=1">' },
+    { name: 'clean-equals-in-prose', html: '<p>12 = a dozen, and a plate at 323 px is the same plate at 323</p>' },
   ];
   for (const c of clean) {
     const dir = `${FIX}/clean-${c.name.replace(/[^a-z]/g, '')}`;
@@ -336,6 +395,8 @@ if (selftest) {
     { name: 'clean-expr-string', astro: '---\nconst a = 1;\n---\n<p>{a === 1 ? \'club\\u2019s\' : \'theirs\'}</p>\n' },
     { name: 'clean-script-body', astro: '---\n---\n<script>const s = "club\\u2019s";</script>\n<p>fine</p>\n' },
     { name: 'clean-svelte-expr', svelte: '<script>let x = true;</script>\n<p>{x ? \'club\\u2019s\' : \'theirs\'}</p>\n' },
+    { name: 'clean-astro-expr-comment', astro: '---\nconst a = 1; // a JS comment in the frontmatter is code\n---\n<p>{a === 1 ? // a // in an expression is code: Astro lexes it before it reaches markup\n  \'one\' : \'two\'}</p>\n' },
+    { name: 'clean-svelte-block-comment', svelte: '<script>// a comment in the script body</script>\n{/* an Astro-style comment is not markup text */}\n<p>fine</p>\n' },
   ];
   for (const c of cleanSrc) {
     const ext = c.astro !== undefined ? 'astro' : 'svelte';

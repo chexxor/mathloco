@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
 import { URLs } from '../config.json';
+import { PLATFORMS } from '../lib/rsvp.mjs';
+import { newTabQualifier } from '../lib/links.mjs';
 
 // Cloudflare Pages serves the root page for any path that is not a static asset **unless a
 // top-level `404.html` exists** ("If your project does not include a top-level `404.html` file,
@@ -13,12 +15,15 @@ export const prerender = true;
 ---
 
 <Layout title="Page not found - Matheapolis" noindex>
-  <main class="mx-auto max-w-4xl px-4 py-24 text-center">
-    <p class="text-label uppercase tracking-wide mb-4">
-      <span class="text-ink-3">404</span>
-    </p>
-
-    <h1 class="text-display-1 font-extrabold text-ink mb-6">We could not find that page</h1>
+  {/* `py-16` (64px) rather than `py-24` (96px): DESIGN.md puts 64px at a page's own top and bottom edges,
+     and 96 is not on the eight-step ladder. `check:scale` (S042, D321) is what found it — the page has no
+     band air to measure against, so a spacing value nobody ruled survived here. */}
+  <main class="mx-auto max-w-4xl px-4 py-16 text-center">
+    <h1 class="text-display-1 font-extrabold text-ink">We could not find that page</h1>
+    {/* The status code is the subtitle, not a label above the heading (S040, 2026-11-14): `check:naming`
+       now fails any text between `<main>` and the first heading, and a code under the sentence reads the way
+       a printed page sets one. */}
+    <p class="mt-2 text-label uppercase tracking-wide text-ink-3 mb-6">404</p>
 
     <p class="text-lede leading-prose text-ink-2 mb-12 max-w-measure mx-auto">
       The link may be old, or the address may have a typo. Everything we have sits behind one of these
@@ -29,14 +34,14 @@ export const prerender = true;
       <a
         href="/"
         data-control="primary"
-        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
       >
         Back to the home page
       </a>
       <a
         href="/chat"
         data-control="secondary"
-        class="inline-flex items-center justify-center px-8 py-4 text-label font-medium rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-medium rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
       >
         Recent Discord summaries
       </a>
@@ -46,15 +51,15 @@ export const prerender = true;
       Looking for a specific meetup?
       <a
         href="/schedule"
-        class="underline text-ink-2 hover:text-gold"
+        class="underline text-ink-2 hover:text-accent"
       >Our schedule page</a
       > lists every date on the club’s own calendar, and
       <a
         href={URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
-        class="underline text-ink-2 hover:text-gold"
-      >our Meetup group</a
+        class="underline text-ink-2 hover:text-accent"
+      >our Meetup group<span class="sr-only">{newTabQualifier('our Meetup group', PLATFORMS.meetup)}</span></a
       > lists every session.
     </p>
   </main>

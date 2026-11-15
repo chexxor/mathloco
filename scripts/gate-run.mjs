@@ -71,7 +71,20 @@ const DEPLOY = [
   { name: 'check:svelte', desc: 'svelte-check: every .svelte island plus the TS it reaches - the type surface astro check is blind to' },
   { name: 'check:svelte:selftest', desc: 'the svelte gate can still fail (7 plantings in one fixture run, plus a clean control)' },
   { name: 'check:classes', desc: 'every written class resolves to CSS' },
+  // The value behind the class (S042, D321, the second design read §4). DESIGN.md's "Spacing — 4px grid,
+  // eight steps" names the ladder and says "never use a step outside that set", and its own Enforcement
+  // section admits `check:classes` cannot see it: Tailwind v4's dynamic spacing scale makes `mt-23` (92px)
+  // resolve, so "the class generates CSS" is not "the value is on the scale". Source-only, so it can go red
+  // before anyone builds (D118). Cost @measured 2026-11-14 by this step: 0.04s gate, 0.03s selftest.
+  { name: 'check:scale', desc: 'every margin/padding/gap step written in src/ is one of DESIGN.md\u2019s eight (4 8 12 16 24 32 48 64); no half steps, no bracket px' },
+  { name: 'check:scale:selftest', desc: 'the spacing-scale gate can still fail (12 cases: 6 plantings — gap-5, mt-23, py-10, mt-7, gap-3.5, p-[13px], plus a responsive-prefix case — and 6 clean controls, incl. a comment quoting the defect, which must NOT fire, and a sizing utility, which is not a spacing one)' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
+  // The palette round of 2026-11-14 (D316) moved 23 colour tokens in one commit, and nothing between design
+  // rounds re-checks the bars DESIGN.md states. `check:classes` proves a class resolves, not that its colour
+  // clears anything — the pitfall register's `gap-5` story. Source-only, so before `build` (D118).
+  // Cost @measured 2026-11-14 by this step: 0.04s gate, 0.08s selftest.
+  { name: 'check:contrast', desc: 'every @theme colour is an oklch triple the palette record solved, every asserted pair clears its bar, reserved hues stay 40 degrees apart, and no paint literal sits outside the token file' },
+  { name: 'check:contrast:selftest', desc: 'the contrast gate can still fail (11 plantings: a muted step off the 4.5 bar, a hairline under the 3.0 boundary bar, a tint promoted to a layer, an accent off the band, a hover fill under its own label, two reserved hues 6 degrees apart, an accent that is Target red, a brand collision deeper than the recorded one, an invented token, a hex token, a hex in a style attribute; plus the shipped file as the clean control)' },
   // The roadmap is one file (.notes/PLAN.md, host-local) and MILESTONES.md is its tracked projection. Two
   // files claiming "what is next" drift, and the drift is invisible in a table cell (S015). Reads prose, so
   // it runs before build; the selftest plants each defect class and requires a named failure.
@@ -106,7 +119,7 @@ const DEPLOY = [
   // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step
   // in the wave passed. The selftest plants in-memory clones of the committed snapshot, so it needs nothing.
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes', needs: ['build'] },
-  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (21 plantings)' },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (38 plantings, each named @measured 2026-11-14 by `node scripts/check-ics.mjs --selftest`)' },
   // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
   // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
@@ -119,7 +132,7 @@ const DEPLOY = [
   // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
-  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (42 plantings each named, plus a clean control that must pass)' },
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (43 plantings each named, plus a clean control that must pass)' },
   // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a mark. Keyed
   // on anything that outlives a render - a path, a counter - a warm process answers every request after the
   // first with `<use>` refs and no symbols: three empty 16px boxes @measured 2026-11-13 by
@@ -138,7 +151,7 @@ const DEPLOY = [
   // time, and nothing compared the pages that print a date with the rulings that allow it - so a new page could
   // start printing one and only `check:content`'s prose rules would ever look. Its fixtures are in memory, so it
   // runs before `build` (D118).
-  { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (15 cases: 9 plantings — an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled route missing from the build, a nav date written as bare prose, a nav date on the wrong element so the chip has no handle (nav-date-unhandled), a nav chip disagreeing with the schedule, a chip on an empty calendar; 5 clean controls incl. an empty calendar, an age, a commented date, the shipped chip and the page of record; plus the route-walker case)' },
+  { name: 'check:dated-surfaces:selftest', desc: 'the dated-surfaces gate can still fail (18 cases: 12 plantings — an unruled page printing a date, the homepage printing one again, a year-bearing stamp on an unruled page, a ruled page with no data-date handle, a ruled route missing from the build, a nav date written as bare prose, a nav date on the wrong element so the chip has no handle (nav-date-unhandled), a nav chip disagreeing with the schedule, a chip on an empty calendar, and three thin chip names (bare label, no aria-label at all, day without the weekday); 5 clean controls incl. an empty calendar, an age, a commented date, the shipped chip and the page of record; plus the route-walker case)' },
   // The band half of D115 ("at most one dark band per screen, and the band is the site's EXIT") was only ever
   // half-checked: `check:render` counts dark regions on a page that HAS a band and never asked whether a page
   // has one. In-memory fixtures, so before `build` (D118). Cost @measured 2026-11-14 by this step: 0.20s.
@@ -148,7 +161,16 @@ const DEPLOY = [
   // "Schedule", homepage button "View Schedule". Every one is fine alone; together they are an alias map the
   // reader has to hold. The verdict here runs on in-memory fixtures, so the rule can go red on a branch nobody
   // has built yet (D118). Cost @measured 2026-11-14 by this step: 0.13s.
-  { name: 'check:naming:selftest', desc: 'the naming gate can still fail (15 cases: 8 plantings — nav/title drift, band drift, a page that never names itself, the name only in a comment, a nav label with no page, a title with no site name, two pages labelling one route differently, a date glued to a nav label — and 7 clean controls, incl. a subordinate date chip and prose that describes without naming)' },
+  { name: 'check:naming:selftest', desc: 'the naming gate can still fail (19 cases: 10 plantings — nav/title drift, band drift, a page that never names itself, the name only in a comment, a nav label with no page, a title with no site name, two pages labelling one route differently, a date glued to a nav label, an eyebrow above the h1, a section h2 that is another page’s h1 — and 9 clean controls, incl. a subordinate date chip, prose that describes without naming, and a subtitle under the heading)' },
+  // The heading ladder (S040, 2026-11-14, the second design read §7 D8): `/schedule` printed an h1 and then
+  // jumped straight to h3 row titles, and no gate looked at levels at all. In-memory fixtures, so the rule can
+  // go red before anyone builds (D118). Cost @measured 2026-11-14 by this step: 0.05s selftest, 0.04s gate.
+  { name: 'check:outline:selftest', desc: 'the outline gate can still fail (12 cases: 7 plantings — h1 to h3, h1 to h4, two h1s, no h1, no headings, an empty heading, an image-only heading — and 5 clean controls)' },
+  // Outbound links (S041, D317): the read's §5.5 asked for `rel=noopener` + an arrow + an sr-only qualifier. Two
+  // of those were already shipped; the defect was a qualifier repeated in the accessible name and four outbound
+  // links carrying no qualifier at all. In-memory fixtures, so it can go red before anyone builds (D118).
+  // Cost @measured 2026-11-14 by this step: 0.06s selftest.
+  { name: 'check:ext-links:selftest', desc: 'the external-link gate can still fail (15 cases: 9 plantings — a new tab with no rel, rel without noopener, the qualifier painted in the label, an outbound link with no qualifier, a platform named twice, an internal route opened as a new tab, an outbound link in the same tab, the "new window" wording, all four at once — and 4 clean controls plus the derivation assertion)' },
   { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
@@ -159,7 +181,7 @@ const DEPLOY = [
   { name: 'check:rsvp-promise:selftest', desc: 'the promise gate can still fail (8 plantings: config emptied, row reworded, painted-but-unpromised, a dropped link, a projection that disagrees, no plan, no artifact, an unknown platform name)' },
   // Runs before `build` on purpose: its fixture tree is its own, so a defect in this class is caught on a branch
   // nobody has built yet, and the artifact half of it is the reason it still belongs in this set.
-  { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (25 fixtures: 13 plantings, 11 clean forms, 1 severity case)' },
+  { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (37 fixtures: 19 plantings, 17 clean forms, 1 severity case @measured 2026-11-14 by `node scripts/check-escapes.mjs --selftest`)' },
   { name: 'check:cache', desc: 'summary-cache rules against a fake KV namespace' },
   // The n8n integration builds an importable artifact from sources in this repo, and its rules are the same
   // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
@@ -170,7 +192,7 @@ const DEPLOY = [
   // a row that dropped out of the feed) are invisible in a diff. 15 offline fixtures, no network, no live feed
   // touched @measured 2026-11-13 by this step: 0.45s. Planting each rule in a copy of the harvester names the
   // failure (D290's reasoning, applied to a tool rather than a gate).
-  { name: 'harvest:selftest', desc: "the calendar harvester's four rules, proven on 15 offline fixtures (cancelled-UID guard, venue-split reuse, TZID hour confirmation, rows never deleted)" },
+  { name: 'harvest:selftest', desc: "the harvester's five rules on 19 offline fixtures: the cancelled-UID guard, the (date, venue, series) grouping and the superseded rows it logs, byte-identical venue reuse, TZID hour confirmation, rows never deleted", },
   // Which dates `/schedule` is allowed to print, checked against the rule module rather than a copy of it. Runs
   // before `build` because it opens no artifact (D118 again: a gate that can go red before anyone builds is a
   // gate that catches the defect on the branch that introduced it).
@@ -203,6 +225,10 @@ const DEPLOY = [
   // The artifact side of the same rule: walk every emitted page, and require the set that prints a date to be the
   // set a ruling names. It reads `dist/`, so it waits for `build` (D118).
   { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/schedule` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included; the nav’s subordinate date is chrome and must equal the first date /schedule prints (D311)', needs: ['build'] },
+  // Which register each "how current is this" line uses (S042, D322): an age inside 30 days, the calendar
+  // date beyond it, produced by the one function in `src/lib/provenance.mjs`. The read's D6 found the site
+  // running both registers at once; this is the detector that keeps them from drifting back apart.
+  { name: 'check:provenance', desc: 'every provenance line in the artifact uses the one ruled register for its age — relative inside 30 days, absolute beyond — and no component computes its own age outside src/lib/provenance.mjs (D322)', needs: ['build'] },
   { name: 'check:join', desc: 'every way in on /join is a channel joinChannels() returns, in canonical order under its kind, named in visible words, at a stamped URL, and the page prints no date; no invented channel, no empty kind heading, no blind link past 60 days', needs: ['build'] },
   // The artifact half of the same rule: every route the build emits (read off `dist/`, never remembered, D117)
   // closes with the band, on the ratified ground, offering at least two paths out. It reads `dist/`, so it waits
@@ -212,7 +238,20 @@ const DEPLOY = [
   // link and the page's own opening block have to say it too (D309). Routes are read off `dist/`, never
   // remembered (D117). It also prints an alias census - every other label the artifact attaches to an internal
   // route - as information, because prose is allowed to describe a page without naming it.
-  { name: 'check:naming', desc: 'one name per page in the four surfaces a visitor navigates by: nav, title, exit band and the page’s own opening block; a nav label with no page behind it fails', needs: ['build'] },
+  { name: 'check:naming', desc: 'one name per page in the four surfaces a visitor navigates by: nav, title, exit band and the page’s own opening block; a nav label with no page behind it fails; nothing sits above a page’s first heading and no page wears another page’s h1 as its own h2 (S040)', needs: ['build'] },
+  // Every emitted page: exactly one h1, and a ladder that never skips a level (S040). Routes are read off
+  // `dist/`, never remembered (D117), and the ladder itself is printed so a reviewer sees the shape.
+  { name: 'check:outline', desc: 'one h1 per built page and no skipped heading level: an h1 -> h3 jump, a second h1, a page starting at h2, or an empty heading fails', needs: ['build'] },
+  // Every link that leaves the site (S041, D317): rel carries noopener, "opens in a new tab" lives only in the
+  // sr-only span, no platform is named twice in one accessible name, and the club's own routes never open a new
+  // tab. Counts are printed from the artifact so a reviewer sees the census, not just the verdict.
+  { name: 'check:ext-links', desc: 'every outbound anchor: rel carries noopener, opens in a new tab, "opens in a new tab" only in an sr-only span, no platform named twice in one accessible name, and no club route painted target=_blank (S041, D317)', needs: ['build'] },
+  // One provenance register (S042, D322). The selftest plants on in-memory pages and fixture files, so it
+  // can go red before anyone builds (D118); the gate itself reads the emitted pages, so it waits for
+  // `build`. Cost @measured 2026-11-14 by this step: 0.05s gate, 0.03s selftest.
+  { name: 'check:provenance:selftest', desc: 'the provenance gate can still fail (14 cases: 4 artifact plantings — an age past the 30-day window, an absolute date inside it, both registers on one line, and a phrase with no register that must NOT fire — plus 5 source-side cases, incl. the rule\u2019s own module being exempt and a comment quoting the defect not counting as a call)' },
+  // The site's own drawings (S042, D323). Cost @measured 2026-11-14 by this step: 0.04s gate, 0.03s selftest.
+  { name: 'check:line-art:selftest', desc: 'the line-art gate can still fail (13 cases: 9 plantings — a hex in a stroke, a hex fill, a currentColor fill, a missing role, a missing label, a 20-word label, a missing caption, an oversized drawing, a figure with no svg at all — and 4 clean controls, incl. fill="none", a bare svg that is not a figure, and a label at exactly the 12-word cap)' },
   // What an alt says, and where the source goes (2026-11-14, the MS04 read, D312). Before this gate the three
   // horizon plates' alts ran 30, 28 and 32 words @measured 2026-11-14 by
   // `git show HEAD:src/components/HorizonBand.astro | grep -o "alt: '[^']*'" | awk '{print NF-2}'` and each opened
@@ -220,8 +259,16 @@ const DEPLOY = [
   // a citation in the place a description belongs - with nothing on the page carrying a caption. Selftest runs
   // on in-memory fixtures, so the rule can go red before anyone builds (D118). Cost @measured 2026-11-14 by
   // this step: 0.16s selftest, 0.14s gate.
-  { name: 'check:alt:selftest', desc: 'the alt gate can still fail (9 cases: 5 plantings — a bare img, an empty alt, a 22-word alt, a citation in an alt with no figcaption, 19 words — plus 4 clean controls, incl. an 18-word alt exactly at the cap)' },
-  { name: 'check:alt', desc: 'every img in the artifact has an alt, no alt runs past 18 words, and no alt carries a book/year/leaf citation with no figcaption under the image', needs: ['build'] },
+  { name: 'check:alt:selftest', desc: 'the alt gate can still fail (13 cases: 8 plantings — a bare img, an empty alt nobody declared, a 22-word alt, a citation in an alt with no figcaption, 13 words, an alt that names the file instead of the picture, an img with no intrinsic size, a bare `alt` with no declaration — plus 5 clean controls, incl. a declared decorative plate and a 12-word alt exactly at the cap)' },
+  // Which pages carry the club's own drawings, in the ruled language: hairlines, currentColor, under 1200
+  // bytes, captioned (S042, D323). Reads the artifact, so it waits for `build`.
+  { name: 'check:line-art', desc: 'every <figure data-line-art> in the artifact is a captioned, role="img" drawing under 1200 bytes whose strokes are currentColor and whose shapes are unfilled (D323)', needs: ['build'] },
+  { name: 'check:alt', desc: 'every img in every built page: an alt, or a declared decorative plate (data-decorative); no alt over 12 words, no alt naming the file’s role, no citation in an alt with no figcaption, no img without intrinsic width/height (D312, D324)', needs: ['build'] },
+  // The homepage's thread list: the cap the component declares, the number the page paints, and a link that
+  // actually lands on the page that holds the rest (S042, D320, read §5.4). The cap is read out of
+  // WhyJoinUs.astro rather than restated here, so the gate and the page cannot disagree (D238).
+  { name: 'check:threads:selftest', desc: 'the thread-list gate can still fail (9 cases: 7 plantings — nine bullets under a cap of six, the rest link deleted, the rest link aimed at Meetup, a dead #threads anchor, a list that quietly dropped two items, no cap declared, an offer with nothing left to offer — plus 2 clean controls) @measured 2026-11-14 by `node scripts/check-threads.mjs --selftest`' },
+  { name: 'check:threads', desc: 'the home page paints exactly min(cap, items) thread bullets, and when items exceed the cap the page carries a "the rest of the list" link to /chat#threads and /chat has that id (S042, D320)', needs: ['build'] },
   // A schedule row's shape is a rule, not a preference (2026-11-14, the commissioned read's item 4, D313, S037).
   // The restructure was measured - `design/schedule-geometry.mjs` prints the rail/lane/plate boxes and
   // `design/line-length.mjs` prints characters per line - but both are diagnostics: they exit 0 whatever they
@@ -231,8 +278,8 @@ const DEPLOY = [
   // measured 0.455 em per serif character (32em = ~70 @measured 2026-11-14 by
   // `node design/line-length.mjs /schedule 1240 1024 640 320 --no-build`). Selftest is in-memory (D118).
   // Cost @measured 2026-11-14 by this step: 0.03s selftest, 0.05s gate.
-  { name: 'check:row-geometry:selftest', desc: 'the row-geometry gate can still fail (11 cases: 7 plantings — head deleted, prose uncapped, date sentence after the title, plate before the copy, measure token gone, cap widened to 60em, cap cut to 12em — plus 3 clean controls and the parser assertion that a shipped row parses as one row)' },
-  { name: 'check:row-geometry', desc: 'every date row in the artifact is three zones in order — leaf, copy (head + capped prose + cluster), plate — with the date sentence in the head above the title, and the emitted --container-measure inside DESIGN.md’s 40-75 character band (D313)', needs: ['build'] },
+  { name: 'check:row-geometry:selftest', desc: 'the row-geometry gate can still fail (17 cases: 11 plantings — head deleted, prose uncapped, date sentence after the title, plate before the copy, measure token gone, cap widened to 60em, cap cut to 12em, the <time> wrapper gone, the <time> value disagreeing with data-date, the zone word missing, the zone word on the second row, the zone repeated — plus 5 clean controls and the parser assertion that a shipped row parses as one row)' },
+  { name: 'check:row-geometry', desc: 'every date row in the artifact is three zones in order — leaf, copy (head + capped prose + cluster), plate — the date sentence in the head above the title and wrapped in <time datetime> matching the row’s data-date, the zone named once per page on the first row only, and the emitted --container-measure inside DESIGN.md’s 40-75 character band (D313, D327)', needs: ['build'] },
   // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
   { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name

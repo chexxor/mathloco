@@ -57,6 +57,22 @@ const dashed = MARK.shapes.find((s) => s.dash);
 const solidArc = MARK.shapes.find((s) => s.role === 'sphere' && s.tag === 'path' && !s.dash);
 const swStroke = MARK.shapes.find((s) => s.sw);
 if (!arcs.length || !dashed || !solidArc || !swStroke) { console.error('the geometry table no longer has the shapes these cases expect — re-read src/lib/brand-mark.mjs'); process.exit(1); }
+// Re-anchored 2026-11-15 (D316): the "painted into the ground" case used to match the literal string
+// `class="fill-none stroke-gold"`, and the palette round renamed the mark's paint roles (the sphere now paints
+// `stroke-rule`, the route `stroke-ink`), so the literal rotted exactly the way D190's cid stamp rotted the
+// cases in the comment below. The anchor is now the shape's own `d`, taken from the geometry table, so the
+// planting follows the drawing instead of a snapshot of one class list. `#faf6ec` is --color-paper: painting a
+// stroke in the colour of the surface it sits on makes the shape invisible while every box, count and dash
+// still measures fine — only the per-shape contrast can see it.
+const paintIntoGround = (h, shape) => h.replace(
+  new RegExp(`<path d="${dEsc(shape.d)}"[^>]*>`),
+  // Strip the paint class from the CLASS attribute only. A whole-tag ` stroke-...` sweep eats the
+  // `stroke-width` attribute too (first draft did exactly that: the shape kept its `stroke-rule` class and the
+  // case passed for the wrong reason), and the paint class has to go, or Tailwind's rule outranks the
+  // presentation attribute and nothing changes.
+  (tag) => tag.replace(/class="([^"]*)"/, (_, cls) => `class="${cls.replace(/ stroke-(?!none)[a-z0-9-]+/, '')}"`)
+            .replace(/^<path/, '<path stroke="#faf6ec"'),
+);
 
 const cases = [
   // **Write a case's anchor on the attribute you care about, never on a whole tag.** A component that grows a
@@ -84,7 +100,7 @@ const cases = [
   //        attribute with no colour class is what the browser actually paints.
   //      - the ground here is PAPER (the hero sits on sand), not the card's ink. A dark green stroke is
   //        the strongest thing on this surface, not the faintest.
-  ['mark stroke painted into the ground', (h) => h.replace('class="fill-none stroke-gold"', 'class="fill-none" stroke="#f7f5f1"'), /under the 3\.0 graphic bar/],
+  ['mark stroke painted into the ground', (h) => paintIntoGround(h, solidArc), /under the 3\.0 graphic bar/],
   // 3. the hero column stopped drawing a mark at all — the gate must notice an empty hero, not just a
   //    badly drawn one (this is the D108 rule: missing content is a defect, never a blank).
   ['no mark in the page', (h) => h.replace('data-mark="hero"', 'data-nothing="hero"'), /draws no mark at all/],
@@ -133,15 +149,20 @@ const cases = [
   //        The mutation swaps a real class for a real class (`bg-panel` is in the built CSS because the join band
   //        asks for it), so nothing about the harness is doing the painting here.
   ['ring straddling two grounds', (h) => h.replace(/(<a[^>]*data-control="secondary"[^>]*class="[^"]*?)bg-paper/, '$1bg-panel'), /may not straddle two grounds/],
-  // 7b. a ring that is one-ground but on the WRONG ground: the notice keeps its no-fill grammar and its 1px inset
-  //    ring, and only the strip behind it is tinted. Both sides then read 2.88 — under the bar `--color-rule`
-  //    was solved to clear (3.01 on paper). This is why the rule is a pair and not a token grep.
-  // Re-pointed 2026-11-04: this used to tint the strip behind the schedule section's empty-state notice, and
-  // the notice is only in the built page when the calendar holds no upcoming date (data/events.json now holds
-  // two, so the markup the mutation targeted stopped existing and the case proved nothing — the gate's own
-  // message says so). It now tints the list the schedule rows sit on: each row is a 1px `--color-rule` inset
-  // ring with no fill of its own, so both sides of that ring become `panel`, where record 0018's table says
-  // the token reads 2.88 — under the 3.0 bar the token was solved to clear on paper. Same rule, real markup.
+  // 7b. a ring that is one-ground but on the WRONG ground: the boundary keeps its 1px inset ring and paints no
+  //     fill of its own, and only the strip behind it is tinted. Both sides then read the same number, so the
+  //     straddle rule is silent and only the graphic-bar branch can see it — which is why the rule is a pair of
+  //     measurements and not a token grep.
+  // Re-pointed twice, and both re-points are the same failure mode worth remembering:
+  //   2026-11-04: it tinted the strip behind the schedule section's empty-state notice. That notice only exists
+  //     in the built page when the calendar holds no upcoming date (data/events.json now holds two), so the
+  //     markup the mutation targeted stopped existing and the case proved nothing — the gate's own message says so.
+  //   2026-11-15 (D316): it tinted the strip `panel`, which failed while `--color-rule` on panel measured 2.88
+  //     (record 0018's table). The palette round retuned `rule` to clear 3.0 on every ground it is ever drawn on
+  //     — 3.66 paper, 3.85 panel, 3.10 tint, 4.69 band @measured 2026-11-14 by node design/grill/palette-remap.mjs
+  //     — so no ground in the system could make that planting fail any more. The strip is now painted
+  //     `accent-strong`, the primary button's hover fill: the boundary token reads 2.23 on it, under the bar.
+  //     Same rule, real markup, and a ground a future writer could genuinely reach for.
   // Both cases below match on the CLASS, not on a whole tag. That is not style: a component that grows a
   // `<style>` block gets a `data-astro-cid-*` attribute on every element it renders, and on 2026-11-04 PS-4's
   // slot cap landing in a scoped `<style>` in `Schedule.astro` silently un-matched both — each case printed
@@ -151,7 +172,7 @@ const cases = [
   // utility to `space-y-4`, which is the same failure mode as the cid bug one line up — the class list is
   // exactly what a spacing ruling edits. `data-art-cap` is the schedule list's intentional handle (the same
   // attribute `design/grill/rhythm-variants.mjs` selects on), so anchor here and keep mutating the class.
-  ['ring on a tint', (h) => h.replace(/<ul class="([^"]*"[^>]*data-art-cap="323")/, '<ul class=" bg-panel $1'), /under the 3\.0 graphic bar/, 'schedule'],
+  ['ring on a ground the boundary cannot carry', (h) => h.replace(/<ul class="([^"]*"[^>]*data-art-cap="323")/, '<ul class=" bg-accent-strong $1'), /under the 3\.0 graphic bar/, 'schedule'],
   // The leak this rule exists for (D181): the exact bytes a `//` comment produced in the built card on 2026-11-04,
   // re-inserted at the same place. Without this planting, "comments never ship" is a hope, not a check.
   ['leaked // comment in a card', (h) => h.replace(/(<span class="text-label text-ink-3"[^>]*>)/, '$1// One text node, so the render gate sees one measurement'), /begins like source-comment syntax/, 'schedule'],
@@ -173,7 +194,9 @@ const cases = [
   ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), /paints no platform mark/, 'schedule'],
   ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/, 'schedule'],
   ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-meetup"', '<symbol id="pm-meetupX"'), /sprite has no such symbol/, 'schedule'],
-  ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\) while its label is rgb\(32,57,39\)/, 'schedule'],
+  // The expected string names only the planted mark colour: the label's own rgb moved with the palette round
+  // (D316), so a case that pinned `rgb(32,57,39)` went red on a page whose only defect was the mark.
+  ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\)/, 'schedule'],
 ];
 
 const selected = only.length ? cases.filter(([name]) => only.some((o) => name.includes(o))) : cases;

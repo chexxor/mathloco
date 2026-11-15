@@ -28,59 +28,73 @@
      needed-of-available per width): "Schedule" is 57.6px at this tier, so the row would need 245 — inside
      276 — and a third path would not fit. ONE more path, not two. */
 
-  /* ---- colour ROLES, named for what they are for (D89). Contrast pairs are renderer-measured. ---- */
-  --color-paper: oklch(98.5% 0.006 85); /* ground for the page; #fcfaf6 */
-  --color-panel: oklch(97% 0.008 85);   /* 1.04 vs paper = a tint, NOT a layer (layer bar is 1.35) */
-  --color-tint: oklch(95% 0.03 152);    /* hover fill; carries ink (10.96), never gold (4.39 = FAIL) */
-  --color-ink: oklch(32% 0.045 152);    /* 12.02 on paper; also the ONE dark band per screen (D89) */
-  /* the primary button's hover fill (DESIGN.md's button table records "primary | ink fill,
-     band-text label, 48px | 10.19, hover 7.33"). Ratify wrote the RATIO and never wrote the VALUE
-     down, so apply solved it in the renderer (design/grill/contrast/cfg-hover-sweep.json;
-     Firefox 158.0.1, Linux/x64, 2026-11-01). At L 40 C .055 H 152: label `band-text` on the fill =
-     7.33 (bar 4.5) and fill vs resting `ink` = 1.39 (layer bar 1.35) — reproducing round 6's number.
-     The BINDING bar is the layer one, not legibility: sweeping L 36..48 at this C,H the label stays
-     8.67..5.16 (always >= 4.5) while fill-vs-ink is FLAT below L 39 (L 36 = 1.18, L 38 = 1.29) and
-     clears at L 39 = 1.35. So L 40 is the nearest step above the layer bar that keeps margin, and
-     chroma is not what buys it — at C .045 the same L 40 also measures 1.39 (measured).
-     Direction is a rule, not a coincidence: a hover always goes LIGHTER (the secondary hover fill
-     `tint` is lighter too); two controls moving in opposite directions is two grammars. */
-  --color-ink-hover: oklch(40% 0.055 152); /* 7.33 under band-text; 1.39 over ink */
-  --color-ink-2: oklch(45% 0.035 152);  /* 7.02 — secondary text, chip label, cancelled title */
-  --color-ink-3: oklch(52% 0.028 152);  /* 5.21 — meta, the dated freshness line, "time not set" */
-  --color-rule: oklch(65.5% 0.03 152);  /* solved to the 3.0 bar, not by eye: 3.01 on paper, 4.00 on
-                                           the ink band — one boundary role, two grounds, no rule-dark
-                                           (D99). On a panel fill it is 2.88, so a keylined control
-                                           never sits on a panel. */
-  --color-gold: oklch(55% 0.12 62);     /* 4.82 as text and as keyline; min distance 0.135 to every
-                                           commerce brand colour (D88). Never a bright fill. */
-  --color-gold-on-ink: oklch(76% 0.06 84); /* 5.80 on the ink band */
-  --color-band-text: oklch(93% 0.008 152); /* 10.19 on the ink band; also the primary button label */
+  /* ---- colour ROLES, named for what they are for (D89). The 2026-11-14 round (D316): the commissioned
+     read (docs/design-critique-2026-11-14.md §3) proposed nine hexes and the operator ruled they BECOME
+     the palette, mapped onto these role names rather than a parallel system. Every number below is printed
+     by `npm run check:contrast` (arithmetic from design/grill/okcolor.mjs, the repo's one OKLab
+     implementation, D101) and re-checked on painted bytes by check:render and check:ground. The hex in
+     each comment is the byte the token paints, so a reader can compare it with the read's table. ---- */
+  --color-paper: oklch(97.35% 0.0139 88.7); /* #faf6ec — the page ground (the read's --paper) */
+  --color-panel: oklch(99.09% 0.0123 91.5);  /* #fffcf3 — 1.05 vs paper = a tint, NOT a layer (layer bar is 1.35) */
+  --color-tint: oklch(91.92% 0.0285 74.3);   /* #f0e2d0 — hover fill; carries ink (14.53), never the accent (the pair reads 4.89, which is why the ban is grammar, not legibility: D102) */
+  --color-ink: oklch(18.92% 0.0149 81.4);    /* #17130c — 17.15 on paper; also the ONE dark band per screen (D89) */
+  /* the primary button's hover fill. It used to be `ink-hover`, a lighter chalkboard green solved in the
+     renderer (design/grill/contrast/cfg-hover-sweep.json; Firefox 158.0.1, Linux/x64, 2026-11-01). The
+     read's --accent-strong is the same job, and D316 rules that the accent family is the only hue allowed
+     to appear on a control. The two bars that bind are unchanged; the numbers are not: label `band-text` on
+     the fill = 7.83 (bar 4.5) and fill vs resting `ink` = 2.10 (layer bar 1.35) @measured 2026-11-14 by
+     `npm run check:contrast`. Round 6's lesson still decides the
+     lightness: legibility is not the binding bar here — band-text clears 4.5 across L 42..79 at this hue —
+     the layer bar is, because a hover fill sitting 1.29 from the resting fill simply does not read as a
+     change. L 42.22 is the read's #7e3320: 2.10 over the resting ink, comfortably above the bar.
+     Direction is a rule, not a coincidence: a hover always goes LIGHTER (the secondary hover fill `tint`
+     is lighter too); two controls moving in opposite directions is two grammars. */
+  --color-accent-strong: oklch(42.22% 0.109 35.35); /* #7e3320 — 7.83 under band-text; 2.10 over ink */
+  --color-ink-2: oklch(45.17% 0.0252 85.9);  /* #5c5546 — 6.84; secondary text, chip label, cancelled title (the read's --ink-muted) */
+  --color-ink-3: oklch(50.5% 0.03 86);       /* #6c6451 — 5.44 on paper, 5.72 on a panel, 4.61 on a tint; meta, the dated freshness line,
+                                             "time not set". The read names only one muted step. Solved so the role clears 4.5 on every
+                                             ground it is ever printed on, not just paper: the window ends at L 54.9 on paper but only
+                                             L 51.3 on a tint, and a meta line that reads on the page and fails on a hover fill is the
+                                             same class of defect the `rule` re-solve closed (D316). */
+  --color-rule: oklch(60% 0.04 86.6);        /* #8b7f65 — the read's --rule #dfd6c2 measures 1.34 against paper: under the 3.0
+                                             boundary bar AND under the 1.35 layer bar, so it is not a line at all. Same hue family,
+                                             solved so one boundary role clears 3.0 on every ground it is ever drawn on: 3.66 paper,
+                                             3.10 tint, 3.85 panel, 4.69 ink (D99). That retires round 4's finding that a keylined
+                                             control may never sit on a panel (rule on panel was 2.88; it is 3.85 now). */
+  --color-accent: oklch(50.57% 0.1321 35.7);   /* #a2432a — 5.77 as text and as keyline; the role `gold` held. D316 renames it,
+                                             because a name a future agent can trust is worth the class churn: every `text-gold`
+                                             write in src/ moved in this commit. */
+  --color-accent-on-ink: oklch(66% 0.10 35.7); /* 5.69 on the ink band; the accent itself is 2.97 there — an invisible ring (D116) */
+  --color-band-text: oklch(96% 0.012 88);     /* #f5f1e9 — 16.43 on the ink band; also the primary button label */
 
-  /* ---- Join-path hues: one hue per real path, reserved, never reassigned (round 2). Every value
-     is >= 4.5 as text on paper AND >= 47 degrees from the ink hue (152), which is why olive sits
-     at 105 rather than the original 150. ---- */
-  --color-path-calendar: oklch(50% 0.11 205);  /* 5.47 — our own /events.ics */
-  --color-path-meetup: oklch(47% 0.15 315);    /* 7.07 */
-  --color-path-discord: oklch(50% 0.14 35);    /* 6.14 */
-  --color-path-mobilizon: oklch(50% 0.10 105); /* 5.68 */
-  /* chip tracks: 1.10 vs paper = flat on purpose. The hue keyline + the word carry the chip; a
-     track is never the only cue (tints alone measure 1.02). */
-  --color-path-calendar-tint: oklch(95% 0.03 205);
-  --color-path-meetup-tint: oklch(95% 0.03 315);
-  --color-path-discord-tint: oklch(95% 0.03 35);
-  --color-path-mobilizon-tint: oklch(95% 0.03 105);
-  /* the same four hues on the ink band: the paper set measures ~1.97 there, so the band needs its
-     own lightness, solved to clear 4.5 with margin (D99). */
-  --color-path-calendar-on-ink: oklch(70% 0.11 205); /* 4.91 */
-  --color-path-meetup-on-ink: oklch(72% 0.15 315);   /* 4.74 */
-  --color-path-discord-on-ink: oklch(71% 0.14 35);   /* 4.59 */
-  --color-path-mobilizon-on-ink: oklch(69% 0.10 105); /* 4.57 */
+  /* ---- Join-path hues: one hue per real path, reserved, never reassigned (round 2). The rules are
+     >= 4.5 as text on the ground it is printed on, and >= 40 degrees from every other reserved hue
+     (round 3b). The new ink sits at hue 81.4 and the new accent at 35.7, so two paths had to move:
+     mobilizon's olive (105) is now 24 degrees from the ink — a tint of the ink, not a channel — and
+     discord's orange (35) is the accent's hue exactly. Discord takes its own brand's blue (262), which
+     is 134 degrees from the accent and 57 from the calendar. `check:contrast` prints every gap. ---- */
+  --color-path-calendar: oklch(51% 0.11 205);  /* #007784 — 4.90 — our own /events.ics */
+  --color-path-meetup: oklch(49% 0.15 315);    /* #7f409a — 6.27 */
+  --color-path-discord: oklch(52% 0.15 262);   /* #3664be — 5.23 */
+  --color-path-mobilizon: oklch(51% 0.11 145); /* #38763c — 5.09 */
+  /* chip tracks: 1.13 vs paper = flat on purpose. The hue keyline + the word carry the chip; a
+     track is never the only cue (tints alone measure 1.02-1.13, all under the 1.35 layer bar). */
+  --color-path-calendar-tint: oklch(93% 0.03 205);
+  --color-path-meetup-tint: oklch(93% 0.03 315);
+  --color-path-discord-tint: oklch(93% 0.03 262);
+  --color-path-mobilizon-tint: oklch(93% 0.03 145);
+  /* the same four hues on the ink band: the paper set measures ~2.1 there, so the band needs its own
+     lightness. One lightness for all four (L 64), each clearing 4.5 with margin (D99). */
+  --color-path-calendar-on-ink: oklch(64% 0.11 205); /* 5.78 */
+  --color-path-meetup-on-ink: oklch(64% 0.15 315);   /* 5.15 */
+  --color-path-discord-on-ink: oklch(64% 0.15 262);  /* 5.41 */
+  --color-path-mobilizon-on-ink: oklch(64% 0.11 145); /* 5.77 */
 
   /* ---- Keylines are inset shadows, never borders: a border adds 2px and silently breaks the
-     control-height arithmetic (D98). `rule` is the only boundary on paper and on the band; `gold`
+     control-height arithmetic (D98). `rule` is the only boundary on paper and on the band; `accent`
      is the caution variant of a notice (D102) — the system has NO signal hue. ---- */
   --inset-shadow-rule: inset 0 0 0 1px var(--color-rule);
-  --inset-shadow-gold: inset 0 0 0 1px var(--color-gold);
+  --inset-shadow-accent: inset 0 0 0 1px var(--color-accent);
   --inset-shadow-path-calendar: inset 0 0 0 1px var(--color-path-calendar);
   --inset-shadow-path-meetup: inset 0 0 0 1px var(--color-path-meetup);
   --inset-shadow-path-discord: inset 0 0 0 1px var(--color-path-discord);
@@ -91,8 +105,8 @@
      a black stop wide enough to read at a wide blur paints a 2.10 grey band. Cards never get a
      shadow. Nothing floats in src/ yet (no modal, no dropdown), so these two ship defined-but-
      unused until the first menu — the values are solved maths and re-deriving them is the work. ---- */
-  --shadow-e1: 0 1px 2px 0 rgba(32, 57, 39, 0.165);
-  --shadow-e2: 0 2px 5px -1px rgba(32, 57, 39, 0.22), 0 12px 28px -6px rgba(32, 57, 39, 0.3);
+  --shadow-e1: 0 1px 2px 0 rgba(23, 19, 12, 0.165);
+  --shadow-e2: 0 2px 5px -1px rgba(23, 19, 12, 0.22), 0 12px 28px -6px rgba(23, 19, 12, 0.3);
 
   /* ---- Type ramp: 1.200, nine steps (T3, D95), plus the 11.1px chrome step below the ladder
      (nav narrow tier D100, status chip and notice labels). Leading is carried by the size token
@@ -165,21 +179,21 @@
   --default-transition-duration: 150ms;
   --default-transition-timing-function: linear;
 
-  /* ---- RETIRED IN design-apply (kept only because markup still writes the class):
-     `--color-book-gray` = the four never-imported social icons only (the Footer band now writes
-     `bg-ink`); it stays so those dormant files still resolve for check:classes, and choose-icons
-     deletes them wholesale. `--color-book-theme` is GONE as of apply batch 3: its last two
-     references were `::selection` and a global `.underline` class in Layout.astro that painted an
-     amber highlighter instead of an underline (D82/D88: that amber is delta-OKLab 0.019 from Amazon
-     orange #FF9900, and the selection pair measured 2.06 — under the 4.5 bar).
+  /* ---- RETIRED (D316): `--color-book-gray` and the four dormant social-icon files it existed for are
+     gone in this commit. They were the only cool-grey left in the palette and the only remaining writes
+     of a Tailwind palette colour (`hover:text-gray-500`), and no file in src/ imports them @measured
+     2026-11-14 by `grep -rn "icons/" src/` (no matches). `--color-book-theme` is GONE as of apply batch
+     3: its last two references were `::selection` and a global `.underline` class in Layout.astro that
+     painted an amber highlighter instead of an underline (D82/D88). The read's `--amber #e9a63f` is not
+     adopted for the same reason: it is 0.043 OKLab from Amazon orange #FF9900, inside this repo's own
+     0.05 same-colour bar (D88), and it measures 1.95 against paper — a band, not a tint. `check:contrast`
+     prints the number so nobody re-introduces it.
      `--font-sans` no longer names a phantom. It used to be "Inter var", a family no file in this repo
      provided — measured consequence: every chrome label on the ratified specimen rendered in this
      rig's system-ui (x-height 0.48). design-apply wired the ratified faces: PT Serif latin 400+700
      (static pair, imported in Layout.astro) and Public Sans Variable latin wght 100-900 (one 26,832 B
      file, @font-face in src/styles/fonts.css because the vendor package has no latin-only entry point).
      `--font-body` is live (PT Serif) and stays under the same name. ---- */
-  --color-book-gray: #1a1a1c;
-
   --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-body: "PT Serif", ui-serif, Georgia, serif;

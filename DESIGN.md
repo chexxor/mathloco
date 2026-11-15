@@ -19,44 +19,73 @@ not a design value.
 fill. `paper` is the page's ground, `ink` is the ground inside the one dark band, `panel` is a card's ground.
 Every contrast number in this file is a **pair** — a role against the ground it is painted on — and a number
 quoted without its ground is not a fact. That is why the palette carries `-on-ink` twins (D116) and why a tint
-(`panel`, 1.04 against `paper`) is not a layer (the layer bar is 1.35).
+(`panel`, 1.05 against `paper`) is not a layer (the layer bar is 1.35).
+
+The table below is the 2026-11-14 palette (D316): the commissioned read's hexes (docs/design-critique-2026-11-14.md
+§3) mapped onto these role names, re-solved wherever a role's own bar disagreed. Every number is printed by
+`npm run check:contrast`, which reads the tokens out of `src/styles/global.css` and runs them through
+`design/grill/okcolor.mjs` @measured 2026-11-14 — the same arithmetic the renderer agreed with to ±0.15 in the
+rounds that chose them (D101), and the same file `design/grill/palette-remap.mjs` used to solve them.
 
 | Role | Value | Means | Measured |
 |---|---|---|---|
-| `paper` | `oklch(98.5% .006 85)` | the page ground | — |
-| `panel` | `oklch(97% .008 85)` | a quiet fill, **not** a layer | 1.04 vs paper |
-| `tint` | `oklch(95% .03 152)` | hover fill; carries ink | ink on tint 10.96 |
-| `ink` | `oklch(32% .045 152)` | text, and the ground of the one dark band | 12.02 on paper |
-| `ink-hover` | `oklch(40% .055 152)` | the primary button's hover fill | 7.33 under `band-text`, 1.39 over `ink` |
-| `ink-2` | `oklch(45% .035 152)` | secondary text, chip label, cancelled title | 7.02 |
-| `ink-3` | `oklch(52% .028 152)` | meta, the dated line, "time not set" | 5.21 |
-| `rule` | `oklch(65.5% .03 152)` | the only boundary role | 3.01 on paper, 4.00 on ink |
-| `gold` | `oklch(55% .12 62)` | quiet action, notice word, caution keyline | 4.82 text and keyline |
-| `gold-on-ink` | `oklch(76% .06 84)` | same role on the dark band | 5.80 on ink |
-| `band-text` | `oklch(93% .008 152)` | text on ink; also the primary button label | 10.19 on ink |
-| `path-calendar` / `-meetup` / `-discord` / `-mobilizon` | `50/.11/205`, `47/.15/315`, `50/.14/35`, `50/.10/105` | one reserved hue per join path | 5.28 / 7.09 / 6.15 / 5.68 on paper |
-| `path-*-tint` | `95% .03 <hue>` | chip track, deliberately flat | 1.12 vs paper |
-| `path-*-on-ink` | `70/.11/205`, `72/.15/315`, `71/.14/35`, `69/.10/105` | the same four paths on the dark band | 4.91 / 4.74 / 4.59 / 4.57 |
+| `paper` | `oklch(97.35% .0139 88.7)` `#faf6ec` | the page ground | — |
+| `panel` | `oklch(99.09% .0123 91.5)` `#fffcf3` | a quiet fill, **not** a layer | 1.05 vs paper |
+| `tint` | `oklch(91.92% .0285 74.3)` `#f0e2d0` | hover fill, chip ground; carries ink | ink on tint 14.53 |
+| `ink` | `oklch(18.92% .0149 81.4)` `#17130c` | text, and the ground of the one dark band | 17.15 on paper |
+| `accent-strong` | `oklch(42.22% .109 35.35)` `#7e3320` | the primary button's hover fill (the role `ink-hover` held) | 7.83 under `band-text`, 2.10 over `ink` |
+| `ink-2` | `oklch(45.17% .0252 85.9)` `#5c5546` | secondary text, chip label, cancelled title | 6.84 |
+| `ink-3` | `oklch(50.5% .03 86)` `#6c6451` | meta, the dated line, "time not set" | 5.44 paper, 5.72 panel, 4.61 tint |
+| `rule` | `oklch(60% .04 86.6)` `#8b7f65` | the only boundary role | 3.66 paper, 3.85 panel, 3.10 tint, 4.69 ink |
+| `accent` | `oklch(50.57% .1321 35.7)` `#a2432a` | quiet action, notice word, focus ring, caution keyline | 5.77 text and keyline |
+| `accent-on-ink` | `oklch(66% .10 35.7)` `#c77b67` | the accent as the band may paint it | 5.69 on ink |
+| `band-text` | `oklch(96% .012 88)` `#f5f1e9` | text on ink; also the primary button label | 16.43 on ink |
+| `path-calendar` / `-meetup` / `-discord` / `-mobilizon` | `51/.11/205`, `49/.15/315`, `52/.15/262`, `51/.11/145` | one reserved hue per join path | 4.90 / 6.27 / 5.23 / 5.09 on paper |
+| `path-*-tint` | `93% .03 <hue>` | chip track, deliberately flat | 1.12–1.15 vs paper |
+| `path-*-on-ink` | `64/.11/205`, `64/.15/315`, `64/.15/262`, `64/.11/145` | the same four paths on the dark band | 5.78 / 5.15 / 5.41 / 5.77 |
+
+Two things the round had to change rather than adopt. The read's `--rule #dfd6c2` measures **1.34** against
+paper — under the 3.0 boundary bar and under the 1.35 layer bar, so it is not a line, it is a smudge; `rule` is
+the same hue family solved to clear 3.0 on every ground it is ever drawn on. The read's `--amber #e9a63f` is
+**not adopted**: 1.95 against paper is a band, not a tint, and it is 0.043 OKLab from Amazon orange, inside this
+repo's own 0.05 same-colour bar (D88). And the hues moved: the new ink sits at hue 81.4, so mobilizon's olive
+(105) was 24 degrees from it — one channel, not two — and discord's orange (35) was the accent's hue. Discord
+takes its own brand's blue (262), 134 degrees from the accent and 57 from the calendar. `check:contrast` prints
+every gap and fails one under 40 degrees (round 3b).
 
 **Never** use a Tailwind palette colour (`text-gray-600`, `bg-blue-100`, `text-red-600`) where a role
-exists; use the role. **Never** add a signal hue: the system has no red and no amber, and severity is
-carried by the notice's keyline and word (D102). **Never** put `gold` on a `tint` (4.39, under AA) —
-tints carry ink, gold carries paper. **Never** put a keylined control on a `panel` (`rule` on panel =
-2.88, under the 3.0 boundary bar). **Never** let a coloured fill express a state (every shipped state
-fill measures 1.05–1.09 = flat).
+exists; use the role, and never write a hex — `check:contrast` fails any paint literal in `src/` outside
+`src/styles/global.css`. **Never** add a signal hue: the system has no red and no amber, and severity is
+carried by the notice's keyline and word (D102). **Never** put `accent` on a `tint` — the pair reads (4.89),
+which is exactly why it is a grammar rule rather than a legibility one: tints carry ink, the accent carries
+paper (D102). **Never** put `accent` on `ink` (2.97): an invisible ring, and the band takes `accent-on-ink`
+instead (D116). The round-4 rule that a keylined control may never sit on a `panel` is **retired** — `rule`
+against the new panel measures 3.85, above the 3.0 boundary bar (D316). **Never** let a coloured fill express
+a state (every shipped state fill measures 1.05–1.18 = flat).
 
 Bars, non-negotiable: **4.5** text (3.0 for text at/below the `display-2` step), **3.0** for a boundary
 or graphic, **1.35** for "this is a separate layer", **24px** minimum target, **44px** for every pressable
 block at phone widths (D139: the bar belongs to the tap, not only to the primary).
 
-**A hover always goes lighter.** `ink` → `ink-hover`, `paper` → `tint`; a control that darkens on hover
-next to one that lightens is two grammars. On the layer bar this is not cosmetic: at `L` 38 the hover
-fill sits 1.29 from the resting fill, which is FLAT — the hover simply does not happen.
+**A hover always goes lighter.** `ink` → `accent-strong`, `paper` → `tint`; a control that darkens on hover
+next to one that lightens is two grammars. On the layer bar this is not cosmetic: round 6 measured a hover
+fill sitting 1.29 from the resting fill, which is FLAT — the hover simply does not happen. Legibility is not
+the binding bar for the hover fill either: `band-text` clears 4.5 across `L` 42..79 at this hue, so the layer
+bar decides the lightness, and 42.22 clears it with room (2.10).
 
-**Focus rings take one role per ground:** `outline-gold` on paper (4.82) and `outline-band-text` on the
-dark band (10.19), always with `outline-2 outline-offset-2`. `gold` on the band is 2.50 = an invisible
+**One hue on a control: the accent family** (S038). A control may carry `accent`, `accent-strong` or
+`accent-on-ink` and no other hue — the join-path hues belong to a path, not to a button.
+
+**Focus rings take one role per ground:** `outline-accent` on paper (5.77) and `outline-band-text` on the
+dark band (16.43), always with `outline-2 outline-offset-2`. `accent` on the band is 2.97 = an invisible
 keyboard ring, and the shipped artifact proved that failure mode twice (`focus:shadow-outline-blue` was
 a Tailwind 2 name that generated nothing).
+
+**The one open colour question.** `accent` is 0.091 OKLab from Target red and `accent-strong` 0.071 from UMN
+maroon, both inside D88's 0.135 "not a commerce brand" bar; the adopted ink is 0.046 from Amazon ink, inside
+the 0.05 same-colour bar @measured 2026-11-14 by `node scripts/check-contrast.mjs`. The gate prints these as
+notes and fails if a token drifts *closer* than the recorded number. Moving the accent to the nearest
+hue-35.7 candidate that clears 0.135 (`#915848`, 5.27 on paper) is the operator's call, not a delegate's.
 
 ## Spacing — 4px grid, eight steps
 
@@ -181,10 +210,10 @@ thing to enforce. **Never** use `rounded-lg`/`rounded-md` (Tailwind's ramp) on a
 
 | Token | Value | Use |
 |---|---|---|
-| `inset-shadow-rule` | `inset 0 0 0 1px` `rule` | every boundary on paper and on the band |
-| `inset-shadow-gold` | `inset 0 0 0 1px` `gold` | the caution variant of a notice, and the only edge that is legal on a tint |
+| `inset-shadow-rule` | `inset 0 0 0 1px` `rule` | every boundary, on paper, on a panel, on a tint and on the band |
+| `inset-shadow-accent` | `inset 0 0 0 1px` `accent` | the caution variant of a notice, and the only edge that is legal on a tint |
 | `inset-shadow-path-*` | 1px of the path hue | chip and tag keylines |
-| `shadow-e1` | `0 1px 2px rgba(32,57,39,.165)` | something that floats: a menu |
+| `shadow-e1` | `0 1px 2px rgba(23,19,12,.165)` | something that floats: a menu |
 | `shadow-e2` | `0 2px 5px -1px …,.22 + 0 12px 28px -6px …,.30` | something that floats over content |
 
 Those are the token's numbers, not the page's: they are the stops composited at full alpha in
@@ -201,34 +230,34 @@ band.
 's `<header>` carries **no** `bg-*` class: its computed background was the page paper (layer contrast **1.00**,
 OKLab distance 0 @measured 2026-11-13 by `node design/round17.mjs --only shipped`), so `bg-paper` painted nothing
 and only invited a reader to think the bar has a surface of its own. The one device separating it is the
-`inset-shadow-rule` ring at **3.01** on paper. How much of the band actually differs from the page @measured
+`inset-shadow-rule` ring at **3.66** on paper @measured 2026-11-14 by `npm run check:contrast`. How much of the band actually differs from the page @measured
 2026-11-13 by `node design/header-band.mjs .design/tmp-round17/shot-shipped-1240.png 71` (Linux native,
 Firefox 159.0): **5.00%** of the 1240×72 band — 2.78% the ring's two rows, 2.22% the nav ink. `check:render`'s
 `bands` section only sees elements with a `bg-*` class, so once a surface declares no ground this probe is the
 instrument that still reports it.
 
-**A keyline is a PAIR, and `rule` is solved for two grounds, not for all of them.** `--color-rule`
-measures **3.01** on `paper`, **4.00** on the `ink` band, **2.88** on `panel` and **2.74** on `tint` — so
-on a tint it sits under the 3.0 graphic bar it was solved to clear. That is a measurement, not a
-taste call, and it is why the table says "on paper and on the band" rather than "everywhere".
-@measured 2026-11-03 by check:ground and check:render
+**A keyline is a PAIR, and D316 re-solved `rule` for every ground, not just two.** The old `rule` measured
+**3.01** on `paper`, **4.00** on the `ink` band, **2.88** on `panel` and **2.74** on `tint` @measured 2026-11-03
+by check:ground and check:render — which is why round 4 banned a keylined control on a panel. The adopted rule
+(`oklch(60% .04 86.6)`, `#8b7f65`) clears **3.66** paper, **3.85** panel, **3.10** tint, **4.69** ink
+@measured 2026-11-14 by `npm run check:contrast`, so the ban is retired and a ring may sit on any ground the
+palette has.
 
 A ring is drawn ON A BOUNDARY, so it has two neighbours: the fill inside it (its own background, or
 whatever shows through an unfilled box) and the ground it stands on. The operator's ruling
 (D149-3c, 2026-11-03) is **a keyline may not straddle two grounds, and the fix is the placement, not
 the number**. What that means when choosing a token:
 
-- a `rule`-ringed box sits on `paper` or inside the band — never inside a `bg-panel` or `bg-tint`
-  region, and never carrying a `panel` or `tint` fill of its own;
+- a `rule`-ringed box may now sit on `paper`, `panel`, `tint` or inside the band — the boundary role clears
+  3.0 on all four (D316). It still may not *straddle* two different grounds: a ring has two neighbours and
+  the weaker side is what the reader sees (D149-3c);
 - a control that paints its own fill is ringed only where that fill **equals the ground it stands on**.
-  `bg-paper inset-shadow-rule` is the shipped secondary for exactly that reason, and it was a defect
-  the moment it moved inside the tinted join card;
-- a box on a tint carries **no** `rule` ring. If it needs an edge, the edge is the caution variant
-  (`inset-shadow-gold`: 4.61 on `panel`, 4.82 on `paper`, both over the 4.5 text bar) and the state has
-  to actually be a caution — that is what the grammar means, and using gold to rescue a `rule` ring
-  would be colour as decoration;
-- `panel` is 1.04 against `paper` (a tint, not a layer: the layer bar is 1.35), so a tint was never
-  doing the separation a ring does. Taking the ring off a tinted box costs no readable edge.
+  `bg-paper inset-shadow-rule` is the shipped secondary for exactly that reason;
+- a box on a tint that needs a caution edge takes `inset-shadow-accent`: **5.77** on paper and **4.89** on a
+  tint @measured 2026-11-14 by `npm run check:contrast`, both over the 4.5 text bar — and the state has to
+  actually be a caution, because using the accent to rescue a missing ring would be colour as decoration;
+- `panel` is 1.05 against `paper` (a tint, not a layer: the layer bar is 1.35), so a tint was never doing the
+  separation a ring does. Taking the ring off a tinted box costs no readable edge.
 
 `check:render` measures both sides of every inset ring on every route the build emits and fails a straddle or a
 ring under the bar (`design/emitted-routes.mjs` derives the set, so a new page is measured without being added to a
@@ -285,32 +314,35 @@ how a block gets a second way out without a second button.
 
 | Component | Construction | Measured |
 |---|---|---|
-| primary | `ink` fill, `band-text` label, 48px | 10.19, hover 7.33 |
-| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint`, and **on `paper` only** — a ringed control inside a tinted card straddles two grounds (D149-3c) | 12.02 / 10.96 |
-| quiet | `gold` label, 32px standalone; **no keyline inside a notice** | 4.82 |
-| chip | its own component, not a button: `ink-2` label on `path-*-tint`, `inset-shadow-path-*`, 24px | 6.27 label, 5.28–7.09 edge |
+| primary | `ink` fill, `band-text` label, 48px | 16.43, hover 7.83 |
+| secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint`, and **on `paper` only** — a ringed control inside a tinted card straddles two grounds (D149-3c) | 17.15 label, 3.66 ring, 14.53 hover |
+| quiet | `accent` label, 32px standalone; **no keyline inside a notice** | 5.77 |
+| chip | its own component, not a button: `ink-2` label on `path-*-tint`, `inset-shadow-path-*`, 24px | 5.95–6.09 label, 3.18–3.25 edge |
+
+Every number in that table is a token pair, @measured 2026-11-14 by `node design/grill/palette-remap.mjs` — the
+same table `npm run check:contrast` prints, and the same one the gate fails on.
 
 A box has exactly **one** boundary. A notice's action therefore takes the `quiet` label with no keyline
-of its own — a second `rule` hairline 12px inside the notice's own keyline reads as a double border and
-is illegal on a panel anyway (2.88). Because gold is also the caution colour, an in-notice action is
+of its own — a second `rule` hairline 12px inside the notice's own keyline reads as a double border. Because
+the accent is also the caution colour, an in-notice action is
 distinguished from the status word by an **underline at rest**, its lane, and its size — never by a
 second colour.
 
 ## Notices, status words, freshness
 
-- A notice = **word + keyline** on the page's own ground: edge `inset-shadow-rule` (3.01 paper / 4.00
-  band), word `ink`, body `ink-2`, meta `ink-3`, padding 12/16. One-line notice **48px**, two-line body
-  **64px**. Caution variant: `gold` keyline and word (4.82 on paper, 4.61 on a tint); on the band,
-  `gold-on-ink` (5.80). No fill.
-  **A notice's ground is `paper` or the band.** On a tint the `rule` edge reads 2.88, under the graphic
-  bar, so a notice is not drawn on `panel` at all: either the block moves to a paper ground, or the
-  state is the caution variant, which is a real claim (the gold grammar means "something is off") and
-  not a way to buy an edge. `WhyJoinUs.astro`'s empty-thread list is that case: the whole section is a
-  tint, there is no paper to move it onto, and an empty list is a fact about the page's wiring rather
-  than about the club.
+- A notice = **word + keyline** on the page's own ground: edge `inset-shadow-rule` (3.66 paper / 3.85 panel /
+  3.10 tint / 4.69 band @measured 2026-11-14 by `node design/grill/palette-remap.mjs`), word `ink`, body
+  `ink-2`, meta `ink-3`, padding 12/16. One-line notice **48px**, two-line body **64px**. Caution variant:
+  `accent` keyline and word (5.77 on paper, 4.89 on a tint); on the band, `accent-on-ink` (5.69). No fill.
+  **A notice may sit on any ground whose ring does not straddle two grounds** (D149-3c). Round 4 banned a
+  keylined notice on `panel` because `rule` measured 2.88 there; D316 re-solved `rule` to clear 3.0 on paper,
+  panel, tint and band, so that ban is **retired** and the straddle is what the gate checks. `WhyJoinUs.astro`'s
+  empty-thread list is the case the caution grammar exists for: the whole section is a tint, there is no paper
+  to move it onto, and an empty list is a fact about the page's wiring rather than about the club.
   `check:render` measures every `role="status"` / `role="alert"` block in the built page and fails on a
-  fill, on an inset other than 1px, on a keyline contrast that is not the rule (**3.01 in both the
-  specimen and the built page** — D116), on text under the 4.5 bar, or on a block under 48px.
+  fill, on an inset other than 1px, on a keyline under the 3.0 graphic bar (the token pair is 3.66 on paper;
+  the harness reads painted bytes, never the authored triple — D101/D116), on text under the 4.5 bar, or on a
+  block under 48px.
 - **A notice is one boundary** (operator ruling, 2026-11-03). The ring around a notice is the only edge in it,
   so nothing inside a notice may carry its own fill or its own ring: an action in a notice is an **inline link**
   (a sentence with a link in it) or a **quiet label** — `text-label font-medium text-ink`, underline at
@@ -325,9 +357,13 @@ second colour.
   `ink-2`.
 - "Time not set" is stated **in the date lane** where the clock would be (`ink-3`), never defaulted to
   12:00 am, and never rendered as a date.
-- Freshness is **one dated line, always**, in the same slot on every surface: `ink-3`, tabular numerals,
-  e.g. "Schedule copied 30 Oct 2026". No staleness alarm: the real harvested feed has gaps of 4, 10 and
-  4 days, so any 7-day threshold fires in an ordinary month.
+- Freshness is **one line, one register**, in the same slot on every surface: `ink-3`, tabular numerals, and the
+  wording comes from `provenanceStamp()` in `src/lib/provenance.mjs` — **relative inside 30 days** ("last read 11
+  days ago"), **absolute beyond** ("Copied from the club’s own calendar on Nov 13, 2026") (D322, 2026-11-14). A
+  surface ruled date-free passes `allowDate: false` and still gets the age form of the same rule.
+  `npm run check:provenance` fails a page that computes its own age outside that module: **43 source files, 5 built
+  pages, threshold 30 days** @measured 2026-11-14 by `node scripts/check-provenance.mjs`. No staleness alarm: the
+  real harvested feed has gaps of 4, 10 and 4 days, so any 7-day threshold fires in an ordinary month.
 
 **Never** use strikethrough or colour as the only status cue. **Never** hide a cancelled event from the
 page while `/events.ics` announces `STATUS:CANCELLED`. **Never** invent a threshold and call it
@@ -348,8 +384,8 @@ freshness.
 - **Applied in `DiscordSummary` (apply 4c): the pending block IS that line.** It is the notice grammar
   (`inset-shadow-rule`, no fill, word `ink`, body `ink-2`, meta `ink-3`), and `min-h-20` reserves the
   fixed part of whatever lands: dated line 16 + `space-y-6` 24 + a card header 40 = **80px**. Measured in
-  the built page: 80px at 1240, 100px at 390 (the meta line wraps), 124px at 320; inset ring **3.01**
-  against its ground, word at **12.02**. The deleted spinner painted 2px of `blue-600` — measured 4.98
+  the built page: 80px at 1240, 100px at 390 (the meta line wraps), 124px at 320; inset ring **3.66**
+  against its ground, word at **17.15** @measured 2026-11-14 by `npm run check:contrast` (D316). The deleted spinner painted 2px of `blue-600` — measured 4.98
   under the arithmetic path D116 replaced, and higher than that in painted bytes, which only strengthens
   the point: 2px of foreign hue is not the 1px `rule` ring the grammar names.
 - **The pending sentence is also the JavaScript-off state.** It reads "The channel summaries have not
@@ -370,22 +406,23 @@ freshness.
 ## Layout rules that came out of the colour rounds
 
 - **At most one dark band per screen**, ground = `ink`, text `band-text`. That is where the quote and
-  interview cards live; cards inside it are flat with the same `rule` hairline (4.00 there). Today the
+  interview cards live; cards inside it are flat with the same `rule` hairline (4.69 there, @measured 2026-11-14 by
+  `node design/grill/palette-remap.mjs`). Today the
   one band is the footer, and the footer is the site's **exit**, so it carries paths, identity and date —
   never a slogan:
   - It must contain **pressable paths**. `check:render` fails a band with no link in it (D115); the band
     that used to sit here was a sentence with a pulsing glyph and zero links.
   - **No fill buttons on the band.** The primary control is an `ink` fill, and ink on ink is invisible,
-    so band paths are links named by hue instead: `text-path-meetup-on-ink` (4.74) and
-    `text-path-discord-on-ink` (4.59), the variants the token block solved for this ground.
-  - **The focus ring on the band is `outline-band-text`.** Gold on ink measures 2.50 and is banned, and a
+    so band paths are links named by hue instead: `text-path-meetup-on-ink` (5.15) and
+    `text-path-discord-on-ink` (5.41), the variants the token block solved for this ground (D316).
+  - **The focus ring on the band is `outline-band-text`.** `accent` on ink measures 2.97 and is banned, and a
     headless screenshot cannot focus anything, so `check:render` cannot see a focus ring at all —
-    `ratify-check` greps `Footer.astro` for the rings and fails if a gold one comes back.
+    `ratify-check` greps `Footer.astro` for the rings and fails if an `outline-accent` one comes back.
   - **Targets**: band path links pad to 32px like the nav; a link inside a sentence keeps its 24px line
     box, and the gate floor for any band target is 24px.
   - **Identity, not a locator**: the club name in `text-body` serif at every width, never a display step
     (D112 — the display step belongs to a screen's locator, never to a punchline), with the ∑ glyph inline
-    at the size of the word beside it, `gold-on-ink`, `aria-hidden`, and **static**.
+    at the size of the word beside it, `accent-on-ink`, `aria-hidden`, and **static**.
   - **Small print** carries place and date only. No frequency (D92), and the old "All rights reserved"
     boilerplate went with the band it lived in.
   - **Every page the build emits ends with this band** (D307, 2026-11-14). `check:render` enforces the band's rules
@@ -401,9 +438,9 @@ freshness.
 - The nav is **one row at every width, `flex-wrap: nowrap`, one type tier at every width**: links at
   `text-label` with 16px gaps, targets 32px tall (16px line box + py-2). Shape is D100's; the tier
   boundary is not (D117). The mark is the club's own name — `Matheapolis` since the 2026-11-07 rename, `MPLS Math Club`
-  before it — in `font-body` at the `text-body` step, ink, no accent: the old gold `Math` inside the mark depended on
-  "Math" being a word inside the mark, and a coined single word has no word boundary to colour. (The gold `∑` summand
-  stays, and only on the ink band, where `gold-on-ink` is the hue the contrast oracle allows.) It is the home path, and
+  before it — in `font-body` at the `text-body` step, ink, no accent: the old accent-coloured `Math` inside the mark depended on
+  "Math" being a word inside the mark, and a coined single word has no word boundary to colour. (The `∑` summand
+  stays, and only on the ink band, where `accent-on-ink` is the hue the contrast oracle allows.) It is the home path, and
   its `aria-label` carries the name. D100 rejected a 13px target, so do
   not shave the padding.
 - **The label set is the mark plus `Dates`, `Chat` and `Ways in`.** `Schedule` and `Members` were dropped on
@@ -505,7 +542,7 @@ component's silence. The box is **32px** tall wherever the lane holds all three 
 `/schedule` — and **104px** at 390 and 320 where each label takes its own (two 4px `gap-y-1` rows between three
 32px line boxes). Height × width @measured 2026-11-14 by `npm run check:render:dist` (Linux native, Firefox 159.0,
 PASS, **5 routes × 4 widths**): `/schedule` 32x645, 32x544, 104x314, 104x244 for 1240/640/390/320 — the homepage's
-half of this line (32x633, 68x532, 104x314, 104x244) is history with its card (D306). Its links render the label tier **13.3px** at **12.02** contrast on paper, and the gate asserts all three,
+half of this line (32x633, 68x532, 104x314, 104x244) is history with its card (D306). Its links render the label tier **13.3px** at **17.15** contrast on paper (D316), and the gate asserts all three,
 because `check:render:selftest` plants a fill, a ring, a lost `min-h-8` and a `data-control` promotion, each of
 which must go red.
 - **The order is a permutation, never a filter** (S022, D281). The server paints Meetup, Discord, Facebook; the
@@ -537,7 +574,7 @@ which must go red.
   The one-sprite-per-render rule was measured on a fixture that renders
   the cluster twice: 3 `<symbol>` defs, 6 `<use>` refs, three requests in a row @measured 2026-11-13 by
   `node design/sprite-claim.mjs` (fixture deleted after the run; D297).
-  The glyph is painted in `currentColor`, so a mark is the ink of the label it belongs to and turns gold with it on
+  The glyph is painted in `currentColor`, so a mark is the ink of the label it belongs to and turns accent with it on
   hover; a mark that carried its own brand colour would be a second colour rule, which the named-roles section
   forbids.
 
@@ -558,12 +595,18 @@ column below gives the **social** row first and the **study-session** row second
 | 768 | 708x480 / 708x509 | 660x164 (both) |
 | 640 (stacked) | 580x516 / 580x545 | 532x200 |
 | 390 | 346x576 / 346x632 | 314x265 / 314x293 |
-| 320 | 276x570 / 276x616 | 244x293 / 244x317 |
+| 320 | 276x594 (first row) / 276x616 | 244x317 (both) |
+
+The first row at 320 is **594** where every other social row is 570: the zone word `Central` on the first date
+wraps to a second line inside a 244px lane @measured 2026-11-14 by `node design/schedule-geometry.mjs
+--routes /schedule --widths 1240 1024 640 390 320` — **+24px on that row, +24px on the page (4032 → 4056)**, and
+**0** at 1240, 1024, 640 and 390. That is the price of naming the zone once (D327), and it is the only row that
+pays it.
 
 The homepage card this table used to carry a column for (1164x228 at 1240, 276x626 at 320) is history with the card
-(D306). The shape is gated, not remembered: `npm run check:row-geometry` (11-case selftest, 0 wrong, both steps in
+(D306). The shape is gated, not remembered: `npm run check:row-geometry` (17-case selftest, 0 wrong, both steps in
 `verify`) reads every emitted row's `data-head`, its `max-w-measure` prose wrapper, the plate after the copy zone,
-and the emitted `--container-measure` against the 40-75 band, and it failed on the audit's question — before it
+the row's `<time datetime>` against its `data-date` handle, and the emitted `--container-measure` against the 40-75 band, and it failed on the audit's question — before it
 existed, deleting the head or the cap changed nothing any gate could see (D314, S038). The desktop rows did not move when the row became three zones (D313); **900 and 768 are 28px taller** than
 the 2026-11-13 table recorded (452→480, 481→509) because the row's prose now wraps inside `max-w-measure` instead of
 running the full 792px column.
@@ -645,11 +688,11 @@ stock crowd shot with a scrim and `#f59e0b` type over it.
   uppercase, club name `text-display-4` (the one display step per screen, on the locator — D112), lede
   `text-heading` in PT Serif 400, focus line `text-micro` uppercase, paths row `text-lede`.
 - **The paths row is the footer's grammar** (D115, D106): word plus hue, in `path-meetup-on-ink` /
-  `path-discord-on-ink`, the domain in `gold-on-ink`, hairline `rule` between. No fill buttons on a band —
+  `path-discord-on-ink`, the domain in `accent-on-ink`, hairline `rule` between. No fill buttons on a band —
   `ink` on `ink` is invisible.
 - **The mark is the operator's sphere diagram** (geometry from the ratified round-4 specimen, corrected on
   the operator's rulings of 2026-11-02 — see *Graphics* below). The two curves arriving at the meeting point
-  carry `gold-on-ink`; `gold` on ink is 2.50 and banned.
+  carry `accent-on-ink` (5.69); `accent` on ink is 2.97 and banned (D316).
 - **firefox composes the pixels**, through the same `design/grill/page-measure.mjs` loop the gates use,
   and the generator refuses to write a card when `document.fonts.load()` reports any ratified face missing.
 - **What the card does not say:** no cadence word ("monthly" in config vs "weekly" in the old hero is the
@@ -664,9 +707,10 @@ Five measured consequences that changed the code, each one invisible to a source
    4-channel PNG, and the body background came out alpha 0, so the card read as near-black (4,7,4).
 3. Below ~24px no glyph pixel reaches full coverage, so colour **identity** is asserted by bytes only at
    ≥24px (title off by 1, lede off by 4) and by **pair contrast + hue** below it. Measured: the 19.2px
-   Discord path's token pair is 4.60 while the brightest painted cluster is 4.27 — holding the pixels to
+   Discord path's token pair is 5.41 on the band while the brightest painted cluster in the JPEG lands below it
+   (the pair-vs-pixels gap was measured 4.60 / 4.27 on the pre-D316 card) — holding the pixels to
    4.5 would fail honest work, so the palette is held to the bar and the pixels to 85% of the pair.
-4. Colour-cluster merging (40 RGB units) folds JPEG ringing into the reported colour and moved a gold
+4. Colour-cluster merging (40 RGB units) folds JPEG ringing into the reported colour and moved an accent
    word's hue reading 43 degrees; hue is read off the most chromatic pixels instead.
 5. The planted control — the title line asked for in `NoSuchFace At All`, laid out and painted nowhere —
    measures 1200px against the real 776px. That is what calibrates the 1.5%-of-run drift tolerance which
@@ -688,11 +732,12 @@ the gate can fail.
 Tailwind's default `#3b82f6` ground with a `white` glyph — a colour in no token and a pair measuring **3.68**
 against the 4.5 text bar, in the tree since the Init commit and untouched by the design round @measured
 2026-11-14 by `node design/grill/okcolor.mjs` (the repo's one OKLab implementation). It now paints
-`--color-ink` (#203927) ground with a `--color-paper` (#fcfaf6) glyph, **12.02**, the same pair the band and
+`--color-ink` (#17130c) ground with a `--color-paper` (#faf6ec) glyph, **17.15** @measured 2026-11-14 by
+`node design/grill/palette-remap.mjs`, the same pair the band and
 `::selection` use, and `rx 6` is `--radius-control`. `npm run check:favicon` asserts four things from the
 committed bytes: every fill is a token, at most two colours in the mark, the pair clears 4.5, and no
 `--color-path-*` hue appears in it (round 3b reserves those hues for channels the visitor leaves for).
-`check:favicon:selftest` plants each of those defects — a named colour, a Tailwind hex, a 3.01 pair, three
+`check:favicon:selftest` plants each of those defects — a named colour, a Tailwind hex, a 3.66 pair, three
 hues, a channel hue, an empty mark, a missing file — with three clean controls @measured 2026-11-14 by the
 selftest: **10 cases, 0 wrong**; the gate runs in **0.18s**, its selftest **0.18s**, both in `verify`.
 
@@ -750,8 +795,8 @@ Rules for drawing it:
   only shippable if it still reads at the 276px phone box, which needs a measured overlap test against real
   boundary data rather than an opinion.
 
-- **Colour by role, in literal classes**: `stroke-rule` (sphere), `stroke-ink` (routes), `stroke-gold`
-  (accents, meeting dot), `fill-gold`. Tailwind generates CSS only for classes it sees in source, so the
+- **Colour by role, in literal classes**: `stroke-rule` (sphere), `stroke-ink` (routes), `stroke-accent`
+  (accents, meeting dot), `fill-accent`. Tailwind generates CSS only for classes it sees in source, so the
   class string must be literal in the `.astro` file — a computed name paints nothing (D110). `ratify-check`
   asserts the literals stay coupled to `MARK_COLOURS`.
 - **Intrinsic sizing, never a pixel box**: `<svg viewBox="0 0 240 150" class="w-full h-auto block">`. Any
@@ -765,8 +810,8 @@ Rules for drawing it:
   pair (D119). The gate holds both: the pair >= 3.0, and the device stroke >= 1px.
 
 Measured consequence, kept in view rather than tuned away: at 320 the sphere's 1.3-unit stroke lands at
-**1.49px** and its pixels top out near 2-3 against sand where the token pair is 3.01, while the routes
-(1.61px, pair 12.02) and the gold (1.84px, pair 4.82) stay fully covered. So at phone width the mark reads
+**1.49px** and its pixels top out near 2-3 against the ring's ground where the token pair is 3.66, while the routes
+(1.61px, pair 17.15) and the accent (1.84px, pair 5.77) stay fully covered. So at phone width the mark reads
 as routes arriving at a point without its context ring. `node design/mark-pixels.mjs <shot> <report>`
 re-measures this; changing `MARK.shapes[*].sw` re-runs the card pipeline, not just the render gate.
 
@@ -784,9 +829,9 @@ and the screen can disagree.
   2,038 — were measured against the *wrong* drawing and are not comparable; a re-ruling of line weight is
   cheap now that the geometry is right).
 - The probe calibrates its own colour roles from the per-shape contrast numbers the page report carries
-  (line pair 3.01, route pair 12.02, gold pair 4.82; neutral roles split at the geometric mean, warm roles by
+  (line pair 3.66, route pair 17.15, accent pair 5.77; neutral roles split at the geometric mean, warm roles by
   R−B ≥ 25). Guessing them from luminance classified the sphere ring as route ink and produced confident
-  nonsense ("0 crossings", "0 gold pixels near the pole").
+  nonsense ("0 crossings", "0 accent pixels near the pole").
 
 ### The horizon band: PS-5, and why it is three plates rather than one wide one (ruled 2026-11-04, shipped)
 - The operator's ruling on the round-14 specimen was **1c** — not the Byrne band, not the single 1910 horizon, but
@@ -829,10 +874,20 @@ and the screen can disagree.
   labelled "photo coming" is a production note wearing a visitor's clothes (`design/records/0010-missing-content-is-a-state.md`).
   A photo that exists **requires an `alt` describing what it shows**, or the build throws: an invented alt is the
   same defect as an invented photograph, and nothing renders it visually.
+  An `alt` is **at most 12 words and says what the picture shows**; the citation (book, year, leaf) goes in the
+  `<figcaption>` under it, and a plate that carries nothing the page does not already print is declared
+  `data-decorative="true"` with `alt=""` — a decision on the page, not a gap (D324, 2026-11-14, superseding D312's
+  18-word cap and the five event plates' "The club's own event image for this social", 8 words about the file rather
+  than the picture). `npm run check:alt` reads every `.html` in the artifact and fails a missing alt, an undeclared
+  empty alt, an alt over 12 words, an alt that names the file's role, a citation in an alt with no caption, and an
+  `<img>` with no intrinsic size: **4 described alts, 5 declared-decorative plates, longest 12 words, 5 built pages**
+  @measured 2026-11-14 by `node scripts/check-alt.mjs`.
   The **review** state (placeholder mode, reachable only from `src/content.local/`) draws the measured box with
-  `inset-shadow-gold` and **no fill**: a `rule` ring over a `tint` fill measures 2.74 inside / 3.01 or 2.88 outside,
-  which is a keyline straddling two grounds (D149-3c, record 0024), and inside a `bg-panel` region a `rule` ring is
-  illegal at any placement (2.88 on both sides). Gold reads 4.82 on paper, 4.61 on panel, one ground each side.
+  `inset-shadow-accent` and **no fill**: a `rule` ring over a `tint` fill puts the ring on two grounds at once
+  (D149-3c, record 0024 measured 2.74 inside / 3.01 outside on the pre-D316 palette; `rule` now reads 3.10 on
+  tint and 3.66 on paper, so the straddle is the only half of that rule left standing). The accent reads 5.77 on
+  paper and 6.07 on panel @measured 2026-11-14 by `npm run check:contrast`, and with no fill the ring has one
+  ground on both sides.
   No browser gate can see this state on the shipped page, so it has to be right by construction; the review-build
   recipe (`src/content.local/` + `check:render:dist`) is in record 0024.
 - **The aspect ratio is declared in CSS, never left to the file.** Tailwind preflight's `img { height: auto }`
@@ -955,6 +1010,28 @@ npm run check:social:live       # run the card generator into a gitignored temp 
                                 # like check:render it is outside verify: run it beside check:render.
 npm run check:social            # measure the committed share card's painted bytes against the page report
 npm run check:social:selftest   # prove the share-card checks can still fail (seven synthetic cards)
+npm run check:scale             # every margin/padding/gap step written in src/ is one of the eight above:
+                                # 45 source files, 52 distinct spacing utilities, 0 off-ladder @measured 2026-11-14
+                                # by `node scripts/check-scale.mjs` (its 12-case selftest plants gap-5, mt-23, py-10,
+                                # mt-7, gap-3.5, p-[13px] and a responsive-prefix case, plus a comment quoting the
+                                # defect that must NOT fire). `check:classes` proves a class *resolves*; this is the
+                                # gate that proves it is on the scale.
+npm run check:outline           # one h1 per built page and no skipped level: 5 pages, every ladder starting at h1
+                                # @measured 2026-11-14 by `node scripts/check-outline.mjs` (12-case selftest)
+npm run check:ext-links         # every anchor that leaves the site: rel carries noopener, it opens a new tab, the
+                                # "opens in a new tab" words are sr-only, no platform is named twice in one
+                                # accessible name, and no club route is painted target=_blank — 33 outbound anchors,
+                                # 33 qualified @measured 2026-11-14 by `node scripts/check-ext-links.mjs` (15 cases)
+npm run check:provenance        # every "how current is this" line goes through `provenanceStamp()` in
+                                # `src/lib/provenance.mjs`: relative inside 30 days, absolute beyond (D322). 43
+                                # source files, 5 built pages @measured 2026-11-14 by `node scripts/check-provenance.mjs`
+npm run check:line-art          # every `<figure data-line-art>` is a captioned `role="img"` drawing under 1200
+                                # bytes, strokes currentColor, nothing filled: the one original drawing on the site,
+                                # `/chat "undoable-steps"`, 622 bytes, 9 strokes @measured 2026-11-14 by
+                                # `node scripts/check-line-art.mjs`
+npm run check:threads           # the home page paints exactly min(cap, items) thread bullets and, when the set is
+                                # larger, links "the rest of the list" to /chat#threads — cap 6, 9 in content.json,
+                                # 6 painted, 3 reachable @measured 2026-11-14 by `node scripts/check-threads.mjs`
 npm run verify                  # the browser-free CI gate set (everything above except the pixel gates)
 ```
 
@@ -989,8 +1066,9 @@ colours in author syntax (`oklch(0.71 0.14 35)`), and the first version of `chec
 through OKLab by hand — which measured a colour no screen shows and read every pair 0.1–0.3 low (band
 text on ink 10.00 against a record of 10.19, `path-discord-on-ink` 4.47 against 4.59, which would have
 failed a token that passes). The harness now paints each colour into a 1px canvas and reads the byte
-back, which is why the harness and the oracle now agree exactly: rule on paper 3.01, ink on paper 12.02,
-band text 10.19, meetup/discord on ink 4.74 / 4.59.
+back, which is why the harness and the oracle measure the same thing. The numbers the round-4 palette printed
+through both — rule on paper 3.01, ink on paper 12.02, band text 10.19, meetup/discord on ink 4.74 / 4.59 — are
+that palette's; the table at the top of this file is the current one (D316).
 
 Two things these gates **cannot** catch, so enforce must be value-aware: Tailwind v4's dynamic spacing
 scale makes `mt-23` (92px) resolve, and "the class exists" is not "the value is on the scale". That is
@@ -1007,17 +1085,61 @@ an operator call, not a delegate change (`.notes/NEXT.md`).
 exists, `border` keylines, `shadow-*` outside `e1/e2`, `duration-*` outside 150/250, and any frequency
 word in event prose.
 
+## Surface grammar: headings, links, the thread list, drawings (ruled 2026-11-14)
+
+These are the rules the second commissioned read (docs/design-critique-2026-11-14.md) asked for that this repo
+accepted, each with the gate that keeps it true.
+
+- **Nothing sits above a page's first heading.** The eyebrow is gone; where it carried meaning it became a
+  subtitle *under* the h1 (S040, D309). `check:naming` plants an eyebrow above the h1 and a section h2 that is
+  another page's h1; `check:outline` (12 cases) fails a second h1, a page starting at h2, an h1 → h3 jump, an
+  empty heading and a heading whose only content is an image. Shipped: **5 built pages, every ladder starting at
+  h1 and never skipping a level** @measured 2026-11-14 by `node scripts/check-outline.mjs`.
+- **A link that leaves the site says so, once.** `rel="noopener noreferrer"`, an arrow, and
+  `, opens in a new tab` in an `sr-only` span — the words are written once, in `src/lib/links.mjs`, and derived
+  from the label so a label that already names the platform does not name it twice (S041, D317). **33 outbound
+  anchors, 33 carrying the qualifier, 33 held to the rules** @measured 2026-11-14 by `node scripts/check-ext-links.mjs`.
+- **Spacing steps are audited, not remembered.** Tailwind v4's dynamic scale makes `mt-23` resolve, so
+  "the class exists" was never "the value is on the ladder" — `/join` shipped `gap-5` under a green `check:classes`
+  (S042). `check:scale`: **45 source files, 52 distinct spacing utilities, 0 off-ladder** @measured 2026-11-14 by
+  `node scripts/check-scale.mjs`.
+- **The homepage thread list is capped at six, with the remainder linked** (S042, D320). The cap lives in
+  `WhyJoinUs.astro` as `const VISIBLE = 6`; `check:threads` reads that number rather than restating it, and fails
+  a page that paints more, paints fewer without a reason, promises the rest with no link, aims the link anywhere
+  other than `/chat#threads`, or links to an anchor the `/chat` page does not have. **cap 6, 9 in content.json, 6
+  painted, 3 reachable** @measured 2026-11-14 by `node scripts/check-threads.mjs`. The columns break at `md`
+  (768), not at the read's 900: the list measures **720x273** at 768 with each column **344px** wide, **852x273** at
+  900 with each **410px**, and **592x434** in a single column below the flip @measured 2026-11-15 by
+  `node design/whitespace-survey.mjs --routes / --widths 1024 900 768 640 390 320` — the two columns save 161px of
+  page height exactly where the read wanted them switched off, and `--breakpoint-900` does not exist in this repo.
+- **A drawing the club owns is drawn, not borrowed** (D323). One figure, `data-line-art`, hairlines only,
+  `currentColor`, no fill, under 1200 bytes, `role="img"` with a ≤ 12-word label and a caption. `/chat
+  "undoable-steps"`: **622 bytes, 9 strokes** @measured 2026-11-14 by `node scripts/check-line-art.mjs`.
+- **A date is an element, and the zone is named once** (D327, the read §5.1). Every row's date sentence sits
+  inside `<time datetime="YYYY-MM-DD">` carrying exactly the value the row's `data-date` handle carries, and the
+  **first** row `/schedule` prints appends ` Central` — the feed's own `DTSTART;TZID=America/Chicago` is where the
+  word comes from (D188), and one word on one row is the whole cost. `check:row-geometry` (17 cases) fails a loose
+  date, a `<time>` whose value disagrees with `data-date`, a page that names no zone, a zone named on the second
+  row, and a zone repeated **5 page(s) → 1, 5 rows → 1** @measured 2026-11-14 by `node scripts/check-row-geometry.mjs`.
+- **Source syntax never reaches a reader as prose.** Astro templates have no `//` comment and do not render a
+  brace-comment, so a `//` line between tags is page text and an attribute written after a closed element is page
+  text too. `check:escapes` catches both in the artifact and at the source (D325): nine comment lines painted on
+  `/` and five rows of `/schedule` painting `class=rounded-control event-art />` were both found this way
+  @measured 2026-11-14 by `npm run build` plus `node scripts/check-escapes.mjs`.
+
 ## Open threads that are not gates yet
 
 - **A background pattern is ground, not a graphic — operator ruling 2026-11-03, nothing built.** Asked whether a
   barely-noticeable paper texture belongs under the page, the answer measured (record
   `design/records/0019-a-ground-texture-has-zero-headroom.md`): the ceiling is the boundary role, not
-  legibility. The `rule` hairline sits at **3.01** against a 3.0 bar, so a ground that goes **one 8-bit level
-  darker** is already under its own bar (2.96), while body text survives ±40 levels; rendered paper is
+  legibility. The `rule` hairline sat at **3.01** against a 3.0 bar, so a ground that went **one 8-bit level
+  darker** was already under its own bar (2.96) @measured 2026-11-03 by `design/grill/round17`'s ground probe;
+  D316 gives the boundary role 3.66 of headroom on paper, so the ceiling is now 0.66 rather than 0.01, while body
+  text survives ±40 levels; rendered paper is
   `252,250,246`, three levels from clipping. Only a **light-only** grain (token ground as the floor, ≤3 levels
   up, σ ≈ 0.5) fits, and it leaves the area metrics alone — painted **4.48 → 4.49%** at 1240, **9.68 → 9.84%** at
-  390, empty-run unchanged — because it sits under the survey's 0.05 same-colour bar. It may not go on `panel`
-  (`rule` there is 2.88) or on the ink band without its own specimen.
+  390, empty-run unchanged — because it sits under the survey's 0.05 same-colour bar. `panel` is no longer
+  excluded by the ring number (D316: `rule` on panel is 3.85), and the ink band still needs its own specimen.
   **Ruled:** it is *ground*, so the 3.0 graphic bar is not its bar; what bounds it is everything painted on top
   of it. **Blocked on, in order:** (1) the pixel-ground probe — `design/grill/render-measure.js` `paintBytes()`
   parses a computed colour *string*, so a `background-image` moves **no** contrast number `check:render` prints
@@ -1040,7 +1162,9 @@ word in event prose.
   colour. That is removed (see "Photograph slots and third-party marks"), which is why the remaining colour budget
   has to be spent on area and real content. A round still has to clear, on painted bytes: **3.0** as a graphic,
   **4.5** as text (**7.0** as body), **1.35** as a fill against its ground (D101/D116); **≥40°** of hue separation from the primary and from the reserved path hues (round
-  3b); gold keeps its **0.135** minimum distance to every other colour (the Amazon/UMN gold zone, D88); any
+  3b); the accent keeps its **0.135** minimum distance to every other colour (the Amazon/UMN zone, D88 — D316
+  records where the adopted accent sits inside that bar and `check:contrast` fails only if a token drifts
+  *closer* than the recorded number); any
   role the mark or a band uses needs an `-on-ink` variant, because the footer band inverts the ground; and the
   card re-runs through `assets:social` + `check:social` in the same commit.
   Photographs are the other lever and they are **blocked on a phone camera, not on code**: D94 forbids stock
@@ -1052,24 +1176,28 @@ word in event prose.
   specimen `design/grill/round-9.html`, numbers `design/grill/round9/report.json`, record `colourRound9` in
   `design/decisions.json`). What the scan settled, before any taste: the reserved hues leave **exactly one open
   window, 246–274°, 29° wide**, because round 3b's ≥40° rule is arithmetic on a wheel. The shipped palette
-  breaks that rule itself — **gold ↔ path-discord is 27°** (gold ↔ gold-on-ink is 22°, fine: per-ground twins).
+  broke that rule itself — **gold ↔ path-discord is 27°** on the round-9 palette — and D316 closes it: the accent
+  sits at 35.7° and discord moved to 262°, 134° apart, with the smallest reserved gap 46° @measured 2026-11-14 by
+  `node design/grill/palette-remap.mjs`.
   And one colour can never do both jobs: for anything between paper and ink in luminance,
-  contrast-on-paper × contrast-on-ink = **12.02**, and 4.5 × 3.0 = 13.5 > 12.02 — which is why every role has an
-  `-on-ink` twin and why `MARK_COLOURS` is keyed per ground.
+  contrast-on-paper × contrast-on-ink = **12.02** on the round-4 palette, and 4.5 × 3.0 = 13.5 > 12.02 — which is
+  why every role has an `-on-ink` twin and why `MARK_COLOURS` is keyed per ground. D316 moves that product to
+  **17.15**, so the arithmetic no longer forces a twin by itself; the twins stay because the gate asserts them
+  and a per-ground table is the only way to say which hue a role may take (D116).
   Measured on painted pixels (two bars, because one bar hides one trap: **ink itself is chroma 0.045**, so the
   0.04 count includes every glyph; **0.08** sits above every neutral and is the colour a reader would call
   colour): as shipped **13.6% / 0.0% / 2 hue families**; colour-on-meaningful-things **12.7% / 0.4% / 5**;
   colour-as-area **12.9% / 0.5% / 6, but 46.9% faint**. That last one is the finding: the shipped
   `oklch(95% 0.03 …)` tints sit **under** the census bar, so a tinted field buys no measurable colour, and it
-  costs gold its text bar — **gold on a tinted hero is 4.39** against 4.5 (4.82 on paper). The open-window
+  costs the accent of that round its text bar — **4.39 on a tinted hero** against 4.5 (4.82 on paper). The open-window
   accent (hue 266, L 55.5, C 0.06) is legal but tight — **4.56 on paper, 4.5 on ink**, both inside the noise of a
-  font change — and its nearest commerce brand is **0.11**, dirtier than gold's 0.135. A warm accent needs the
-  **R-4** re-arrangement (fold the gold twins, retire `path-mobilizon`, move discord) which costs **12 measured
-  pairs**; retiring mobilizon alone, or moving gold+discord, does **not** open a warm window. The mark's four
+  font change — and its nearest commerce brand is **0.11**, dirtier than the accent's 0.135. A warm accent needs the
+  **R-4** re-arrangement (fold the accent twins, retire `path-mobilizon`, move discord) which costs **12 measured
+  pairs**; retiring mobilizon alone, or moving accent+discord, does **not** open a warm window. The mark's four
   colourings measure the same coverage (8.10–8.15% of box; 3930–3973 px at the 1.5 device-px floor), so that
   choice is about the two lines staying two *things*, not about legibility.
   **Ruled 2026-11-02 (partial):** **H-A approved** — no new hue; the free win is spending colour on things that
-  mean something. **K-B provisionally accepted** — one route line gold (`gold-on-ink` on dark grounds) "until we
+  mean something. **K-B provisionally accepted** — one route line in the accent (`accent-on-ink` on dark grounds) "until we
   find something better"; hold the caveat that mark colouring is coverage-flat, so this buys distinctness, not
   legibility, and re-run `design/mark-pixels.mjs` before shrinking the mark further. **Ruled 2026-11-02 (rest of
   the round):** surface policy **S-B** — colour where it means something; `S-C` (colour as area) rejected because

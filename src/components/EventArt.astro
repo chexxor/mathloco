@@ -43,6 +43,7 @@ const art = artFor(slug);
       slot={`event-${slug}`}
       ratio={art.ratio}
       alt={art.alt}
+      decorative={art.alt === ''}
       class={`rounded-control event-art ${extra ?? ''}`}
     />
   </div>

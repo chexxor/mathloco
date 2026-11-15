@@ -69,8 +69,8 @@ export const BANDS = [
   { name: 'invite', y0: 262, y1: 282, min: 4.5 },
   {
     // min 3.0 at band level because this row legitimately contains 1px hairline rules (`--color-rule`,
-    // measured 4.00 on ink) whose bar is the graphic bar, not the text bar. Each word is held to 4.5
-    // individually by the `words` pass below.
+    // 4.69 on the band @measured 2026-11-14 by node design/grill/palette-remap.mjs) whose bar is the graphic
+    // bar, not the text bar. Each word is held to 4.5 individually by the `words` pass below.
     name: 'paths', y0: 494, y1: 530, min: 3.0,
     words: ['path-meetup', 'path-discord', 'path-domain'],
   },
@@ -262,8 +262,9 @@ export async function checkCard(file, { page = null } = {}) {
       //   pair    - contrast(tokenPaint, ground) from the browser's own colour conversion. This is the D101
       //             bar, and it is what the palette has to satisfy.
       //   coverage- the brightest ink actually in the JPEG. Thin strokes at 19.2px never reach full
-      //             coverage (measured: the Discord path's token pair is 4.60, the brightest painted pixel
-      //             cluster is 4.27), so the pixel number is held to 85% of the pair — anti-aliasing is a
+      //             coverage (measured: the Discord path's token pair against the band is 5.41,
+      //             @measured 2026-11-14 by node design/grill/palette-remap.mjs, and the brightest painted
+      //             pixel cluster in the JPEG lands below it), so the pixel number is held to 85% of the pair — anti-aliasing is a
       //             rendering consequence, a wrong colour is a design error, and only the second one should
       //             fail. A gate that demanded 4.5 of the pixels here would be a gate that fails honest work.
       const pair = contrast(wantBytes, g);

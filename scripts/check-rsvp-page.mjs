@@ -41,7 +41,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import {
-  LINK_KEYS, PLATFORMS, PREF_KEY, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths,
+  LINK_KEYS, PLATFORMS, PREF_KEY, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths, newTabQualifier,
 } from '../src/lib/rsvp.mjs';
 import { MARKS, MARK_COUNT, markId } from '../src/lib/platform-marks.mjs';
 import { dateOf, scheduleWindow, todayInZone } from '../src/lib/event-window.mjs';
@@ -449,8 +449,8 @@ if (selftest) {
       const href = d.href ?? 'https://example.com/';
       const rel = d.rel ?? 'noopener noreferrer';
       const target = d.target ?? '_blank';
-      const sr = d.srOnly === undefined ? ` on ${platform}, opens in a new tab` : d.srOnly;
-      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}"><svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#${markId(platform)}"></use></svg>${d.label ?? 'Details and sign-up'}${sr ? ` <span class="sr-only">${sr}</span>` : ''}<span aria-hidden="true">→</span></a>`;
+      const sr = d.srOnly === undefined ? newTabQualifier(d.label ?? '', platform) : d.srOnly;
+      return `<a href="${href}" target="${target}" rel="${rel}" data-rsvp-platform="${platform}" data-rsvp-date="${p.date}"><svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#${markId(platform)}"></use></svg>${d.label ?? 'Details and sign-up'}${sr ? `<span class="sr-only">${sr}</span>` : ''}<span aria-hidden="true">→</span></a>`;
     }).join('');
     const note = (mut.note === null ? '' : p.note) ? `<p class="text-label text-ink-3">${mut.note ?? p.note}</p>` : '';
     return `<div class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1" data-rsvp-cluster ${attrs}>${note}${links}</div>`;
@@ -484,7 +484,11 @@ if (selftest) {
     { name: 'a cluster stamped with a snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-snapshot="2026-11-09T06:42:38.507Z" data-rsvp-age="1.7"', 'data-rsvp-snapshot="2026-10-01T00:00:00.000Z" data-rsvp-age="40.1"'), ctx, want: ['cluster says the snapshot is 2026-10-01T00:00:00.000Z'] },
     { name: 'an age painted 3.7 days off while the snapshot stamp is correct', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-age="1.7"', 'data-rsvp-age="5.4"'), ctx, want: ['says the snapshot is 5.4 days old; the stamp says 1.7']},
     { name: 'links painted from a snapshot past the freshness window', html: `<main><ul><li class="rounded-card" data-surface="row" data-date="2026-11-11">${island(clusterHtml({ date: '2026-11-11', time: '18:00' }, { snapshot: '2026-10-01T00:00:00.000Z', age: '40.1' }))}</li></ul></main>`, ctx: { ...ctx, fetchedAt: '2026-10-01T00:00:00.000Z', age: 40.1 }, want: ['snapshot 40.1 days old (limit 14'] },
-    { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('Proofs <span class="sr-only">', '12 going <span class="sr-only">'), ctx, want: ['paints a headcount']},
+    // The anchor here is the arrow glyph, not a label word. This planting used to be `replace('Proofs <span class="sr-only">', ...)` -
+    // a label - and it went dead on 2026-11-14 when the cluster's copy changed, producing 0 failures and a
+    // selftest that looked green for a rule that had stopped being exercised (D265, S041). Markup the
+    // cluster emits on every link is the stable anchor.
+    { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('<span aria-hidden="true">→</span>', '12 going<span aria-hidden="true">→</span>'), ctx, want: ['paints a headcount']},
     { name: 'the roster tally the join band used to print, painted again', html: `${clean}<section class="mt-8"><p>280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.</p></section>`, ctx, want: ['paints a headcount', '280 on the Meetup list']},
     { name: 'a member count painted as prose', html: `${clean}<section class="mt-8"><p>The club has 142 members.</p></section>`, ctx, want: ['paints a headcount', '142 members']},
     { name: 'an RSVP tally painted where a Discord link is', html: page([['2026-11-11', '18:00']]).replace('Sign up on Discord', 'Sign up on Discord (14 RSVPs)'), ctx, want: ['paints a headcount', '14 RSVPs']},

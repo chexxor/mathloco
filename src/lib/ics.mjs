@@ -5,6 +5,11 @@
  * (the gate that can fail it), in the same spirit as `src/lib/content-slots.mjs`: one implementation, so
  * the gate cannot audit a different calendar from the one that ships.
  *
+ * Two decisions the renderer owns, so no caller can opt out of them (D318, D319, both 2026-11-14):
+ *   - a row the grouping supersedes is not emitted (`src/lib/event-groups.mjs`);
+ *   - the `DESCRIPTION` is the club's own copy, not the upstream boilerplate (`src/lib/event-description.mjs`).
+ * Both are asserted from the bytes by `scripts/check-ics.mjs`.
+ *
  * Every rule this file enforces is quoted in `.notes/DECISIONS.md` D72, from `tools.ietf.org/rfc/rfc5545.txt`:
  *   - `VCALENDAR` requires `PRODID` and `VERSION`; a `VEVENT` requires `UID`, `DTSTAMP` and (absent a METHOD)
  *     `DTSTART`.
@@ -21,6 +26,9 @@
  *
  * Node/Vite only: `src/` is build-time and Worker code, so this module uses no `node:` built-ins.
  */
+
+import { publishableRows } from './event-groups.mjs';
+import { feedDescription } from './event-description.mjs';
 
 export const CRLF = '\r\n';
 
@@ -153,7 +161,10 @@ export const vevent = (row, calendar) => {
   lines.push(contentLine('STATUS', null, status));
   if (row.venue?.raw) lines.push(contentLine('LOCATION', null, escapeText(row.venue.raw)));
   if (row.geo) lines.push(contentLine('GEO', null, row.geo));
-  if (row.blurb) lines.push(contentLine('DESCRIPTION', null, escapeText(row.blurb)));
+  // D319: the club's own copy, per meeting type, never the organizer's pre-2026 boilerplate. `blurb` stays in
+  // the snapshot as provenance (rule 2 of the harvest: the tool does not author copy, so it stores what the
+  // source said) and is what `check:ics`'s feed-copy rule plants against.
+  lines.push(contentLine('DESCRIPTION', null, escapeText(feedDescription(row))));
   if (row.url) lines.push(contentLine('URL', null, row.url));
   if (row.image) lines.push(contentLine('ATTACH', 'FMTTYPE=image/png', row.image));
   lines.push('END:VEVENT');
@@ -164,7 +175,10 @@ export const vevent = (row, calendar) => {
 export const renderCalendar = (data) => {
   const cal = { ...data.calendar, stamp: data.source?.fetchedAt };
   if (!cal.prodid || !cal.timezone) throw new Error('renderCalendar: calendar.prodid and calendar.timezone are required');
-  const rows = [...(data.events ?? [])].sort((a, b) =>
+  // D318: one meeting, one VEVENT. The grouping is applied here rather than in each caller so the route and
+  // the gate cannot audit different calendars, and so a page that forgot to filter could not publish a row
+  // the calendar is meant to have retired.
+  const rows = publishableRows(data.events ?? []).rows.sort((a, b) =>
     `${a.start} ${a.uid}`.localeCompare(`${b.start} ${b.uid}`),
   );
   const lines = [

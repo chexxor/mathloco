@@ -146,10 +146,9 @@ const AUTO = [
 // them. Their writes are reported in their own section so they stay a visible decision instead of being
 // silently counted as "applied".
 const DORMANT = [
-  'src/components/icons/Instagram.astro',
-  'src/components/icons/Linkedin.astro',
-  'src/components/icons/Medium.astro',
-  'src/components/icons/Twitter.astro',
+  // The four icons/*.astro files this list used to name were deleted on 2026-11-14 (D316 round): no file
+  // in src/ imported them, so they shipped nothing. A dormant entry for a file that does not exist is a
+  // dead exemption, and `check:design` fails the literal (D268).
 ];
 
 // A MAP row whose bucket name is not a bucket would never print, yet would still count as "covered",

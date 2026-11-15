@@ -16,8 +16,12 @@
 //                                about a path; this is how "Schedule" and "Members" rendered the 404 page)
 //   FAIL  nav-title-mismatch   — the page's <title> does not contain the nav name as a word
 //   FAIL  band-name-drift      — the exit band names a nav route with a different word than the nav does
-//   FAIL  name-not-on-page     — the page's own opening block (eyebrow + h1) never says the nav name
+//   FAIL  name-not-on-page     — the page's own opening block (subtitle + h1) never says the nav name
 //   FAIL  title-tail-missing   — an emitted page whose title has no " - Matheapolis" tail
+//   FAIL  eyebrow-above-heading— any text between <main> and the page's first heading (S040, 2026-11-14: the
+//                                eyebrow is deleted; where it carried meaning it became the subtitle under the h1)
+//   FAIL  heading-alias        — a page whose h2 is word-for-word another page's h1 (S040 §1: "no page may reuse
+//                                another page's H1 as its own H2")
 //   INFO  alias census         — every OTHER label in the artifact pointing at an internal route, printed so
 //                                the operator can see the drift without the gate treating prose as a defect.
 //                                "All 5 dates →" and "the next ones are on the schedule" are prose registers,
@@ -45,9 +49,12 @@ const ANCHOR = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/g;
  *  read, so "Dates <span data-nav-date=...>21 Nov</span>" is still the label "Dates" — and an unmarked date
  *  glued to a label is not, which is the planting the selftest plants. */
 const NAV_CHIP = /<span[^>]*data-nav-date="[^"]*"[^>]*>[\s\S]*?<\/span>/g;
+/** The new-tab qualifier (S041) is part of a link's accessible name, never its label as a reader sees it, so
+ *  it is stripped before a label is compared with a page name. */
+const SR_ONLY = /<span class="sr-only">[\s\S]*?<\/span>/g;
 
 const visible = (html) =>
-  html.replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim();
+  html.replace(SR_ONLY, '').replace(/<[^>]+>/g, ' ').replace(/&[a-z]+;/g, ' ').replace(/\s+/g, ' ').trim();
 
 /** Is `name` present as a word in `text`, case-insensitively? "Dates" is in "Dates on the schedule";
  *  "Date" is not in "Validate". Word boundaries on both sides, so the check is a name, not a substring. */
@@ -126,7 +133,39 @@ export const namingFindings = (pages) => {
     const h1 = H1.exec(opening);
     const openingText = visible(opening.slice(0, (h1 ? h1.index + h1[0].length : 400) + 240));
     if (hasWord(openingText, label) === false) {
-      fails.push({ rule: 'name-not-on-page', detail: `${href} is called "${label}" in the nav, and its own opening block says "${openingText.slice(0, 90)}". Put the name in the eyebrow above the h1 — the h1 keeps its voice, the eyebrow carries the name.` });
+      fails.push({ rule: 'name-not-on-page', detail: `${href} is called "${label}" in the nav, and its own opening block says "${openingText.slice(0, 90)}". Put the name in the subtitle under the h1 — the h1 keeps its voice, the line under it carries the name.` });
+    }
+  }
+
+  // S040 (2026-11-14), two rules the second design read stated and this gate can check in the artifact.
+  //   1. Nothing sits between <main> and the first heading. The old shape — a small uppercase locator line
+  //      above every h1 — is the eyebrow the read asks for, and every page now puts its name first.
+  //   2. A page may not wear another page's name as a section heading. `/schedule`'s h1 is "When We Meet";
+  //      the homepage band that used to be an h2 with those exact words is now "Dates", the word the nav uses.
+  for (const p of pages) {
+    const mainStart = p.html.indexOf('<main');
+    if (mainStart < 0) continue;
+    const firstH1 = /<h1\b/.exec(p.html.slice(mainStart));
+    if (!firstH1) continue;
+    const above = visible(p.html.slice(mainStart, mainStart + firstH1.index).replace(/<!--[\s\S]*?-->/g, ' '));
+    if (above) {
+      fails.push({ rule: 'eyebrow-above-heading', detail: `${p.route} prints "${above.slice(0, 80)}" between <main> and its h1. A heading is the first thing a page says; anything above it is an eyebrow, and the site's rule (S040) is that the meaning it carried goes under the heading instead.` });
+    }
+  }
+  const h1ByPage = new Map();   // normalised h1 text -> the route that owns it
+  for (const p of pages) {
+    for (const m of p.html.matchAll(/<h1\b[^>]*>([\s\S]*?)<\/h1>/g)) {
+      const t = visible(m[1]).toLowerCase();
+      if (t && !h1ByPage.has(t)) h1ByPage.set(t, p.route);
+    }
+  }
+  for (const p of pages) {
+    for (const m of p.html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)) {
+      const t = visible(m[1]).toLowerCase();
+      const owner = h1ByPage.get(t);
+      if (owner && owner !== p.route) {
+        fails.push({ rule: 'heading-alias', detail: `${p.route} heads a section "${visible(m[1])}" while ${owner} makes the same words its h1. One page's name is another page's section: rename the section, or point at the page instead of restating it.` });
+      }
     }
   }
 
@@ -171,8 +210,11 @@ const runSelftest = () => {
     `<html><head><title>${title}</title></head><body><header><nav>${nav}</nav></header>${main}${band}</body></html>`;
   const navRow = `<a href="/">Matheapolis</a><a href="/schedule">Dates</a><a href="/chat">Chat</a>`;
   const bandRow = `<footer class="bg-ink text-band-text"><a href="/schedule" class="py-2">Dates</a><a href="/chat" class="py-2">Chat</a></footer>`;
-  const good = page('Dates - Matheapolis', navRow, '<main><p class="eyebrow">Dates</p><h1>When We Meet</h1><p>text</p></main>', bandRow);
-  const home = page('Matheapolis - a Minneapolis math club', navRow, '<main><h1>Matheapolis</h1><p>the club</p></main>', bandRow);
+  // S040 (2026-11-14): the shipped shape is heading first, then the line that carries the nav's word. Every
+  // planting below is a mutation of that shape, so a clean control means the shape itself is legal.
+  const SUBTITLE = '<p class="subtitle">Dates copied from the club\u2019s calendar</p>';
+  const good = page('Dates - Matheapolis', navRow, `<main><h1>When We Meet</h1>${SUBTITLE}<p>text</p></main>`, bandRow);
+  const home = page('Matheapolis - a Minneapolis math club', navRow, '<main><h1>Matheapolis</h1><p class="subtitle">Minneapolis math club</p><p>the club</p></main>', bandRow);
   const clean = [{ route: '/', html: home }, { route: '/schedule', html: good }, { route: '/chat', html: page('Chat - Matheapolis', navRow, '<main><h1>Summaries from the chat</h1></main>', bandRow) }];
   const mutate = (fn) => clean.map((p) => ({ route: p.route, html: p.route === '/schedule' ? fn(p.html) : p.html }));
 
@@ -180,19 +222,24 @@ const runSelftest = () => {
     { name: 'clean control: one name in every surface', pages: clean, want: [] },
     { name: 'nav says Dates, the title says Schedule', pages: mutate((h) => h.replace('Dates - Matheapolis', 'Schedule - Matheapolis')), want: ['nav-title-mismatch'] },
     { name: 'the band says Schedule while the nav says Dates', pages: mutate((h) => h.replace('class="py-2">Dates</a>', 'class="py-2">Schedule</a>')), want: ['band-name-drift'] },
-    { name: 'the page never names itself', pages: mutate((h) => h.replace('<p class="eyebrow">Dates</p>', '')), want: ['name-not-on-page'] },
+    { name: 'the page never names itself', pages: mutate((h) => h.replace(SUBTITLE, '')), want: ['name-not-on-page'] },
     { name: 'a title that never names the site', pages: mutate((h) => h.replace('Dates - Matheapolis', 'Dates and places')), want: ['title-site-missing'] },
     { name: 'a nav label pointing at a page the build does not emit', pages: mutate((h) => h.replace('<a href="/chat">Chat</a>', '<a href="/members">Members</a>')), want: ['nav-target-missing'] },
     { name: 'containment is enough: "Dates on the schedule" names the page', pages: mutate((h) => h.replace('Dates - Matheapolis', 'Dates on the schedule - Matheapolis')), want: [] },
     { name: 'prose elsewhere may describe, not name', pages: mutate((h) => h.replace('</main>', '<a href="/schedule">the whole calendar</a></main>')), want: [] },
     { name: 'case is not a different name', pages: mutate((h) => h.replace('When We Meet', 'WHEN WE MEET').replace('>Dates</p>', '>DATES</p>')), want: [] },
-    { name: 'the name in an HTML comment is not a name', pages: mutate((h) => h.replace('<p class="eyebrow">Dates</p>', '<!--Dates-->')), want: ['name-not-on-page'] },
-    { name: 'the h1 itself may carry the name, no eyebrow needed', pages: mutate((h) => h.replace('<p class="eyebrow">Dates</p>', '').replace('When We Meet', 'Dates')), want: [] },
+    { name: 'the name in an HTML comment is not a name', pages: mutate((h) => h.replace(SUBTITLE, '<!--Dates-->')), want: ['name-not-on-page'] },
+    { name: 'the h1 itself may carry the name, no subtitle needed', pages: mutate((h) => h.replace(SUBTITLE, '').replace('When We Meet', 'Dates')), want: [] },
     { name: 'two pages label the same nav route differently', pages: [{ route: '/', html: home.replace('<a href="/schedule">Dates</a>', '<a href="/schedule">Schedule</a>') }, { route: '/schedule', html: good }, { route: '/chat', html: clean[2].html }], want: ['nav-label-inconsistent', 'nav-title-mismatch', 'band-name-drift', 'name-not-on-page'] },
     { name: 'clean control: a 404 page is titled like the site', pages: [...clean, { route: '/404', html: page('Page not found - Matheapolis', navRow, '<main><h1>Page not found</h1></main>', bandRow) }], want: [] },
     // D311: the nav's subordinate date is chrome, not a name. It must not turn "Dates" into a two-word name.
     { name: 'clean control: a date chip inside the anchor is not part of the label', pages: mutate((h) => h.replace('<a href="/schedule">Dates</a>', '<a href="/schedule">Dates <span data-nav-date="2026-11-21">21 Nov</span></a>')), want: [] },
     { name: 'a date glued to the label with no chip fails every surface at once', pages: clean.map((p) => ({ route: p.route, html: p.html.replace('<a href="/schedule">Dates</a>', '<a href="/schedule">Dates 21 Nov</a>') })), want: ['nav-title-mismatch', 'band-name-drift', 'name-not-on-page'] },
+    // S040, the two rules the second design read added: no eyebrow above a heading, and no borrowed heading.
+    { name: 'an eyebrow above the h1', pages: mutate((h) => h.replace('<h1>When We Meet</h1>', '<p class="text-label">The calendar</p><h1>When We Meet</h1>')), want: ['eyebrow-above-heading'] },
+    { name: 'clean control: the line under the h1 is a subtitle, not an eyebrow', pages: mutate((h) => h.replace('<h1>When We Meet</h1>', '<h1>When We Meet</h1><p class="text-label">Dates, where, and where to sign up</p>')), want: [] },
+    { name: 'a section h2 that is another page\u2019s h1', pages: mutate((h) => h.replace('</main>', '<section><h2>Matheapolis</h2><p>the club</p></section></main>')), want: ['heading-alias'] },
+    { name: 'clean control: a section heading no other page owns', pages: mutate((h) => h.replace('</main>', '<section><h2>The next three dates</h2><p>the club</p></section></main>')), want: [] },
   ];
 
   let bad = 0;

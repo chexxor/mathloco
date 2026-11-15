@@ -121,7 +121,7 @@
       onclick={() => remember(d.platform)}
       data-rsvp-platform={d.platform}
       data-rsvp-date={date}
-      class="min-h-8 inline-flex items-center gap-1 text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-gold hover:decoration-gold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+      class="min-h-8 inline-flex items-center gap-1 text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
     >
       <!-- The platform's own glyph, 16px, before the words (operator ruling F3(b), S026/D294). Three things
          make it a mark rather than a box: it is `currentColor` (no brand colour exists in the palette, and a
@@ -133,9 +133,11 @@
       <svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true">
         <use href={`#pm-${d.platform.toLowerCase()}`} />
       </svg>
-      {d.label}{' '}
+      {d.label}
       <!-- The visible label names the platform and the action (D273); the suffix exists for the case where a
-        link is lifted out of context — a screen reader's link list — and has to say it leaves the page. -->
+        link is lifted out of context — a screen reader's link list — and has to say it leaves the page.
+        No space between the label and the span: `srOnly` already carries its own punctuation (S041), so a
+        space here would paint "Sign up on Meetup , opens in a new tab" in the accessible name. -->
       <span class="sr-only">{d.srOnly}</span>
       <span aria-hidden="true">→</span>
     </a>

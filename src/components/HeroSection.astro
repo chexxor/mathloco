@@ -30,8 +30,8 @@ import { content, value } from '../lib/content.ts';
 // `@type` there is reported as a hint and then ignored, so the map would have to be keyed by a literal
 // role union instead of by role name — which is the drift this comment is about, and the throw below is
 // what actually catches it at build time.
-const STROKE_CLASS: Record<string, string> = { sphere: 'stroke-rule', route: 'stroke-ink', accent: 'stroke-gold' };
-const FILL_CLASS: Record<string, string> = { accent: 'fill-gold' };
+const STROKE_CLASS: Record<string, string> = { sphere: 'stroke-rule', route: 'stroke-ink', accent: 'stroke-accent' };
+const FILL_CLASS: Record<string, string> = { accent: 'fill-accent' };
 // A role with no class paints no stroke, and an invisible shape inside a healthy-looking box is the one
 // failure mode a screenshot review misses. check:render catches it with numbers; the build catching it
 // first is cheaper, so this throws rather than shipping the hole.
@@ -103,12 +103,13 @@ const focus = value(content.focus);
 >
   <div class='lg:grid lg:grid-cols-12 lg:gap-8'>
     <div class='mb-12 md:max-w-2xl md:mx-auto lg:col-span-8'>
-      <div class='text-label uppercase tracking-wide mb-4'>
-        {/* Not a date, and not a frequency word either: `cadence` ("Monthly") is a sourced slot, but D92's rule is
-            that a frequency word needs its named source in the same breath, and an eyebrow is too short a breath.
-            This line's job is to tell a first-time visitor what kind of thing this is before the h1 names it. */}
-        <span class="text-ink-3">{locator}</span>
-      </div>
+      {/* 2026-11-14 (S040, second design read §1): nothing sits ABOVE a page's h1 any more. The descriptor used
+          to sit here as an eyebrow; the words are the same ones D243 settled, and `check:copy` still asserts this
+          string against `seo.title`, so only the position moved - the name first, then what it is, the way a
+          book page sets a subtitle. The invariants the old comment carried stay in force: this line is not a
+          date (D239) and not a cadence word (D92 - a frequency word needs its source in the same breath, and a
+          subtitle is too short a breath for one). `mt-1` goes with it: the h1 is now the first thing in the
+          column, so there is nothing for it to be 4px away from. */}
 
       {/* One word, one line, at every width this site is probed at (1240 / 640 / 390 / 320): the name is 251px of
           ink at display-2 with 672px available at 1240, and 209px in 288px at 320 @measured 2026-11-07 by
@@ -132,10 +133,11 @@ const focus = value(content.focus);
           now throws on any class an option adds that the built CSS does not emit; the ceiling that stays typed is
           `DESIGN.md`'s own ban on `text-display-4` below a 375 viewport without a cap. */}
       <h1
-        class='mt-1 text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3'
+        class='text-display-1 tracking-tight font-extrabold text-ink sm:text-display-3'
       >
         Matheapolis
       </h1>
+      <p class='mt-2 text-label uppercase tracking-wide text-ink-3'>{locator}</p>
 
       <p
         class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
@@ -177,7 +179,7 @@ const focus = value(content.focus);
             <a
               href="/join"
               data-control="primary"
-              class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-ink-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
+              class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
               >Join Our Group</a
             >
           </div>
@@ -190,9 +192,9 @@ const focus = value(content.focus);
             <a
               href="/schedule"
               data-control="secondary"
-              class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold transition'
+              class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
             >
-              View Schedule
+              See the dates
             </a>
           </div>
         </div>
@@ -219,7 +221,7 @@ const focus = value(content.focus);
       <PhotoSlot
         slot="hero"
         ratio="376 / 307"
-        alt="A circle with an equilateral hexagon inscribed in it, and the diameters drawn through its centre"
+        alt="A hexagon inscribed in a circle, with its diameters drawn"
         provenance="Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — cropped from that leaf (D312)"
         caption="a real meeting: the table, the books, the room (376x307 crop)"
         class="mb-8"

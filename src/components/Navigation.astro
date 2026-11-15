@@ -55,8 +55,10 @@ const navItems = [
      no ground of its own - its computed background is the page's paper (layer contrast 1.00, OKLab distance 0),
      so nothing in the bar separates it from the page. Every ground the palette has was priced and refused:
      panel 1.04, tint 1.10, warm tint 1.11 (drops `rule` to 2.74 against its own 3.0 bar), warm band 1.20
-     (`rule` 2.51), gold fill fails outright (nav ink 2.5). The ratified inset ring is the one device that
-     clears the graphic bar for free in height: 3.01 against the paper it stands on, bar still 1228x72.
+     (`rule` 2.51), accent fill fails outright (nav ink 2.5) — those are the numbers the round priced with the
+     palette it had. The ratified inset ring is still the one device that clears the graphic bar for free in
+     height: **3.66** against the paper it stands on @measured 2026-11-14 by `npm run check:contrast`, bar
+     still 1228x72.
      `shadow-e2` paints 1.78 - a layer, not an edge - and is held back until the bar actually moves (sticky,
      parked in PLAN.md §Parked with its trigger). An inset ring is not a border (D103), so check:design's
      no-border rule still holds.
@@ -88,15 +90,22 @@ const navItems = [
         {navItems.map(item => (
           <a
             href={item.href}
-            class="whitespace-nowrap py-2 text-label text-ink font-medium hover:text-gold"
-            aria-label={item.date ? `Navigate to ${item.label}: the next date is ${formatDate(item.date, 'wide')}` : `Navigate to ${item.label}`}
+            class="whitespace-nowrap py-2 text-label text-ink font-medium hover:text-accent"
+            aria-label={item.date ? `${item.label}, next meeting ${formatDate(item.date, 'wide')}` : item.label}
           >
             {item.label}
             {/* The subordinate date, not a second nav item. `data-nav-date` is the handle
                 scripts/check-dated-surfaces.mjs reads: a chrome date is allowed only when it equals the first
                 date the window says the schedule page prints (D311), so the nav can never print a stale date
                 the page of record does not. Hidden below `sm` for the measured 25px the pair needs at the
-                320px floor. */}
+                320px floor.
+
+                The accessible name is a sentence, not the two visible words: `Dates, next meeting Saturday, Nov 21`.
+                The weekday cannot go in the visible chip — `node design/nav-fit.mjs --no-build` @measured 2026-11-14
+                prices `Sat 21 Nov` at 286px against a 276px content box at the 320 floor (D311) — but it costs nothing
+                in the name, and a chip that reads "21 Nov" to a screen reader is a number with no subject. The name
+                is checked by the same gate, rule nav-chip-name-thin. With no date on the calendar the anchor falls
+                back to the plain label: no sentence about a meeting that does not exist. */}
             {item.date && (
               <span data-nav-date={item.date} class="hidden sm:inline ml-2 text-label text-ink-3 tabular-nums">
                 {dateParts(item.date).day} {dateParts(item.date).month}

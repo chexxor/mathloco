@@ -152,8 +152,8 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
   <!-- the club's mark: two lines that leave a sphere's equator at right angles - so parallel - and cross at the
        pole. Geometry from src/lib/brand-mark.mjs, corrected on 2026-11-02 against the club's own source figure
        (the operator ruled the previous drawing an incorrect reading of it; the correction and how the source was
-       measured are recorded in that file). The right-angle marks and the pole carry gold-on-ink, the only accent
-       the band grammar allows on ink (DESIGN.md: gold on ink is 2.50 and banned). -->
+       measured are recorded in that file). The right-angle marks and the pole carry accent-on-ink, the only accent
+       the band grammar allows on ink (DESIGN.md: accent on ink is 2.97 and banned, D316). -->
   <svg class="motif" data-mark="card" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" role="img" aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole, drawn like the club's sphere diagram">
     ${MARK.shapes.map((s) => (s.tag === 'circle'
       ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`
@@ -179,7 +179,7 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
       Chat on Discord
     </span>
     <span class="hair"></span>
-    <span class="word" data-band="path-domain" style="color: var(--color-gold-on-ink)">
+    <span class="word" data-band="path-domain" style="color: var(--color-accent-on-ink)">
       <span aria-hidden="true" style="font-family: var(--font-body); font-size: 22px">&#8721;</span>
       ${DOMAIN}
     </span>

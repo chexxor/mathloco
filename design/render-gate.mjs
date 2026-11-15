@@ -295,8 +295,11 @@ for (const route of routes) {
     }
 
     // 4. keylines: a painted border / outline / decoration line darker than a hairline. The ratified
-    //    keyline is `inset-shadow-rule` — a 1px inset ring, measured 3.01 against paper in this same
-    //    harness, which is the number the specimen records — and it costs no height. A BORDER at the
+    //    keyline is `inset-shadow-rule` — a 1px inset ring whose token pair measures 3.66 on paper
+    //    @measured 2026-11-14 by node design/grill/palette-remap.mjs, and which `check:ground` reads off the
+    //    painted bytes as 3.66 too — bytes minus CSS: 0 @measured 2026-11-14 by `npm run check:ground`
+    //    (D316: the 2026-11-14 palette round retuned `rule` from a paper-only 3.01 to a value that clears 3.0
+    //    on paper, panel, tint and band). A ring costs no height; a BORDER at the
     //    same hue measures
     //    the same contrast and costs 2px, which is how a 40px control arrives at 42. So the bar here
     //    is about the grammar, not the hue: D105's 1.35 layer bar is for shadows.
@@ -310,9 +313,9 @@ for (const route of routes) {
     //     the ratified keyline is a 1px INSET box-shadow, not a border, so `keylines` reports nothing for it.
     //     A ring is drawn on a boundary and therefore has two neighbours - the fill inside it and the ground
     //     it stands on - and the operator's ruling is that a keyline may not straddle two grounds. That is a
-    //     measurement, not a preference: `--color-rule` is 3.01 on paper, 2.88 on `panel` (under this same
-    //     graphic bar) and 4.00 on the ink band, so a ring that has a tint on one side is under bar on that
-    //     side even when the number printed beside it looks legal.
+    //     measurement, not a preference: since D316 `--color-rule` is 3.66 on paper, 3.85 on `panel`, 3.10 on
+    //     `tint` and 4.69 on the ink band — one boundary role that clears the bar on all four grounds — so a
+    //     ring that has a tint on one side is no longer automatically under bar; the straddle itself still is.
     for (const g of j.rings || []) {
       if (g.inside === null || g.outside === null || g.inset !== 1) continue;
       const who = `${g.tag} ${JSON.stringify(g.cls.slice(0, 60))}`;
@@ -320,7 +323,8 @@ for (const route of routes) {
       if (Math.abs(g.inside - g.outside) > 0.05) {
         fails.push(`${at}: ${pair} against two different grounds (${JSON.stringify(g.innerBytes)} vs ${JSON.stringify(g.outerBytes)}) — a keyline may not straddle two grounds (D149-3c, record 0018): move the box onto one ground — ${who}`);
       } else if (Math.min(g.inside, g.outside) < BARS.graphic) {
-        fails.push(`${at}: ${pair} — under the ${BARS.graphic.toFixed(1)} graphic bar on its own ground. --color-rule is solved for paper (3.01); on a tint it reads 2.88 (record 0018) — ${who}`);
+        fails.push(`${at}: ${pair} — under the ${BARS.graphic.toFixed(1)} graphic bar on its own ground. ` +
+          `--color-rule is solved to clear it on paper, tint, panel and band (design/grill/palette-remap.mjs, D316) — ${who}`);
       }
     }
 
@@ -329,8 +333,11 @@ for (const route of routes) {
     for (const n of j.notices || []) {
       if (n.fill) fails.push(`${at}: ${n.role} block paints a fill (${n.fill}) — a notice is word + keyline, never a fill (D102)`);
       if (n.inset !== 1) fails.push(`${at}: ${n.role} block keyline is ${n.inset}px, want the 1px inset ring (inset-shadow-rule)`);
-      if (n.keylineContrast !== null && Math.abs(n.keylineContrast - 3.01) > 0.2) {
-        fails.push(`${at}: ${n.role} keyline contrast ${n.keylineContrast} is not the ratified rule (measured 3.01 on paper, 4.00 on the band)`);
+      // Not "is it exactly 3.01": the ratified number moved with the palette (D316), and a painted keyline is
+      // never the authored triple (gamut mapping + 8-bit quantisation, D101). What the rule actually is: the
+      // boundary a notice draws clears the graphic bar on the ground it stands on.
+      if (n.keylineContrast !== null && n.keylineContrast < BARS.graphic) {
+        fails.push(`${at}: ${n.role} keyline contrast ${n.keylineContrast} is under the ${BARS.graphic} graphic bar (D101, D99)`);
       }
       if (n.textContrast !== null && n.textContrast < 4.5) fails.push(`${at}: ${n.role} text at contrast ${n.textContrast} is under the 4.5 bar`);
       if (n.h < 48) fails.push(`${at}: ${n.role} block is ${n.h}px tall — D98 puts a one-line notice at 48px`);

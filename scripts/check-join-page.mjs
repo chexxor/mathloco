@@ -126,7 +126,7 @@ export const joinFindings = (painted, headings, urls = {}, { today = new Date(),
       fail('join-channel-missing', `the resolver has a ${w.kind}/${w.platform} channel at ${w.href} and the page does not paint it (S033, D303)`);
       continue;
     }
-    const wantText = text(`${w.label}${w.srOnly ? ` ${w.srOnly}` : ''}`);
+    const wantText = text(`${w.label}${w.srOnly ?? ''}`);
     if (g.text !== wantText) {
       fail('join-label-mismatch', `${w.kind}/${w.platform} paints "${g.text}" but the resolver's label is "${wantText}" (D273: the resolved label is the painted label, and the gate compares bytes)`);
     }
@@ -240,7 +240,7 @@ if (selftest) {
     kind: c.kind,
     platform: c.platform,
     href: c.href,
-    text: `${c.label}${c.srOnly ? ` ${c.srOnly}` : ''}`,
+    text: `${c.label}${c.srOnly ?? ''}`,
     gives: c.gives,
   }));
   const goodHeadings = ['social', 'rsvp', 'chat'];
@@ -277,9 +277,9 @@ if (selftest) {
   }
   // The page's own painted bytes must be read by the same parser the selftest plants into: the fixture below
   // is the shape `join.astro` emits (attributes in any order, an sr-only span inside the anchor).
-  const fixture = `<h2 id="join-social">Follow</h2><ul><li><a href="${urls.meetupGroup}" target="_blank" data-control="primary" data-join-kind="social" data-join-platform="Meetup">Join the Meetup group<span class="sr-only"> Meetup, opens in a new tab</span></a><p class="mt-2">The club's member list.</p></li></ul>`;
+  const fixture = `<h2 id="join-social">Follow</h2><ul><li><a href="${urls.meetupGroup}" target="_blank" data-control="primary" data-join-kind="social" data-join-platform="Meetup">Join the Meetup group<span class="sr-only">, opens in a new tab</span></a><p class="mt-2">The club's member list.</p></li></ul>`;
   const parsed = paintedChannels(fixture);
-  const parseOk = parsed.length === 1 && parsed[0].kind === 'social' && parsed[0].platform === 'Meetup' && parsed[0].text === 'Join the Meetup group Meetup, opens in a new tab' && parsed[0].gives === "The club's member list.";
+  const parseOk = parsed.length === 1 && parsed[0].kind === 'social' && parsed[0].platform === 'Meetup' && parsed[0].text === 'Join the Meetup group, opens in a new tab' && parsed[0].gives === "The club's member list.";
   console.log(`${parseOk ? 'ok   parsed' : 'FAIL parsed'}  the parser reads what the page emits   ${JSON.stringify(parsed[0] ?? null)}`);
   if (!parseOk) bad++;
   const headsOk = paintedKindHeadings(fixture).join(',') === 'social';

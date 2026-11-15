@@ -43,13 +43,11 @@ const ALLOWED_COLLISIONS = new Set([
   '--default-transition-timing-function', // linear for colour, ease-out written where things move
   '--font-sans',                        // chrome face; still the phantom value until apply installs it
   '--font-body',                        // PT Serif, live today
-  '--color-book-gray',                  // retired, but the four never-imported icons/*.astro still
-                                        // write it, so check:classes needs it until choose-icons lands
 ]);
 // A retired token must STAY retired. book-theme's last two references were ::selection and a global
 // `.underline` class in Layout.astro that painted an amber highlighter instead of underlining; both
 // went in apply batch 3, so its return to @theme would be a regression, not a typo.
-const RETIRED_GONE = ['--color-book-theme', '--breakpoint-nav-narrow'];
+const RETIRED_GONE = ['--color-book-theme', '--color-book-gray', '--breakpoint-nav-narrow', '--color-ink-hover'];
 const collisions = declared.filter((d) => twDefaults.has(d) && !ALLOWED_COLLISIONS.has(d));
 console.log('\n== token block: declared keys, collisions with Tailwind defaults ==');
 console.log(`  ${declared.length} keys declared; ${new Set(declared).size} distinct`);
@@ -107,11 +105,12 @@ const stripComments = (t) => t
   .replace(/^\s*\/\/.*$/gm, ' ')          /* js line */
   .replace(/<!--[\s\S]*?-->/g, ' ');       /* astro/html */
 const DORMANT = new Set([
-  // never imported; choose-icons will replace them wholesale. The two event components that used to be
-  // here are gone — real schedule work replaced them with src/components/Schedule.astro (2026-11-03),
-  // which is live and IS scanned, because its states are written in the ratified grammar.
-  'src/components/icons/Instagram.astro', 'src/components/icons/Linkedin.astro',
-  'src/components/icons/Medium.astro', 'src/components/icons/Twitter.astro',
+  // The four icons/*.astro files that used to be here were deleted on 2026-11-14 (D316 round): no file
+  // in src/ imported them, so they shipped nothing, and `check:design` now treats a literal naming them
+  // as a broken pointer. A dormant entry for a file that does not exist is a dead exemption (D268).
+  // The two event components that used to be here are gone — real schedule work replaced them with
+  // src/components/Schedule.astro (2026-11-03), which is live and IS scanned, because its states are
+  // written in the ratified grammar.
 ]);
 const liveFiles = [];
 (function walk(dir, rel) {
@@ -156,14 +155,15 @@ for (const [re, why] of [
 }
 
 // ---------------- 1d. the band's own grammar, grepped out of Footer.astro ----------------------
-// gold is banned as text AND as a ring on ink (2.50), so every focusable thing in the band takes the
+// accent is banned as text AND as a ring on ink (2.97 @measured 2026-11-14 by node design/grill/palette-remap.mjs),
+// so every focusable thing in the band takes the
 // band-text ring. This is file-scoped because a headless screenshot cannot focus anything, so
 // `check:render` cannot see a focus ring at all — this grep is the only gate that can.
 const footer = readFileSync(join(ROOT, 'src/components/Footer.astro'), 'utf8');
 const bandRings = (footer.match(/focus-visible:outline-band-text/g) ?? []).length;
-if (/outline-gold/.test(footer)) fail('Footer.astro writes a gold focus ring on the ink band — the oracle bans gold on ink at 2.50');
-else if (bandRings < 4) fail(`Footer.astro has ${bandRings} band focus rings; every focusable link in the band needs focus-visible:outline-band-text (gold on ink = 2.50, banned)`);
-else ok(`${bandRings} band focus rings, no gold ring on the band`);
+if (/outline-accent/.test(footer)) fail('Footer.astro writes an accent focus ring on the ink band — the oracle bans accent on ink at 2.97 (D316)');
+else if (bandRings < 4) fail(`Footer.astro has ${bandRings} band focus rings; every focusable link in the band needs focus-visible:outline-band-text (accent on ink = 2.97, banned)`);
+else ok(`${bandRings} band focus rings, no accent ring on the band`);
 
 // ---------------- 1e. the drawn mark (D120): the coupling that can rot silently ----------------
 // The mark is geometry in src/lib/brand-mark.mjs, drawn by HeroSection.astro and by the share-card
@@ -255,12 +255,12 @@ else {
 const ds = await __unstable__loadDesignSystem(css, { base: ROOT });
 const promised = [
   'bg-paper', 'bg-panel', 'bg-tint', 'bg-ink', 'bg-path-mobilizon-tint',
-  'bg-ink-hover', 'hover:bg-ink-hover', 'hover:bg-tint',
-  'focus-visible:outline-gold', 'focus-visible:outline-band-text', 'focus-visible:outline-2', 'focus-visible:outline-offset-2',
-  'text-ink', 'text-ink-2', 'text-ink-3', 'text-gold', 'text-gold-on-ink', 'text-band-text',
+  'bg-accent-strong', 'hover:bg-accent-strong', 'hover:bg-tint',
+  'focus-visible:outline-accent', 'focus-visible:outline-band-text', 'focus-visible:outline-2', 'focus-visible:outline-offset-2',
+  'text-ink', 'text-ink-2', 'text-ink-3', 'text-accent', 'text-accent-on-ink', 'text-band-text',
   'text-path-calendar', 'text-path-meetup-on-ink', 'text-path-discord-on-ink',
-  'hover:text-gold-on-ink', 'hover:underline', 'gap-x-6', 'gap-y-2', 'flex-wrap',
-  'inset-shadow-rule', 'inset-shadow-gold', 'inset-shadow-path-calendar', 'inset-shadow-path-meetup',
+  'hover:text-accent-on-ink', 'hover:underline', 'gap-x-6', 'gap-y-2', 'flex-wrap',
+  'inset-shadow-rule', 'inset-shadow-accent', 'inset-shadow-path-calendar', 'inset-shadow-path-meetup',
   'inset-shadow-path-discord', 'inset-shadow-path-mobilizon',
   'shadow-e1', 'shadow-e2',
   'text-micro', 'text-label', 'text-body', 'text-lede', 'text-subhead', 'text-heading',
@@ -273,7 +273,7 @@ const promised = [
   // The hero's drawn mark (D120) paints through these, so a token role it asks for must resolve; if
   // `stroke-rule` stopped existing the mark would paint nothing and only check:render would catch it, at
   // the cost of a firefox run. Asserted here too because this gate takes a second.
-  'stroke-rule', 'stroke-ink', 'stroke-gold', 'stroke-none', 'fill-gold', 'fill-none', 'w-full', 'h-auto', 'block',
+  'stroke-rule', 'stroke-ink', 'stroke-accent', 'stroke-none', 'fill-accent', 'fill-none', 'w-full', 'h-auto', 'block',
   // text-micro is the kickers' and the footer's small print. The nav's narrow tier is retired (D117),
   // and --breakpoint-nav-narrow is asserted ABSENT with the other retired tokens.
   // The share card is composed from @theme by scripts/make-social-share.mjs (D118) and ships as a JPEG, so

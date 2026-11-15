@@ -1,5 +1,7 @@
 ---
 import config from '../config.json';
+import { PLATFORMS } from '../lib/rsvp.mjs';
+import { newTabQualifier } from '../lib/links.mjs';
 
 // The band is the site's EXIT, so it answers the three things a visitor asks at the bottom of a page:
 // where do I go next, who is this, and when was this written. What used to sit here was a slogan
@@ -13,7 +15,7 @@ import config from '../config.json';
 // `--color-path-*-on-ink` steps exist for precisely this ("the same four paths on the dark band" — the four
 // are the outbound platform steps, calendar / Meetup / Discord / Mobilizon, and an internal link like
 // `/chat` or `/schedule` carries no hue at all, it is the band's own text colour; the hue is what marks a
-// path that leaves the site, 4.74 meetup / 4.59 discord, asserted in the contrast oracle) — and the band
+// path that leaves the site, 5.15 meetup / 5.41 discord @measured 2026-11-14 by `npm run check:contrast`) — and the band
 // gets exactly one dark region, which is what `check:render` counts.
 //
 // No "Home" link: the serif mark below is the home path, same as in the nav (D100, and the operator
@@ -22,12 +24,17 @@ const year = new Date().getFullYear();
 ---
 
 <footer class="bg-ink text-band-text">
-  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  {/* `py-12` (48px), not `py-10` (40px): DESIGN.md rules section air as ONE step at every width — 48px on
+     every band — and this was the last off-ladder spacing write left in the band. Caught by
+     `npm run check:scale` (S042, D321), the detector DESIGN.md's own Enforcement section says
+     `check:classes` cannot be: Tailwind v4 resolves `py-10`, so "the class exists" was never
+     "the value is on the scale". The band gains 8px top and bottom. */}
+  <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <p class="text-micro uppercase tracking-wide">Where to next</p>
 
     <!-- Targets are 32px tall (16px line box + py-2), the same accepted shape as the nav links; do not
-         shave the pad. `outline-band-text` is the focus ring HERE: gold on ink measures 2.50, which the
-         oracle bans, and `ratify-check` fails this file if a gold ring comes back. -->
+         shave the pad. `outline-band-text` is the focus ring HERE: accent on ink measures 2.97, which the
+         oracle bans, and `ratify-check` fails this file if an accent ring comes back. -->
     <nav
       aria-label="Where to next"
       class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2"
@@ -37,19 +44,19 @@ const year = new Date().getFullYear();
            site's map, and two names for one page is a map with two entries for one place. -->
       <a
         href='/schedule'
-        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Dates
       </a>
       <a
         href='/chat'
-        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Community chat
       </a>
       <a
         href='/join'
-        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Ways in
       </a>
@@ -59,7 +66,7 @@ const year = new Date().getFullYear();
            path hue — the `--color-path-*-*-on-ink` steps mark paths that LEAVE the site. -->
       <a
         href='/events.ics'
-        class='py-2 text-label font-medium hover:text-gold-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
+        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Add to a calendar
       </a>
@@ -68,22 +75,22 @@ const year = new Date().getFullYear();
         target="_blank"
         rel="noopener noreferrer"
         class='py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
-      >
-        Join on Meetup
+        >
+        Join on Meetup<span class="sr-only">{newTabQualifier('Join on Meetup', PLATFORMS.meetup)}</span>
       </a>
       <a
         href={config.URLs.discordInvite}
         target="_blank"
         rel="noopener noreferrer"
         class='py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
-      >
-        Discord
+        >
+        Discord<span class="sr-only">{newTabQualifier('Discord', PLATFORMS.discord)}</span>
       </a>
     </nav>
 
     <!-- Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
          because the club's name is carried by the face (D95/D100). The summand is the club's own glyph,
-         set inline at the size of the word beside it, in gold-on-ink (5.80), and NOT read aloud — it is
+         set inline at the size of the word beside it, in accent-on-ink (5.69), and NOT read aloud — it is
          punctuation here, not a word. -->
     <p class="mt-8 font-body text-body font-bold">
       <a
@@ -91,7 +98,7 @@ const year = new Date().getFullYear();
         aria-label="Matheapolis, home"
         class='py-1 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
-        Matheapolis <span aria-hidden="true" class="text-gold-on-ink">∑</span>
+        Matheapolis <span aria-hidden="true" class="text-accent-on-ink">∑</span>
       </a>
     </p>
 

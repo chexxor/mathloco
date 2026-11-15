@@ -1,0 +1,50 @@
+---
+/*
+ * ONE original drawing (S042, second design read §6.6, 2026-11-14).
+
+ * The read's finding was that the club's own thinking has no visual form: every image on the site is a
+ * hundred-year-old printed plate or a Meetup upload, and nothing depicts a thread. This is the one
+ * drawing the site owns, drawn in the plates' language rather than borrowed from one: hairlines only,
+ * no fills, `currentColor` so the ink is the token rather than a hard-coded hex, and a box that is
+ * drawn as a wire through it.
+
+ * The constraints are the ruled ones, and `npm run check:line-art` is the gate that keeps them:
+ * under 1200 bytes, strokes only, no fill other than `none`, no colour literal, `role="img"` with an
+ * `aria-label` of 12 words or fewer (D324's cap is the alt cap), and a `<figcaption>` carrying the
+ * provenance — for an original that means who drew it, not a book citation. No date in the caption:
+ * `check:dated-surfaces` rules `/schedule` as the only page that prints a date (D218), and a
+ * `2026-11-14` sitting under a drawing on `/chat` reads to a visitor as a meeting date (D325). The
+ * day the drawing was made is in this commit's history.
+
+ * Why the thread "Steps you can undo": it is already in `src/content.json`, sourced to the operator
+ * (2026-11-03), and its gloss says the thread is "algorithms that lose nothing, drawn as wires and
+ * boxes" — the only thread on the list that names a picture. Drawing a different one would be inventing
+ * a claim about what the club discusses (D92).
+ */
+const LABEL = 'A wire running through three boxes, and the same path traced back';
+const CAPTION = '“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no fills. Not a scan of a book.';
+---
+
+<figure data-line-art="undoable-steps" class="mt-3">
+  {/* `check:line-art` measures the figure's BYTES in the emitted page (622 against a 1200 cap
+     @measured 2026-11-14), and Astro does not render a brace-comment, so a note inside the drawing costs
+     nothing against that cap — it is here because a nine-path wire is hard to read without one. The
+     reasoning for each stroke lives here and in the frontmatter note:
+     the forward wire is broken where a box interrupts it, and each span is a cubic rather than a dead
+     straight line — the wobble is the drawing's personality and it costs about 60 bytes. The return path
+     comes over the top so the reader sees one closed circuit rather than two separate drawings. */}
+  <svg viewBox="0 0 240 96" role="img" aria-label={LABEL} fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 52c13-1 20 1 30 0" />
+    <path d="M70 52c11 1 18-1 24 0" />
+    <path d="M128 52c11-1 19 1 24 0" />
+    <path d="M186 52c15 1 24-1 28 0" />
+    <rect x="36" y="34" width="34" height="36" />
+    <rect x="94" y="34" width="34" height="36" />
+    <rect x="152" y="34" width="34" height="36" />
+    {/* The return path: the same three boxes, traversed the other way, which is what "undoable" means.
+        It comes back over the top so the reader sees one closed circuit, not two separate drawings. */}
+    <path d="M220 44c5-13-9-21-22-21H26c-13 0-20 8-20 21" />
+    <path d="M6 44l4 8 7-5" />
+  </svg>
+  <figcaption class="mt-2 text-micro leading-prose text-ink-3 font-body">{CAPTION}</figcaption>
+</figure>

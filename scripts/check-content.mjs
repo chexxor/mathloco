@@ -157,8 +157,11 @@ const contentWords = (t) => new Set(t.toLowerCase().replace(/[.,;:!?\u2013\u2014
 // @measured 2026-11-13 by this gate — one harvest moved the stamp from Nov 6 to Nov 13 and made all 3 baseline
 // rows stale, each of them a FAIL for a sentence nobody touched. The pair is the pair whatever today is; the
 // date is data the page prints, not the shape of the sentence.
-const DATE_STAMP = /\b(?:on|read|dated|as of)\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{1,2},? \d{4}\b|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{1,2},? \d{4}\b|\b\d{4}-\d{2}-\d{2}\b/g;
-const normSentence = (t) => t.toLowerCase().replace(DATE_STAMP, '').replace(/[^a-z0-9' ]/g, '').replace(/\s+/g, ' ').trim();
+// Since D322 the same line can read "yesterday" or "11 days ago" instead of a date, so the relative forms are
+// stripped too — otherwise every run of the build ages an exemption out of existence, which is the same defect
+// with a different clock.
+const DATE_STAMP = /\b(?:on|read|dated|as of)\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{1,2},? \d{4}\b|\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]* \d{1,2},? \d{4}\b|\b\d{4}-\d{2}-\d{2}\b|\b(?:today|yesterday|recently)\b|\b\d+ (?:day|week|month|year)s? ago\b/g;
+const normSentence = (t) => t.toLowerCase().replace(/\u2019|\u2018/g, "'").replace(DATE_STAMP, '').replace(/[^a-z0-9' ]/g, '').replace(/\s+/g, ' ').trim();
 const dupSignature = (a, b) => [normSentence(a), normSentence(b)].sort().join(' <> ');
 
 /** The rows the schedule builds from the snapshot are `<li data-surface="row">` (EventRow.astro); the homepage's
@@ -433,19 +436,26 @@ if (selftest) {
       name: 'rows-that-paraphrase', rule: 'near-duplicate-surface',
       html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><ul><li data-surface="row"><h3>Session A</h3><p>The social is an hour at the bakery with no agenda.</p></li><li data-surface="row"><h3>Session B</h3><p>An hour at the bakery with no agenda and no sign-up.</p></li></ul></section></body></html>`,
     },
-    // The signature must survive a harvest. This pair is recorded with the stamp as it read on Nov 6 and the
-    // page prints Nov 13: without DATE_STAMP normalisation the exemption expires on its own and the page goes
-    // red for a sentence nobody edited.
+    // The signature must survive a harvest that moved the date, and one that turned the date into an age.
+    // D322 made the stamp relative inside 30 days, so the shipped pair can read "yesterday" while the baseline
+    // row was written against an absolute stamp; a baseline that only matches a specific calendar date is an
+    // exemption that expires on its own.
     {
-      name: 'stamp-date-moves-baseline-still-matches', rule: 'near-duplicate-surface',
+      name: 'stamp-date-moves-baseline-still-matches', rule: 'near-duplicate-surface', exempt: true,
       baseline: [{ signature: dupSignature('Copied from the club\u2019s own calendar on Nov 6, 2026', 'These dates are copied from the club\u2019s own calendar.') }],
       html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><p>These dates are copied from the club\u2019s own calendar.</p><ul><li data-surface="row"><h3>MPLS Math Club Social</h3><p>Copied from the club\u2019s own calendar on Nov 13, 2026</p></li></ul></section></body></html>`,
     },
-    // The exemption has to be load-bearing, not decorative: the identical pair, with its signature in the baseline,
-    // must go GREEN and still be reported. If `known` were ignored the shipped page would be red; if the gate only
-    // ever printed baseline rows, nobody would notice a rule that had stopped firing. `recorded: true` builds the
-    // baseline from the pair itself rather than from a hand-typed string, so a change to `dupSignature` shows up
-    // here as a red planting instead of a silent pass.
+    {
+      name: 'relative-stamp-matches-absolute-baseline', rule: 'near-duplicate-surface', exempt: true,
+      baseline: [{ signature: dupSignature('Copied from the club\u2019s own calendar on Nov 6, 2026', 'These dates are copied from the club\u2019s own calendar.') }],
+      html: `<html><body><section id="when-we-meet"><h2>When We Meet</h2><p>These dates are copied from the club\u2019s own calendar.</p><ul><li data-surface="row"><h3>MPLS Math Club Social</h3><p>Copied from the club\u2019s own calendar yesterday</p></li></ul></section></body></html>`,
+    },
+    // A pair whose signature is in the baseline must go GREEN and still be reported, or the exemption is
+    // decorative: if the gate only ever printed baseline rows, nobody would notice a rule that had stopped
+    // firing. `recorded: true` builds the baseline from the pair itself rather than from a hand-typed string,
+    // so a change to `dupSignature` shows up here as a red planting instead of a silent pass.
+    // Both exempt plants also prove the *shape* of the signature: a hand-typed baseline with a curly apostrophe
+    // has to match page text that `plain()` already turned into a straight one.
     {
       name: 'near-duplicate-recorded-not-exempted', rule: 'near-duplicate-surface', recorded: true,
       html: `<html><body><main><h1>Matheapolis</h1><p>Dates go up on Meetup; most of the arguing happens in the chat between meetings.</p></main><section id="when-we-meet"><h2>When We Meet</h2><p>A date and its place go up on Meetup; the discussion keeps running between meetings in the chat.</p></section></body></html>`,
@@ -471,9 +481,10 @@ if (selftest) {
     let caught;
     if (p.furniture) caught = dup.fails.length === 0 && dup.furniture.length === 1 && dup.furniture[0].count === p.furniture;
     else if (p.recorded) caught = dup.fails.length === 0 && dup.opens.length === 1;
+    else if (p.exempt) caught = dup.fails.length === 0 && dup.opens.length === 1;
     else if (p.negative) caught = !fails.some((f) => f.rule === (p.rule ?? 'near-duplicate-surface'));
     else caught = fails.some((f) => f.rule === (p.rule ?? p.name));
-    console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(34)} ${p.recorded ? `green, reported as open (${dup.opens.length})` : fails.map((f) => f.rule).join(',') || 'nothing'}`);
+    console.log(`${caught ? 'ok   caught' : 'FAIL missed'}  ${p.name.padEnd(34)} ${p.recorded || p.exempt ? `green, reported as open (${dup.opens.length})` : fails.map((f) => f.rule).join(',') || 'nothing'}`);
     if (!caught) bad++;
   }
   // and the clean fixture must pass, or the gate is just always red

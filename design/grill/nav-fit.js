@@ -94,7 +94,21 @@
       added.forEach((a) => a.parentNode.removeChild(a));
     }
     shipped.forEach((n) => labelBox.appendChild(n));
-    send({ vw: innerWidth, gap, rows, fonts: [...document.fonts].map((f) => `${f.family} ${f.weight} ${f.status}`) });
+
+    // 2026-11-15 (read §6.5): the same question asked of the WORDMARK rather than the labels — the read wants
+    // the `∑` promoted from the footer glyph into the lockup. That is the operator's call (MS25), so the
+    // delegate's job is to price it: the shipped label set, the mark written with and without the glyph, in
+    // the row the visitor actually gets. The glyph is measured in the face the nav actually resolves, not in
+    // a specimen.
+    const LOCKUPS = ['Matheapolis', '\u2211 Matheapolis', 'Sigma Matheapolis'];
+    const markText = mark.textContent;
+    const lockups = LOCKUPS.map((t) => {
+      mark.textContent = t;
+      const needed = mark.scrollWidth + gap * shipped.length + shipped.reduce((s, a) => s + a.scrollWidth, 0);
+      return { text: t, mark: mark.scrollWidth, needed: +needed.toFixed(1), slack: +(row.clientWidth - needed).toFixed(1) };
+    });
+    mark.textContent = markText;
+    send({ vw: innerWidth, gap, rows, lockups, fonts: [...document.fonts].map((f) => `${f.family} ${f.weight} ${f.status}`) });
   };
 
   const run = () => { try { measure(); } catch (e) { send({ error: String(e && e.message ? e.message : e) }); } };

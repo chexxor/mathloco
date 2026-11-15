@@ -19,7 +19,9 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { renderCalendar } from '../src/lib/ics.mjs';
+import { renderCalendar, escapeText } from '../src/lib/ics.mjs';
+import { publishableRows, meetingKind, venueKey } from '../src/lib/event-groups.mjs';
+import { feedDescription, DESCRIPTIONS } from '../src/lib/event-description.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -99,7 +101,7 @@ const daysBetween = (from, to) =>
 const DATE_SHAPE = /^\d{4}-\d{2}-\d{2}$/;
 
 /** Top-level fields the gate knows by name, so a hatch spelled wrong fails instead of silently silencing. */
-const SNAPSHOT_KEYS = ['calendar', 'source', 'events', 'stalenessOkUntil'];
+const SNAPSHOT_KEYS = ['calendar', 'source', 'events', 'stalenessOkUntil', 'superseded'];
 
 // ------------------------------------------------------------------ the rules
 // Each rule returns findings: `[]` means satisfied. Rules receive (data, text) where text is the published
@@ -116,8 +118,12 @@ const RULES = [
     const begun = (text.match(/^BEGIN:VEVENT$/gm) ?? []).length;
     const ended = (text.match(/^END:VEVENT$/gm) ?? []).length;
     if (begun !== ended) out.push({ rule: 'envelope', detail: `unbalanced VEVENT components (${begun} BEGIN, ${ended} END)` });
-    const rows = (data.events ?? []).length;
-    if (rows !== ended) out.push({ rule: 'envelope', detail: `${rows} row(s) in the snapshot, ${ended} VEVENT(s) published` });
+    // D318: the snapshot holds every row the source has; the feed publishes the rows the grouping does not
+    // supersede. Comparing the raw row count here would make the renderer's de-duplication look like a bug.
+    const publishable = publishableRows(data.events ?? []).rows.length;
+    if (publishable !== ended) {
+      out.push({ rule: 'envelope', detail: `${publishable} of ${(data.events ?? []).length} snapshot row(s) are publishable, ${ended} VEVENT(s) published` });
+    }
     return out;
   },
 
@@ -156,7 +162,10 @@ const RULES = [
       if (TIME_SHAPE.test(u) || TIME_SHAPE.test(u.replace(/[-:]/g, '')))
         out.push({ rule: 'uid-shape', detail: `UID ${u} looks time-derived — every redeploy would duplicate it` });
       if (u.includes(BUILD_DATE)) out.push({ rule: 'uid-shape', detail: 'a UID contains this build date' });
-      if (u && !unfold(text).includes(`UID:${u}`)) out.push({ rule: 'uid-shape', detail: `UID ${u} is absent from the published feed` });
+      // D318: a row the grouping supersedes is *meant* to be absent, so the presence test runs only on rows
+      // the calendar is supposed to publish. The grouping rule below is what proves the absence is deliberate.
+      const publishable = new Set(publishableRows(data.events ?? []).rows.map((r) => String(r.uid ?? '')));
+      if (u && publishable.has(u) && !unfold(text).includes(`UID:${u}`)) out.push({ rule: 'uid-shape', detail: `UID ${u} is absent from the published feed` });
     }
     if (new Set(uids).size !== uids.length) out.push({ rule: 'uid-shape', detail: 'two rows share a UID' });
     return out;
@@ -378,6 +387,97 @@ const RULES = [
     return out;
   },
 
+  // D318, the assertion the 2026-11-14 read asked for in its own words: "assert in a test that no two VEVENTs
+  // share a DTSTART date". Read strictly, that is wrong — the club can legitimately hold two meetings on one
+  // day — so the rule is the useful version of it: **no published CANCELLED row shares a group (date, venue,
+  // meeting type) with a published live row.** It is computed from the bytes, not from the snapshot, so a
+  // publisher that proxies upstream rows is caught by the same rule even if the data is clean.
+  (_data, text) => {
+    const out = [];
+    const groups = new Map();
+    for (const block of eventsOf(text)) {
+      const u = unfold(block);
+      const start = propOf(u, 'DTSTART');
+      if (!start) continue;
+      const status = String(propOf(u, 'STATUS')?.value ?? 'CONFIRMED').toUpperCase();
+      const key = `${String(start.value).slice(0, 8)}|${venueKey({ venue: { raw: propOf(u, 'LOCATION')?.value ?? '' } })}|${meetingKind({ summary: propOf(u, 'SUMMARY')?.value ?? '' })}`;
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push({ status, uid: propOf(u, 'UID')?.value ?? '(no uid)' });
+    }
+    for (const [key, members] of groups) {
+      const dead = members.filter((m) => m.status === 'CANCELLED');
+      const live = members.filter((m) => m.status !== 'CANCELLED');
+      if (dead.length && live.length) {
+        out.push({
+          rule: 'grouping',
+          detail: `${dead.length} CANCELLED VEVENT(s) (${dead.map((m) => m.uid).join(', ')}) share the group ${key} with a live one (${live.map((m) => m.uid).join(', ')}) — a subscriber sees a struck-through meeting on the day of the real one (D318)`,
+        });
+      }
+    }
+    // And the rows the grouping decided not to publish must actually be absent.
+    const dropped = publishableRows(_data.events ?? []).dropped;
+    const u = unfold(text);
+    for (const d of dropped) {
+      if (d.uid && u.includes(`UID:${d.uid}`)) {
+        out.push({ rule: 'grouping', detail: `${d.uid} is published although ${d.reason} (D318)` });
+      }
+    }
+    return out;
+  },
+
+  // The superseded list the harvest writes is a record, so it has to agree with the decision the renderer is
+  // making right now. A log that names a row the grouping no longer drops is a claim about a row the calendar
+  // does publish (D118's "one table" rule applied to a log).
+  (data) => {
+    const out = [];
+    const log = data.superseded;
+    if (log == null) return out; // the key only exists after a harvest has run; its absence is not a defect
+    if (!Array.isArray(log)) return [{ rule: 'superseded-log', detail: 'superseded is not an array' }];
+    const live = new Set(publishableRows(data.events ?? []).dropped.map((d) => d.uid));
+    for (const d of log) {
+      if (!d?.uid) out.push({ rule: 'superseded-log', detail: 'a superseded entry has no uid' });
+      else if (!live.has(d.uid)) {
+        out.push({ rule: 'superseded-log', detail: `the log records ${d.uid} as superseded, but the grouping no longer drops it — a stale log is a claim about a row nobody dropped` });
+      }
+      if (!d?.reason) out.push({ rule: 'superseded-log', detail: `${d?.uid ?? '(no uid)'}: a superseded entry with no reason is a deletion nobody can audit` });
+    }
+    for (const uid of live) {
+      if (!log.some((d) => d.uid === uid)) {
+        out.push({ rule: 'superseded-log', detail: `${uid} is superseded by the grouping but is not in the log (D318: every dropped UID is logged)` });
+      }
+    }
+    return out;
+  },
+
+  // D319: the published DESCRIPTION is the club's own copy, per meeting type. This is the rule that makes
+  // "the publisher normalizes, it does not proxy" (D150) checkable in the calendar file, and it is the reason
+  // the organizer's pre-2026 boilerplate cannot come back on the next harvest while the gate is green.
+  (data, text) => {
+    const out = [];
+    const rowsByUid = new Map((data.events ?? []).map((r) => [String(r.uid ?? ''), r]));
+    for (const block of eventsOf(text)) {
+      const u = unfold(block);
+      const uid = String(propOf(u, 'UID')?.value ?? '');
+      const desc = propOf(u, 'DESCRIPTION');
+      if (!desc) continue;
+      const row = rowsByUid.get(uid) ?? { uid };
+      const want = escapeText(feedDescription(row));
+      if (desc.value !== want) {
+        out.push({ rule: 'feed-copy', detail: `${uid}: DESCRIPTION is not the copy src/lib/event-description.mjs generates — the feed proxies upstream boilerplate (D319)` });
+      }
+      const lower = desc.value.toLowerCase();
+      for (const stale of ['algorithms of most any kind', 'post a comment before the date', 'generate topics to discuss']) {
+        if (lower.includes(stale)) out.push({ rule: 'feed-copy', detail: `${uid}: DESCRIPTION still carries the organizer's obsolete phrase "${stale}" (D319)` });
+      }
+      if (!lower.includes('discord.com/invite')) out.push({ rule: 'feed-copy', detail: `${uid}: DESCRIPTION carries no path to where the club actually talks (D319)` });
+    }
+    for (const [kind, template] of Object.entries(DESCRIPTIONS)) {
+      if (template.sentences.length !== 2) out.push({ rule: 'feed-copy', detail: `the ${kind} template has ${template.sentences.length} sentences; the ruled shape is two (D319)` });
+      if (!template._source) out.push({ rule: 'feed-copy', detail: `the ${kind} template names no source for its claims (D92)` });
+    }
+    return out;
+  },
+
   // The hatch above only works if the name is right. A top-level key the gate does not know is either a typo
   // (which would silence a gate for free) or a field some tool started writing (which nobody reviewed), so it
   // fails by name rather than passing through.
@@ -414,6 +514,10 @@ const report = (data) => {
   const upcoming = upcomingRows(data, today);
   const lines = [];
   const hatch = data.stalenessOkUntil;
+  const dropped = publishableRows(data.events ?? []).dropped;
+  if (dropped.length) {
+    lines.push(`${dropped.length} row(s) superseded by the grouping (D318): ${dropped.map((d) => `${d.uid} (${d.reason})`).join('; ')} — they stay in data/events.json and are never published`);
+  }
   const daysTo = (row) => daysBetween(today, String(row.start).slice(0, 10));
   if (!upcoming.length) {
     lines.push(`no upcoming row on or after ${today} (${data.calendar?.timezone ?? 'zone unknown'}) — the page renders its empty state (M6 names a silently stale schedule as the failure mode)`);
@@ -481,6 +585,26 @@ if (selftest) {
     { name: 'bad-SEQUENCE', data: (d) => { d.events[0].sequence = 'first'; return d; }, rule: 'sourced-rows' },
     { name: 'unsourced-row', data: (d) => { delete d.events[0].source; return d; }, rule: 'sourced-rows' },
     { name: 'unknown-field-shape-drift', data: (d) => { d.events[0].rsvp_count = 12; return d; }, rule: 'sourced-rows' },
+    // D318/D319. The first three plant the defects the grouping and the feed-copy rule exist to catch; the
+    // last two are the assertions in the other direction, so a green run means the grouping is firing on the
+    // shipped snapshot and not merely always silent.
+    { name: 'a-cancelled-twin-published-next-to-a-live-row', text: (t) => t.replace('END:VCALENDAR', [
+      'BEGIN:VEVENT',
+      'UID:twin-cancelled-planting',
+      `DTSTAMP:${String(snapshot.source.fetchedAt).replace(/[-:]/g, '')}`,
+      'SEQUENCE:1',
+      'DTSTART;TZID=America/Chicago:20261121T120000',
+      'DTEND;TZID=America/Chicago:20261121T140000',
+      'SUMMARY:MPLS Math Club - Bimonthly Social',
+      'LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States',
+      'STATUS:CANCELLED',
+      'END:VEVENT',
+      'END:VCALENDAR',
+    ].join('\r\n')), rule: 'grouping' },
+    { name: 'the-organizer-s-boilerplate-back-in-the-feed', text: (t) => t.replace(/DESCRIPTION:[^\r]*(?:\r\n [^\r]*)*/, 'DESCRIPTION:We are interested in discussing algorithms of most any kind.'), rule: 'feed-copy' },
+    { name: 'a-stale-superseded-log', data: (d) => { d.superseded = [{ uid: 'ghost-row', group: '2026-11-21|angel|social', reason: 'dropped last week' }]; return d; }, rule: 'superseded-log' },
+    { name: 'the-grouping-is-silent-on-the-shipped-snapshot', clean: true, rule: 'grouping' },
+    { name: 'the-log-matches-the-live-decision', clean: true, data: (d) => { d.superseded = publishableRows(d.events).dropped; return d; }, rule: 'superseded-log' },
     // The "renderer read a clock" defect is not plantable from the data side, and is not asserted here as a
     // source-text rule either (nextDay() legitimately builds a Date from a date string). It is caught by
     // behaviour: `byte-identity` renders the snapshot twice and fails on any difference, which is what a

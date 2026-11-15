@@ -44,6 +44,13 @@
  *    dead row's date, its slug and therefore its art key (D223). The harvest prints the collision by name and
  *    changes nothing; the human decides which row lives (D299).
  *
+ * 5. **It does not publish two rows for one meeting.** On 2026-11-13 the instance held UID `649bf59a`
+ *    (`CONFIRMED`, 2026-11-21 12:00) and UID `99df9996` (`CANCELLED`, 2026-11-21 12:00) at the same venue with
+ *    the same series name (@measured 2026-11-14 by `node scripts/check-ics.mjs` on `dist/client/events.ics`).
+ *    `src/lib/event-groups.mjs` decides which of a group the *publisher* emits; this tool prints every UID it
+ *    is superseding and writes the list to the snapshot under `superseded`. It deletes nothing (rule 3) and
+ *    never un-cancels a row (rule 4): grouping is a publishing decision, not a data edit.
+ *
  * Sequence numbers move automatically: if a mechanical field on an existing UID changed, `SEQUENCE`
  * increments, because RFC 5545 (lines 6267-6272) makes UID+SEQUENCE the only way a subscriber learns that
  * the copy it holds is stale.
@@ -51,6 +58,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { cadenceWords } from '../src/lib/cadence.mjs';
+import { publishableRows } from '../src/lib/event-groups.mjs';
 
 const args = process.argv.slice(2);
 const flag = (f) => args.includes(f);
@@ -307,10 +315,24 @@ for (const e of snapshot.events ?? []) {
 
 // ------------------------------------------------------------------ report
 
+// Rule 5, stated as a log rather than as a deletion (D318). Computed from the merged snapshot, so what the
+// run prints is exactly what `src/lib/ics.mjs` will publish when the build runs.
+const grouping = publishableRows(snapshot.events ?? []);
+snapshot.superseded = grouping.dropped.map((d) => ({ ...d, recordedAt: fetchedAt }));
+for (const d of grouping.dropped) {
+  console.log(
+    `superseded ${d.uid} "${d.summary}" (${d.start}) — ${d.reason}; group ${d.group}. ` +
+    `The row stays in data/events.json (rule 3), it is only never published (D318).`,
+  );
+}
+
 for (const c of changes) console.log(c);
 for (const n of notes) console.log(`note  ${n}`);
 const upcoming = (snapshot.events ?? []).filter((e) => String(e.start).slice(0, 10) >= new Date().toISOString().slice(0, 10));
-console.log(`harvest: ${feed.events.length} VEVENT(s) in the feed, ${(snapshot.events ?? []).length} row(s) in the snapshot, ${upcoming.length} not yet past`);
+console.log(
+  `harvest: ${feed.events.length} VEVENT(s) in the feed, ${(snapshot.events ?? []).length} row(s) in the snapshot, ` +
+  `${grouping.rows.length} publishable (${grouping.dropped.length} superseded), ${upcoming.length} not yet past`,
+);
 if (flag('--write')) {
   writeFileSync(OUT, `${JSON.stringify(snapshot, null, 2)}\n`);
   console.log(`harvest: wrote ${OUT}`);

@@ -106,7 +106,9 @@ const faviconFindings = (svgPath) => {
 if (process.argv.includes('--selftest')) {
   const dir = path.join('.design', 'tmp-favicon-selftest');
   mkdirSync(dir, { recursive: true });
-  const ink = '#203927', paper = '#fcfaf6', rule = '#849688', gold = '#a25f12', discord = '#a33e25';
+  // the bytes the adopted tokens paint (D316): ink #17130c, paper #faf6ec, rule #8b7f65, accent #a2432a,
+  // path-discord #3664be. A fixture that no longer matches a token tests the wrong thing.
+  const ink = '#17130c', paper = '#faf6ec', rule = '#8b7f65', accent = '#a2432a', discord = '#3664be';
   const mark = (a, b, extra = '') => `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="${a}"/><text x="16" y="16" fill="${b}">x</text>${extra}</svg>`;
   const put = (name, body) => { const p = path.join(dir, name); writeFileSync(p, body); return p; };
 
@@ -117,7 +119,7 @@ if (process.argv.includes('--selftest')) {
     ['named colour instead of a token', put('named.svg', mark(ink, 'white')), ['not a token']],
     ['a Tailwind hex nobody ratified', put('tailwind.svg', mark(ink, '#3b82f6')), ['not a token']],
     ['ground and glyph too close', put('low.svg', mark(paper, rule)), ['4.5']],
-    ['three colours in one mark', put('three.svg', mark(paper, ink, `<rect x="2" y="2" width="8" height="8" fill="${gold}"/>`)), ['3 colours']],
+    ['three colours in one mark', put('three.svg', mark(paper, ink, `<rect x="2" y="2" width="8" height="8" fill="${accent}"/>`)), ['3 colours']],
     ['a reserved join-path hue', put('channel.svg', mark(discord, paper)), ['reserved']],
     ['a mark that paints nothing', put('blank.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32"/></svg>'), ['paints nothing']],
     ['a missing mark', path.join(dir, 'nope.svg'), ['does not exist']],
