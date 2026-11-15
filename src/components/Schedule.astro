@@ -175,6 +175,9 @@ const scheduleHref = '/schedule';
 // disagree about when the club's calendar was last read.
 const copied = copiedOn();
 // The heading is the page's own h1 on /schedule and a section h2 on the homepage, where the hero owns the h1.
+// The id stays `when-we-meet` on both surfaces even where the heading beside it now reads "Dates": it is a
+// probe handle (design/grill/round14-options.mjs selects the section by this exact attribute), and the rule
+// for a probe handle is that it does not follow the copy.
 const headingId = 'when-we-meet';
 const Heading = compact ? 'h2' : 'h1';
 // 2026-11-14 (S040, second design read §1): the eyebrow is gone from both surfaces. `check:naming` (D309) used
@@ -185,7 +188,12 @@ const Heading = compact ? 'h2' : 'h1';
 // page in the same block; on the homepage the band's heading IS the nav's word, "Dates", so a visitor who
 // clicked "Dates" finds a heading that says "Dates" - and `check:naming`'s new alias rule (a page may not use
 // another page's h1 as its own h2) is exactly what this band was violating.
-const headingText = compact ? 'Dates' : 'When We Meet';
+// 2026-11-15 (round-3 read §4, S043): the page of record is named by the nav. `/schedule`'s own h1 used to be
+// "When We Meet" while the nav, the <title> and the exit band all said "Dates" - four surfaces, two names, which
+// is exactly the alias defect `check:naming` was built for (D309). The name goes on the page that is the page;
+// the voice goes to the homepage band, where a section heading is prose rather than a page name. The order also
+// removes the collision the read spotted: a section on `/` can no longer wear `/schedule`'s h1 as its own h2.
+const headingText = compact ? 'When we meet' : 'Dates';
 // The compact lede used to be the join band's sentence, kept verbatim when the bands merged (D228): "One place to
 // say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether
 // this is your kind of room." The operator asked for the join copy rewritten (2026-11-07), and the clause that did
@@ -296,7 +304,7 @@ const lede = compact
           {hidden > 0 && (
             <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
               {/* The label has to match what the target page actually lists: `/schedule` shows a window, not the
-                  whole future, so promising "All 14 dates" on a page that prints 8 would be a link that lies
+                  whole future, so promising "all fourteen dates" on a page that prints eight would be a link that lies
                   about its own destination (D238). */}
               {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All ${win.shown.length} dates`} <span aria-hidden="true">→</span>
             </a>

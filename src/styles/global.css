@@ -13,12 +13,38 @@
    The old palette entries below are marked RETIRED-IN-APPLY and stay until the markup stops using
    them — deleting a token before its class write goes away is what `check:classes` exists to catch. */
 
+/* One focus ring, for every link and button on the site (round-3 read §12 criterion 9, S043, D328).
+   Before this, the ring was written per component: the exit band and every control carry their own
+   `focus-visible:outline-*`, but the nav's four links, the 404 page's two in-sentence links and the hero's
+   plate captions had no ring at all and fell back to the browser's default — a colour the contrast oracle
+   never measured, on a ground the palette record says nothing about. `npm run check:focus` (scripts/check-focus.mjs)
+   is the detector: it fails any rule that suppresses an outline, fails this rule's absence, and fails a ring
+   with no offset.
+   Specificity is deliberate: a Tailwind utility such as `focus-visible:outline-band-text` is (0,2,0) and
+   beats this (0,1,1), so the band's ring — `band-text`, because accent on ink measures 2.97 and the oracle
+   bans it (DESIGN.md "The focus ring on the band") — still wins wherever it is written. */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
 @theme {
   /* ---- 4px grid (round 2; D95). Already Tailwind's default; stated so the gate can assert it.
      Allowed steps: 1,2,3,4,6,8,12,16 (= 4,8,12,16,24,32,48,64px — scale S3, fits 65 of 66 writes).
      The 20px orphan (`mt-5` 1 write + `sm:mt-5` 4 writes) maps to 24 in design-apply, and
      design-enforce then flags any 20px write. ---- */
   --spacing: 0.25rem;
+
+  /* A breakpoint the site actually needs, defined here so the gate that measures widths sees it too.
+     `xs` = 380px. It exists for one thing: the nav's subordinate date chip. The row carrying the chip needs
+     314px and the 320 floor offers 276 - 38px over - so it cannot paint there @measured 2026-11-15 by
+     `node design/nav-fit.mjs --no-build`, while the shipped row without it needs 257 of 276; at 390 the row
+     with the chip needs 306 of 346, so the chip CAN paint from there up @measured 2026-11-15 by `npm run check:render:dist`,
+     and `sm` (640)
+     was hiding it at a width where the measurement says it fits (round-3 read, §12 criterion 5).
+     Nothing else in src/ uses `xs:`; adding a second use of this tier is a design decision, not a class. */
+  --breakpoint-xs: 380px;
 
   /* RETIRED (D117, apply 4f): --breakpoint-nav-narrow is gone, and it stays gone. The nav needed a
      narrow type tier only because it carried four labels (mark + Schedule + Chat + Members), and two of

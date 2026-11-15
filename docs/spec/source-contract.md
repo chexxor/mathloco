@@ -95,6 +95,27 @@ group — `/events/ics/`, `/events/calendar/ics/` and `/events/atom/` all answer
 disallows the atom/rss/xml paths, `/api/`, `/mu_api/` and `/gql*` (D258, D264). The group's `/events/` page is
 not disallowed and answers 200 without a Cloudflare challenge.
 
+### 4b. Candidate sources the operator has named — not wired, and nothing reads them yet
+
+The operator keeps a list of **free online math events** to aggregate (opened 2026-11-15: "Add this to a list
+of free online math events to aggregate: https://momath.org/volumes/"). The list itself — one row per
+publisher, each with its measured wire shape and its terms — lives beside the plan in
+`.notes/roadmap-events.md` §"the operator's list: free online math events to aggregate", which is host-local,
+so **this table is the part that travels**: a fresh clone learns that the candidate exists, what it would
+promise, and that no code may read it before this contract names it.
+
+| candidate | fields it would give | fields deliberately not read | who may correct it | how a correction is proven |
+|---|---|---|---|---|
+| **MoMath `Volumes`, the MoMath book club** — `momath.org/volumes/` (the museum's fuller list is `momath.org/calendar/`, header `Events (Eastern Time Zone)`) | nothing today. If it is ever wired: the series name, the date and wall clock **as declared in Eastern**, the `( online )` marker, and the publisher's own link | no club fact is asserted from it; no registrant data (its register form collects a name and a street address — a roster is not a statistic, and this row would inherit the consent rule in rule 4); no paraphrase of its blurb | MoMath's own staff, on MoMath | a dated stamp on the configured URL, re-measured, in the same 60-day window `check:rsvp` already applies to a configured platform link |
+
+Three rules this candidate does not relieve, and each is why nothing is wired mid-round: the disagreement
+rule in §1 is stated for the club's **two** calendars, and a third publisher's dates are not a club record —
+they would need a surface that says so (the parked "a dimension for other groups" question, D303); its times
+are **wall clock in Eastern**, while the site's clock is `todayInZone('America/Chicago')` (D188) and its clock
+rule is D174's; and its event names are not in `src/lib/event-groups.mjs`'s two-type vocabulary, which the
+N1 ruling on series names still owns. **It is parked in `PLAN.md` §Parked until the operator's letter names
+the surface and the vocabulary** (D334).
+
 ## 5. Age windows
 
 | what | inside the window | outside it |

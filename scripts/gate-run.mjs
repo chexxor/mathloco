@@ -246,6 +246,11 @@ const DEPLOY = [
   // sr-only span, no platform is named twice in one accessible name, and the club's own routes never open a new
   // tab. Counts are printed from the artifact so a reviewer sees the census, not just the verdict.
   { name: 'check:ext-links', desc: 'every outbound anchor: rel carries noopener, opens in a new tab, "opens in a new tab" only in an sr-only span, no platform named twice in one accessible name, and no club route painted target=_blank (S041, D317)', needs: ['build'] },
+  // One focus ring for the whole site, asserted in the stylesheet it ships in (S043, D328). The selftest plants
+  // on in-memory CSS and HTML, so the rule can go red before anyone builds (D118); the gate reads the shipped
+  // stylesheet, so it waits for `build`. Cost @measured 2026-11-15 by this step: 0.06s gate, 0.07s selftest.
+  { name: 'check:focus:selftest', desc: 'the focus gate can still fail (14 cases: 6 plantings — an authored outline:none, outline:0, outline-style:none, a stylesheet with no global ring, a ring covering links but not buttons, a 1px ring, a ring with no offset, a hex ring, a token under the 3.0 bar, outline-none on a link, outline-hidden on a button — plus 3 clean controls, incl. the defect quoted inside a comment and outline-none on a non-control)' },
+  { name: 'check:focus', desc: 'the shipped stylesheet carries one global 2px focus ring on a:focus-visible and button:focus-visible, offset 2px, coloured by a @theme token that clears 3.0 against paper, and nothing in src/ or the artifact suppresses an outline (S043, D328)', needs: ['build'] },
   // One provenance register (S042, D322). The selftest plants on in-memory pages and fixture files, so it
   // can go red before anyone builds (D118); the gate itself reads the emitted pages, so it waits for
   // `build`. Cost @measured 2026-11-14 by this step: 0.05s gate, 0.03s selftest.

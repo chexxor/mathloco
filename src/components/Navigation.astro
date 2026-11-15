@@ -32,8 +32,12 @@
 // Width, measured on the built row by `node design/nav-fit.mjs --no-build` (Linux native, Firefox 159.0):
 // `Dates` 36px, the chip `21 Nov` 41px, and the pair inside one anchor 80px. At the 320px floor (D114, 276px of
 // content box, 16px gaps) the shipped row needs 257px; with the chip it needs 301px - 25px OVER the floor, and
-// `flex-nowrap` means that is a failed probe, not a wrap. So the chip is `hidden sm:inline`: it paints at 640
-// and above, where the row needs 301 of 580 (279px of slack), and the floor keeps the bare label.
+// `flex-nowrap` means that is a failed probe, not a wrap. So the chip is hidden below the tier where it fits:
+// `hidden xs:inline` with `--breakpoint-xs: 380px` in src/styles/global.css. It paints from 390 up - the row
+// needs 306 of the 346 that width offers @measured 2026-11-15 by `npm run check:render:dist` - and stays hidden
+// at the 320 floor, where the shipped row needs 257 of 276 and the same row with the chip needs 314, 38px over
+// @measured 2026-11-15 by `node design/nav-fit.mjs --no-build`. The round-3 read (§12 criterion 5) asked for the chip
+// at 390px; `sm` (640) was hiding it at a width the measurement says can hold it.
 import { upcoming, dateParts, formatDate } from '../lib/content.ts';
 import { todayIn } from '../lib/events.mjs';
 import { scheduleWindow } from '../lib/event-window.mjs';
@@ -48,6 +52,11 @@ const navItems = [
   { href: '/chat', label: 'Chat' },
   { href: '/join', label: 'Ways in' },
 ];
+
+// The chip's own words, in the order the anchor paints them. `chipWords` is used twice on the date-bearing
+// item - in the anchor's `aria-label` and in the chip's text - so the name and the page cannot drift apart
+// the next time the short form changes (D333, 2026-11-15).
+const chipWords = (iso: string | null) => (iso ? `${dateParts(iso).day} ${dateParts(iso).month}` : '');
 ---
 
 <!-- Round 17 (MS03), operator ruling 2026-11-09 (S017 B1): the bar is chrome by an edge, not by a ground.
@@ -91,24 +100,33 @@ const navItems = [
           <a
             href={item.href}
             class="whitespace-nowrap py-2 text-label text-ink font-medium hover:text-accent"
-            aria-label={item.date ? `${item.label}, next meeting ${formatDate(item.date, 'wide')}` : item.label}
+            aria-label={item.date ? `${item.label} ${chipWords(item.date)}, next meeting ${formatDate(item.date, 'wide')}` : item.label}
           >
             {item.label}
             {/* The subordinate date, not a second nav item. `data-nav-date` is the handle
                 scripts/check-dated-surfaces.mjs reads: a chrome date is allowed only when it equals the first
                 date the window says the schedule page prints (D311), so the nav can never print a stale date
                 the page of record does not. Hidden below `sm` for the measured 25px the pair needs at the
-                320px floor.
+                320px floor. The gap in front of the chip is a TEXT NODE, not ml-2: Astro ate the newline between
+                the two expressions, so the anchor serialized as >Dates<span data-nav-date=... and the two visible
+                words were one word - which is what axe-core's label-in-name rule (SC 2.5.7) called on all four
+                pages, and a margin says nothing to a screen reader anyway (D333, measured 2026-11-15 by
+                node design/axe-check.mjs).
 
-                The accessible name is a sentence, not the two visible words: `Dates, next meeting Saturday, Nov 21`.
-                The weekday cannot go in the visible chip — `node design/nav-fit.mjs --no-build` @measured 2026-11-14
-                prices `Sat 21 Nov` at 286px against a 276px content box at the 320 floor (D311) — but it costs nothing
-                in the name, and a chip that reads "21 Nov" to a screen reader is a number with no subject. The name
-                is checked by the same gate, rule nav-chip-name-thin. With no date on the calendar the anchor falls
-                back to the plain label: no sentence about a meeting that does not exist. */}
+                The accessible name is a sentence, not the two visible words: `Dates 21 Nov, next meeting Saturday, Nov 21`.
+                It has to *begin* with the words a visitor sees: SC 2.5.7 ("label in name") asks that an element's
+                accessible name contain its visible text, and axe-core's `label-content-name-mismatch` - serious
+                impact, flagged on the nav chip of all four pages @measured 2026-11-15 by `node design/axe-check.mjs` -
+                is that rule as a check. The old name put the chip's words nowhere (`Dates, next meeting Saturday, Nov 21`),
+                so a reader who activates the link by name could not find it by what it says. The weekday still cannot go
+                in the visible chip - `node design/nav-fit.mjs --no-build` @measured 2026-11-14 prices `Sat 21 Nov` at
+                286px against a 276px content box at the 320 floor (D311) - but it costs nothing in the name, and a chip
+                that reads "21 Nov" to a screen reader is a number with no subject. The name is checked by the same gate,
+                rule nav-chip-name-thin. With no date on the calendar the anchor falls back to the plain label: no
+                sentence about a meeting that does not exist. */}
             {item.date && (
-              <span data-nav-date={item.date} class="hidden sm:inline ml-2 text-label text-ink-3 tabular-nums">
-                {dateParts(item.date).day} {dateParts(item.date).month}
+              <span data-nav-date={item.date} class="hidden xs:inline text-label text-ink-3 tabular-nums">
+                {' '}{chipWords(item.date)}
               </span>
             )}
           </a>

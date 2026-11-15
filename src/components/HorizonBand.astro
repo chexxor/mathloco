@@ -17,11 +17,20 @@ import radio1922 from '../assets/photos/horizon-radio1922.png';
  * rather than upscale one."* These three are each a whole leaf at **0.38–0.55x** of its native scan.
  *
  * What it costs, measured on the built page at the box this component ships (`npm run round14`, option
- * `shelf-lg`, 2026-11-03): page **+321px at 1240** and **+321 at 1024**, **+0 at 640 and 390** (the band is
- * `hidden` below `lg`, and the phone keeps the composition the operator ruled in round 14's phone question),
+ * `shelf-lg`, 2026-11-03): page **+321px at 1240** and **+321 at 1024**, **+0 at 640 and 390** (the band was
+ * `hidden` below `lg` then, and the phone kept the composition the operator ruled in round 14's phone question),
  * painted area **5.33% -> 7.47%** at 1240, and page chroma >= 0.08 **0.274% -> 0.255%** — three more plates
  * and the page gets *less* loud, because all three are colourless line work (0% at chroma >= 0.08 each).
  * @measured 2026-11-03 by npm run round14
+ *
+ * **The band is no longer desktop-only (D329, 2026-11-15, lifting D168's park).** The round-3 read asked for
+ * 3-up from 900, 2-up from 640, 1-up below, and the re-measure prices what that costs on a phone: the band
+ * adds **+332px at 1240** (the round's +321, the same box), **+472px at 640**, **+715px at 390** and
+ * **+623px at 320**, so the phone page goes from 4045px to **4760px** at 390 — 18% taller, for three plates
+ * stacked one per line at 346px wide (0.45x of the archive's own scan, so the hairlines survive). The rungs
+ * are the read's; the *cost* is the number the operator has to weigh, and the cheaper rung is one class
+ * (`hidden sm:block`, which pays +472 at 640 and nothing below). @measured 2026-11-15 by `node design/plates-price.mjs`
+ * (plates painted: 382.6px x3 at 1240, 282px x2 +1 wrapped at 640, 346px x3 stacked at 390).
  *
  * The alt text comes from the source's own picture page (`insideoutlibrary.com/p/<id>`, which carries book,
  * year and leaf), plus the one thing measured about the drawing itself: it is line work, ink at 21.1% of
@@ -68,7 +77,7 @@ const plates = [
     band moving cannot reach either of those, because both are inside a surface rather than between sections
     (D223). R6 took every landing-page band to a single 48px step (D214). The plates keep their box; only the air
     around the shelf moves. */}
-<section class="bg-paper py-12 hidden lg:block" aria-label="Plates from public-domain mathematics books">
+<section class="bg-paper py-12" aria-label="Plates from public-domain mathematics books">
   {/* `flex` on the wrapper is not styling: check:space records a `data-slot` box only for a child of a grid or
       flex container, so a PS box inside a plain block is invisible to the survey and to every design round that
       reads it. Measured 2026-11-03: PS-5 was absent from the slot list until its parent became a flex container. */}
@@ -93,13 +102,25 @@ const plates = [
      its labels. gap 1rem = the 16px the round measured. */
   .horizon {
     display: flex;
-    flex: 1 1 auto;
+    flex-wrap: wrap;
     gap: 1rem;
     align-items: flex-end;
   }
+  /* The plate widths are written HERE rather than as utilities on the element, and they have to be: Astro
+     compiles a component <style> selector to `.horizon__plate[data-astro-cid-…]`, specificity (0,2,0), which
+     beats every Tailwind utility (0,1,0) - so a `w-1/2` on the figure would lose to the `width: 100%` below
+     it and quietly do nothing (measured 2026-11-15: the round-3 read asked for 3-up / 2-up / 1-up and the
+     utilities changed nothing). The three rungs are the read's §10: three plates across from 900, two from
+     640, one per line below, with the gaps subtracted so a line never wraps for want of 16px. */
   .horizon__plate {
     display: block;
     width: 100%;
+  }
+  @media (min-width: 640px) {
+    .horizon__plate { width: calc((100% - 1rem) / 2); }
+  }
+  @media (min-width: 900px) {
+    .horizon__plate { width: calc((100% - 2rem) / 3); }
   }
   .horizon__img {
     display: block;

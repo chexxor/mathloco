@@ -467,9 +467,11 @@ freshness.
   side, so the choice is visible rather than argued.
 - **The nav may carry the next date, subordinate to the label, and only where the row has room for it** (D311,
   2026-11-14). The chip is a `data-nav-date` span inside the same anchor, taken from the same
-  `scheduleWindow(upcoming(), todayIn())` call the schedule page makes, `hidden sm:inline` because the row with it
-  painted needs **311px** and the 320 floor offers **276** @measured 2026-11-14 by `npm run check:render:dist`
-  (PASS at 1240: 311 of 1164; 640: 311 of 580; 390: 257 of 346 with the chip hidden; 320: 257 of 276). A date in the
+  `scheduleWindow(upcoming(), todayIn())` call the schedule page makes, `hidden xs:inline` (D329 lifted the tier from
+  `sm` to `--breakpoint-xs: 380px`) because the row carrying the chip needs **314px** and the 320 floor offers
+  **276** — 38px over — @measured 2026-11-15 by `node design/nav-fit.mjs --no-build`, while the shipped row without
+  it needs **257 of 276**; at 390 the row with the chip needs **306 of 346**, so the chip paints from 380 up and the
+  round-3 read's criterion 5 ("visible at 390px") is met @measured 2026-11-15 by `npm run check:render:dist`. A date in the
   nav is chrome, not a dated surface: `check:dated-surfaces` fails a chip whose date is not the first date
   `/schedule` prints, and a chip when the page prints no date.
 - **One name per page** (D309, 2026-11-14): the nav label is the page's name, and the `<title>` stem, the exit-band

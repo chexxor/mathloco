@@ -32,7 +32,7 @@ export const formatSince = (iso) => {
     .format(new Date(Date.UTC(y, m - 1, d)));
 };
 
-/** How long ago a stamp was taken, in words: "today", "yesterday", "11 days ago", "3 months ago". */
+/** How long ago a stamp was taken, in the digits a visitor can compare: "today", "yesterday", "<n> days ago", "3 months ago". */
 export const ageSince = (iso, now = new Date()) => {
   const [y, m, d] = String(iso ?? '').split('-').map(Number);
   if (!y || !m || !d) return 'recently';

@@ -56,11 +56,18 @@ const rest = items.length - shown.length;
 
 {/* `py-12` (48px), not `py-16` (64px): the band air was ruled down on 2026-11-05 (D214, R6) and measured
     again on 2026-11-06 (see the hero's note for the pair's number). Every landing-page band carries the
-    same step, so this section's edge is a number the reader meets four times, not four numbers. */}
-<section class="bg-panel py-12">
+    same step, so this section's edge is a number the reader meets four times, not four numbers.
+
+    The section is a *named* landmark (D331, 2026-11-15): a `<section>` is only a region for assistive tech
+    when it has an accessible name, and axe-core's `region` rule - moderate impact - called this band, the
+    one top-level block on `/` that had no name, out-of-landmark content on both the built page at 390 and
+    at 1440 @measured 2026-11-15 by `node design/axe-check.mjs`. The name is the section's own heading by
+    reference, not a second copy of the words: `aria-labelledby` keeps one string in the page. `HorizonBand.astro`
+    and `Schedule.astro` were already named this way; this is the last band brought up to the same rule. */}
+<section class="bg-panel py-12" aria-labelledby="what-we-take-up">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-measure">
-      <h2 class="text-heading font-extrabold text-ink">
+      <h2 id="what-we-take-up" class="text-heading font-extrabold text-ink">
         What we take up
       </h2>
       {/* Round 17 (MS03), operator ruling 2026-11-09 (S017 B3): the syllabus reassurance is the hero's,

@@ -23,6 +23,7 @@
 //   FAIL qualifier-visible   the words "opens in a new tab" painted where a sighted reader sees them
 //   FAIL no-qualifier        an anchor that leaves the site with nothing in its accessible name saying so
 //   FAIL name-repeats        the same platform word in the visible label AND in the sr-only suffix
+//   FAIL label-repeats-word  the same word twice in a row anywhere in the link's accessible name (S043)
 //
 // The wording itself lives in `src/lib/rsvp.mjs` (`NEW_TAB_QUALIFIER`); this gate only checks the artifact.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
@@ -53,7 +54,10 @@ const visibleText = (inner) =>
 const accessibleName = (inner, attrs) => {
   const label = attr(attrs, 'aria-label');
   if (label) return label.replace(/\s+/g, ' ').trim();
-  return inner.replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/\s+/g, ' ').trim();
+  // Tags become a space, not nothing: the accessible name a screen reader gets is the concatenation of the
+  // visible label and the sr-only suffix, and "Meetup" followed by a hidden "Meetup, opens in a new tab" is two
+  // identical words side by side even though the markup has a tag between them (S043, round-3 read §2).
+  return inner.replace(/<[^>]*>/g, ' ').replace(/&amp;/g, '&').replace(/&#39;|&apos;/g, "'").replace(/\s+/g, ' ').trim();
 };
 const isExternal = (href) => /^https?:\/\//i.test(href);
 
@@ -112,6 +116,19 @@ export const extLinkFindings = (html, pageName = 'page') => {
         fails.push({ rule: 'name-repeats', detail: `${pageName} names ${platform} twice in one link: "${accessibleName(inner, attrs)}"` });
       }
     }
+
+    // 7. (S043, round-3 read §2 criterion 2) No word repeats inside one link's own name.
+    //    The defect the read found was not a typo at twenty call sites: a label prop that appended the destination
+    //    name and a component that appended the qualifier produced "Sign up on Meetup Meetup, opens in a new tab"
+    //    everywhere at once. The generic detector for that class is "no two identical words side by side", which is
+    //    why the rule lives here rather than in a list of strings somebody has to remember to update.
+    const words = accessibleName(inner, attrs).toLowerCase().replace(/[^a-z0-9' -]/g, ' ').split(/\s+/).filter(Boolean);
+    for (let i = 1; i < words.length; i++) {
+      if (words[i] === words[i - 1]) {
+        fails.push({ rule: 'label-repeats-word', detail: `${pageName} says "${words[i]}" twice in a row in the link "${accessibleName(inner, attrs)}"` });
+        break;
+      }
+    }
   }
   return { fails, checked };
 };
@@ -129,7 +146,10 @@ if (selftest) {
     { name: 'rel noreferrer without noopener', html: '<a href="https://example.com/z" target="_blank" rel="noreferrer">Meetup<span class="sr-only">, opens in a new tab</span></a>', want: ['blank-no-rel'] },
     { name: 'the qualifier painted in the visible label', html: '<a href="https://example.com/z" target="_blank" rel="noopener">Sign up on Meetup opens in a new tab</a>', want: ['qualifier-visible'] },
     { name: 'an external link with no qualifier', html: '<a href="https://example.com/z" target="_blank" rel="noopener noreferrer">Discord</a>', want: ['no-qualifier'] },
-    { name: 'the platform repeated in the suffix', html: ext('Sign up on Meetup', 'Meetup, opens in a new tab'), want: ['name-repeats'] },
+    { name: 'the platform repeated in the suffix', html: ext('Sign up on Meetup', 'Meetup, opens in a new tab'), want: ['name-repeats', 'label-repeats-word'] },
+    { name: 'the exact string the round-3 read quoted', html: '<a href="https://example.com/e" target="_blank" rel="noopener noreferrer">Sign up on Meetup Meetup, opens in a new tab<span aria-hidden="true">→</span></a>', want: ['qualifier-visible', 'label-repeats-word'] },
+    { name: 'a doubled word with no platform involved', html: ext('Join the the group on Discord', ', opens in a new tab'), want: ['label-repeats-word'] },
+    { name: 'clean control: a hyphenated name is not a repeat', html: ext('Common Denominator - Study Session', ' on Meetup, opens in a new tab'), want: [] },
     { name: 'an internal route opening a new tab', html: '<a href="/join" target="_blank" rel="noopener">Ways in</a>', want: ['internal-blank'] },
     { name: 'an outbound link that keeps the reader in the same tab', html: '<a href="https://example.com/x" rel="noopener">Meetup</a>', want: ['external-no-blank'] },
     { name: 'a mailto link with no rel', html: '<a href="mailto:club@example.com">Write to us</a>', want: [] },

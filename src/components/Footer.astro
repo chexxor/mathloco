@@ -30,14 +30,21 @@ const year = new Date().getFullYear();
      `check:classes` cannot be: Tailwind v4 resolves `py-10`, so "the class exists" was never
      "the value is on the scale". The band gains 8px top and bottom. */}
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <p class="text-micro uppercase tracking-wide">Where to next</p>
-
+    {/* The read's §1 asks for the footer as "complete map, this order and nothing else" and names one
+        thing it forbids: a "Where to next" heading. The visible micro-label here WAS that orphan — a
+        caption over a `<nav>` that already carries its own name (`aria-label="Where to next"`), the same
+        class as the eyebrow D309 deleted above every page's first heading (DESIGN.md, "Nothing sits above
+        a page's first heading"). Deleting it is D335: the band still answers the three questions its own
+        comment names, and the label was the site calling its own map a question. The `aria-label` stays —
+        it is invisible to eyes and is what keeps axe's `region` rule off this element — and the band's
+        air is now its own `py-12` (DESIGN.md, "Section air is one step at every width"), so the
+        `mt-1` that used to sit under the label goes with it. */}
     <!-- Targets are 32px tall (16px line box + py-2), the same accepted shape as the nav links; do not
          shave the pad. `outline-band-text` is the focus ring HERE: accent on ink measures 2.97, which the
          oracle bans, and `ratify-check` fails this file if an accent ring comes back. -->
     <nav
       aria-label="Where to next"
-      class="mt-1 flex flex-wrap items-center gap-x-6 gap-y-2"
+      class="flex flex-wrap items-center gap-x-6 gap-y-2"
     >
       <!-- 2026-11-14 (D309): the band says the word the nav says. This link used to read "Schedule"
            while the nav read "Dates", which is the alias defect `check:naming` now fails: the band is the
@@ -52,7 +59,7 @@ const year = new Date().getFullYear();
         href='/chat'
         class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
-        Community chat
+        Chat
       </a>
       <a
         href='/join'
