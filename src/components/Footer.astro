@@ -20,6 +20,13 @@ import { newTabQualifier } from '../lib/links.mjs';
 //
 // No "Home" link: the serif mark below is the home path, same as in the nav (D100, and the operator
 // confirmed the fourth nav link goes too).
+//
+// The two outbound platform anchors below carry `data-rsvp-platform` handles since 2026-11-15 (round-4
+// §10's ceiling on outbound links outside the band). That attribute is what lets
+// `scripts/check-rsvp-page.mjs` prove the band and the schedule's standing row are one map rather than two
+// copies of it: `src/lib/rsvp.mjs`'s `EXIT_BAND_PLATFORMS` names the club-wide exits the band owns, and a
+// standing row that repeated one of them is now a defect the gate reads off the built bytes instead of a
+// page with the same URL painted twice.
 const year = new Date().getFullYear();
 ---
 
@@ -77,10 +84,23 @@ const year = new Date().getFullYear();
       >
         Add to a calendar
       </a>
+      <!-- Round-4 brief §9b (2026-11-15, D346): this href used to be `${config.URLs.meetupGroup}/join` - still
+           readable at `git show 5cd128f:src/components/Footer.astro:81` - so the site addressed one group two ways
+           from the band every page ends with. §9b asks for one survivor and the other deleted; the survivor is the
+           **config-declared root**, because it is the string `URLs.meetupGroup` holds, the shape `MEETUP_GROUP_URL_SHAPE`
+           (src/lib/rsvp.mjs:76) requires of it, and the only Meetup group URL carrying a dated `_verified` stamp
+           (`status: 200, verifiedAt: 2026-11-10` in src/config.json). Measured off this commit's artifact @measured
+           2026-11-15 by `grep -o minneapolis-mathematics-book-club/join dist/client/* | wc -l`: the `/join` form now
+           paints **0 times on all five built pages**, and the root paints 2 on `/`, 1 on `/chat`, 2 on `/join`, 1 on
+           `/schedule` (besides 5 per-event pages), 2 on `/404`. The `/join` form survives only inside `joinUrl()`
+           (src/lib/rsvp.mjs:127, called at :416) - the resolver's named "no page yet for this date" state, which is a
+           per-date action with its own stamp that `check:rsvp` reads - so nothing here is dead code, and no unprobed
+           URL is a primary control. -->
       <a
-        href={`${config.URLs.meetupGroup}/join`}
+        href={config.URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
+        data-rsvp-platform={PLATFORMS.meetup}
         class='py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
         >
         Join on Meetup<span class="sr-only">{newTabQualifier('Join on Meetup', PLATFORMS.meetup)}</span>
@@ -89,6 +109,7 @@ const year = new Date().getFullYear();
         href={config.URLs.discordInvite}
         target="_blank"
         rel="noopener noreferrer"
+        data-rsvp-platform={PLATFORMS.discord}
         class='py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
         >
         Discord<span class="sr-only">{newTabQualifier('Discord', PLATFORMS.discord)}</span>

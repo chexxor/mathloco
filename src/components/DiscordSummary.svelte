@@ -75,17 +75,26 @@
 
 <div class="space-y-6">
   {#if phase === 'pending'}
-    <!-- DESIGN.md "States": loading is one line, `role="status"`, no motion, and it reserves the
+    <!-- DESIGN.md "States": loading is one notice, `role="status"`, no motion, and it reserves the
          height of the fixed part of what lands (the dated line + 24px gap + a card header = 16 + 24
          + 40 = 80px = min-h-20, measured in design/grill/states.html). No spinner: the shipped one
          measured a 2px keyline at contrast 4.98 against its ground, where --color-rule is 1.27.
-         A notice, not a fill (D102): edge inset-shadow-rule, word ink, body ink-2, meta ink-3. -->
+         A notice, not a fill (D102): edge inset-shadow-rule, word ink, body ink-2, meta ink-3.
+
+         Round-4 brief §9a (2026-11-15, D345): the sentence that opened this state used to be
+         "The channel summaries have not loaded." — and this branch is what the server renders, so it was
+         the FIRST screen of /chat to a crawler, to a JavaScript-off visitor, and to anyone who had not scrolled
+         to the `client:visible` island yet (@measured 2026-11-15: the string is in dist/client/chat/index.html,
+         and it is the pending branch, which is what the server paints). §9a's exit is a static fallback in place
+         of the error string, so the state now names what the section is and hands over the path out; it claims
+         nothing about whether a load succeeded, because the server-rendered state cannot know. The failed branch
+         below keeps the failure sentence, since that one is a fact the browser established. -->
     <div
       class="inset-shadow-rule rounded-control px-4 py-3 min-h-20 flex flex-col justify-center gap-1"
       role="status"
       aria-live="polite"
     >
-      <p class="text-body text-ink">The channel summaries have not loaded.</p>
+      <h2 class="text-lede font-bold text-ink font-body">The bot's reading of the channels</h2>
       <p class="text-label text-ink-2">
         They are written by our bot from recent channel activity. Read the same thing where it is
         posted: <a class="underline hover:text-accent" href={discordUrl} target="_blank" rel="noopener noreferrer">Discord<span class="sr-only">{NEW_TAB_QUALIFIER}</span></a>.

@@ -322,13 +322,48 @@ export const snapshotFindings = (snap, nowMs = Date.now()) => {
  */
 export const ROW_PRIMARY_PLATFORM = PLATFORMS.meetup;
 
+/** The club-wide exits the site's **exit band** (`src/components/Footer.astro`, which every page ends with)
+ *  already paints: the group's own page and the Discord invite. Round-4 brief §6 and §10 ("no page contains
+ *  more than six outbound links outside the footer"), 2026-11-15. A URL the band paints is not painted a
+ *  second time under the rows — that duplication is what took the page from five links to seven, and the
+ *  brief's own sketch of the standing row ("the chat · the Facebook group · add the calendar to yours") is
+ *  the page the acceptance then forbids; the acceptance is the measurable half, so it wins and the standing
+ *  row carries only what the band does not: the Facebook group. Declared here rather than in the component
+ *  or in the gate, because both read it (D264: a rule written twice is a rule that drifts).
+ *  This is a list of **club-wide** exits, not a list of destinations: a Discord guild *event page* for a
+ *  printed date carries a URL the band never paints, so it stays in the standing row, and rule 6c in
+ *  `scripts/check-rsvp-page.mjs` is what prices that — seven cross-site anchors outside the band fails the
+ *  build there, and the fix is the split this module owns: a page for a date belongs to the row.
+ */
+export const EXIT_BAND_PLATFORMS = [PLATFORMS.meetup, PLATFORMS.discord];
+
+/** The URLs the exit band paints, derived from the config the band itself reads, so the band and the
+ *  standing row cannot disagree about which URLs are already on the page (D241's "one source per fact").
+ *  Iterated over the platform KEYS, not the painted names: `LINK_KEYS` is keyed by key (`meetup`), while
+ *  `EXIT_BAND_PLATFORMS` holds the value (`Meetup`) — indexing one by the other returns undefined, and an
+ *  empty set here means "dedup nothing", which is a silent pass rather than a defect (D264's drift class).
+ *  `scripts/check-rsvp-page.mjs` reads the same list, and its rule 6c is what catches a band that stopped
+ *  painting one of these URLs.
+ */
+export const exitBandUrls = (urls = {}) =>
+  new Set(Object.entries(LINK_KEYS)
+    .filter(([platformKey, urlKey]) => EXIT_BAND_PLATFORMS.includes(PLATFORMS[platformKey]) && urls?.[urlKey])
+    .map(([, urlKey]) => urls[urlKey]));
+
 /** The destinations of one cluster split into the row's action and the page's standing row. One call to
  *  `signUpPaths()` feeds both, so the two surfaces cannot drift into two link sets.
+ *  `urls` is the same `src/config.json` map the components pass to `signUpPaths()`; it is what lets the
+ *  standing half drop the exits the exit band already paints, and a call that omits it dedups nothing rather
+ *  than deduping wrong — `scripts/check-rsvp-page.mjs` re-derives the standing row from the config it read,
+ *  so an omitted argument shows up as painted bytes that disagree with the resolver, not as a silent pass.
  */
-export const splitPaths = (paths) => ({
-  row: paths.destinations.filter((d) => d.platform === ROW_PRIMARY_PLATFORM),
-  standing: paths.destinations.filter((d) => d.platform !== ROW_PRIMARY_PLATFORM),
-});
+export const splitPaths = (paths, urls = {}) => {
+  const band = exitBandUrls(urls);
+  return {
+    row: paths.destinations.filter((d) => d.platform === ROW_PRIMARY_PLATFORM),
+    standing: paths.destinations.filter((d) => d.platform !== ROW_PRIMARY_PLATFORM && !band.has(d.href)),
+  };
+};
 
 /** How many of the open pages printed on this date the record's own clock settles. The same function serves
  *  both calendars, because the contract's key is the same for both: date + wall-clock hour. A settled hour

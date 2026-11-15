@@ -134,7 +134,7 @@ const zone = first ? ' Central' : '';
 // that picked its own way out would be a second link rule, and the gate that compares painted bytes against
 // `signUpPaths()` would then be comparing the wrong thing (D264).
 const paths = signUpPaths(item, meetupSnapshot.events, config.URLs, discordSnapshot.events);
-const primary = splitPaths(paths).row[0] ?? null;
+const primary = splitPaths(paths, config.URLs).row[0] ?? null;
 // The label already names the platform, so the suffix is the mode of opening only — and it is glued to the
 // label with no whitespace between the two. The round-4 brief §4 quoted the built page as
 // "Sign up on Meetup , opens in a new tab": Astro keeps the newline and indent between two expressions,

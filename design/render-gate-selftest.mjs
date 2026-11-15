@@ -195,11 +195,18 @@ const cases = [
   // typographic label with no mark (D341), so `#pm-meetup` is painted by nothing and the two cases that
   // anchored on it rotted — the gate's own preflight said so, and "the mutation matched nothing" is the only
   // honest failure a planting can have. The marks the built page still paints live in the standing cluster,
-  // so both cases anchor there now: `grep -o '<svg[^>]*><use href="#[^"]*"[^>]*></use></svg>'
-  // dist/client/schedule/index.html` @measured 2026-11-15 returns exactly `#pm-discord` and `#pm-facebook`.
-  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-discord"></use></svg>', ''), /paints no platform mark/, 'schedule'],
+  // so both cases anchor there now: `grep -o '<svg[^>]*><use href="#^"]*"[^>]*></use></svg>' dist/client/schedule/index.html`
+  // @measured 2026-11-16 returns exactly ONE painted mark, `#pm-facebook` — the standing row's Discord mark went away
+  // with D349's URL dedup (the exit band already paints that invite, so the standing row repeats no URL it does not
+  // add). The sprite still defines three symbols (`pm-meetup`, `pm-discord`, `pm-facebook`), so the case that plants a
+  // mark pointing at a symbol the sprite does NOT have still anchors on a definition rather than on a painted use.
+  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-facebook"></use></svg>', ''), /paints no platform mark/, 'schedule'],
   ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/, 'schedule'],
-  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-discord"', '<symbol id="pm-discordX"'), /sprite has no such symbol/, 'schedule'],
+  // The case plants a **painted** mark that names a symbol the sprite does not have, not a symbol definition nothing
+  // uses: since D349's URL dedup the standing row paints one mark (`#pm-facebook`), so renaming an unused `pm-discord`
+  // definition plants a page whose defect is invisible to the gate — a planting the gate passes is a planting that proves
+  // nothing, and this file's whole contract is that every case must FAIL the gate.
+  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<use href="#pm-facebook"></use>', '<use href="#pm-facebookX"></use>'), /sprite has no such symbol/, 'schedule'],
   // The expected string names only the planted mark colour: the label's own rgb moved with the palette round
   // (D316), so a case that pinned `rgb(32,57,39)` went red on a page whose only defect was the mark.
   ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\)/, 'schedule'],

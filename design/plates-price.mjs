@@ -34,7 +34,11 @@ if (!args.includes('--no-build')) {
 
 const out = [];
 for (const w of widths) {
-  const h = w >= 640 ? 2400 : 1400;
+  // Window taller than any page this probe will meet, so Firefox draws no vertical scrollbar: that scrollbar
+  // steals 12px of the column at narrow widths, which made this probe's leaf 346px where `check:space` says 358px
+  // (measured 2026-11-15 on one dist). The page height is the bottom of the body's boxes (design/grill/plates-price.js),
+  // so a tall window cannot inflate it — same condition the gate measures in.
+  const h = 6000;
   let json = null;
   for (let attempt = 1; attempt <= 2 && !json; attempt++) {
     try {
@@ -60,6 +64,8 @@ for (const r of out) {
     console.log(`  ${row.id.padEnd(38)} +${String(row.delta).padStart(4)}px page  band ${String(row.band).padStart(5)}px  painted ${String(Math.round(row.paintedArea)).padStart(6)}px²  [${boxes}]${painted ? '' : '  (nothing painted)'}`);
   }
 }
-console.log('\nRow 1 is what the tree ships now (D329 ruled the rungs 2026-11-15, lifting D168\u2019s park). The other rows');
-console.log('are the alternatives priced against it: hiding the band below lg costs what the band costs today,');
-console.log('and dropping plates costs the rest.');
+console.log('\nRow 1 is what the tree ships now (D351, 2026-11-15: ONE plate on the shelf, no cap, full-bleed to the column edge;');
+console.log("D347's cap at the leaf's own scan width is a dated record in HorizonBand.astro's header, not this build).");
+console.log('The other rows are the alternatives priced against it: the band gone, the band with nothing on it, and');
+console.log('the leaf let to the column edge - which is now the SAME page as row 1, so that row prints +0px and a');
+console.log('band as tall as row 1. Read them together: a differing pair would mean the cap is still binding somewhere.');

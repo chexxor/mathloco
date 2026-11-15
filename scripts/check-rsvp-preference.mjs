@@ -31,6 +31,18 @@
  * including the row that was not clicked - a "preference" that applies only to the row you touched is not
  * a preference.
  *
+ * What the one-link standing row can and cannot show (D342, 2026-11-15). Since the exit band already paints
+ *  the Meetup group page and the Discord invite on every page, the standing cluster the island reorders holds
+ *  ONE anchor today. A reorder of one item is the identity, so "the island reorders" and "the island does
+ *  nothing" produce the same order, and "the reorder is a filter" removes the only anchor so the probe then
+ *  reports no link to click rather than a verdict. The two observable halves of the rule stay asserted, and the
+ *  gate says so rather than pretending: the island still offers every destination the resolver names (a
+ *  permutation that repeats or drops one changes the count and fails), and the island ADOPTS the platform it
+ *  remembers — `data-rsvp-preferred` moves for a seed, a dispatched event and a real click even where the
+ *  order cannot. What is no longer demonstrable on this artifact is a reorder that shuffles the wrong entries
+ *  or silently drops one; it un-parks the day a page paints a standing row of two or more platforms, which is
+ *  the day the club adds a standing exit the band does not already paint.
+ *
  * What it does NOT do: reach the network. The only network here is 127.0.0.1.
  */
 import { existsSync, readFileSync, cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
@@ -85,8 +97,9 @@ const attrsOf = (tag) => {
 
 /** The clusters a page paints, with the canonical order the resolver says they should have.
  *  Since D342 (round-4 D-B) a cluster is the page's ONE standing row, so its canonical list is `splitPaths()`'
- *  **standing** subset — Discord and Facebook — and not `signUpPaths().destinations`, which still carries the
- *  per-date primary that lives in the row instead. Asking a two-link cluster to permute a three-link list is
+ *  **standing** subset — every platform the resolver offers for that date that is not the row's own primary AND
+ *  whose URL the exit band does not already paint. On the club's own calendar that is the Facebook group ALONE
+ *  @measured 2026-11-15 by `npm run check:rsvp-preference` ("/schedule: 1 cluster(s) — none: Facebook  ;  Facebook: Facebook  ;  Myspace: Facebook"), because the band already paints the Meetup group page and the Discord invite on every page and `exitBandUrls()` drops them from the row. Asking a one-link cluster to permute a three-link list is
  *  the same defect class the gate exists to name, one level up: it would report every clean page as broken.
  *  `canonical` stays destination objects (what `orderByPreference` takes); `platforms` is the same list
  *  flattened to names, which is what the painted `data-rsvp-platform` attributes are compared against.
@@ -101,6 +114,7 @@ const clustersIn = (html, meetupEvents, urls, discordEvents) =>
     const canonical = splitPaths(
       signUpPaths({ date: attrs['data-rsvp-date'], time: hour && hour !== 'unsettled' ? hour : null },
         meetupEvents, urls, discordEvents),
+      urls,
     ).standing;
     return {
       date: attrs['data-rsvp-date'] || '(no date)',
@@ -231,6 +245,12 @@ const verdict = (probe, clusters, pageName, seed) => {
   //    the islands report back: an island listening to the wrong event name still shows its own seeded
   //    `data-rsvp-preferred`, so comparing orders to each other would read as self-consistent
   //    @measured 2026-11-12 by `npm run check:rsvp-preference:selftest`.
+  //    And since D342 the order is not the whole evidence: on a one-platform standing row every reorder is the
+  //    identity, so the assertion that still prices the event is that the island ADOPTS the platform it was
+  //    sent. `SignUpLinksCluster.svelte`'s `onPick` writes `preferred = detail` whatever the row offers, so an
+  //    island still reporting its seeded value never heard the event. Checked against the platform the probe
+  //    SENT, per phase @measured 2026-11-15 by `npm run check:rsvp-preference:selftest`: with only the order
+  //    compared, `the cross-row event name is broken` read "NOT caught (gate silent)".
   for (const [phaseName, list, expected] of [
     ['the synthetic event', probe.orderAfterEvent, probe.dispatch],
     ['a real click', probe.orderAfterClick, probe.clicked?.platform],
@@ -243,6 +263,9 @@ const verdict = (probe, clusters, pageName, seed) => {
       const want = wantFor(c, expected);
       if (h.order.join(', ') !== want) {
         say(`${where} did not take the platform chosen ${phaseName} (${h.order.join(', ')}); the window event 'rsvp-platform' is not reaching every island (want ${want}, from ${expected})`);
+      }
+      if ((h.preferred ?? null) !== expected) {
+        say(`${where} kept ${h.preferred ?? 'no preference'} after the ${phaseName} chose ${expected}; the island that hears 'rsvp-platform' adopts it (the window event 'rsvp-platform' is not reaching every island)`);
       }
     }
   }
@@ -303,9 +326,18 @@ const plantings = (home, pageFile, chunkName, chunk) => {
    *  the shape orderByPreference compiles to. */
   const reorderMatch = chunk.match(/\w+=\(\w+,\w+\)=>\{[^{}]*findIndex[^{}]*\}/);
   const reorderName = reorderMatch ? reorderMatch[0].split('=')[0] : null;
+  /** The island's write of the remembered platform, found by shape rather than by the minifier's letters: the
+   *  built chunk spells it `p(V,`data-rsvp-preferred`,l(I)??void 0)` today, and a hardcoded copy of that line
+   *  stops matching the day esbuild renames `p` or `V` — the selftest would then report "the mutation changed
+   *  nothing" and the class would go untested. */
+  const prefAttrMatch = chunk.match(/,[\w$]+\([\w$]+,`data-rsvp-preferred`,[^;{}]*\)/);
 
-  /** Paint the canonical cluster with its first two links swapped, props untouched: the only evidence of
-   *  the defect is the bytes the server emitted. */
+  /** Paint the standing cluster's anchor with a platform the resolver does not offer for that date — the bytes
+   *  the server emitted are the only evidence. The old planting swapped the cluster's first two anchors and
+   *  therefore returned the page UNCHANGED on the artifact as shipped, which the selftest reported as
+   *  "the mutation changed nothing (the pattern it targets is not in the artifact)" @measured 2026-11-15 by
+   *  `npm run check:rsvp-preference:selftest`; since D342 the standing row has one anchor to swap, so the
+   *  claim this planting makes is the same claim the rule reads — painted handle ≠ resolver handle. */
   const swapPaintedOrder = () => {
     const i = home.indexOf(island);
     const start = i + island.length;
@@ -313,10 +345,13 @@ const plantings = (home, pageFile, chunkName, chunk) => {
     if (i < 0 || clusterStart < 0) return home;
     const clusterEnd = home.indexOf('</div>', clusterStart) + 6;
     const cluster = home.slice(clusterStart, clusterEnd);
-    const links = [...cluster.matchAll(/<a[^>]*data-rsvp-platform="([^"]*)"[^>]*>[\s\S]*?<\/a>/g)].map((m) => m[0]);
-    if (links.length < 2) return home;
-    const swapped = cluster.replace(links[0], '@@').replace(links[1], links[0]).replace('@@', links[1]);
-    return home.slice(0, clusterStart) + swapped + home.slice(clusterEnd);
+    const painted = [...cluster.matchAll(/data-rsvp-platform="([^"]*)"/g)].map((m) => m[1]);
+    if (!painted.length) return home;
+    const foreign = Object.values(PLATFORMS).find((p) => !painted.includes(p));
+    if (!foreign) return home;
+    return home.slice(0, clusterStart)
+      + cluster.replace(`data-rsvp-platform="${painted[0]}"`, `data-rsvp-platform="${foreign}"`)
+      + home.slice(clusterEnd);
   };
   const chunkKey = chunkName.replace(/^\//, '');
 
@@ -329,17 +364,35 @@ const plantings = (home, pageFile, chunkName, chunk) => {
     {
       name: 'the shipped chunk reads a different preference key',
       files: { [chunkKey]: chunk.replace(`\`${PREF_KEY}\``, '`old-matheapolis-rsvp`') },
-      want: 'it should read',
+      // The order message this planting used to aim at ("it should read") cannot fire on a one-anchor standing
+      // row: moving one item is the identity. The seed is still observable, in the attribute.
+      want: 'with a stored preference (Facebook), data-rsvp-preferred is unset',
     },
     {
-      name: 'the chunk carries the key but never reorders',
-      files: { [chunkKey]: reorderMatch ? chunk.replace(reorderMatch[0], `${reorderName}=(a,b)=>a`) : chunk },
-      want: 'it should read',
+      /** Replaces the old 'the chunk carries the key but never reorders' planting, which reported "NOT caught
+       *  (gate silent)" on the artifact as shipped @measured 2026-11-15 by
+       *  `npm run check:rsvp-preference:selftest`: the standing row offers ONE platform, so `orderByPreference`
+       *  returning its input is byte-identical to returning a permutation. The class that IS still priceable on
+       *  this page is the other half of the same rule — the island reads the key, adopts the platform, and never
+       *  paints it — which is what a visitor's preference is for, and what rule 3 asserts. */
+      name: 'the island never paints the platform it remembered',
+      // The leading comma is part of the match on purpose: the attribute write is the LAST call in the island's
+      // attribute block, so deleting only the call leaves `void 0,)}` behind, the chunk fails to import, the
+      // island never hydrates, and the selftest names the wrong defect @measured 2026-11-15 by
+      // `node --check` on the mutated chunk.
+      files: { [chunkKey]: prefAttrMatch ? chunk.replace(prefAttrMatch[0], '') : chunk },
+      want: 'data-rsvp-preferred is unset',
     },
     {
-      name: 'the reorder is a filter (only the preferred platform survives)',
-      files: { [chunkKey]: reorderMatch ? chunk.replace(reorderMatch[0], `${reorderName}=(a,b)=>{if(!b)return a;let i=a.findIndex(a=>a.platform===b);return i<=0?a:[a[i]]}`) : chunk },
-      want: 'lost Discord',
+      /** The old 'the reorder is a filter (only the preferred platform survives)' planting was identity here
+       *  (the only platform survives), and a planting that drops it entirely leaves the probe with no anchor to
+       *  click, so the probe's own error swallows the verdict @measured 2026-11-15 by
+       *  `npm run check:rsvp-preference:selftest`. What a one-anchor row CAN show is a destination count that
+       *  disagrees with the resolver's — a reorder that re-adds the preferred entry instead of moving it is the
+       *  real bug of that shape, and the count is what rule 2 prices. */
+      name: 'the reorder repeats the preferred platform instead of moving it',
+      files: { [chunkKey]: reorderMatch ? chunk.replace(reorderMatch[0], `${reorderName}=(a,b)=>{if(!b)return a;let i=a.findIndex(a=>a.platform===b);return i<0?a:[a[i],...a]}`) : chunk },
+      want: 'but the resolver offers',
     },
     {
       /* Every occurrence, not the first one. `String.prototype.replace` with a string pattern hits ONE

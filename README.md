@@ -316,8 +316,16 @@ served `/api/discord-summary` → 200 with a real summary off the base-config se
 
 ## 🌐 Host names and the canonical URL
 
-The site is served at the **apex**: `https://minneapolismathbookclub.com`. The canonical host appears in
-exactly two files, and they must match:
+The canonical host is **`https://matheapolis.com`** — the club's own word, and the name the rename made it.
+The two hosts this repo has are **not** interchangeable and the README used to name the wrong one as canonical:
+`minneapolismathbookclub.com` is the **legacy apex**, still attached and still serving (@measured 2026-11-07 and
+re-measured 2026-11-08, Linux native, `curl` with `--resolve` around the rig's cached negative DNS lookup — the
+legacy apex answers `200` with `cf-cache-status: HIT`), but it is **serving-but-not-canonical**, and no gate reads
+that host. What the build says today, read off the artifact rather than remembered here @measured 2026-11-15:
+`src/config.json` `seo.canonical` = `https://matheapolis.com`, `astro.config.mjs` `site:` = the same, so
+`dist/client/index.html` carries `<link rel="canonical" href="https://matheapolis.com">` and `sitemap-0.xml`
+lists `<loc>https://matheapolis.com/…`; `public/robots.txt` line 9 is `Sitemap: https://matheapolis.com/sitemap-index.xml`.
+The canonical host appears in exactly two files, and they must match:
 
 | File | Key | What it drives |
 | :-- | :-- | :-- |
@@ -326,11 +334,19 @@ exactly two files, and they must match:
 
 `public/robots.txt` also names the sitemap absolutely, so it is a third place the host is written.
 
-**Do not set these to `www` unless `www` actually resolves.** A canonical pointing at a host with no DNS
-record tells every crawler that the working pages are duplicates of pages that do not exist — it is worse
-than no canonical at all. The canonical is the apex, and `www` redirects to it. Nothing in the build points
-at `www` (grepping `dist/client` for it returns 0 files), so `www` is insurance for hand-typed addresses and
-old shares, not a dependency.
+**Do not set these to `www` unless `www` actually answers.** A canonical pointing at a host nothing is attached
+to tells every crawler that the working pages are duplicates of pages that do not exist — it is worse than no
+canonical at all. What is true today is narrower than it used to read: **`www` does not redirect to the canonical
+apex.** `www.matheapolis.com` answers `404` with `x-preview-user-error: true` (@measured 2026-11-08, Linux native:
+the apex answers `200`, a deliberate nonsense subdomain answers the same `404`, so the name resolves to Cloudflare
+and **nothing is attached to it** — a Custom Domain is an exact-hostname match, which is why the apex's trigger
+never receives `www`). Nothing in the build points at `www` as the site's own host either: `grep -rl "www\.matheapolis\|www\.minneapolismathbookclub" dist/client` returns **0 files** @measured 2026-11-15 (the naive `grep "www\."` returns **10 files across six hosts** @measured 2026-11-15 — `www.meetup.com`, `www.w3.org` (the SVG namespace), `www.facebook.com`, `www.robotstxt.org`, `www.google.com` and `www.sitemaps.org`, none of them this site's own host; the count moved from 5 because the sitemap set and `robots.txt` are in the same tree). Finishing the `www` move is the operator's decision, not a copy edit: the mechanisms and their free-plan costs are written up in the domain-cutover notes, and one of them is a trigger inside `wrangler.toml` that `npm run check:deploy` counts, while a zone redirect rule is invisible to every gate here.
+
+**What follows is the legacy apex's history, measured 2026-10-31 — it is superseded for `matheapolis.com` by the
+state above** (the `www` of the new apex does *not* answer, and the record below was on the old zone). Kept because
+it is the record of what the October teardown did, and because the same error — `100117`, "already has externally
+managed DNS records" — is what stands between a `www` Custom Domain on the new zone and a clean attach until the
+conflicting record is deleted first.
 
 **The end state is one DNS record** (measured 2026-10-31 at 00:34 UTC): a **proxied `CNAME www →
 minneapolismathbookclub.com`**. The zone holds nothing else for `www` — no Redirect Rule, no Bulk Redirect
@@ -465,11 +481,14 @@ a dependency if you want the query builder; `env.DB.prepare(...).run()` needs no
 ## 🎨 Customization
 
 Tailwind 4 has no JS config file. Theme tokens live in [`src/styles/global.css`](./src/styles/global.css)
-under `@theme` — currently `--color-book-gray` (Footer + social icons) and `--color-book-theme`
-(the `::selection` and `.underline` accents in [`Layout.astro`](./src/layouts/Layout.astro)).
-That token is the only source of truth for the accent colour: `src/config.json` also carries a
-`theme.color` hex, but nothing reads it. `npm run check:classes` fails if markup uses a utility
-whose token has been dropped, which is what makes it safe to add or remove a token here.
+under `@theme`. The two tokens this section used to document are **retired, not live** — `--color-book-gray`
+(the Footer grey and the four social-icon files it existed for) and `--color-book-theme` (the amber that painted
+`::selection` and a global `.underline`) went with D316, and the `theme.color` hex went out of `src/config.json`
+with them. `grep -n "book-gray\|book-theme" src/styles/global.css` on 2026-11-15 returns only the RETIRED comment
+that says so; nothing in `src/` writes either one. Do not read a hue back out of this file's history: the amber
+measures 1.95 against paper, under the 4.5 text bar `check:contrast` enforces, and it is delta-OKLab 0.019 from
+Amazon orange — inside this repo's own 0.05 same-colour bar (D82/D88). `npm run check:classes` fails if markup
+uses a utility whose token has been dropped, which is what makes it safe to add or remove a token here.
 
 ## 🤖 Agent skills
 
