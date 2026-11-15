@@ -126,12 +126,26 @@ this build   : "Where to next" x1   (aria-label only)
 | The wordmark slot links to `/` | ships today | `<a href="/" aria-label="Matheapolis, home">Matheapolis</a>`, in the wrapper. |
 | Footer carries no second nav copy | ships today | one `<footer>`, one `<nav>` inside it, the whole map. |
 
-Footer contents today, on staging and in the build (`Footer.astro`): Dates · Community chat · Ways in · Add to a
-calendar · Join on Meetup · Discord. The read wants a different order and shorter labels. The labels are refused
-by D309 (the nav label is the page's canonical name and the exit band must carry that word); the **order** is
-the operator's call — it is one line in `Footer.astro`, nothing in the gates asserts an order, and nothing in
-the measurements prices it. Recommendation: adopt their order, keep our names, because the order is `reversible`
-and the names are not.
+Footer contents today — same six links, same order, on both surfaces, but not with the same words. `Footer.astro`
+builds its band from the nav table in `src/components/Navigation.astro`, and that table says `Chat`, not
+`Community chat`:
+
+```
+grep -o '>Chat<\|>Community chat<' dist/client/chat/index.html /tmp/srv-chat.html | sort | uniq -c
+      2 dist/client/chat/index.html:>Chat<
+      1 /tmp/srv-chat.html:>Chat<
+      1 /tmp/srv-chat.html:>Community chat<
+```
+
+@measured 2026-11-15. So: this build prints `Dates · Chat · Ways in · Add to a calendar · Join on Meetup ·
+Discord`; staging prints the same map with the older chat label, `Community chat`, because its deploy predates
+the rename — it is a stale artifact on the label exactly as it is on the "Where to next" caption above.
+
+What that leaves refused from the read's footer line is the **word for the join slot** — their `Join` against our
+`Ways in`, refused by D309 (the nav label is the page's canonical name, and `/join`'s H1 is `Ways in`), and the
+**order**, which is the operator's call: one line in `Footer.astro`, no gate asserts an order, and nothing in the
+measurements prices one. Their `Chat` for the chat slot is already shipped, which is why it is not in the refusal.
+Recommendation: adopt their order, keep our names, because the order is `reversible` and the names are not.
 
 ---
 
@@ -458,7 +472,7 @@ counts and the file:line for each finding:
 
 ```
 === 1. paint literals ===
-26 literal paint value(s) in src/ after comments are stripped; 1 shipped stylesheet(s) carry 100 literal(s).
+26 literal paint value(s) in src/ after comments are stripped; 1 shipped stylesheet(s) carry 103 literal(s).
   src/styles/global.css:63  oklch  oklch(97.35% 0.0139 88.7)
   … 23 oklch writes, all in src/styles/global.css …
   src/styles/global.css:134 rgb rgba(23, 19, 12, 0.165)
@@ -473,10 +487,10 @@ distinct text colours: 60
 === 4. outlines ===
 outline-suppressing rules in src/: 0
 focus-visible rules in the shipped CSS: 6
-interactive elements in the artifact: 129; carrying their own ring utility: 95; covered by the global rule: 34
+interactive elements in the artifact: 91; carrying their own ring utility: 67; covered by the global rule: 24
 === 5. every text colour against the ground its own markup gives it ===
-  band-text on ink    16.43   7 element(s)   clears 4.5
-  ink on paper        17.15   7 element(s)   clears 4.5
+  band-text on ink    16.43   5 element(s)   clears 4.5
+  ink on paper        17.15   5 element(s)   clears 4.5
   2 distinct text/ground pairs in the artifact; 0 under 4.5
 === 6. the round-3 read's eight hex tokens, measured ===
   --paper         #FAF6EC  oklch(97.35% 0.0139 88.68)   on shipped paper 1     on shipped ink 17.15
