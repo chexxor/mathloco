@@ -74,6 +74,56 @@ export const meetingKind = (row) => {
   return type;
 };
 
+/**
+ * The name the **page** paints for a row, in the site's own vocabulary (D339, round-4 read §3 D-C).
+ *
+ * Why the map is here rather than in the row markup: `meetingKind` already groups the organizer's spellings
+ * into two kinds, and `/join` already defines the two formats a visitor can come to — "A social:" and "A
+ * study session:" (`src/pages/join.astro`). The page's row heading is one of those two words, so the
+ * vocabulary that decides it belongs beside the kind that groups them, in one module, and not copied into
+ * a component. `check:row-geometry` and `check:naming` read the built page, so they see the mapped string;
+ * nothing here touches the **feed**, which keeps the organizer's own `SUMMARY` verbatim (D189: a source
+ * name is the organizer's quotation, and the quotation is what a subscriber holds).
+ *
+ * A name outside this list **fails the build** and names the string it could not map: a series the site
+ * does not define must not reach the page (round-4 read §3, which is also what settles the "Joyful Math"
+ * question). The spellings below are every name in the club's own snapshot as of 2026-11-15 — @measured by
+ * tabulating `data/events.json`: `series` carries 3 distinct names over 8 rows, `summary` carries 4 — and
+ * `Parallel Learning for Mathematical Minds` is the older spelling of the Wednesday series, which `data/events.json`
+ * itself says (its `2026-11-25` row's `_series` note names the older row as "the same series now appearing
+ * under two names", and `2026-12-09` prints the newer one), so it maps to the study-session format rather
+ * than becoming a third one.
+ */
+const SERIES_VOCABULARY = new Map([
+  ['Social', ['MPLS Math Club Social', 'MPLS Math Club - Bimonthly Social', 'Matheapolis - Bimonthly Social']],
+  ['Study session', ['Common Denominator - Study Session', 'Parallel Learning for Mathematical Minds']],
+]);
+
+/** Spelling → label, both normalized, so a re-cased or re-hyphenated source name still lands. */
+const LABEL_BY_SOURCE = new Map(
+  [...SERIES_VOCABULARY].flatMap(([label, names]) => names.map((name) => [norm(name), label])),
+);
+
+/** The label for a source name, or `null` when the site does not define it. */
+export const publishedNameOrNull = (name) => LABEL_BY_SOURCE.get(norm(name));
+
+/** The labels the site owns, in the order they are defined, so a report can print the whole vocabulary. */
+export const publishedSeriesNames = () => [...SERIES_VOCABULARY.keys()];
+
+/** The label a row prints, or a thrown error naming the string. The build fails here on demand (D339). */
+export const publishedName = (row) => {
+  const source = String(row?.series || row?.summary || '');
+  const label = LABEL_BY_SOURCE.get(norm(source));
+  if (!label) {
+    throw new Error(
+      `Unmapped event name: "${source}" is not in the site's series vocabulary (${publishedSeriesNames().join(', ')}) `
+      + 'and cannot reach the page. The site owns the event vocabulary (D339): add the spelling to SERIES_VOCABULARY '
+      + 'in src/lib/event-groups.mjs with the format it is, or fix the row in the source that publishes it.',
+    );
+  }
+  return label;
+};
+
 /** The venue as one comparable string. `raw` is the organizer's own text, kept verbatim in the feed (D92). */
 export const venueKey = (row) => {
   const v = row?.venue ?? {};
@@ -113,7 +163,7 @@ export const publishableRows = (rows) => {
   for (const [key, members] of groupRows(list)) {
     const live = members.filter((m) => statusOf(m.row) !== 'CANCELLED');
     if (live.length) {
-      live.forEach((m) => keep.add(m.i));
+      for (const m of live) keep.add(m.i);
       for (const m of members) {
         if (statusOf(m.row) === 'CANCELLED') {
           dropped.push({

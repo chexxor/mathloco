@@ -345,5 +345,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D336** (2026-11-15) — the round-3 reply pastes the global stylesheet and the layout wrapper verbatim, and the screenshots are replaced by the render gate's boxes (2026-11-15, delegate decision, `reversible`; Linux native, Node 24.22.1, `npm run check:design`, `npm run check:render:dist`, `node design/audit-references.mjs --stale`)
 - **D337** — MS28: a refusal is priced, not refused, in four spendable units — and the pricing probe's units
 - **D338** — The free-online-events list is measured as twelve publishers, and the verdict is in the table, not
+- **D339** (2026-11-15) — the site owns the event vocabulary: a row's visible name is one of two labels, and an unmapped name fails the build (2026-11-15, delegate decision under the `reversible` rule, reported to the operator; Linux native, Node 24.22.1, `npm run build`, `node .design/tmp-unmapped-name.mjs`)
 
-Defined: 337 (D1-D338). Unused ids: D315.
+Defined: 338 (D1-D339). Unused ids: D315.

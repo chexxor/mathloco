@@ -16,6 +16,9 @@ import tracked from '../../data/events.json';
 // every existing importer keeps importing one module.
 import { isUpcoming, startDate, todayInZone } from './event-window.mjs';
 export { addDays, HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from './event-window.mjs';
+// The published-name vocabulary lives with the grouping rules, so one module decides both which rows are
+// one meeting and what that meeting is called on the page (D339, round-4 read §3 D-C).
+import { publishedName } from './event-groups.mjs';
 
 // A review-only overlay, the same trick src/lib/content.ts uses for its slots (D120's render-harness note):
 // files in gitignored `src/content.local/` merge over the tracked snapshot in filename order, so a session can
@@ -76,10 +79,13 @@ export const asUpcomingItems = (rows = upcomingEvents()) =>
     date: startDate(row),
     time: displayTime(row),
     endTime: displayEndTime(row),
-    // The page shows the human-labelled series name when the snapshot has one, because D92 keeps a frequency
-    // word off the page ("Bimonthly" is the organizer's own title and stays verbatim in the feed, where it is
-    // a quotation rather than the club's claim). `seriesNote` is the only second line a row may print.
-    title: row.series ?? row.summary ?? null,
+    // The row heading is the site's own word for the format, not the organizer's spelling (D339, round-4 read
+    // §3 D-C): `publishedName` maps every name the snapshot carries onto the two formats `/join` already
+    // defines, and throws naming the string for a name the site does not define, which fails the build. D92's
+    // rule still holds in the other direction — a frequency word stays off the page, and `seriesNote` is still
+    // the only second line a row may print. The organizer's spelling survives in `data/events.json` and in
+    // `/events.ics` as the organizer's quotation (D189).
+    title: publishedName(row),
     // The row's key, not a fact for the page: PS-4's art is resolved by filename (`event-<slug>.png`, D190),
     // so an attachment follows the meeting rather than its position in the list.
     slug: row.slug ?? null,
