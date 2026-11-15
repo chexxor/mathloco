@@ -726,7 +726,7 @@ What it decided, in the four lines that matter to you:
 page (18 dated, online `Webinar` rows, robots fully allowed) — with the caveat that its `free` column waits
 for a human read of a registration page. NYAS is third and loses on one measurement: `Free for Members`.
 
-**What I want back from you**, in the order it would change my next step: (1) the **host re-resolutions** —
+**What I want back from you**, in the order it would change my next step. (1) the **host re-resolutions** —
 `submap.cc`, `mathseminars.net`, `jointmathematics.com`, `mathgoverschool.org`, `mtcmath.org`,
 `mathematicalseminars.com` all failed DNS from this seat, and I refuse to call any of them a rejection on
 that; if you know the real hostname, say it and I will re-measure. (2) A **price read** for Julia Computing
@@ -734,6 +734,19 @@ and NYAS: what a non-member pays to attend, from the registration page, not the 
 **publisher that is local and online**, if one exists: every publisher that passed so far is in New York or
 generic, and this site's visitors are in Minneapolis — the column the list wants may be "online and near",
 which is a different answer than "free and online".
+
+(4) **The naming defect on the club's own feed, because the fix is one line in a source this seat cannot
+edit.** One meeting publishes three names: the same UID prints `SUMMARY:Matheapolis - Bimonthly Social` in
+`dist/client/events.ics` and prints `MPLS Math Club Social` in the schedule page's `<h2>`, and a third spelling
+(`MPLS Math Club - Bimonthly Social`) sits in between — @measured 2026-11-15 by tabulating `data/events.json`
+(8 rows), the built feed (8 `SUMMARY:` lines, 4 distinct) and the built page (5 `<h2>` rows, 3 distinct);
+`design/records/0028-a-series-carries-two-names-and-the-feed-prints-the-wrong-one.md` carries the row-by-row
+tabulation. A subscriber who added both this feed and the Mobilizon one sees one meeting under two names, which
+is the same class as the duplicate the round named first. The organizer's own `Mobilizon` instance calls it
+`Matheapolis - Bimonthly Social` and the club's page calls it `MPLS Math Club Social`; **`seriesNote` is the
+field the publisher already reads and 0 of 8 rows write it**, so the question is which one list of published
+series names the site owns — the same grant as N1's rename.
+
 
 ## Appendix A — `src/styles/global.css`, verbatim
 
