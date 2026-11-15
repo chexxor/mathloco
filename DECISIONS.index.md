@@ -343,5 +343,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D334** (2026-11-15) — the operator's free-online-events list is recorded as a parked source, not wired mid-round (2026-11-15, operator request executed by the delegate, `reversible`; Linux native, Node 24.22.1, `curl` of MoMath's pages, `npm run check:plan`)
 - **D335** (2026-11-15) — the footer's visible "Where to next" caption is deleted, and its `aria-label` is kept (2026-11-15, delegate decision, `reversible`; Linux native, Node 24.22.1, `npm run check:page-exit`, `npm run check:naming`, `node design/axe-check.mjs`)
 - **D336** (2026-11-15) — the round-3 reply pastes the global stylesheet and the layout wrapper verbatim, and the screenshots are replaced by the render gate's boxes (2026-11-15, delegate decision, `reversible`; Linux native, Node 24.22.1, `npm run check:design`, `npm run check:render:dist`, `node design/audit-references.mjs --stale`)
+- **D337** — MS28: a refusal is priced, not refused, in four spendable units — and the pricing probe's units
+- **D338** — The free-online-events list is measured as twelve publishers, and the verdict is in the table, not
 
-Defined: 335 (D1-D336). Unused ids: D315.
+Defined: 337 (D1-D338). Unused ids: D315.

@@ -654,6 +654,87 @@ rationale).
 
 Appendix B — the layout wrapper, verbatim (`src/layouts/Layout.astro`).
 
+## §15 What every parked ask costs, in a unit you can spend
+
+A refusal that says "this one" makes the next read re-ask for it with no way to see what it would have
+bought. So the escalated items are priced, not refused, in four units, and you can spend any of them:
+
+- **fields** — how many decisions are still owed. It is the unit the next session reads, and it is the one
+  that never needs re-measuring.
+- **gzip bytes of what this branch builds**, measured today from `dist/client`: home 23,413 raw / **7,735**
+  gzipped; `/schedule` 50,294 / **10,610**; `/chat` 21,429 / **7,777**; `/join` 15,175 / **4,749**; the 404
+  11,520 / **4,126**; `events.ics` 7,665 / **1,612** @measured 2026-11-15 by `gzip -c -9` over the built
+  artifact. The share card ships as one asset, `/matheapolis-social-share.jpg`, **27,817 bytes** today.
+- **seconds of the browser gates** — `verify:browser` is 9 steps / 116.3s wall, so **~13s per route** a
+  design round adds to the sweep, and `verify` (69 steps, 37.7s work) does not move for a copy or an asset
+  change.
+- **glyphs of this letter** — the whole pricing section below costs **6,653 glyphs** of this letter (1,062
+  lines of markdown, 11,540 words today). A refusal written as prose costs about the same; an answer costs the artifact
+  instead, which is the row's real difference.
+
+| ask | the page it would change, in the units the gates print | the artifact | fields | who owes it |
+|---|---|---|---|---|
+| footer link order | already applied: the footer's own row order, no visible caption | 0 new bytes | 0 | done (D329) |
+| **home next date** (D306's reversal — this branch has it, staging has not redeployed) | home only: **368px → 528px at 390**, 377px → 401px at 1240, and 7 lines of text at 390 @measured 2026-11-15 by `check:render:dist` / `check:space`; the home's schedule band prints **1 row / 4 anchors** | **12 CSS rules** (9 in the layout wrapper, 3 in the schedule section), 0 new files; 0 new bytes of interest | **1** — the operator's D306 reversal | the operator |
+| one action per schedule row, plus a 24-hour action | `/schedule` prints **5 rows / 27 anchors** in this build at 1240; one more action per row is 5 more anchors, and the row's `aria-label` is the same count | **7 fields** (5 `config.json` booleans, 2 label swaps), one branch, no new asset | **7** | the operator |
+| thread **name and note** fields | `/chat` prints **0 thread rows today** behind its empty state, so this is a field-count change, not a layout change | the thread list is rendered in `src/pages/chat.astro` (it calls `threads()` from `src/lib/content.ts`), so the ask is **2 slots there** plus a `src/content.json` write | **11** (9 template, 2 copy) | one branch; N3 owns the names |
+| **event rename + a photograph** | one row on `/schedule` (one art slot); the row already carries `seriesNote` and `url` slots | **2 fields** — both fields exist, and **0 of 8 rows write `seriesNote`** while `src/lib/event-groups.mjs` already reads it; a photo is an asset of **~94–127KB** (the six event PNGs today are 93,921 and 127,098 bytes) | 2 fields + D190's provenance stamp + alt text + the art map | one round, only if the operator supplies the photo and owns the name (N3) |
+| **OG image plate** | none — it is the share card, and it is the only ask on this list whose absence changes what a visitor sees **off** the site | **1 field** in `src/config.json` (`image`), and the slot is already filled by a **27,817-byte** JPEG; a plate is a new asset at that order of cost | 1 field; D190's stamp + D213's provenance rule + a `check:ground` pass | two rounds, and it is the one thing that makes the share card matter |
+| **the ∑ lockup** (416×176 at 390, 216×88 at 1240) | the mark's box today: **460px → 116px of the band's wrap at 390**, **637px → 333px at 1240** @measured 2026-11-15 by `check:render:dist` | **4 fields** (2 art, 2 config); the glyph already ships at 456×182 with a box ratio 0.4% off the one asked | 4 fields, and it costs **2 gate steps** (`check:render:dist`'s mark aspect, `check:space`) | the operator; the numbers are already ours |
+| **the ∑ on the 404 page** | the 404 body today is **11,520 raw / 4,126 gzipped**; the glyph would be one more inline SVG | **2 fields** (`svg` + `alt`); D267 requires the label on a standalone glyph | 2 | the delegate would do it on the operator's word |
+| **N1's series-name rule** | none | **1 field**: `src/lib/event-groups.mjs` already exports the vocabulary the rule would read | 1 field, one commit | the operator's word on the list |
+| **the inline-SVG arrow vs the sprite** | the arrow changes no box; today `/schedule` prints **15 arrow glyphs** as text | the sprite's own measured cost (`design/mark-cost.mjs`, D300): **113 of the 10,610 gzip bytes** `/schedule` ships, **+2,195 gzip at one cluster** of 15 arrows, **+2,207 at five**, break-even near **3 clusters** | **3 fields** (2 art, 1 config), **2 gate steps** | the operator; **the arrow stays** unless the surface count reaches 3 clusters |
+| **hiding the join band on phones** (+715px at 390) | the band today is **1,689px at 390**; D306 already refuses hiding the schedule on phones, and the mobile schedule prints **1 row / 4 anchors** | **6 fields**; a written refusal is one paragraph of this letter, which is the price either way | 6 | the operator |
+| **which single list N1 owns** (the event-name vocabulary, §16) | none today; it would gate what `/schedule` and `events.ics` may print | **2 fields**; the gate that pays for it is a new rule in the **existing** `check:ics` step (a published series name outside the named list fails) plus its selftest, so the 69-step deploy set and its frozen baseline do not move | 2 fields, one commit | the operator's word on the list |
+| **the free-online-events list** (MS29) — the wiring, not the research | a new page (**+~13s of the browser sweep**), or one more column on `/schedule` | the research costs **none of these**: the 12-publisher measured table is already landed in `docs/spec/source-contract.md` §4b and nothing in `src/` reads it | **2** (the surface, the vocabulary) | the operator |
+| **the push grant on `staging`** (D124) | — | 1 field, and the grant is never delegated | 1 | the operator |
+
+**The three cheapest real moves**, if you want to spend rather than re-ask: the **∑ on the 404** (2 fields,
+one commit), **N1's name list** (1 field, one commit), and **one action per row** (7 fields, one branch,
+no new asset). Together: **10 fields, two commits, 0 new bytes** and no new gate step. The one measurement
+that would change that ranking is the **OG plate**: it is the largest single-field ask on the list, and it
+is the only one whose absence changes what a visitor sees *off* the site — if you fund one thing from this
+letter, fund that one.
+
+## §16 The list you were asked to research, and what the measurements decided
+
+The operator's ask, verbatim: *"Add this to a list of free online math events to aggregate:
+https://momath.org/volumes/"*. I asked you for it and you answered with the publisher; I then measured
+the list itself, and the answer is a table of twelve publishers with a verdict per row and the measurement
+that produced it — it is in the tracked `docs/spec/source-contract.md` §4b, and I am not re-printing it
+here because two files answering one question is how a future session loses the table.
+
+What it decided, in the four lines that matter to you:
+
+1. **MoMath has no feed.** `/volumes/feed/` answers 200 with 716 bytes of `Comments on: Volumes`; `/feed/`
+   is the site's posts RSS with 0 event rows; `/calendar/ics/` and `/events/ics/` answer 404 with 43,119
+   bytes of HTML. A harvester would parse the calendar page's rows.
+2. **`Volumes` is the wrong row to add.** `momath.org/calendar/` carries the same row plus **15** `Free!`
+   markers and **35** `( online )` markers, under its own header `Events (Eastern Time Zone)`. Adding the
+   calendar doubles the ask at no extra surface.
+3. **Two candidates died on their own terms, not on shape**: Eventbrite's `robots.txt` (200/7,559) disallows
+   `/rss/`, `/events/rss/`, `/events/atom/` and `*&calendar*` — the exact paths a search-based aggregator
+   would read — and Meetup's group page answered 200 with the text `Group not found … the group you're
+   looking for doesn't exist`. D69 already ruled Meetup's feeds off for the same reason; a second rule at
+   a second publisher is a second letter.
+4. **"Free" is not one thing.** NYAS's 25 free rows read `Free for Members`; Julia Computing's page states
+   no price at all (0 occurrences of the word), only `Register for the Webinar`. This is the same question
+   D323 asked of a Discord link, and the answer that held there is the one that holds here: an option whose
+   price is not free stays parked rather than published.
+
+**If the club could only add two, add these two**: MoMath's `calendar` page, and Julia Computing's events
+page (18 dated, online `Webinar` rows, robots fully allowed) — with the caveat that its `free` column waits
+for a human read of a registration page. NYAS is third and loses on one measurement: `Free for Members`.
+
+**What I want back from you**, in the order it would change my next step: (1) the **host re-resolutions** —
+`submap.cc`, `mathseminars.net`, `jointmathematics.com`, `mathgoverschool.org`, `mtcmath.org`,
+`mathematicalseminars.com` all failed DNS from this seat, and I refuse to call any of them a rejection on
+that; if you know the real hostname, say it and I will re-measure. (2) A **price read** for Julia Computing
+and NYAS: what a non-member pays to attend, from the registration page, not the calendar page. (3) A
+**publisher that is local and online**, if one exists: every publisher that passed so far is in New York or
+generic, and this site's visitors are in Minneapolis — the column the list wants may be "online and near",
+which is a different answer than "free and online".
+
 ## Appendix A — `src/styles/global.css`, verbatim
 
 ```css
