@@ -116,7 +116,45 @@ rule is D174's; and its event names are not in `src/lib/event-groups.mjs`'s two-
 N1 ruling on series names still owns. **It is parked in `PLAN.md` §Parked until the operator's letter names
 the surface and the vocabulary** (D334).
 
-## 5. Age windows
+### 4c. The two names one meeting carries — the vocabulary at N1, measured 2026-11-15
+
+A row carries **two** names, and the contract says which surface gets which. This is the part of the
+naming decision that a fresh clone has to learn, because it is not visible in the code that reads it:
+`src/lib/event-groups.mjs` consults `row.series || row.seriesNote || row.summary`, and the page prints
+`series` while the feed publishes `summary` (D189: the feed's line is a quotation of the organizer,
+not the club's claim). Measured over `data/events.json`, `dist/client/events.ics` and the built
+schedule page @measured 2026-11-15 (full dump `.design/tmp-naming-2026-11-15.txt`, reasoning in
+`design/records/0028-a-series-carries-two-names-and-the-feed-prints-the-wrong-one.md`):
+
+| surface | name it prints | rows | distinct names |
+|---|---|---|---|
+| `data/events.json` — `series` (the club's own word) | `MPLS Math Club Social` ×5, `Common Denominator - Study Session` ×2, `Parallel Learning for Mathematical Minds` ×1 | 8 | **3** |
+| `data/events.json` — `summary` (the organizer's, verbatim) | `Matheapolis - Bimonthly Social` ×3, `Common Denominator - Study Session` ×2, `MPLS Math Club - Bimonthly Social` ×2, `Parallel Learning for Mathematical Minds` ×1 | 8 | **4** |
+| `dist/client/events.ics` — `SUMMARY:` | the four organizer strings, one CANCELLED row superseded under D318's grouping note | 7 | **4** |
+| `dist/client/schedule/index.html` — the row's `<h2>` | `MPLS Math Club Social` ×3, `Common Denominator - Study Session` ×2 | 5 | **2** |
+
+Three rules follow, and each is a rule a future session would otherwise re-derive:
+
+1. **Never rename inside `summary`.** It is the organizer's verbatim field (D92, `check:ics`'s
+   read-verbatim rule), and `npm run events:harvest` overwrites it with whatever Mobilizon types — a
+   rename there is a rename that does not survive the next harvest.
+2. **The club's word for a meeting lives in `series`, one field per row.** That is legal today; what is
+   *not* settled is the list of members of that vocabulary, and nothing in the gates asserts one:
+   `meetingKind` deliberately compares **kinds, not names** (its own comment: "a byte-level gate can
+   only compare kinds, not names"), and `check:naming` owns page names, not series names. So the
+   divergence above is not a defect a gate can see — it is an open decision.
+3. **`seriesNote` is a shape the code already reads and the data never writes — 0 of 8 rows carry one**
+   @measured 2026-11-15. A "bold name plus a muted clause" is therefore a new **field**, not markup,
+   and the field is the one `event-groups.mjs` already falls back through.
+
+**What stays the operator's, and why it is not decided here:** which names belong to the club — is
+`Common Denominator` a series the club runs, or one meeting the club attended? — is the N1 ruling on
+series names (still open, MS25/MS27). Picking names would be this seat inventing what the club calls
+its own meetings, which is the same class as D309's one-name-per-page rule; the recommendation is that
+the operator's letter answer **one question** — the list of series the club owns — and the code then
+fills `series` and `seriesNote` from that list in one commit, with `check:ics` gaining a rule that
+fails a `series` outside the named list.
+
 
 | what | inside the window | outside it |
 |---|---|---|
