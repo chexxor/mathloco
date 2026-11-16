@@ -218,12 +218,16 @@ function selftest(base) {
     ['projection disagrees', () => ({ proj: rewriteRow(proj, 'MS02', 3, '**queued**') }), ['disagrees'], false],
     ['projection missing a milestone', () => ({ proj: drop(proj, 'MS11') }), ['is missing', 'does not carry'], true],
     ['milestone id skipped', () => ({ [src]: drop(rows, 'MS07') }), ['is missing'], true],
-    // The "at most one active" rule is planted into whichever row is *not* already active, so the
-    // planting survives the plan's statuses changing (D268's dead-exemption rule).
+    // The "at most one active" rule needs a **pair** active, so the planting activates two rows: with one,
+    // a plan that has no active row at all yields exactly one and never fires. The statuses change every
+    // round (and MS rows close faster than they open), so a planting that assumes one row is already
+    // active goes dead the day none is - D268's dead-exemption rule, and the 2026-11-16 selftest run
+    // that reported "19 plantings, 1 undetected" is what made the pair the shape (D365).
     ['two milestones active at once', () => {
-      const live = milestoneRows(rows).find((r) => statusOf(r) !== 'active');
-      if (!live) throw new Error('no milestone row is inactive - there is no row to make active');
-      return { [src]: rewriteRow(rows, live.id, statusCell, '**active**') };
+      const free = milestoneRows(rows).filter((r) => statusOf(r) !== 'active');
+      if (free.length < 2) throw new Error('fewer than two inactive milestone rows - there is no pair to make active');
+      const first = rewriteRow(rows, free[0].id, statusCell, '**active**');
+      return { [src]: rewriteRow(first, free[1].id, statusCell, '**active**') };
     }, ['milestones are "active"'], true],
     ['fourth open question', () => ({ plan: plan.replace('## Open questions (capped at three)', '## Open questions (capped at three)\n4. **A fourth one.** Something nobody has answered yet.') }), ['open questions'], false],
     ['queue put back in NEXT', () => ({ next: '| **MS11** | an item in the entry point | a command | **queued** |\n\n' + next }), ['milestone table'], false],
