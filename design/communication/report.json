@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-15",
+ "measuredAt": "2026-11-16",
  "instrument": "design/communication-census.mjs",
  "artifact": "dist/client",
  "claimBar": 0.34,
@@ -7,7 +7,7 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 23583,
+   "bytes": 23671,
    "words": {
     "nav-chrome": 7,
     "exit-band": 52,
@@ -293,6 +293,12 @@
     {
      "zone": "body",
      "section": "Matheapolis",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
      "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
      "heading": false
     },
@@ -312,12 +318,6 @@
      "zone": "body",
      "section": "Matheapolis",
      "text": "See the dates",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Matheapolis",
-     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
      "heading": false
     },
     {

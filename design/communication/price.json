@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-15",
+ "measuredAt": "2026-11-16",
  "instrument": "design/communication-price.mjs",
  "unit": "gzip -9 octets of the built page, measured in memory over `dist/client`; the artifact is never written",
  "baseline": "dist/client as emittedRoutes finds it; the census record (design/communication/report.json) supplies the clusters, so the two probes cannot describe different facts",
@@ -8,17 +8,17 @@
    "route": "/",
    "rawBytes": 5762,
    "gzipAlone": 2322,
-   "pageRaw": 23639,
-   "pageGzip": 7999,
-   "saveIfDeleted": 1800,
-   "shareOfPageGzip": 22.5
+   "pageRaw": 23727,
+   "pageGzip": 8013,
+   "saveIfDeleted": 1797,
+   "shareOfPageGzip": 22.4
   },
   {
    "route": "/404",
    "rawBytes": 5762,
    "gzipAlone": 2322,
    "pageRaw": 12894,
-   "pageGzip": 4663,
+   "pageGzip": 4664,
    "saveIfDeleted": 1859,
    "shareOfPageGzip": 39.9
   },
@@ -27,8 +27,8 @@
    "rawBytes": 5762,
    "gzipAlone": 2322,
    "pageRaw": 22821,
-   "pageGzip": 8357,
-   "saveIfDeleted": 1873,
+   "pageGzip": 8358,
+   "saveIfDeleted": 1872,
    "shareOfPageGzip": 22.4
   },
   {
@@ -37,7 +37,7 @@
    "gzipAlone": 2322,
    "pageRaw": 16637,
    "pageGzip": 5306,
-   "saveIfDeleted": 1835,
+   "saveIfDeleted": 1836,
    "shareOfPageGzip": 34.6
   },
   {
@@ -45,7 +45,7 @@
    "rawBytes": 5762,
    "gzipAlone": 2322,
    "pageRaw": 34002,
-   "pageGzip": 11045,
+   "pageGzip": 11046,
    "saveIfDeleted": 1816,
    "shareOfPageGzip": 16.4
   }
@@ -75,15 +75,15 @@
    "perRoute": {
     "/404": {
      "found": 1,
-     "gzip": 18
+     "gzip": 19
     },
     "/chat": {
      "found": 1,
-     "gzip": 18
+     "gzip": 19
     },
     "/join": {
      "found": 1,
-     "gzip": 18
+     "gzip": 17
     },
     "/schedule": {
      "found": 1,
@@ -115,7 +115,7 @@
    "perRoute": {
     "/404": {
      "found": 1,
-     "gzip": 25
+     "gzip": 26
     },
     "/chat": {
      "found": 1,
@@ -149,7 +149,7 @@
    "perRoute": {
     "/schedule": {
      "found": 3,
-     "gzip": 0
+     "gzip": 3
     }
    }
   },
@@ -171,7 +171,7 @@
    "perRoute": {
     "/schedule": {
      "found": 2,
-     "gzip": 22
+     "gzip": 24
     }
    }
   },
@@ -193,7 +193,7 @@
    "perRoute": {
     "/chat": {
      "found": 1,
-     "gzip": 28
+     "gzip": 29
     }
    }
   },
@@ -215,7 +215,7 @@
    "perRoute": {
     "/chat": {
      "found": 1,
-     "gzip": 33
+     "gzip": 34
     }
    }
   },
@@ -237,7 +237,7 @@
    "perRoute": {
     "/chat": {
      "found": 1,
-     "gzip": 28
+     "gzip": 29
     }
    }
   },
@@ -325,7 +325,7 @@
    "perRoute": {
     "/schedule": {
      "found": 1,
-     "gzip": 24
+     "gzip": 25
     }
    }
   },
@@ -375,6 +375,6 @@
  ],
  "totals": {
   "bandRawIdentical": 5762,
-  "bandGzipSavedAcrossPages": 9183
+  "bandGzipSavedAcrossPages": 9180
  }
 }
