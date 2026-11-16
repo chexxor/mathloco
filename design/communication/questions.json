@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T11:31:37.743Z",
+ "artifactBuilt": "2026-11-16T11:41:40.016Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -2084,24 +2084,40 @@
    "verdict": "ANSWERED",
    "perRoute": {
     "/": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "chrome only",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "exit-band"
+     ]
     },
     "/404": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "chrome only",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "exit-band"
+     ]
     },
     "/chat": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "chrome only",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "exit-band"
+     ]
     },
     "/join": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "chrome only",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "exit-band"
+     ]
     },
     "/schedule": {
      "status": "answered",
@@ -2119,20 +2135,69 @@
     }
    },
    "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
     "/schedule"
    ],
    "forms": [
+    "prose/exit-band",
     "prose/body"
    ],
-   "outsideRoutes": [],
-   "outsideCount": 0,
+   "outsideRoutes": [
+    "/404",
+    "/chat",
+    "/join"
+   ],
+   "outsideCount": 3,
    "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "shape": 0
+    },
     {
      "route": "/schedule",
      "form": "prose",
      "zone": "body",
      "section": "Social",
      "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
      "shape": 0
     }
    ],

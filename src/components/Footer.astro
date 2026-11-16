@@ -116,6 +116,24 @@ const year = new Date().getFullYear();
       </a>
     </nav>
 
+    <!-- The feed's own sentence, in the band beside the path it describes (round-5 communication read A5,
+        2026-11-16, D369). q21 — "am I told when a date moves?" — was answered on `/schedule` and nowhere else,
+        because the clause lived once in `src/components/SignUpLinks.astro`, under that page's own calendar
+        link. The band paints the same offer (`Add to a calendar`, `href='/events.ics'`) on all five emitted
+        pages, so every other page handed the reader the feed link with nothing to qualify it — they subscribe
+        to a file and are never told it moves with the club. Echoed here, **not linked**: the band's existing
+        path is the way in, so no second `/events.ics` anchor and no new URL (R1: do not add URLs to a page
+        for a gate). The band stays one string on all five routes — `node design/communication-price.mjs`
+        before this clause: 6,983 raw octets a page, deleting the whole band 2,269 · 2,332 · 2,342 · 2,303 ·
+        2,296 gzip on /, /404, /chat, /join, /schedule = 11,542 across five pages. Against this commit's
+        artifact the same probe prints the grown band; `node design/communication-census.mjs` clusters the
+        echo with `/schedule`'s standing sentence, and `design/copy-duplicates.json` keeps that pair as
+        `status: deliberate` — the echo is the point, since the fact has to travel with every place the file
+        is offered. -->
+    <p class="mt-2 text-micro max-w-measure">
+      Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.
+    </p>
+
     <!-- Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
          because the club's name is carried by the face (D95/D100). The summand is the club's own glyph,
          set inline at the size of the word beside it, in accent-on-ink (5.69), and NOT read aloud — it is

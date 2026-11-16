@@ -7,10 +7,10 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 24732,
+   "bytes": 26454,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 39,
+    "exit-band": 60,
     "body": 427
    },
    "bodySentences": 43,
@@ -611,6 +611,12 @@
     {
      "zone": "exit-band",
      "section": "How it works",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
      "text": "Matheapolis",
      "heading": false
     },
@@ -642,10 +648,10 @@
   },
   {
    "route": "/404",
-   "bytes": 13936,
+   "bytes": 15658,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 39,
+    "exit-band": 60,
     "body": 65
    },
    "bodySentences": 11,
@@ -981,6 +987,12 @@
     {
      "zone": "exit-band",
      "section": "We could not find that page",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
      "text": "Matheapolis",
      "heading": false
     },
@@ -1012,14 +1024,14 @@
   },
   {
    "route": "/chat",
-   "bytes": 23839,
+   "bytes": 26021,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 39,
-    "body": 283
+    "exit-band": 60,
+    "body": 293
    },
-   "bodySentences": 33,
-   "bodyWords": 283,
+   "bodySentences": 35,
+   "bodyWords": 293,
    "headings": [
     "Summaries from the chat",
     "The bot's reading of the channels",
@@ -1027,12 +1039,12 @@
     "The chat itself"
    ],
    "anchors": {
-    "total": 13,
+    "total": 14,
     "internal": 9,
-    "external": 4,
+    "external": 5,
     "nav-chrome": 4,
     "exit-band": 7,
-    "body": 2
+    "body": 3
    },
    "anchorList": [
     {
@@ -1054,6 +1066,11 @@
      "href": "/join",
      "label": "Ways in",
      "zone": "nav-chrome"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Join the chat on Discord, opens in a new tab",
+     "zone": "body"
     },
     {
      "href": "https://discord.com/invite/wx5S7YJSkU",
@@ -1104,13 +1121,15 @@
    "destinations": [
     {
      "href": "ext:discord.com",
-     "n": 3,
+     "n": 4,
      "labels": [
+      "Join the chat on Discord, opens in a new tab",
       "Discord , opens in a new tab",
       "Join the chat on Discord, opens in a new tab",
       "Discord , opens in a new tab"
      ],
      "zones": [
+      "body",
       "body",
       "body",
       "exit-band"
@@ -1227,6 +1246,18 @@
      "zone": "body",
      "section": "Summaries from the chat",
      "text": "Written by our bot, after the noise settles",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "Join the chat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "on Discord, opens in a new tab",
      "heading": false
     },
     {
@@ -1490,6 +1521,12 @@
     {
      "zone": "exit-band",
      "section": "The chat itself",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
      "text": "Matheapolis",
      "heading": false
     },
@@ -1521,14 +1558,14 @@
   },
   {
    "route": "/join",
-   "bytes": 17854,
+   "bytes": 19729,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 39,
-    "body": 289
+    "exit-band": 60,
+    "body": 305
    },
-   "bodySentences": 29,
-   "bodyWords": 289,
+   "bodySentences": 30,
+   "bodyWords": 305,
    "headings": [
     "Ways in",
     "Follow the club",
@@ -1965,6 +2002,12 @@
     {
      "zone": "body",
      "section": "Your first one",
+     "text": "The club has no front desk and no phone number; the chat is where you ask.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
      "text": "Meetup and Discord are trademarks of their owners.",
      "heading": false
     },
@@ -2025,6 +2068,12 @@
     {
      "zone": "exit-band",
      "section": "Your first one",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
      "text": "Matheapolis",
      "heading": false
     },
@@ -2056,10 +2105,10 @@
   },
   {
    "route": "/schedule",
-   "bytes": 35014,
+   "bytes": 36737,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 39,
+    "exit-band": 60,
     "body": 229
    },
    "bodySentences": 43,
@@ -2651,6 +2700,12 @@
     {
      "zone": "exit-band",
      "section": "Social",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
      "text": "Matheapolis",
      "heading": false
     },
@@ -2682,6 +2737,56 @@
   }
  ],
  "duplicateClaims": [
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "exit-band",
+     "section": "How it works",
+     "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+    },
+    {
+     "page": "/404",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+    },
+    {
+     "page": "/chat",
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+    },
+    {
+     "page": "/join",
+     "zone": "exit-band",
+     "section": "Your first one",
+     "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Social",
+     "words": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date."
+    },
+    {
+     "page": "/schedule",
+     "zone": "exit-band",
+     "section": "Social",
+     "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+    }
+   ],
+   "routes": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "repeatedOnSamePage": true
+  },
   {
    "bar": 0.34,
    "weakestPair": 1,
@@ -2758,6 +2863,35 @@
    "routes": [
     "/",
     "/schedule"
+   ],
+   "repeatedOnSamePage": true
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "How it works",
+     "words": "on Discord, opens in a new tab"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "words": "on Discord, opens in a new tab"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "The chat itself",
+     "words": "on Discord, opens in a new tab"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
    ],
    "repeatedOnSamePage": true
   },
@@ -2948,29 +3082,6 @@
    "routes": [
     "/",
     "/schedule"
-   ],
-   "repeatedOnSamePage": false
-  },
-  {
-   "bar": 0.34,
-   "weakestPair": 1,
-   "fact": [
-    {
-     "page": "/",
-     "zone": "body",
-     "section": "How it works",
-     "words": "on Discord, opens in a new tab"
-    },
-    {
-     "page": "/chat",
-     "zone": "body",
-     "section": "The chat itself",
-     "words": "on Discord, opens in a new tab"
-    }
-   ],
-   "routes": [
-    "/",
-    "/chat"
    ],
    "repeatedOnSamePage": false
   },
@@ -3237,10 +3348,9 @@
   {
    "page": "/join",
    "section": "Your first one",
-   "words": "Meetup and Discord are trademarks of their owners.",
+   "words": "The club has no front desk and no phone number; the chat is where you ask.",
    "named": [
-    "meetup",
-    "discord"
+    "chat"
    ],
    "hrefs": [
     "/chat"

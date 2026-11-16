@@ -423,8 +423,10 @@ freshness.
   - **Identity, not a locator**: the club name in `text-body` serif at every width, never a display step
     (D112 — the display step belongs to a screen's locator, never to a punchline), with the ∑ glyph inline
     at the size of the word beside it, `accent-on-ink`, `aria-hidden`, and **static**.
-  - **Small print** carries place and date only. No frequency (D92), and the old "All rights reserved"
-    boilerplate went with the band it lived in.
+  - **Small print** carries place, date, and the facts the map above it needs qualifying — the calendar
+    clause (round-5 communication read A5, D369) and one clause of attribution (D366, restated under
+    "Attribution is one static line"). It carried place and date only until those two landed; no frequency
+    (D92), and the old "All rights reserved" boilerplate went with the band it lived in.
   - **Every page the build emits ends with this band** (D307, 2026-11-14). `check:render` enforces the band's rules
     for a page that has one, and nothing asked whether a page has one at all: `/chat`, `/join` and `/404` ended on
     their last paragraph, so a visitor arriving from a shared link had the nav above and nothing below. `check:page-exit`
