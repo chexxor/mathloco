@@ -1,0 +1,3338 @@
+{
+ "measuredAt": "2026-11-15",
+ "instrument": "design/communication-census.mjs",
+ "artifact": "dist/client",
+ "claimBar": 0.34,
+ "minSalientWords": 4,
+ "pages": [
+  {
+   "route": "/",
+   "bytes": 23583,
+   "words": {
+    "nav-chrome": 7,
+    "exit-band": 52,
+    "body": 427
+   },
+   "bodySentences": 43,
+   "bodyWords": 427,
+   "headings": [
+    "Matheapolis",
+    "What we take up",
+    "When we meet",
+    "How it works"
+   ],
+   "anchors": {
+    "total": 19,
+    "internal": 15,
+    "external": 4,
+    "nav-chrome": 4,
+    "exit-band": 7,
+    "body": 8
+   },
+   "anchorList": [
+    {
+     "href": "/",
+     "label": "Matheapolis",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates 21 Nov",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Join Our Group",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "See the dates",
+     "zone": "body"
+    },
+    {
+     "href": "/chat#threads",
+     "label": "the rest of the list →",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "All 5 dates →",
+     "zone": "body"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar →",
+     "zone": "body"
+    },
+    {
+     "href": "/join",
+     "label": "Join the club",
+     "zone": "body"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Join the chat on Discord, opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join on Meetup , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/",
+     "label": "Matheapolis ∑",
+     "zone": "exit-band"
+    }
+   ],
+   "destinations": [
+    {
+     "href": "/schedule",
+     "n": 4,
+     "labels": [
+      "Dates 21 Nov",
+      "See the dates",
+      "All 5 dates →",
+      "Dates"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 4,
+     "labels": [
+      "Ways in",
+      "Join Our Group",
+      "Join the club",
+      "Ways in"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/",
+     "n": 2,
+     "labels": [
+      "Matheapolis",
+      "Matheapolis ∑"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 2,
+     "labels": [
+      "Chat",
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.meetup.com",
+     "n": 2,
+     "labels": [
+      "Meetup , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/events.ics",
+     "n": 2,
+     "labels": [
+      "Add to a calendar →",
+      "Add to a calendar"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:discord.com",
+     "n": 2,
+     "labels": [
+      "Join the chat on Discord, opens in a new tab",
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat#threads",
+     "n": 1,
+     "labels": [
+      "the rest of the list →"
+     ],
+     "zones": [
+      "body"
+     ]
+    }
+   ],
+   "arrowAnchors": [
+    {
+     "href": "/chat#threads",
+     "label": "the rest of the list →",
+     "internal": true
+    },
+    {
+     "href": "/schedule",
+     "label": "All 5 dates →",
+     "internal": true
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar →",
+     "internal": true
+    }
+   ],
+   "sentences": [
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "21 Nov",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Matheapolis",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Minneapolis math club",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Join Our Group",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "See the dates",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "There is no syllabus, no reading list to keep up with, and no current focus.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Formerly the Minneapolis Mathematics Book Club.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — cropped from that leaf (D312)",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "What we take up",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes when the chat changes.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Arithmetic with the rules nudged",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "— what breaks, and what gets interesting, if you change how numbers combine",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Proofs a machine checks",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "— Lean, and what it does to a proof when something verifies it line by line",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "The mathematics under a quantum computer",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "— Qiskit, and the linear algebra those gates are made of",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Steps you can undo",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "— algorithms that lose nothing, drawn as wires and boxes",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "What mathematics sits on",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "— foundations, and why the question keeps coming back",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "What a language model changes",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "— about doing mathematics, and about who gets to",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "the rest of the list",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "→",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Dates and places go up on",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": ", and every date on the schedule links to the page the club posts its sign-up on.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Whether the room is your kind of room is not something a page can tell you.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "When we meet",
+     "text": "When we meet",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "When we meet",
+     "text": "All 5 dates",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "When we meet",
+     "text": "→",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "When we meet",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "When we meet",
+     "text": "→",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "How it works",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "The club has used 15 of them.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "If you would rather hear what is being argued about before you go, the chat invite is below.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "The club's list of members is its Meetup group page, last read 13 days ago — the list is not the room.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the club",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the chat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "on Discord, opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Join on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "∑",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "© 2026 Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Meetup and Discord are trademarks of their owners.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "heading": false
+    }
+   ]
+  },
+  {
+   "route": "/404",
+   "bytes": 12875,
+   "words": {
+    "nav-chrome": 7,
+    "exit-band": 52,
+    "body": 65
+   },
+   "bodySentences": 11,
+   "bodyWords": 65,
+   "headings": [
+    "We could not find that page"
+   ],
+   "anchors": {
+    "total": 15,
+    "internal": 12,
+    "external": 3,
+    "nav-chrome": 4,
+    "exit-band": 7,
+    "body": 4
+   },
+   "anchorList": [
+    {
+     "href": "/",
+     "label": "Matheapolis",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates 21 Nov",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/",
+     "label": "Back to the home page",
+     "zone": "body"
+    },
+    {
+     "href": "/chat",
+     "label": "Recent Discord summaries",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "Our schedule page",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "our Meetup group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join on Meetup , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/",
+     "label": "Matheapolis ∑",
+     "zone": "exit-band"
+    }
+   ],
+   "destinations": [
+    {
+     "href": "/",
+     "n": 3,
+     "labels": [
+      "Matheapolis",
+      "Back to the home page",
+      "Matheapolis ∑"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/schedule",
+     "n": 3,
+     "labels": [
+      "Dates 21 Nov",
+      "Our schedule page",
+      "Dates"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 3,
+     "labels": [
+      "Chat",
+      "Recent Discord summaries",
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 2,
+     "labels": [
+      "Ways in",
+      "Ways in"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.meetup.com",
+     "n": 2,
+     "labels": [
+      "our Meetup group , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/events.ics",
+     "n": 1,
+     "labels": [
+      "Add to a calendar"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:discord.com",
+     "n": 1,
+     "labels": [
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    }
+   ],
+   "arrowAnchors": [],
+   "sentences": [
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "21 Nov",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "We could not find that page",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "404",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "The link may be old, or the address may have a typo.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Everything we have sits behind one of these links.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Back to the home page",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Recent Discord summaries",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Looking for a specific meetup?",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Our schedule page",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "lists every date on the club’s own calendar, and",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "our Meetup group",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "lists every session.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Join on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "∑",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "© 2026 Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Meetup and Discord are trademarks of their owners.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "heading": false
+    }
+   ]
+  },
+  {
+   "route": "/chat",
+   "bytes": 22778,
+   "words": {
+    "nav-chrome": 7,
+    "exit-band": 52,
+    "body": 283
+   },
+   "bodySentences": 33,
+   "bodyWords": 283,
+   "headings": [
+    "Summaries from the chat",
+    "The bot's reading of the channels",
+    "What the club is pulling on",
+    "The chat itself"
+   ],
+   "anchors": {
+    "total": 13,
+    "internal": 9,
+    "external": 4,
+    "nav-chrome": 4,
+    "exit-band": 7,
+    "body": 2
+   },
+   "anchorList": [
+    {
+     "href": "/",
+     "label": "Matheapolis",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates 21 Nov",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Join the chat on Discord, opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join on Meetup , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/",
+     "label": "Matheapolis ∑",
+     "zone": "exit-band"
+    }
+   ],
+   "destinations": [
+    {
+     "href": "ext:discord.com",
+     "n": 3,
+     "labels": [
+      "Discord , opens in a new tab",
+      "Join the chat on Discord, opens in a new tab",
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/",
+     "n": 2,
+     "labels": [
+      "Matheapolis",
+      "Matheapolis ∑"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/schedule",
+     "n": 2,
+     "labels": [
+      "Dates 21 Nov",
+      "Dates"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 2,
+     "labels": [
+      "Chat",
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 2,
+     "labels": [
+      "Ways in",
+      "Ways in"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/events.ics",
+     "n": 1,
+     "labels": [
+      "Add to a calendar"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.meetup.com",
+     "n": 1,
+     "labels": [
+      "Join on Meetup , opens in a new tab"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    }
+   ],
+   "arrowAnchors": [],
+   "sentences": [
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "21 Nov",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "Summaries from the chat",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "Written by our bot, after the noise settles",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": "The bot's reading of the channels",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": "They are written by our bot from recent channel activity.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": "Read the same thing where it is posted:",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": ".",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "What the club is pulling on",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "The threads the home page lists, in full.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Any of them can be dropped mid-sentence, and none of them is a prerequisite for arriving.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Arithmetic with the rules nudged",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— what breaks, and what gets interesting, if you change how numbers combine",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Proofs a machine checks",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— Lean, and what it does to a proof when something verifies it line by line",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "The mathematics under a quantum computer",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— Qiskit, and the linear algebra those gates are made of",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Steps you can undo",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— algorithms that lose nothing, drawn as wires and boxes",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "What mathematics sits on",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— foundations, and why the question keeps coming back",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "What a language model changes",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— about doing mathematics, and about who gets to",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Puzzles that need no background",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— and have strange answers",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Whatever the field is arguing about",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— read carefully, rather than retweeted",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "The mathematics videos we finish",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "— and the ones we abandon, with reasons",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no fills.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Not a scan of a book.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "The chat itself",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "The summaries above are the bot's reading of the channel.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "The channel itself is where the club talks — what it is pulling on, what it is arguing about, where and when it is next meeting.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "The invite is the button below.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "Join the chat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "on Discord, opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Join on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "∑",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "© 2026 Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Meetup and Discord are trademarks of their owners.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "heading": false
+    }
+   ]
+  },
+  {
+   "route": "/join",
+   "bytes": 16620,
+   "words": {
+    "nav-chrome": 7,
+    "exit-band": 52,
+    "body": 268
+   },
+   "bodySentences": 27,
+   "bodyWords": 268,
+   "headings": [
+    "Ways in",
+    "Follow the club",
+    "Come to a meeting",
+    "Talk with us now",
+    "What we do",
+    "Your first one"
+   ],
+   "anchors": {
+    "total": 17,
+    "internal": 12,
+    "external": 5,
+    "nav-chrome": 4,
+    "exit-band": 7,
+    "body": 6
+   },
+   "anchorList": [
+    {
+     "href": "/",
+     "label": "Matheapolis",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates 21 Nov",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join the Meetup group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.facebook.com/groups/matheapolis",
+     "label": "Join the Facebook group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "See the dates",
+     "zone": "body"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Join the chat on Discord , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "schedule",
+     "zone": "body"
+    },
+    {
+     "href": "/chat",
+     "label": "the messages we post there",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join on Meetup , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/",
+     "label": "Matheapolis ∑",
+     "zone": "exit-band"
+    }
+   ],
+   "destinations": [
+    {
+     "href": "/schedule",
+     "n": 4,
+     "labels": [
+      "Dates 21 Nov",
+      "See the dates",
+      "schedule",
+      "Dates"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 3,
+     "labels": [
+      "Chat",
+      "the messages we post there",
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/",
+     "n": 2,
+     "labels": [
+      "Matheapolis",
+      "Matheapolis ∑"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 2,
+     "labels": [
+      "Ways in",
+      "Ways in"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.meetup.com",
+     "n": 2,
+     "labels": [
+      "Join the Meetup group , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:discord.com",
+     "n": 2,
+     "labels": [
+      "Join the chat on Discord , opens in a new tab",
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.facebook.com",
+     "n": 1,
+     "labels": [
+      "Join the Facebook group , opens in a new tab"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    {
+     "href": "/events.ics",
+     "n": 1,
+     "labels": [
+      "Add to a calendar"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    }
+   ],
+   "arrowAnchors": [],
+   "sentences": [
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "21 Nov",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Ways in",
+     "text": "Ways in",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Ways in",
+     "text": "Each way in is a different kind of thing, and you only need one to start: somewhere to follow along, something to turn up to, or somebody to talk to.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": "Follow the club",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": "A feed you already read, where the club can put a date.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": "Join the Meetup group",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": "The club's member list, and where a date gets announced.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": "Join the Facebook group",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Follow the club",
+     "text": "The club's own public Facebook group.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "Come to a meeting",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "Pick a date that works and sign up for that one.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "See the dates",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "The schedule lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "Talk with us now",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "The people, on an ordinary day.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "Join the chat on Discord",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "The conversation that runs between meetings.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "What we do",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "A study session: an evening working side by side on whatever each person is learning, with help when someone asks for it.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "The next ones are on the",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "schedule",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": ".",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Your first one",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Nothing to prepare and nothing to read first.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Bring a question; you don't need a field.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Come and listen if you would rather; no subject is assumed, no background is required, and none of the threads the chat runs is a prerequisite for arriving.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Want to ask something before you turn up?",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Somebody from the club reads",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "the messages we post there",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": ".",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Join on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "∑",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "© 2026 Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "Meetup and Discord are trademarks of their owners.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "heading": false
+    }
+   ]
+  },
+  {
+   "route": "/schedule",
+   "bytes": 33954,
+   "words": {
+    "nav-chrome": 7,
+    "exit-band": 52,
+    "body": 229
+   },
+   "bodySentences": 43,
+   "bodyWords": 229,
+   "headings": [
+    "Dates",
+    "Social",
+    "Study session",
+    "Social",
+    "Study session",
+    "Social"
+   ],
+   "anchors": {
+    "total": 18,
+    "internal": 10,
+    "external": 8,
+    "nav-chrome": 4,
+    "exit-band": 7,
+    "body": 7
+   },
+   "anchorList": [
+    {
+     "href": "/",
+     "label": "Matheapolis",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates 21 Nov",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.facebook.com/groups/matheapolis",
+     "label": "Join the Facebook group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "body"
+    },
+    {
+     "href": "/schedule",
+     "label": "Dates",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join on Meetup , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/",
+     "label": "Matheapolis ∑",
+     "zone": "exit-band"
+    }
+   ],
+   "destinations": [
+    {
+     "href": "ext:www.meetup.com",
+     "n": 6,
+     "labels": [
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "body",
+      "body",
+      "body",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/",
+     "n": 2,
+     "labels": [
+      "Matheapolis",
+      "Matheapolis ∑"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/schedule",
+     "n": 2,
+     "labels": [
+      "Dates 21 Nov",
+      "Dates"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 2,
+     "labels": [
+      "Chat",
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 2,
+     "labels": [
+      "Ways in",
+      "Ways in"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/events.ics",
+     "n": 2,
+     "labels": [
+      "Add to a calendar",
+      "Add to a calendar"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.facebook.com",
+     "n": 1,
+     "labels": [
+      "Join the Facebook group , opens in a new tab"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    {
+     "href": "ext:discord.com",
+     "n": 1,
+     "labels": [
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    }
+   ],
+   "arrowAnchors": [],
+   "sentences": [
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "21 Nov",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Dates",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "These dates are copied from the club’s own calendar.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Each one links to the page the club posts its sign-up on.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Nov",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "21",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Sat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Nov",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "25",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wed",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Dec",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "5",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Dec",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "9",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wed",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Dec",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "19",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Copied from the club’s own calendar 3 days ago",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Between meetings:",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Join the Facebook group",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Join on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "∑",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "© 2026 Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Meetup and Discord are trademarks of their owners.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "heading": false
+    }
+   ]
+  }
+ ],
+ "duplicateClaims": [
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "exit-band",
+     "section": "How it works",
+     "words": "Meetup and Discord are trademarks of their owners."
+    },
+    {
+     "page": "/404",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "words": "Meetup and Discord are trademarks of their owners."
+    },
+    {
+     "page": "/chat",
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "words": "Meetup and Discord are trademarks of their owners."
+    },
+    {
+     "page": "/join",
+     "zone": "exit-band",
+     "section": "Your first one",
+     "words": "Meetup and Discord are trademarks of their owners."
+    },
+    {
+     "page": "/schedule",
+     "zone": "exit-band",
+     "section": "Social",
+     "words": "Meetup and Discord are trademarks of their owners."
+    }
+   ],
+   "routes": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "exit-band",
+     "section": "How it works",
+     "words": "This site is the club's own — not sponsored or endorsed by either."
+    },
+    {
+     "page": "/404",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "words": "This site is the club's own — not sponsored or endorsed by either."
+    },
+    {
+     "page": "/chat",
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "words": "This site is the club's own — not sponsored or endorsed by either."
+    },
+    {
+     "page": "/join",
+     "zone": "exit-band",
+     "section": "Your first one",
+     "words": "This site is the club's own — not sponsored or endorsed by either."
+    },
+    {
+     "page": "/schedule",
+     "zone": "exit-band",
+     "section": "Social",
+     "words": "This site is the club's own — not sponsored or endorsed by either."
+    }
+   ],
+   "routes": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "Matheapolis",
+     "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Social",
+     "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Social",
+     "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Social",
+     "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+    }
+   ],
+   "routes": [
+    "/",
+    "/schedule"
+   ],
+   "repeatedOnSamePage": true
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/404",
+     "zone": "body",
+     "section": "We could not find that page",
+     "words": "lists every date on the club’s own calendar, and"
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Dates",
+     "words": "These dates are copied from the club’s own calendar."
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Social",
+     "words": "Copied from the club’s own calendar 3 days ago"
+    }
+   ],
+   "routes": [
+    "/404",
+    "/schedule"
+   ],
+   "repeatedOnSamePage": true
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": "— what breaks, and what gets interesting, if you change how numbers combine"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "words": "— what breaks, and what gets interesting, if you change how numbers combine"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": "— Lean, and what it does to a proof when something verifies it line by line"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "words": "— Lean, and what it does to a proof when something verifies it line by line"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": "— Qiskit, and the linear algebra those gates are made of"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "words": "— Qiskit, and the linear algebra those gates are made of"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": "— algorithms that lose nothing, drawn as wires and boxes"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "words": "— algorithms that lose nothing, drawn as wires and boxes"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": "— foundations, and why the question keeps coming back"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "words": "— foundations, and why the question keeps coming back"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": "— about doing mathematics, and about who gets to"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "words": "— about doing mathematics, and about who gets to"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": ", and every date on the schedule links to the page the club posts its sign-up on."
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Dates",
+     "words": "Each one links to the page the club posts its sign-up on."
+    }
+   ],
+   "routes": [
+    "/",
+    "/schedule"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "How it works",
+     "words": "on Discord, opens in a new tab"
+    },
+    {
+     "page": "/chat",
+     "zone": "body",
+     "section": "The chat itself",
+     "words": "on Discord, opens in a new tab"
+    }
+   ],
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Study session",
+     "words": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+    },
+    {
+     "page": "/schedule",
+     "zone": "body",
+     "section": "Study session",
+     "words": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+    }
+   ],
+   "routes": [
+    "/schedule"
+   ],
+   "repeatedOnSamePage": true
+  }
+ ],
+ "wayfindingProse": [
+  {
+   "page": "/",
+   "section": "Matheapolis",
+   "words": "Join Our Group",
+   "named": [
+    "join"
+   ],
+   "hrefs": [
+    "/join",
+    "/schedule"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/",
+   "section": "Matheapolis",
+   "words": "See the dates",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/",
+   "section": "Matheapolis",
+   "words": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
+   "named": [
+    "dates",
+    "chat",
+    "meetup"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/",
+   "section": "What we take up",
+   "words": "Dates and places go up on",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/chat#threads"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/",
+   "section": "When we meet",
+   "words": "All 5 dates",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/schedule",
+    "/events.ics"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/",
+   "section": "When we meet",
+   "words": "Add to a calendar",
+   "named": [
+    "calendar"
+   ],
+   "hrefs": [
+    "/events.ics"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/",
+   "section": "How it works",
+   "words": "If you would rather hear what is being argued about before you go, the chat invite is below.",
+   "named": [
+    "chat"
+   ],
+   "hrefs": [
+    "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/",
+   "section": "How it works",
+   "words": "The club's list of members is its Meetup group page, last read 13 days ago — the list is not the room.",
+   "named": [
+    "meetup"
+   ],
+   "hrefs": [
+    "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/",
+   "section": "How it works",
+   "words": "Join the club",
+   "named": [
+    "join"
+   ],
+   "hrefs": [
+    "/join"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/404",
+   "section": "We could not find that page",
+   "words": "Recent Discord summaries",
+   "named": [
+    "discord"
+   ],
+   "hrefs": [
+    "/chat",
+    "/schedule"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/404",
+   "section": "We could not find that page",
+   "words": "Looking for a specific meetup?",
+   "named": [
+    "meetup"
+   ],
+   "hrefs": [
+    "/chat",
+    "/schedule"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/404",
+   "section": "We could not find that page",
+   "words": "Our schedule page",
+   "named": [
+    "schedule"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/404",
+   "section": "We could not find that page",
+   "words": "lists every date on the club’s own calendar, and",
+   "named": [
+    "calendar"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/404",
+   "section": "We could not find that page",
+   "words": "our Meetup group",
+   "named": [
+    "meetup"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/chat",
+   "section": "Summaries from the chat",
+   "words": "Summaries from the chat",
+   "named": [
+    "chat"
+   ],
+   "hrefs": [
+    "/chat",
+    "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/join",
+   "section": "Ways in",
+   "words": "Ways in",
+   "named": [
+    "ways in"
+   ],
+   "hrefs": [
+    "/chat",
+    "/join"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/join",
+   "section": "Come to a meeting",
+   "words": "See the dates",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/join",
+   "section": "What we do",
+   "words": "schedule",
+   "named": [
+    "schedule"
+   ],
+   "hrefs": [
+    "/schedule"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/join",
+   "section": "Your first one",
+   "words": "Come and listen if you would rather; no subject is assumed, no background is required, and none of the threads the chat runs is a prerequisite for arriving.",
+   "named": [
+    "chat"
+   ],
+   "hrefs": [
+    "/chat"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/schedule",
+   "section": "Dates",
+   "words": "Dates",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/join"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/schedule",
+   "section": "Social",
+   "words": "Join the Facebook group",
+   "named": [
+    "join"
+   ],
+   "hrefs": [
+    "/events.ics"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/schedule",
+   "section": "Social",
+   "words": "Add to a calendar",
+   "named": [
+    "calendar"
+   ],
+   "hrefs": [
+    "/events.ics"
+   ],
+   "isLabelItself": true
+  }
+ ],
+ "wayfindingProseCount": 22,
+ "wayfindingProseReal": 11
+}

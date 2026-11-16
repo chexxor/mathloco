@@ -1,0 +1,2942 @@
+{
+ "measuredAt": "2026-11-15",
+ "instrument": "design/visitor-questions.mjs",
+ "artifact": "dist/client",
+ "artifactBuilt": "2026-11-16T05:55:26.182Z",
+ "artifactFresh": true,
+ "routes": [
+  "/",
+  "/404",
+  "/chat",
+  "/join",
+  "/schedule",
+  "/events.ics"
+ ],
+ "visitorClasses": [
+  "first-time",
+  "phone",
+  "share-link",
+  "calendar-subscriber",
+  "returning",
+  "search-visitor",
+  "any-visitor",
+  "assistive-tech"
+ ],
+ "shareCard": {
+  "distinct": 1,
+  "routes": [
+   "/",
+   "/404",
+   "/chat",
+   "/join",
+   "/schedule"
+  ],
+  "text": "A Minneapolis math club. We work through papers, proofs, proof assistants and puzzles together, around a table in a coffee shop or a brewery. Dates on Meetup, a sign-up link on every date, and the discussion in the chat."
+ },
+ "questions": [
+  {
+   "id": "q01",
+   "who": "first-time",
+   "ask": "What is this, in one line?",
+   "where": [
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "shape": 1
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q02",
+   "who": "first-time",
+   "ask": "When do we meet?",
+   "where": [
+    "/",
+    "/schedule"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/schedule"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "shape": 1
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "shape": 1
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
+     "shape": 1
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
+     "shape": 1
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q03",
+   "who": "first-time",
+   "ask": "Where do we meet?",
+   "where": [
+    "/",
+    "/schedule"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "answered",
+     "forms": [
+      "ics-line"
+     ],
+     "zones": [
+      "feed"
+     ]
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/join",
+    "/schedule",
+    "/events.ics"
+   ],
+   "forms": [
+    "prose/body",
+    "ics-line/feed"
+   ],
+   "outsideRoutes": [
+    "/join",
+    "/events.ics"
+   ],
+   "outsideCount": 16,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 1
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "shape": 1
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",
+     "shape": 1
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we do",
+     "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
+     "shape": 1
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q04",
+   "who": "first-time",
+   "ask": "Do I need to bring or prepare anything?",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/join"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "There is no syllabus, no reading list to keep up with, and no current focus.",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Nothing to prepare and nothing to read first.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Bring a question; you don't need a field.",
+     "shape": 1
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Come and listen if you would rather; no subject is assumed, no background is required, and none of the threads the chat runs is a prerequisite for arriving.",
+     "shape": 1
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q05",
+   "who": "first-time",
+   "ask": "What does it cost — is there a cover charge or a fee?",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q06",
+   "who": "first-time",
+   "ask": "What is the club's current focus?",
+   "where": [
+    "/"
+   ],
+   "verdict": "DECLINED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "There is no syllabus, no reading list to keep up with, and no current focus."
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat."
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " \\, a puzzle with a strange answer. There is no syllabus\\, no reading to ke",
+     "text": " \\, a puzzle with a strange answer. There is no syllabus\\, no reading to ke"
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " ep up with and nobody sets an agenda",
+     "text": " ep up with and nobody sets an agenda: people bring what they are curious a"
+    }
+   ]
+  },
+  {
+   "id": "q07",
+   "who": "first-time",
+   "ask": "Is the room one I can be in — quiet, seated, reachable?",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "verdict": "DECLINED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Whether the room is your kind of room is not something a page can tell you."
+    }
+   ]
+  },
+  {
+   "id": "q08",
+   "who": "first-time",
+   "ask": "How do I get in?",
+   "where": [
+    "/join",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "chrome only",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
+    "/chat": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "forms": [
+    "prose/body",
+    "prose/exit-band",
+    "label/body",
+    "label/exit-band"
+   ],
+   "outsideRoutes": [
+    "/404",
+    "/chat",
+    "/schedule"
+   ],
+   "outsideCount": 20,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Join Our Group",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the club",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the chat",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Join on Meetup",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Join Our Group",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the club",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the chat on Discord, opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Join on Meetup , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Join on Meetup",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Join on Meetup , opens in a new tab",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q09",
+   "who": "first-time",
+   "ask": "What actually happens at a meeting?",
+   "where": [
+    "/join",
+    "/schedule",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "heading"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/join",
+    "/schedule"
+   ],
+   "forms": [
+    "prose/body",
+    "heading/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "shape": 2
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we do",
+     "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
+     "shape": 2
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we do",
+     "text": "A study session: an evening working side by side on whatever each person is learning, with help when someone asks for it.",
+     "shape": 2
+    },
+    {
+     "route": "/schedule",
+     "form": "heading",
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "heading",
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "heading",
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "heading",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "shape": 1
+    },
+    {
+     "route": "/schedule",
+     "form": "heading",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "shape": 1
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q10",
+   "who": "first-time",
+   "ask": "Do I have to be a member to come?",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q11",
+   "who": "phone",
+   "ask": "Which tap gets me the calendar file?",
+   "where": [
+    "/",
+    "/schedule"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "chrome only",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
+    "/chat": {
+     "status": "chrome only",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
+    "/join": {
+     "status": "chrome only",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "forms": [
+    "href/body",
+    "href/exit-band"
+   ],
+   "outsideRoutes": [
+    "/404",
+    "/chat",
+    "/join"
+   ],
+   "outsideCount": 3,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "href",
+     "zone": "body",
+     "section": "When we meet",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "Your first one",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "href",
+     "zone": "body",
+     "section": "Social",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "/events.ics",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q12",
+   "who": "phone",
+   "ask": "Can I ask the club something before a meeting?",
+   "where": [
+    "/join"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/join"
+   ],
+   "forms": [
+    "prose/body",
+    "label/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Want to ask something before you turn up?",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Somebody from the club reads",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "the messages we post there",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "label",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "the messages we post there",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q13",
+   "who": "phone",
+   "ask": "Does the page hand me something to call or tap more than once?",
+   "where": [
+    "/join",
+    "/"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q14",
+   "who": "share-link",
+   "ask": "Does the page name itself in what a share card carries?",
+   "where": [
+    "/",
+    "/schedule",
+    "/chat",
+    "/join",
+    "/404"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "meta"
+     ],
+     "zones": [
+      "head"
+     ]
+    },
+    "/404": {
+     "status": "answered",
+     "forms": [
+      "meta"
+     ],
+     "zones": [
+      "head"
+     ]
+    },
+    "/chat": {
+     "status": "answered",
+     "forms": [
+      "meta"
+     ],
+     "zones": [
+      "head"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "meta"
+     ],
+     "zones": [
+      "head"
+     ]
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "meta"
+     ],
+     "zones": [
+      "head"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "forms": [
+    "meta/head"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "meta",
+     "zone": "head",
+     "section": "title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "meta",
+     "zone": "head",
+     "section": "og:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "meta",
+     "zone": "head",
+     "section": "twitter:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "meta",
+     "zone": "head",
+     "section": "og:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "meta",
+     "zone": "head",
+     "section": "twitter:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "meta",
+     "zone": "head",
+     "section": "title",
+     "text": "Page not found - Matheapolis",
+     "shape": 4
+    },
+    {
+     "route": "/chat",
+     "form": "meta",
+     "zone": "head",
+     "section": "og:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "meta",
+     "zone": "head",
+     "section": "twitter:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "meta",
+     "zone": "head",
+     "section": "title",
+     "text": "Chat - Matheapolis",
+     "shape": 2
+    },
+    {
+     "route": "/join",
+     "form": "meta",
+     "zone": "head",
+     "section": "og:title",
+     "text": "Matheapolis - a Minneapolis math club",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q15",
+   "who": "calendar-subscriber",
+   "ask": "Does the file know my timezone?",
+   "where": [
+    "/events.ics"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "answered",
+     "forms": [
+      "ics-line"
+     ],
+     "zones": [
+      "feed"
+     ]
+    }
+   },
+   "answeredOn": [
+    "/events.ics"
+   ],
+   "forms": [
+    "ics-line/feed"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "X-WR-TIMEZONE",
+     "text": "X-WR-TIMEZONE:America/Chicago",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "TZID",
+     "text": "TZID:America/Chicago",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTSTART;TZID=America/Chicago",
+     "text": "DTSTART;TZID=America/Chicago:20261107T120000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTEND;TZID=America/Chicago",
+     "text": "DTEND;TZID=America/Chicago:20261107T130000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTSTART;TZID=America/Chicago",
+     "text": "DTSTART;TZID=America/Chicago:20261111T180000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTEND;TZID=America/Chicago",
+     "text": "DTEND;TZID=America/Chicago:20261111T200000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTSTART;TZID=America/Chicago",
+     "text": "DTSTART;TZID=America/Chicago:20261121T120000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTEND;TZID=America/Chicago",
+     "text": "DTEND;TZID=America/Chicago:20261121T130000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTSTART;TZID=America/Chicago",
+     "text": "DTSTART;TZID=America/Chicago:20261125T180000",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "DTEND;TZID=America/Chicago",
+     "text": "DTEND;TZID=America/Chicago:20261125T200000",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q16",
+   "who": "calendar-subscriber",
+   "ask": "Does each entry tell me where to go?",
+   "where": [
+    "/events.ics"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "answered",
+     "forms": [
+      "ics-line"
+     ],
+     "zones": [
+      "feed"
+     ]
+    }
+   },
+   "answeredOn": [
+    "/events.ics"
+   ],
+   "forms": [
+    "ics-line/feed"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minn",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minn",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minn",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "LOCATION",
+     "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
+     "shape": 1
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "GEO",
+     "text": "GEO:44.9498412;-93.3824443",
+     "shape": 2
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "GEO",
+     "text": "GEO:44.9057455;-93.2878163",
+     "shape": 2
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": "GEO",
+     "text": "GEO:44.9498412;-93.3824443",
+     "shape": 2
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q17",
+   "who": "calendar-subscriber",
+   "ask": "Does the file say which of its dates have already passed?",
+   "where": [
+    "/events.ics",
+    "/schedule"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q18",
+   "who": "calendar-subscriber",
+   "ask": "Does anything say how far ahead the file reaches?",
+   "where": [
+    "/events.ics",
+    "/schedule",
+    "/"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q19",
+   "who": "returning",
+   "ask": "What is the club arguing about now?",
+   "where": [
+    "/chat",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/chat": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "heading"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join"
+   ],
+   "forms": [
+    "prose/body",
+    "label/body",
+    "heading/body"
+   ],
+   "outsideRoutes": [
+    "/404",
+    "/join"
+   ],
+   "outsideCount": 3,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes when the chat changes.",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "How it works",
+     "text": "If you would rather hear what is being argued about before you go, the chat invite is below.",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Recent Discord summaries",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Recent Discord summaries",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "prose",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "The threads the home page lists, in full.",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "prose",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Whatever the field is arguing about",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "prose",
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "The summaries above are the bot's reading of the channel.",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "prose",
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "The channel itself is where the club talks — what it is pulling on, what it is arguing about, where and when it is next meeting.",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "heading",
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "Summaries from the chat",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q20",
+   "who": "returning",
+   "ask": "What happened at a meeting I missed?",
+   "where": [
+    "/chat",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "answered",
+     "forms": [
+      "heading"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/chat"
+   ],
+   "forms": [
+    "heading/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/chat",
+     "form": "heading",
+     "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "Summaries from the chat",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q21",
+   "who": "returning",
+   "ask": "Am I told when a date moves?",
+   "where": [
+    "/schedule",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/schedule"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q22",
+   "who": "search-visitor",
+   "ask": "The link I followed is dead — what happened?",
+   "where": [
+    "/404"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "answered",
+     "forms": [
+      "prose",
+      "heading"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/404"
+   ],
+   "forms": [
+    "prose/body",
+    "heading/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "The link may be old, or the address may have a typo.",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "heading",
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "We could not find that page",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q23",
+   "who": "search-visitor",
+   "ask": "Is there anything here I am not being shown?",
+   "where": [
+    "/404",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/404"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "Everything we have sits behind one of these links.",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q24",
+   "who": "search-visitor",
+   "ask": "Can I look for a specific past meetup?",
+   "where": [
+    "/schedule",
+    "/404",
+    "/chat"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q25",
+   "who": "any-visitor",
+   "ask": "How do I get to the venue?",
+   "where": [
+    "/",
+    "/schedule"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q26",
+   "who": "assistive-tech",
+   "ask": "Does the page's drawing carry a name for a reader?",
+   "where": [
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "mark-tag"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/"
+   ],
+   "forms": [
+    "mark-tag/body"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "mark-tag",
+     "zone": "body",
+     "section": "(mark)",
+     "text": "<svg data-mark=\"hero\" viewBox=\"0 0 240 150\" class=\"w-full h-auto block\" role=\"img\" aria-label=\"Two parallel lines leaving a sphere's equator and crossing at its pole\">",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q27",
+   "who": "assistive-tech",
+   "ask": "Does the page explain its own section names?",
+   "where": [
+    "/chat",
+    "/join",
+    "/schedule",
+    "/"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "heading",
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "chrome only",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    "/chat": {
+     "status": "answered",
+     "forms": [
+      "heading",
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "heading"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "chrome only",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "forms": [
+    "prose/nav-chrome",
+    "prose/exit-band",
+    "heading/body",
+    "label/nav-chrome",
+    "label/exit-band",
+    "prose/body"
+   ],
+   "outsideRoutes": [
+    "/404"
+   ],
+   "outsideCount": 4,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "heading",
+     "zone": "body",
+     "section": "What we take up",
+     "text": "What we take up",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes when the chat changes.",
+     "shape": 1
+    },
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Ways in",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q28",
+   "who": "assistive-tech",
+   "ask": "What does the mark the wordmark carries mean?",
+   "where": [
+    "/",
+    "/schedule",
+    "/chat",
+    "/join",
+    "/404"
+   ],
+   "verdict": "UNANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/schedule": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [],
+   "forms": [],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q29",
+   "who": "assistive-tech",
+   "ask": "Does a link that leaves the site say so?",
+   "where": [
+    "/",
+    "/schedule",
+    "/chat",
+    "/join",
+    "/404"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "answered",
+     "forms": [
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/chat": {
+     "status": "answered",
+     "forms": [
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/schedule": {
+     "status": "answered",
+     "forms": [
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "forms": [
+    "label/body",
+    "label/exit-band"
+   ],
+   "outsideRoutes": [],
+   "outsideCount": 0,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Meetup , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Join the chat on Discord, opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Join on Meetup , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "How it works",
+     "text": "Discord , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "body",
+     "section": "We could not find that page",
+     "text": "our Meetup group , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Join on Meetup , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/404",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "We could not find that page",
+     "text": "Discord , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "label",
+     "zone": "body",
+     "section": "The bot's reading of the channels",
+     "text": "Discord , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "label",
+     "zone": "body",
+     "section": "The chat itself",
+     "text": "Join the chat on Discord, opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "label",
+     "zone": "exit-band",
+     "section": "The chat itself",
+     "text": "Join on Meetup , opens in a new tab",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  }
+ ],
+ "gaps": [
+  {
+   "id": "q05",
+   "who": "first-time",
+   "ask": "What does it cost — is there a cover charge or a fee?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q06",
+   "who": "first-time",
+   "ask": "What is the club's current focus?",
+   "verdict": "DECLINED",
+   "where": [
+    "/"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q07",
+   "who": "first-time",
+   "ask": "Is the room one I can be in — quiet, seated, reachable?",
+   "verdict": "DECLINED",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q10",
+   "who": "first-time",
+   "ask": "Do I have to be a member to come?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q13",
+   "who": "phone",
+   "ask": "Does the page hand me something to call or tap more than once?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/join",
+    "/"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q17",
+   "who": "calendar-subscriber",
+   "ask": "Does the file say which of its dates have already passed?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/events.ics",
+    "/schedule"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q18",
+   "who": "calendar-subscriber",
+   "ask": "Does anything say how far ahead the file reaches?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/events.ics",
+    "/schedule",
+    "/"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q24",
+   "who": "search-visitor",
+   "ask": "Can I look for a specific past meetup?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/schedule",
+    "/404",
+    "/chat"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q25",
+   "who": "any-visitor",
+   "ask": "How do I get to the venue?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/",
+    "/schedule"
+   ],
+   "answeredOn": []
+  },
+  {
+   "id": "q28",
+   "who": "assistive-tech",
+   "ask": "What does the mark the wordmark carries mean?",
+   "verdict": "UNANSWERED",
+   "where": [
+    "/",
+    "/schedule",
+    "/chat",
+    "/join",
+    "/404"
+   ],
+   "answeredOn": []
+  }
+ ],
+ "counts": {
+  "questions": 29,
+  "ANSWERED": 19,
+  "DECLINED": 2,
+  "ANSWERED-IN-CHROME": 0,
+  "ANSWERED-ELSEWHERE": 0,
+  "UNANSWERED": 8
+ }
+}

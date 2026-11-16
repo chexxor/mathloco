@@ -1,0 +1,5241 @@
+{
+ "measuredAt": "2026-11-16",
+ "instrument": "design/communication-survey.mjs",
+ "viewports": [
+  "1240x900",
+  "768x1024",
+  "390x844"
+ ],
+ "cells": [
+  {
+   "route": "/",
+   "widths": [
+    {
+     "done": true,
+     "errors": [],
+     "vw": 1240,
+     "vh": 900,
+     "fold": {
+      "vh": 900,
+      "wordsAbove": 141,
+      "wordsBelow": 284,
+      "runsAbove": 8,
+      "runsBelow": 19,
+      "headingsAbove": [
+       {
+        "y": 136,
+        "text": "Matheapolis"
+       },
+       {
+        "y": 890,
+        "text": "What we take up"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 364,
+        "role": "primary",
+        "label": "Join Our Group"
+       },
+       {
+        "y": 364,
+        "role": "secondary",
+        "label": "See the dates"
+       }
+      ],
+      "controlsBelow": 2,
+      "anchorsAbove": 6,
+      "anchorsBelow": 13,
+      "surfacesAbove": [
+       {
+        "name": "next-meeting",
+        "y": 248,
+        "w": 512,
+        "h": 84,
+        "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm CentralAngel Food Bakery, 8100 Minneto"
+       },
+       {
+        "name": "PS-1",
+        "y": 136,
+        "w": 372,
+        "h": 642,
+        "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+       },
+       {
+        "name": "hero",
+        "y": 527,
+        "w": 372,
+        "h": 233,
+        "text": ""
+       }
+      ]
+     },
+     "band": {
+      "y": 2834,
+      "height": 280
+     },
+     "surfaces": [
+      {
+       "name": "next-meeting",
+       "y": 248,
+       "w": 512,
+       "h": 84,
+       "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm CentralAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "name": "PS-1",
+       "y": 136,
+       "w": 372,
+       "h": 642,
+       "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+      },
+      {
+       "name": "hero",
+       "y": 527,
+       "w": 372,
+       "h": 233,
+       "text": ""
+      },
+      {
+       "name": "PS-5",
+       "y": 1557,
+       "w": 1180,
+       "h": 619,
+       "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122"
+      },
+      {
+       "name": "PS-3",
+       "y": 2549,
+       "w": 538,
+       "h": 0,
+       "text": ""
+      }
+     ],
+     "controls": [
+      {
+       "y": 364,
+       "role": "primary",
+       "label": "Join Our Group"
+      },
+      {
+       "y": 364,
+       "role": "secondary",
+       "label": "See the dates"
+      },
+      {
+       "y": 2738,
+       "role": "secondary",
+       "label": "Join the club"
+      },
+      {
+       "y": 2738,
+       "role": "secondary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 3114,
+     "firstAction": {
+      "y": 364,
+      "role": "primary",
+      "label": "Join Our Group"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "./",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 136,
+       "words": 1,
+       "text": "Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 200,
+       "words": 3,
+       "text": "Minneapolis math club"
+      },
+      {
+       "tag": "p",
+       "y": 248,
+       "words": 12,
+       "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      },
+      {
+       "tag": "p",
+       "y": 276,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 436,
+       "words": 50,
+       "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through s"
+      },
+      {
+       "tag": "p",
+       "y": 595,
+       "words": 41,
+       "text": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets a"
+      },
+      {
+       "tag": "figcaption",
+       "y": 491,
+       "words": 20,
+       "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+      },
+      {
+       "tag": "h2",
+       "y": 890,
+       "words": 4,
+       "text": "What we take up"
+      },
+      {
+       "tag": "p",
+       "y": 946,
+       "words": 23,
+       "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the"
+      },
+      {
+       "tag": "li",
+       "y": 1072,
+       "words": 18,
+       "text": "Arithmetic with the rules nudged — what breaks, and what gets interesting, if you change h"
+      },
+      {
+       "tag": "li",
+       "y": 1072,
+       "words": 20,
+       "text": "Proofs a machine checks — Lean, and what it does to a proof when something verifies it lin"
+      },
+      {
+       "tag": "li",
+       "y": 1144,
+       "words": 17,
+       "text": "The mathematics under a quantum computer — Qiskit, and the linear algebra those gates are "
+      },
+      {
+       "tag": "li",
+       "y": 1144,
+       "words": 14,
+       "text": "Steps you can undo — algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+       "tag": "li",
+       "y": 1216,
+       "words": 13,
+       "text": "What mathematics sits on — foundations, and why the question keeps coming back"
+      },
+      {
+       "tag": "li",
+       "y": 1216,
+       "words": 14,
+       "text": "What a language model changes — about doing mathematics, and about who gets to"
+      },
+      {
+       "tag": "p",
+       "y": 1305,
+       "words": 6,
+       "text": "the rest of the list →"
+      },
+      {
+       "tag": "p",
+       "y": 1377,
+       "words": 44,
+       "text": "Dates and places go up on Meetup, opens in a new tab, and every date on the schedule links"
+      },
+      {
+       "tag": "figcaption",
+       "y": 2159,
+       "words": 12,
+       "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122"
+      },
+      {
+       "tag": "h2",
+       "y": 2272,
+       "words": 3,
+       "text": "When we meet"
+      },
+      {
+       "tag": "h3",
+       "y": 2416,
+       "words": 3,
+       "text": "How it works"
+      },
+      {
+       "tag": "p",
+       "y": 2460,
+       "words": 29,
+       "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are all"
+      },
+      {
+       "tag": "p",
+       "y": 2557,
+       "words": 18,
+       "text": "If you would rather hear what is being argued about before you go, the chat invite is belo"
+      },
+      {
+       "tag": "p",
+       "y": 2625,
+       "words": 22,
+       "text": "The club's list of members is its Meetup group page, last read 13 days ago — the list is n"
+      },
+      {
+       "tag": "p",
+       "y": 2946,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 2994,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 3014,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 3034,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 136,
+       "text": "Matheapolis"
+      },
+      {
+       "y": 890,
+       "text": "What we take up"
+      },
+      {
+       "y": 2272,
+       "text": "When we meet"
+      },
+      {
+       "y": 2416,
+       "text": "How it works"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 364,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 364,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 1309,
+       "href": "./chat#threads",
+       "internal": false
+      },
+      {
+       "y": 1378,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2336,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 2336,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 2738,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 2738,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2882,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 2882,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 2882,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 2882,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 2882,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2882,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2941,
+       "href": "./",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 81
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 768,
+     "vh": 1024,
+     "fold": {
+      "vh": 1024,
+      "wordsAbove": 117,
+      "wordsBelow": 308,
+      "runsAbove": 6,
+      "runsBelow": 21,
+      "headingsAbove": [
+       {
+        "y": 136,
+        "text": "Matheapolis"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 364,
+        "role": "primary",
+        "label": "Join Our Group"
+       },
+       {
+        "y": 364,
+        "role": "secondary",
+        "label": "See the dates"
+       }
+      ],
+      "controlsBelow": 2,
+      "anchorsAbove": 6,
+      "anchorsBelow": 13,
+      "surfacesAbove": [
+       {
+        "name": "next-meeting",
+        "y": 248,
+        "w": 512,
+        "h": 84,
+        "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm CentralAngel Food Bakery, 8100 Minneto"
+       },
+       {
+        "name": "PS-1",
+        "y": 778,
+        "w": 512,
+        "h": 806,
+        "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+       }
+      ]
+     },
+     "band": {
+      "y": 3571,
+      "height": 280
+     },
+     "surfaces": [
+      {
+       "name": "next-meeting",
+       "y": 248,
+       "w": 512,
+       "h": 84,
+       "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm CentralAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "name": "PS-1",
+       "y": 778,
+       "w": 512,
+       "h": 806,
+       "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+      },
+      {
+       "name": "hero",
+       "y": 1264,
+       "w": 512,
+       "h": 320,
+       "text": ""
+      },
+      {
+       "name": "PS-5",
+       "y": 2447,
+       "w": 708,
+       "h": 382,
+       "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122"
+      },
+      {
+       "name": "PS-3",
+       "y": 3244,
+       "w": 310,
+       "h": 0,
+       "text": ""
+      }
+     ],
+     "controls": [
+      {
+       "y": 364,
+       "role": "primary",
+       "label": "Join Our Group"
+      },
+      {
+       "y": 364,
+       "role": "secondary",
+       "label": "See the dates"
+      },
+      {
+       "y": 3475,
+       "role": "secondary",
+       "label": "Join the club"
+      },
+      {
+       "y": 3475,
+       "role": "secondary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 3851,
+     "firstAction": {
+      "y": 364,
+      "role": "primary",
+      "label": "Join Our Group"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "./",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 136,
+       "words": 1,
+       "text": "Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 200,
+       "words": 3,
+       "text": "Minneapolis math club"
+      },
+      {
+       "tag": "p",
+       "y": 248,
+       "words": 12,
+       "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      },
+      {
+       "tag": "p",
+       "y": 276,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 436,
+       "words": 50,
+       "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through s"
+      },
+      {
+       "tag": "p",
+       "y": 595,
+       "words": 41,
+       "text": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets a"
+      },
+      {
+       "tag": "figcaption",
+       "y": 1229,
+       "words": 20,
+       "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+      },
+      {
+       "tag": "h2",
+       "y": 1696,
+       "words": 4,
+       "text": "What we take up"
+      },
+      {
+       "tag": "p",
+       "y": 1752,
+       "words": 23,
+       "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the"
+      },
+      {
+       "tag": "li",
+       "y": 1877,
+       "words": 18,
+       "text": "Arithmetic with the rules nudged — what breaks, and what gets interesting, if you change h"
+      },
+      {
+       "tag": "li",
+       "y": 1877,
+       "words": 20,
+       "text": "Proofs a machine checks — Lean, and what it does to a proof when something verifies it lin"
+      },
+      {
+       "tag": "li",
+       "y": 1978,
+       "words": 17,
+       "text": "The mathematics under a quantum computer — Qiskit, and the linear algebra those gates are "
+      },
+      {
+       "tag": "li",
+       "y": 1978,
+       "words": 14,
+       "text": "Steps you can undo — algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+       "tag": "li",
+       "y": 2078,
+       "words": 13,
+       "text": "What mathematics sits on — foundations, and why the question keeps coming back"
+      },
+      {
+       "tag": "li",
+       "y": 2078,
+       "words": 14,
+       "text": "What a language model changes — about doing mathematics, and about who gets to"
+      },
+      {
+       "tag": "p",
+       "y": 2195,
+       "words": 6,
+       "text": "the rest of the list →"
+      },
+      {
+       "tag": "p",
+       "y": 2267,
+       "words": 44,
+       "text": "Dates and places go up on Meetup, opens in a new tab, and every date on the schedule links"
+      },
+      {
+       "tag": "figcaption",
+       "y": 2811,
+       "words": 12,
+       "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122"
+      },
+      {
+       "tag": "h2",
+       "y": 2925,
+       "words": 3,
+       "text": "When we meet"
+      },
+      {
+       "tag": "h3",
+       "y": 3069,
+       "words": 3,
+       "text": "How it works"
+      },
+      {
+       "tag": "p",
+       "y": 3113,
+       "words": 29,
+       "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are all"
+      },
+      {
+       "tag": "p",
+       "y": 3238,
+       "words": 18,
+       "text": "If you would rather hear what is being argued about before you go, the chat invite is belo"
+      },
+      {
+       "tag": "p",
+       "y": 3334,
+       "words": 22,
+       "text": "The club's list of members is its Meetup group page, last read 13 days ago — the list is n"
+      },
+      {
+       "tag": "p",
+       "y": 3683,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 3731,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 3751,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 3771,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 136,
+       "text": "Matheapolis"
+      },
+      {
+       "y": 1696,
+       "text": "What we take up"
+      },
+      {
+       "y": 2925,
+       "text": "When we meet"
+      },
+      {
+       "y": 3069,
+       "text": "How it works"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 364,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 364,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 2199,
+       "href": "./chat#threads",
+       "internal": false
+      },
+      {
+       "y": 2268,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2989,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 2989,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 3475,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 3475,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 3619,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 3619,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 3619,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 3619,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 3619,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 3619,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 3678,
+       "href": "./",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 92
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 390,
+     "vh": 844,
+     "fold": {
+      "vh": 844,
+      "wordsAbove": 117,
+      "wordsBelow": 308,
+      "runsAbove": 6,
+      "runsBelow": 21,
+      "headingsAbove": [
+       {
+        "y": 136,
+        "text": "Matheapolis"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 356,
+        "role": "primary",
+        "label": "Join Our Group"
+       },
+       {
+        "y": 416,
+        "role": "secondary",
+        "label": "See the dates"
+       }
+      ],
+      "controlsBelow": 2,
+      "anchorsAbove": 6,
+      "anchorsBelow": 13,
+      "surfacesAbove": [
+       {
+        "name": "next-meeting",
+        "y": 224,
+        "w": 346,
+        "h": 108,
+        "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm CentralAngel Food Bakery, 8100 Minneto"
+       }
+      ]
+     },
+     "band": {
+      "y": 3780,
+      "height": 320
+     },
+     "surfaces": [
+      {
+       "name": "next-meeting",
+       "y": 224,
+       "w": 346,
+       "h": 108,
+       "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm CentralAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "name": "PS-1",
+       "y": 1077,
+       "w": 346,
+       "h": 566,
+       "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+      },
+      {
+       "name": "hero",
+       "y": 1427,
+       "w": 346,
+       "h": 216,
+       "text": ""
+      },
+      {
+       "name": "PS-5",
+       "y": 2813,
+       "w": 346,
+       "h": 218,
+       "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122"
+      },
+      {
+       "name": "PS-3",
+       "y": 3636,
+       "w": 298,
+       "h": 0,
+       "text": ""
+      }
+     ],
+     "controls": [
+      {
+       "y": 356,
+       "role": "primary",
+       "label": "Join Our Group"
+      },
+      {
+       "y": 416,
+       "role": "secondary",
+       "label": "See the dates"
+      },
+      {
+       "y": 3684,
+       "role": "secondary",
+       "label": "Join the club"
+      },
+      {
+       "y": 3684,
+       "role": "secondary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 4100,
+     "firstAction": {
+      "y": 356,
+      "role": "primary",
+      "label": "Join Our Group"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "./",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 136,
+       "words": 1,
+       "text": "Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 184,
+       "words": 3,
+       "text": "Minneapolis math club"
+      },
+      {
+       "tag": "p",
+       "y": 224,
+       "words": 12,
+       "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      },
+      {
+       "tag": "p",
+       "y": 276,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 476,
+       "words": 50,
+       "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through s"
+      },
+      {
+       "tag": "p",
+       "y": 758,
+       "words": 41,
+       "text": "There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets a"
+      },
+      {
+       "tag": "figcaption",
+       "y": 1391,
+       "words": 20,
+       "text": "Detail of a coloured engraving after John Byrne’s 1847 Euclid, Book IV, proposition XV — c"
+      },
+      {
+       "tag": "h2",
+       "y": 1755,
+       "words": 4,
+       "text": "What we take up"
+      },
+      {
+       "tag": "p",
+       "y": 1811,
+       "words": 23,
+       "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the"
+      },
+      {
+       "tag": "li",
+       "y": 1970,
+       "words": 18,
+       "text": "Arithmetic with the rules nudged — what breaks, and what gets interesting, if you change h"
+      },
+      {
+       "tag": "li",
+       "y": 2070,
+       "words": 20,
+       "text": "Proofs a machine checks — Lean, and what it does to a proof when something verifies it lin"
+      },
+      {
+       "tag": "li",
+       "y": 2171,
+       "words": 17,
+       "text": "The mathematics under a quantum computer — Qiskit, and the linear algebra those gates are "
+      },
+      {
+       "tag": "li",
+       "y": 2271,
+       "words": 14,
+       "text": "Steps you can undo — algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+       "tag": "li",
+       "y": 2344,
+       "words": 13,
+       "text": "What mathematics sits on — foundations, and why the question keeps coming back"
+      },
+      {
+       "tag": "li",
+       "y": 2416,
+       "words": 14,
+       "text": "What a language model changes — about doing mathematics, and about who gets to"
+      },
+      {
+       "tag": "p",
+       "y": 2504,
+       "words": 6,
+       "text": "the rest of the list →"
+      },
+      {
+       "tag": "p",
+       "y": 2576,
+       "words": 44,
+       "text": "Dates and places go up on Meetup, opens in a new tab, and every date on the schedule links"
+      },
+      {
+       "tag": "figcaption",
+       "y": 2995,
+       "words": 12,
+       "text": "Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122"
+      },
+      {
+       "tag": "h2",
+       "y": 3127,
+       "words": 3,
+       "text": "When we meet"
+      },
+      {
+       "tag": "h3",
+       "y": 3263,
+       "words": 3,
+       "text": "How it works"
+      },
+      {
+       "tag": "p",
+       "y": 3307,
+       "words": 29,
+       "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are all"
+      },
+      {
+       "tag": "p",
+       "y": 3431,
+       "words": 18,
+       "text": "If you would rather hear what is being argued about before you go, the chat invite is belo"
+      },
+      {
+       "tag": "p",
+       "y": 3528,
+       "words": 22,
+       "text": "The club's list of members is its Meetup group page, last read 13 days ago — the list is n"
+      },
+      {
+       "tag": "p",
+       "y": 3932,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 3980,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 4000,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 4020,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 136,
+       "text": "Matheapolis"
+      },
+      {
+       "y": 1755,
+       "text": "What we take up"
+      },
+      {
+       "y": 3127,
+       "text": "When we meet"
+      },
+      {
+       "y": 3263,
+       "text": "How it works"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 356,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 416,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 2509,
+       "href": "./chat#threads",
+       "internal": false
+      },
+      {
+       "y": 2578,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 3191,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 3191,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 3684,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 3684,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 3828,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 3828,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 3828,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 3828,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 3868,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 3868,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 3928,
+       "href": "./",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 93
+    }
+   ]
+  },
+  {
+   "route": "/404",
+   "widths": [
+    {
+     "done": true,
+     "errors": [],
+     "vw": 1240,
+     "vh": 900,
+     "fold": {
+      "vh": 900,
+      "wordsAbove": 82,
+      "wordsBelow": 0,
+      "runsAbove": 8,
+      "runsBelow": 0,
+      "headingsAbove": [
+       {
+        "y": 136,
+        "text": "We could not find that page"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 340,
+        "role": "primary",
+        "label": "Back to the home page"
+       },
+       {
+        "y": 340,
+        "role": "secondary",
+        "label": "Recent Discord summaries"
+       }
+      ],
+      "controlsBelow": 0,
+      "anchorsAbove": 15,
+      "anchorsBelow": 0,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 532,
+      "height": 280
+     },
+     "surfaces": [],
+     "controls": [
+      {
+       "y": 340,
+       "role": "primary",
+       "label": "Back to the home page"
+      },
+      {
+       "y": 340,
+       "role": "secondary",
+       "label": "Recent Discord summaries"
+      }
+     ],
+     "docHeight": 900,
+     "firstAction": {
+      "y": 340,
+      "role": "primary",
+      "label": "Back to the home page"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "./",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 136,
+       "words": 6,
+       "text": "We could not find that page"
+      },
+      {
+       "tag": "p",
+       "y": 184,
+       "words": 1,
+       "text": "404"
+      },
+      {
+       "tag": "p",
+       "y": 224,
+       "words": 21,
+       "text": "The link may be old, or the address may have a typo. Everything we have sits behind one of"
+      },
+      {
+       "tag": "p",
+       "y": 452,
+       "words": 26,
+       "text": "Looking for a specific meetup?Our schedule page lists every date on the club’s own calenda"
+      },
+      {
+       "tag": "p",
+       "y": 644,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 692,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 712,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 732,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 136,
+       "text": "We could not find that page"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 340,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 340,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 452,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 452,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 580,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 580,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 580,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 580,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 580,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 580,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 639,
+       "href": "./",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 19
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 768,
+     "vh": 1024,
+     "fold": {
+      "vh": 1024,
+      "wordsAbove": 82,
+      "wordsBelow": 0,
+      "runsAbove": 8,
+      "runsBelow": 0,
+      "headingsAbove": [
+       {
+        "y": 136,
+        "text": "We could not find that page"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 340,
+        "role": "primary",
+        "label": "Back to the home page"
+       },
+       {
+        "y": 340,
+        "role": "secondary",
+        "label": "Recent Discord summaries"
+       }
+      ],
+      "controlsBelow": 0,
+      "anchorsAbove": 15,
+      "anchorsBelow": 0,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 548,
+      "height": 280
+     },
+     "surfaces": [],
+     "controls": [
+      {
+       "y": 340,
+       "role": "primary",
+       "label": "Back to the home page"
+      },
+      {
+       "y": 340,
+       "role": "secondary",
+       "label": "Recent Discord summaries"
+      }
+     ],
+     "docHeight": 1024,
+     "firstAction": {
+      "y": 340,
+      "role": "primary",
+      "label": "Back to the home page"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "./",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 136,
+       "words": 6,
+       "text": "We could not find that page"
+      },
+      {
+       "tag": "p",
+       "y": 184,
+       "words": 1,
+       "text": "404"
+      },
+      {
+       "tag": "p",
+       "y": 224,
+       "words": 21,
+       "text": "The link may be old, or the address may have a typo. Everything we have sits behind one of"
+      },
+      {
+       "tag": "p",
+       "y": 452,
+       "words": 26,
+       "text": "Looking for a specific meetup?Our schedule page lists every date on the club’s own calenda"
+      },
+      {
+       "tag": "p",
+       "y": 660,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 708,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 728,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 748,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 136,
+       "text": "We could not find that page"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 340,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 340,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 452,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 452,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 596,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 596,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 596,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 596,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 596,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 596,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 655,
+       "href": "./",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 123
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 390,
+     "vh": 844,
+     "fold": {
+      "vh": 844,
+      "wordsAbove": 54,
+      "wordsBelow": 28,
+      "runsAbove": 4,
+      "runsBelow": 4,
+      "headingsAbove": [
+       {
+        "y": 136,
+        "text": "We could not find that page"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 413,
+        "role": "primary",
+        "label": "Back to the home page"
+       },
+       {
+        "y": 477,
+        "role": "secondary",
+        "label": "Recent Discord summaries"
+       }
+      ],
+      "controlsBelow": 0,
+      "anchorsAbove": 14,
+      "anchorsBelow": 1,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 701,
+      "height": 320
+     },
+     "surfaces": [],
+     "controls": [
+      {
+       "y": 413,
+       "role": "primary",
+       "label": "Back to the home page"
+      },
+      {
+       "y": 477,
+       "role": "secondary",
+       "label": "Recent Discord summaries"
+      }
+     ],
+     "docHeight": 1021,
+     "firstAction": {
+      "y": 413,
+      "role": "primary",
+      "label": "Back to the home page"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "./",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 136,
+       "words": 6,
+       "text": "We could not find that page"
+      },
+      {
+       "tag": "p",
+       "y": 224,
+       "words": 1,
+       "text": "404"
+      },
+      {
+       "tag": "p",
+       "y": 264,
+       "words": 21,
+       "text": "The link may be old, or the address may have a typo. Everything we have sits behind one of"
+      },
+      {
+       "tag": "p",
+       "y": 589,
+       "words": 26,
+       "text": "Looking for a specific meetup?Our schedule page lists every date on the club’s own calenda"
+      },
+      {
+       "tag": "p",
+       "y": 853,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 901,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 921,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 941,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 136,
+       "text": "We could not find that page"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 413,
+       "href": "./",
+       "internal": false
+      },
+      {
+       "y": 477,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 589,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 605,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 749,
+       "href": "./schedule",
+       "internal": false
+      },
+      {
+       "y": 749,
+       "href": "./chat",
+       "internal": false
+      },
+      {
+       "y": 749,
+       "href": "./join",
+       "internal": false
+      },
+      {
+       "y": 749,
+       "href": "./events.ics",
+       "internal": false
+      },
+      {
+       "y": 789,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 789,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 849,
+       "href": "./",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 62
+    }
+   ]
+  },
+  {
+   "route": "/chat",
+   "widths": [
+    {
+     "done": true,
+     "errors": [],
+     "vw": 1240,
+     "vh": 900,
+     "fold": {
+      "vh": 900,
+      "wordsAbove": 168,
+      "wordsBelow": 131,
+      "runsAbove": 12,
+      "runsBelow": 10,
+      "headingsAbove": [
+       {
+        "y": 104,
+        "text": "Summaries from the chat"
+       },
+       {
+        "y": 224,
+        "text": "The bot's reading of the channels"
+       },
+       {
+        "y": 352,
+        "text": "What the club is pulling on"
+       }
+      ],
+      "controlsAbove": [],
+      "controlsBelow": 1,
+      "anchorsAbove": 5,
+      "anchorsBelow": 8,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 1832,
+      "height": 280
+     },
+     "surfaces": [
+      {
+       "name": "undoable-steps",
+       "y": 1160,
+       "w": 512,
+       "h": 248,
+       "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no "
+      }
+     ],
+     "controls": [
+      {
+       "y": 1720,
+       "role": "primary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 2112,
+     "firstAction": {
+      "y": 1720,
+      "role": "primary",
+      "label": "Join the chat on Discord, opens in a new tab"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 104,
+       "words": 4,
+       "text": "Summaries from the chat"
+      },
+      {
+       "tag": "p",
+       "y": 160,
+       "words": 8,
+       "text": "Written by our bot, after the noise settles"
+      },
+      {
+       "tag": "h2",
+       "y": 224,
+       "words": 6,
+       "text": "The bot's reading of the channels"
+      },
+      {
+       "tag": "p",
+       "y": 256,
+       "words": 24,
+       "text": "They are written by our bot from recent channel activity. Read the same thing where it is "
+      },
+      {
+       "tag": "h2",
+       "y": 352,
+       "words": 6,
+       "text": "What the club is pulling on"
+      },
+      {
+       "tag": "p",
+       "y": 408,
+       "words": 24,
+       "text": "The threads the home page lists, in full. Any of them can be dropped mid-sentence, and non"
+      },
+      {
+       "tag": "li",
+       "y": 533,
+       "words": 18,
+       "text": "Arithmetic with the rules nudged — what breaks, and what gets interesting, if you change h"
+      },
+      {
+       "tag": "li",
+       "y": 533,
+       "words": 20,
+       "text": "Proofs a machine checks — Lean, and what it does to a proof when something verifies it lin"
+      },
+      {
+       "tag": "li",
+       "y": 662,
+       "words": 17,
+       "text": "The mathematics under a quantum computer — Qiskit, and the linear algebra those gates are "
+      },
+      {
+       "tag": "li",
+       "y": 662,
+       "words": 14,
+       "text": "Steps you can undo — algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+       "tag": "li",
+       "y": 791,
+       "words": 13,
+       "text": "What mathematics sits on — foundations, and why the question keeps coming back"
+      },
+      {
+       "tag": "li",
+       "y": 791,
+       "words": 14,
+       "text": "What a language model changes — about doing mathematics, and about who gets to"
+      },
+      {
+       "tag": "li",
+       "y": 919,
+       "words": 10,
+       "text": "Puzzles that need no background — and have strange answers"
+      },
+      {
+       "tag": "li",
+       "y": 919,
+       "words": 12,
+       "text": "Whatever the field is arguing about — read carefully, rather than retweeted"
+      },
+      {
+       "tag": "li",
+       "y": 1048,
+       "words": 13,
+       "text": "The mathematics videos we finish — and the ones we abandon, with reasons"
+      },
+      {
+       "tag": "figcaption",
+       "y": 1373,
+       "words": 23,
+       "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no "
+      },
+      {
+       "tag": "h2",
+       "y": 1505,
+       "words": 3,
+       "text": "The chat itself"
+      },
+      {
+       "tag": "p",
+       "y": 1561,
+       "words": 42,
+       "text": "The summaries above are the bot's reading of the channel. The channel itself is where the "
+      },
+      {
+       "tag": "p",
+       "y": 1944,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 1992,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 2012,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 2032,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 104,
+       "text": "Summaries from the chat"
+      },
+      {
+       "y": 224,
+       "text": "The bot's reading of the channels"
+      },
+      {
+       "y": 352,
+       "text": "What the club is pulling on"
+      },
+      {
+       "y": 1505,
+       "text": "The chat itself"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 256,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1720,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1939,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 98
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 768,
+     "vh": 1024,
+     "fold": {
+      "vh": 1024,
+      "wordsAbove": 190,
+      "wordsBelow": 109,
+      "runsAbove": 14,
+      "runsBelow": 8,
+      "headingsAbove": [
+       {
+        "y": 104,
+        "text": "Summaries from the chat"
+       },
+       {
+        "y": 224,
+        "text": "The bot's reading of the channels"
+       },
+       {
+        "y": 352,
+        "text": "What the club is pulling on"
+       }
+      ],
+      "controlsAbove": [],
+      "controlsBelow": 1,
+      "anchorsAbove": 5,
+      "anchorsBelow": 8,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 1832,
+      "height": 280
+     },
+     "surfaces": [
+      {
+       "name": "undoable-steps",
+       "y": 1160,
+       "w": 512,
+       "h": 248,
+       "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no "
+      }
+     ],
+     "controls": [
+      {
+       "y": 1720,
+       "role": "primary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 2112,
+     "firstAction": {
+      "y": 1720,
+      "role": "primary",
+      "label": "Join the chat on Discord, opens in a new tab"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 104,
+       "words": 4,
+       "text": "Summaries from the chat"
+      },
+      {
+       "tag": "p",
+       "y": 160,
+       "words": 8,
+       "text": "Written by our bot, after the noise settles"
+      },
+      {
+       "tag": "h2",
+       "y": 224,
+       "words": 6,
+       "text": "The bot's reading of the channels"
+      },
+      {
+       "tag": "p",
+       "y": 256,
+       "words": 24,
+       "text": "They are written by our bot from recent channel activity. Read the same thing where it is "
+      },
+      {
+       "tag": "h2",
+       "y": 352,
+       "words": 6,
+       "text": "What the club is pulling on"
+      },
+      {
+       "tag": "p",
+       "y": 408,
+       "words": 24,
+       "text": "The threads the home page lists, in full. Any of them can be dropped mid-sentence, and non"
+      },
+      {
+       "tag": "li",
+       "y": 533,
+       "words": 18,
+       "text": "Arithmetic with the rules nudged — what breaks, and what gets interesting, if you change h"
+      },
+      {
+       "tag": "li",
+       "y": 533,
+       "words": 20,
+       "text": "Proofs a machine checks — Lean, and what it does to a proof when something verifies it lin"
+      },
+      {
+       "tag": "li",
+       "y": 662,
+       "words": 17,
+       "text": "The mathematics under a quantum computer — Qiskit, and the linear algebra those gates are "
+      },
+      {
+       "tag": "li",
+       "y": 662,
+       "words": 14,
+       "text": "Steps you can undo — algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+       "tag": "li",
+       "y": 791,
+       "words": 13,
+       "text": "What mathematics sits on — foundations, and why the question keeps coming back"
+      },
+      {
+       "tag": "li",
+       "y": 791,
+       "words": 14,
+       "text": "What a language model changes — about doing mathematics, and about who gets to"
+      },
+      {
+       "tag": "li",
+       "y": 919,
+       "words": 10,
+       "text": "Puzzles that need no background — and have strange answers"
+      },
+      {
+       "tag": "li",
+       "y": 919,
+       "words": 12,
+       "text": "Whatever the field is arguing about — read carefully, rather than retweeted"
+      },
+      {
+       "tag": "li",
+       "y": 1048,
+       "words": 13,
+       "text": "The mathematics videos we finish — and the ones we abandon, with reasons"
+      },
+      {
+       "tag": "figcaption",
+       "y": 1373,
+       "words": 23,
+       "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no "
+      },
+      {
+       "tag": "h2",
+       "y": 1505,
+       "words": 3,
+       "text": "The chat itself"
+      },
+      {
+       "tag": "p",
+       "y": 1561,
+       "words": 42,
+       "text": "The summaries above are the bot's reading of the channel. The channel itself is where the "
+      },
+      {
+       "tag": "p",
+       "y": 1944,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 1992,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 2012,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 2032,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 104,
+       "text": "Summaries from the chat"
+      },
+      {
+       "y": 224,
+       "text": "The bot's reading of the channels"
+      },
+      {
+       "y": 352,
+       "text": "What the club is pulling on"
+      },
+      {
+       "y": 1505,
+       "text": "The chat itself"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 256,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1720,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 1880,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1939,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 95
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 390,
+     "vh": 844,
+     "fold": {
+      "vh": 844,
+      "wordsAbove": 110,
+      "wordsBelow": 189,
+      "runsAbove": 8,
+      "runsBelow": 14,
+      "headingsAbove": [
+       {
+        "y": 104,
+        "text": "Summaries from the chat"
+       },
+       {
+        "y": 260,
+        "text": "The bot's reading of the channels"
+       },
+       {
+        "y": 444,
+        "text": "What the club is pulling on"
+       }
+      ],
+      "controlsAbove": [],
+      "controlsBelow": 1,
+      "anchorsAbove": 5,
+      "anchorsBelow": 8,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 2187,
+      "height": 320
+     },
+     "surfaces": [
+      {
+       "name": "undoable-steps",
+       "y": 1447,
+       "w": 346,
+       "h": 182,
+       "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no "
+      }
+     ],
+     "controls": [
+      {
+       "y": 2075,
+       "role": "primary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 2507,
+     "firstAction": {
+      "y": 2075,
+      "role": "primary",
+      "label": "Join the chat on Discord, opens in a new tab"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 104,
+       "words": 4,
+       "text": "Summaries from the chat"
+      },
+      {
+       "tag": "p",
+       "y": 200,
+       "words": 8,
+       "text": "Written by our bot, after the noise settles"
+      },
+      {
+       "tag": "h2",
+       "y": 260,
+       "words": 6,
+       "text": "The bot's reading of the channels"
+      },
+      {
+       "tag": "p",
+       "y": 320,
+       "words": 24,
+       "text": "They are written by our bot from recent channel activity. Read the same thing where it is "
+      },
+      {
+       "tag": "h2",
+       "y": 444,
+       "words": 6,
+       "text": "What the club is pulling on"
+      },
+      {
+       "tag": "p",
+       "y": 540,
+       "words": 24,
+       "text": "The threads the home page lists, in full. Any of them can be dropped mid-sentence, and non"
+      },
+      {
+       "tag": "li",
+       "y": 699,
+       "words": 18,
+       "text": "Arithmetic with the rules nudged — what breaks, and what gets interesting, if you change h"
+      },
+      {
+       "tag": "li",
+       "y": 800,
+       "words": 20,
+       "text": "Proofs a machine checks — Lean, and what it does to a proof when something verifies it lin"
+      },
+      {
+       "tag": "li",
+       "y": 900,
+       "words": 17,
+       "text": "The mathematics under a quantum computer — Qiskit, and the linear algebra those gates are "
+      },
+      {
+       "tag": "li",
+       "y": 1001,
+       "words": 14,
+       "text": "Steps you can undo — algorithms that lose nothing, drawn as wires and boxes"
+      },
+      {
+       "tag": "li",
+       "y": 1073,
+       "words": 13,
+       "text": "What mathematics sits on — foundations, and why the question keeps coming back"
+      },
+      {
+       "tag": "li",
+       "y": 1145,
+       "words": 14,
+       "text": "What a language model changes — about doing mathematics, and about who gets to"
+      },
+      {
+       "tag": "li",
+       "y": 1218,
+       "words": 10,
+       "text": "Puzzles that need no background — and have strange answers"
+      },
+      {
+       "tag": "li",
+       "y": 1290,
+       "words": 12,
+       "text": "Whatever the field is arguing about — read carefully, rather than retweeted"
+      },
+      {
+       "tag": "li",
+       "y": 1362,
+       "words": 13,
+       "text": "The mathematics videos we finish — and the ones we abandon, with reasons"
+      },
+      {
+       "tag": "figcaption",
+       "y": 1593,
+       "words": 23,
+       "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no "
+      },
+      {
+       "tag": "h2",
+       "y": 1725,
+       "words": 3,
+       "text": "The chat itself"
+      },
+      {
+       "tag": "p",
+       "y": 1781,
+       "words": 42,
+       "text": "The summaries above are the bot's reading of the channel. The channel itself is where the "
+      },
+      {
+       "tag": "p",
+       "y": 2339,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 2387,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 2407,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 2427,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 104,
+       "text": "Summaries from the chat"
+      },
+      {
+       "y": 260,
+       "text": "The bot's reading of the channels"
+      },
+      {
+       "y": 444,
+       "text": "What the club is pulling on"
+      },
+      {
+       "y": 1725,
+       "text": "The chat itself"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 352,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2075,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2235,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 2235,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 2235,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 2235,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 2275,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2275,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2334,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 124
+    }
+   ]
+  },
+  {
+   "route": "/join",
+   "widths": [
+    {
+     "done": true,
+     "errors": [],
+     "vw": 1240,
+     "vh": 900,
+     "fold": {
+      "vh": 900,
+      "wordsAbove": 117,
+      "wordsBelow": 168,
+      "runsAbove": 9,
+      "runsBelow": 13,
+      "headingsAbove": [
+       {
+        "y": 104,
+        "text": "Ways in"
+       },
+       {
+        "y": 309,
+        "text": "Follow the club"
+       },
+       {
+        "y": 642,
+        "text": "Come to a meeting"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 409,
+        "role": "primary",
+        "label": "Join the Meetup group, opens in a new tab"
+       },
+       {
+        "y": 510,
+        "role": "secondary",
+        "label": "Join the Facebook group, opens in a new tab"
+       },
+       {
+        "y": 742,
+        "role": "secondary",
+        "label": "See the dates"
+       }
+      ],
+      "controlsBelow": 1,
+      "anchorsAbove": 7,
+      "anchorsBelow": 10,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 1644,
+      "height": 280
+     },
+     "surfaces": [],
+     "controls": [
+      {
+       "y": 409,
+       "role": "primary",
+       "label": "Join the Meetup group, opens in a new tab"
+      },
+      {
+       "y": 510,
+       "role": "secondary",
+       "label": "Join the Facebook group, opens in a new tab"
+      },
+      {
+       "y": 742,
+       "role": "secondary",
+       "label": "See the dates"
+      },
+      {
+       "y": 1002,
+       "role": "secondary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 1924,
+     "firstAction": {
+      "y": 409,
+      "role": "primary",
+      "label": "Join the Meetup group, opens in a new tab"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 104,
+       "words": 2,
+       "text": "Ways in"
+      },
+      {
+       "tag": "p",
+       "y": 160,
+       "words": 30,
+       "text": "Each way in is a different kind of thing, and you only need one to start: somewhere to fol"
+      },
+      {
+       "tag": "h2",
+       "y": 309,
+       "words": 3,
+       "text": "Follow the club"
+      },
+      {
+       "tag": "p",
+       "y": 357,
+       "words": 12,
+       "text": "A feed you already read, where the club can put a date."
+      },
+      {
+       "tag": "li",
+       "y": 409,
+       "words": 18,
+       "text": "Join the Meetup group, opens in a new tabThe club's member list, and where a date gets ann"
+      },
+      {
+       "tag": "li",
+       "y": 510,
+       "words": 14,
+       "text": "Join the Facebook group, opens in a new tabThe club's own public Facebook group."
+      },
+      {
+       "tag": "h2",
+       "y": 642,
+       "words": 4,
+       "text": "Come to a meeting"
+      },
+      {
+       "tag": "p",
+       "y": 690,
+       "words": 11,
+       "text": "Pick a date that works and sign up for that one."
+      },
+      {
+       "tag": "li",
+       "y": 742,
+       "words": 23,
+       "text": "See the datesThe schedule lists each date and whatever the club has posted for it: a Meetu"
+      },
+      {
+       "tag": "h2",
+       "y": 902,
+       "words": 4,
+       "text": "Talk with us now"
+      },
+      {
+       "tag": "p",
+       "y": 950,
+       "words": 6,
+       "text": "The people, on an ordinary day."
+      },
+      {
+       "tag": "li",
+       "y": 1002,
+       "words": 15,
+       "text": "Join the chat on Discord, opens in a new tabThe conversation that runs between meetings."
+      },
+      {
+       "tag": "h2",
+       "y": 1135,
+       "words": 3,
+       "text": "What we do"
+      },
+      {
+       "tag": "p",
+       "y": 1183,
+       "words": 42,
+       "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prep"
+      },
+      {
+       "tag": "p",
+       "y": 1307,
+       "words": 6,
+       "text": "The next ones are on theschedule."
+      },
+      {
+       "tag": "h2",
+       "y": 1383,
+       "words": 3,
+       "text": "Your first one"
+      },
+      {
+       "tag": "p",
+       "y": 1431,
+       "words": 44,
+       "text": "Nothing to prepare and nothing to read first. Bring a question; you don't need a field. Co"
+      },
+      {
+       "tag": "p",
+       "y": 1556,
+       "words": 17,
+       "text": "Want to ask something before you turn up? Somebody from the club readsthe messages we post"
+      },
+      {
+       "tag": "p",
+       "y": 1756,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 1804,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 1824,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 1844,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 104,
+       "text": "Ways in"
+      },
+      {
+       "y": 309,
+       "text": "Follow the club"
+      },
+      {
+       "y": 642,
+       "text": "Come to a meeting"
+      },
+      {
+       "y": 902,
+       "text": "Talk with us now"
+      },
+      {
+       "y": 1135,
+       "text": "What we do"
+      },
+      {
+       "y": 1383,
+       "text": "Your first one"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 409,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 510,
+       "href": "https://www.facebook.com/groups/matheapolis",
+       "internal": false
+      },
+      {
+       "y": 742,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1002,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1309,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1586,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1752,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 97
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 768,
+     "vh": 1024,
+     "fold": {
+      "vh": 1024,
+      "wordsAbove": 142,
+      "wordsBelow": 143,
+      "runsAbove": 12,
+      "runsBelow": 10,
+      "headingsAbove": [
+       {
+        "y": 104,
+        "text": "Ways in"
+       },
+       {
+        "y": 309,
+        "text": "Follow the club"
+       },
+       {
+        "y": 642,
+        "text": "Come to a meeting"
+       },
+       {
+        "y": 902,
+        "text": "Talk with us now"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 409,
+        "role": "primary",
+        "label": "Join the Meetup group, opens in a new tab"
+       },
+       {
+        "y": 510,
+        "role": "secondary",
+        "label": "Join the Facebook group, opens in a new tab"
+       },
+       {
+        "y": 742,
+        "role": "secondary",
+        "label": "See the dates"
+       },
+       {
+        "y": 1002,
+        "role": "secondary",
+        "label": "Join the chat on Discord, opens in a new tab"
+       }
+      ],
+      "controlsBelow": 0,
+      "anchorsAbove": 8,
+      "anchorsBelow": 9,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 1644,
+      "height": 280
+     },
+     "surfaces": [],
+     "controls": [
+      {
+       "y": 409,
+       "role": "primary",
+       "label": "Join the Meetup group, opens in a new tab"
+      },
+      {
+       "y": 510,
+       "role": "secondary",
+       "label": "Join the Facebook group, opens in a new tab"
+      },
+      {
+       "y": 742,
+       "role": "secondary",
+       "label": "See the dates"
+      },
+      {
+       "y": 1002,
+       "role": "secondary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 1924,
+     "firstAction": {
+      "y": 409,
+      "role": "primary",
+      "label": "Join the Meetup group, opens in a new tab"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 104,
+       "words": 2,
+       "text": "Ways in"
+      },
+      {
+       "tag": "p",
+       "y": 160,
+       "words": 30,
+       "text": "Each way in is a different kind of thing, and you only need one to start: somewhere to fol"
+      },
+      {
+       "tag": "h2",
+       "y": 309,
+       "words": 3,
+       "text": "Follow the club"
+      },
+      {
+       "tag": "p",
+       "y": 357,
+       "words": 12,
+       "text": "A feed you already read, where the club can put a date."
+      },
+      {
+       "tag": "li",
+       "y": 409,
+       "words": 18,
+       "text": "Join the Meetup group, opens in a new tabThe club's member list, and where a date gets ann"
+      },
+      {
+       "tag": "li",
+       "y": 510,
+       "words": 14,
+       "text": "Join the Facebook group, opens in a new tabThe club's own public Facebook group."
+      },
+      {
+       "tag": "h2",
+       "y": 642,
+       "words": 4,
+       "text": "Come to a meeting"
+      },
+      {
+       "tag": "p",
+       "y": 690,
+       "words": 11,
+       "text": "Pick a date that works and sign up for that one."
+      },
+      {
+       "tag": "li",
+       "y": 742,
+       "words": 23,
+       "text": "See the datesThe schedule lists each date and whatever the club has posted for it: a Meetu"
+      },
+      {
+       "tag": "h2",
+       "y": 902,
+       "words": 4,
+       "text": "Talk with us now"
+      },
+      {
+       "tag": "p",
+       "y": 950,
+       "words": 6,
+       "text": "The people, on an ordinary day."
+      },
+      {
+       "tag": "li",
+       "y": 1002,
+       "words": 15,
+       "text": "Join the chat on Discord, opens in a new tabThe conversation that runs between meetings."
+      },
+      {
+       "tag": "h2",
+       "y": 1135,
+       "words": 3,
+       "text": "What we do"
+      },
+      {
+       "tag": "p",
+       "y": 1183,
+       "words": 42,
+       "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prep"
+      },
+      {
+       "tag": "p",
+       "y": 1307,
+       "words": 6,
+       "text": "The next ones are on theschedule."
+      },
+      {
+       "tag": "h2",
+       "y": 1383,
+       "words": 3,
+       "text": "Your first one"
+      },
+      {
+       "tag": "p",
+       "y": 1431,
+       "words": 44,
+       "text": "Nothing to prepare and nothing to read first. Bring a question; you don't need a field. Co"
+      },
+      {
+       "tag": "p",
+       "y": 1556,
+       "words": 17,
+       "text": "Want to ask something before you turn up? Somebody from the club readsthe messages we post"
+      },
+      {
+       "tag": "p",
+       "y": 1756,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 1804,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 1824,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 1844,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 104,
+       "text": "Ways in"
+      },
+      {
+       "y": 309,
+       "text": "Follow the club"
+      },
+      {
+       "y": 642,
+       "text": "Come to a meeting"
+      },
+      {
+       "y": 902,
+       "text": "Talk with us now"
+      },
+      {
+       "y": 1135,
+       "text": "What we do"
+      },
+      {
+       "y": 1383,
+       "text": "Your first one"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 409,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 510,
+       "href": "https://www.facebook.com/groups/matheapolis",
+       "internal": false
+      },
+      {
+       "y": 742,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1002,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1309,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1586,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 1692,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1752,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 27
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 390,
+     "vh": 844,
+     "fold": {
+      "vh": 844,
+      "wordsAbove": 94,
+      "wordsBelow": 191,
+      "runsAbove": 8,
+      "runsBelow": 14,
+      "headingsAbove": [
+       {
+        "y": 104,
+        "text": "Ways in"
+       },
+       {
+        "y": 377,
+        "text": "Follow the club"
+       },
+       {
+        "y": 766,
+        "text": "Come to a meeting"
+       }
+      ],
+      "controlsAbove": [
+       {
+        "y": 505,
+        "role": "primary",
+        "label": "Join the Meetup group, opens in a new tab"
+       },
+       {
+        "y": 634,
+        "role": "secondary",
+        "label": "Join the Facebook group, opens in a new tab"
+       }
+      ],
+      "controlsBelow": 2,
+      "anchorsAbove": 6,
+      "anchorsBelow": 11,
+      "surfacesAbove": []
+     },
+     "band": {
+      "y": 1994,
+      "height": 320
+     },
+     "surfaces": [],
+     "controls": [
+      {
+       "y": 505,
+       "role": "primary",
+       "label": "Join the Meetup group, opens in a new tab"
+      },
+      {
+       "y": 634,
+       "role": "secondary",
+       "label": "Join the Facebook group, opens in a new tab"
+      },
+      {
+       "y": 894,
+       "role": "secondary",
+       "label": "See the dates"
+      },
+      {
+       "y": 1183,
+       "role": "secondary",
+       "label": "Join the chat on Discord, opens in a new tab"
+      }
+     ],
+     "docHeight": 2314,
+     "firstAction": {
+      "y": 505,
+      "role": "primary",
+      "label": "Join the Meetup group, opens in a new tab"
+     },
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 104,
+       "words": 2,
+       "text": "Ways in"
+      },
+      {
+       "tag": "p",
+       "y": 160,
+       "words": 30,
+       "text": "Each way in is a different kind of thing, and you only need one to start: somewhere to fol"
+      },
+      {
+       "tag": "h2",
+       "y": 377,
+       "words": 3,
+       "text": "Follow the club"
+      },
+      {
+       "tag": "p",
+       "y": 425,
+       "words": 12,
+       "text": "A feed you already read, where the club can put a date."
+      },
+      {
+       "tag": "li",
+       "y": 505,
+       "words": 18,
+       "text": "Join the Meetup group, opens in a new tabThe club's member list, and where a date gets ann"
+      },
+      {
+       "tag": "li",
+       "y": 634,
+       "words": 14,
+       "text": "Join the Facebook group, opens in a new tabThe club's own public Facebook group."
+      },
+      {
+       "tag": "h2",
+       "y": 766,
+       "words": 4,
+       "text": "Come to a meeting"
+      },
+      {
+       "tag": "p",
+       "y": 814,
+       "words": 11,
+       "text": "Pick a date that works and sign up for that one."
+      },
+      {
+       "tag": "li",
+       "y": 894,
+       "words": 23,
+       "text": "See the datesThe schedule lists each date and whatever the club has posted for it: a Meetu"
+      },
+      {
+       "tag": "h2",
+       "y": 1083,
+       "words": 4,
+       "text": "Talk with us now"
+      },
+      {
+       "tag": "p",
+       "y": 1131,
+       "words": 6,
+       "text": "The people, on an ordinary day."
+      },
+      {
+       "tag": "li",
+       "y": 1183,
+       "words": 15,
+       "text": "Join the chat on Discord, opens in a new tabThe conversation that runs between meetings."
+      },
+      {
+       "tag": "h2",
+       "y": 1343,
+       "words": 3,
+       "text": "What we do"
+      },
+      {
+       "tag": "p",
+       "y": 1391,
+       "words": 42,
+       "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prep"
+      },
+      {
+       "tag": "p",
+       "y": 1572,
+       "words": 6,
+       "text": "The next ones are on theschedule."
+      },
+      {
+       "tag": "h2",
+       "y": 1648,
+       "words": 3,
+       "text": "Your first one"
+      },
+      {
+       "tag": "p",
+       "y": 1696,
+       "words": 44,
+       "text": "Nothing to prepare and nothing to read first. Bring a question; you don't need a field. Co"
+      },
+      {
+       "tag": "p",
+       "y": 1877,
+       "words": 17,
+       "text": "Want to ask something before you turn up? Somebody from the club readsthe messages we post"
+      },
+      {
+       "tag": "p",
+       "y": 2146,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 2194,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 2214,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 2234,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 104,
+       "text": "Ways in"
+      },
+      {
+       "y": 377,
+       "text": "Follow the club"
+      },
+      {
+       "y": 766,
+       "text": "Come to a meeting"
+      },
+      {
+       "y": 1083,
+       "text": "Talk with us now"
+      },
+      {
+       "y": 1343,
+       "text": "What we do"
+      },
+      {
+       "y": 1648,
+       "text": "Your first one"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 505,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 634,
+       "href": "https://www.facebook.com/groups/matheapolis",
+       "internal": false
+      },
+      {
+       "y": 894,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1183,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1574,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1907,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 2042,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 2042,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 2042,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 2042,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 2082,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2082,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2141,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 81
+    }
+   ]
+  },
+  {
+   "route": "/schedule",
+   "widths": [
+    {
+     "done": true,
+     "errors": [],
+     "vw": 1240,
+     "vh": 900,
+     "fold": {
+      "vh": 900,
+      "wordsAbove": 202,
+      "wordsBelow": 118,
+      "runsAbove": 24,
+      "runsBelow": 18,
+      "headingsAbove": [
+       {
+        "y": 120,
+        "text": "Dates"
+       },
+       {
+        "y": 300,
+        "text": "Social"
+       },
+       {
+        "y": 501,
+        "text": "Study session"
+       },
+       {
+        "y": 701,
+        "text": "Social"
+       }
+      ],
+      "controlsAbove": [],
+      "controlsBelow": 0,
+      "anchorsAbove": 7,
+      "anchorsBelow": 11,
+      "surfacesAbove": [
+       {
+        "name": "row",
+        "y": 256,
+        "w": 1164,
+        "h": 184,
+        "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+       },
+       {
+        "name": "row",
+        "y": 457,
+        "w": 1164,
+        "h": 184,
+        "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+       },
+       {
+        "name": "row",
+        "y": 657,
+        "w": 1164,
+        "h": 184,
+        "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+       },
+       {
+        "name": "row",
+        "y": 857,
+        "w": 1164,
+        "h": 184,
+        "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+       }
+      ]
+     },
+     "band": {
+      "y": 1458,
+      "height": 280
+     },
+     "surfaces": [
+      {
+       "name": "row",
+       "y": 256,
+       "w": 1164,
+       "h": 184,
+       "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "name": "row",
+       "y": 457,
+       "w": 1164,
+       "h": 184,
+       "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+      },
+      {
+       "name": "row",
+       "y": 657,
+       "w": 1164,
+       "h": 184,
+       "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+      },
+      {
+       "name": "row",
+       "y": 857,
+       "w": 1164,
+       "h": 184,
+       "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+      },
+      {
+       "name": "row",
+       "y": 1058,
+       "w": 1164,
+       "h": 184,
+       "text": "Dec19SatSaturday, Dec 19 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boul"
+      },
+      {
+       "name": "div",
+       "y": 1314,
+       "w": 171,
+       "h": 32,
+       "text": "Join the Facebook group, opens in a new tab"
+      }
+     ],
+     "controls": [],
+     "docHeight": 1738,
+     "firstAction": null,
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 120,
+       "words": 1,
+       "text": "Dates"
+      },
+      {
+       "tag": "p",
+       "y": 176,
+       "words": 21,
+       "text": "These dates are copied from the club’s own calendar. Each one links to the page the club p"
+      },
+      {
+       "tag": "li",
+       "y": 256,
+       "words": 27,
+       "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "tag": "p",
+       "y": 313,
+       "words": 1,
+       "text": "Nov"
+      },
+      {
+       "tag": "p",
+       "y": 329,
+       "words": 1,
+       "text": "21"
+      },
+      {
+       "tag": "p",
+       "y": 369,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 272,
+       "words": 10,
+       "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      },
+      {
+       "tag": "h2",
+       "y": 300,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 336,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 457,
+       "words": 25,
+       "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+      },
+      {
+       "tag": "p",
+       "y": 513,
+       "words": 1,
+       "text": "Nov"
+      },
+      {
+       "tag": "p",
+       "y": 529,
+       "words": 1,
+       "text": "25"
+      },
+      {
+       "tag": "p",
+       "y": 569,
+       "words": 1,
+       "text": "Wed"
+      },
+      {
+       "tag": "p",
+       "y": 473,
+       "words": 9,
+       "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 501,
+       "words": 2,
+       "text": "Study session"
+      },
+      {
+       "tag": "p",
+       "y": 537,
+       "words": 8,
+       "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 657,
+       "words": 26,
+       "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+      },
+      {
+       "tag": "p",
+       "y": 713,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 769,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 673,
+       "words": 9,
+       "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 701,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 737,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 857,
+       "words": 25,
+       "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+      },
+      {
+       "tag": "p",
+       "y": 914,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 970,
+       "words": 1,
+       "text": "Wed"
+      },
+      {
+       "tag": "p",
+       "y": 873,
+       "words": 9,
+       "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 901,
+       "words": 2,
+       "text": "Study session"
+      },
+      {
+       "tag": "p",
+       "y": 937,
+       "words": 8,
+       "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 1058,
+       "words": 26,
+       "text": "Dec19SatSaturday, Dec 19 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boul"
+      },
+      {
+       "tag": "p",
+       "y": 1114,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 1130,
+       "words": 1,
+       "text": "19"
+      },
+      {
+       "tag": "p",
+       "y": 1170,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 1074,
+       "words": 9,
+       "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1102,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 1138,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 1254,
+       "words": 9,
+       "text": "Copied from the club’s own calendar 3 days ago"
+      },
+      {
+       "tag": "p",
+       "y": 1325,
+       "words": 2,
+       "text": "Between meetings:"
+      },
+      {
+       "tag": "p",
+       "y": 1354,
+       "words": 18,
+       "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a"
+      },
+      {
+       "tag": "p",
+       "y": 1570,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 1618,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 1638,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 1658,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 120,
+       "text": "Dates"
+      },
+      {
+       "y": 300,
+       "text": "Social"
+      },
+      {
+       "y": 501,
+       "text": "Study session"
+      },
+      {
+       "y": 701,
+       "text": "Social"
+      },
+      {
+       "y": 901,
+       "text": "Study session"
+      },
+      {
+       "y": 1102,
+       "text": "Social"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 393,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+       "internal": false
+      },
+      {
+       "y": 593,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+       "internal": false
+      },
+      {
+       "y": 793,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+       "internal": false
+      },
+      {
+       "y": 994,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+       "internal": false
+      },
+      {
+       "y": 1194,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+       "internal": false
+      },
+      {
+       "y": 1314,
+       "href": "https://www.facebook.com/groups/matheapolis",
+       "internal": false
+      },
+      {
+       "y": 1325,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 1506,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 1506,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 1506,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 1506,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 1506,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 1506,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 1566,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 96
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 768,
+     "vh": 1024,
+     "fold": {
+      "vh": 1024,
+      "wordsAbove": 157,
+      "wordsBelow": 163,
+      "runsAbove": 20,
+      "runsBelow": 22,
+      "headingsAbove": [
+       {
+        "y": 120,
+        "text": "Dates"
+       },
+       {
+        "y": 412,
+        "text": "Social"
+       },
+       {
+        "y": 725,
+        "text": "Study session"
+       }
+      ],
+      "controlsAbove": [],
+      "controlsBelow": 0,
+      "anchorsAbove": 6,
+      "anchorsBelow": 12,
+      "surfacesAbove": [
+       {
+        "name": "row",
+        "y": 256,
+        "w": 708,
+        "h": 296,
+        "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+       },
+       {
+        "name": "row",
+        "y": 569,
+        "w": 708,
+        "h": 296,
+        "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+       },
+       {
+        "name": "row",
+        "y": 881,
+        "w": 708,
+        "h": 296,
+        "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+       }
+      ]
+     },
+     "band": {
+      "y": 2018,
+      "height": 280
+     },
+     "surfaces": [
+      {
+       "name": "row",
+       "y": 256,
+       "w": 708,
+       "h": 296,
+       "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "name": "row",
+       "y": 569,
+       "w": 708,
+       "h": 296,
+       "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+      },
+      {
+       "name": "row",
+       "y": 881,
+       "w": 708,
+       "h": 296,
+       "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+      },
+      {
+       "name": "row",
+       "y": 1193,
+       "w": 708,
+       "h": 296,
+       "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+      },
+      {
+       "name": "row",
+       "y": 1506,
+       "w": 708,
+       "h": 296,
+       "text": "Dec19SatSaturday, Dec 19 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boul"
+      },
+      {
+       "name": "div",
+       "y": 1874,
+       "w": 171,
+       "h": 32,
+       "text": "Join the Facebook group, opens in a new tab"
+      }
+     ],
+     "controls": [],
+     "docHeight": 2298,
+     "firstAction": null,
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 120,
+       "words": 1,
+       "text": "Dates"
+      },
+      {
+       "tag": "p",
+       "y": 176,
+       "words": 21,
+       "text": "These dates are copied from the club’s own calendar. Each one links to the page the club p"
+      },
+      {
+       "tag": "li",
+       "y": 256,
+       "words": 27,
+       "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "tag": "p",
+       "y": 284,
+       "words": 1,
+       "text": "Nov"
+      },
+      {
+       "tag": "p",
+       "y": 300,
+       "words": 1,
+       "text": "21"
+      },
+      {
+       "tag": "p",
+       "y": 340,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 384,
+       "words": 10,
+       "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      },
+      {
+       "tag": "h2",
+       "y": 412,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 448,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 569,
+       "words": 25,
+       "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+      },
+      {
+       "tag": "p",
+       "y": 597,
+       "words": 1,
+       "text": "Nov"
+      },
+      {
+       "tag": "p",
+       "y": 613,
+       "words": 1,
+       "text": "25"
+      },
+      {
+       "tag": "p",
+       "y": 653,
+       "words": 1,
+       "text": "Wed"
+      },
+      {
+       "tag": "p",
+       "y": 697,
+       "words": 9,
+       "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 725,
+       "words": 2,
+       "text": "Study session"
+      },
+      {
+       "tag": "p",
+       "y": 761,
+       "words": 8,
+       "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 881,
+       "words": 26,
+       "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+      },
+      {
+       "tag": "p",
+       "y": 909,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 965,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 1009,
+       "words": 9,
+       "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1037,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 1073,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 1193,
+       "words": 25,
+       "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+      },
+      {
+       "tag": "p",
+       "y": 1221,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 1277,
+       "words": 1,
+       "text": "Wed"
+      },
+      {
+       "tag": "p",
+       "y": 1321,
+       "words": 9,
+       "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1349,
+       "words": 2,
+       "text": "Study session"
+      },
+      {
+       "tag": "p",
+       "y": 1385,
+       "words": 8,
+       "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 1506,
+       "words": 26,
+       "text": "Dec19SatSaturday, Dec 19 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boul"
+      },
+      {
+       "tag": "p",
+       "y": 1534,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 1550,
+       "words": 1,
+       "text": "19"
+      },
+      {
+       "tag": "p",
+       "y": 1590,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 1634,
+       "words": 9,
+       "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1662,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 1698,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 1814,
+       "words": 9,
+       "text": "Copied from the club’s own calendar 3 days ago"
+      },
+      {
+       "tag": "p",
+       "y": 1885,
+       "words": 2,
+       "text": "Between meetings:"
+      },
+      {
+       "tag": "p",
+       "y": 1914,
+       "words": 18,
+       "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a"
+      },
+      {
+       "tag": "p",
+       "y": 2130,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 2178,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 2198,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 2218,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 120,
+       "text": "Dates"
+      },
+      {
+       "y": 412,
+       "text": "Social"
+      },
+      {
+       "y": 725,
+       "text": "Study session"
+      },
+      {
+       "y": 1037,
+       "text": "Social"
+      },
+      {
+       "y": 1349,
+       "text": "Study session"
+      },
+      {
+       "y": 1662,
+       "text": "Social"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 505,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+       "internal": false
+      },
+      {
+       "y": 817,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+       "internal": false
+      },
+      {
+       "y": 1129,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+       "internal": false
+      },
+      {
+       "y": 1442,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+       "internal": false
+      },
+      {
+       "y": 1754,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+       "internal": false
+      },
+      {
+       "y": 1874,
+       "href": "https://www.facebook.com/groups/matheapolis",
+       "internal": false
+      },
+      {
+       "y": 1885,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 2066,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 2066,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 2066,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 2066,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 2066,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2066,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2126,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 95
+    },
+    {
+     "done": true,
+     "errors": [],
+     "vw": 390,
+     "vh": 844,
+     "fold": {
+      "vh": 844,
+      "wordsAbove": 120,
+      "wordsBelow": 200,
+      "runsAbove": 16,
+      "runsBelow": 26,
+      "headingsAbove": [
+       {
+        "y": 120,
+        "text": "Dates"
+       },
+       {
+        "y": 441,
+        "text": "Social"
+       },
+       {
+        "y": 753,
+        "text": "Study session"
+       }
+      ],
+      "controlsAbove": [],
+      "controlsBelow": 0,
+      "anchorsAbove": 5,
+      "anchorsBelow": 13,
+      "surfacesAbove": [
+       {
+        "name": "row",
+        "y": 285,
+        "w": 346,
+        "h": 296,
+        "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+       },
+       {
+        "name": "row",
+        "y": 597,
+        "w": 346,
+        "h": 296,
+        "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+       }
+      ]
+     },
+     "band": {
+      "y": 2099,
+      "height": 320
+     },
+     "surfaces": [
+      {
+       "name": "row",
+       "y": 285,
+       "w": 346,
+       "h": 296,
+       "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "name": "row",
+       "y": 597,
+       "w": 346,
+       "h": 296,
+       "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+      },
+      {
+       "name": "row",
+       "y": 909,
+       "w": 346,
+       "h": 296,
+       "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+      },
+      {
+       "name": "row",
+       "y": 1222,
+       "w": 346,
+       "h": 296,
+       "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+      },
+      {
+       "name": "row",
+       "y": 1534,
+       "w": 346,
+       "h": 296,
+       "text": "Dec19SatSaturday, Dec 19 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boul"
+      },
+      {
+       "name": "div",
+       "y": 1902,
+       "w": 171,
+       "h": 32,
+       "text": "Join the Facebook group, opens in a new tab"
+      }
+     ],
+     "controls": [],
+     "docHeight": 2419,
+     "firstAction": null,
+     "firstAnchor": {
+      "y": 16,
+      "href": "../",
+      "internal": false
+     },
+     "runs": [
+      {
+       "tag": "h1",
+       "y": 120,
+       "words": 1,
+       "text": "Dates"
+      },
+      {
+       "tag": "p",
+       "y": 176,
+       "words": 21,
+       "text": "These dates are copied from the club’s own calendar. Each one links to the page the club p"
+      },
+      {
+       "tag": "li",
+       "y": 285,
+       "words": 27,
+       "text": "Nov21SatSaturday, Nov 21 · 12:00 pm – 1:00 pm CentralSocialAngel Food Bakery, 8100 Minneto"
+      },
+      {
+       "tag": "p",
+       "y": 313,
+       "words": 1,
+       "text": "Nov"
+      },
+      {
+       "tag": "p",
+       "y": 329,
+       "words": 1,
+       "text": "21"
+      },
+      {
+       "tag": "p",
+       "y": 369,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 413,
+       "words": 10,
+       "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      },
+      {
+       "tag": "h2",
+       "y": 441,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 477,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 597,
+       "words": 25,
+       "text": "Nov25WedWednesday, Nov 25 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale "
+      },
+      {
+       "tag": "p",
+       "y": 625,
+       "words": 1,
+       "text": "Nov"
+      },
+      {
+       "tag": "p",
+       "y": 641,
+       "words": 1,
+       "text": "25"
+      },
+      {
+       "tag": "p",
+       "y": 681,
+       "words": 1,
+       "text": "Wed"
+      },
+      {
+       "tag": "p",
+       "y": 725,
+       "words": 9,
+       "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 753,
+       "words": 2,
+       "text": "Study session"
+      },
+      {
+       "tag": "p",
+       "y": 789,
+       "words": 8,
+       "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 909,
+       "words": 26,
+       "text": "Dec5SatSaturday, Dec 5 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boulev"
+      },
+      {
+       "tag": "p",
+       "y": 937,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 993,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 1037,
+       "words": 9,
+       "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1065,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 1101,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 1222,
+       "words": 25,
+       "text": "Dec9WedWednesday, Dec 9 · 6:00 pm – 8:00 pmStudy sessionKowalski's Market, 5327 Lyndale Av"
+      },
+      {
+       "tag": "p",
+       "y": 1250,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 1306,
+       "words": 1,
+       "text": "Wed"
+      },
+      {
+       "tag": "p",
+       "y": 1350,
+       "words": 9,
+       "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1378,
+       "words": 2,
+       "text": "Study session"
+      },
+      {
+       "tag": "p",
+       "y": 1414,
+       "words": 8,
+       "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
+      },
+      {
+       "tag": "li",
+       "y": 1534,
+       "words": 26,
+       "text": "Dec19SatSaturday, Dec 19 · 12:00 pm – 1:00 pmSocialAngel Food Bakery, 8100 Minnetonka Boul"
+      },
+      {
+       "tag": "p",
+       "y": 1562,
+       "words": 1,
+       "text": "Dec"
+      },
+      {
+       "tag": "p",
+       "y": 1578,
+       "words": 1,
+       "text": "19"
+      },
+      {
+       "tag": "p",
+       "y": 1618,
+       "words": 1,
+       "text": "Sat"
+      },
+      {
+       "tag": "p",
+       "y": 1662,
+       "words": 9,
+       "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm"
+      },
+      {
+       "tag": "h2",
+       "y": 1690,
+       "words": 1,
+       "text": "Social"
+      },
+      {
+       "tag": "p",
+       "y": 1726,
+       "words": 10,
+       "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 1842,
+       "words": 9,
+       "text": "Copied from the club’s own calendar 3 days ago"
+      },
+      {
+       "tag": "p",
+       "y": 1913,
+       "words": 2,
+       "text": "Between meetings:"
+      },
+      {
+       "tag": "p",
+       "y": 1966,
+       "words": 18,
+       "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a"
+      },
+      {
+       "tag": "p",
+       "y": 2251,
+       "words": 2,
+       "text": "Matheapolis ∑"
+      },
+      {
+       "tag": "p",
+       "y": 2299,
+       "words": 2,
+       "text": "Minneapolis, Minnesota"
+      },
+      {
+       "tag": "p",
+       "y": 2319,
+       "words": 3,
+       "text": "© 2026 Matheapolis"
+      },
+      {
+       "tag": "p",
+       "y": 2339,
+       "words": 21,
+       "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not spons"
+      }
+     ],
+     "headings": [
+      {
+       "y": 120,
+       "text": "Dates"
+      },
+      {
+       "y": 441,
+       "text": "Social"
+      },
+      {
+       "y": 753,
+       "text": "Study session"
+      },
+      {
+       "y": 1065,
+       "text": "Social"
+      },
+      {
+       "y": 1378,
+       "text": "Study session"
+      },
+      {
+       "y": 1690,
+       "text": "Social"
+      }
+     ],
+     "anchors": [
+      {
+       "y": 16,
+       "href": "../",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 20,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 533,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+       "internal": false
+      },
+      {
+       "y": 845,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+       "internal": false
+      },
+      {
+       "y": 1158,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+       "internal": false
+      },
+      {
+       "y": 1470,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+       "internal": false
+      },
+      {
+       "y": 1782,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+       "internal": false
+      },
+      {
+       "y": 1902,
+       "href": "https://www.facebook.com/groups/matheapolis",
+       "internal": false
+      },
+      {
+       "y": 1942,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 2147,
+       "href": "../schedule",
+       "internal": false
+      },
+      {
+       "y": 2147,
+       "href": "../chat",
+       "internal": false
+      },
+      {
+       "y": 2147,
+       "href": "../join",
+       "internal": false
+      },
+      {
+       "y": 2147,
+       "href": "../events.ics",
+       "internal": false
+      },
+      {
+       "y": 2187,
+       "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+       "internal": false
+      },
+      {
+       "y": 2187,
+       "href": "https://discord.com/invite/wx5S7YJSkU",
+       "internal": false
+      },
+      {
+       "y": 2246,
+       "href": "../",
+       "internal": false
+      }
+     ],
+     "faces": [
+      "400 normal PT Serif loaded",
+      "700 normal PT Serif loaded",
+      "100 900 normal Public Sans Variable loaded"
+     ],
+     "facesSettled": true,
+     "elapsedMs": 73
+    }
+   ]
+  }
+ ]
+}
