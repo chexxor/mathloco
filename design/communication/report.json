@@ -7,14 +7,14 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 26454,
+   "bytes": 26615,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 427
+    "body": 461
    },
-   "bodySentences": 43,
-   "bodyWords": 427,
+   "bodySentences": 44,
+   "bodyWords": 461,
    "headings": [
     "Matheapolis",
     "What we take up",
@@ -36,7 +36,7 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates 21 Nov",
      "zone": "nav-chrome"
     },
@@ -56,7 +56,7 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "See the dates",
      "zone": "body"
     },
@@ -71,7 +71,7 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "All 5 dates →",
      "zone": "body"
     },
@@ -91,7 +91,7 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates",
      "zone": "exit-band"
     },
@@ -128,7 +128,7 @@
    ],
    "destinations": [
     {
-     "href": "/schedule",
+     "href": "/dates",
      "n": 4,
      "labels": [
       "Dates 21 Nov",
@@ -237,7 +237,7 @@
      "internal": true
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "All 5 dates →",
      "internal": true
     },
@@ -545,6 +545,12 @@
     {
      "zone": "body",
      "section": "How it works",
+     "text": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
      "text": "Join the club",
      "heading": false
     },
@@ -648,7 +654,7 @@
   },
   {
    "route": "/404",
-   "bytes": 15658,
+   "bytes": 15646,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
@@ -674,7 +680,7 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates 21 Nov",
      "zone": "nav-chrome"
     },
@@ -699,8 +705,8 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
-     "label": "Our schedule page",
+     "href": "/dates",
+     "label": "Our dates page",
      "zone": "body"
     },
     {
@@ -709,7 +715,7 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates",
      "zone": "exit-band"
     },
@@ -760,11 +766,11 @@
      ]
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "n": 3,
      "labels": [
       "Dates 21 Nov",
-      "Our schedule page",
+      "Our dates page",
       "Dates"
      ],
      "zones": [
@@ -909,7 +915,7 @@
     {
      "zone": "body",
      "section": "We could not find that page",
-     "text": "Our schedule page",
+     "text": "Our dates page",
      "heading": false
     },
     {
@@ -1024,7 +1030,7 @@
   },
   {
    "route": "/chat",
-   "bytes": 26021,
+   "bytes": 26015,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
@@ -1053,7 +1059,7 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates 21 Nov",
      "zone": "nav-chrome"
     },
@@ -1083,7 +1089,7 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates",
      "zone": "exit-band"
     },
@@ -1148,7 +1154,7 @@
      ]
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "n": 2,
      "labels": [
       "Dates 21 Nov",
@@ -1557,30 +1563,30 @@
    ]
   },
   {
-   "route": "/join",
-   "bytes": 20055,
+   "route": "/dates",
+   "bytes": 37206,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 351
+    "body": 285
    },
-   "bodySentences": 31,
-   "bodyWords": 351,
+   "bodySentences": 48,
+   "bodyWords": 285,
    "headings": [
-    "Ways in",
-    "Follow the club",
-    "Come to a meeting",
-    "Talk with us now",
-    "What we do",
-    "Your first one"
+    "Dates",
+    "Social",
+    "Study session",
+    "Social",
+    "Study session",
+    "Social"
    ],
    "anchors": {
-    "total": 17,
-    "internal": 12,
-    "external": 5,
+    "total": 19,
+    "internal": 11,
+    "external": 8,
     "nav-chrome": 4,
     "exit-band": 7,
-    "body": 6
+    "body": 8
    },
    "anchorList": [
     {
@@ -1589,7 +1595,7 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates 21 Nov",
      "zone": "nav-chrome"
     },
@@ -1604,8 +1610,28 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
-     "label": "Join the Meetup group , opens in a new tab",
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+     "label": "Sign up on Meetup , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+     "label": "Sign up on Meetup , opens in a new tab",
      "zone": "body"
     },
     {
@@ -1614,27 +1640,17 @@
      "zone": "body"
     },
     {
-     "href": "/schedule",
-     "label": "See the dates",
+     "href": "/events.ics",
+     "label": "Add to a calendar",
      "zone": "body"
     },
     {
-     "href": "https://discord.com/invite/wx5S7YJSkU",
-     "label": "Join the chat on Discord , opens in a new tab",
+     "href": "/past",
+     "label": "Past meetings",
      "zone": "body"
     },
     {
-     "href": "/schedule",
-     "label": "schedule",
-     "zone": "body"
-    },
-    {
-     "href": "/chat",
-     "label": "the messages we post there",
-     "zone": "body"
-    },
-    {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates",
      "zone": "exit-band"
     },
@@ -1671,7 +1687,674 @@
    ],
    "destinations": [
     {
-     "href": "/schedule",
+     "href": "ext:www.meetup.com",
+     "n": 6,
+     "labels": [
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
+     ],
+     "zones": [
+      "body",
+      "body",
+      "body",
+      "body",
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/",
+     "n": 2,
+     "labels": [
+      "Matheapolis",
+      "Matheapolis ∑"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/dates",
+     "n": 2,
+     "labels": [
+      "Dates 21 Nov",
+      "Dates"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 2,
+     "labels": [
+      "Chat",
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 2,
+     "labels": [
+      "Ways in",
+      "Ways in"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "/events.ics",
+     "n": 2,
+     "labels": [
+      "Add to a calendar",
+      "Add to a calendar"
+     ],
+     "zones": [
+      "body",
+      "exit-band"
+     ]
+    },
+    {
+     "href": "ext:www.facebook.com",
+     "n": 1,
+     "labels": [
+      "Join the Facebook group , opens in a new tab"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    {
+     "href": "/past",
+     "n": 1,
+     "labels": [
+      "Past meetings"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    {
+     "href": "ext:discord.com",
+     "n": 1,
+     "labels": [
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    }
+   ],
+   "arrowAnchors": [],
+   "sentences": [
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "21 Nov",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "nav-chrome",
+     "section": "(no heading above it)",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Dates",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "These dates are copied from the club’s own calendar.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Each one links to the page the club posts its sign-up on.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Nov",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "21",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Sat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Nov",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "25",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wed",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Dec",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "5",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Dec",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "9",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wed",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Dec",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "19",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Sat",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Study session",
+     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Sign up on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Copied from the club’s own calendar 3 days ago",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Between meetings:",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Join the Facebook group",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "The address printed with a line is the address to give directions to, and no page here draws a route to it.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Looking for a date that has already passed?",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "Past meetings",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Social",
+     "text": "lists the ones our own calendar has finished.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Dates",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Chat",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Ways in",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Join on Meetup",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Discord",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "∑",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Minneapolis, Minnesota",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "© 2026 Matheapolis",
+     "heading": false
+    },
+    {
+     "zone": "exit-band",
+     "section": "Social",
+     "text": "Meetup and Discord are the platforms’ own names.",
+     "heading": false
+    }
+   ]
+  },
+  {
+   "route": "/join",
+   "bytes": 20043,
+   "words": {
+    "nav-chrome": 7,
+    "exit-band": 60,
+    "body": 351
+   },
+   "bodySentences": 31,
+   "bodyWords": 351,
+   "headings": [
+    "Ways in",
+    "Follow the club",
+    "Come to a meeting",
+    "Talk with us now",
+    "What we do",
+    "Your first one"
+   ],
+   "anchors": {
+    "total": 17,
+    "internal": 12,
+    "external": 5,
+    "nav-chrome": 4,
+    "exit-band": 7,
+    "body": 6
+   },
+   "anchorList": [
+    {
+     "href": "/",
+     "label": "Matheapolis",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/dates",
+     "label": "Dates 21 Nov",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "nav-chrome"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join the Meetup group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.facebook.com/groups/matheapolis",
+     "label": "Join the Facebook group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/dates",
+     "label": "See the dates",
+     "zone": "body"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Join the chat on Discord , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "/dates",
+     "label": "schedule",
+     "zone": "body"
+    },
+    {
+     "href": "/chat",
+     "label": "the messages we post there",
+     "zone": "body"
+    },
+    {
+     "href": "/dates",
+     "label": "Dates",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/chat",
+     "label": "Chat",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/join",
+     "label": "Ways in",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/events.ics",
+     "label": "Add to a calendar",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join on Meetup , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "https://discord.com/invite/wx5S7YJSkU",
+     "label": "Discord , opens in a new tab",
+     "zone": "exit-band"
+    },
+    {
+     "href": "/",
+     "label": "Matheapolis ∑",
+     "zone": "exit-band"
+    }
+   ],
+   "destinations": [
+    {
+     "href": "/dates",
      "n": 4,
      "labels": [
       "Dates 21 Nov",
@@ -2110,30 +2793,26 @@
    ]
   },
   {
-   "route": "/schedule",
-   "bytes": 36821,
+   "route": "/past",
+   "bytes": 15376,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 245
+    "body": 74
    },
-   "bodySentences": 44,
-   "bodyWords": 245,
+   "bodySentences": 9,
+   "bodyWords": 74,
    "headings": [
-    "Dates",
-    "Social",
-    "Study session",
-    "Social",
-    "Study session",
-    "Social"
+    "Past meetings",
+    "No finished date on our calendar"
    ],
    "anchors": {
-    "total": 18,
+    "total": 13,
     "internal": 10,
-    "external": 8,
+    "external": 3,
     "nav-chrome": 4,
     "exit-band": 7,
-    "body": 7
+    "body": 2
    },
    "anchorList": [
     {
@@ -2142,7 +2821,7 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates 21 Nov",
      "zone": "nav-chrome"
     },
@@ -2157,42 +2836,17 @@
      "zone": "nav-chrome"
     },
     {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
-     "label": "Sign up on Meetup , opens in a new tab",
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "its own Meetup page , opens in a new tab",
      "zone": "body"
     },
     {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
-     "label": "Sign up on Meetup , opens in a new tab",
+     "href": "/dates",
+     "label": "The dates still to come",
      "zone": "body"
     },
     {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
-     "label": "Sign up on Meetup , opens in a new tab",
-     "zone": "body"
-    },
-    {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
-     "label": "Sign up on Meetup , opens in a new tab",
-     "zone": "body"
-    },
-    {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
-     "label": "Sign up on Meetup , opens in a new tab",
-     "zone": "body"
-    },
-    {
-     "href": "https://www.facebook.com/groups/matheapolis",
-     "label": "Join the Facebook group , opens in a new tab",
-     "zone": "body"
-    },
-    {
-     "href": "/events.ics",
-     "label": "Add to a calendar",
-     "zone": "body"
-    },
-    {
-     "href": "/schedule",
+     "href": "/dates",
      "label": "Dates",
      "zone": "exit-band"
     },
@@ -2229,21 +2883,15 @@
    ],
    "destinations": [
     {
-     "href": "ext:www.meetup.com",
-     "n": 6,
+     "href": "/dates",
+     "n": 3,
      "labels": [
-      "Sign up on Meetup , opens in a new tab",
-      "Sign up on Meetup , opens in a new tab",
-      "Sign up on Meetup , opens in a new tab",
-      "Sign up on Meetup , opens in a new tab",
-      "Sign up on Meetup , opens in a new tab",
-      "Join on Meetup , opens in a new tab"
+      "Dates 21 Nov",
+      "The dates still to come",
+      "Dates"
      ],
      "zones": [
-      "body",
-      "body",
-      "body",
-      "body",
+      "nav-chrome",
       "body",
       "exit-band"
      ]
@@ -2254,18 +2902,6 @@
      "labels": [
       "Matheapolis",
       "Matheapolis ∑"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "/schedule",
-     "n": 2,
-     "labels": [
-      "Dates 21 Nov",
-      "Dates"
      ],
      "zones": [
       "nav-chrome",
@@ -2297,11 +2933,11 @@
      ]
     },
     {
-     "href": "/events.ics",
+     "href": "ext:www.meetup.com",
      "n": 2,
      "labels": [
-      "Add to a calendar",
-      "Add to a calendar"
+      "its own Meetup page , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
      ],
      "zones": [
       "body",
@@ -2309,13 +2945,13 @@
      ]
     },
     {
-     "href": "ext:www.facebook.com",
+     "href": "/events.ics",
      "n": 1,
      "labels": [
-      "Join the Facebook group , opens in a new tab"
+      "Add to a calendar"
      ],
      "zones": [
-      "body"
+      "exit-band"
      ]
     },
     {
@@ -2363,385 +2999,151 @@
     },
     {
      "zone": "body",
-     "section": "Dates",
-     "text": "Dates",
+     "section": "Past meetings",
+     "text": "Past meetings",
      "heading": true
     },
     {
      "zone": "body",
-     "section": "Dates",
-     "text": "These dates are copied from the club’s own calendar.",
+     "section": "Past meetings",
+     "text": "Every date on our own calendar that has finished and was not called off.",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Dates",
-     "text": "Each one links to the page the club posts its sign-up on.",
+     "section": "Past meetings",
+     "text": "Nothing listed yet",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Dates",
-     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Dates",
-     "text": "Nov",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Dates",
-     "text": "21",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Dates",
-     "text": "Sat",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Dates",
-     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
+     "section": "No finished date on our calendar",
+     "text": "No finished date on our calendar",
      "heading": true
     },
     {
      "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "section": "No finished date on our calendar",
+     "text": "The dates our own calendar holds that have already passed were announced cancelled.",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Social",
-     "text": "Sign up on Meetup",
+     "section": "No finished date on our calendar",
+     "text": "The club posts every session on",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Social",
+     "section": "No finished date on our calendar",
+     "text": "its own Meetup page",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "No finished date on our calendar",
      "text": ", opens in a new tab",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Social",
-     "text": "Nov",
+     "section": "No finished date on our calendar",
+     "text": ", and a meeting that has already happened lives there.",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Social",
-     "text": "25",
+     "section": "No finished date on our calendar",
+     "text": "The dates still to come",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Social",
-     "text": "Wed",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Study session",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Sign up on Meetup",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Dec",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "5",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Sat",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Sign up on Meetup",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Dec",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "9",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Wed",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Study session",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Sign up on Meetup",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Dec",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "19",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Sat",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Study session",
-     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Sign up on Meetup",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Copied from the club’s own calendar 3 days ago",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Between meetings:",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Join the Facebook group",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Add to a calendar",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
+     "section": "No finished date on our calendar",
+     "text": "are the page of record.",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Dates",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Chat",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Ways in",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Add to a calendar",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Join on Meetup",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": ", opens in a new tab",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Discord",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": ", opens in a new tab",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Matheapolis",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "∑",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Minneapolis, Minnesota",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "© 2026 Matheapolis",
      "heading": false
     },
     {
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "text": "Meetup and Discord are the platforms’ own names.",
      "heading": false
     }
@@ -2772,21 +3174,27 @@
      "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
     },
     {
+     "page": "/dates",
+     "zone": "body",
+     "section": "Social",
+     "words": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date."
+    },
+    {
+     "page": "/dates",
+     "zone": "exit-band",
+     "section": "Social",
+     "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+    },
+    {
      "page": "/join",
      "zone": "exit-band",
      "section": "Your first one",
      "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
     },
     {
-     "page": "/schedule",
-     "zone": "body",
-     "section": "Social",
-     "words": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date."
-    },
-    {
-     "page": "/schedule",
+     "page": "/past",
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "words": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
     }
    ],
@@ -2794,8 +3202,9 @@
     "/",
     "/404",
     "/chat",
+    "/dates",
     "/join",
-    "/schedule"
+    "/past"
    ],
    "repeatedOnSamePage": true
   },
@@ -2822,15 +3231,21 @@
      "words": "Meetup and Discord are the platforms’ own names."
     },
     {
+     "page": "/dates",
+     "zone": "exit-band",
+     "section": "Social",
+     "words": "Meetup and Discord are the platforms’ own names."
+    },
+    {
      "page": "/join",
      "zone": "exit-band",
      "section": "Your first one",
      "words": "Meetup and Discord are the platforms’ own names."
     },
     {
-     "page": "/schedule",
+     "page": "/past",
      "zone": "exit-band",
-     "section": "Social",
+     "section": "No finished date on our calendar",
      "words": "Meetup and Discord are the platforms’ own names."
     }
    ],
@@ -2838,8 +3253,9 @@
     "/",
     "/404",
     "/chat",
+    "/dates",
     "/join",
-    "/schedule"
+    "/past"
    ],
    "repeatedOnSamePage": false
   },
@@ -2854,19 +3270,19 @@
      "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
     },
     {
-     "page": "/schedule",
+     "page": "/dates",
      "zone": "body",
      "section": "Social",
      "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
     },
     {
-     "page": "/schedule",
+     "page": "/dates",
      "zone": "body",
      "section": "Social",
      "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
     },
     {
-     "page": "/schedule",
+     "page": "/dates",
      "zone": "body",
      "section": "Social",
      "words": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota"
@@ -2874,9 +3290,75 @@
    ],
    "routes": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "repeatedOnSamePage": true
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/404",
+     "zone": "body",
+     "section": "We could not find that page",
+     "words": "lists every date on the club’s own calendar, and"
+    },
+    {
+     "page": "/dates",
+     "zone": "body",
+     "section": "Dates",
+     "words": "These dates are copied from the club’s own calendar."
+    },
+    {
+     "page": "/dates",
+     "zone": "body",
+     "section": "Social",
+     "words": "Copied from the club’s own calendar 3 days ago"
+    },
+    {
+     "page": "/past",
+     "zone": "body",
+     "section": "Past meetings",
+     "words": "Every date on our own calendar that has finished and was not called off."
+    }
+   ],
+   "routes": [
+    "/404",
+    "/dates",
+    "/past"
+   ],
+   "repeatedOnSamePage": true
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "What we take up",
+     "words": ", and every date on the schedule links to the page the club posts its sign-up on."
+    },
+    {
+     "page": "/dates",
+     "zone": "body",
+     "section": "Dates",
+     "words": "Each one links to the page the club posts its sign-up on."
+    },
+    {
+     "page": "/past",
+     "zone": "body",
+     "section": "No finished date on our calendar",
+     "words": "The club posts every session on"
+    }
+   ],
+   "routes": [
+    "/",
+    "/dates",
+    "/past"
+   ],
+   "repeatedOnSamePage": false
   },
   {
    "bar": 0.34,
@@ -2912,35 +3394,6 @@
    "weakestPair": 1,
    "fact": [
     {
-     "page": "/404",
-     "zone": "body",
-     "section": "We could not find that page",
-     "words": "lists every date on the club’s own calendar, and"
-    },
-    {
-     "page": "/schedule",
-     "zone": "body",
-     "section": "Dates",
-     "words": "These dates are copied from the club’s own calendar."
-    },
-    {
-     "page": "/schedule",
-     "zone": "body",
-     "section": "Social",
-     "words": "Copied from the club’s own calendar 3 days ago"
-    }
-   ],
-   "routes": [
-    "/404",
-    "/schedule"
-   ],
-   "repeatedOnSamePage": true
-  },
-  {
-   "bar": 0.34,
-   "weakestPair": 1,
-   "fact": [
-    {
      "page": "/",
      "zone": "body",
      "section": "What we take up",
@@ -3079,43 +3532,20 @@
    "weakestPair": 1,
    "fact": [
     {
-     "page": "/",
-     "zone": "body",
-     "section": "What we take up",
-     "words": ", and every date on the schedule links to the page the club posts its sign-up on."
-    },
-    {
-     "page": "/schedule",
-     "zone": "body",
-     "section": "Dates",
-     "words": "Each one links to the page the club posts its sign-up on."
-    }
-   ],
-   "routes": [
-    "/",
-    "/schedule"
-   ],
-   "repeatedOnSamePage": false
-  },
-  {
-   "bar": 0.34,
-   "weakestPair": 1,
-   "fact": [
-    {
-     "page": "/schedule",
+     "page": "/dates",
      "zone": "body",
      "section": "Study session",
      "words": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
     },
     {
-     "page": "/schedule",
+     "page": "/dates",
      "zone": "body",
      "section": "Study session",
      "words": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota"
     }
    ],
    "routes": [
-    "/schedule"
+    "/dates"
    ],
    "repeatedOnSamePage": true
   }
@@ -3130,7 +3560,7 @@
    ],
    "hrefs": [
     "/join",
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3142,7 +3572,7 @@
     "dates"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3156,7 +3586,7 @@
     "meetup"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": false
   },
@@ -3180,7 +3610,7 @@
     "dates"
    ],
    "hrefs": [
-    "/schedule",
+    "/dates",
     "/events.ics"
    ],
    "isLabelItself": false
@@ -3200,9 +3630,9 @@
   {
    "page": "/",
    "section": "How it works",
-   "words": "If you would rather hear what is being argued about before you go, the chat invite is below.",
+   "words": "The club's list of members is its Meetup group page, last read 13 days ago — the list is not the room.",
    "named": [
-    "chat"
+    "meetup"
    ],
    "hrefs": [
     "/join"
@@ -3212,9 +3642,9 @@
   {
    "page": "/",
    "section": "How it works",
-   "words": "The club's list of members is its Meetup group page, last read 13 days ago — the list is not the room.",
+   "words": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
    "named": [
-    "meetup"
+    "dates"
    ],
    "hrefs": [
     "/join"
@@ -3242,7 +3672,7 @@
    ],
    "hrefs": [
     "/chat",
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3255,19 +3685,19 @@
    ],
    "hrefs": [
     "/chat",
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": false
   },
   {
    "page": "/404",
    "section": "We could not find that page",
-   "words": "Our schedule page",
+   "words": "Our dates page",
    "named": [
-    "schedule"
+    "dates"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3279,7 +3709,7 @@
     "calendar"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": false
   },
@@ -3291,7 +3721,7 @@
     "meetup"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": false
   },
@@ -3305,6 +3735,54 @@
    "hrefs": [
     "/chat",
     "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/dates",
+   "section": "Dates",
+   "words": "Dates",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/join"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/dates",
+   "section": "Social",
+   "words": "Join the Facebook group",
+   "named": [
+    "join"
+   ],
+   "hrefs": [
+    "/events.ics"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/dates",
+   "section": "Social",
+   "words": "Add to a calendar",
+   "named": [
+    "calendar"
+   ],
+   "hrefs": [
+    "/events.ics"
+   ],
+   "isLabelItself": true
+  },
+  {
+   "page": "/dates",
+   "section": "Social",
+   "words": "lists the ones our own calendar has finished.",
+   "named": [
+    "calendar"
+   ],
+   "hrefs": [
+    "/past"
    ],
    "isLabelItself": false
   },
@@ -3329,7 +3807,7 @@
     "dates"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3341,7 +3819,7 @@
     "schedule"
    ],
    "hrefs": [
-    "/schedule"
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3370,42 +3848,42 @@
    "isLabelItself": false
   },
   {
-   "page": "/schedule",
-   "section": "Dates",
-   "words": "Dates",
-   "named": [
-    "dates"
-   ],
-   "hrefs": [
-    "/join"
-   ],
-   "isLabelItself": true
-  },
-  {
-   "page": "/schedule",
-   "section": "Social",
-   "words": "Join the Facebook group",
-   "named": [
-    "join"
-   ],
-   "hrefs": [
-    "/events.ics"
-   ],
-   "isLabelItself": false
-  },
-  {
-   "page": "/schedule",
-   "section": "Social",
-   "words": "Add to a calendar",
+   "page": "/past",
+   "section": "Past meetings",
+   "words": "Every date on our own calendar that has finished and was not called off.",
    "named": [
     "calendar"
    ],
    "hrefs": [
-    "/events.ics"
+    "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/past",
+   "section": "No finished date on our calendar",
+   "words": "its own Meetup page",
+   "named": [
+    "meetup"
+   ],
+   "hrefs": [
+    "/dates"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/past",
+   "section": "No finished date on our calendar",
+   "words": "The dates still to come",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/dates"
    ],
    "isLabelItself": true
   }
  ],
- "wayfindingProseCount": 23,
- "wayfindingProseReal": 12
+ "wayfindingProseCount": 27,
+ "wayfindingProseReal": 15
 }

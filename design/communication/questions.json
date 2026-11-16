@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T21:07:18.488Z",
+ "artifactBuilt": "2026-11-16T22:07:00.955Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -350,6 +350,14 @@
      "route": "/",
      "form": "prose",
      "zone": "body",
+     "section": "How it works",
+     "text": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
      "section": "Matheapolis",
      "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
      "shape": 1
@@ -409,14 +417,6 @@
      "section": "Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "shape": 1
     }
    ],
    "declinedEvidence": []
@@ -2768,12 +2768,16 @@
     "/",
     "/dates"
    ],
-   "verdict": "ANSWERED-ELSEWHERE",
+   "verdict": "ANSWERED",
    "perRoute": {
     "/": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/404": {
      "status": "unanswered",
@@ -2786,9 +2790,13 @@
      "zones": []
     },
     "/dates": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/join": {
      "status": "answered",
@@ -2811,6 +2819,8 @@
     }
    },
    "answeredOn": [
+    "/",
+    "/dates",
     "/join"
    ],
    "forms": [
@@ -2821,6 +2831,22 @@
    ],
    "outsideCount": 1,
    "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "The address printed with a line is the address to give directions to, and no page here draws a route to it.",
+     "shape": 0
+    },
     {
      "route": "/join",
      "form": "prose",
@@ -3372,19 +3398,6 @@
    "answeredOn": []
   },
   {
-   "id": "q25",
-   "who": "any-visitor",
-   "ask": "How do I get to the venue?",
-   "verdict": "ANSWERED-ELSEWHERE",
-   "where": [
-    "/",
-    "/dates"
-   ],
-   "answeredOn": [
-    "/join"
-   ]
-  },
-  {
    "id": "q28",
    "who": "assistive-tech",
    "ask": "What does the mark the wordmark carries mean?",
@@ -3401,10 +3414,10 @@
  ],
  "counts": {
   "questions": 29,
-  "ANSWERED": 22,
+  "ANSWERED": 23,
   "DECLINED": 3,
   "ANSWERED-IN-CHROME": 0,
-  "ANSWERED-ELSEWHERE": 1,
+  "ANSWERED-ELSEWHERE": 0,
   "UNANSWERED": 3
  }
 }
