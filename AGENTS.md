@@ -114,10 +114,15 @@ each of those and requires a named failure. Both are in `verify`.
    once so you know whether the branch is green *before* you start changing it: **`npm run verify`**
    (the set lives in `scripts/gate-run.mjs`, and `node scripts/gate-run.mjs --list` prints it. It used to be
    enumerated in this file and went stale twice, so the enumeration is gone - read the list rather than trusting
-   this sentence). There are three sets (S028, D291), and each has its own cost baseline: `verify` is the deploy
-   set - 40 steps, 32.4s wall / 45.8s work; `verify:rig` is the rig set - 3 steps, 3.6s wall / 6.9s work;
-   `verify:browser` is the browser set - 9 steps, 98.8s wall / 98.8s work, all @measured 2026-11-13 by the runner
-   itself (Linux native, Node 24.22.1, 16 CPU).
+   this sentence). There are three sets (S028, D291), and **what a set holds today and what its baseline
+   holds are two different numbers — read both.** Today's run of each, @measured 2026-11-16 by the runner
+   itself (Linux native, Node 24.22.1, 16 CPU, load 9.9 → 16.7/16cpu — a contended rig): `verify` is the
+   deploy set, **71 steps**, 70.7s wall / 108.8s of work; `verify:rig` is 3 steps, 5.5s wall / 10.4s; `verify:browser`
+   is 9 steps, 122.5s wall / 122.5s. The **frozen** baselines in `design/gate-cost.json` are a smaller set: deploy
+   69 steps at 33.6s wall / 52.8s of work (frozen 2026-11-15, load 7.6 → 5.5/16cpu), browser 9 steps at 96.7s
+   (2026-11-15), rig 3 steps at 3.9s / 7.5s (2026-11-13). A contended run's like-for-like percentage is not a
+   regression — the guard prints the normalised figure beside it (-34% for that deploy run) and the load, and
+   only a run that started and ended at or below 6/16cpu can call a rise a defect (D269).
    It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
@@ -148,9 +153,12 @@ each of those and requires a named failure. Both are in `verify`.
    (the steps the baseline knows; new steps are listed with their cost) and **fails only when the run started
    and ended at or below 6/16cpu** - a contended rig is a WARN with the load printed, not a blocked ship step
    (D269). `npm run cost:save` refuses to freeze a baseline from a run above that load unless you pass
-   `--force` and say why. Baselines now exist per set: deploy 40 steps and rig 3 steps frozen 2026-11-13,
-   browser 9 steps also frozen 2026-11-13 - the deploy freeze had `check:lsp` in it and no longer does
-   (@measured 2026-11-13 by `node scripts/gate-cost.mjs`: 40 steps, 45.8s work, load 2.9/16cpu; D290, D291).
+   `--force` and say why. Baselines now exist per set, as `design/gate-cost.json` carries them @read 2026-11-16:
+   deploy **69 steps at 33.6s wall / 52.8s of work** frozen 2026-11-15 (load 7.6 → 5.5/16cpu), browser 9 steps at
+   96.7s frozen 2026-11-15, rig 3 steps at 3.9s wall / 7.5s work frozen 2026-11-13. The deploy freeze covers
+   **69 of the set's 71 steps** — the two it does not know are `check:focus` and `check:focus:selftest`, 0.6s
+   together, listed with their cost rather than folded into the bar (D290, D291). Re-freezing needs a run that
+   started and ended at or below 6/16cpu, which a working session's rig is not (today: 9.9 → 16.7/16cpu).
 5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
    you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
@@ -242,11 +250,12 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
 - **Every tool call carries a timeout, and none runs longer than 10 minutes.** The shell tool has **no
   default timeout**, so an unbounded command - a build, a browser probe, a `wrangler` call waiting on a
   network - runs until the session does. Guess the wall time first, then pass a timeout a little higher
-  than the guess, taken from the frozen baselines the runner compares against: `verify` 40 steps / 45.8s of
-  work (32.4s wall), `verify:rig` 3 steps / 6.9s (3.6s wall), `verify:browser` 9 steps / 98.8s (98.8s wall)
-  @measured 2026-11-13 by `design/gate-cost.json`; today's runs of the same sets came in at 32.5s/46.3s and
-  36.4s/53.1s wall/work for `verify` (Linux native, Node 24.22.1, 16 CPU), so the
-  honest budgets are 60s rig, 120s deploy, 180s browser - not 600s.
+  than the guess, taken from **what the sets cost when run**, not from the frozen bars alone: measured
+  @measured 2026-11-16 by `npm run verify` / `npm run verify:rig` / `npm run verify:browser` (Linux native,
+  Node 24.22.1, 16 CPU, load 9.9 → 16.7/16cpu) — deploy 71 steps at 70.7s wall / 108.8s work, rig 3 steps at
+  5.5s / 10.4s, browser 9 steps at 122.5s / 122.5s; the frozen bars are smaller (deploy 69 steps / 52.8s of
+  work, frozen 2026-11-15). So the honest budgets are **90s rig, 180s deploy, 300s browser** — not 600s, and
+  not the 120s/180s a 40-step deploy set used to fit.
   Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
   the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
   genuinely cannot finish inside 600s it is not one command: run the gate steps individually, start the
