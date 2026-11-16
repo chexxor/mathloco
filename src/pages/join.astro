@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import config from '../config.json';
 import Footer from '../components/Footer.astro';
 import { JOIN_KIND_COPY, joinChannels, paintedKinds } from '../lib/rsvp.mjs';
+import { refusals } from '../lib/content.ts';
 
 // One action on the homepage lands here (S033, D303): the page's job is the commitment decision — which
 // KIND of relationship the visitor wants — so the rows are grouped by kind and the platforms are values
@@ -124,6 +125,24 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
           >the messages we post there</a
         >.
       </p>
+      {/* C1+C2 · q05 and q10 (round-5 communication read, 2026-11-16, D376/D377): the two club-claim gaps, in
+          the open. The read's own recommendation was the operator's word for each — a price, a membership rule —
+          and both are claims about the club rather than about the page, which is why they are one-way and why the
+          operator's letter of 2026-11-16 ruled instead that the gap is DECLINED here: no seat writes a fee, and no
+          seat writes who may arrive. What ships is therefore the page naming what it has never been told, and the
+          only place it can say that from is the slot file: the two sentences come from `cost` and `membershipRule`
+          in `src/content.json` through `refusals()`, which is the same call `/` paints them from, so the pair cannot
+          be edited apart on one surface and left stale on the other (D247's defect class, inverted). Placed with the
+          page's other refusals — the phone line and the directions words — because this section is "Your first one",
+          which is where a reader who has already decided to come asks what they still have to do; the read preferred
+          a clause on the "Come to a meeting" rows, but that clause is the resolver's (`JOIN_KIND_COPY` and
+          `joinChannels()`), it is text-pinned by `check:join-page`'s `join-gives-mismatch` rule, and a refusal inside
+          a row would compete with D342's one way out. 0 boxes, no link, no URL, so `check:join`, `check:ext-links`
+          and the sprite's platform set stay as measured. */}
+      {refusals().length > 0 && (
+        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{refusals().join(' ')}</p>
+      )}
+
       {/* A4 · q13 (round-5 communication read, 2026-11-16, D368): the phone visitor asks whether the page
           hands over something to call or tap more than once, and the artifact carries no `tel:` and no email
           on any route, so the honest answer was a gap nobody could see. Stated here in the form `/` already

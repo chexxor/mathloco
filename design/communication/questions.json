@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T22:07:00.955Z",
+ "artifactBuilt": "2026-11-16T22:54:03.033Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -536,7 +536,7 @@
     "/",
     "/join"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "DECLINED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -579,7 +579,22 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": []
+   "declinedEvidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nothing here says what a meeting costs, and no price is printed."
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Nothing here says what a meeting costs, and no price is printed."
+    }
+   ]
   },
   {
    "id": "q06",
@@ -1050,7 +1065,7 @@
     "/",
     "/join"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "DECLINED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -1093,7 +1108,22 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": []
+   "declinedEvidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nothing here says whether you must be a member to come, and no rule is kept."
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Nothing here says whether you must be a member to come, and no rule is kept."
+    }
+   ]
   },
   {
    "id": "q11",
@@ -3347,7 +3377,7 @@
    "id": "q05",
    "who": "first-time",
    "ask": "What does it cost — is there a cover charge or a fee?",
-   "verdict": "UNANSWERED",
+   "verdict": "DECLINED",
    "where": [
     "/",
     "/join"
@@ -3379,7 +3409,7 @@
    "id": "q10",
    "who": "first-time",
    "ask": "Do I have to be a member to come?",
-   "verdict": "UNANSWERED",
+   "verdict": "DECLINED",
    "where": [
     "/",
     "/join"
@@ -3415,9 +3445,9 @@
  "counts": {
   "questions": 29,
   "ANSWERED": 23,
-  "DECLINED": 3,
+  "DECLINED": 5,
   "ANSWERED-IN-CHROME": 0,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 3
+  "UNANSWERED": 1
  }
 }

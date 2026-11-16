@@ -63,7 +63,14 @@ const QUESTIONS = [
             [/bring a question|no background is required/i]] },
 
   { id: 'q05', who: 'first-time', ask: 'What does it cost — is there a cover charge or a fee?', where: ['/', '/join'],
-    anyOf: [[/cover charge|no cover|\bcost\b|\bprice\b|\bticket\b|\bfee\b|free of charge|\$\s?\d/i]] },
+    anyOf: [[/cover charge|no cover|\bcost\b|\bprice\b|\bticket\b|\bfee\b|free of charge|\$\s?\d/i]],
+    // C1 (round-5 read) landed as a decline under D376, 2026-11-16: the operator ruled the gap open rather
+    // than stating a price, so `src/content.json` `cost` carries the sentence "Nothing here says what a meeting
+    // costs, and no price is printed." — which is an `anyOf` hit AND a refusal, exactly as q13's "phone number"
+    // is. Both halves have to be in ONE alt, because the probe's rule is that a sentence which offers and refuses
+    // at once is a refusal: counting "no price is printed" as an offer would hide the class this probe exists to
+    // find, and would report the site's own refusal as an answer.
+    declinedBy: [[/nothing here says what a meeting costs/i, /no (cover charge|price|fee) (is )?(printed|stated|kept|on this page)/i]] },
 
   { id: 'q06', who: 'first-time', ask: "What is the club's current focus?", where: ['/'], formsIn: ['prose', 'heading'],
     anyOf: [[/the focus is|focus is now|currently (on|about)/i]], declinedBy: [[/no current focus|no syllabus|nobody sets an agenda/i]] },
@@ -80,7 +87,13 @@ const QUESTIONS = [
 
   { id: 'q10', who: 'first-time', ask: 'Do I have to be a member to come?', where: ['/', '/join'],
     anyOf: [[/without being a member|need to be a member|membership is (free|not required)/i],
-            [/anyone can (come|attend|bring)/i]] },
+            [/anyone can (come|attend|bring)/i]],
+    // C2 under D377, same shape as q05's refusal: `src/content.json` `membershipRule` ships "Nothing here says
+    // whether you must be a member to come, and no rule is kept." The read's own recommendation was the operator's
+    // word — a claim about the club's practice no seat may write — so what a probe can measure today is the refusal,
+    // and the verdict that names it (DECLINED) is the one that tells the next session the gap is ruled open rather
+    // than unfilled. Nothing here matches `anyOf` alone: the sentence says "must be a member", not "need to be".
+    declinedBy: [[/nothing here says whether you must be a member/i, /no (membership )?rule is (kept|stated|printed)/i]] },
 
   { id: 'q11', who: 'phone', ask: 'Which tap gets me the calendar file?', where: ['/', '/dates'], formsIn: ['label', 'href', 'prose'],
     anyOf: [[/events\.ics/i]] },

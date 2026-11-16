@@ -2,7 +2,7 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
-import { content, value, upcoming, formatDate, timeSpan } from '../lib/content.ts';
+import { content, value, refusals, upcoming, formatDate, timeSpan } from '../lib/content.ts';
 import { todayIn } from '../lib/events.mjs';
 import { scheduleWindow } from '../lib/event-window.mjs';
 
@@ -84,6 +84,11 @@ const locator = 'Minneapolis math club';
 // sourced slot says, and an empty slot renders no line — the section below (What we take up) is what carries
 // a subject on the page now, undated by design (src/content.json `threads._rule`).
 const focus = value(content.focus);
+// The site's refusals (q05 cost, D376; q10 membership, D377) come out of `refusals()` in src/lib/content.ts
+// rather than from strings here, because they are claims with sources - the source is the ruling that decided
+// the gap stays open - and because `/join` paints the same two sentences out of the same call, so the pair
+// cannot be edited apart on one surface and left stale on the other (D247's defect class, inverted).
+const refusalLines = refusals();
 // 2026-11-15 (round-4 design brief §5, ruling D340): **the home page states the next meeting**, and the
 // statement lives here rather than in the schedule band below the horizon, because the brief's acceptance test is
 // a stranger on a phone asking "when is the next meeting?" and the answer must be visible without scrolling past
@@ -277,6 +282,22 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
         agenda - people bring what they are curious about, and the conversation runs in the club's chat.
         Formerly the Minneapolis Mathematics Book Club.
       </p>
+
+      {/* Round-5 communication read (2026-11-16, C1 · q05 and C2 · q10, D376/D377): the first-time visitor's
+          third and fourth questions - "what does it cost?", "must I be a member to come?" - were UNANSWERED on
+          every route, and the read's own recommendation was the operator's word, which is the operator's to give
+          and not a seat's to write. The operator ruled instead that the gap is DECLINED in the open, so what
+          ships is the page naming, in its own words, what it has never been told: two sentences from `src/content.json`
+          (`cost`, `membershipRule`) rendered by `refusals()`, in the voice `/` already ships twice for q06 and q07
+          - plain declarative, 0 boxes, no link, no third party, no new way in. Nothing here is a price and nothing
+          is a rule about the club: no file in the tree carries either, which is D92's defect class and the reason
+          the refusal is the whole of the answer. Placed under the lede's reassurance paragraph, which is the home
+          page's own refusal grammar ("no syllabus, no reading list, no current focus"), so a first-time visitor
+          meets the four things the page will not claim before it meets a path out. `node design/visitor-questions.mjs`
+          moves q05 and q10 from UNANSWERED to DECLINED on both routes this paragraph is on. */}
+      {refusalLines.length > 0 && (
+        <p class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'>{refusalLines.join(' ')}</p>
+      )}
 
       {focus && (
         <p

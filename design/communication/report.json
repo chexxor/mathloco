@@ -7,14 +7,14 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 26615,
+   "bytes": 26829,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 461
+    "body": 489
    },
-   "bodySentences": 44,
-   "bodyWords": 461,
+   "bodySentences": 46,
+   "bodyWords": 489,
    "headings": [
     "Matheapolis",
     "What we take up",
@@ -342,6 +342,18 @@
      "zone": "body",
      "section": "Matheapolis",
      "text": "Formerly the Minneapolis Mathematics Book Club.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nothing here says what a meeting costs, and no price is printed.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nothing here says whether you must be a member to come, and no rule is kept.",
      "heading": false
     },
     {
@@ -2241,14 +2253,14 @@
   },
   {
    "route": "/join",
-   "bytes": 20043,
+   "bytes": 20263,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 351
+    "body": 379
    },
-   "bodySentences": 31,
-   "bodyWords": 351,
+   "bodySentences": 33,
+   "bodyWords": 379,
    "headings": [
     "Ways in",
     "Follow the club",
@@ -2680,6 +2692,18 @@
      "zone": "body",
      "section": "Your first one",
      "text": ".",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Nothing here says what a meeting costs, and no price is printed.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Nothing here says whether you must be a member to come, and no rule is kept.",
      "heading": false
     },
     {
@@ -3396,6 +3420,52 @@
     {
      "page": "/",
      "zone": "body",
+     "section": "Matheapolis",
+     "words": "Nothing here says what a meeting costs, and no price is printed."
+    },
+    {
+     "page": "/join",
+     "zone": "body",
+     "section": "Your first one",
+     "words": "Nothing here says what a meeting costs, and no price is printed."
+    }
+   ],
+   "routes": [
+    "/",
+    "/join"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "Matheapolis",
+     "words": "Nothing here says whether you must be a member to come, and no rule is kept."
+    },
+    {
+     "page": "/join",
+     "zone": "body",
+     "section": "Your first one",
+     "words": "Nothing here says whether you must be a member to come, and no rule is kept."
+    }
+   ],
+   "routes": [
+    "/",
+    "/join"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
      "section": "What we take up",
      "words": "— what breaks, and what gets interesting, if you change how numbers combine"
     },
@@ -3836,18 +3906,6 @@
    "isLabelItself": false
   },
   {
-   "page": "/join",
-   "section": "Your first one",
-   "words": "The club has no front desk and no phone number; the chat is where you ask.",
-   "named": [
-    "chat"
-   ],
-   "hrefs": [
-    "/chat"
-   ],
-   "isLabelItself": false
-  },
-  {
    "page": "/past",
    "section": "Past meetings",
    "words": "Every date on our own calendar that has finished and was not called off.",
@@ -3884,6 +3942,6 @@
    "isLabelItself": true
   }
  ],
- "wayfindingProseCount": 27,
- "wayfindingProseReal": 15
+ "wayfindingProseCount": 26,
+ "wayfindingProseReal": 14
 }
