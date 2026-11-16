@@ -1,8 +1,8 @@
 {
- "measuredAt": "2026-11-15",
+ "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T05:55:26.182Z",
+ "artifactBuilt": "2026-11-16T11:31:37.743Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -334,7 +334,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
      "shape": 1
     },
     {
@@ -342,7 +342,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 1
     },
     {
@@ -770,7 +770,7 @@
     "/chat",
     "/schedule"
    ],
-   "outsideCount": 20,
+   "outsideCount": 22,
    "evidence": [
     {
      "route": "/",
@@ -1272,7 +1272,7 @@
     "/join",
     "/"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "DECLINED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -1310,7 +1310,15 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": []
+   "declinedEvidence": [
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "The club has no front desk and no phone number; the chat is where you ask."
+    }
+   ]
   },
   {
    "id": "q14",
@@ -2791,6 +2799,14 @@
      "route": "/chat",
      "form": "label",
      "zone": "body",
+     "section": "Summaries from the chat",
+     "text": "Join the chat on Discord, opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "label",
+     "zone": "body",
      "section": "The bot's reading of the channels",
      "text": "Discord , opens in a new tab",
      "shape": 0
@@ -2801,14 +2817,6 @@
      "zone": "body",
      "section": "The chat itself",
      "text": "Join the chat on Discord, opens in a new tab",
-     "shape": 0
-    },
-    {
-     "route": "/chat",
-     "form": "label",
-     "zone": "exit-band",
-     "section": "The chat itself",
-     "text": "Join on Meetup , opens in a new tab",
      "shape": 0
     }
    ],
@@ -2863,7 +2871,7 @@
    "id": "q13",
    "who": "phone",
    "ask": "Does the page hand me something to call or tap more than once?",
-   "verdict": "UNANSWERED",
+   "verdict": "DECLINED",
    "where": [
     "/join",
     "/"
@@ -2934,9 +2942,9 @@
  "counts": {
   "questions": 29,
   "ANSWERED": 19,
-  "DECLINED": 2,
+  "DECLINED": 3,
   "ANSWERED-IN-CHROME": 0,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 8
+  "UNANSWERED": 7
  }
 }

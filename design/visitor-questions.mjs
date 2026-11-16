@@ -89,7 +89,11 @@ const QUESTIONS = [
     anyOf: [[/ask something before|messages we post there|somebody from the club reads/i]] },
 
   { id: 'q13', who: 'phone', ask: 'Does the page hand me something to call or tap more than once?', where: ['/join', '/'],
-    anyOf: [[/mailto:/i], [/[a-z0-9._+-]+@[a-z0-9-]+\.(com|org|net|io)\b/i], [/\bcall us\b|text us|phone number/i]] },
+    anyOf: [[/mailto:/i], [/[a-z0-9._+-]+@[a-z0-9-]+\.(com|org|net|io)\b/i], [/\bcall us\b|text us|phone number/i]],
+    // The decline ships as A4 (D368) on `/join`. `phone number` is in `anyOf` and in `declinedBy` at once,
+    // and that is the file's own rule: a sentence that both offers and refuses is a refusal, not an offer —
+    // "no phone number" is the page naming the gap, and counting it as an offer would hide the class.
+    declinedBy: [[/no front desk|no phone number|nothing to call|no phone line/i]] },
 
   { id: 'q14', who: 'share-link', ask: 'Does the page name itself in what a share card carries?', where: ['/', '/schedule', '/chat', '/join', '/404'], formsIn: ['meta'],
     anyOf: [[/^matheapolis - a minneapolis math club$/i], [/^dates - matheapolis$/i], [/^chat - matheapolis$/i],

@@ -653,6 +653,14 @@ a source exists. **In markup text write the character, never an escape:** `club�
 `/schedule`. Inside a JavaScript string or a JSON file the escape is correct and decodes — which is why the rule
 is enforced by a gate that reads rendered text (`npm run check:escapes`), not by a grep for backslashes.
 
+**Name a gap the site cannot fill, in the open** (round-5 communication read A4, D368): the page says so in
+its own words — "There is no syllabus, no reading list to keep up with, and no current focus." on `/`,
+"…is not something a page can tell you." on `/`, "The club has no front desk and no phone number; the chat
+is where you ask." on `/join`. A gap the reader can see and a gap the page does not know it has are **different
+defects**, and only the second is worth finding; `node design/visitor-questions.mjs` keeps them apart as
+DECLINED vs UNANSWERED (3 declined in the open, 7 unanswered @measured 2026-11-16 by that probe). Refusing is
+never a substitute for a source: an ungrounded contact, price or room description would be a claim (D92).
+
 ## Motion
 
 | Kind | Duration | Easing |
