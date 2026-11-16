@@ -5,6 +5,24 @@ the brief asserts that this tree contradicts, or that this tree cannot be made t
 written as an ask, not as a fix — where a fix was possible it was made on `design-critique-round-4` and is not
 in this file. Nothing below substitutes a change for the question.
 
+> **Superseded 2026-11-16 — do not send this file to the research agent.** The operator's rulings letter on the
+> round-4 delegate letter is tracked at `docs/rulings-round-4-2026-11-16.md`, and it answers **every item below, 1
+> through 9**: 1 → **R1** (option (a): same-origin is not an exit, `/schedule` meets the ceiling at **6** absolute
+> anchors outside its own `<footer>`, and 7 is not accepted); 2 → **R2** (none of the four options — the plate is
+> capped at its own scan width, and **D356** undoes D351's cap deletion); 3 → **R3** (the shipped fallback stands,
+> the pending state asserts nothing, and the deploy condition is parked in `PLAN.md` §Parked with its trigger);
+> 4 → **R4** (the group root survives as shipped — the redirect was unbuildable and is withdrawn); 5 → **R5** (the
+> errand is a milestone row, **MS32**, with a two-clause trigger; "open an issue and stop" is withdrawn and this
+> repo has no issue tracker); 6 → **R6** (closed: a text extraction drops `position: fixed` chrome, so the artifact
+> was never missing its nav — the honest instruments are `npm run check:render:dist` and `node design/nav-fit.mjs`);
+> 7 → **R7** (name a mirrored asset `<role>-<mediaUid>.<ext>` so no filename asserts a date, record `reuseCount`
+> and `standing: true`, and the seven `src/assets/photos/event-*.png` were deleted in **D359**'s one commit);
+> 8 → **R8** (the criterion is retired as vacuous; the replacement decides both naming halves); 9 → **R9** (the
+> answers-first order ships with one hoist, and `node design/fold-answers.mjs` at 320×844 came back **0 of 5 answers
+> past the fold** @measured 2026-11-16, so the letter's first table row fired and the item closed).
+> The file stays in the tree as the record of what was asked — the asks are what the letter's rulings are answers
+> to — but a session that sends it spends a research round on nine settled questions.
+
 ## Environment the reply must answer against
 
 Answer for **this rig and these pinned versions**; a reply measured on a different one is not comparable
