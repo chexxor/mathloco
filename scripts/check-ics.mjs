@@ -425,6 +425,37 @@ const RULES = [
     return out;
   },
 
+  // Round-5 communication read B1 (q17, D370): a row the source stopped announcing stays in the snapshot,
+  // keeps `STATUS:CONFIRMED`, and reads to every subscriber as upcoming long after the evening passed — two
+  // of them on the artifact this round measured. The class becomes a gate because the rule is what makes it
+  // unmissable forever: a future harvest that publishes a passed row fails `verify` instead of shipping two
+  // live-looking dates to every calendar (D313's class — a rule the reader cannot see is worse than a number,
+  // which is why the planting below anchors on the shape, not on today's data). The feed stays **uncapped**
+  // (D238: shrinking a calendar feed to a page limit is how a subscriber loses a date they were told about),
+  // so this fires on a row that is *stale*, never on a feed that is *short*. A `STATUS:CANCELLED` row is
+  // exempt, because retiring a date is the RFC's own mechanism — UID plus a raised SEQUENCE (lines 6267-6272)
+  // — which is what keeps D225's and D318's hand-authored cancellations green. `stalenessOkUntil` is
+  // deliberately **not** consulted here: the hatch grants silence about *no upcoming row*, not about announcing
+  // an evening that already happened as live; the honest states are retire-it or re-fetch, both named below.
+  (data, text) => {
+    const out = [];
+    const today = clubToday(data).replace(/-/g, '');
+    for (const block of eventsOf(text)) {
+      const u = unfold(block);
+      const start = propOf(u, 'DTSTART');
+      if (!start) continue;
+      const day = String(start.value).slice(0, 8);
+      if (!/^\d{8}$/.test(day)) continue;
+      const status = String(propOf(u, 'STATUS')?.value ?? 'CONFIRMED').toUpperCase();
+      if (status === 'CANCELLED' || day >= today) continue;
+      out.push({
+        rule: 'stale-live-row',
+        detail: `VEVENT ${propOf(u, 'UID')?.value ?? '(no uid)'} publishes as ${status} with DTSTART ${day.slice(0, 4)}-${day.slice(4, 6)}-${day.slice(6, 8)}, a day already past (${today.slice(0, 4)}-${today.slice(4, 6)}-${today.slice(6, 8)}) — a subscriber who added this feed is being asked to attend an evening that happened. Retire it the only way RFC 5545 gives: STATUS:CANCELLED with a raised SEQUENCE, hand-authored (.notes/runbooks/event-feed-churn.md §3; the source stops announcing old rows rather than cancelling them), or re-fetch first: node scripts/events-harvest.mjs. The row is never deleted (D72), and the feed is never shortened to dodge this rule (D238).`,
+      });
+    }
+    return out;
+  },
+
   // The superseded list the harvest writes is a record, so it has to agree with the decision the renderer is
   // making right now. A log that names a row the grouping no longer drops is a claim about a row the calendar
   // does publish (D118's "one table" rule applied to a log).
@@ -602,6 +633,12 @@ if (selftest) {
       'END:VCALENDAR',
     ].join('\r\n')), rule: 'grouping' },
     { name: 'the-organizer-s-boilerplate-back-in-the-feed', text: (t) => t.replace(/DESCRIPTION:[^\r]*(?:\r\n [^\r]*)*/, 'DESCRIPTION:We are interested in discussing algorithms of most any kind.'), rule: 'feed-copy' },
+    // Round-5 B1 (q17): the class `stale-live-row` exists for. Anchored on the row's **status**, not on a uid or
+    // a date — the harvest re-dates rows and this snapshot now carries three cancellations, so a uid-keyed or
+    // date-keyed planting stops measuring the day the data moves (D173's rule, the one `zero-length-instant-span`
+    // follows). The first live row is moved four days into the past and kept CONFIRMED, which is what a harvest
+    // that reads a stale copy leaves behind.
+    { name: 'a-past-row-published-as-live', data: (d) => { moveRow(d.events.find((e) => String(e.status ?? 'CONFIRMED').toUpperCase() !== 'CANCELLED'), dayShift(-4)); return d; }, rule: 'stale-live-row' },
     { name: 'a-stale-superseded-log', data: (d) => { d.superseded = [{ uid: 'ghost-row', group: '2026-11-21|angel|social', reason: 'dropped last week' }]; return d; }, rule: 'superseded-log' },
     { name: 'the-grouping-is-silent-on-the-shipped-snapshot', clean: true, rule: 'grouping' },
     { name: 'the-log-matches-the-live-decision', clean: true, data: (d) => { d.superseded = publishableRows(d.events).dropped; return d; }, rule: 'superseded-log' },
