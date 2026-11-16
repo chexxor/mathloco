@@ -882,8 +882,11 @@ and the screen can disagree.
   18-word cap and the five event plates' "The club's own event image for this social", 8 words about the file rather
   than the picture). `npm run check:alt` reads every `.html` in the artifact and fails a missing alt, an undeclared
   empty alt, an alt over 12 words, an alt that names the file's role, a citation in an alt with no caption, and an
-  `<img>` with no intrinsic size: **4 described alts, 5 declared-decorative plates, longest 12 words, 5 built pages**
-  @measured 2026-11-14 by `node scripts/check-alt.mjs`.
+  `<img>` with no intrinsic size: **2 described alts, 0 declared-decorative plates, longest 12 words, 5 built pages**, word counts `10x1 12x1` @measured 2026-11-16 by `npm run check:alt`. The **4 alts and 5 plates** this
+  bullet carried on 2026-11-14 counted things that are no longer on the page: three of the alts were horizon leaves,
+  and D347 kept one of them on 2026-11-15; the five decorative plates were the event art, and **D359**'s sweep of
+  2026-11-16 deleted it. What ships now is two `<img>` on the home page — the hero plate and one horizon leaf — and
+  no event asset at all.
   The **review** state (placeholder mode, reachable only from `src/content.local/`) draws the measured box with
   `inset-shadow-accent` and **no fill**: a `rule` ring over a `tint` fill puts the ring on two grounds at once
   (D149-3c, record 0024 measured 2.74 inside / 3.01 outside on the pre-D316 palette; `rule` now reads 3.10 on
@@ -892,6 +895,21 @@ and the screen can disagree.
   ground on both sides.
   No browser gate can see this state on the shipped page, so it has to be right by construction; the review-build
   recipe (`src/content.local/` + `check:render:dist`) is in record 0024.
+- **No image filename contains a date, and an asset shared by more than one event is named by media UID and
+  marked `standing: true` in the manifest** (the operator's rulings letter of 2026-11-16, R8, **D360**, and
+  **D359**'s naming rule, which supersedes D190's `event-<slug>.<ext>` key). This sentence replaces the round-4 brief's
+  criterion "no image is painted on a date its filename contradicts", which was **vacuous**: it was satisfied by
+  having no filenames that bear dates, so it decided nothing and could not be failed. What ships today satisfies the
+  half that matters in the stronger way — seven mirrored `src/assets/photos/event-*.png` were deleted in D359's
+  sweep, so `src/assets/photos/` carries four PNGs and **no event asset at all** — and it decides the future half:
+  an asset a re-mirror would name is `<role>-<mediaUid>.<ext>` (`social`, `study`), and `npm run events:harvest` prints
+  the reuse count that sets `standing: true` rather than leaving it to a comment (media `1f54c2` serves 5 rows,
+  media `0e26aa` serves 3 @measured 2026-11-16 by `npm run events:harvest`). It is checkable with a `find` for digits
+  in a filename — but that census **over-reports here**: `find src/assets/photos -name '*[0-9]*'` prints 3 of the
+  4 PNGs @measured 2026-11-16, and every digit run in them is a book year (Euclid 1903, Euler 1910, the 1922 radio
+  text) under D167's provenance keys, not a meeting date, so what decides is that **no filename names a row** a date
+  could contradict. What ships: 5 built pages carrying **2 `<img>` in total**, both on `/` (the hero plate and one
+  horizon leaf) @measured 2026-11-16 by `find dist/client -name '*.html' -exec grep -o '<img' {} \;`.
 - **The aspect ratio is declared in CSS, never left to the file.** Tailwind preflight's `img { height: auto }`
   makes an HTML height attribute inert — the png this page shipped asked for `200x80` and rendered **200×192** —
   and a lazy image whose box is undeclared reflows the page: measured **2495px → 2607px, 112px**, which is also
@@ -1037,6 +1055,14 @@ npm run check:threads           # the home page paints exactly min(cap, items) t
 npm run verify                  # the browser-free CI gate set (everything above except the pixel gates)
 ```
 
+**Claims about absence are made against a byte census of the built HTML, not a text extraction** (the operator's
+rulings letter of 2026-11-16, R6, **D364**, closing round 4's nav/footer item): "The round-3 finding was produced by
+a text extraction that drops `position: fixed` chrome; the artifact was never missing its nav. Claims about absence
+must be made against a byte census of the built HTML. The honest instruments are `npm run check:render:dist` (nav-fit
+and mark cells) and `node design/nav-fit.mjs`." Every built page carries 2 `<nav>` and 1 `<footer>`, so the class of
+finding that reported a missing nav was an instrument's blindness rather than an artifact's defect — and `check:space`
+saying "position: fixed elements are excluded and the count is printed" is the same trap from the other side.
+
 **These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
 assumed.** @measured 2026-11-14 by `npm run verify:browser` (Linux native, 16 CPU, Firefox 159.0, load 2.9 →
 9.0/16cpu; re-run it to refresh these): `check:render:dist` over its **20 cells** (4 widths × 5 routes: `/`,
@@ -1099,8 +1125,29 @@ accepted, each with the gate that keeps it true.
   h1 and never skipping a level** @measured 2026-11-14 by `node scripts/check-outline.mjs`.
 - **A link that leaves the site says so, once.** `rel="noopener noreferrer"`, an arrow, and
   `, opens in a new tab` in an `sr-only` span — the words are written once, in `src/lib/links.mjs`, and derived
-  from the label so a label that already names the platform does not name it twice (S041, D317). **33 outbound
-  anchors, 33 carrying the qualifier, 33 held to the rules** @measured 2026-11-14 by `node scripts/check-ext-links.mjs`.
+  from the label so a label that already names the platform does not name it twice (S041, D317). **24 outbound
+  anchors, 24 carrying the qualifier, 24 held to the rules** @measured 2026-11-16 by `npm run check:ext-links`
+  (the 33 this bullet carried on 2026-11-14 counted the four standing platforms each schedule row used to repeat;
+  D342 moved them out of the row, and a count that only ever grows by repetition is the reason the count is printed
+  rather than ruled).
+- **Two tiers of outbound link, and they are not the same decision** (the operator's rulings letter of 2026-11-16,
+  R4, **D361**). A row's primary link goes to **that event's** page — the way out for a visitor deciding about one
+  specific date. The standing row's link and the exit band's go to the **group root** — joining a thing that persists,
+  which is not a question about a date. Two purposes, two URLs, **not an inconsistency and nothing to dedupe**: a
+  page that pointed both tiers at one URL would be answering "how do I come to this date" with "join the club".
+  `signUpPaths()` is where the first tier comes from and `splitPaths().standing` is where the second comes from,
+  so the two are computed from different calls and a future reader cannot mistake a mismatch for a defect.
+- **The link ceiling, as accepted** (the operator's rulings letter of 2026-11-16, R1, **(a)** — same-origin is not
+  an exit, and the ceiling is not bought back by adding a door to a page). The acceptance, verbatim, replaces the
+  round-4 brief's §6 parenthetical and its §10 clause:
+
+  > `/schedule` at 390px offers five row primaries (one per printed date, distinct event URLs), one standing
+  > platform whose URL the footer does not already paint, and one same-origin calendar route. Absolute URLs
+  > outside the `<footer>` element: 6. No page on the site exceeds 6 absolute URLs outside its own `<footer>`.
+
+  The instrument is the built artifact, not a source read: count `<a href="http…">` anchors outside each page's
+  own `<footer>` in `dist/client` @measured 2026-11-16 over the 5 built pages — `/schedule` 6, `/join` 3, `/chat`
+  2, `/` 2, `/404` 1, so the page's ceiling is met and `/schedule` is the page that defines it.
 - **Spacing steps are audited, not remembered.** Tailwind v4's dynamic scale makes `mt-23` resolve, so
   "the class exists" was never "the value is on the ladder" — `/join` shipped `gap-5` under a green `check:classes`
   (S042). `check:scale`: **45 source files, 52 distinct spacing utilities, 0 off-ladder** @measured 2026-11-14 by
