@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T20:27:14.579Z",
+ "artifactBuilt": "2026-11-16T21:07:18.488Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -10,6 +10,7 @@
   "/chat",
   "/dates",
   "/join",
+  "/past",
   "/events.ics"
  ],
  "visitorClasses": [
@@ -29,7 +30,8 @@
    "/404",
    "/chat",
    "/dates",
-   "/join"
+   "/join",
+   "/past"
   ],
   "text": "A Minneapolis math club. We work through papers, proofs, proof assistants and puzzles together, around a table in a coffee shop or a brewery. Dates on Meetup, a sign-up link on every date, and the discussion in the chat."
  },
@@ -68,6 +70,11 @@
      "zones": []
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -145,6 +152,11 @@
      ]
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -294,6 +306,11 @@
      "zones": [
       "body"
      ]
+    },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/events.ics": {
      "status": "answered",
@@ -447,6 +464,11 @@
       "body"
      ]
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -541,6 +563,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -584,6 +611,11 @@
      "zones": []
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -661,6 +693,11 @@
      "zones": []
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -746,6 +783,16 @@
       "body"
      ]
     },
+    "/past": {
+     "status": "chrome only",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -757,7 +804,8 @@
     "/404",
     "/chat",
     "/dates",
-    "/join"
+    "/join",
+    "/past"
    ],
    "forms": [
     "prose/body",
@@ -768,9 +816,10 @@
    "outsideRoutes": [
     "/404",
     "/chat",
-    "/dates"
+    "/dates",
+    "/past"
    ],
-   "outsideCount": 22,
+   "outsideCount": 24,
    "evidence": [
     {
      "route": "/",
@@ -903,6 +952,11 @@
       "body"
      ]
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -1023,6 +1077,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -1091,6 +1150,15 @@
       "exit-band"
      ]
     },
+    "/past": {
+     "status": "chrome only",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -1102,7 +1170,8 @@
     "/404",
     "/chat",
     "/dates",
-    "/join"
+    "/join",
+    "/past"
    ],
    "forms": [
     "href/body",
@@ -1111,9 +1180,10 @@
    "outsideRoutes": [
     "/404",
     "/chat",
-    "/join"
+    "/join",
+    "/past"
    ],
-   "outsideCount": 3,
+   "outsideCount": 4,
    "evidence": [
     {
      "route": "/",
@@ -1170,6 +1240,14 @@
      "section": "Your first one",
      "text": "/events.ics",
      "shape": 0
+    },
+    {
+     "route": "/past",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "No finished date on our calendar",
+     "text": "/events.ics",
+     "shape": 0
     }
    ],
    "declinedEvidence": []
@@ -1212,6 +1290,11 @@
      "zones": [
       "body"
      ]
+    },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -1299,6 +1382,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -1378,6 +1466,15 @@
       "head"
      ]
     },
+    "/past": {
+     "status": "answered",
+     "forms": [
+      "meta"
+     ],
+     "zones": [
+      "head"
+     ]
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -1389,13 +1486,16 @@
     "/404",
     "/chat",
     "/dates",
-    "/join"
+    "/join",
+    "/past"
    ],
    "forms": [
     "meta/head"
    ],
-   "outsideRoutes": [],
-   "outsideCount": 0,
+   "outsideRoutes": [
+    "/past"
+   ],
+   "outsideCount": 2,
    "evidence": [
     {
      "route": "/",
@@ -1510,6 +1610,11 @@
      "zones": []
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -1652,6 +1757,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "answered",
      "forms": [
@@ -1782,14 +1892,27 @@
      "zones": []
     },
     "/dates": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
+    },
+    "/past": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/events.ics": {
      "status": "answered",
@@ -1802,14 +1925,43 @@
     }
    },
    "answeredOn": [
+    "/dates",
+    "/past",
     "/events.ics"
    ],
    "forms": [
+    "prose/body",
     "ics-event/feed"
    ],
-   "outsideRoutes": [],
-   "outsideCount": 0,
+   "outsideRoutes": [
+    "/past"
+   ],
+   "outsideCount": 2,
    "evidence": [
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Looking for a date that has already passed?",
+     "shape": 1
+    },
+    {
+     "route": "/past",
+     "form": "prose",
+     "zone": "body",
+     "section": "No finished date on our calendar",
+     "text": "The dates our own calendar holds that have already passed were announced cancelled.",
+     "shape": 1
+    },
+    {
+     "route": "/past",
+     "form": "prose",
+     "zone": "body",
+     "section": "No finished date on our calendar",
+     "text": ", and a meeting that has already happened lives there.",
+     "shape": 1
+    },
     {
      "route": "/events.ics",
      "form": "ics-event",
@@ -1865,6 +2017,11 @@
      ]
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2028,6 +2185,11 @@
       "body"
      ]
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2173,6 +2335,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2254,6 +2421,15 @@
       "exit-band"
      ]
     },
+    "/past": {
+     "status": "chrome only",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "exit-band"
+     ]
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2265,7 +2441,8 @@
     "/404",
     "/chat",
     "/dates",
-    "/join"
+    "/join",
+    "/past"
    ],
    "forms": [
     "prose/exit-band",
@@ -2274,9 +2451,10 @@
    "outsideRoutes": [
     "/404",
     "/chat",
-    "/join"
+    "/join",
+    "/past"
    ],
-   "outsideCount": 3,
+   "outsideCount": 4,
    "evidence": [
     {
      "route": "/",
@@ -2325,6 +2503,14 @@
      "section": "Your first one",
      "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
      "shape": 0
+    },
+    {
+     "route": "/past",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "No finished date on our calendar",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "shape": 0
     }
    ],
    "declinedEvidence": []
@@ -2364,6 +2550,11 @@
      "zones": []
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2442,6 +2633,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2475,9 +2671,10 @@
    "where": [
     "/dates",
     "/404",
-    "/chat"
+    "/chat",
+    "/past"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "ANSWERED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -2495,14 +2692,28 @@
      "zones": []
     },
     "/dates": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
+    },
+    "/past": {
+     "status": "answered",
+     "forms": [
+      "heading"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/events.ics": {
      "status": "unanswered",
@@ -2510,11 +2721,43 @@
      "zones": []
     }
    },
-   "answeredOn": [],
-   "forms": [],
+   "answeredOn": [
+    "/dates",
+    "/past"
+   ],
+   "forms": [
+    "prose/body",
+    "label/body",
+    "heading/body"
+   ],
    "outsideRoutes": [],
    "outsideCount": 0,
-   "evidence": [],
+   "evidence": [
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Past meetings",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "label",
+     "zone": "body",
+     "section": "Social",
+     "text": "Past meetings",
+     "shape": 0
+    },
+    {
+     "route": "/past",
+     "form": "heading",
+     "zone": "body",
+     "section": "Past meetings",
+     "text": "Past meetings",
+     "shape": 0
+    }
+   ],
    "declinedEvidence": []
   },
   {
@@ -2555,6 +2798,11 @@
      "zones": [
       "body"
      ]
+    },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -2618,6 +2866,11 @@
      "zones": []
     },
     "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/past": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2711,6 +2964,17 @@
       "body"
      ]
     },
+    "/past": {
+     "status": "chrome only",
+     "forms": [
+      "prose",
+      "label"
+     ],
+     "zones": [
+      "nav-chrome",
+      "exit-band"
+     ]
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2722,7 +2986,8 @@
     "/404",
     "/chat",
     "/dates",
-    "/join"
+    "/join",
+    "/past"
    ],
    "forms": [
     "prose/nav-chrome",
@@ -2733,9 +2998,10 @@
     "prose/body"
    ],
    "outsideRoutes": [
-    "/404"
+    "/404",
+    "/past"
    ],
-   "outsideCount": 4,
+   "outsideCount": 8,
    "evidence": [
     {
      "route": "/",
@@ -2858,6 +3124,11 @@
      "forms": [],
      "zones": []
     },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2929,6 +3200,15 @@
       "body"
      ]
     },
+    "/past": {
+     "status": "answered",
+     "forms": [
+      "label"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
     "/events.ics": {
      "status": "unanswered",
      "forms": [],
@@ -2940,14 +3220,17 @@
     "/404",
     "/chat",
     "/dates",
-    "/join"
+    "/join",
+    "/past"
    ],
    "forms": [
     "label/body",
     "label/exit-band"
    ],
-   "outsideRoutes": [],
-   "outsideCount": 0,
+   "outsideRoutes": [
+    "/past"
+   ],
+   "outsideCount": 3,
    "evidence": [
     {
      "route": "/",
@@ -3089,18 +3372,6 @@
    "answeredOn": []
   },
   {
-   "id": "q24",
-   "who": "search-visitor",
-   "ask": "Can I look for a specific past meetup?",
-   "verdict": "UNANSWERED",
-   "where": [
-    "/dates",
-    "/404",
-    "/chat"
-   ],
-   "answeredOn": []
-  },
-  {
    "id": "q25",
    "who": "any-visitor",
    "ask": "How do I get to the venue?",
@@ -3130,10 +3401,10 @@
  ],
  "counts": {
   "questions": 29,
-  "ANSWERED": 21,
+  "ANSWERED": 22,
   "DECLINED": 3,
   "ANSWERED-IN-CHROME": 0,
   "ANSWERED-ELSEWHERE": 1,
-  "UNANSWERED": 4
+  "UNANSWERED": 3
  }
 }

@@ -437,8 +437,8 @@ it freshness.
     for a page that has one, and nothing asked whether a page has one at all: `/chat`, `/join` and `/404` ended on
     their last paragraph, so a visitor arriving from a shared link had the nav above and nothing below. `check:page-exit`
     walks the routes read off `dist/client` (`design/emitted-routes.mjs`, never a remembered list, D117) and requires
-    the band, on the ratified ground, offering at least two paths out — 5 built pages, 5 with the band
-    @measured 2026-11-14 by `npm run check:page-exit`. A route that is genuinely exempt has to say so here and in the
+    the band, on the ratified ground, offering at least two paths out — **6** built pages, **6** with the band
+    @measured 2026-11-16 by `npm run check:page-exit` (`/past` landed the day the count moved, D374). A route that is genuinely exempt has to say so here and in the
     gate's own list, not by omission.
 - **Photo-free by construction**: no surface may require a photograph, because none of the club's
   existing images contains a person (D86/D94). The hero motif may be derived from the operator's own
@@ -913,7 +913,7 @@ and the screen can disagree.
   18-word cap and the five event plates' "The club's own event image for this social", 8 words about the file rather
   than the picture). `npm run check:alt` reads every `.html` in the artifact and fails a missing alt, an undeclared
   empty alt, an alt over 12 words, an alt that names the file's role, a citation in an alt with no caption, and an
-  `<img>` with no intrinsic size: **2 described alts, 0 declared-decorative plates, longest 12 words, 5 built pages**, word counts `10x1 12x1` @measured 2026-11-16 by `npm run check:alt`. The **4 alts and 5 plates** this
+  `<img>` with no intrinsic size: **2 described alts, 0 declared-decorative plates, longest 12 words, 6 built pages**, word counts `10x1 12x1` @measured 2026-11-16 by `npm run check:alt`. The **4 alts and 5 plates** this
   bullet carried on 2026-11-14 counted things that are no longer on the page: three of the alts were horizon leaves,
   and D347 kept one of them on 2026-11-15; the five decorative plates were the event art, and **D359**'s sweep of
   2026-11-16 deleted it. What ships now is two `<img>` on the home page — the hero plate and one horizon leaf — and
@@ -939,7 +939,7 @@ and the screen can disagree.
   in a filename — but that census **over-reports here**: `find src/assets/photos -name '*[0-9]*'` prints 3 of the
   4 PNGs @measured 2026-11-16, and every digit run in them is a book year (Euclid 1903, Euler 1910, the 1922 radio
   text) under D167's provenance keys, not a meeting date, so what decides is that **no filename names a row** a date
-  could contradict. What ships: 5 built pages carrying **2 `<img>` in total**, both on `/` (the hero plate and one
+  could contradict. What ships: 6 built pages carrying **2 `<img>` in total**, both on `/` (the hero plate and one
   horizon leaf) @measured 2026-11-16 by `find dist/client -name '*.html' -exec grep -o '<img' {} \;`.
 - **The aspect ratio is declared in CSS, never left to the file.** Tailwind preflight's `img { height: auto }`
   makes an HTML height attribute inert — the png this page shipped asked for `200x80` and rendered **200×192** —
@@ -1075,15 +1075,15 @@ npm run check:scale             # every margin/padding/gap step written in src/ 
                                 # mt-7, gap-3.5, p-[13px] and a responsive-prefix case, plus a comment quoting the
                                 # defect that must NOT fire). `check:classes` proves a class *resolves*; this is the
                                 # gate that proves it is on the scale.
-npm run check:outline           # one h1 per built page and no skipped level: 5 pages, every ladder starting at h1
-                                # @measured 2026-11-14 by `node scripts/check-outline.mjs` (12-case selftest)
+npm run check:outline           # one h1 per built page and no skipped level: 6 pages, every ladder starting at h1
+                                # @measured 2026-11-16 by `node scripts/check-outline.mjs` (12-case selftest)
 npm run check:ext-links         # every anchor that leaves the site: rel carries noopener, it opens a new tab, the
                                 # "opens in a new tab" words are sr-only, no platform is named twice in one
-                                # accessible name, and no club route is painted target=_blank — 33 outbound anchors,
-                                # 33 qualified @measured 2026-11-14 by `node scripts/check-ext-links.mjs` (15 cases)
+                                # accessible name, and no club route is painted target=_blank — 28 outbound anchors,
+                                # 28 qualified @measured 2026-11-16 by `node scripts/check-ext-links.mjs` (15 cases)
 npm run check:provenance        # every "how current is this" line goes through `provenanceStamp()` in
                                 # `src/lib/provenance.mjs`: relative inside 30 days, absolute beyond (D322). 43
-                                # source files, 5 built pages @measured 2026-11-14 by `node scripts/check-provenance.mjs`
+                                # source files, 6 built pages @measured 2026-11-16 by `node scripts/check-provenance.mjs`
 npm run check:line-art          # every `<figure data-line-art>` is a captioned `role="img"` drawing under 1200
                                 # bytes, strokes currentColor, nothing filled: the one original drawing on the site,
                                 # `/chat "undoable-steps"`, 622 bytes, 9 strokes @measured 2026-11-14 by
@@ -1160,12 +1160,15 @@ accepted, each with the gate that keeps it true.
 - **Nothing sits above a page's first heading.** The eyebrow is gone; where it carried meaning it became a
   subtitle *under* the h1 (S040, D309). `check:naming` plants an eyebrow above the h1 and a section h2 that is
   another page's h1; `check:outline` (12 cases) fails a second h1, a page starting at h2, an h1 → h3 jump, an
-  empty heading and a heading whose only content is an image. Shipped: **5 built pages, every ladder starting at
-  h1 and never skipping a level** @measured 2026-11-14 by `node scripts/check-outline.mjs`.
+  empty heading and a heading whose only content is an image. Shipped: **6 built pages, every ladder starting at
+  h1 and never skipping a level** @measured 2026-11-16 by `node scripts/check-outline.mjs` — the h1 → h3 jump
+  `check:outline` caught on `/past`'s empty state is why that notice's title is an `h2` and not the `h3` its
+  sibling on `/dates` may use (there, rows carry the `h2` the ladder needs; a page whose list is empty has no
+  row to carry it, and that is the one place a notice title has to sit at level 2).
 - **A link that leaves the site says so, once.** `rel="noopener noreferrer"`, an arrow, and
   `, opens in a new tab` in an `sr-only` span — the words are written once, in `src/lib/links.mjs`, and derived
-  from the label so a label that already names the platform does not name it twice (S041, D317). **24 outbound
-  anchors, 24 carrying the qualifier, 24 held to the rules** @measured 2026-11-16 by `npm run check:ext-links`
+  from the label so a label that already names the platform does not name it twice (S041, D317). **28 outbound
+  anchors, 28 carrying the qualifier, 28 held to the rules** @measured 2026-11-16 by `npm run check:ext-links`
   (the 33 this bullet carried on 2026-11-14 counted the four standing platforms each schedule row used to repeat;
   D342 moved them out of the row, and a count that only ever grows by repetition is the reason the count is printed
   rather than ruled).
@@ -1185,8 +1188,12 @@ accepted, each with the gate that keeps it true.
   > outside the `<footer>` element: 6. No page on the site exceeds 6 absolute URLs outside its own `<footer>`.
 
   The instrument is the built artifact, not a source read: count `<a href="http…">` anchors outside each page's
-  own `<footer>` in `dist/client` @measured 2026-11-16 over the 5 built pages — `/schedule` 6, `/join` 3, `/chat`
-  2, `/` 2, `/404` 1, so the page's ceiling is met and `/schedule` is the page that defines it.
+  own `<footer>` in `dist/client` @measured 2026-11-16 by `node design/link-ceiling.mjs` over the **6** built pages
+  — `/dates` 6, `/join` 3, `/chat` 3, `/` 2, `/404` 1, `/past` 1, so the page's ceiling is met and `/dates` is the
+  page that defines it. The instrument counts `<a … href="http…">` anchors outside each page's own `<footer>`,
+  attribute order included; the 2026-11-16 run before D374 listed five pages and read `/chat` 2, which is the same
+  anchors counted with `href` required to be `<a>`'s first attribute — the ceiling never moved, only the count of
+  one page's anchors did, and the ceiling is a maximum, not a sum.
 - **Spacing steps are audited, not remembered.** Tailwind v4's dynamic scale makes `mt-23` resolve, so
   "the class exists" was never "the value is on the ladder" — `/join` shipped `gap-5` under a green `check:classes`
   (S042). `check:scale`: **45 source files, 52 distinct spacing utilities, 0 off-ladder** @measured 2026-11-14 by

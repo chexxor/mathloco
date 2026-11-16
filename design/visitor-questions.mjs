@@ -132,7 +132,12 @@ const QUESTIONS = [
   { id: 'q23', who: 'search-visitor', ask: 'Is there anything here I am not being shown?', where: ['/404', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/everything we have sits behind/i]] },
 
-  { id: 'q24', who: 'search-visitor', ask: 'Can I look for a specific past meetup?', where: ['/dates', '/404', '/chat'], formsIn: ['prose', 'heading', 'label'],
+  // `where` gained `/past` in the same commit that emitted it (D374, round-5 read Batch D half 2): the
+  // route a good answer belongs on moved because the site grew the page that holds it. A question whose
+  // answer sits on a route `where` does not name is ANSWERED-ELSEWHERE, so leaving `/past` out would have
+  // reported the shipped archive as an open gap forever — the same reason q17 and q18 were rewritten
+  // against the mechanism the site ships (D371), rather than against a string the probe remembered.
+  { id: 'q24', who: 'search-visitor', ask: 'Can I look for a specific past meetup?', where: ['/dates', '/404', '/chat', '/past'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/\bsearch\b|look up|past (meetings?|dates?|sessions?)/i], [/archive/i]] },
 
   { id: 'q25', who: 'any-visitor', ask: 'How do I get to the venue?', where: ['/', '/dates'],

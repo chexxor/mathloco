@@ -56,7 +56,7 @@ import {
   ROW_PRIMARY_PLATFORM, splitPaths, EXIT_BAND_PLATFORMS, exitBandUrls,
 } from '../src/lib/rsvp.mjs';
 import { MARKS, MARK_COUNT, markId } from '../src/lib/platform-marks.mjs';
-import { dateOf, scheduleWindow, todayInZone } from '../src/lib/event-window.mjs';
+import { dateOf, scheduleWindow, todayInZone, isPast } from '../src/lib/event-window.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -78,6 +78,11 @@ const PAGES = [
   // that starts printing one again fails here as well as in `check:dated-surfaces`.
   { name: 'homepage', file: resolve(DIST, 'index.html'), dates: false },
   { name: '/dates', file: resolve(DIST, 'dates/index.html'), dates: true },
+  // D374 (round-5 read Batch D half 2): `/past` is ruled to print dates, and its rows carry `data-surface="past-row"`,
+  // which the row rules above do not read. `dates: false` is that contract stated in the entry rather than a flag
+  // the rules guess: an upcoming-style row on the past page is the failure of this gate's row rules, and rule 10 is
+  // what checks the handle this page does use.
+  { name: '/past', file: resolve(DIST, 'past/index.html'), dates: false, past: true },
 ];
 
 /** Every `.html` the build emitted. A gate that keeps its own list of pages is a gate that goes stale the day a
@@ -106,6 +111,11 @@ const routeOf = (file) => {
  *  would read it as the last row's. Same element span `scripts/check-row-geometry.mjs` matches, so the two
  *  gates cannot disagree about what a row is (D264). */
 const SURFACE_RE = /<li\b[^>]*data-surface="(row|preview)"[^>]*data-date="(\d{4}-\d{2}-\d{2})"[^>]*>[\s\S]*?<\/li>/g;
+/** A date on the **past** surface (D374). It is deliberately not the handle above: `EventRow.astro`'s rules
+ *  (leaf, capped prose, one sign-up primary) are about a date a visitor can still act on, and a meeting
+ *  that has finished offers no sign-up page. Rule 10 below owns this handle, and the two handles are how
+ *  one gate states two contracts instead of bending one contract to cover both halves of the calendar. */
+const PAST_RE = /<li\b[^>]*data-surface="past-row"[^>]*>/g;
 /** The cluster the component paints inside it. */
 const CLUSTER_RE = /<div[^>]*data-rsvp-cluster[\s\S]*?<\/div>/g;
 /** The site's exit band — the same first `<footer>` `scripts/check-page-exit.mjs` calls the ratified band.
@@ -216,7 +226,7 @@ const surfacesOf = (html) => {
  * The rules, as failures against one page's HTML. Pure: the selftest plants pages in memory and requires a
  * named failure for each defect, which is only possible if the verdict does not touch the filesystem.
  */
-const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetchedAt, age, discordFetchedAt, discordAge, today, pageName, dates = true, chunks = {} }) => {
+const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetchedAt, age, discordFetchedAt, discordAge, today, pageName, dates = true, past = false, chunks = {} }) => {
   const fails = [];
   const surfaces = surfacesOf(html);
   const bandMatch = BAND_RE.exec(html);
@@ -237,6 +247,10 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
   } else if (surfaces.length && clusters.length !== 1) {
     fails.push(`${pageName} prints ${surfaces.length} row(s) and ${clusters.length} standing cluster(s) — the standing cluster renders once per page (D-B, round-4 §6), not once per row and not twice`);
   }
+  // A ruled page printing neither a row nor a cluster is legitimate on both surfaces now: an upcoming calendar
+  // is empty some weeks (record 0010's designed state), and `/past` prints nothing today because every date
+  // the harvest holds that has finished was announced cancelled (D374, @measured 2026-11-16). What is not
+  // legitimate on `/past` is a cluster, and rule 10 is what says so.
   if (!surfaces.length && !clusters.length && dates) {
     fails.push(`${pageName} prints no date and no cluster: either the schedule is empty or its rows lost their data-surface/data-date handles`);
   }
@@ -571,6 +585,38 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
     fails.push(`${pageName} paints a headcount: ${counts.slice(0, 3).map((m) => `"${m[0]}"`).join(', ')} — the site prints dates, not attendance (D265)`);
   }
 
+  // 10. (D374, round-5 read Batch D half 2) The ruled **past** surface. `/past` answers q24 from data the
+  //     build already holds — D72 keeps a retired row rather than deleting it, and `/events.ics` publishes
+  //     it with `STATUS:CANCELLED` — so the dates on this page are facts on a surface no window rule owned
+  //     before, and they are checked against `data/events.json` rather than against the page's own claim
+  //     (D238's lesson: a gate reads the bytes, and the rule is the module's). Four findings, one per way a
+  //     past page gets a date wrong: a date no row carries (an invented meeting), a date that has not
+  //     finished (the upcoming half leaking into the past one), a date announced cancelled (D72 keeps
+  //     those rows so a client can retire them; painting one claims a meeting the club said would not
+  //     happen), and a sign-up cluster (a meeting that has happened offers nothing to sign up for, and
+  //     rule 9 would then demand an island for it).
+  if (past) {
+    const pastRows = [...html.matchAll(PAST_RE)].map((m) => ({ attrs: attrsOf(m[0]), tag: m[0] }));
+    if (clusters.length) {
+      fails.push(`${pageName} paints ${clusters.length} standing cluster(s); a date that has finished offers no sign-up page, and the standing row describes a meeting the site is offering to (D374)`);
+    }
+    for (const r of pastRows) {
+      const d = r.attrs['data-date'];
+      if (!d) {
+        fails.push(`${pageName}'s past row carries no data-date handle — every painted date carries the handle (D173), and rule 10 is what compares it to the harvest`);
+        continue;
+      }
+      const rows = eventRows.filter((x) => dateOf(x) === d);
+      if (!rows.length) {
+        fails.push(`${pageName}'s past row for ${d} is a date no row of data/events.json carries — /past prints only dates the build already holds (D374, D72's rows are the record)`);
+        continue;
+      }
+      if (!rows.some((x) => isPast(x, today))) {
+        fails.push(`${pageName}'s past row for ${d} is not a date that finished and was not called off (today is ${today}) — /past lists meetings that happened; ${d} is still to come, or was announced cancelled and D72 keeps that word in the data (D374)`);
+      }
+    }
+  }
+
   return { surfaces, clusters, fails, outsideBand };
 };
 
@@ -606,6 +652,12 @@ if (selftest) {
     { start: '2026-11-21T12:00:00', timeConfirmed: true },
     { start: '2026-11-25T18:00:00', timeConfirmed: false },
     { start: '2026-11-28T18:00:00', timeConfirmed: true },
+    // Rule 10 (D374) needs a finished row the harvest made — the clean control's date — and a finished row
+    // the harvest **announced** cancelled, which is the row D72 keeps in the data and `/past` must refuse
+    // to paint as a meeting that happened. Neither date is used by any rule above, which keys on 11-11,
+    // 11-21, 11-25 and 11-28.
+    { start: '2026-11-01T18:00:00', timeConfirmed: true },
+    { start: '2026-11-02T18:00:00', timeConfirmed: true, status: 'CANCELLED' },
   ];
   // The island Astro really emits (measured 2026-11-11 against dist/client/index.html): `component-url` names
   // the shipped chunk, `client="visible"` is what makes it hydrate, and the props are HTML-escaped JSON.
@@ -668,9 +720,19 @@ if (selftest) {
     }).join('')}</nav></footer>`;
   const page = (rows, extra = '', us = urls) =>
     `${sprite()}<main><ul class="space-y-4">${rows.map(([date, hour]) => `<li class="rounded-card" data-surface="row" data-date="${date}"><div data-copy><p>${date}</p>${rowAnchor({ date, time: hour }, {}, us)}</div></li>`).join('')}</ul>${rows.length ? island(clusterHtml({ date: rows[0][0], time: rows[0][1] }, {}, us)) : ''}${extra}</main>${bandHtml(us)}`;
+  // The past surface (D374): rows carry `data-surface="past-row"`, and the page owns no cluster and no
+  // sprite, because a meeting that has finished offers nothing to sign up for. Same band, because rule 6c
+  // needs an inside and an outside to judge at all.
+  const pastPage = (dates) =>
+    `<main><ul class="space-y-4">${dates.map((d) => `<li data-surface="past-row" data-date="${d}"><time class="tabular-nums" datetime="${d}">${d}</time> — Study session</li>`).join('')}</ul></main>${bandHtml()}`;
 
   const clean = page([['2026-11-11', '18:00'], ['2026-11-21', '12:00']]);
   const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: DISFETCHED, discordAge: DISAGE, today: TODAY, pageName: 'planted page', chunks: { [ISLAND_CHUNK]: shippedChunk } };
+  // The entry the live run passes for `/past` (D374): `dates: false` is the row contract's, `past: true` is
+  // rule 10's, and the pair is what a fixture has to carry — a fixture that leaves `dates` at its default
+  // asks a page of finished dates to print an upcoming row and a standing cluster (the defect D374 fixed
+  // by moving the fixtures rather than by weakening a rule, D155's rule applied to fixtures).
+  const pastCtx = { ...ctx, dates: false, past: true };
 
   const cases = [
     { name: 'a page the resolver agrees with', html: clean, ctx, want: [] },
@@ -741,6 +803,14 @@ if (selftest) {
     { name: 'an island with no client directive', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), island(clusterHtml({ date: '2026-11-11', time: '18:00' }), ISLAND_CHUNK, '')), ctx, want: ['no client directive: it is server-rendered only'] },
     { name: 'an island whose shipped chunk never reads localStorage', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), island(clusterHtml({ date: '2026-11-11', time: '18:00' }), '/_astro/SignUpLinksCluster.stripped.js')), ctx: { ...ctx, chunks: { '/_astro/SignUpLinksCluster.stripped.js': 'function reorder(list,p){return list}' } }, want: ['never touches localStorage'] },
     { name: 'an island whose shipped chunk carries a different preference key', html: page([['2026-11-11', '18:00']]).replace(island(clusterHtml({ date: '2026-11-11', time: '18:00' })), island(clusterHtml({ date: '2026-11-11', time: '18:00' }), '/_astro/SignUpLinksCluster.oldkey.js')), ctx: { ...ctx, chunks: { '/_astro/SignUpLinksCluster.oldkey.js': 'const KEY="old-rsvp-key"; localStorage.getItem(KEY);' } }, want: ['preference key "matheapolis-rsvp-platform" — the resolver'] },
+    // Rule 10 (D374, round-5 read Batch D half 2): `/past` prints dates the build already holds, and each
+    // one is a row that finished and was not called off. The clean control is the same page shape the live
+    // run reads today, which lists nothing; these plantings are the four ways a past page gets a date wrong.
+    { name: 'clean control: a past row on a date the harvest made and that finished', html: pastPage(['2026-11-01']), ctx: pastCtx, want: [] },
+    { name: 'a past page painting a date that has not finished', html: pastPage(['2026-11-21']), ctx: pastCtx, want: ['is not a date that finished and was not called off'] },
+    { name: 'a cancelled date painted as a meeting that happened', html: pastPage(['2026-11-02']), ctx: pastCtx, want: ['D72 keeps that word in the data'] },
+    { name: 'a past page inventing a date the harvest never made', html: pastPage(['2026-10-04']), ctx: pastCtx, want: ['is a date no row of data/events.json carries'] },
+    { name: 'a past page painting a standing sign-up cluster', html: pastPage(['2026-11-01']).replace('</main>', `${island(clusterHtml({ date: '2026-11-11', time: '18:00' }, {}, urls))}</main>`), ctx: pastCtx, want: ['offers no sign-up page'] },
   ];
 
   let bad = 0;
@@ -799,7 +869,7 @@ for (const page of PAGES) {
   }
   const { surfaces, clusters, fails, outsideBand } = pageFindings(html, {
     meetupEvents: meetupSnap.events ?? [], discordEvents: discordSnap.events ?? [], eventRows: events.events ?? [], urls,
-    fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name, dates: page.dates, chunks,
+    fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name, dates: page.dates, past: page.past, chunks,
   });
   if (fails.length) {
     for (const f of fails) console.log(`FAIL  ${f}`);

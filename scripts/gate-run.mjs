@@ -132,7 +132,7 @@ const DEPLOY = [
   // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
-  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (43 plantings each named, plus a clean control that must pass)' },
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (55 plantings each named, plus 2 clean controls that must pass: the resolver-agrees page, and a past row on a date the harvest made and that finished)' },
   // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a mark. Keyed
   // on anything that outlives a render - a path, a counter - a warm process answers every request after the
   // first with `<use>` refs and no symbols: three empty 16px boxes @measured 2026-11-13 by
