@@ -72,6 +72,44 @@ export const isOpen = (row, today) => {
 /** Kept as the row-shaped name, because that is what `events.mjs` and the feed code call it with. */
 export const isUpcoming = (row, today) => isOpen(row, today);
 
+/**
+ * A date in the one prose shape that carries a year and no weekday — `Nov 7, 2026`.
+ *
+ * It lives here rather than beside `content.ts`'s `formatDate` for the reason this module exists at all: a
+ * plain `node script.mjs` can import this file, it cannot import a `.ts` one, and `scripts/check-ics.mjs`
+ * reads the same window sentence the page prints. The construction is `formatDate`'s — `Date.UTC` plus
+ * `timeZone: 'UTC'` — because a second parser is a second chance at the bug `formatDate` exists to prevent:
+ * a `new Date('2026-11-07')` is UTC midnight, which a build on a UTC-offset host prints as Nov 6.
+ * The year is in because this form names a **range**, and a range that crosses a year boundary read without
+ * one ("Nov 7 through Jan 16") is a window a subscriber cannot place.
+ */
+export const plainDate = (iso) => {
+  const [y, m, d] = String(iso ?? '').slice(0, 10).split('-').map(Number);
+  if (!y || !m || !d) return String(iso ?? '');
+  return new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' })
+    .format(new Date(Date.UTC(y, m - 1, d)));
+};
+
+/**
+ * The window the **published calendar file** covers — first date, last date, how many. Round-5 communication
+ * read B2 (q18, D371): the file's own `DTSTART`s already answer "how far ahead does it reach" and "which rows
+ * have passed", and nothing wrapped either answer anywhere.
+ *
+ * It counts every row the file carries, cancellations included — the question is what the *file* holds, not
+ * what a page prints, and a subscriber who added the feed is told about the cancelled rows precisely so they
+ * can drop them. The page's window (`scheduleWindow`) stays separate and narrower (D238): a feed's reach is a
+ * fact about the club's calendar, a page's length is a layout rule. Both are derived here so one module owns
+ * both, and `scripts/check-ics.mjs` reads the generated sentence against these numbers rather than a copy.
+ */
+export const feedWindow = (rows) => {
+  const DATE = /^\d{4}-\d{2}-\d{2}$/;
+  const days = (Array.isArray(rows) ? rows : [])
+    .map((r) => dateOf(r))
+    .filter((d) => DATE.test(d))
+    .sort();
+  return { first: days[0] ?? null, last: days[days.length - 1] ?? null, count: days.length };
+};
+
 /** Add whole days to a `YYYY-MM-DD` calendar date without going through an instant — same rule as `isUpcoming`. */
 export const addDays = (isoDate, days) => {
   const [y, m, d] = String(isoDate).split('-').map(Number);

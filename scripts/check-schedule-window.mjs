@@ -26,7 +26,11 @@
  *   - **the omission left unsaid** — when rows are hidden the page must say so and point at `/events.ics`, which
  *     carries everything (D150: the page limit is a layout rule, not a fact about the club);
  *   - **a cancelled date painted on the page** — the feed publishes cancellations with a raised SEQUENCE; the page
- *     does not (D223).
+ *     does not (D223);
+ *   - **the reach of the file left unsaid** (round-5 communication read B2, q18, D371) — the page that offers
+ *     `/events.ics` also has to say how far that file reaches, in the same generated sentence the file carries
+ *     inside itself. A lede that names no window, or names one the rows do not support, is the half of q18 the
+ *     page owns; `check:ics`'s `calendar-window` rule owns the half inside the file.
  *
  * The snapshot is read the way `src/lib/events.mjs` reads it: the tracked file, with gitignored
  * `src/content.local/events-*.json` merged over it, so a review build made over an overlay is checked against the
@@ -35,8 +39,10 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
-  HORIZON_WEEKS, MAX_ROWS, addDays, dateOf, scheduleWindow, startDate, todayInZone,
+  HORIZON_WEEKS, MAX_ROWS, addDays, dateOf, scheduleWindow, startDate, todayInZone, feedWindow,
 } from '../src/lib/event-window.mjs';
+import { publishableRows } from '../src/lib/event-groups.mjs';
+import { windowSentence } from '../src/lib/event-description.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -82,6 +88,9 @@ const cancelledOnlyDates = (rows, today) => {
 const planFor = (rows, today) => {
   const plan = scheduleWindow(rows, today);
   plan.cancelledOnly = cancelledOnlyDates(rows, today);
+  // D371: the reach of the **file**, not of the page (D238 keeps those apart). Derived from the rows the grouping
+  // publishes, which is what the subscriber and the lede both have to agree with.
+  plan.reach = feedWindow(publishableRows(Array.isArray(rows) ? rows : []).rows);
   return plan;
 };
 
@@ -112,6 +121,12 @@ const verdict = (html, plan, today) => {
   }
   for (const d of plan.cancelledOnly) {
     if (printed.includes(d)) fails.push(`${d} is cancelled and has no open row, but the page prints it (D223)`);
+  }
+  // D371: the page offers the file, so it names the file's reach — in the generated sentence, not a paraphrase,
+  // because a paraphrased window is a claim that expires with the next harvest.
+  const reach = windowSentence(plan.reach);
+  if (reach && !html.includes(reach)) {
+    fails.push(`the page never names the reach of the file it offers: it should say ${JSON.stringify(reach)} (D371)`);
   }
   if (plan.hiddenHorizon + plan.hiddenCap > 0) {
     if (!/events\.ics/.test(html)) fails.push('rows are hidden and the page offers no /events.ics path');
@@ -198,57 +213,72 @@ if (selftest) {
     `This page lists the next ${HORIZON_WEEKS} weeks, and ${hiddenHorizon} more ${hiddenHorizon === 1 ? 'date is' : 'dates are'} booked past 2027-01-01. ` +
     (hiddenCap ? `It lists at most ${MAX_ROWS} dates, and ${hiddenCap} more are inside that window. ` : '') +
     '<a href="/events.ics">Add the club calendar</a>';
-  const pageOf = (printed, extra = '') => `<main><ul>${printed.map((d) => `<li data-surface="row" data-date="${d}">x</li>`).join('')}</ul>${extra}</main>`;
+  // Every fixture page carries the reach sentence the plan generates, so the clean page stays clean and the one
+  // planting whose sentence disagrees with its rows is the only case that can fail for the reach reason. `clause`
+  // is a parameter rather than a constant because the point of the fixture is that sentence and rows agree or
+  // disagree — a fixture that could not disagree would make the assertion undetectable.
+  const clauseOf = (rows) => windowSentence(feedWindow(publishableRows(Array.isArray(rows) ? rows : []).rows));
+  const pageOf = (printed, rows, extra = '', clause = clauseOf(rows)) =>
+    `<main><p>${clause}</p><ul>${printed.map((d) => `<li data-surface="row" data-date="${d}">x</li>`).join('')}</ul>${extra}</main>`;
 
   const long = weekly('2026-11-09', 12).map((d) => row(d));            // 12 weekly dates: 8 in, 4 past
   const pageCases = [
     {
       name: 'clean page: every in-window date printed, the omission spoken',
       snap: long,
-      html: () => pageOf(weekly('2026-11-09', 8), said(4, 0)),
+      html: () => pageOf(weekly('2026-11-09', 8), long, said(4, 0)),
       expect: [],
     },
     {
       name: 'one row too many printed',
       snap: long,
-      html: () => pageOf(weekly('2026-11-09', 9), said(4, 0)),
+      html: () => pageOf(weekly('2026-11-09', 9), long, said(4, 0)),
       expect: ['MAX_ROWS'],
     },
     {
       name: 'a date the window lists is missing from the page',
       snap: [row('2026-11-11'), row('2026-11-18')],
-      html: () => pageOf(['2026-11-11']),
+      html: () => pageOf(['2026-11-11'], [row('2026-11-11'), row('2026-11-18')]),
       expect: ['does not print it'],
     },
     {
       name: 'a date past the horizon is printed',
       snap: [row('2027-04-03')],
-      html: () => pageOf(['2027-04-03']),
+      html: () => pageOf(['2027-04-03'], [row('2027-04-03')]),
       expect: ['past the horizon'],
     },
     {
       name: 'rows are printed out of order',
       snap: [row('2026-11-11'), row('2026-12-05')],
-      html: () => pageOf(['2026-12-05', '2026-11-11']),
+      html: () => pageOf(['2026-12-05', '2026-11-11'], [row('2026-11-11'), row('2026-12-05')]),
       expect: ['is not the window'],
     },
     {
       name: 'a cancelled date is painted on the page',
       snap: [row('2026-11-07', { status: 'CANCELLED' })],
-      html: () => pageOf(['2026-11-07']),
+      html: () => pageOf(['2026-11-07'], [row('2026-11-07', { status: 'CANCELLED' })]),
       expect: ['cancelled'],
     },
     {
       name: 'rows are hidden and the page says nothing about it',
       snap: long,
-      html: () => pageOf(weekly('2026-11-09', 8)),
+      html: () => pageOf(weekly('2026-11-09', 8), long),
       expect: ['never says so'],
     },
     {
       name: 'the cap binds and the page does not mention the cap',
       snap: Array.from({ length: 12 }, (_, i) => row('2026-11-09', { seq: i })),
-      html: () => pageOf(Array(8).fill('2026-11-09'), `This page lists the next ${HORIZON_WEEKS} weeks, and 0 more dates are booked past 2027-01-01. <a href="/events.ics">Add the club calendar</a>`),
+      html: () => pageOf(Array(8).fill('2026-11-09'), Array.from({ length: 12 }, (_, i) => row('2026-11-09', { seq: i })), `This page lists the next ${HORIZON_WEEKS} weeks, and 0 more dates are booked past 2027-01-01. <a href="/events.ics">Add the club calendar</a>`),
       expect: ['never says so'],
+    },
+    {
+      // D371. The window the page prints is not the window the rows it printed have: what a hand-written reach
+      // sentence in a lede looks like once the harvest moves a date. Fixture: 12 weekly dates from 2026-11-09,
+      // eight printed — a file that reaches 2027-01-25, lede claiming one that stops after five rows.
+      name: 'the reach sentence the page prints is not the reach the file has',
+      snap: long,
+      html: () => pageOf(weekly('2026-11-09', 8), long, said(4, 0), windowSentence({ first: '2026-11-09', last: '2026-12-07', count: 5 })),
+      expect: ['reach of the file'],
     },
   ];
 

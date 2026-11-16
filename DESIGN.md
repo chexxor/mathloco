@@ -365,9 +365,15 @@ second colour.
   pages, threshold 30 days** @measured 2026-11-14 by `node scripts/check-provenance.mjs`. No staleness alarm: the
   real harvested feed has gaps of 4, 10 and 4 days, so any 7-day threshold fires in an ordinary month.
 
-**Never** use strikethrough or colour as the only status cue. **Never** hide a cancelled event from the
-page while `/events.ics` announces `STATUS:CANCELLED`. **Never** invent a threshold and call it
-freshness.
+**Never** use strikethrough or colour as the only status cue. A date the club stopped announcing is retired **in the
+file** — `STATUS:CANCELLED` with a raised `SEQUENCE`, the only mechanism RFC 5545 gives a client for dropping a date
+it already holds (D72, D225, D370) — and **not painted on the page** (D223: a page of upcoming dates that shows a
+finished evening is a lie with a friendly face). What used to be a single "**Never** hide a cancelled event from the
+page while `/events.ics` announces `STATUS:CANCELLED`" line is restated here because the shipped design and that gate
+rule contradict it: the page never paints one, and the file says it. `CANCELLED` is the retirement mechanism, not a
+claim that the club called a meeting off — the source stops announcing old rows rather than cancelling them, so the
+note beside any hand-authored cancellation says what is **not** claimed (D370). **Never** invent a threshold and call
+it freshness.
 
 ## States: empty, loading, failed
 
@@ -528,6 +534,15 @@ Rules that are not decoration:
   up to two 4px hairline edges under its preview card; the card and the deck went together, because a deck under a
   pointer is a picture of dates the page no longer shows. What survives is the part that was always the accessible
   one: the **link text** (`Next 8 dates →`), which is where assistive tech reads the count.
+- **The reach of the file is said where the file is offered, and it is generated** (round-5 communication read B2,
+  q18, D371). `/schedule`'s lede names the window the published `/events.ics` carries — first `DTSTART`, last
+  `DTSTART`, how many rows — and every row's `DESCRIPTION` carries the **identical** sentence, both from
+  `windowSentence(feedWindow(…))`. It is never hand-written, because a date in prose is a claim that expires with
+  the next harvest; `check:ics`'s `calendar-window` rule derives the window from the file's own `DTSTART`s and
+  `check:schedule-window` compares the page's sentence against the same generator, so a sentence the rows do not
+  support goes red rather than shipping. One sentence in two places rather than two sentences is deliberate: the
+  page and the file naming one window twice in different words is a near-duplicate `check:content` would have to be
+  signed off for no new fact.
 - **The plate cap is one number, read from the drawing code.** `node design/schedule-geometry.mjs` parses the
   323px out of `EventArt.astro`'s scoped style rather than remembering it, so a cap change cannot leave a probe
   reporting a number nothing decides (same reasoning as the route lists in D230).

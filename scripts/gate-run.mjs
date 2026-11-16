@@ -118,8 +118,8 @@ const DEPLOY = [
   // wave. It was scheduled before `build` @measured 2026-11-12: a fresh clone - CI, or anyone's first checkout -
   // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step
   // in the wave passed. The selftest plants in-memory clones of the committed snapshot, so it needs nothing.
-  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes', needs: ['build'] },
-  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (38 plantings, each named @measured 2026-11-14 by `node scripts/check-ics.mjs --selftest`)' },
+  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, and the reach the file states about itself (D371)', needs: ['build'] },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (40 plantings, each named @measured 2026-11-16 by `node scripts/check-ics.mjs --selftest`)' },
   // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
   // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
@@ -196,7 +196,7 @@ const DEPLOY = [
   // Which dates `/schedule` is allowed to print, checked against the rule module rather than a copy of it. Runs
   // before `build` because it opens no artifact (D118 again: a gate that can go red before anyone builds is a
   // gate that catches the defect on the branch that introduced it).
-  { name: 'check:schedule-window:selftest', desc: 'the schedule-window gate can still fail (17 cases: 9 rule, 8 page plantings)' },
+  { name: 'check:schedule-window:selftest', desc: 'the schedule-window gate can still fail (18 cases: 9 rule, 9 page plantings, @measured 2026-11-16 by `npm run check:schedule-window:selftest`)' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.

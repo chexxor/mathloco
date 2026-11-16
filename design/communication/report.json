@@ -2105,14 +2105,14 @@
   },
   {
    "route": "/schedule",
-   "bytes": 36737,
+   "bytes": 36821,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 229
+    "body": 245
    },
-   "bodySentences": 43,
-   "bodyWords": 229,
+   "bodySentences": 44,
+   "bodyWords": 245,
    "headings": [
     "Dates",
     "Social",
@@ -2371,6 +2371,12 @@
      "zone": "body",
      "section": "Dates",
      "text": "Each one links to the page the club posts its sign-up on.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
      "heading": false
     },
     {

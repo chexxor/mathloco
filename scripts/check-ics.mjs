@@ -19,9 +19,10 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { renderCalendar, escapeText } from '../src/lib/ics.mjs';
+import { renderCalendar, escapeText, contentLine, CRLF } from '../src/lib/ics.mjs';
 import { publishableRows, meetingKind, venueKey } from '../src/lib/event-groups.mjs';
-import { feedDescription, DESCRIPTIONS } from '../src/lib/event-description.mjs';
+import { feedDescription, DESCRIPTIONS, windowSentence } from '../src/lib/event-description.mjs';
+import { feedWindow, plainDate } from '../src/lib/event-window.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -481,18 +482,63 @@ const RULES = [
   },
 
   // D319: the published DESCRIPTION is the club's own copy, per meeting type. This is the rule that makes
+  // D371 (round-5 communication read B2, q18): the reach of the file, **inside** the file. A subscriber who added
+  // this feed in November and opened it in December cannot tell how far it reaches or which of its rows already
+  // passed; the answer is in the `DTSTART`s and nothing wraps it. The window here is derived from the **published
+  // bytes** — the same rows the subscriber reads, grouping applied, cancellations included — and the rule demands
+  // the generated sentence appear in every `DESCRIPTION`. That direction is the point: the gate does not compare
+  // the sentence against `data`, it compares it against the rows, so a sentence hand-written into the copy, or one
+  // left behind by a harvest that moved a date, fails by name instead of shipping a reach the file does not have.
+  (_data, text) => {
+    const out = [];
+    const iso = (d) => `${d.slice(0, 4)}-${d.slice(4, 6)}-${d.slice(6, 8)}`;
+    const days = eventsOf(text)
+      .map((block) => {
+        const v = String(propOf(unfold(block), 'DTSTART')?.value ?? '');
+        return /^\d{8}/.test(v.slice(0, 8)) ? v.slice(0, 8) : null;
+      })
+      .filter(Boolean)
+      .sort();
+  // No VEVENT at all is the runway rules' failure, not this one; asserting a window over an empty file would
+    // add a second message for the same defect.
+    if (!days.length) return out;
+    const sentence = windowSentence({ first: iso(days[0]), last: iso(days[days.length - 1]), count: days.length });
+    const want = escapeText(sentence);
+    for (const block of eventsOf(text)) {
+      const u = unfold(block);
+      const uid = propOf(u, 'UID')?.value ?? '(no uid)';
+      const desc = propOf(u, 'DESCRIPTION');
+      if (!desc) {
+        out.push({ rule: 'calendar-window', detail: `${uid}: a VEVENT with no DESCRIPTION cannot name the file it belongs to or how far that file reaches (D371)` });
+        continue;
+      }
+      if (!desc.value.includes(want)) {
+        out.push({ rule: 'calendar-window', detail: `${uid}: DESCRIPTION does not name the window these rows carry. The file's own DTSTARTs run ${plainDate(iso(days[0]))} through ${plainDate(iso(days[days.length - 1]))} across ${days.length} row(s); the sentence the renderer generates is ${JSON.stringify(sentence)} (D371: how far the file reaches is printed nowhere, so the answer lives only as bare dates a subscriber has to count)` });
+      }
+    }
+    return out;
+  },
+
   // "the publisher normalizes, it does not proxy" (D150) checkable in the calendar file, and it is the reason
   // the organizer's pre-2026 boilerplate cannot come back on the next harvest while the gate is green.
   (data, text) => {
     const out = [];
     const rowsByUid = new Map((data.events ?? []).map((r) => [String(r.uid ?? ''), r]));
+    // D371: the window clause is part of the generated copy, so the gate compares the whole DESCRIPTION against
+    // the same call the renderer makes — with the window the renderer would have had, derived from the rows the
+    // grouping publishes (not from every snapshot row, which is a different count). A DESCRIPTION that lost the
+    // clause, or kept a stale one, fails here rather than shipping.
+    const wantWindow = feedWindow(publishableRows(data.events ?? []).rows);
     for (const block of eventsOf(text)) {
       const u = unfold(block);
       const uid = String(propOf(u, 'UID')?.value ?? '');
       const desc = propOf(u, 'DESCRIPTION');
       if (!desc) continue;
       const row = rowsByUid.get(uid) ?? { uid };
-      const want = escapeText(feedDescription(row));
+      // D371: the window clause is part of the generated copy, so the gate compares the whole DESCRIPTION against
+      // the same call the renderer makes — with the window the renderer would have had, derived from the snapshot.
+      // A DESCRIPTION that lost the clause, or kept a stale one, fails here rather than shipping.
+      const want = escapeText(feedDescription(row, wantWindow));
       if (desc.value !== want) {
         out.push({ rule: 'feed-copy', detail: `${uid}: DESCRIPTION is not the copy src/lib/event-description.mjs generates — the feed proxies upstream boilerplate (D319)` });
       }
@@ -639,6 +685,18 @@ if (selftest) {
     // follows). The first live row is moved four days into the past and kept CONFIRMED, which is what a harvest
     // that reads a stale copy leaves behind.
     { name: 'a-past-row-published-as-live', data: (d) => { moveRow(d.events.find((e) => String(e.status ?? 'CONFIRMED').toUpperCase() !== 'CANCELLED'), dayShift(-4)); return d; }, rule: 'stale-live-row' },
+    // D371. The class is a reach sentence that does not match the rows — what a hand-written window looks like
+    // the first harvest after it moves a date. The swap is done on the **unfolded logical line** and the line is
+    // re-folded through the renderer's own `contentLine`, so the planting plants the window defect and nothing
+    // else: a naive replace over the wire bytes would miss, because the sentence is split across content lines.
+    { name: 'the-window-sentence-lags-the-rows', text: (t) => {
+        const good = escapeText(windowSentence(feedWindow(publishableRows(snapshot.events).rows)));
+        const stale = escapeText(windowSentence({ first: '2026-11-01', last: '2026-12-01', count: 6 }));
+      return unfold(String(t).replace(/\r\n$/, '')).split(CRLF).map((line) => {
+        if (!line.startsWith('DESCRIPTION:')) return line;
+        return contentLine('DESCRIPTION', null, line.slice('DESCRIPTION:'.length).replace(good, stale));
+      }).join(CRLF) + CRLF;
+      }, rule: 'calendar-window' },
     { name: 'a-stale-superseded-log', data: (d) => { d.superseded = [{ uid: 'ghost-row', group: '2026-11-21|angel|social', reason: 'dropped last week' }]; return d; }, rule: 'superseded-log' },
     { name: 'the-grouping-is-silent-on-the-shipped-snapshot', clean: true, rule: 'grouping' },
     { name: 'the-log-matches-the-live-decision', clean: true, data: (d) => { d.superseded = publishableRows(d.events).dropped; return d; }, rule: 'superseded-log' },

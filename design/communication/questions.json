@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T11:41:40.016Z",
+ "artifactBuilt": "2026-11-16T12:30:50.323Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -186,6 +186,14 @@
      "form": "prose",
      "zone": "body",
      "section": "Dates",
+     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
+     "shape": 0
+    },
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
      "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
      "shape": 0
     },
@@ -235,14 +243,6 @@
      "zone": "body",
      "section": "Social",
      "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
-     "shape": 1
-    },
-    {
-     "route": "/schedule",
-     "form": "prose",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
      "shape": 1
     }
    ],
@@ -1517,7 +1517,8 @@
     "/events.ics": {
      "status": "answered",
      "forms": [
-      "ics-line"
+      "ics-line",
+      "ics-event"
      ],
      "zones": [
       "feed"
@@ -1528,7 +1529,8 @@
     "/events.ics"
    ],
    "forms": [
-    "ics-line/feed"
+    "ics-line/feed",
+    "ics-event/feed"
    ],
    "outsideRoutes": [],
    "outsideCount": 0,
@@ -1653,6 +1655,7 @@
     "/events.ics": {
      "status": "answered",
      "forms": [
+      "ics-event",
       "ics-line"
      ],
      "zones": [
@@ -1664,6 +1667,7 @@
     "/events.ics"
    ],
    "forms": [
+    "ics-event/feed",
     "ics-line/feed"
    ],
    "outsideRoutes": [],
@@ -1671,6 +1675,62 @@
    "evidence": [
     {
      "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261121T120000\r\nDTEND;TZID=America/Chicago:20261121T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:bccd6c33-c3c1-487f-b52d-887374e79134\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261125T180000\r\nDTEND;TZID=America/Chicago:20261125T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/bccd6c33-c3c1-487f-b52d-887374e79134\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:ad58ce62-65e3-47c1-9806-74166b7c6808\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261205T120000\r\nDTEND;TZID=America/Chicago:20261205T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/ad58ce62-65e3-47c1-9806-74166b7c6808\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:97b75e15-af79-4aa5-a87b-d8938baf1464\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261209T180000\r\nDTEND;TZID=America/Chicago:20261209T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/97b75e15-af79-4aa5-a87b-d8938baf1464\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:e69a8833-0c07-41cd-a235-329b369239b7\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261219T120000\r\nDTEND;TZID=America/Chicago:20261219T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/e69a8833-0c07-41cd-a235-329b369239b7\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
      "form": "ics-line",
      "zone": "feed",
      "section": "LOCATION",
@@ -1692,62 +1752,6 @@
      "section": "LOCATION",
      "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
      "shape": 1
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "LOCATION",
-     "text": "LOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minn",
-     "shape": 1
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "LOCATION",
-     "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
-     "shape": 1
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "LOCATION",
-     "text": "LOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minn",
-     "shape": 1
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "LOCATION",
-     "text": "LOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park",
-     "shape": 1
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "GEO",
-     "text": "GEO:44.9498412;-93.3824443",
-     "shape": 2
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "GEO",
-     "text": "GEO:44.9057455;-93.2878163",
-     "shape": 2
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": "GEO",
-     "text": "GEO:44.9498412;-93.3824443",
-     "shape": 2
     }
    ],
    "declinedEvidence": []
@@ -1760,7 +1764,7 @@
     "/events.ics",
     "/schedule"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "ANSWERED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -1788,16 +1792,41 @@
      "zones": []
     },
     "/events.ics": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "ics-event"
+     ],
+     "zones": [
+      "feed"
+     ]
     }
    },
-   "answeredOn": [],
-   "forms": [],
+   "answeredOn": [
+    "/events.ics"
+   ],
+   "forms": [
+    "ics-event/feed"
+   ],
    "outsideRoutes": [],
    "outsideCount": 0,
-   "evidence": [],
+   "evidence": [
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 3
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 3
+    }
+   ],
    "declinedEvidence": []
   },
   {
@@ -1809,7 +1838,7 @@
     "/schedule",
     "/"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "ANSWERED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -1832,21 +1861,118 @@
      "zones": []
     },
     "/schedule": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/events.ics": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "ics-line",
+      "ics-event"
+     ],
+     "zones": [
+      "feed"
+     ]
     }
    },
-   "answeredOn": [],
-   "forms": [],
+   "answeredOn": [
+    "/schedule",
+    "/events.ics"
+   ],
+   "forms": [
+    "prose/body",
+    "ics-line/feed",
+    "ics-event/feed"
+   ],
    "outsideRoutes": [],
    "outsideCount": 0,
-   "evidence": [],
+   "evidence": [
+    {
+     "route": "/schedule",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "text": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "text": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "text": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261121T120000\r\nDTEND;TZID=America/Chicago:20261121T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:bccd6c33-c3c1-487f-b52d-887374e79134\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261125T180000\r\nDTEND;TZID=America/Chicago:20261125T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/bccd6c33-c3c1-487f-b52d-887374e79134\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:ad58ce62-65e3-47c1-9806-74166b7c6808\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261205T120000\r\nDTEND;TZID=America/Chicago:20261205T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/ad58ce62-65e3-47c1-9806-74166b7c6808\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-event",
+     "zone": "feed",
+     "section": "VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:97b75e15-af79-4aa5-a87b-d8938baf1464\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261209T180000\r\nDTEND;TZID=America/Chicago:20261209T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/97b75e15-af79-4aa5-a87b-d8938baf1464\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "shape": 0
+    }
+   ],
    "declinedEvidence": []
   },
   {
@@ -2944,29 +3070,6 @@
    "answeredOn": []
   },
   {
-   "id": "q17",
-   "who": "calendar-subscriber",
-   "ask": "Does the file say which of its dates have already passed?",
-   "verdict": "UNANSWERED",
-   "where": [
-    "/events.ics",
-    "/schedule"
-   ],
-   "answeredOn": []
-  },
-  {
-   "id": "q18",
-   "who": "calendar-subscriber",
-   "ask": "Does anything say how far ahead the file reaches?",
-   "verdict": "UNANSWERED",
-   "where": [
-    "/events.ics",
-    "/schedule",
-    "/"
-   ],
-   "answeredOn": []
-  },
-  {
    "id": "q24",
    "who": "search-visitor",
    "ask": "Can I look for a specific past meetup?",
@@ -3006,10 +3109,10 @@
  ],
  "counts": {
   "questions": 29,
-  "ANSWERED": 19,
+  "ANSWERED": 21,
   "DECLINED": 3,
   "ANSWERED-IN-CHROME": 0,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 7
+  "UNANSWERED": 5
  }
 }

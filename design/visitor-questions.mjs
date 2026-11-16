@@ -105,8 +105,14 @@ const QUESTIONS = [
   { id: 'q16', who: 'calendar-subscriber', ask: 'Does each entry tell me where to go?', where: ['/events.ics'],
     anyOf: [[/description[^\n]*https?:\/\//i], [/^location/i], [/^geo:/i]] },
 
+  // The shapes above were written before this repo had a mechanism for a finished date. The shipped one (D370,
+  // D371): the file retires it with `STATUS:CANCELLED` — RFC 5545's own word — and names where the file starts in
+  // every row's `DESCRIPTION`, which is what lets a subscriber tell which of its rows are past. A probe that
+  // cannot match the mechanism the site ships reports the gap as open forever, which is the same defect as a gate
+  // that cannot go red. Both halves have to match inside ONE carrier, and that carrier is an **unfolded VEVENT**:
+  // the sentence lives in a folded `DESCRIPTION`, so no single wire line carries it (D371).
   { id: 'q17', who: 'calendar-subscriber', ask: 'Does the file say which of its dates have already passed?', where: ['/events.ics', '/schedule'],
-    anyOf: [[/status:(past|complete|expired)/i], [/already (passed|gone|ended|happened)/i], [/starts? in the past|past date/i]] },
+    anyOf: [[/status:(past|complete|expired)/i], [/already (passed|gone|ended|happened)/i], [/starts? in the past|past date/i], [/status:cancelled/i, /the calendar file carries/i]] },
 
   { id: 'q18', who: 'calendar-subscriber', ask: 'Does anything say how far ahead the file reaches?', where: ['/events.ics', '/schedule', '/'],
     anyOf: [[/through (20\d\d|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))/i], [/window|horizon|unbounded|uncapped|no cap\b/i]] },
@@ -183,13 +189,25 @@ function carriersOf(page) {
   return out;
 }
 
+/**
+ * Carriers for the calendar file itself: every wire line (a label a subscriber reads, `LOCATION:…`), plus one
+ * carrier per **unfolded** `VEVENT`. The block carrier exists because RFC 5545 folds long values onto continuation
+ * lines, so a sentence inside a `DESCRIPTION` is split across three or four wire lines — a line-level scan cannot
+ * see the sentence the file writes, and the questions that ask about the file (q03, q17, q18, q21) are exactly the
+ * ones that need it (D371).
+ */
+const icsCarriers = (raw) => {
+  const lines = raw.split(/\r?\n/).filter((l) => l.trim())
+    .map((l) => ({ form: 'ics-line', zone: 'feed', section: l.split(':')[0], text: l }));
+  const events = raw.replace(/\r\n[ \t]/g, '').match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) ?? [];
+  return [...lines, ...events.map((b) => ({ form: 'ics-event', zone: 'feed', section: 'VEVENT', text: b }))];
+};
+
 const ST = distState();
 const pages = builtPageFiles(ROOT).map((p) => onePage(p.file, p.route));
 pages.push({ route: '/events.ics', raw: readFileSync(`${ROOT}/events.ics`, 'utf8'), text: '', headings: [], anchors: [], sentences: [], zones: [] });
 for (const p of pages) {
-  p.carriers = p.route === '/events.ics'
-    ? p.raw.split(/\r?\n/).filter((l) => l.trim()).map((l) => ({ form: 'ics-line', zone: 'feed', section: l.split(':')[0], text: l }))
-    : carriersOf(p);
+  p.carriers = p.route === '/events.ics' ? icsCarriers(p.raw) : carriersOf(p);
 }
 if (pages.length < 2) throw new Error(`no built pages under ${ROOT} — run npm run build first`);
 

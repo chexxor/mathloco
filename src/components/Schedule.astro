@@ -9,7 +9,9 @@ import {
 // The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
 // can compare it against the same rule rather than a copy of it (D238).
 import { todayIn, snapshot } from '../lib/events.mjs';
-import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs';
+import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow, feedWindow } from '../lib/event-window.mjs';
+import { publishableRows } from '../lib/event-groups.mjs';
+import { windowSentence } from '../lib/event-description.mjs';
 import SignUpLinks from './SignUpLinks.astro';
 import { PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
@@ -236,6 +238,17 @@ const headingText = compact ? 'When we meet' : 'Dates';
 // two is the same defect class as a button labelled "Details and sign-up" that happens to go to Meetup. The
 // claim the band can back up is the one the resolver decides per date: each printed date links to whatever
 // sign-up page the club has posted for it.
+// D371 (round-5 communication read B2, q18): the file's reach is printed nowhere — "How far ahead does the file
+// reach?" and "Which of its dates have already passed?" are both answered only by the seven bare `DTSTART`s a
+// subscriber reads. The clause is **generated from the rows this same build publishes** (the grouping applied,
+// cancellations included, since the question is what the file holds), through `windowSentence` — the identical
+// call `src/lib/ics.mjs` puts in every `DESCRIPTION`. One call in two places is the point: a hand-written date
+// in a lede is a claim that expires with the next harvest, and two hand-written sentences naming the same window
+// are a near-duplicate `check:content` would have to be talked into accepting. The homepage band does not carry
+// it: D306 keeps `/schedule` the only surface that prints dates, and the compact lede has no room for a third
+// fact beside its two paths.
+const fileWindow = feedWindow(publishableRows(snapshot.events).rows);
+const windowClause = windowSentence(fileWindow);
 const lede = compact
   // 2026-11-15 (D340, round-4 §5): the sentence that used to live here — "The next date, where the club meets,
   // and where to sign up for it are all on the schedule." — is DELETED, not reworded. A page that says where the
@@ -247,7 +260,10 @@ const lede = compact
   ? (items.length
       ? null
       : 'The club\u2019s dates come from its own calendar.')
-  : 'These dates are copied from the club\u2019s own calendar. Each one links to the page the club posts its sign-up on.';
+  : ['These dates are copied from the club\u2019s own calendar.',
+      'Each one links to the page the club posts its sign-up on.', windowClause]
+      .filter((s) => s)
+      .join(' ');
 ---
 
 <section class="bg-paper py-12" aria-labelledby={headingId}>

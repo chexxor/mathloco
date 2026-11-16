@@ -13,7 +13,12 @@
  * normalizes; it does not proxy" — failing in the direction that costs a subscriber a wrong expectation of a
  * meeting they are about to walk into.
  *
- * The rule the copy obeys, from the 2026-11-14 read (§7 D2): **two sentences, then the chat link.** Every
+ * The rule the copy obeys, from the 2026-11-14 read (§7 D2): **two sentences, then the window clause, then the
+ * chat link.** The window clause (round-5 read B2, q18, D371) is not authored here at all — it is generated from
+ * the file's own `DTSTART`s by `windowSentence` — because a date written into a sentence is a claim that expires
+ * with the next harvest, which is the half of "the publisher normalizes" that no prose rule can enforce.
+ *
+ * Every
  * sentence is taken from copy this repo already carries a source for (the hero lede, `src/config.json`'s
  * `seo.description`, the organizer's own DESCRIPTION for the study series). No cadence word appears in any
  * template, because a cadence word needs a source that names it (D92, D301) and a calendar file is the
@@ -29,6 +34,7 @@
  */
 import config from '../config.json' with { type: 'json' };
 import { meetingKind } from './event-groups.mjs';
+import { plainDate } from './event-window.mjs';
 
 /** The one line every published description ends with: where the club actually talks. */
 const CHAT_LINE = `The club’s chat is where the conversation happens: ${config.URLs.discordInvite}`;
@@ -72,8 +78,34 @@ export const descriptionKind = (row) => {
   return DESCRIPTIONS[kind] ? kind : 'general';
 };
 
-/** The text a `VEVENT`’s DESCRIPTION carries. The chat link is appended, not counted as a sentence. */
-export const feedDescription = (row) => {
+/**
+ * The one sentence that names the window the published file carries — `Nov 7, 2026` … `Dec 19, 2026`.
+ *
+ * Generated, never written: it is computed from the `DTSTART`s the same build puts in the file, so the sentence
+ * and the rows cannot disagree after a harvest moves one of them, which is what makes the date in a sentence
+ * gate-able instead of hopeful (round-5 read B2, q18: "How far ahead does the file reach?" — UNANSWERED on the
+ * artifact, the answer living only as seven bare `DTSTART`s). The same call answers q17 ("Which of its dates
+ * have already passed?") by naming the **first** date: a file that says it starts before today, and that marks
+ * those rows cancelled, has told a subscriber which of its rows are past (D370's retirement pair).
+ *
+ * It is deliberately one sentence, used in the file and in `/schedule`'s lede, rather than two: the page and the
+ * file would otherwise carry the same window twice in different words, and `check:content` would then need a
+ * signature for a pair that is only deliberate because it is the same generated string.
+ */
+export const windowSentence = (window) => {
+  if (!window || !window.first || !window.last || !window.count) return '';
+  if (window.count === 1) return `The calendar file carries one date, ${plainDate(window.first)}.`;
+  return `The calendar file carries the club\u2019s ${window.count} dates from ${plainDate(window.first)} through ${plainDate(window.last)}.`;
+};
+
+/**
+ * The text a `VEVENT`'s DESCRIPTION carries: two sentences for the meeting's kind, then the window the file
+ * carries, then the chat link. `window` is required, not defaulted — a DESCRIPTION that silently loses the
+ * window clause is the defect `check:ics`'s `calendar-window` rule exists to catch, and a default would hide
+ * exactly the drift that rule is written to fail on.
+ */
+export const feedDescription = (row, window) => {
   const template = DESCRIPTIONS[descriptionKind(row)] ?? DESCRIPTIONS.general;
-  return `${template.sentences.join(' ')} ${CHAT_LINE}`;
+  const clause = windowSentence(window);
+  return [template.sentences.join(' '), clause, CHAT_LINE].filter((s) => s).join(' ');
 };
