@@ -41,7 +41,11 @@
  *  remembers — `data-rsvp-preferred` moves for a seed, a dispatched event and a real click even where the
  *  order cannot. What is no longer demonstrable on this artifact is a reorder that shuffles the wrong entries
  *  or silently drops one; it un-parks the day a page paints a standing row of two or more platforms, which is
- *  the day the club adds a standing exit the band does not already paint.
+ *  the day a page paints a standing row of two or more platforms. R1 (the operator's rulings letter of
+ *  2026-11-16, D358) is what makes that half CONDITIONAL rather than deleted: the order-equality and the
+ *  never-a-filter assertions are guarded on the cluster offering >= 2 platforms and print a note naming the
+ *  reason when skipped, so a future two-platform standing row re-activates them with no code change — and
+ *  the letter forbids the alternative that would buy the coverage back: "Do not add URLs to a page for a gate."
  *
  * What it does NOT do: reach the network. The only network here is 127.0.0.1.
  */
@@ -200,11 +204,25 @@ const verdict = (probe, clusters, pageName, seed) => {
     if (!c.platforms.length) {
       say(`${where} offers no platform, but the resolver's destinations for that date are empty while the row is printed - check src/config.json (D280)`);
     }
-    for (const [phase, list] of [['after load', probe.orderAfterSeed], ['after another row is clicked', probe.orderAfterEvent], ['after this row is clicked', probe.orderAfterClick]]) {
+      for (const [phase, list] of [['after load', probe.orderAfterSeed], ['after another row is clicked', probe.orderAfterEvent], ['after this row is clicked', probe.orderAfterClick]]) {
       const h = (list || []).find((x) => x.date === c.date);
       if (!h) continue;
+      // R1 (the operator's rulings letter of 2026-11-16, D358): the two assertions that need a ROW TO
+      // PERMUTE — "a preference is a reorder, never a filter" (the platform-count check below) and
+      // "the reorder shuffles the right entries" (the order-equality checks in rules 3 and 4) — are
+      // CONDITIONAL on this cluster offering at least two platforms, and are SKIPPED WITH A PRINTED NOTE
+      // rather than deleted, so a future two-platform standing row re-activates them with no code change.
+      // On the club's own calendar the standing row offers ONE platform (D342: the exit band already paints
+      // Meetup and Discord), and a reorder of one item is the identity, so a clean page and a broken one
+      // print the same order. The letter forbids the other exit: "Do not add URLs to a page for a gate."
+      // What stays UNCONDITIONAL at one platform, because it is still decidable there: the platform COUNT
+      // a reorder paints against the resolver's (`h.order.length !== c.platforms.length` — a reorder that
+      // repeats an entry changes the count, and that is the defect the selftest plants), the resolver's
+      // own count, the server-painted order, hydration, and that the island ADOPTS the platform it was
+      // sent (`data-rsvp-preferred`).
+      const permutible = c.platforms.length >= 2;
       const missing = c.platforms.filter((p) => !h.order.includes(p));
-      if (missing.length) {
+      if (missing.length && permutible) {
         say(`${where} lost ${missing.join(', ')} ${phase} (${h.order.join(', ')}) - a preference is a reorder, never a filter (D281); every platform the club declares stays on every date`);
       }
       if (h.order.length !== c.platforms.length) {
@@ -223,7 +241,7 @@ const verdict = (probe, clusters, pageName, seed) => {
     const h = (probe.orderAfterSeed || []).find((x) => x.date === c.date);
     if (!h) { say(`${pageName}: the probe saw no cluster for ${c.date} in the ${label} case`); continue; }
     const want = wantFor(c, seed);
-    if (h.order.join(', ') !== want) {
+    if (c.platforms.length >= 2 && h.order.join(', ') !== want) {
       say(`${where}: with ${label}, the cluster reads ${h.order.join(', ')} - it should read ${want} (the island reads ${PREF_KEY} and reorders with orderByPreference())`);
     }
     const wantPreferred = seed && c.platforms.includes(seed) ? seed : null;
@@ -261,7 +279,7 @@ const verdict = (probe, clusters, pageName, seed) => {
       const h = list.find((x) => x.date === c.date);
       if (!h) continue;
       const want = wantFor(c, expected);
-      if (h.order.join(', ') !== want) {
+      if (c.platforms.length >= 2 && h.order.join(', ') !== want) {
         say(`${where} did not take the platform chosen ${phaseName} (${h.order.join(', ')}); the window event 'rsvp-platform' is not reaching every island (want ${want}, from ${expected})`);
       }
       if ((h.preferred ?? null) !== expected) {
@@ -269,8 +287,16 @@ const verdict = (probe, clusters, pageName, seed) => {
       }
     }
   }
-  if (clusters.length < 2) {
+  if (clusters.length < 2 && seed === null) {
     console.log(`  note: ${pageName} paints one cluster, so "the platform one row chose reaches the OTHER rows" has no second row to test. The event itself is still exercised: the probe dispatches it and the island that hears it must reorder (checked above). The club's calendar holds one upcoming date @measured 2026-11-12 by npm run events:harvest, so this is the honest state of the artifact, not a gap in the gate; the planting that breaks the event name is still caught.`);
+  }
+  // R1 (D358): the two order assertions are conditional on a cluster offering >= 2 platforms, and a run
+  // that skipped them says so, with the reason, rather than reading as coverage. The letter's standing row
+  // is one platform today; the day the club paints a standing exit the band does not already paint, the
+  // same code re-activates them and this note stops printing.
+  const degenerate = clusters.filter((c) => c.platforms.length < 2);
+  if (degenerate.length && seed === null) {
+    console.log(`  note: ${pageName} cluster(s) for ${degenerate.map((c) => c.date).join(', ')} offer ${Math.max(...degenerate.map((c) => c.platforms.length))} platform(s), so "the reorder never reorders the wrong entries" and "a reorder is never a filter" are SKIPPED here — a reorder of ${degenerate.map((c) => c.platforms.length).join('/')} item(s) is the identity, and the two states print the same order. They are conditional, not deleted (D358, R1): a standing row of two or more platforms re-activates them with no code change. What IS still checked at one platform: the cluster still offers every destination the resolver names (count checked against the resolver), the server-painted order equals splitPaths().standing, the island hydrates, and it ADOPTS the platform the seed, the dispatched event or a real click sent it.`);
   }
 
   // 5. the click itself: it must write the key, and the island you clicked must reorder.
@@ -463,7 +489,7 @@ if (!selftest) {
     for (const f of fails) console.log(`  - ${f}`);
     process.exit(1);
   }
-  console.log(`check:rsvp-preference: ok - ${ROUTES.length} route(s), ${ROUTES.length * 3} browser loads, canonical order preserved with no seed and with an unknown seed, ${PREF_SEED} first when stored, every cluster a permutation of the same platforms, click path stored and reordering every cluster`);
+  console.log(`check:rsvp-preference: ok - ${ROUTES.length} route(s), ${ROUTES.length * 3} browser loads, canonical order preserved with no seed and with an unknown seed, ${PREF_SEED} first when stored, every cluster the same set of platforms the resolver offers; the two order assertions are conditional on a standing row of >= 2 platforms and are printed as SKIPPED where the row is degenerate (D358, R1), and the click path stores and the island adopts the platform it was sent`);
   process.exit(0);
 }
 
