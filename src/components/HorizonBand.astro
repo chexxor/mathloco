@@ -17,18 +17,29 @@ import euler1910 from '../assets/photos/horizon-euler1910.png';
  * page** - D329's band, kept in the header as of 5cd128f and quoted here as its record, not as this page; the two
  * figures are close by arithmetic (D329's three-leaf rungs vs one leaf at a wider cap), not by coincidence-checking.
  *
- * **D351 (2026-11-15) superseded that cap the same day D347 wrote it**: the round-4 brief's acceptance line asks for
- * a FULL-BLEED captioned break, so the `max-width` is deleted and the leaf runs to the column edge at every width. What
- * that costs is measured, not argued - @measured 2026-11-16 by `node design/plates-price.mjs --no-build` (Linux native,
- * Node 24.22.1), the shipped page is now identical to the probe's "plate full-bleed on the column" row at all four widths:
- * band **721.2px** holding a leaf **1192x599.4** on a 3153px page at 1240 - a **1.71x upscale** of the 698x351 scan -
- * **419.5** / 592x297.7 at 640, **319.6** / 358x180 on a 4152px page at 390, **284.4** / 288x144.8 at 320. Below 640 the
- * column is narrower than the scan, so the upscale is the one width band this shape reaches. Half of record 0023's
- * caution still applies at 1240 and nothing here resolves it by argument: the hairlines stop being one-to-one with the
- * archive's drawing, and `check:ground` is the instrument that decides whether they stay legible on the painted bytes
- * - it runs in `verify` and is green on this build, which is the evidence for shipping the upscale, not a claim about
- * the reader's eye. The capped figures above (+320px at 390, +473px at 1240, band 472.8px, leaf 698x351) are that
- * alternative's price, kept as a record of what was priced before it was refused.
+ * **D351 (2026-11-15) superseded that cap the same day D347 wrote it, and the operator's rulings letter of 2026-11-16
+ * (R2, D356) undoes that undo: D351's cap deletion is undone and D347's cap is reinstated.** "Full-bleed" was a visual
+ * outcome the archive cannot supply — the widest rung for this leaf is `/img/1024/` and that rung returns the leaf's OWN
+ * scan, 698x351 (`/img/1600/`, `/img/2048/` and `/img/full/` answer 404, probed 2026-11-03) — so full-bleed at 1240 is
+ * 1.71x interpolated pixels of the one asset whose whole value is hairlines. Capped, the plate paints at no more than
+ * 1.0x its widest available source rung, and the plate plus its caption cost the page **+377px at 1240** - the band's own
+ * box is 472.8px, of which 96px is declared `py-12` air, and the leaf paints 698x351, exactly 1.0x the archive's 698x351
+ * scan, on a 2905px page @measured 2026-11-16 by `node design/plates-price.mjs --no-build`. That is inside the 400px the
+ * letter's replacement acceptance names, counting the plate rather than the air around it; the band's whole box, air
+ * included, is 472.8px, and this header says which of the two it means wherever it quotes a figure. Against D351's
+ * **band 721.2px holding a leaf 1192x599.4 on a 3153px page** - a 23% slice of the document for a plate about the
+ * history of geometry, and +248px of page over what ships.
+ *
+ * What that refusal costs, measured on both shapes - @measured 2026-11-16 by `node design/plates-price.mjs --no-build`
+ * (Linux native, Node 24.22.1). What ships is the capped band: at 1240 the band is 472.8px, the leaf 698x351, the page
+ * 2905px; at 640, 419.5 / 592x297.7 on a 3932px page; at 390, 319.6 / 358x180 on a 4152px page; at 320, 284.4 /
+ * 288x144.8 on a 4600px page. D351's full-bleed shape differs from it at exactly ONE width: at 1240 it prints 721.2 /
+ * 1192x599.4 on a 3153px page, and below 1024 it prints the same boxes as the capped band, because the column is
+ * narrower than the 698px scan and the cap never binds. So the 1.71x upscale that made full-bleed a refusal was the
+ * one width band that shape reached, and it was reached only on the widest columns. Half of record 0023's caution
+ * still applies and nothing here argues the other half: under the cap the leaf is never upscaled, so the hairlines stay
+ * one-to-one with the archive's drawing at 1240 and shrink with it below, and `check:ground` - which runs in `verify`,
+ * and is green on this build - is the instrument that decides whether they stay legible on the bytes a browser paints.
  *
  * Why three and not one used to be the ruling (this is the composition the site arrived at, 2026-11-03, round
  * 14 option C -> F): the archive serves a widest rung of `/img/1024/`, but that rung returns each leaf's *own*
@@ -37,9 +48,11 @@ import euler1910 from '../assets/photos/horizon-euler1910.png';
  * **1.68x upscale that keeps 34% of the drawing** (`design/grill/round14/report.json`, `plates["band-mid"]`),
  * and record 0023 answered that in advance: *"if a strip is ever wanted from the archive, compose it from
  * several plates rather than upscale one."* Those three are each a whole leaf at **0.38–0.55x** of its native
- * scan. **That is no longer the shape on the page**, and since D351 it is no longer the width either: with one plate
- * the answer to "how wide may it go" was the scan under D347 and is the **column** under D351, so the plate carries
- * no cap and runs to the text column's edge at every width. What survives of record 0023 is its other half, the one
+ * scan. **That is no longer the shape on the page**, and under D351 it was no longer the width either - under D356 it is
+ * again. With one plate the answer to "how wide may it go" was the scan under D347, became the **column** under D351,
+ * and came back to the scan when the operator's letter of 2026-11-16 undid D351: the plate carries `max-width: 698px`,
+ * so it runs to the column edge only where the column is narrower than the scan (every width under 1024) and stops at
+ * its own scan above that. What survives of record 0023 is its other half, the one
  * that made this component's stylesheet necessary at all: a leaf whose own width is a percentage needs a **definite**
  * containing block, and left content-sized the shelf measured 434.35px inside a 1228px outer box at 1240 (the leaf sat
  * 0.62x under its own scan; @measured 2026-11-15 by `node design/plates-price.mjs`), so the shelf declares `width: 100%`
@@ -120,19 +133,20 @@ const plate = {
      a component <style> selector to `.horizon__plate[data-astro-cid-…]`, specificity (0,2,0), which beats every
      Tailwind utility (0,1,0) - a `w-full` on the figure would lose to the `width` below it and quietly do nothing
      (measured 2026-11-15: the round-3 read asked for 3-up / 2-up / 1-up and the utilities changed nothing).
-     With ONE plate the rungs at 640 and 900 have nothing to divide, so they are gone, and since D351 the plate
-     carries **no cap at all**: `width: 100%` of the shelf is the full-bleed the round-4 brief §7.2 asks for, and
-     the shelf is `width: 100%` of the outer box, so the plate runs edge to edge of the text column at every width
-     this site is probed at. The cap that used to bind here - 698px, the leaf's own scan width - is DELETED, not
-     raised: a cap below the column is why the plate sat inside 1192px of column at 1240, which is the reading the
-     auditor priced against the criterion. What that costs is measured rather than argued (see the header): the leaf
-     is upscaled past its scan above 698px of column, so the hairlines stop being one-to-one with the archive's
-     drawing, and `check:ground` is what decides whether they stay legible on the painted bytes. The old cap's own
+     The cap is BACK, and this is whose undo it is: the operator's rulings letter of 2026-11-16 (R2) rules that
+     D351's cap deletion is undone and D347 is reinstated, because "full-bleed" names a visual outcome the archive
+     cannot supply and this site's letter rule says the archive wins where it cannot supply the pixels. So the figure
+     carries `max-width: 698px` - the leaf's own scan at the archive's widest rung - and never paints above 1.0x that
+     scan. `width: 100%` stays: below 698px of column (every width under 1024) the plate still runs to the column
+     edge, and it is the *ceiling* that changes, not the floor. What the cap costs is measured, not argued (see the
+     header): the plate and its caption add +377px of page at 1240, band 472.8px against D351's 721.2px, and `check:ground`
+     clear the legibility bars on the bytes a browser paints. The old cap's own
      record - the shelf measured 434.35px with no declared width, so the leaf sat 0.62x under its scan - stays in
      the header above, because it is why a percentage width needs a definite containing block at all. */
   .horizon__plate {
     display: block;
     width: 100%;
+    max-width: 698px;
   }
   .horizon__img {
     display: block;

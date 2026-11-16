@@ -5,9 +5,13 @@
 //   node design/plates-price.mjs --no-build      # measure the dist that is already there
 //   PLATES_WIDTHS=1240,640,390 node design/plates-price.mjs
 //
-// Why this exists (2026-11-15, round-3 read §10). The band is `hidden lg:block`: below 1024px the three
-// public-domain plates are not on the page at all. D168 parks the fix behind a ruling — "Revisit when a
-// phone band composition gets ruled" — so the delegate's job is to price the options, not to pick one.
+// Why this exists (2026-11-15, round-3 read §10; re-anchored 2026-11-15 by D347, and again 2026-11-16 by D356).
+// The band used to be `hidden lg:block`: below 1024px the three
+// public-domain plates are not on the page at all. D168 parks the fix behind a ruling - "Revisit when a
+// phone band composition gets ruled" - so the delegate's job is to price the options, not to pick one.
+// The 2026-11-16 ruling (the operator's R2) is why this probe grew a third row: the letter says the option set
+// the delegate offered looked exhaustive because the capped row was missing from the instrument that priced it,
+// so the instrument now prints the cap alongside the shipped shape and D351's refused full-bleed.
 // The probe mutates the DOM only (never the artifact on disk) and reports, per variant: page height,
 // band height, each plate's painted box, and the painted area in px².
 //
@@ -64,8 +68,10 @@ for (const r of out) {
     console.log(`  ${row.id.padEnd(38)} +${String(row.delta).padStart(4)}px page  band ${String(row.band).padStart(5)}px  painted ${String(Math.round(row.paintedArea)).padStart(6)}px²  [${boxes}]${painted ? '' : '  (nothing painted)'}`);
   }
 }
-console.log('\nRow 1 is what the tree ships now (D351, 2026-11-15: ONE plate on the shelf, no cap, full-bleed to the column edge;');
-console.log("D347's cap at the leaf's own scan width is a dated record in HorizonBand.astro's header, not this build).");
-console.log('The other rows are the alternatives priced against it: the band gone, the band with nothing on it, and');
-console.log('the leaf let to the column edge - which is now the SAME page as row 1, so that row prints +0px and a');
-console.log('band as tall as row 1. Read them together: a differing pair would mean the cap is still binding somewhere.');
+console.log('\nRow 1 is what the tree ships now (D356, 2026-11-16, the operator\'s rulings letter R2: ONE plate on the shelf,');
+console.log("capped at its own scan width - D351's cap deletion is undone and D347's cap is back.");
+console.log('The other rows are the alternatives priced against it: the band gone, the band with nothing on it, D351\'s');
+console.log('full-bleed shape (the refused alternative, priced so that the refusal is a number rather than a memory), and');
+console.log('the cap written inline again - the letter\'s third row, "one plate, capped at intrinsic scan width", which IS');
+console.log('the same page as row 1. The probe prints that pair deliberately: a differing pair would mean the cap that');
+console.log('binds is not the cap this component wrote, which is the class of defect this instrument exists to keep visible.');

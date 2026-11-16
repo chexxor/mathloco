@@ -43,17 +43,28 @@
       return { w: +r.width.toFixed(1), h: +r.height.toFixed(1), painted: img && getComputedStyle(img).display !== 'none' && r.width > 0 };
     });
     const off = page();
-    // The rows are what the operator is choosing between now, not what the old tree had: since D351 (2026-11-15, round-4
-    // §7.2) the shipped page carries ONE plate with NO cap, full-bleed to the column edge, so the variants priced
-    // against it are the band gone, the band without its leaf, and the leaf let to the column - which is now the SAME
-    // page as row 1, and the probe prints that pair deliberately: a differing pair would mean a cap is still binding.
+    // The rows are what the operator is choosing between now, not what the old tree had: the operator's rulings letter
+    // of 2026-11-16 (R2, D356) undid D351's cap deletion, so the shipped page carries ONE plate WITH D347's cap at
+    // its own scan width. The variants priced against it are the band gone, the band without its leaf, D351's
+    // full-bleed shape - the refused alternative, priced so the refusal is a number rather than a memory - and the
+    // cap written inline again, which is the letter's third row "one plate, capped at intrinsic scan width" and is
+    // the SAME page as row 1. The probe prints that pair deliberately: a differing pair would mean the cap the letter
+    // asked for is not what binds, which is the defect this instrument exists to keep visible.
     // Every mutation is undone by name below, so a row cannot leak into the next one's baseline.
-    const states = [{ id: 'shipped (one plate, no cap, full-bleed)', apply: () => { /* as shipped */ } }];
+    // The cap's number lives here rather than being read off the shipped CSS on purpose: 698px is the 1910 Euler
+    // leaf's own scan at the archive's widest rung (`/img/1024/`, probed 2026-11-03; `/img/1600/`, `/img/2048/` and
+    // `/img/full/` answer 404). If the cap and the scan ever disagree, these two rows disagree, and the disagreement
+    // is the finding.
+    const states = [{ id: 'shipped (one plate, capped at its own scan)', apply: () => { /* as shipped */ } }];
     states.push({ id: 'band hidden', apply: () => { sec.classList.add('hidden'); } });
     states.push({ id: 'band empty (plate removed)', apply: () => { plates.forEach((p) => p.remove()); } });
     states.push({
-      id: 'plate full-bleed on the column',
+      id: 'plate full-bleed on the column (D351, refused)',
       apply: () => { plates.forEach((p) => p.setAttribute('style', 'max-width: none')); },
+    });
+    states.push({
+      id: 'one plate, capped at intrinsic scan width',
+      apply: () => { plates.forEach((p) => p.setAttribute('style', 'max-width: 698px')); },
     });
     const rows = [];
     for (const s of states) {
