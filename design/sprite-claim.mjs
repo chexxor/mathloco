@@ -38,7 +38,7 @@ function arg(name, fallback) {
 
 const base = arg('--base', 'http://localhost:4321').replace(/\/$/, '');
 const requests = Number(arg('--requests', '3'));
-const paths = (arg('--paths', '/,/schedule,/chat')).split(',').filter(Boolean);
+const paths = (arg('--paths', '/,/dates,/chat')).split(',').filter(Boolean);
 
 let expected = 0;
 try {

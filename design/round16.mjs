@@ -207,7 +207,7 @@ function distCopy(label, option) {
   cpSync('dist/client', dir, { recursive: true, filter: (s) => !/rendered-|\.measured-|\.rel\.css/.test(s) });
   if (!option) return { dir, counts: [] };
   // The measured page gets the strict form (every pair must match); the other routes get the same pairs where
-  // they exist — /schedule's lede is the full form, not the compact one, so a hard match there would be a bug in
+  // they exist — /dates's lede (D373's route) is the full form, not the compact one, so a hard match there would be a bug in
   // this driver, not a fact about the option.
   const page = join(dir, 'index.html');
   const { html: shippedPage, counts } = apply(readFileSync(page, 'utf8'), option, '/');

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // schedule-geometry.mjs — is one date drawn the same way on both schedule surfaces?
 //
-//   node design/schedule-geometry.mjs                       # / and /schedule at 1240 390 320
+//   node design/schedule-geometry.mjs                       # / and /dates at 1240 390 320
 //   node design/schedule-geometry.mjs --widths 1240         # one viewport
-//   node design/schedule-geometry.mjs --routes /schedule    # one page
+//   node design/schedule-geometry.mjs --routes /dates       # one page (the route moved from /schedule under D373)
 //   node design/schedule-geometry.mjs --dist .design/tmp-x  # a mutated copy of the built artifact, so a
 //                                                          # differential (strip a control, measure the delta) is
 //                                                          # a flag rather than a hand-edit of dist/
@@ -43,7 +43,7 @@ const argList = (flag, dflt) => {
   for (let j = i + 1; j < argv.length && !argv[j].startsWith('--'); j++) out.push(argv[j]);
   return out;
 };
-const routes = argList('--routes', ['/', '/schedule']);
+const routes = argList('--routes', ['/', '/dates']);
 const widths = argList('--widths', ['1240', '390', '320']).map(Number);
 const dist = resolve(argv.includes('--dist') ? argv[argv.indexOf('--dist') + 1] : 'dist/client');
 const MEASURE = 'design/grill/row-measure.js';

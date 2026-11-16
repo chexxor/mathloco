@@ -73,10 +73,11 @@ const CONFIG = resolve(argOne('--config', 'src/config.json'));
 
 const PAGES = [
   // `dates: false` is a contract, not a description: since D306 the homepage prints no date (its one date moved
-  // off the pitch when the operator's `/join` objective made `/schedule` the only dated surface), and a homepage
+  // off the pitch when the operator's `/join` objective made `/dates` the only dated surface — the route moved
+  // from `/schedule` under D373), and a homepage
   // that starts printing one again fails here as well as in `check:dated-surfaces`.
   { name: 'homepage', file: resolve(DIST, 'index.html'), dates: false },
-  { name: '/schedule', file: resolve(DIST, 'schedule/index.html'), dates: true },
+  { name: '/dates', file: resolve(DIST, 'dates/index.html'), dates: true },
 ];
 
 /** Every `.html` the build emitted. A gate that keeps its own list of pages is a gate that goes stale the day a

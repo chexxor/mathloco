@@ -4,7 +4,7 @@
 // and injected as a --prelude script by design/grill/dist-measure.mjs.
 //
 //   node design/axe-check.mjs                        # the four pages, 390 and 1440
-//   node design/axe-check.mjs --routes /,/schedule   # a subset
+//   node design/axe-check.mjs --routes /,/dates      # a subset (D373 moved the route from /schedule)
 //   node design/axe-check.mjs --widths 390           # one width
 //
 // Why this exists (2026-11-15, round-3 read §12 criterion 10): the reviewer asks for "axe-core: zero
@@ -27,7 +27,7 @@ const AXE = resolve('.design/axe.min.js');
 // appends the real file.
 const PRELUDE = resolve('.design/axe-prelude.js');
 const args = process.argv.slice(2);
-const routes = (args.includes('--routes') ? args[args.indexOf('--routes') + 1] : '/,/schedule,/chat,/join').split(',');
+const routes = (args.includes('--routes') ? args[args.indexOf('--routes') + 1] : '/,/dates,/chat,/join').split(',');
 const widths = (args.includes('--widths') ? args[args.indexOf('--widths') + 1] : '390,1440').split(',').map(Number);
 
 if (!existsSync(AXE)) {

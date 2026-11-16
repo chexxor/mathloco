@@ -32,10 +32,10 @@ if (!/data-mark="hero"/.test(original)) { console.error('the built page has no d
 // Two targets since 2026-11-14 (D306): the hero mark, the controls and the ring plantings live on `/`, and the
 // sign-up cluster and its platform marks live on the page of record, because the homepage prints no date and
 // therefore carries no cluster. A case names its target as a fourth element; the default is the homepage.
-const SCHEDULE = resolve('dist/client/schedule/index.html');
+const SCHEDULE = resolve('dist/client/dates/index.html');
 const scheduleHtml = existsSync(SCHEDULE) ? readFileSync(SCHEDULE, 'utf8') : null;
-if (!scheduleHtml) { console.error('dist/client/schedule/index.html missing — the cluster cases need the page of record'); process.exit(1); }
-const target = (name) => (name === 'schedule' ? { file: SCHEDULE, html: scheduleHtml, route: '/schedule' } : { file: page, html: original, route: '/' });
+if (!scheduleHtml) { console.error('dist/client/dates/index.html missing — the cluster cases need the page of record'); process.exit(1); }
+const target = (name) => (name === 'schedule' ? { file: SCHEDULE, html: scheduleHtml, route: '/dates' } : { file: page, html: original, route: '/' });
 
 // Optional case-name substrings as arguments run a subset — each case is a firefox run, so iterating on
 // one case should not cost five.
@@ -195,7 +195,7 @@ const cases = [
   // typographic label with no mark (D341), so `#pm-meetup` is painted by nothing and the two cases that
   // anchored on it rotted — the gate's own preflight said so, and "the mutation matched nothing" is the only
   // honest failure a planting can have. The marks the built page still paints live in the standing cluster,
-  // so both cases anchor there now: `grep -o '<svg[^>]*><use href="#^"]*"[^>]*></use></svg>' dist/client/schedule/index.html`
+  // so both cases anchor there now: `grep -o '<svg[^>]*><use href="#^"]*"[^>]*></use></svg>' dist/client/dates/index.html`
   // @measured 2026-11-16 returns exactly ONE painted mark, `#pm-facebook` — the standing row's Discord mark went away
   // with D349's URL dedup (the exit band already paints that invite, so the standing row repeats no URL it does not
   // add). The sprite still defines three symbols (`pm-meetup`, `pm-discord`, `pm-facebook`), so the case that plants a

@@ -186,13 +186,16 @@ const venues = value(content.venues);
 const membership = value(content.membership);
 const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.length : null;
 
-// D117: a path needs a page, and it has one now, so the compact band may point at it.
-const scheduleHref = '/schedule';
+// D117: a path needs a page, and it has one now, so the compact band may point at it. The path moved from
+// `/schedule` to `/dates` under D373 (the round-5 read's Batch D: the nav, the band and the page's own h1 all
+// said `Dates` while the URL said `schedule`); the binding name stayed `scheduleHref` because it is a handle,
+// not a path, and renaming a handle is a different change from renaming a route.
+const scheduleHref = '/dates';
 // When the copy was taken. This is the same stamp every published `DTSTAMP` derives from (`check:ics`'s
 // dtstamp rule asserts it), so the sentence under a date and the calendar file a subscriber holds cannot
 // disagree about when the club's calendar was last read.
 const copied = copiedOn();
-// The heading is the page's own h1 on /schedule and a section h2 on the homepage, where the hero owns the h1.
+// The heading is the page's own h1 on /dates and a section h2 on the homepage, where the hero owns the h1.
 // The id stays `when-we-meet` on both surfaces even where the heading beside it now reads "Dates": it is a
 // probe handle (design/grill/round14-options.mjs selects the section by this exact attribute), and the rule
 // for a probe handle is that it does not follow the copy.

@@ -22,18 +22,26 @@ import { resolve } from 'node:path';
 const strict = process.argv.includes('--strict');
 
 // The three environments this repo has, in the order a reviewer should read them.
+//
+// The routes here are what **this tree** would ship, so a mismatch reads as the deploy gap it is. D373
+// (2026-11-16) moved the page of record from `/schedule` to `/dates`, so the rows below moved with it;
+// what production actually answers today was measured by this probe on 2026-11-16: `/schedule` is **404**
+// (a 3,729 b page titled `Page not found - Minneapolis Math Book Club`) on both apexes, and so would
+// `/dates` be — production is the 2026-10-31 Worker artifact (D245), which is why the rename is not what
+// makes these 404. The Preview still answers `/schedule` (200 via `307 -> /schedule/`) because the deployed
+// Preview artifact predates the rename; its title already reads `Dates - Matheapolis`.
 const targets = [
   { group: 'production', url: 'https://matheapolis.com/', expect: 200 },
-  { group: 'production', url: 'https://matheapolis.com/schedule', expect: 200 },
+  { group: 'production', url: 'https://matheapolis.com/dates', expect: 200 },
   { group: 'production', url: 'https://matheapolis.com/events.ics', expect: 200, ics: true },
   { group: 'production', url: 'https://minneapolismathbookclub.com/', expect: 200 },
-  { group: 'production', url: 'https://minneapolismathbookclub.com/schedule', expect: 200 },
+  { group: 'production', url: 'https://minneapolismathbookclub.com/dates', expect: 200 },
   { group: 'production', url: 'https://minneapolismathbookclub.com/events.ics', expect: 200, ics: true },
   // `expect: null` is a ruling that is still open, not a pass: www.matheapolis.com 404s today and the
   // operator has to rule 1a/1b/1c before anyone can call that right or wrong (D245).
   { group: 'production', url: 'https://www.matheapolis.com/', expect: null },
   { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/', expect: 200 },
-  { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/schedule', expect: 200 },
+  { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/dates', expect: 200 },
   { group: 'preview', url: 'https://staging-minneapolis-math-book-club.chexxor.workers.dev/events.ics', expect: 200, ics: true },
 ];
 
@@ -50,7 +58,8 @@ async function probe(url, { ics = false } = {}) {
   try {
     // Followed by hand, and the chain kept, because the cutover being planned in D245/D246 *is* a chain of
     // redirects: a 301 that lands on a 404 has to be visible as `301 -> 404`, not collapsed into either end.
-    // `/schedule` already answers `307 -> /schedule/` on the Preview while every internal link says `href="/schedule"`.
+    // The route moved under D373 (2026-11-16): `/dates` answers `307 -> /dates/` on the Preview while every
+    // internal link says `href="/dates"`, and the deployed Preview artifact still serves the older `/schedule`.
     const chain = [];
     let res = await fetch(url, { redirect: 'manual' });
     let hops = 0;

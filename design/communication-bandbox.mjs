@@ -2,7 +2,7 @@
 // communication-bandbox.mjs — the exit band's box, at the widths the fold is measured at.
 //
 //   node design/communication-bandbox.mjs                 # `/` at 1240 and 390
-//   node design/communication-bandbox.mjs /schedule       # another page's band
+//   node design/communication-bandbox.mjs /dates          # another page's band (the route moved from /schedule under D373)
 //   node design/communication-bandbox.mjs --widths 1240 768 390
 //
 // Round 5 (communication). The band is standing copy on EVERY emitted page (D307), so its cost is what a

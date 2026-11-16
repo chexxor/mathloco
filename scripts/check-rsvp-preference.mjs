@@ -2,9 +2,9 @@
 /**
  * check:rsvp-preference — the remembered platform reorders the cluster in a real browser.
  *
- *   npm run check:rsvp-preference              # dist/client, route /schedule (the only one with clusters since D306)
+ *   npm run check:rsvp-preference              # dist/client, route /dates (the only one with clusters since D306; the route moved under D373)
  *   npm run check:rsvp-preference:selftest     # plant each defect, require each to FAIL (D118)
- *   node scripts/check-rsvp-preference.mjs --dist dist/client --routes /schedule
+ *   node scripts/check-rsvp-preference.mjs --dist dist/client --routes /dates
  *
  * Why this gate exists on top of `check:rsvp-page` (S022, D281). The page gate proves the bytes Astro
  * builds: every printed date carries a cluster, the cluster sits inside an island, the shipped chunk
@@ -73,8 +73,9 @@ const readJson = (path) => {
 
 const DIST = resolve(argOne('--dist', 'dist/client'));
 // Since D306 the homepage prints no date and carries no cluster, so the rule's only surface is the page of
-// record; a route with no cluster would make every seed vacuous rather than prove anything.
-const ROUTES = (argOne('--routes', '/schedule')).split(',').filter(Boolean);
+// record — `/dates` since D373 moved the route; a route with no cluster would make every seed vacuous rather
+// than prove anything.
+const ROUTES = (argOne('--routes', '/dates')).split(',').filter(Boolean);
 const SCRATCH = resolve('.design', 'tmp-rsvp-preference');
 /** Astro writes a route as <route>/index.html; the homepage is index.html itself. `join('/schedule',
  * 'index.html')` is absolute, so it must be stripped before joining onto the dist directory - a trap
@@ -495,9 +496,11 @@ if (!selftest) {
 
 let wrong = 0;
 let cases = 0;
-// /schedule, not /: it is the only route with more than one cluster, and cross-row sync - the promise that
+// /dates, not /: it is the only route with more than one cluster, and cross-row sync - the promise that
 // one row's click reorders the others - can only be planted where there is a second row to fail.
-const CASE_ROUTE = '/schedule';
+// (The route moved from `/schedule` under D373; this gate's own selftest reads the built page, so the
+// fixture route and the fixture chunk have to move together with the artifact.)
+const CASE_ROUTE = '/dates';
 const casePage = pageRel(CASE_ROUTE);
 const home = homeOfRoute(CASE_ROUTE);
 const chunkName = (home.match(/component-url="([^"]*SignUpLinksCluster[^"]*)"/) || [])[1];

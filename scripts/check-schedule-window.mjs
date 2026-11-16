@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
- * check:schedule-window — `/schedule` prints exactly the dates the window rule says, and says what it left out.
+ * check:schedule-window — `/dates` prints exactly the dates the window rule says, and says what it left out.
+ *  (The gate keeps its historical name, which is how every `check:schedule-window` citation in the plan, the
+ *  decision index and the gate runner stays put; the route it reads moved to `/dates` under **D373).
  *
  *   npm run check:schedule-window                     # the built page against the tracked snapshot
  *   npm run check:schedule-window:selftest            # plant each defect, require each to FAIL (D118)
@@ -52,7 +54,7 @@ const argOne = (flag, dflt) => {
 };
 
 const DIST_DIR = resolve(argOne('--dist', 'dist/client'));
-const PAGE = resolve(DIST_DIR, 'schedule/index.html');
+const PAGE = resolve(DIST_DIR, 'dates/index.html');
 const LOCAL_DIR = 'src/content.local';
 
 /** The snapshot as the build saw it: the tracked file, then the gitignored overlays in filename order. */
@@ -338,7 +340,7 @@ if (fails.length) {
   process.exit(1);
 }
 console.log(
-  `ok    /schedule prints ${plan.shown.length} of ${plan.total} open dates ` +
+  `ok    /dates prints ${plan.shown.length} of ${plan.total} open dates ` +
   `(${today} + ${HORIZON_WEEKS} weeks = ${plan.horizonEnd}, cap ${MAX_ROWS}, ` +
   `hidden ${plan.hiddenHorizon} past the horizon / ${plan.hiddenCap} inside it)`,
 );

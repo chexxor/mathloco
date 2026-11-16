@@ -1,7 +1,7 @@
 // emitted-routes.mjs — which paths the build actually emits, read off the artifact.
 //
 //   import { emittedRoutes } from './emitted-routes.mjs';
-//   emittedRoutes();                       // -> ['/', '/404', '/chat', '/schedule']
+//   emittedRoutes();                       // -> ['/', '/404', '/chat', '/dates']
 //   emittedRoutes('dist/client', { include404: false });
 //
 // Why this is a module and not a line in each probe. Three design tools used to carry their own literal

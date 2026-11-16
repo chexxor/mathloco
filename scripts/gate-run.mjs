@@ -215,7 +215,7 @@ const DEPLOY = [
   { name: 'check:escapes', desc: 'no escape sequence reaches a reader: built text and meta, and template text at the source', needs: ['build'] },
   // The page half of the same rule: `data-date` handles off the built page against `scheduleWindow()`'s plan,
   // plus the requirement that a page hiding dates says so and offers `/events.ics` (D238).
-  { name: 'check:schedule-window', desc: '/schedule prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
+  { name: 'check:schedule-window', desc: '/dates prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
   // The other end of the RSVP rule: `check:rsvp` proves the inputs, this proves the bytes. Recomputes each
   // cluster from `signUpPaths()` and fails a painted page that disagrees with the resolver (D272).
   { name: 'check:rsvp-page', desc: 'every printed date carries one sign-up cluster, and that cluster matches what signUpPaths() returns for it against both event snapshots; no headcount is painted', needs: ['build'] },
@@ -224,7 +224,7 @@ const DEPLOY = [
   // nothing is painted that the resolver does not have. It reads `dist/`, so it waits for `build` (D118).
   // The artifact side of the same rule: walk every emitted page, and require the set that prints a date to be the
   // set a ruling names. It reads `dist/`, so it waits for `build` (D118).
-  { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/schedule` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included; the nav’s subordinate date is chrome and must equal the first date /schedule prints (D311)', needs: ['build'] },
+  { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/dates` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included; the nav’s subordinate date is chrome and must equal the first date /dates prints (D311)', needs: ['build'] },
   // Which register each "how current is this" line uses (S042, D322): an age inside 30 days, the calendar
   // date beyond it, produced by the one function in `src/lib/provenance.mjs`. The read's D6 found the site
   // running both registers at once; this is the detector that keeps them from drifting back apart.

@@ -38,6 +38,9 @@
 // at the 320 floor, where the shipped row needs 257 of 276 and the same row with the chip needs 314, 38px over
 // @measured 2026-11-15 by `node design/nav-fit.mjs --no-build`. The round-3 read (§12 criterion 5) asked for the chip
 // at 390px; `sm` (640) was hiding it at a width the measurement says can hold it.
+// 2026-11-16 (D373): the route the `Dates` label points at moved from `/schedule` to `/dates`. The label never
+// said `schedule` — the nav, the band and the page's own h1 all said `Dates` while the URL said something else,
+// which is the defect the round-5 read priced as Batch D; the words and the path now match.
 import { upcoming, dateParts, formatDate } from '../lib/content.ts';
 import { todayIn } from '../lib/events.mjs';
 import { scheduleWindow } from '../lib/event-window.mjs';
@@ -48,7 +51,7 @@ const window = scheduleWindow(upcoming(), todayIn());
 const nextDate = window.shown[0]?.date ?? null;
 
 const navItems = [
-  { href: '/schedule', label: 'Dates', date: nextDate },
+  { href: '/dates', label: 'Dates', date: nextDate },
   { href: '/chat', label: 'Chat' },
   { href: '/join', label: 'Ways in' },
 ];

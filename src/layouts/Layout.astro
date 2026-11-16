@@ -3,9 +3,10 @@ export interface Props {
   title?: string;
   noindex?: boolean;
   /**
-   * This page's own path, e.g. `/schedule`. A page that does not name itself in `rel=canonical` is telling
+   * This page's own path, e.g. `/dates`. A page that does not name itself in `rel=canonical` is telling
    * every crawler it is a copy of the homepage, which is exactly how a new page fails to get indexed;
-   * `chat.astro` and `schedule.astro` now pass theirs. Unset means the apex, which is the homepage.
+   * `chat.astro`, `dates.astro` and `join.astro` now pass theirs (`dates.astro` under the route D373 moved).
+   * Unset means the apex, which is the homepage.
    */
   path?: string;
 }

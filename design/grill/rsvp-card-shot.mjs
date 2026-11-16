@@ -28,7 +28,7 @@ const arg = (flag) => {
   for (let j = i + 1; j < argv.length && !argv[j].startsWith('--'); j++) out.push(argv[j]);
   return out;
 };
-const routes = arg('--routes') || ['/', '/schedule'];
+const routes = arg('--routes') || ['/', '/dates'];
 const widths = (arg('--widths') || [1240, 390]).map(Number);
 const outDir = arg('--out') || ['.design/rsvp-shot'];
 const out = path.resolve(outDir[0]);

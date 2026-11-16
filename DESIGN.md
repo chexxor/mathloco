@@ -481,7 +481,7 @@ it freshness.
   it needs **257 of 276**; at 390 the row with the chip needs **306 of 346**, so the chip paints from 380 up and the
   round-3 read's criterion 5 ("visible at 390px") is met @measured 2026-11-15 by `npm run check:render:dist`. A date in the
   nav is chrome, not a dated surface: `check:dated-surfaces` fails a chip whose date is not the first date
-  `/schedule` prints, and a chip when the page prints no date.
+  `/dates` prints (the route moved from `/schedule` on 2026-11-16 under **D373**), and a chip when the page prints no date.
 - **One name per page** (D309, 2026-11-14): the nav label is the page's name, and the `<title>` stem, the exit-band
   label and the page's own opening block must carry that word. `npm run check:naming` is the detector; aliases in
   prose ("When We Meet", "All 5 dates →") are counted and reported, not failed, because they do a different job.
@@ -502,6 +502,12 @@ band and drew it with the same three parts; that card (and the sign-up cluster i
 operator's `/join` objective — "`/schedule` stays the only surface that prints dates" — recorded as **D306** and
 enforced by `check:dated-surfaces`, which fails any built page that prints a date without a ruling. The homepage now
 points at this page and prints none; the row below is what `/schedule` prints, in this order:
+
+> **The route moved on 2026-11-16 (**D373**): `/schedule` → `/dates`, and the round-5 read's Batch D gave the page of
+> record a sibling `/past` for the finished half of the same calendar.** Two rules, both enforced in `check:dated-surfaces`'s
+> own `RULED` map, so a third dated surface is still refused. Every `/schedule` below in a `@measured` line is that page
+> as it was named on the stamp's date — same page, same rules, older path; the commands quoted there are the ones that
+> ran then and are kept as records, not re-run against today's artifact.
 
 - **leaf** — month, day number, weekday, stacked, `bg-tint` **fill**, `EventLeaf.astro`. It is `aria-hidden`:
   the same date is spelled out in prose beside it, and a screen reader should hear a date once.
@@ -535,7 +541,7 @@ Rules that are not decoration:
   pointer is a picture of dates the page no longer shows. What survives is the part that was always the accessible
   one: the **link text** (`Next 8 dates →`), which is where assistive tech reads the count.
 - **The reach of the file is said where the file is offered, and it is generated** (round-5 communication read B2,
-  q18, D371). `/schedule`'s lede names the window the published `/events.ics` carries — first `DTSTART`, last
+  q18, D371). `/dates`'s lede names the window the published `/events.ics` carries — first `DTSTART`, last
   `DTSTART`, how many rows — and every row's `DESCRIPTION` carries the **identical** sentence, both from
   `windowSentence(feedWindow(…))`. It is never hand-written, because a date in prose is a claim that expires with
   the next harvest; `check:ics`'s `calendar-window` rule derives the window from the file's own `DTSTART`s and

@@ -51,11 +51,11 @@ const QUESTIONS = [
   { id: 'q01', who: 'first-time', ask: 'What is this, in one line?', where: ['/'], formsIn: ['prose', 'heading'],
     anyOf: [[/minneapolis math club/i], [/we meet around a table/i]] },
 
-  { id: 'q02', who: 'first-time', ask: 'When do we meet?', where: ['/', '/schedule'], formsIn: ['prose', 'heading', 'label'],
+  { id: 'q02', who: 'first-time', ask: 'When do we meet?', where: ['/', '/dates'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/\b(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.? \d{1,2}\b/i],
             [/\b\d{1,2}:\d{2}\s*[ap]m\b/i], [/\b(19|20)\d\d-\d\d-\d\d\b/]] },
 
-  { id: 'q03', who: 'first-time', ask: 'Where do we meet?', where: ['/', '/schedule'], formsIn: ['prose', 'heading', 'label', 'ics-line'],
+  { id: 'q03', who: 'first-time', ask: 'Where do we meet?', where: ['/', '/dates'], formsIn: ['prose', 'heading', 'label', 'ics-line'],
     anyOf: [[/\b(boulevard|avenue|street|road)\b/i], [/bakery|brewery|coffee shop/i]] },
 
   { id: 'q04', who: 'first-time', ask: 'Do I need to bring or prepare anything?', where: ['/', '/join'], formsIn: ['prose', 'heading', 'label'],
@@ -75,14 +75,14 @@ const QUESTIONS = [
   { id: 'q08', who: 'first-time', ask: 'How do I get in?', where: ['/join', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/sign up|join (the|our)|join on|join the chat/i]] },
 
-  { id: 'q09', who: 'first-time', ask: 'What actually happens at a meeting?', where: ['/join', '/schedule', '/'], formsIn: ['prose', 'heading', 'label'],
+  { id: 'q09', who: 'first-time', ask: 'What actually happens at a meeting?', where: ['/join', '/dates', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/^social$/i], [/^study session$/i], [/a social:|study session:|around a table|side by side|work through/i]] },
 
   { id: 'q10', who: 'first-time', ask: 'Do I have to be a member to come?', where: ['/', '/join'],
     anyOf: [[/without being a member|need to be a member|membership is (free|not required)/i],
             [/anyone can (come|attend|bring)/i]] },
 
-  { id: 'q11', who: 'phone', ask: 'Which tap gets me the calendar file?', where: ['/', '/schedule'], formsIn: ['label', 'href', 'prose'],
+  { id: 'q11', who: 'phone', ask: 'Which tap gets me the calendar file?', where: ['/', '/dates'], formsIn: ['label', 'href', 'prose'],
     anyOf: [[/events\.ics/i]] },
 
   { id: 'q12', who: 'phone', ask: 'Can I ask the club something before a meeting?', where: ['/join'],
@@ -95,7 +95,7 @@ const QUESTIONS = [
     // "no phone number" is the page naming the gap, and counting it as an offer would hide the class.
     declinedBy: [[/no front desk|no phone number|nothing to call|no phone line/i]] },
 
-  { id: 'q14', who: 'share-link', ask: 'Does the page name itself in what a share card carries?', where: ['/', '/schedule', '/chat', '/join', '/404'], formsIn: ['meta'],
+  { id: 'q14', who: 'share-link', ask: 'Does the page name itself in what a share card carries?', where: ['/', '/dates', '/chat', '/join', '/404'], formsIn: ['meta'],
     anyOf: [[/^matheapolis - a minneapolis math club$/i], [/^dates - matheapolis$/i], [/^chat - matheapolis$/i],
             [/^ways in - matheapolis$/i], [/^page not found - matheapolis$/i]] },
 
@@ -111,10 +111,10 @@ const QUESTIONS = [
   // cannot match the mechanism the site ships reports the gap as open forever, which is the same defect as a gate
   // that cannot go red. Both halves have to match inside ONE carrier, and that carrier is an **unfolded VEVENT**:
   // the sentence lives in a folded `DESCRIPTION`, so no single wire line carries it (D371).
-  { id: 'q17', who: 'calendar-subscriber', ask: 'Does the file say which of its dates have already passed?', where: ['/events.ics', '/schedule'],
+  { id: 'q17', who: 'calendar-subscriber', ask: 'Does the file say which of its dates have already passed?', where: ['/events.ics', '/dates'],
     anyOf: [[/status:(past|complete|expired)/i], [/already (passed|gone|ended|happened)/i], [/starts? in the past|past date/i], [/status:cancelled/i, /the calendar file carries/i]] },
 
-  { id: 'q18', who: 'calendar-subscriber', ask: 'Does anything say how far ahead the file reaches?', where: ['/events.ics', '/schedule', '/'],
+  { id: 'q18', who: 'calendar-subscriber', ask: 'Does anything say how far ahead the file reaches?', where: ['/events.ics', '/dates', '/'],
     anyOf: [[/through (20\d\d|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))/i], [/window|horizon|unbounded|uncapped|no cap\b/i]] },
 
   { id: 'q19', who: 'returning', ask: 'What is the club arguing about now?', where: ['/chat', '/'], formsIn: ['prose', 'heading', 'label'],
@@ -123,7 +123,7 @@ const QUESTIONS = [
   { id: 'q20', who: 'returning', ask: 'What happened at a meeting I missed?', where: ['/chat', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/summaries from the chat|what happened|recap|minutes of/i]] },
 
-  { id: 'q21', who: 'returning', ask: 'Am I told when a date moves?', where: ['/schedule', '/'], formsIn: ['prose', 'heading', 'label'],
+  { id: 'q21', who: 'returning', ask: 'Am I told when a date moves?', where: ['/dates', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/it changes when the club changes a date|when a date changes|subscribe/i]] },
 
   { id: 'q22', who: 'search-visitor', ask: 'The link I followed is dead — what happened?', where: ['/404'], formsIn: ['prose', 'heading', 'label'],
@@ -132,24 +132,24 @@ const QUESTIONS = [
   { id: 'q23', who: 'search-visitor', ask: 'Is there anything here I am not being shown?', where: ['/404', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/everything we have sits behind/i]] },
 
-  { id: 'q24', who: 'search-visitor', ask: 'Can I look for a specific past meetup?', where: ['/schedule', '/404', '/chat'], formsIn: ['prose', 'heading', 'label'],
+  { id: 'q24', who: 'search-visitor', ask: 'Can I look for a specific past meetup?', where: ['/dates', '/404', '/chat'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/\bsearch\b|look up|past (meetings?|dates?|sessions?)/i], [/archive/i]] },
 
-  { id: 'q25', who: 'any-visitor', ask: 'How do I get to the venue?', where: ['/', '/schedule'],
+  { id: 'q25', who: 'any-visitor', ask: 'How do I get to the venue?', where: ['/', '/dates'],
     anyOf: [[/directions|transit|light rail|\bbus\b|parking|get there/i],
             [/maps\.google|google\.com\/maps|mapbox|openstreetmap|\/maps\?|map=/i]] },
 
   { id: 'q26', who: 'assistive-tech', ask: "Does the page's drawing carry a name for a reader?", where: ['/'], formsIn: ['mark-tag'],
     anyOf: [[/aria-label|alt="/i]] },
 
-  { id: 'q27', who: 'assistive-tech', ask: 'Does the page explain its own section names?', where: ['/chat', '/join', '/schedule', '/'], formsIn: ['prose', 'heading', 'label'],
+  { id: 'q27', who: 'assistive-tech', ask: 'Does the page explain its own section names?', where: ['/chat', '/join', '/dates', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/what we take up|what the club is pulling on|ways in\b|what we do\b/i],
             [/dropped mid-sentence|threads that are open/i]] },
 
-  { id: 'q28', who: 'assistive-tech', ask: 'What does the mark the wordmark carries mean?', where: ['/', '/schedule', '/chat', '/join', '/404'],
+  { id: 'q28', who: 'assistive-tech', ask: 'What does the mark the wordmark carries mean?', where: ['/', '/dates', '/chat', '/join', '/404'],
     anyOf: [[/∑ (is|means)|the mark means|wordmark means|sigma\b|an equator and a pole/i]] },
 
-  { id: 'q29', who: 'assistive-tech', ask: 'Does a link that leaves the site say so?', where: ['/', '/schedule', '/chat', '/join', '/404'], formsIn: ['label'],
+  { id: 'q29', who: 'assistive-tech', ask: 'Does a link that leaves the site say so?', where: ['/', '/dates', '/chat', '/join', '/404'], formsIn: ['label'],
     anyOf: [[/opens in a new tab/i]] },
 ];
 

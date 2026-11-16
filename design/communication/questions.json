@@ -2,14 +2,14 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T13:09:11.976Z",
+ "artifactBuilt": "2026-11-16T20:27:14.579Z",
  "artifactFresh": true,
  "routes": [
   "/",
   "/404",
   "/chat",
+  "/dates",
   "/join",
-  "/schedule",
   "/events.ics"
  ],
  "visitorClasses": [
@@ -28,8 +28,8 @@
    "/",
    "/404",
    "/chat",
-   "/join",
-   "/schedule"
+   "/dates",
+   "/join"
   ],
   "text": "A Minneapolis math club. We work through papers, proofs, proof assistants and puzzles together, around a table in a coffee shop or a brewery. Dates on Meetup, a sign-up link on every date, and the discussion in the chat."
  },
@@ -62,12 +62,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -112,7 +112,7 @@
    "ask": "When do we meet?",
    "where": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "verdict": "ANSWERED",
    "perRoute": {
@@ -135,12 +135,7 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/schedule": {
+    "/dates": {
      "status": "answered",
      "forms": [
       "prose"
@@ -148,6 +143,11 @@
      "zones": [
       "body"
      ]
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -157,7 +157,7 @@
    },
    "answeredOn": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "forms": [
     "prose/body"
@@ -182,7 +182,7 @@
      "shape": 1
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Dates",
@@ -190,7 +190,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Dates",
@@ -198,7 +198,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
@@ -206,7 +206,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Study session",
@@ -214,7 +214,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
@@ -222,7 +222,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Study session",
@@ -230,7 +230,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Dates",
@@ -238,7 +238,7 @@
      "shape": 1
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
@@ -254,7 +254,7 @@
    "ask": "Where do we meet?",
    "where": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "verdict": "ANSWERED",
    "perRoute": {
@@ -277,7 +277,7 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "answered",
      "forms": [
       "prose"
@@ -286,7 +286,7 @@
       "body"
      ]
     },
-    "/schedule": {
+    "/join": {
      "status": "answered",
      "forms": [
       "prose"
@@ -307,8 +307,8 @@
    },
    "answeredOn": [
     "/",
+    "/dates",
     "/join",
-    "/schedule",
     "/events.ics"
    ],
    "forms": [
@@ -354,31 +354,7 @@
      "shape": 1
     },
     {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
-     "shape": 0
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "What we do",
-     "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
-     "shape": 1
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
-     "shape": 1
-    },
-    {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
@@ -386,7 +362,7 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Study session",
@@ -394,12 +370,36 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 1
     }
    ],
    "declinedEvidence": []
@@ -433,6 +433,11 @@
      "forms": [],
      "zones": []
     },
+    "/dates": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/join": {
      "status": "answered",
      "forms": [
@@ -441,11 +446,6 @@
      "zones": [
       "body"
      ]
-    },
-    "/schedule": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -531,12 +531,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -578,12 +578,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -655,12 +655,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -726,7 +726,7 @@
       "body"
      ]
     },
-    "/join": {
+    "/dates": {
      "status": "answered",
      "forms": [
       "prose",
@@ -736,7 +736,7 @@
       "body"
      ]
     },
-    "/schedule": {
+    "/join": {
      "status": "answered",
      "forms": [
       "prose",
@@ -756,8 +756,8 @@
     "/",
     "/404",
     "/chat",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "prose/body",
@@ -768,7 +768,7 @@
    "outsideRoutes": [
     "/404",
     "/chat",
-    "/schedule"
+    "/dates"
    ],
    "outsideCount": 22,
    "evidence": [
@@ -861,7 +861,7 @@
    "ask": "What actually happens at a meeting?",
    "where": [
     "/join",
-    "/schedule",
+    "/dates",
     "/"
    ],
    "verdict": "ANSWERED",
@@ -885,19 +885,19 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "answered",
      "forms": [
-      "prose"
+      "heading"
      ],
      "zones": [
       "body"
      ]
     },
-    "/schedule": {
+    "/join": {
      "status": "answered",
      "forms": [
-      "heading"
+      "prose"
      ],
      "zones": [
       "body"
@@ -911,8 +911,8 @@
    },
    "answeredOn": [
     "/",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "prose/body",
@@ -930,6 +930,46 @@
      "shape": 2
     },
     {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Social",
+     "text": "Social",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "shape": 1
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Study session",
+     "shape": 1
+    },
+    {
      "route": "/join",
      "form": "prose",
      "zone": "body",
@@ -944,46 +984,6 @@
      "section": "What we do",
      "text": "A study session: an evening working side by side on whatever each person is learning, with help when someone asks for it.",
      "shape": 2
-    },
-    {
-     "route": "/schedule",
-     "form": "heading",
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "shape": 0
-    },
-    {
-     "route": "/schedule",
-     "form": "heading",
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "shape": 0
-    },
-    {
-     "route": "/schedule",
-     "form": "heading",
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "shape": 0
-    },
-    {
-     "route": "/schedule",
-     "form": "heading",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Study session",
-     "shape": 1
-    },
-    {
-     "route": "/schedule",
-     "form": "heading",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Study session",
-     "shape": 1
     }
    ],
    "declinedEvidence": []
@@ -1013,12 +1013,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -1042,7 +1042,7 @@
    "ask": "Which tap gets me the calendar file?",
    "where": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "verdict": "ANSWERED",
    "perRoute": {
@@ -1073,6 +1073,15 @@
       "exit-band"
      ]
     },
+    "/dates": {
+     "status": "answered",
+     "forms": [
+      "href"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
     "/join": {
      "status": "chrome only",
      "forms": [
@@ -1080,15 +1089,6 @@
      ],
      "zones": [
       "exit-band"
-     ]
-    },
-    "/schedule": {
-     "status": "answered",
-     "forms": [
-      "href"
-     ],
-     "zones": [
-      "body"
      ]
     },
     "/events.ics": {
@@ -1101,8 +1101,8 @@
     "/",
     "/404",
     "/chat",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "href/body",
@@ -1148,15 +1148,7 @@
      "shape": 0
     },
     {
-     "route": "/join",
-     "form": "href",
-     "zone": "exit-band",
-     "section": "Your first one",
-     "text": "/events.ics",
-     "shape": 0
-    },
-    {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "href",
      "zone": "body",
      "section": "Social",
@@ -1164,10 +1156,18 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "href",
      "zone": "exit-band",
      "section": "Social",
+     "text": "/events.ics",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "href",
+     "zone": "exit-band",
+     "section": "Your first one",
      "text": "/events.ics",
      "shape": 0
     }
@@ -1198,6 +1198,11 @@
      "forms": [],
      "zones": []
     },
+    "/dates": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/join": {
      "status": "answered",
      "forms": [
@@ -1207,11 +1212,6 @@
      "zones": [
       "body"
      ]
-    },
-    "/schedule": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -1289,12 +1289,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -1326,7 +1326,7 @@
    "ask": "Does the page name itself in what a share card carries?",
    "where": [
     "/",
-    "/schedule",
+    "/dates",
     "/chat",
     "/join",
     "/404"
@@ -1360,7 +1360,7 @@
       "head"
      ]
     },
-    "/join": {
+    "/dates": {
      "status": "answered",
      "forms": [
       "meta"
@@ -1369,7 +1369,7 @@
       "head"
      ]
     },
-    "/schedule": {
+    "/join": {
      "status": "answered",
      "forms": [
       "meta"
@@ -1388,8 +1388,8 @@
     "/",
     "/404",
     "/chat",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "meta/head"
@@ -1470,7 +1470,7 @@
      "shape": 2
     },
     {
-     "route": "/join",
+     "route": "/dates",
      "form": "meta",
      "zone": "head",
      "section": "og:title",
@@ -1504,12 +1504,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -1642,12 +1642,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -1762,7 +1762,7 @@
    "ask": "Does the file say which of its dates have already passed?",
    "where": [
     "/events.ics",
-    "/schedule"
+    "/dates"
    ],
    "verdict": "ANSWERED",
    "perRoute": {
@@ -1781,12 +1781,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -1835,7 +1835,7 @@
    "ask": "Does anything say how far ahead the file reaches?",
    "where": [
     "/events.ics",
-    "/schedule",
+    "/dates",
     "/"
    ],
    "verdict": "ANSWERED",
@@ -1855,12 +1855,7 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/schedule": {
+    "/dates": {
      "status": "answered",
      "forms": [
       "prose"
@@ -1868,6 +1863,11 @@
      "zones": [
       "body"
      ]
+    },
+    "/join": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/events.ics": {
      "status": "answered",
@@ -1881,7 +1881,7 @@
     }
    },
    "answeredOn": [
-    "/schedule",
+    "/dates",
     "/events.ics"
    ],
    "forms": [
@@ -1893,7 +1893,7 @@
    "outsideCount": 0,
    "evidence": [
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Dates",
@@ -2014,6 +2014,11 @@
       "body"
      ]
     },
+    "/dates": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/join": {
      "status": "answered",
      "forms": [
@@ -2022,11 +2027,6 @@
      "zones": [
       "body"
      ]
-    },
-    "/schedule": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -2163,12 +2163,12 @@
       "body"
      ]
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2204,7 +2204,7 @@
    "who": "returning",
    "ask": "Am I told when a date moves?",
    "where": [
-    "/schedule",
+    "/dates",
     "/"
    ],
    "verdict": "ANSWERED",
@@ -2236,6 +2236,15 @@
       "exit-band"
      ]
     },
+    "/dates": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
     "/join": {
      "status": "chrome only",
      "forms": [
@@ -2243,15 +2252,6 @@
      ],
      "zones": [
       "exit-band"
-     ]
-    },
-    "/schedule": {
-     "status": "answered",
-     "forms": [
-      "prose"
-     ],
-     "zones": [
-      "body"
      ]
     },
     "/events.ics": {
@@ -2264,8 +2264,8 @@
     "/",
     "/404",
     "/chat",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "prose/exit-band",
@@ -2303,15 +2303,7 @@
      "shape": 0
     },
     {
-     "route": "/join",
-     "form": "prose",
-     "zone": "exit-band",
-     "section": "Your first one",
-     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
-     "shape": 0
-    },
-    {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
@@ -2319,10 +2311,18 @@
      "shape": 0
     },
     {
-     "route": "/schedule",
+     "route": "/dates",
      "form": "prose",
      "zone": "exit-band",
      "section": "Social",
+     "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "exit-band",
+     "section": "Your first one",
      "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
      "shape": 0
     }
@@ -2358,12 +2358,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2432,12 +2432,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2473,7 +2473,7 @@
    "who": "search-visitor",
    "ask": "Can I look for a specific past meetup?",
    "where": [
-    "/schedule",
+    "/dates",
     "/404",
     "/chat"
    ],
@@ -2494,12 +2494,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2523,7 +2523,7 @@
    "ask": "How do I get to the venue?",
    "where": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "verdict": "ANSWERED-ELSEWHERE",
    "perRoute": {
@@ -2542,6 +2542,11 @@
      "forms": [],
      "zones": []
     },
+    "/dates": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
     "/join": {
      "status": "answered",
      "forms": [
@@ -2550,11 +2555,6 @@
      "zones": [
       "body"
      ]
-    },
-    "/schedule": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -2612,12 +2612,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2655,7 +2655,7 @@
    "where": [
     "/chat",
     "/join",
-    "/schedule",
+    "/dates",
     "/"
    ],
    "verdict": "ANSWERED",
@@ -2691,16 +2691,7 @@
       "body"
      ]
     },
-    "/join": {
-     "status": "answered",
-     "forms": [
-      "heading"
-     ],
-     "zones": [
-      "body"
-     ]
-    },
-    "/schedule": {
+    "/dates": {
      "status": "chrome only",
      "forms": [
       "prose",
@@ -2709,6 +2700,15 @@
      "zones": [
       "nav-chrome",
       "exit-band"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "heading"
+     ],
+     "zones": [
+      "body"
      ]
     },
     "/events.ics": {
@@ -2721,8 +2721,8 @@
     "/",
     "/404",
     "/chat",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "prose/nav-chrome",
@@ -2826,7 +2826,7 @@
    "ask": "What does the mark the wordmark carries mean?",
    "where": [
     "/",
-    "/schedule",
+    "/dates",
     "/chat",
     "/join",
     "/404"
@@ -2848,12 +2848,12 @@
      "forms": [],
      "zones": []
     },
-    "/join": {
+    "/dates": {
      "status": "unanswered",
      "forms": [],
      "zones": []
     },
-    "/schedule": {
+    "/join": {
      "status": "unanswered",
      "forms": [],
      "zones": []
@@ -2877,7 +2877,7 @@
    "ask": "Does a link that leaves the site say so?",
    "where": [
     "/",
-    "/schedule",
+    "/dates",
     "/chat",
     "/join",
     "/404"
@@ -2911,7 +2911,7 @@
       "body"
      ]
     },
-    "/join": {
+    "/dates": {
      "status": "answered",
      "forms": [
       "label"
@@ -2920,7 +2920,7 @@
       "body"
      ]
     },
-    "/schedule": {
+    "/join": {
      "status": "answered",
      "forms": [
       "label"
@@ -2939,8 +2939,8 @@
     "/",
     "/404",
     "/chat",
-    "/join",
-    "/schedule"
+    "/dates",
+    "/join"
    ],
    "forms": [
     "label/body",
@@ -3094,7 +3094,7 @@
    "ask": "Can I look for a specific past meetup?",
    "verdict": "UNANSWERED",
    "where": [
-    "/schedule",
+    "/dates",
     "/404",
     "/chat"
    ],
@@ -3107,7 +3107,7 @@
    "verdict": "ANSWERED-ELSEWHERE",
    "where": [
     "/",
-    "/schedule"
+    "/dates"
    ],
    "answeredOn": [
     "/join"
@@ -3120,7 +3120,7 @@
    "verdict": "UNANSWERED",
    "where": [
     "/",
-    "/schedule",
+    "/dates",
     "/chat",
     "/join",
     "/404"

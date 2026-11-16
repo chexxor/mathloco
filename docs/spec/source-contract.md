@@ -206,7 +206,11 @@ the round-4 brief's "add no new gates"; the build's own `publishedName` throw is
 the page today.
 
 
-| what | inside the window | outside it |
+**Path correction 2026-11-16 (**D373**):** the page of record is now emitted at `dist/client/dates/index.html`,
+so the probe a future session runs over it reads that path. `dist/client/schedule/index.html` in the two
+table rows above, and in the corrected paragraph's `grep`, is the same page under the route as it was
+measured through 2026-11-15 — the rows are records of those measurements, and D373 moved the route, not the page.
+
 |---|---|---|
 | `data/meetup-events.json` | ≤ 14 days (`SNAPSHOT_FRESH_DAYS`, `src/lib/rsvp.mjs`) | > 14 days: `check:rsvp` fails the build. One threshold, one failure, one fix: `node scripts/meetup-events.mjs --write` |
 | `data/events.json` | any (the record is the record) | `check:ics`'s 21-day runway for a *near* row (D188) |

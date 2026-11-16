@@ -599,12 +599,12 @@ export const joinChannels = (urls = {}) => {
     {
       kind: 'rsvp',
       platform: PLATFORMS.meetup,
-      href: '/schedule',
+      href: '/dates',
       external: false,
       label: 'See the dates',
       // internal route: no suffix (derived below from `external`)
       // The platform is named in the visible clause, not just in `data-join-platform`: the row's destination is
-      // the club's own /schedule, so the label must not promise a new site - but the visitor is still choosing a
+      // the club's own /dates (the route moved from `/schedule` under D373), so the label must not promise a new site - but the visitor is still choosing a
       // platform, and a kind that never says which one delivers it leaves the reader to find out after the click
       // (the 2026-11-14 audit's objection; `check:join` now requires the platform's name in every row's text).
       // Nothing per-date here. `signUpPaths()` has three states - a Meetup page, a chat page, or nothing yet - and
