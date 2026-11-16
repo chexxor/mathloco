@@ -1558,14 +1558,14 @@
   },
   {
    "route": "/join",
-   "bytes": 19729,
+   "bytes": 20055,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
-    "body": 305
+    "body": 351
    },
-   "bodySentences": 30,
-   "bodyWords": 305,
+   "bodySentences": 31,
+   "bodyWords": 351,
    "headings": [
     "Ways in",
     "Follow the club",
@@ -2003,6 +2003,12 @@
      "zone": "body",
      "section": "Your first one",
      "text": "The club has no front desk and no phone number; the chat is where you ask.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
      "heading": false
     },
     {

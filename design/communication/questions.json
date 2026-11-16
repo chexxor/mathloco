@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-16T12:30:50.323Z",
+ "artifactBuilt": "2026-11-16T13:09:11.976Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -319,7 +319,7 @@
     "/join",
     "/events.ics"
    ],
-   "outsideCount": 16,
+   "outsideCount": 18,
    "evidence": [
     {
      "route": "/",
@@ -357,25 +357,25 @@
      "route": "/join",
      "form": "prose",
      "zone": "body",
+     "section": "Your first one",
+     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
      "section": "What we do",
      "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
      "shape": 1
     },
     {
-     "route": "/schedule",
+     "route": "/join",
      "form": "prose",
      "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "shape": 0
-    },
-    {
-     "route": "/schedule",
-     "form": "prose",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
-     "shape": 0
+     "section": "Your first one",
+     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
+     "shape": 1
     },
     {
      "route": "/schedule",
@@ -2525,7 +2525,7 @@
     "/",
     "/schedule"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "ANSWERED-ELSEWHERE",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -2543,9 +2543,13 @@
      "zones": []
     },
     "/join": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/schedule": {
      "status": "unanswered",
@@ -2558,11 +2562,26 @@
      "zones": []
     }
    },
-   "answeredOn": [],
-   "forms": [],
-   "outsideRoutes": [],
-   "outsideCount": 0,
-   "evidence": [],
+   "answeredOn": [
+    "/join"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [
+    "/join"
+   ],
+   "outsideCount": 1,
+   "evidence": [
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
+     "shape": 0
+    }
+   ],
    "declinedEvidence": []
   },
   {
@@ -3085,12 +3104,14 @@
    "id": "q25",
    "who": "any-visitor",
    "ask": "How do I get to the venue?",
-   "verdict": "UNANSWERED",
+   "verdict": "ANSWERED-ELSEWHERE",
    "where": [
     "/",
     "/schedule"
    ],
-   "answeredOn": []
+   "answeredOn": [
+    "/join"
+   ]
   },
   {
    "id": "q28",
@@ -3112,7 +3133,7 @@
   "ANSWERED": 21,
   "DECLINED": 3,
   "ANSWERED-IN-CHROME": 0,
-  "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 5
+  "ANSWERED-ELSEWHERE": 1,
+  "UNANSWERED": 4
  }
 }

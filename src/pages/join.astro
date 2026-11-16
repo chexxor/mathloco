@@ -134,6 +134,15 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
         The club has no front desk and no phone number; the chat is where you ask.
       </p>
+      {/* B4 · q25 (round-5 communication read, 2026-11-16, D372): "how do I get to the venue?" was UNANSWERED
+          on every route, because the artifact prints an address and prints no way to reach it. Both halves were
+          measured before writing: the address string ships — `/schedule` row prose reads e.g. "Kowalski's Market,
+          5327 Lyndale Avenue South, Minneapolis, Minnesota" — and no map host ships anywhere (`grep -o 'google.com/maps\|mapbox\|openstreetmap' dist/client/*.html` returns nothing @measured 2026-11-16), so the honest answer is words, not a link. The venue changes with the date — `src/content.json` `venues._rule` says the names are "the pool a date gets a place from" (operator, 2026-11-03) — which is why the site cannot name one door. This is option (b) of the read's B4, and it is placed LAST in the section a visitor reaches after they have decided to come: no `src/config.json` URL key, no map host, no link, no box, so `check:ext-links`, `check:join` and the sprite's platform set stay exactly as they are, and `/schedule`'s row keeps its single way out (D342). Option (a) — a per-row map link — is the costly half: a platform this seat does not declare, and a second way out competing with D342's one inside the same row (D372). */}
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
+        Every date names the place it is in and prints its street address, and that address is how you get
+        there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no
+        single door this site could give directions to.
+      </p>
     </section>
 
     {/* The legal pair, once, on the page that names the platforms (round-5 communication read A2, 2026-11-16,
