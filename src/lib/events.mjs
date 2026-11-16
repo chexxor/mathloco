@@ -86,8 +86,10 @@ export const asUpcomingItems = (rows = upcomingEvents()) =>
     // the only second line a row may print. The organizer's spelling survives in `data/events.json` and in
     // `/events.ics` as the organizer's quotation (D189).
     title: publishedName(row),
-    // The row's key, not a fact for the page: PS-4's art is resolved by filename (`event-<slug>.png`, D190),
-    // so an attachment follows the meeting rather than its position in the list.
+    // The row's key, not a fact for the page: it used to name a file (`event-<slug>.png`, PS-4, D190), which put the
+    // row's date inside the asset's name; R7's rule of 2026-11-16 (D359) names an asset by role + media identity
+    // instead, so an attachment still follows the meeting rather than its position in the list, and a filename no
+    // longer asserts a date.
     slug: row.slug ?? null,
     series: row.seriesNote ?? null,
     status: String(row.status ?? '').toUpperCase() === 'CANCELLED' ? 'Cancelled' : null,

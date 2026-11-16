@@ -63,9 +63,11 @@ export type UpcomingItem = {
   endTime?: string | null;
   title: string;
   /**
-   * The snapshot's own key for the row. The page never prints it; it exists so a file can be attached to a
-   * row by name (`src/assets/photos/event-<slug>.png`, PS-4, D190) rather than by position, so adding art is
-   * a drop and reordering the list cannot move it to the wrong meeting.
+   * The snapshot's own key for the row. The page never prints it; it exists so a row can be attached to a
+   * file by identity rather than by position, so reordering the list cannot move a picture to the wrong meeting.
+   * It used to be the filename: `src/assets/photos/event-<slug>.png` (PS-4, D190) put the row's DATE inside the
+   * asset's name, and R7's rule of 2026-11-16 (D359) retires that key — an asset is now named `<role>-<mediaUid>.<ext>`
+   * and `src/lib/event-art.ts` carries the file name in the entry, not in the key.
    */
   slug?: string | null;
   /** An optional second line. The row's own name is not repeated there — see `asUpcomingItems`. */

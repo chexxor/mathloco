@@ -68,6 +68,7 @@ const KNOWN_GONE = {
   'design/ratify-tokens': 'a branch name recorded in design/state.json, not a path',
   'src/assets/math-group-image.jpg': 'deleted in apply 4h (D120); scripts/make-social-share.mjs names it as the provenance of the crop geometry',
   'src/consts.ts': 'named in dated evidence (records/0010, token-plan.md); the section flags now live in src/config.json',
+  'src/assets/photos/event-2026-12-05-matheapolis-bimonthly-social.png': 'cited by a dated letter (docs/reply-to-the-design-read-2026-11-14.md, 2026-11-14) that ran a metadata probe on the file and reported what it found there. R7\u2019s sweep of 2026-11-16 (D359) deleted the seven mirrored event PNGs, which is what made the letter\u2019s probe unverifiable from that seat rather than wrong. The letter is a record, not a live tool: the probe it ran is quoted in src/assets/photos/README.md, whose provenance table is what a future mirror re-verifies against.',
   'design/grill/round6/round-6_html-375.json': 'design/decisions.json recorded this before the harness named outputs grill_round_6_html-375.json',
   'design/grill/navfit/D100.md': 'a specimen note that went missing mid-session; DECISIONS names it while recording that it is gone',
   'src/components/UpcomingMeetups.astro': 'deleted 2026-11-03 — invented events behind a false flag; real schedule work wrote src/components/Schedule.astro instead of enabling it. Cited by dated evidence (design/drift.json, the phase-1 measurement) and one-shot history (design/apply-batch1.mjs), which are records, not live tooling',

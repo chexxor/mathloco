@@ -4,9 +4,10 @@
  *
  * **2026-11-15 (round-4 design brief §6 and §7.1, rulings D-B and D-D): the row today is TWO zones — the
  *  date rail and the copy zone — and the copy zone carries exactly one way out, the per-date sign-up link.
- *  The per-row plate (`data-slot="PS-4"`, `event-*.webp`) is gone, so every sentence below about the plate,
- *  the 323px cap, PS-4, or "three art-bearing rows" describes the row as it shipped up to that date. Those
- *  measurements are history and keep their dates; the shape they describe is not what `dist/` paints, and
+ *  The per-row plate (`data-slot="PS-4"`, `event-*.webp`) is gone, and the seven mirrored asset files it read
+ *  (`src/assets/photos/event-*.png`) were deleted on 2026-11-16 with it (R7's sweep, D359), so every sentence below
+ *  about the plate, the 323px cap, PS-4, or "three art-bearing rows" describes the row as it shipped up to that date.
+ *  Those measurements are history and keep their dates; the shape they describe is not what `dist/` paints, and
  *  `check:row-geometry` was rewritten in the same commit to fail a row that paints a plate again.**
  *
  * There is deliberately **no `variant` prop here** (D227): the row is one shape, and a second surface would differ
@@ -201,14 +202,19 @@ const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS
     {primary && <a href={primary.href} target="_blank" rel="noopener noreferrer" data-rsvp-platform={primary.platform} data-rsvp-date={item.date} class="min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{primary.label}<span class="sr-only">{srOnly}</span></a>}
   </div>
   {/* Round-4 brief §7.1, ruling D-D (2026-11-15): the per-row plate is GONE, and the rows are typographic.
-      The brief's rationale survives the "declared decorative" defence: `event-2026-11-07-club-social.webp`
-      is painted on rows dated Nov 21, Dec 5 and Dec 19 — a decorative image whose *name* is a false claim is
-      still a false claim, one asset rename away from being a visible one. No replacement image (the brief
-      forbids a stock substitute, and D86/D94 already rule a stock crowd photo out). The row is now two zones
-      — the rail answers "when", the copy zone answers "what" and holds the way out — and `check:row-geometry`
-      was rewritten in this commit to say so: a row that paints `data-slot="PS-4"` again now fails, so the
-      art cannot come back with every gate green (D301's "a part that reports is not a part that gates").
-      `src/lib/event-art.ts` and `EventArt.astro` stay: the art files are a source the site still harvests
-      and mirrors, and deleting a source because no surface paints it is a different change with its own
-      sweep. Nothing else paints them. */}
+      The brief's rationale survives the "declared decorative" defence: `event-2026-11-07-club-social.webp` was painted
+      on rows dated Nov 21, Dec 5 and Dec 19 — a decorative image whose *name* is a false claim is still a false claim,
+      one asset rename away from being a visible one. No replacement image (the brief forbids a stock substitute, and
+      D86/D94 already rule a stock crowd photo out). The row is now two zones — the rail answers "when", the copy zone
+      answers "what" and holds the way out — and `check:row-geometry` was rewritten in this commit to say so: a row that
+      paints `data-slot="PS-4"` again now fails, so the art cannot come back with every gate green (D301's "a part that
+      reports is not a part that gates").
+      `src/lib/event-art.ts` and `EventArt.astro` stay as wiring, and the asset files they read do not: the operator's
+      rulings letter of 2026-11-16 (R7) made the harvest side own the sweep, and this commit is that sweep — the seven
+      `src/assets/photos/event-*.png` are deleted, the map in `src/lib/event-art.ts` is empty, and no mirrored event
+      asset exists in this repo at all (D359). The build is the test for that claim, in the letter's words: "if the build
+      stays green after the deletion, nothing referenced them and the deletion was free", which is also why no check was
+      added to make the deletion feel guarded. What would put a plate back is an entry in that table naming an asset
+      under R7's rule (`<role>-<mediaUid>.<ext>`, no date in a filename), and R8's criterion in DESIGN.md is what decides
+      whether such an asset may be painted at all. */}
 </li>

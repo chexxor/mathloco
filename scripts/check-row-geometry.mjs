@@ -27,9 +27,12 @@
 //                               first row it prints (D327, the second read §5.1)
 //   row-zone-order              leaf, copy — the order `design/schedule-geometry.mjs` measures against
 //   row-art-painted             a row that paints a plate or an `<img>` again (D-D, round-4 §7.1 — the rows are
-//                               typographic, and `event-2026-11-07-club-social.webp` on a row dated Nov 21 is a
-//                               false claim in the asset's own name; the rule is what stops the plate coming back
-//                               with every gate green, which is D301's class in this new place)
+//                               typographic. What made the old plate a false claim was its NAME: `event-2026-11-07-club-social.webp`
+//                               sat on rows dated Nov 21, Dec 5 and Dec 19, and R7's rule of 2026-11-16 removes
+//                               that claim by naming an asset `<role>-<mediaUid>.<ext>` with no date in it, while
+//                               R8's criterion replaces the criterion that a date in a name made decidable; the
+//                               rule is still what stops a plate coming back with every gate green, which is D301's
+//                               class in this new place)
 //   measure-token-missing       the emitted CSS has no `--container-measure`, so `max-w-measure` resolves to nothing
 //   measure-out-of-band         the cap, converted to characters with the measured 0.455 em/character advance of
 //                               PT Serif, lands outside DESIGN.md's 40-75 character reading band
@@ -83,7 +86,7 @@ export const rowFindings = (rows, css) => {
     if (art) {
       fails.push({
         rule: 'row-art-painted',
-        detail: `row ${i + 1} paints \`${art[0].trim()}\` — the rows are typographic (D-D, round-4 §7.1): no plate, no \`event-*.webp\`. The filenames carry dates that contradict the row they sit on (\`event-2026-11-07-club-social.webp\` was painted on rows dated Nov 21, Dec 5 and Dec 19), and a decorative image whose name is a false claim is still a false claim. Delete it; \`EventArt.astro\` and \`src/lib/event-art.ts\` stay as a source nothing paints.`,
+        detail: `row ${i + 1} paints \`${art[0].trim()}\` — the rows are typographic (D-D, round-4 §7.1) and no mirrored event asset exists in this repo at all: R7's sweep of 2026-11-16 deleted the seven \`src/assets/photos/event-*.png\` with the plate (D359). A filename no longer asserts a date, so what makes a plate a false claim is no longer a name contradicting the row (R8's criterion replaced that one) — it is the row being typographic by ruling, and a shared asset being an illustration of a format (\`standing: true\` in the manifest) rather than a photograph of the meeting beside it. Delete it, or name what it shows and give it a real alt; \`EventArt.astro\` and \`src/lib/event-art.ts\` stay as wiring over an empty map.`,
       });
     }
 
@@ -222,7 +225,7 @@ if (selftest) {
     { name: 'the plate is painted back into a row (D-D deleted it)', rows: [row(`
       <div data-leaf></div>
       <div data-copy><div data-head><time datetime="2026-11-21"><span class="text-label text-ink-3">Nov 21 Central</span></time><h2>Title</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>
-      <div data-slot="PS-4"><img alt="a poster" src="/event-2026-11-07-club-social.webp"></div>`) ], css: CSS, want: ['row-art-painted'] },
+      <div data-slot="PS-4"><img alt="a poster" src="/social-1f54c2.webp"></div>`) ], css: CSS, want: ['row-art-painted'] },
     { name: 'an image is painted in a row with no plate slot at all', rows: [row(`
       <div data-leaf></div>
       <div data-copy><div data-head><time datetime="2026-11-21"><span class="text-label text-ink-3">Nov 21 Central</span></time><h2>Title</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div><img alt="a poster" src="/poster.webp"></div>`) ], css: CSS, want: ['row-art-painted'] },
