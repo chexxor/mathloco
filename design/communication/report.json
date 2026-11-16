@@ -7,10 +7,10 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 23671,
+   "bytes": 24732,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 52,
+    "exit-band": 39,
     "body": 427
    },
    "bodySentences": 43,
@@ -635,23 +635,17 @@
     {
      "zone": "exit-band",
      "section": "How it works",
-     "text": "Meetup and Discord are trademarks of their owners.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "How it works",
-     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "text": "Meetup and Discord are the platforms’ own names.",
      "heading": false
     }
    ]
   },
   {
    "route": "/404",
-   "bytes": 12875,
+   "bytes": 13936,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 52,
+    "exit-band": 39,
     "body": 65
    },
    "bodySentences": 11,
@@ -1011,23 +1005,17 @@
     {
      "zone": "exit-band",
      "section": "We could not find that page",
-     "text": "Meetup and Discord are trademarks of their owners.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "We could not find that page",
-     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "text": "Meetup and Discord are the platforms’ own names.",
      "heading": false
     }
    ]
   },
   {
    "route": "/chat",
-   "bytes": 22778,
+   "bytes": 23839,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 52,
+    "exit-band": 39,
     "body": 283
    },
    "bodySentences": 33,
@@ -1526,27 +1514,21 @@
     {
      "zone": "exit-band",
      "section": "The chat itself",
-     "text": "Meetup and Discord are trademarks of their owners.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "The chat itself",
-     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "text": "Meetup and Discord are the platforms’ own names.",
      "heading": false
     }
    ]
   },
   {
    "route": "/join",
-   "bytes": 16620,
+   "bytes": 17854,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 52,
-    "body": 268
+    "exit-band": 39,
+    "body": 289
    },
-   "bodySentences": 27,
-   "bodyWords": 268,
+   "bodySentences": 29,
+   "bodyWords": 289,
    "headings": [
     "Ways in",
     "Follow the club",
@@ -1981,6 +1963,18 @@
      "heading": false
     },
     {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Meetup and Discord are trademarks of their owners.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "This site is the club’s own — not sponsored or endorsed by either.",
+     "heading": false
+    },
+    {
      "zone": "exit-band",
      "section": "Your first one",
      "text": "Dates",
@@ -2055,23 +2049,17 @@
     {
      "zone": "exit-band",
      "section": "Your first one",
-     "text": "Meetup and Discord are trademarks of their owners.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Your first one",
-     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "text": "Meetup and Discord are the platforms’ own names.",
      "heading": false
     }
    ]
   },
   {
    "route": "/schedule",
-   "bytes": 33954,
+   "bytes": 35014,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 52,
+    "exit-band": 39,
     "body": 229
    },
    "bodySentences": 43,
@@ -2687,13 +2675,7 @@
     {
      "zone": "exit-band",
      "section": "Social",
-     "text": "Meetup and Discord are trademarks of their owners.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Social",
-     "text": "This site is the club's own — not sponsored or endorsed by either.",
+     "text": "Meetup and Discord are the platforms’ own names.",
      "heading": false
     }
    ]
@@ -2708,75 +2690,31 @@
      "page": "/",
      "zone": "exit-band",
      "section": "How it works",
-     "words": "Meetup and Discord are trademarks of their owners."
+     "words": "Meetup and Discord are the platforms’ own names."
     },
     {
      "page": "/404",
      "zone": "exit-band",
      "section": "We could not find that page",
-     "words": "Meetup and Discord are trademarks of their owners."
+     "words": "Meetup and Discord are the platforms’ own names."
     },
     {
      "page": "/chat",
      "zone": "exit-band",
      "section": "The chat itself",
-     "words": "Meetup and Discord are trademarks of their owners."
+     "words": "Meetup and Discord are the platforms’ own names."
     },
     {
      "page": "/join",
      "zone": "exit-band",
      "section": "Your first one",
-     "words": "Meetup and Discord are trademarks of their owners."
+     "words": "Meetup and Discord are the platforms’ own names."
     },
     {
      "page": "/schedule",
      "zone": "exit-band",
      "section": "Social",
-     "words": "Meetup and Discord are trademarks of their owners."
-    }
-   ],
-   "routes": [
-    "/",
-    "/404",
-    "/chat",
-    "/join",
-    "/schedule"
-   ],
-   "repeatedOnSamePage": false
-  },
-  {
-   "bar": 0.34,
-   "weakestPair": 1,
-   "fact": [
-    {
-     "page": "/",
-     "zone": "exit-band",
-     "section": "How it works",
-     "words": "This site is the club's own — not sponsored or endorsed by either."
-    },
-    {
-     "page": "/404",
-     "zone": "exit-band",
-     "section": "We could not find that page",
-     "words": "This site is the club's own — not sponsored or endorsed by either."
-    },
-    {
-     "page": "/chat",
-     "zone": "exit-band",
-     "section": "The chat itself",
-     "words": "This site is the club's own — not sponsored or endorsed by either."
-    },
-    {
-     "page": "/join",
-     "zone": "exit-band",
-     "section": "Your first one",
-     "words": "This site is the club's own — not sponsored or endorsed by either."
-    },
-    {
-     "page": "/schedule",
-     "zone": "exit-band",
-     "section": "Social",
-     "words": "This site is the club's own — not sponsored or endorsed by either."
+     "words": "Meetup and Discord are the platforms’ own names."
     }
    ],
    "routes": [
@@ -3297,6 +3235,19 @@
    "isLabelItself": false
   },
   {
+   "page": "/join",
+   "section": "Your first one",
+   "words": "Meetup and Discord are trademarks of their owners.",
+   "named": [
+    "meetup",
+    "discord"
+   ],
+   "hrefs": [
+    "/chat"
+   ],
+   "isLabelItself": false
+  },
+  {
    "page": "/schedule",
    "section": "Dates",
    "words": "Dates",
@@ -3333,6 +3284,6 @@
    "isLabelItself": true
   }
  ],
- "wayfindingProseCount": 22,
- "wayfindingProseReal": 11
+ "wayfindingProseCount": 23,
+ "wayfindingProseReal": 12
 }

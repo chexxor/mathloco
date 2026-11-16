@@ -125,6 +125,18 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
         >.
       </p>
     </section>
+
+    {/* The legal pair, once, on the page that names the platforms (round-5 communication read A2, 2026-11-16,
+        D366). It used to live in the exit band, which every emitted page ends with, so one fact pair printed
+        TEN statements and the reader met it on `/404` too. `src/components/Footer.astro` now carries one
+        clause beside the two platform names it paints; the sentences themselves are byte-identical to what
+        the band used to print, and the attribution stays a static line rather than a component (round 10's
+        ruling, quoted in DESIGN.md). No link and no box added, so R1's ceiling on outbound anchors and
+        `check:page-exit` are untouched by this paragraph. */}
+    <p class="mt-8 max-w-measure text-micro text-ink-3">
+      Meetup and Discord are trademarks of their owners. This site is the club’s own — not sponsored or
+      endorsed by either.
+    </p>
   </main>
   {/* The exit band on the join page: the ways in are the whole subject of the page, so the band repeats the
      paths a reader reached by scrolling past them, and it is the same band every other emitted page carries

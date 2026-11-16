@@ -959,9 +959,17 @@ and the screen can disagree.
   third-party mark is a different risk from a recoloured word, and it is the one the retrievable terms (Discord's)
   name explicitly. Meetup's own brand terms are **not retrievable from this rig** (JS shell / 403), so nobody may
   assert them from memory. Applied: the Meetup png is out of `public/` and out of the join card.
-- **Attribution is one static line in the footer, not a component.** Written: "Meetup and Discord are trademarks of
-  their owners. This site is the club's own — not sponsored or endorsed by either." It is capped at
-  `max-w-measure` like any prose block.
+- **Attribution is one static line, and it is not the same line on every page.** The exit band carries one
+   clause — "Meetup and Discord are the platforms’ own names." — beside the two platform names it paints,
+   and `/join`, the page that talks about the platforms, carries the full pair in its small print: "Meetup
+   and Discord are trademarks of their owners. This site is the club’s own — not sponsored or endorsed by
+   either." Neither block is a component, and both stay capped at `max-w-measure` like any prose block
+   (round-5 communication read A2, 2026-11-16, **D366**). What this replaces: the pair used to live in the band,
+   so one fact pair printed **10 statements** — the census calls the pair TWO clusters of 5 statements across
+   the five emitted pages, and `node design/communication-price.mjs` prices deleting them per route at
+   **19 · 19 · 17 · 19** and **26 · 27 · 25 · 26** gzip octets on `/404`, `/chat`, `/join`, `/schedule`
+   (@measured 2026-11-16, record `design/communication/price.json` clusters #1 and #2); a reader met the
+   same disclaimer on `/404`, which is the page that needs no disclaimer at all.
 - **Measured, so the trade-off is visible** (`npm run check:color`, whole-page crop, settled images — see the
   instrument note under Enforcement). Before, at 1240: **0.49%** of the page was colour a reader would name
   (chroma ≥ 0.08) and **0.48 points of that was Meetup's red** — i.e. **96% of the site's visible colour belonged
@@ -1161,7 +1169,7 @@ accepted, each with the gate that keeps it true.
   900 with each **410px**, and **592x434** in a single column below the flip @measured 2026-11-15 by
   `node design/whitespace-survey.mjs --routes / --widths 1024 900 768 640 390 320` — the two columns save 161px of
   page height exactly where the read wanted them switched off, and `--breakpoint-900` does not exist in this repo.
-- **A thread's gloss is standing copy, not a duplicate to fold** (round-5 communication read A1, 2026-11-16). The six thread glosses each print twice — the home page's *What we take up* list is the **signpost** and `/chat`'s *What the club is pulling on* list is the **thread** — and both read the one `threads` field in `src/content.json`, so one edit moves both surfaces and neither can drift (same one-home rule as D361's two tiers of link). Cost of the duplication, @measured 2026-11-16 by `node design/communication-price.mjs` (record `design/communication/price.json`, clusters #5–#10): **363 characters, 160 gzip bytes on `/chat`**, per-gloss deltas 29 · 34 · 29 · 26 · 24 · 18; `node design/communication-census.mjs` prints those six as clusters of 2 statements across `/` ↔ `/chat`. Folding was refused: option (a) — print the name alone on `/chat` — costs 0 bytes but leaves that page's thread list a bare list of names, and the operator has not accepted that. Kept as **deliberate standing copy**, like D218's provenance pair: 12 statements of 6 facts, and `npm run check:threads` (cap 6, 9 in `content.json`, 6 painted, 3 reachable) is what keeps the two surfaces in step. The measurement that would change the ranking is printed by the census either way: whether `/chat`'s own summaries already re-state a gloss.
+- **A thread's gloss is standing copy, not a duplicate to fold** (round-5 communication read A1, 2026-11-16). The six thread glosses each print twice — the home page's *What we take up* list is the **signpost** and `/chat`'s *What the club is pulling on* list is the **thread** — and both read the one `threads` field in `src/content.json`, so one edit moves both surfaces and neither can drift (same one-home rule as D361's two tiers of link). Cost of the duplication, @measured 2026-11-16 by `node design/communication-price.mjs` (record `design/communication/price.json`, clusters #4–#9 at this artifact): **363 characters, 158 gzip bytes on `/chat`**, per-gloss deltas 29 · 34 · 28 · 25 · 24 · 18 — the probe's figures move when the band's own copy moves (the round quoted 363 characters / 157 gzip, and D366's band clause moved it to 158), so the number comes from the probe, not from this line. `node design/communication-census.mjs` prints those six as clusters of 2 statements across `/` ↔ `/chat`. Folding was refused: option (a) — print the name alone on `/chat` — costs 0 bytes but leaves that page's thread list a bare list of names, and the operator has not accepted that. Kept as **deliberate standing copy**, like D218's provenance pair: 12 statements of 6 facts, and `npm run check:threads` (cap 6, 9 in `content.json`, 6 painted, 3 reachable) is what keeps the two surfaces in step. The measurement that would change the ranking is printed by the census either way: whether `/chat`'s own summaries already re-state a gloss.
 - **A drawing the club owns is drawn, not borrowed** (D323). One figure, `data-line-art`, hairlines only,
   `currentColor`, no fill, under 1200 bytes, `role="img"` with a ≤ 12-word label and a caption. `/chat
   "undoable-steps"`: **622 bytes, 9 strokes** @measured 2026-11-14 by `node scripts/check-line-art.mjs`.
