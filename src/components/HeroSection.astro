@@ -159,6 +159,35 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
       </h1>
       <p class='mt-2 text-label uppercase tracking-wide text-ink-3'>{locator}</p>
 
+      {/* The operator's rulings letter of 2026-11-16 (R9, D357) is what put one sentence HERE, between the
+          locator and the meeting block. R9 accepts the answers-first order and names the one part of it it
+          would not leave: a first-time visitor now meets an imperative — "Join Our Group" — before any
+          sentence says what the group is. Its fix needs no new copy: hoist one existing sentence above the
+          meeting block, so the page says what it is before it says come. The letter named the tagline line
+          beginning "A book, a room, and whoever shows up"; that line was deleted with `heroLabel()` under
+          D239 (and `check:content` still lists it as banned copy), so the letter's own fallback applies and
+          what moves is the FIRST SENTENCE OF THE LEDE — and this commit says so, which is what the letter
+          asked for in that branch. Order only: the classes below are the lede paragraph's, unchanged, so no
+          type, no spacing, no colour and no new way in — D303's single primary control and the `check:space`
+          ramp stay as they were measured. Measured, not argued — @measured 2026-11-16 by `node design/fold-answers.mjs --no-build`
+          (Linux native, Node 24.22.1): with the hoist in place all 5 answers are above the fold at both phone
+          columns — at 390x844 the when-line and the venue line sit at y=439-487 and y=491-547, the controls at
+          y=571-619 and y=631-679, on a 4265px page; at 320x844 they sit at y=472-520 and y=524-609, the controls
+          at y=633-681 and y=693-741, on a 4741px page. Before the hoist the same probe put them at y=224-272 /
+          y=276-332 and y=356-404 / y=416-464 at 390, and y=224-272 / y=276-361 and y=385-433 / y=445-493 at 320,
+          on pages 4253px and 4729px — so 0 of 5 past 844 at either column BEFORE the hoist as well, and the letter's
+          pre-committed table takes its FIRST row (ship as-is, closed) while its third row — an answer already past
+          844 at 320 without the hoist, the escalation — did not fire. What the hoist itself costs is measured the
+          same way: the meeting block moves down +215px at 390 and +248px at 320, and the page grows **+12px at
+          390 and +12px at 320**, because the sentence left the lede paragraph it came from and the paragraph it
+          left is roughly as tall as the paragraph it joined. Nothing here is past the fold at either column, and
+          the margin at 320 is 103px — this is the one measurement that would change R9's answer, and the letter
+          says the escalation it pre-committed is not to be fixed in this branch. */}
+      <p class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'>
+        We meet around a table in a coffee shop or a brewery in the Twin Cities and work through
+        something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.
+      </p>
+
       {/* D340 (round-4 §5, 2026-11-15): the answer to "when is the next meeting?", above the fold, computed —
           and the one thing this block is NOT is a second calendar: `nextMeeting` comes from the same
           `scheduleWindow(upcoming(), todayIn())` call the nav chip makes, the `data-date` handle is what lets
@@ -183,9 +212,10 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
           against an 844 fold, with the page's two controls past it, so the answers were present but not on the
           first screen. Putting the computed meeting and the controls ahead of the two lede paragraphs lands all
           five answers above the fold at 390; no class in this block changed, so what moved is order, not type,
-          spacing or colour (the fence that forbids the latter three). The lede stays the FIRST prose on the page,
-          and `check:copy` and `check:content` read words, not positions, so they see the same page they read
-          before this move. */}
+          spacing or colour (the fence that forbids the latter three). The lede's paragraphs stay the only prose
+          below the controls, and `check:copy` and `check:content` read words, not positions, so they see the same
+          page they read before this move — and before R9's hoist, which moved the lede's first sentence above
+          this block rather than writing one. */}
       <div>
         <div class='mt-6 sm:mt-8 sm:flex sm:justify-center lg:justify-start'>
           <div>
@@ -217,11 +247,11 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
         </div>
       </div>
 
+      {/* R9 (D357, 2026-11-16): this paragraph used to open with the sentence now sitting above the meeting
+          block; what is left here is the paragraph's second sentence, word for word. */}
       <p
         class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
       >
-        We meet around a table in a coffee shop or a brewery in the Twin Cities and work through
-        something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.
         Dates go up on Meetup; most of the arguing happens in the chat between meetings.
       </p>
 
