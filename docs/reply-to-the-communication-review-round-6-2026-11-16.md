@@ -182,6 +182,10 @@ is gitignored scratch, so a fresh clone cannot have these — they are for the o
 a clone). Two images per width: the whole page, and a crop that stops below the acceptance block. Regenerate them
 with `node design/pixel-ground.mjs --routes / --widths 1440 390` and then `node design/hero-crop.mjs` — the cropper
 landed in `design/` (tracked) in this same round, because a claim these paths carry needs a probe behind it (D282).
+One thing about the tracked record beside these images: `design/ground/report.json` is rewritten by every
+`check:ground` in the browser set, so at the tip it carries the widths **that** run measured (1240/390/320), not the
+1440/390 pair this section cites. The two commands above re-produce the cited run in about 20s, which is why the
+commands are printed and the record is not treated as the evidence.
 
 | width | whole page | hero crop | measured |
 |---|---|---|---|
