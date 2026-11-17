@@ -71,7 +71,13 @@ const olderText = win.hiddenCap > 0
   : null;
 ---
 
-<Layout title="Past meetings - Matheapolis" path="/past">
+{/* Round-6 review (2026-11-16), `/dates`/Remove and the site-wide half of it (D404): the route is unlinked
+    from `/dates` until it holds three completed meetings, and it is **noindexed** meanwhile — the letter's own
+    words, "Unlink until there are three completed meetings; `noindex` the route meanwhile." The route stays
+    built (D117: a path the build does not emit is a 404, and the band, the sitemap and the dead-path rule all
+    read the built routes); only the crawler is told not to index an empty shelf. `404.astro` is the precedent
+    for this attribute in this repo. */}
+<Layout title="Past meetings - Matheapolis, a Minneapolis math club" noindex path="/past">
   <main class="mx-auto max-w-4xl px-4 py-16 text-center">
     <h1 class="text-display-1 font-extrabold text-ink">Past meetings</h1>
     <p class="mt-2 text-lede leading-prose text-ink-2 mb-8 max-w-measure mx-auto">

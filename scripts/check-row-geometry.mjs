@@ -23,8 +23,13 @@
 //                               (a screen reader, a calendar importer, the next gate) can read the date as a date
 //   row-date-time-disagrees     the `<time datetime>` value is not the row's own `data-date` handle (D173: a
 //                               handle is part of the interface, so two copies of one date must agree)
-//   zone-not-stated / zone-not-on-first-row / zone-repeated  the page of record names its zone once, on the
-//                               first row it prints (D327, the second read §5.1)
+//   zone-not-stated / zone-missing / zone-repeated  the zone word opens **each venue group** (D397, supersedes
+//                               D327's once-per-page): a page that prints times and names no zone anywhere, a
+//                               group start that loses the word, a row inside a group that repeats it
+//   venue-handle-missing / venue-handle-ungrounded  the grouping the above runs on comes from each row's
+//                               `data-venue-key` handle, so the handle is load-bearing: a dated row that loses
+//                               it, or carries one naming a room the row does not print, is the D301 class
+//                               wearing the interface D173 already calls a handle
 //   row-zone-order              leaf, copy — the order `design/schedule-geometry.mjs` measures against
 //   row-art-painted             a row that paints a plate or an `<img>` again (D-D, round-4 §7.1 — the rows are
 //                               typographic. What made the old plate a false claim was its NAME: `event-2026-11-07-club-social.webp`
@@ -65,6 +70,12 @@ const DATE_SENTENCE = /<span class="text-label text-ink-3">/;
 const TIME_EL = /<time\b[^>]*datetime="(\d{4}-\d{2}-\d{2})"/;
 const DATA_DATE = /data-date="(\d{4}-\d{2}-\d{2})"/;
 const ZONE_WORD = /\bCentral\b/;
+/** D397: the handle each row carries for its venue group. It is the venue's own name — `UpcomingItem.venue`
+ *  is "name, street, city", so the group key is the text before the first comma, and `EventRow.astro` writes
+ *  the same split into the artifact. The gate re-derives groups from the handle rather than from the component's
+ *  boolean, which is what makes the invariant checkable: a component that stopped passing `zone=` would print
+ *  a page missing the fact and every gate would stay green. */
+const VENUE_KEY = /data-venue-key="([^"]*)"/;
 /** (D-D, round-4 §7.1) A row is two zones — the date rail and the copy zone — and nothing else. The plate
  *  (`data-slot="PS-4"`, `event-*.webp`) was deleted from the row in the same commit that added this rule, so a
  *  row that paints one again is the D301 class: a shape a note describes and no gate catches. */
@@ -163,38 +174,87 @@ export const rowFindings = (rows, css) => {
   return fails;
 };
 
-/** Zone naming is a property of a PAGE, not of a row: the read §5.1 asks for the zone once, on the first time
- * the page shows. Rows are grouped by page so the rule counts in page order. */
+/** Zone naming is a property of the VENUE grouping, not of row position (D397, supersedes D327).
+ * Round-6 communication review, `/dates`/Revise, asked for the zone word on every row; what it actually wants
+ * is the word wherever a new room begins, since an hour with no zone reads as "the clock of the room above".
+ * Rows are grouped by the venue key each one carries, and the word is required on the first row of each run
+ * and forbidden on the rest. The gate re-derives the runs from the handle, and checks the handle is grounded
+ * in the row's own printed copy, so neither half of the invariant is an assertion about a component. */
 export const zoneFindings = (pages) => {
   const out = [];
   for (const page of pages) {
     const rows = page.rows.filter((r) => DATE_SENTENCE.test(r));
     if (!rows.length) continue;
-    const hits = rows.map((r) => ZONE_WORD.test(r)).map((h, i) => (h ? i : -1)).filter((i) => i >= 0);
-    if (hits.length === 0) {
+    const keys = rows.map((r) => {
+      const m = VENUE_KEY.exec(r);
+      return m ? m[1] : '';
+    });
+    const keyed = keys.filter((k) => k !== '');
+    if (keyed.length && keyed.length !== keys.length) {
+      out.push({
+        rule: 'venue-handle-missing',
+        detail: `${page.route} prints ${rows.length} dated row(s) and ${keys.length - keyed.length} of them carry no data-venue-key while others do. The zone word now opens each venue group (D397), and a row with no key cannot be placed in a group — so the gate guesses, and a page that lost the handle silently lost the zone rule. Every row that has a venue writes its name into the handle; the component derives it from the same split as the venue line.`,
+      });
+      continue;
+    }
+    // A handle the row does not print is a claim of its own: the gate would group on a room no visitor ever
+    // reads, which is D173's handle rule (a handle is part of the interface, so it has to be a true one).
+    for (const [i, k] of keys.entries()) {
+      if (!k) continue;
+      const printed = rows[i]
+        .replace(VENUE_KEY, '')
+        .replace(/&#39;/g, "'")
+        .replace(/&quot;/g, '"')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&');
+      if (!printed.includes(k)) {
+        out.push({
+          rule: 'venue-handle-ungrounded',
+          detail: `row ${i + 1} on ${page.route} carries data-venue-key="${k}" and prints no such text. The handle is what the zone rule groups on, so a handle naming an unprinted room moves the word without moving a sentence (D173, D301).`,
+        });
+      }
+    }
+    let prev = null;
+    const starts = keys.map((k) => {
+      const s = k !== prev;
+      prev = k;
+      return s;
+    });
+    const hits = keys.map(() => false);
+    rows.forEach((r, i) => {
+      hits[i] = ZONE_WORD.test(r);
+    });
+    if (!hits.some(Boolean)) {
       out.push({
         rule: 'zone-not-stated',
-        detail: `${page.route} prints ${rows.length} time(s) and names no zone. Every row carries DTSTART;TZID=America/Chicago, so "12:00 – 1:00" is a fact a visitor in another zone cannot place on a clock (D327).`,
+        detail: `${page.route} prints ${rows.length} time(s) and names no zone. Every row carries DTSTART;TZID=America/Chicago, so "12:00 – 1:00" is a fact a visitor in another zone cannot place on a clock (D327, D397).`,
       });
-    } else if (hits.length === 1 && hits[0] === 0) {
-      // exactly the shipped shape: one word, on the first row.
-    } else if (hits.length === 1) {
-      out.push({
-        rule: 'zone-not-on-first-row',
-        detail: `${page.route} names the zone on row ${hits[0] + 1}, not the first row the visitor meets (D327).`,
-      });
-    } else {
-      out.push({
-        rule: 'zone-repeated',
-        detail: `${page.route} names the zone on ${hits.length} rows (rows ${hits.map((h) => h + 1).join(', ')}). The ruling is once per page; five rows repeating one word is the noise the read §5.1 was objecting to (D327).`,
-      });
+      continue;
+    }
+    for (let i = 0; i < rows.length; i += 1) {
+      if (starts[i] && !hits[i]) {
+        out.push({
+          rule: 'zone-missing',
+          detail: `${page.route} row ${i + 1} opens ${keys[i] ? `the ${keys[i]} group` : 'a group'} and prints no zone word. Under D397 the word opens every venue group, because an hour with no zone reads as the clock of the room above (D327 was once per page; the read's objection was to an hour the visitor could not place, not to the word's repetition).`,
+        });
+      }
+      if (!starts[i] && hits[i]) {
+        out.push({
+          rule: 'zone-repeated',
+          detail: `${page.route} row ${i + 1} repeats the zone word inside the ${keys[i]} group. The word is the group's opening; repeating it on every date at the same room is the noise D327 was trading (D397).`,
+        });
+      }
     }
   }
   return out;
 };
 
 if (selftest) {
-  const row = (inner, date = '2026-11-21') => `<li class="rounded-card px-4 flex flex-col" data-surface="row" data-date="${date}">${inner}</li>`;
+  const row = (inner, date = '2026-11-21', venue = '') => `<li class="rounded-card px-4 flex flex-col" data-surface="row" data-date="${date}"${venue ? ` data-venue-key="${venue}"` : ''}>${inner}</li>`;
+  // D397: the shipped row now carries a venue handle, so a fixture that wants grouping passes one; a fixture
+  // left at the default is a page with no venue anywhere, which groups as one run and keeps D327's once-per-page
+  // shape as a special case of the new rule.
   const head = (date, zone = ' Central') => `<div data-head><p class="tabular-nums"><time datetime="${date}"><span class="text-label text-ink-3">Saturday, November 21 &middot; 12:00 – 1:00${zone}</span></time></p><h2 class="text-lede">Social</h2></div>`;
   // The shipped row is TWO zones now (D-D, round-4 §7.1): the date rail and the copy zone, and the copy zone
   // carries one primary link — `splitPaths()` puts Meetup in the row, Discord and Facebook in the page's standing
@@ -205,11 +265,17 @@ if (selftest) {
       ${head('2026-11-21')}
       <div data-copy-prose class="max-w-measure"><p class="mt-2 text-body leading-prose">Angel Food Bakery</p></div>
       <a href="https://www.meetup.com/g/events/1/" target="_blank" rel="noopener noreferrer" data-rsvp-platform="Meetup" data-rsvp-date="2026-11-21" class="text-label">Sign up on Meetup</a>
-    </div>`);
+    </div>`, '2026-11-21', 'Angel Food Bakery');
   const CSS = '--container-measure:32em';
   const verdict = (rows, css, pages) => rowFindings(rows, css).concat(zoneFindings(pages ?? [{ route: '/fixture', rows }]));
   const cases = [
-    { name: 'clean control: the shipped row, two zones and a capped lane', rows: [shipped], css: CSS, want: [] },
+    { name: 'clean control: the shipped row, two zones and a capped lane', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy class="min-w-0 flex-1">
+      ${head('2026-11-21')}
+      <div data-copy-prose class="max-w-measure"><p class="mt-2 text-body leading-prose">Angel Food Bakery</p></div>
+      <a href="https://www.meetup.com/g/events/1/" target="_blank" rel="noopener noreferrer" data-rsvp-platform="Meetup" data-rsvp-date="2026-11-21" class="text-label">Sign up on Meetup</a>
+    </div>`, '2026-11-21', 'Angel Food Bakery')], css: CSS, want: [] },
     { name: 'the head div is deleted, and the zone word with it', rows: [row(`
       <div data-leaf></div>
       <div data-copy><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Saturday, Nov 21 · 12:00 – 1:00</span></time></p><h2>Title</h2><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`) ], css: CSS, want: ['row-head-missing', 'zone-not-stated'] },
@@ -250,12 +316,30 @@ if (selftest) {
       <div data-leaf></div>
       <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`, '2026-11-21'), row(`
       <div data-leaf></div>
-      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00 Central</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`, '2026-12-05')], css: CSS, want: ['zone-not-on-first-row'] },
-    { name: 'clean control: two rows, the zone named on the first only', rows: [row(`
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00 Central</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`, '2026-12-05')], css: CSS, want: ['zone-missing', 'zone-repeated'] },
+    { name: 'clean control: two venue groups, the zone word opening each (D397)', rows: [row(`
       <div data-leaf></div>
-      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`, '2026-11-21'), row(`
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Angel Food Bakery</p></div></div>`, '2026-11-21', 'Angel Food Bakery'), row(`
       <div data-leaf></div>
-      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">venue</p></div></div>`, '2026-12-05')], css: CSS, want: [] },
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-25"><span class="text-label text-ink-3">Wed 25 · 18:00 Central</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Kowalski&#39;s Market</p></div></div>`, '2026-11-25', "Kowalski's Market")], css: CSS, want: [] },
+    { name: 'the second venue group starts without the zone word', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Angel Food Bakery</p></div></div>`, '2026-11-21', 'Angel Food Bakery'), row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-25"><span class="text-label text-ink-3">Wed 25 · 18:00</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Kowalski&#39;s Market</p></div></div>`, '2026-11-25', "Kowalski's Market")], css: CSS, want: ['zone-missing'] },
+    { name: 'a dated row loses its venue handle while the page carries one', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Angel Food Bakery</p></div></div>`, '2026-11-21', 'Angel Food Bakery'), row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-25"><span class="text-label text-ink-3">Wed 25 · 18:00 Central</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Kowalski&#39;s Market</p></div></div>`, '2026-11-25')], css: CSS, want: ['venue-handle-missing'] },
+    { name: 'the handle names a room the row never prints', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Angel Food Bakery</p></div></div>`, '2026-11-21', 'Blue Bottle Coffee')], css: CSS, want: ['venue-handle-ungrounded'] },
+    { name: 'clean control: two rows at one venue, the zone opening the group', rows: [row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-11-21"><span class="text-label text-ink-3">Sat 21 · 12:00 Central</span></time></p><h2>A</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Angel Food Bakery</p></div></div>`, '2026-11-21', 'Angel Food Bakery'), row(`
+      <div data-leaf></div>
+      <div data-copy><div data-head><p class="tabular-nums"><time datetime="2026-12-05"><span class="text-label text-ink-3">Sat 5 · 12:00</span></time></p><h2>B</h2></div><div data-copy-prose class="max-w-measure"><p class="text-body">Angel Food Bakery</p></div></div>`, '2026-12-05', 'Angel Food Bakery')], css: CSS, want: [] },
     { name: 'clean control: the widest cap still inside the band (34em ~ 75)', rows: [shipped], css: '--container-measure:34em', want: [] },
     { name: 'clean control: an empty calendar paints no rows', rows: [], css: CSS, want: [] },
   ];
@@ -293,10 +377,25 @@ const css = cssFiles.map((f) => readFileSync(resolve(DIST, f), 'utf8')).join('\n
 
 const fails = rowFindings(rows, css).concat(zoneFindings(pagesWithRows));
 const tokens = [...new Set([...css.matchAll(MEASURE_TOKEN)].map((m) => `${m[1]}${m[2]}`))];
-const zonePages = pagesWithRows.filter((p) => p.rows.some((r) => ZONE_WORD.test(r)));
-console.log(`check:row-geometry — ${rows.length} row(s) across ${pages.filter((p) => ROW.test(p.html)).length} page(s); measure ${tokens.join(', ') || 'MISSING'} = ~${Math.round(parseFloat(tokens[0]) / EM_PER_CHAR)} characters of serif prose at 0.455 em/char; zone named on ${zonePages.length} page(s), first row only (${zonePages.map((p) => p.route).join(', ') || 'none'})`);
+const zoneSummary = pagesWithRows
+  .map((p) => {
+    const dated = p.rows.filter((r) => DATE_SENTENCE.test(r));
+    if (!dated.length) return '';
+    let prev = null;
+    let groups = 0;
+    for (const r of dated) {
+      const m = VENUE_KEY.exec(r);
+      const k = m ? m[1] : '';
+      if (k !== prev) groups += 1;
+      prev = k;
+    }
+    const named = dated.filter((r) => ZONE_WORD.test(r)).length;
+    return `${p.route}: word on ${named}/${dated.length} row(s), ${groups} venue group(s)`;
+  })
+  .filter((s) => s);
+console.log(`check:row-geometry — ${rows.length} row(s) across ${pages.filter((p) => ROW.test(p.html)).length} page(s); measure ${tokens.join(', ') || 'MISSING'} = ~${Math.round(parseFloat(tokens[0]) / EM_PER_CHAR)} characters of serif prose at 0.455 em/char; zone opened on ${zoneSummary.length} page(s), once per venue group (${zoneSummary.join('; ') || 'none'})`);
 for (const f of fails) console.log(`  FAIL ${f.rule}  ${f.detail}`);
-console.log(fails.length ? `\n${fails.length} finding(s).` : '\nEvery row is a rail and a capped copy zone, in that order, with no art painted and its date a <time>, and its zone named once.');
+console.log(fails.length ? `\n${fails.length} finding(s).` : '\nEvery row is a rail and a capped copy zone, in that order, with no art painted and its date a <time>, and its zone word opening each venue group.');
 process.exit(fails.length ? 1 : 0);
 
 function resolvePage(route) {

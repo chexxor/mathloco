@@ -117,23 +117,31 @@ import EventLeaf from './EventLeaf.astro';
 
 type Props = {
   item: UpcomingItem;
-  /** The row the page paints first. Only that row names the zone (D327, second design read §5.1). */
-  first?: boolean;
+  /** Whether this row opens a venue group. Only those rows name the zone (D397, supersedes D327). */
+  zone?: boolean;
 };
 
-const { item, first = false } = Astro.props;
-// The zone is named once, on the first date the page prints (the read §5.1: "append 'Central' to the first
-// time shown on each page, once"). The word is not a guess: every row in `data/events.json` carries
-// `DTSTART;TZID=America/Chicago`, the harvester confirms that hour before writing a row, and `check:ics`'s
-// tzid rule is what keeps it true in the published feed (D188). A visitor in another zone reading
-// "12:00 – 1:00" has no clock to hang it on; on the first row the cost of saying so is one word.
-const zone = first ? ' Central' : '';
+const { item, zone = false } = Astro.props;
+// The zone word used to be one per page, on the first row (D327, second design read §5.1: "append 'Central'
+// to the first time shown on each page, once"). Round-6 communication review, `/dates`/Revise, asked for it
+// on **every** row, and the objection D327 was trading was the wrong trade: the read was objecting to one
+// hour printed with nothing beside it and five more hours under it. What a visitor needs is the word
+// wherever a new room begins, because a row under a different venue is a different address and the hour
+// that carries no zone reads as "same clock as the room above" — which is only true while the rooms are
+// one room. So the word now opens **each venue group** (D397): the first row of every run of dates at the
+// same place. With this snapshot's live rows alternating two venues every row is a group start, and the
+// word costs nothing the address did not already cost. `check:row-geometry` re-derives the groups from a
+// `data-venue-key` handle rather than trusting this flag, because a component that stopped passing it
+// would otherwise keep every gate green while the page lost the fact (D301's class). The word is not a
+// guess either way: every row in `data/events.json` carries `DTSTART;TZID=America/Chicago`, the harvester
+// confirms that hour before writing a row, and `check:ics`'s tzid rule (D188) keeps it true in the feed.
 // Round-4 brief §6, ruling D-B (2026-11-15): a row carries ONE action. The per-date sign-up page belongs to
 // the date, so it belongs to the row; the chat, the group and the calendar file belong to the club, so they
 // moved out of the row and render once per page, after the last row, in `Schedule.astro`. Same resolver,
 // same destinations, split in `src/lib/rsvp.mjs` (`splitPaths`) rather than re-derived here — a component
 // that picked its own way out would be a second link rule, and the gate that compares painted bytes against
 // `signUpPaths()` would then be comparing the wrong thing (D264).
+const zoneWord = zone ? ' Central' : '';
 const paths = signUpPaths(item, meetupSnapshot.events, config.URLs, discordSnapshot.events);
 const primary = splitPaths(paths, config.URLs).row[0] ?? null;
 // The label already names the platform, so the suffix is the mode of opening only — and it is glued to the
@@ -144,7 +152,11 @@ const primary = splitPaths(paths, config.URLs).row[0] ?? null;
 const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS.meetup);
 ---
 
-<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date}>
+{/* `data-venue-key` is the handle `scripts/check-row-geometry.mjs` re-derives venue groups from, so the gate
+      decides where the zone word belongs from the same grouping this component was handed, rather than from
+      a flag that can be dropped without the page noticing. It is the venue's own name — the text before the
+      first comma in `UpcomingItem.venue`, which `src/lib/content.ts` documents as "name, street, city". */}
+<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date} data-venue-key={String(item.venue ?? '').split(',')[0].trim() || undefined}>
   {/* The date rail (2026-11-14, D313, from the MS04 read). Before this the row stacked seven separate things:
      leaf, title, date sentence, series line, venue line, three links. Below `lg` the visitor met the date twice
      with the title in between - leaf above, sentence under the title - so the two drawings of one fact were three
@@ -171,7 +183,7 @@ const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS
           screen reader and a gate can both read it. `check:row-geometry` fails a row whose date sentence is not
           inside a `<time>`, or whose `datetime` disagrees with `data-date` — semantics that cannot rot back
           into prose. */}
-      <p class="tabular-nums"><time datetime={item.date}><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}{zone}</span></time></p>
+      <p class="tabular-nums"><time datetime={item.date}><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}{zoneWord}</span></time></p>
       {/* h2, not h3 (S040 §7 D8, 2026-11-14): `/schedule` is h1 then rows, so an h3 row title skipped a level,
           which is what `npm run check:outline` now fails the build on. The row is a direct child of the page's
           one heading; there is no section between them to level down to. */}

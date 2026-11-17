@@ -29,19 +29,25 @@ import Footer from '../components/Footer.astro';
 export const prerender = true;
 ---
 
-<Layout title="Dates - Matheapolis" path="/dates">
+<Layout title="Dates - Matheapolis, a Minneapolis math club" path="/dates">
   <main>
     <Schedule />
-    {/* The sibling the window names but does not hold (D374): `/dates` is a window of what is **still to
-        come**, and its own copy already says what it left out inside that window. A date that has finished
-        is the other half of the same calendar and answers a different question — "did the club meet last
-        Tuesday?" — so the pointer is an internal path in this page's own copy, not a nav row (D117: a nav
-        label is a promise about a path, and the nav's fit is measured, so a label goes in only with its
-        own ruling) and not a second Meetup exit (R1/D358's ceiling counts an outbound anchor outside the
-        band, and this page already paints the band's six). */}
-    <p class="mt-8 text-label text-ink-3">
-      Looking for a date that has already passed? <a href="/past" class="underline text-ink-2 hover:text-accent">Past meetings</a> lists the ones our own calendar has finished.
-    </p>
+    {/* The sibling the window names but does not hold (D374) — **unlinked by D404, and the route noindexed**.
+        Round-6 review (2026-11-16), `/dates`/Remove: "Never link to an empty shelf". @measured 2026-11-17
+        against `data/events.json`: 8 rows, two of them dated before today (2026-11-07 and 2026-11-11), and
+        both carry `status: CANCELLED` — so `isPast` in `src/lib/event-window.mjs` returns false for all of
+        them and `/past` lists nothing today. What ships is therefore the shelf with no door to it,
+        and `past.astro` carries the `noindex` the same letter asked for on the other half of the ruling.
+
+        The deferral, with its trigger (D148's rule: a parking lot nobody can reconstruct is a lost item):
+        the link comes back in this page's own copy the day `/past` holds **three completed meetings** —
+        `pastWindow(publishableRows(snapshot.events).rows, todayIn()).total >= 3`, which is the number the
+        page's own list prints. Until then the route stays **built** (D117: a path is a file, and nothing here
+        names a path the build does not emit), it keeps its `data-surface="past-row"` contract, and
+        `check:dated-surfaces` still rules it as a page that prints dates. D374's reasoning for a page at all
+        is untouched; only the pointer into it left. The paragraph is deleted rather than reworded, because
+        "looking for a date that has already passed?" is a pointer to a disappointment, and a question the
+        page cannot answer with content is not a question to ask. */}
   </main>
   <Footer />
 </Layout>

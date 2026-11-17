@@ -10,8 +10,12 @@ import {
 // can compare it against the same rule rather than a copy of it (D238).
 import { todayIn, snapshot } from '../lib/events.mjs';
 import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow, feedWindow } from '../lib/event-window.mjs';
+import type { UpcomingItem } from '../lib/content.ts';
 import { publishableRows } from '../lib/event-groups.mjs';
 import { windowSentence } from '../lib/event-description.mjs';
+// The rhythm is generated from the rows this build publishes (D383), by the same module the home hero calls,
+// so `/dates`'s opening line and the hero's clause cannot be edited apart.
+import { rhythmSentence } from '../lib/rhythm.mjs';
 import SignUpLinks from './SignUpLinks.astro';
 import { PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
@@ -158,6 +162,21 @@ if (win.hiddenCap > 0) {
   omitted.push(`It lists at most ${MAX_ROWS} dates, and ${win.hiddenCap} more ${win.hiddenCap === 1 ? 'is' : 'are'} inside that window.`);
 }
 const omittedText = omitted.join(' ');
+// D397: where the zone word goes is a property of the venue grouping, not of row position. The group key is
+// the venue's own name — the text before the first comma, which `src/lib/content.ts` documents as "name,
+// street, city" — and the same split is what `EventRow.astro` writes into its `data-venue-key` handle, so
+// the page and `scripts/check-row-geometry.mjs` agree on the grouping instead of each inventing one.
+const venueKey = (it: UpcomingItem) => String(it.venue ?? '').split(',')[0].trim();
+const zoneStarts = (() => {
+  const out: boolean[] = [];
+  let prev: string | null = null;
+  for (const it of items) {
+    const k = venueKey(it);
+    out.push(k !== prev);
+    prev = k;
+  }
+  return out;
+})();
 // q25 ("How do I get to the venue?"), D375. `node design/visitor-questions.mjs` says the question belongs on
 // `/` and `/dates`; D372 answered it on `/join`, the page a visitor reaches after they have already decided
 // to come, which the probe prices as ANSWERED-ELSEWHERE - a placement defect, kept apart from a missing fact
@@ -168,8 +187,11 @@ const omittedText = omitted.join(' ');
 // `src/content.json`'s `venues.value` and `venues._rule` - the pool a date gets a place from is coffee shops,
 // bakeries and breweries - and "no pin", "no route" is the absence D372 verified (`grep` for a map host in
 // `dist/client` returns nothing), which is why no `URLs.*` key, no map binding and no absolute URL is added.
-const directionsDates = 'The address printed with a line is the address to give directions to, and no page here draws a route to it.';
-const directionsCompact = 'Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.';
+// Round-6 review (2026-11-16), `/dates`/Remove: "no page here draws a route to it" is a disclaimer about what
+// this site can do, not a fact about getting there (D387). The address is still named, because q25's answer is
+// the address itself; the sentence about the site's capabilities is gone. The compact width's whole directions
+// paragraph comes off `/` for the same reason - the review's list of provenance marketing.
+const directionsDates = 'The street address printed with each date is the address to give directions to.';
 const empty = content.schedule?.empty;
 const venueLine = value(empty?.venueLine);
 // The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
@@ -194,9 +216,11 @@ if (beyondWindow) {
 // D136: the count is dated, it has no '+' on it, and the regular-attendee figure is deliberately not
 // published). The join prose around it stayed in markup, where it shipped: a new slot in content.json
 // without a source would be an `openSlots` hole for `check:content` to report.
-const venues = value(content.venues);
-const membership = value(content.membership);
-const venueCount = Array.isArray(content.venues?.names) ? content.venues.names.length : null;
+// Round-6 review (2026-11-16), Home/Add (D385): one number about the room. It is the site's only painted
+// headcount, and it is a sourced slot in `src/content.json` rather than a sentence in markup, which is what
+// `scripts/check-rsvp-page.mjs`'s headcount rule now requires (D265, D385). `venues` and `membership` keep
+// their slots and their sources; they simply stop being painted on `/`.
+const turnout = value(content.turnout);
 
 // D117: a path needs a page, and it has one now, so the compact band may point at it. The path moved from
 // `/schedule` to `/dates` under D373 (the round-5 read's Batch D: the nav, the band and the page's own h1 all
@@ -262,8 +286,24 @@ const headingText = compact ? 'When we meet' : 'Dates';
 // are a near-duplicate `check:content` would have to be talked into accepting. The homepage band does not carry
 // it: D306 keeps `/schedule` the only surface that prints dates, and the compact lede has no room for a third
 // fact beside its two paths.
+// The window is still computed (the omitted-row paragraph and the standing row both need it), but the sentence
+// about it no longer sits in the lede (D387, D388): the review's `/dates`/Remove item is that a paragraph about
+// the file reads as meta-commentary next to the dates themselves, and it invites the reader to notice that the
+// file holds 7 rows while the page prints 5. The reach sentence belongs beside the path to the file, where the
+// reader is already thinking about the file.
 const fileWindow = feedWindow(publishableRows(snapshot.events).rows);
 const windowClause = windowSentence(fileWindow);
+const rhythm = rhythmSentence(snapshot.events);
+// Round-6 review, `/dates`/Revise (D405): "the format words are never defined on this page. A visitor arriving
+// from search learns what a 'Study session' is only by going to `/join`. Add five words at first use." The
+// first use on this page **is** the rhythm sentence above - it is what says "for a social", "for a study
+// session" - so the definition goes in the lede immediately after it, and not in a row. The words are the two
+// `SERIES_VOCABULARY` names `src/lib/event-groups.mjs` owns, and the clauses are the same two definitions
+// `src/pages/join.astro` writes under "What we do", shortened; `check:content`'s near-duplicate rule is per
+// built file, so one definition on each of two pages is not a defect the gate has to be talked into accepting.
+// No cadence word here (`src/lib/cadence.mjs`), and no claim past what the row titles and the feed's own
+// DESCRIPTIONs already carry (D92).
+const kindDefinitions = 'A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.';
 const lede = compact
   // 2026-11-15 (D340, round-4 §5): the sentence that used to live here — "The next date, where the club meets,
   // and where to sign up for it are all on the schedule." — is DELETED, not reworded. A page that says where the
@@ -275,8 +315,12 @@ const lede = compact
   ? (items.length
       ? null
       : 'The club\u2019s dates come from its own calendar.')
-  : ['These dates are copied from the club\u2019s own calendar.',
-      'Each one links to the page the club posts its sign-up on.', windowClause]
+  : // Round-6 review, `/dates`/Add: the rhythm is the page's opening line, because this is the page a planner
+    // lands on. It is generated from the rows below it (D383), so it is the same sentence the hero prints, on a
+    // different page - `check:content`'s near-duplicate rule is per built file, so two pages saying one generated
+    // thing is not a defect the gate has to be talked into accepting.
+    [rhythm, kindDefinitions, 'These dates are copied from the club\u2019s own calendar.',
+      'Each one links to the page the club posts its sign-up on.']
       .filter((s) => s)
       .join(' ');
 ---
@@ -346,35 +390,14 @@ const lede = compact
       )}
 
 
-      {/* Two quiet links, not a paragraph. D139 keeps `data-control` for the band's one primary: a second 48px
-          control under the date would compete with the date itself, which is the loudest thing in the band by
-          design. `decoration-rule` keeps the underline at the hairline token rather than at the text colour,
-          so it reads as the same weight as the deck above it. The count in the label is the number the deleted
-          sentence used to carry; `/events.ics` keeps its path (D218) without the Google/Apple/Outlook
-          sentence, which `/schedule` still says in full. */}
-      {compact && items.length > 0 && (
-        <div class="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-          {hidden > 0 && (
-            <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-              {/* The label has to match what the target page actually lists: `/schedule` shows a window, not the
-                  whole future, so promising "all fourteen dates" on a page that prints eight would be a link that lies
-                  about its own destination (D238). */}
-              {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All ${win.shown.length} dates`} <span aria-hidden="true">→</span>
-            </a>
-          )}
-          <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-            Add to a calendar <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      )}
+      {/* The two quiet paths this band used to print here moved below the card (D388); the empty-state branch
+          below keeps its own paths, because there the notice is the content. */}
 
       {!compact && items.length > 0 && (
         <>
           <ul class="space-y-4" data-art-cap="323">
-            {/* `first` is positional, not a property of the date: the zone word belongs to the first row the
-               page paints and to nothing else (D327, second design read §5.1). `check:row-geometry` counts rows
-               in page order, so a row that moves carries the word with it. */}
-            {items.map((item, i) => <EventRow item={item} first={i === 0} />)}
+            {/* D397 (was `first={i === 0}`, D327): the zone word opens each venue group, not each page. */}
+            {items.map((item, i) => <EventRow item={item} zone={zoneStarts[i]} />)}
           </ul>
           {/* D218's dated line, once for the list rather than once per row: "is this current?" is asked of the
               calendar, not of a row. The stamp is the feed's own `source.fetchedAt` (`copiedOn()`), which is
@@ -395,6 +418,14 @@ const lede = compact
               still keys the cluster on a printed date. `/events.ics` lives in this row rather than in a second
               paragraph below it: one path to one file, and the sentence under it is about that path. */}
           <SignUpLinks item={items[0]} />
+          {/* Round-6 review, `/dates`/Remove and the feed/Revise (D387, D388): the reach sentence leaves the lede
+              and sits here, under the path to the file it describes. It is still generated from the rows the file
+              carries (`windowSentence`, D371), so the page cannot name a window the file does not have; what is
+              gone is the count and the "the calendar file carries" framing, which the reviewer read as the site
+              talking about itself next to the dates themselves. */}
+          {windowClause && (
+            <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{windowClause}</p>
+          )}
           {/* D375 (q25): after the standing row rather than between the rows and it, so the copied line keeps
               its adjacency to the calendar path it sits over (D372's trap: an insertion that moves a sentence
               off its link moves a measurement). The sentence names no destination and spends no link. */}
@@ -419,41 +450,21 @@ const lede = compact
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
                 <h3 class="text-subhead font-semibold text-ink">How it works</h3>
+                {/* Round-6 review (2026-11-16), Home/Revise + "what to do this week" item 4 (D388): this heading
+                    spent itself on the website's data policy - 15 venues, the roster's age, no map pin - which is
+                    the material the reviewer called "written for an auditor, not for a visitor". What ships here is
+                    the prediction the peers make and this site never did: what happens in the first ten minutes,
+                    what to bring, what is expected, and one number about the room. The four sentences deleted here
+                    are not reworded; `venues`, `venueCount` and `membership` keep their slots in
+                    `src/content.json` with their sources, they simply stop being painted on `/`.
+                    The coffee line and the turnout figure are operator-granted draft claims (D381, D385): the
+                    ledger in docs/reply-to-the-communication-review-round-6-2026-11-16.md names both and the
+                    command that corrects them. The one number is data, not markup, so the operator's corrected
+                    figure is a one-line edit to `src/content.json`. */}
                 <div class="mt-3 space-y-3 text-body leading-prose text-ink-2 font-body">
-                  {venues && (
-                    <p>
-                      {venues}
-                      {venueCount ? ` The club has used ${venueCount} of them.` : ''}
-                    </p>
-                  )}
-                  {/* Round 17 (MS03), operator ruling 2026-11-09 (S017 B3): the band keeps only what only the
-                      band can carry - the sourced venues, the venue count, the roster and its date. The
-                      Meetup/chat statement lives in the hero, and the no-homework reassurance lives in the
-                      hero's no-syllabus line. Removing a claim is the safe direction under check:content
-                      (D92); the sentence this replaces is priced in design/grill/round17-options.mjs as
-                      dup-dates-chat-band-goes and dup-homework-band-goes. */}
-                  <p>
-                    If you would rather hear what is being argued about before you go, the chat invite is below.
-                  </p>
-                  {/* D276: the roster sentence used to print "280 on the Meetup list - counted Nov 3, 2026".
-                      That is a count of people, and D265 rules that the site prints dates, not attendance. The
-                      slot keeps its source and its date; the number now lives only in content.json's note, and
-                      `scripts/check-rsvp-page.mjs` reads the painted bytes for either form of tally. What a
-                      visitor gets is where the list is and when it was last read. */}
-                  {membership && (
-                    <p>
-                      {/* D306: an AGE, not the calendar date. "last read Nov 3, 2026" was the last visible date on
-                          `/` after the card came off, and the 2026-11-14 audit named it. `check:dated-surfaces` now
-                          refuses a date on any page it does not list, year-bearing provenance included. */}
-                      {membership}, last read {content.membership.asOf ? provenanceStamp(content.membership.asOf, { allowDate: !compact }) : 'recently'} —
-                      the list is not the room.
-                    </p>
-                  )}
-                  {/* D375 (q25): last in the card, after the roster - the card is a stack a reader works down
-                      before they press either control, and the way in is the last thing they need. The compact
-                      band prints no address, so these words name the page that does rather than pointing at a
-                      place that is not here. */}
-                  <p>{directionsCompact}</p>
+                  <p>Walk in, find a table, buy a coffee if you want one — that is the rent.</p>
+                  <p>Bring nothing, prepare nothing, and bring a question if you have one.</p>
+                  {turnout && <p>{turnout}</p>}
                 </div>
               </div>
               {/* PS-3, the join media column (round 10 ruling: reserve it now). Its box measured **532x56 at
@@ -472,6 +483,27 @@ const lede = compact
               </div>
             </div>
           </div>
+
+          {/* Round-6 review, Home/Revise ("a heading that promises a fact and delivers navigation") and week item
+              4 (D388): the two quiet paths come after the card that says what a meeting is, so the section opens
+              with content rather than with navigation. D139's one-primary rule is untouched: these are inline
+              links, not controls. The empty-state branch keeps its links where they were, because there the notice
+              IS the content. */}
+          {items.length > 0 && (
+            <div class="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+              {hidden > 0 && (
+                <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                  {/* The label has to match what the target page actually lists: `/dates` shows a window, not the
+                      whole future, so promising "all fourteen dates" on a page that prints eight would be a link that
+                      lies about its own destination (D238). */}
+                  {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All ${win.shown.length} dates`} <span aria-hidden="true">→</span>
+                </a>
+              )}
+              <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                Add to a calendar <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          )}
 
           <div class="mt-6 flex flex-wrap gap-3">
             {/* Was the page's second primary, labelled "Join on Meetup" and pointing at the group: two
