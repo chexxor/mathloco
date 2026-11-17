@@ -15,7 +15,18 @@
 
 import { readFileSync } from 'node:fs';
 
-const FILES = ['MILESTONES.md', 'DESIGN.md', 'README.md', 'AGENTS.md', 'DECISIONS.index.md'];
+// D416: the round's two docs are tracked prose carrying tables that ARE the contract — an inventory row
+// that loses a cell loses the line item it was mapping, and the claims ledger is how the operator finds
+// their own hand back. Same authority as MILESTONES.md's rows: the separator row sets the width.
+const FILES = [
+  'MILESTONES.md',
+  'DESIGN.md',
+  'README.md',
+  'AGENTS.md',
+  'DECISIONS.index.md',
+  'docs/communication-review-round-6-2026-11-16.md',
+  'docs/reply-to-the-communication-review-round-6-2026-11-16.md',
+];
 
 // Split a row on unescaped pipes only. `split('|')` on a cell containing `\|` invents a column.
 function cells(line) {
