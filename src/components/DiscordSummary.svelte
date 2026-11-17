@@ -89,15 +89,36 @@
          of the error string, so the state now names what the section is and hands over the path out; it claims
          nothing about whether a load succeeded, because the server-rendered state cannot know. The failed branch
          below keeps the failure sentence, since that one is a fact the browser established. -->
+    <!-- Round-6 review (2026-11-16), `/chat`/Revise + `/chat`/Remove (D409, D410): two defects on the one
+        branch the **server** paints, so it is also what a crawler, a JavaScript-off visitor and a visitor
+        who never scrolled to the `client:visible` island all see.
+
+        D409 — "The empty section: `The bot's reading of the channels` — a heading, one sentence, then the
+        next H2. A section that promises summaries and delivers none is worse than a page that doesn't
+        promise them." The heading over a void becomes a warm static state in the notice grammar DESIGN.md
+        fixes (status word, title, one body line, one boundary), in the reviewer's own words - "No summary
+        this week. The channel is the live thing." It is an operator-granted draft (the ledger in
+        `docs/reply-to-the-communication-review-round-6-2026-11-16.md` names it and its correction path):
+        the server-rendered state cannot know whether a summary exists, which is why the branch below it
+        still says "did not load" only where the browser established that fact.
+
+        D410 — "Remove one of the three Discord invites on this page" (Hick's law: three identical buttons
+        is a choice the reader makes for no reason). The invite the **pending state** carried inline is the
+        one deleted, because it is the same path the page already offers twice in the ratified construction:
+        the fold secondary above (D367) and the card primary below. The channel is still named in words here
+        - "the button above" - which is D369's precedent, echoed rather than linked. That keeps the built
+        page's Discord anchors at three (fold secondary, card primary, exit band) instead of four, and the
+        `failed` and `empty` branches keep their path out, since there the link is the answer to a state the
+        browser established. -->
     <div
       class="inset-shadow-rule rounded-control px-4 py-3 min-h-20 flex flex-col justify-center gap-1"
       role="status"
       aria-live="polite"
     >
-      <h2 class="text-lede font-bold text-ink font-body">The bot's reading of the channels</h2>
-      <p class="text-label text-ink-2">
-        They are written by our bot from recent channel activity. Read the same thing where it is
-        posted: <a class="underline hover:text-accent" href={discordUrl} target="_blank" rel="noopener noreferrer">Discord<span class="sr-only">{NEW_TAB_QUALIFIER}</span></a>.
+      <h2 class="text-lede font-bold text-ink font-body">No summary written this week</h2>
+      <p class="text-body leading-prose text-ink-2 font-body">
+        The channel is the live thing, and the button above goes to it. Our bot writes this section from
+        recent channel activity, after the noise settles.
       </p>
     </div>
   {:else if phase === 'failed'}

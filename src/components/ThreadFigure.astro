@@ -22,7 +22,16 @@
  * a claim about what the club discusses (D92).
  */
 const LABEL = 'A wire running through three boxes, and the same path traced back';
-const CAPTION = '“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no fills. Not a scan of a book.';
+// Round-6 review (2026-11-16), `/chat`/Revise (D412): "The illustration caption: 'drawn for this site in the
+// plates' line language: ink hairlines, no fills. Not a scan of a book.' — provenance commentary about your
+// own drawing, in a prominent slot. Keep the sentence; demote it to a small caption under the figure."
+// It **is** already a small caption under the figure, in `text-micro text-ink-3` - so the demotion the letter
+// asks for was already shipped, and what this commit changes is the sentence itself: the quoted thread name
+// is deleted, because the list item above the figure already names that thread and the figure's own `aria-label`
+// describes it. Repeating a thread title inside a provenance caption is what made the line read as part of the
+// list rather than as a credit. `check:line-art` requires a `<figcaption>` with the provenance, and the provenance
+// that remains is the whole of what a reader needs to know about a drawing the site owns: it is the site's own.
+const CAPTION = 'Drawn for this site in the plates\u2019 line language: ink hairlines, no fills, not a scan of a book.';
 ---
 
 <figure data-line-art="undoable-steps" class="mt-3">

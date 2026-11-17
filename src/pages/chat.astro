@@ -23,7 +23,7 @@ const DISCORD_URL = config.URLs.discordInvite;
 const items = threads();
 ---
 
-<Layout title="Chat - Matheapolis" path="/chat">
+<Layout title="Chat - Matheapolis, a Minneapolis math club" path="/chat">
   <main class="mx-auto max-w-4xl px-4 py-8">
     {/* No eyebrow above the h1 (S040, second design read §1, 2026-11-14): the page's name is its h1, and the
         line under it says what the page holds. "Community Chat" above the heading was a locator the nav already
@@ -31,10 +31,22 @@ const items = threads();
         same gate fails any text between `<main>` and the first heading. The air is unchanged: mb-4 + mb-8 is
         the same 48px the h1's mb-12 spent, and both steps are on DESIGN.md's ladder — `mb-10` (40px) was not,
         and `npm run check:scale` (S042, D321) now fails any spacing write off it. */}
+    {/* Round-6 review (2026-11-16), `/chat`/Revise (D409): "The page is named for a thing that isn't on it."
+        The h1 used to read "Summaries from the chat" and the section under it - the bot's reading - is what
+        the server renders as a notice with nothing under it, so the page promised summaries it did not carry.
+        The name now says what the page is: the club's chat. The bot keeps its own heading **inside the island**
+        (see `DiscordSummary.svelte`), on the branch that has content under it, and the pending branch becomes
+        a warm static state instead of a heading over a void (D409). `check:naming`'s `name-not-on-page` is
+        still satisfied: the nav word is "Chat", and the h1 says it. The subtitle carries the page's three
+        holdings in words rather than naming only the one section that may be empty, and it says them in words
+        that do not restate the thread lead below it: `check:content`'s `near-duplicate-surface` fired on a
+        subtitle sharing "where the club talks" with that lead, which is the same sentence of the same page
+        printed in two surfaces (D273's rule: shared words across surfaces is a defect unless a ruling says the
+        repeat is the point, and here it is not the point - the two lines answer different questions). */}
     <h1 class="text-display-1 font-extrabold text-ink mb-4">
-      Summaries from the chat
+      The club’s chat
     </h1>
-    <p class="text-label uppercase tracking-wide text-ink-3 mb-8">Written by our bot, after the noise settles</p>
+    <p class="text-label uppercase tracking-wide text-ink-3 mb-8">The live channel, the threads worth reading, and the dates the club set</p>
 
     {/* A3 (round-5 communication read, 2026-11-16, D367): the page's ONE way out used to sit 1,720px down at
         1240 and y=2,075 at 390 — a phone visitor scrolled two screens of prose before reaching the only action
@@ -74,9 +86,21 @@ const items = threads();
     {items.length > 0 && (
       <section class="mt-16 max-w-measure" id="threads" aria-labelledby="threads-heading">
         <h2 id="threads-heading" class="text-heading font-bold text-ink mb-4">What the club is pulling on</h2>
+        {/* Round-6 review (2026-11-16), `/chat`/Remove (D411): "The duplicated thread list — this is the page's
+            entire substance and it is word-for-word the home page's list, which home already calls 'the rest
+            of the list →'. The destination must add something the teaser didn't."
+            The **list stays** - `check:threads`'s `rest-link-missing` rule fails a home page that promises the
+            rest of the list and a `/chat` that does not carry it, and the list is the answer to q24's neighbour
+            question - and what changed is the lead. It used to restate what the home page already said
+            ("the threads the home page lists, in full"), which is a teaser describing itself. The words here
+            now name what this page adds over the teaser: every entry carries the club's own gloss (`src/content.json`
+            threads `gloss`), and the drawing under the list is the one picture the site owns (S042, §6.6).
+            No count is written here: `check:threads` reads the cap out of `WhyJoinUs.astro`'s `const VISIBLE`,
+            and a second cap in this file would be a copy of a rule with two homes (D320). */}
         <p class="text-lede leading-prose text-ink-2 mb-6 font-body">
-          The threads the home page lists, in full. Any of them can be dropped mid-sentence, and none of
-          them is a prerequisite for arriving.
+          Every thread on the list, each with what the club says it is, and the club's own drawing of one of
+          them underneath. Any of them can be dropped mid-sentence, and none of them is a prerequisite for
+          arriving.
         </p>
         <ul class="grid grid-cols-1 gap-x-8 md:grid-cols-2">
           {items.map(({ label, gloss }) => (
