@@ -106,6 +106,7 @@
     "round15": "node design/round15.mjs",
     "round16": "node design/round16.mjs",
     "round17": "node design/round17.mjs",
+    "round18": "node design/round18.mjs",
     "round17:specimen": "node design/grill/round17-build.mjs",
     "plates": "node scripts/plate-asset.mjs",
     "check:space": "node design/whitespace-survey.mjs",

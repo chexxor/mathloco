@@ -1,0 +1,4218 @@
+{
+ "measuredAt": "2026-11-17T21:39:40.432Z",
+ "widths": [
+  1240,
+  1024,
+  640,
+  390
+ ],
+ "notes": [],
+ "options": [
+  {
+   "id": "as-shipped",
+   "name": "A — the page as it stands",
+   "claim": "The incumbent, and the baseline every other row is a delta from: hero column stacking a 376x307 plate over the 376x235 mark, the reasons section, ONE capped horizon plate between it and the schedule, the schedule, and the ink footer. Measured here as 8 empty runs over 28.5% of a 2973px page, with a 569px gap before the band — so the weakness this round is about is not the hero, it is the middle.",
+   "inert": true,
+   "plates": [],
+   "at": {
+    "390": {
+     "pageH": 4122,
+     "paintedPct": 10,
+     "emptyRuns": 11,
+     "emptyPct": 25.3,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 40,
+      "y": 3586,
+      "w": 310,
+      "h": 0
+     },
+     "band": {
+      "x": 16,
+      "y": 2909,
+      "w": 358,
+      "h": 224
+     },
+     "mark": {
+      "x": 16,
+      "y": 1572,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "imgs": [
+      {
+       "x": 16,
+       "y": 1212,
+       "w": 358,
+       "h": 292,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 16,
+       "y": 2909,
+       "w": 358,
+       "h": 180,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 390,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 390,
+       "h": 1659
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1859,
+       "w": 390,
+       "h": 1002
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2861,
+       "w": 390,
+       "h": 320
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3181,
+       "w": 390,
+       "h": 577
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3758,
+       "w": 390,
+       "h": 320
+      }
+     ]
+    },
+    "640": {
+     "pageH": 4022,
+     "paintedPct": 9.46,
+     "emptyRuns": 12,
+     "emptyPct": 28.1,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 56,
+      "y": 3466,
+      "w": 528,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 2738,
+      "w": 592,
+      "h": 324
+     },
+     "mark": {
+      "x": 64,
+      "y": 1451,
+      "w": 512,
+      "h": 320,
+      "scale": 2.133
+     },
+     "imgs": [
+      {
+       "x": 64,
+       "y": 965,
+       "w": 512,
+       "h": 418,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 24,
+       "y": 2738,
+       "w": 592,
+       "h": 298,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 640,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 640,
+       "h": 1635
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1835,
+       "w": 640,
+       "h": 856
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2690,
+       "w": 640,
+       "h": 420
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3110,
+       "w": 640,
+       "h": 537
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3646,
+       "w": 640,
+       "h": 320
+      }
+     ]
+    },
+    "1024": {
+     "pageH": 3029,
+     "paintedPct": 7.17,
+     "emptyRuns": 8,
+     "emptyPct": 27.9,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 976,
+      "h": 829
+     },
+     "col": {
+      "x": 696,
+      "y": 136,
+      "w": 304,
+      "h": 829
+     },
+     "ps3": {
+      "x": 524,
+      "y": 2397,
+      "w": 436,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 976,
+      "h": 377
+     },
+     "mark": {
+      "x": 696,
+      "y": 613,
+      "w": 304,
+      "h": 190,
+      "scale": 1.267
+     },
+     "imgs": [
+      {
+       "x": 696,
+       "y": 298,
+       "w": 304,
+       "h": 248,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 163,
+       "y": 1716,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1024,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1024,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1024,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1024,
+       "h": 473
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2140,
+       "w": 1024,
+       "h": 541
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2681,
+       "w": 1024,
+       "h": 320
+      }
+     ]
+    },
+    "1240": {
+     "pageH": 2973,
+     "paintedPct": 6.32,
+     "emptyRuns": 8,
+     "emptyPct": 28.5,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 1192,
+      "h": 829
+     },
+     "col": {
+      "x": 840,
+      "y": 136,
+      "w": 376,
+      "h": 829
+     },
+     "ps3": {
+      "x": 632,
+      "y": 2369,
+      "w": 544,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 1192,
+      "h": 377
+     },
+     "mark": {
+      "x": 840,
+      "y": 620,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "imgs": [
+      {
+       "x": 840,
+       "y": 246,
+       "w": 376,
+       "h": 307,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 271,
+       "y": 1716,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1240,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1240,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1240,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1240,
+       "h": 473
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2140,
+       "w": 1240,
+       "h": 485
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2625,
+       "w": 1240,
+       "h": 320
+      }
+     ]
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,619.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ],
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "minStrokePx": 1.49
+   },
+   "color": {
+    "390": {
+     "strongPct": 0.821,
+     "chromaticPct": 1.69,
+     "faintPct": 93.98,
+     "hueFamilies": 6
+    },
+    "1240": {
+     "strongPct": 0.393,
+     "chromaticPct": 0.84,
+     "faintPct": 92.37,
+     "hueFamilies": 6
+    }
+   },
+   "shots": {
+    "390": {
+     "file": ".design/tmp-round18/scaled-as-shipped-390.png",
+     "from": "390x4122",
+     "to": "86x907",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round18/scaled-as-shipped-640.png",
+     "from": "640x4022",
+     "to": "141x885",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round18/scaled-as-shipped-1024.png",
+     "from": "1024x3029",
+     "to": "225x666",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round18/scaled-as-shipped-1240.png",
+     "from": "1240x2973",
+     "to": "273x654",
+     "factor": 0.22
+    }
+   },
+   "detail": {
+    "file": ".design/tmp-round18/hero-as-shipped-scaled.png",
+    "from": "1208x845",
+    "to": "604x423",
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
+   },
+   "cropOf": "the hero grid",
+   "delta": {
+    "390": "+0",
+    "640": "+0",
+    "1024": "+0",
+    "1240": "+0"
+   }
+  },
+  {
+   "id": "plate-closes-the-page",
+   "name": "B — the plate closes the page instead of dividing it",
+   "claim": "Same plate, same cap, same bytes: the whole horizon section moves below the schedule, so the page reads reasons → schedule → plate → footer. The words keep their order and the band stops being the seam the eye crosses on its way to the dates. Page height barely moves — this is not a height answer, it is an answer about where the emptiness lands, and check:space prints exactly that as empty runs.",
+   "plates": [],
+   "unchangedOk": "a section move reorders the surfaces; check:space aggregates page height, painted area and empty runs, all of which are invariant under a reorder, so this row’s evidence is its two photographs",
+   "at": {
+    "390": {
+     "pageH": 4122,
+     "paintedPct": 10,
+     "emptyRuns": 11,
+     "emptyPct": 25.3,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 40,
+      "y": 3266,
+      "w": 310,
+      "h": 0
+     },
+     "band": {
+      "x": 16,
+      "y": 3486,
+      "w": 358,
+      "h": 224
+     },
+     "mark": {
+      "x": 16,
+      "y": 1572,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "imgs": [
+      {
+       "x": 16,
+       "y": 1212,
+       "w": 358,
+       "h": 292,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 16,
+       "y": 3486,
+       "w": 358,
+       "h": 180,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 390,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 390,
+       "h": 1659
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1859,
+       "w": 390,
+       "h": 1002
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2861,
+       "w": 390,
+       "h": 577
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3438,
+       "w": 390,
+       "h": 320
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3758,
+       "w": 390,
+       "h": 320
+      }
+     ]
+    },
+    "640": {
+     "pageH": 4022,
+     "paintedPct": 9.44,
+     "emptyRuns": 12,
+     "emptyPct": 28.1,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 56,
+      "y": 3047,
+      "w": 528,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 3275,
+      "w": 592,
+      "h": 324
+     },
+     "mark": {
+      "x": 64,
+      "y": 1451,
+      "w": 512,
+      "h": 320,
+      "scale": 2.133
+     },
+     "imgs": [
+      {
+       "x": 64,
+       "y": 965,
+       "w": 512,
+       "h": 418,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 24,
+       "y": 3275,
+       "w": 592,
+       "h": 298,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 640,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 640,
+       "h": 1635
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1835,
+       "w": 640,
+       "h": 856
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2690,
+       "w": 640,
+       "h": 537
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3227,
+       "w": 640,
+       "h": 420
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3646,
+       "w": 640,
+       "h": 320
+      }
+     ]
+    },
+    "1024": {
+     "pageH": 3029,
+     "paintedPct": 7.17,
+     "emptyRuns": 8,
+     "emptyPct": 27.9,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 976,
+      "h": 829
+     },
+     "col": {
+      "x": 696,
+      "y": 136,
+      "w": 304,
+      "h": 829
+     },
+     "ps3": {
+      "x": 524,
+      "y": 1924,
+      "w": 436,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 2256,
+      "w": 976,
+      "h": 377
+     },
+     "mark": {
+      "x": 696,
+      "y": 613,
+      "w": 304,
+      "h": 190,
+      "scale": 1.267
+     },
+     "imgs": [
+      {
+       "x": 696,
+       "y": 298,
+       "w": 304,
+       "h": 248,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 163,
+       "y": 2256,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1024,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1024,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1024,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1024,
+       "h": 541
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2208,
+       "w": 1024,
+       "h": 473
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2681,
+       "w": 1024,
+       "h": 320
+      }
+     ]
+    },
+    "1240": {
+     "pageH": 2973,
+     "paintedPct": 6.32,
+     "emptyRuns": 8,
+     "emptyPct": 28.5,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 1192,
+      "h": 829
+     },
+     "col": {
+      "x": 840,
+      "y": 136,
+      "w": 376,
+      "h": 829
+     },
+     "ps3": {
+      "x": 632,
+      "y": 1896,
+      "w": 544,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 2200,
+      "w": 1192,
+      "h": 377
+     },
+     "mark": {
+      "x": 840,
+      "y": 620,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "imgs": [
+      {
+       "x": 840,
+       "y": 246,
+       "w": 376,
+       "h": 307,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 271,
+       "y": 2200,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1240,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1240,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1240,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1240,
+       "h": 485
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2152,
+       "w": 1240,
+       "h": 473
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2625,
+       "w": 1240,
+       "h": 320
+      }
+     ]
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,619.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ],
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "minStrokePx": 1.49
+   },
+   "color": {
+    "390": {
+     "strongPct": 0.821,
+     "chromaticPct": 1.69,
+     "faintPct": 93.98,
+     "hueFamilies": 6
+    },
+    "1240": {
+     "strongPct": 0.393,
+     "chromaticPct": 0.84,
+     "faintPct": 92.37,
+     "hueFamilies": 6
+    }
+   },
+   "shots": {
+    "390": {
+     "file": ".design/tmp-round18/scaled-plate-closes-the-page-390.png",
+     "from": "390x4122",
+     "to": "86x907",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round18/scaled-plate-closes-the-page-640.png",
+     "from": "640x4022",
+     "to": "141x885",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round18/scaled-plate-closes-the-page-1024.png",
+     "from": "1024x3029",
+     "to": "225x666",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round18/scaled-plate-closes-the-page-1240.png",
+     "from": "1240x2973",
+     "to": "273x654",
+     "factor": 0.22
+    }
+   },
+   "detail": {
+    "file": ".design/tmp-round18/hero-plate-closes-the-page-scaled.png",
+    "from": "1208x845",
+    "to": "604x423",
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
+   },
+   "cropOf": "the hero grid",
+   "delta": {
+    "390": "+0",
+    "640": "+0",
+    "1024": "+0",
+    "1240": "+0"
+   }
+  },
+  {
+   "id": "identity-closes-the-page",
+   "name": "C — the mark closes the page, the plate owns the fold",
+   "claim": "The two graphics in the hero column get one job each, and the identity moves out of the fold: the mark walks to the ink footer and is repainted for a dark ground (its `stroke-rule` hairline and its accent are both under the 3.0 graphic bar on ink — 2.97 for the accent, D116 — so the repaint is part of this option and check:render prices it), and the hero plate gets the column’s full height at the shipped crop recipe. That is the widest honest window on the leaf the page is allowed one of, so the colour bill is the point of this row.",
+   "plates": [
+    "col-plate"
+   ],
+   "at": {
+    "390": {
+     "pageH": 4301,
+     "paintedPct": 10.16,
+     "emptyRuns": 12,
+     "emptyPct": 29.2,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 40,
+      "y": 3592,
+      "w": 310,
+      "h": 0
+     },
+     "band": {
+      "x": 16,
+      "y": 2916,
+      "w": 358,
+      "h": 224
+     },
+     "mark": {
+      "x": 16,
+      "y": 3764,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "imgs": [
+      {
+       "x": 16,
+       "y": 1212,
+       "w": 358,
+       "h": 546,
+       "alt": "Detail of an engraving after The first s",
+       "src": "q0qBP8Bff4KUQbJiiEAAAAASUVORK5CYII=",
+       "complete": true
+      },
+      {
+       "x": 16,
+       "y": 2916,
+       "w": 358,
+       "h": 180,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 390,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 390,
+       "h": 1666
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1866,
+       "w": 390,
+       "h": 1002
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2868,
+       "w": 390,
+       "h": 320
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3187,
+       "w": 390,
+       "h": 577
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3764,
+       "w": 390,
+       "h": 494
+      }
+     ]
+    },
+    "640": {
+     "pageH": 4216,
+     "paintedPct": 9.74,
+     "emptyRuns": 11,
+     "emptyPct": 27.6,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 56,
+      "y": 3486,
+      "w": 528,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 2758,
+      "w": 592,
+      "h": 324
+     },
+     "mark": {
+      "x": 24,
+      "y": 3666,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "imgs": [
+      {
+       "x": 64,
+       "y": 965,
+       "w": 512,
+       "h": 781,
+       "alt": "Detail of an engraving after The first s",
+       "src": "q0qBP8Bff4KUQbJiiEAAAAASUVORK5CYII=",
+       "complete": true
+      },
+      {
+       "x": 24,
+       "y": 2758,
+       "w": 592,
+       "h": 298,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 640,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 640,
+       "h": 1654
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1854,
+       "w": 640,
+       "h": 856
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2710,
+       "w": 640,
+       "h": 420
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3129,
+       "w": 640,
+       "h": 537
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3666,
+       "w": 640,
+       "h": 494
+      }
+     ]
+    },
+    "1024": {
+     "pageH": 3203,
+     "paintedPct": 7.04,
+     "emptyRuns": 9,
+     "emptyPct": 31.8,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 976,
+      "h": 829
+     },
+     "col": {
+      "x": 696,
+      "y": 136,
+      "w": 304,
+      "h": 829
+     },
+     "ps3": {
+      "x": 524,
+      "y": 2397,
+      "w": 436,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 976,
+      "h": 377
+     },
+     "mark": {
+      "x": 32,
+      "y": 2681,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "imgs": [
+      {
+       "x": 696,
+       "y": 297,
+       "w": 304,
+       "h": 464,
+       "alt": "Detail of an engraving after The first s",
+       "src": "q0qBP8Bff4KUQbJiiEAAAAASUVORK5CYII=",
+       "complete": true
+      },
+      {
+       "x": 163,
+       "y": 1716,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1024,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1024,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1024,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1024,
+       "h": 473
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2140,
+       "w": 1024,
+       "h": 541
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2681,
+       "w": 1024,
+       "h": 494
+      }
+     ]
+    },
+    "1240": {
+     "pageH": 3147,
+     "paintedPct": 6.29,
+     "emptyRuns": 9,
+     "emptyPct": 32.4,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 1192,
+      "h": 829
+     },
+     "col": {
+      "x": 840,
+      "y": 136,
+      "w": 376,
+      "h": 829
+     },
+     "ps3": {
+      "x": 632,
+      "y": 2369,
+      "w": 544,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 1192,
+      "h": 377
+     },
+     "mark": {
+      "x": 32,
+      "y": 2625,
+      "w": 240,
+      "h": 150,
+      "scale": 1
+     },
+     "imgs": [
+      {
+       "x": 840,
+       "y": 242,
+       "w": 376,
+       "h": 574,
+       "alt": "Detail of an engraving after The first s",
+       "src": "q0qBP8Bff4KUQbJiiEAAAAASUVORK5CYII=",
+       "complete": true
+      },
+      {
+       "x": 271,
+       "y": 1716,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1240,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1240,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1240,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1240,
+       "h": 473
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2140,
+       "w": 1240,
+       "h": 485
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2625,
+       "w": 1240,
+       "h": 494
+      }
+     ]
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 240x150 at 32,2653 (viewBox 240x150, scale 1, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ],
+    "markBox": {
+     "w": 240,
+     "h": 150
+    },
+    "minStrokePx": 1.3
+   },
+   "color": {
+    "390": {
+     "strongPct": 1.184,
+     "chromaticPct": 2.21,
+     "faintPct": 93.58,
+     "hueFamilies": 6
+    },
+    "1240": {
+     "strongPct": 0.559,
+     "chromaticPct": 1.07,
+     "faintPct": 92.49,
+     "hueFamilies": 6
+    }
+   },
+   "shots": {
+    "390": {
+     "file": ".design/tmp-round18/scaled-identity-closes-the-page-390.png",
+     "from": "390x4301",
+     "to": "86x946",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round18/scaled-identity-closes-the-page-640.png",
+     "from": "640x4216",
+     "to": "141x928",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round18/scaled-identity-closes-the-page-1024.png",
+     "from": "1024x3203",
+     "to": "225x705",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round18/scaled-identity-closes-the-page-1240.png",
+     "from": "1240x3147",
+     "to": "273x692",
+     "factor": 0.22
+    }
+   },
+   "detail": {
+    "file": ".design/tmp-round18/hero-identity-closes-the-page-scaled.png",
+    "from": "1208x845",
+    "to": "604x423",
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
+   },
+   "cropOf": "the hero grid",
+   "delta": {
+    "390": "+179",
+    "640": "+194",
+    "1024": "+174",
+    "1240": "+174"
+   }
+  },
+  {
+   "id": "reserved-slot-gets-a-plate",
+   "name": "D — the reserved join slot gets a second plate now",
+   "claim": "PS-3 is a reserved media column in the schedule card that measures **544x0** today: the round-10 ruling named the place, the club photo that will fill it is MS32, and nothing ships there. This row asks what the page looks like if a licensed archive leaf stands in it while the wait is still open — the 1903 Euclid plate the repo already builds and does not paint, at the slot’s measured box, which is a 0.53x downscale of its own scan and keeps 67% of the drawing. Colourless line work, so the colour bill barely moves; the cost is page at the widths where the grid is one column.",
+   "plates": [
+    "ps3-leaf"
+   ],
+   "at": {
+    "390": {
+     "pageH": 4192,
+     "paintedPct": 10.44,
+     "emptyRuns": 10,
+     "emptyPct": 23.1,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 40,
+      "y": 3586,
+      "w": 310,
+      "h": 73
+     },
+     "band": {
+      "x": 16,
+      "y": 2909,
+      "w": 358,
+      "h": 224
+     },
+     "mark": {
+      "x": 16,
+      "y": 1572,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "imgs": [
+      {
+       "x": 16,
+       "y": 1212,
+       "w": 358,
+       "h": 292,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 16,
+       "y": 2909,
+       "w": 358,
+       "h": 180,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      },
+      {
+       "x": 40,
+       "y": 3586,
+       "w": 310,
+       "h": 73,
+       "alt": "Detail of an engraving after The element",
+       "src": "BUGyQQ3uHkz2AAAAAElFTkSuQmCC",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 390,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 390,
+       "h": 1659
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1859,
+       "w": 390,
+       "h": 1002
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2861,
+       "w": 390,
+       "h": 320
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3181,
+       "w": 390,
+       "h": 650
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3831,
+       "w": 390,
+       "h": 320
+      }
+     ]
+    },
+    "640": {
+     "pageH": 4144,
+     "paintedPct": 10.08,
+     "emptyRuns": 11,
+     "emptyPct": 25.3,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 56,
+      "y": 3466,
+      "w": 528,
+      "h": 124
+     },
+     "band": {
+      "x": 24,
+      "y": 2738,
+      "w": 592,
+      "h": 324
+     },
+     "mark": {
+      "x": 64,
+      "y": 1451,
+      "w": 512,
+      "h": 320,
+      "scale": 2.133
+     },
+     "imgs": [
+      {
+       "x": 64,
+       "y": 965,
+       "w": 512,
+       "h": 418,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 24,
+       "y": 2738,
+       "w": 592,
+       "h": 298,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      },
+      {
+       "x": 56,
+       "y": 3466,
+       "w": 528,
+       "h": 124,
+       "alt": "Detail of an engraving after The element",
+       "src": "BUGyQQ3uHkz2AAAAAElFTkSuQmCC",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 640,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 640,
+       "h": 1635
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1835,
+       "w": 640,
+       "h": 856
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2690,
+       "w": 640,
+       "h": 420
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3110,
+       "w": 640,
+       "h": 661
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3771,
+       "w": 640,
+       "h": 320
+      }
+     ]
+    },
+    "1024": {
+     "pageH": 3029,
+     "paintedPct": 8.62,
+     "emptyRuns": 8,
+     "emptyPct": 27.9,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 976,
+      "h": 829
+     },
+     "col": {
+      "x": 696,
+      "y": 136,
+      "w": 304,
+      "h": 829
+     },
+     "ps3": {
+      "x": 524,
+      "y": 2345,
+      "w": 436,
+      "h": 103
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 976,
+      "h": 377
+     },
+     "mark": {
+      "x": 696,
+      "y": 613,
+      "w": 304,
+      "h": 190,
+      "scale": 1.267
+     },
+     "imgs": [
+      {
+       "x": 696,
+       "y": 298,
+       "w": 304,
+       "h": 248,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 163,
+       "y": 1716,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      },
+      {
+       "x": 524,
+       "y": 2345,
+       "w": 436,
+       "h": 103,
+       "alt": "Detail of an engraving after The element",
+       "src": "BUGyQQ3uHkz2AAAAAElFTkSuQmCC",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1024,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1024,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1024,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1024,
+       "h": 473
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2140,
+       "w": 1024,
+       "h": 541
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2681,
+       "w": 1024,
+       "h": 320
+      }
+     ]
+    },
+    "1240": {
+     "pageH": 2973,
+     "paintedPct": 8.21,
+     "emptyRuns": 8,
+     "emptyPct": 28.5,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 1192,
+      "h": 829
+     },
+     "col": {
+      "x": 840,
+      "y": 136,
+      "w": 376,
+      "h": 829
+     },
+     "ps3": {
+      "x": 632,
+      "y": 2305,
+      "w": 544,
+      "h": 128
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 1192,
+      "h": 377
+     },
+     "mark": {
+      "x": 840,
+      "y": 620,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "imgs": [
+      {
+       "x": 840,
+       "y": 246,
+       "w": 376,
+       "h": 307,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 271,
+       "y": 1716,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      },
+      {
+       "x": 632,
+       "y": 2305,
+       "w": 544,
+       "h": 128,
+       "alt": "Detail of an engraving after The element",
+       "src": "BUGyQQ3uHkz2AAAAAElFTkSuQmCC",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1240,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1240,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1240,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1240,
+       "h": 473
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2140,
+       "w": 1240,
+       "h": 485
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2625,
+       "w": 1240,
+       "h": 320
+      }
+     ]
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,619.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ],
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "minStrokePx": 1.49
+   },
+   "color": {
+    "390": {
+     "strongPct": 0.808,
+     "chromaticPct": 2.21,
+     "faintPct": 93.5,
+     "hueFamilies": 6
+    },
+    "1240": {
+     "strongPct": 0.393,
+     "chromaticPct": 1.6,
+     "faintPct": 91.59,
+     "hueFamilies": 6
+    }
+   },
+   "shots": {
+    "390": {
+     "file": ".design/tmp-round18/scaled-reserved-slot-gets-a-plate-390.png",
+     "from": "390x4192",
+     "to": "86x922",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round18/scaled-reserved-slot-gets-a-plate-640.png",
+     "from": "640x4144",
+     "to": "141x912",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round18/scaled-reserved-slot-gets-a-plate-1024.png",
+     "from": "1024x3029",
+     "to": "225x666",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round18/scaled-reserved-slot-gets-a-plate-1240.png",
+     "from": "1240x2973",
+     "to": "273x654",
+     "factor": 0.22
+    }
+   },
+   "detail": {
+    "file": ".design/tmp-round18/hero-reserved-slot-gets-a-plate-scaled.png",
+    "from": "1208x845",
+    "to": "604x423",
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
+   },
+   "cropOf": "the hero grid",
+   "delta": {
+    "390": "+70",
+    "640": "+122",
+    "1024": "+0",
+    "1240": "+0"
+   }
+  },
+  {
+   "id": "band-pays-less",
+   "name": "E — the band pays less page",
+   "claim": "Keep the one plate and shrink the window on it: the cap moves from the scan’s 698px to 520px, so the leaf paints 520x261 instead of 698x351 and the band gives the page back a hundred-odd pixels where the column is wider than that. Hairlines go down instead of up — the one thing D347’s cap was protecting still holds — and the widths where the cap never binds (a 390 column is already 358) pay nothing, which is why the phone column is printed and not assumed.",
+   "plates": [],
+   "at": {
+    "390": {
+     "pageH": 4122,
+     "paintedPct": 10,
+     "emptyRuns": 11,
+     "emptyPct": 25.3,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 40,
+      "y": 3586,
+      "w": 310,
+      "h": 0
+     },
+     "band": {
+      "x": 16,
+      "y": 2909,
+      "w": 358,
+      "h": 224
+     },
+     "mark": {
+      "x": 16,
+      "y": 1572,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "imgs": [
+      {
+       "x": 16,
+       "y": 1212,
+       "w": 358,
+       "h": 292,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 16,
+       "y": 2909,
+       "w": 358,
+       "h": 180,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 390,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 390,
+       "h": 1659
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1859,
+       "w": 390,
+       "h": 1002
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2861,
+       "w": 390,
+       "h": 320
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3181,
+       "w": 390,
+       "h": 577
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3758,
+       "w": 390,
+       "h": 320
+      }
+     ]
+    },
+    "640": {
+     "pageH": 3992,
+     "paintedPct": 9.01,
+     "emptyRuns": 12,
+     "emptyPct": 28.5,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 56,
+      "y": 3430,
+      "w": 528,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 2738,
+      "w": 592,
+      "h": 287
+     },
+     "mark": {
+      "x": 64,
+      "y": 1451,
+      "w": 512,
+      "h": 320,
+      "scale": 2.133
+     },
+     "imgs": [
+      {
+       "x": 64,
+       "y": 965,
+       "w": 512,
+       "h": 418,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 60,
+       "y": 2738,
+       "w": 520,
+       "h": 262,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 640,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 640,
+       "h": 1635
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1835,
+       "w": 640,
+       "h": 856
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2690,
+       "w": 640,
+       "h": 383
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3073,
+       "w": 640,
+       "h": 537
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3610,
+       "w": 640,
+       "h": 320
+      }
+     ]
+    },
+    "1024": {
+     "pageH": 2940,
+     "paintedPct": 6.31,
+     "emptyRuns": 8,
+     "emptyPct": 28.8,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 976,
+      "h": 829
+     },
+     "col": {
+      "x": 696,
+      "y": 136,
+      "w": 304,
+      "h": 829
+     },
+     "ps3": {
+      "x": 524,
+      "y": 2307,
+      "w": 436,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 976,
+      "h": 287
+     },
+     "mark": {
+      "x": 696,
+      "y": 613,
+      "w": 304,
+      "h": 190,
+      "scale": 1.267
+     },
+     "imgs": [
+      {
+       "x": 696,
+       "y": 298,
+       "w": 304,
+       "h": 248,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 252,
+       "y": 1716,
+       "w": 520,
+       "h": 262,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1024,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1024,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1024,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1024,
+       "h": 383
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2051,
+       "w": 1024,
+       "h": 541
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2592,
+       "w": 1024,
+       "h": 320
+      }
+     ]
+    },
+    "1240": {
+     "pageH": 2883,
+     "paintedPct": 5.67,
+     "emptyRuns": 8,
+     "emptyPct": 29.3,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 1192,
+      "h": 829
+     },
+     "col": {
+      "x": 840,
+      "y": 136,
+      "w": 376,
+      "h": 829
+     },
+     "ps3": {
+      "x": 632,
+      "y": 2279,
+      "w": 544,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1716,
+      "w": 1192,
+      "h": 287
+     },
+     "mark": {
+      "x": 840,
+      "y": 620,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "imgs": [
+      {
+       "x": 840,
+       "y": 246,
+       "w": 376,
+       "h": 307,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 360,
+       "y": 1716,
+       "w": 520,
+       "h": 262,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1240,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1240,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1240,
+       "h": 639
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1668,
+       "w": 1240,
+       "h": 383
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2051,
+       "w": 1240,
+       "h": 485
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2535,
+       "w": 1240,
+       "h": 320
+      }
+     ]
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,619.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ],
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "minStrokePx": 1.49
+   },
+   "color": {
+    "390": {
+     "strongPct": 0.821,
+     "chromaticPct": 1.69,
+     "faintPct": 93.98,
+     "hueFamilies": 6
+    },
+    "1240": {
+     "strongPct": 0.405,
+     "chromaticPct": 0.86,
+     "faintPct": 95.19,
+     "hueFamilies": 6
+    }
+   },
+   "shots": {
+    "390": {
+     "file": ".design/tmp-round18/scaled-band-pays-less-390.png",
+     "from": "390x4122",
+     "to": "86x907",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round18/scaled-band-pays-less-640.png",
+     "from": "640x3992",
+     "to": "141x878",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round18/scaled-band-pays-less-1024.png",
+     "from": "1024x2940",
+     "to": "225x647",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round18/scaled-band-pays-less-1240.png",
+     "from": "1240x2883",
+     "to": "273x634",
+     "factor": 0.22
+    }
+   },
+   "detail": {
+    "file": ".design/tmp-round18/hero-band-pays-less-scaled.png",
+    "from": "1208x845",
+    "to": "604x423",
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
+   },
+   "cropOf": "the hero grid",
+   "delta": {
+    "390": "+0",
+    "640": "-30",
+    "1024": "-89",
+    "1240": "-90"
+   }
+  },
+  {
+   "id": "no-new-art-less-air",
+   "name": "F — no new art, less air",
+   "claim": "Close the emptiness without buying a pixel of colour: the below-fold sections and the margins inside them come off one step of the spacing scale, so the page reaches the dates sooner and its colour census stays where it is. This is the row that tests the assumption the last four rounds made implicitly — that emptiness is answered with pictures rather than with less of the thing that made it.",
+   "plates": [],
+   "at": {
+    "390": {
+     "pageH": 3954,
+     "paintedPct": 10.42,
+     "emptyRuns": 10,
+     "emptyPct": 22.1,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 40,
+      "y": 3438,
+      "w": 310,
+      "h": 0
+     },
+     "band": {
+      "x": 16,
+      "y": 2805,
+      "w": 358,
+      "h": 224
+     },
+     "mark": {
+      "x": 16,
+      "y": 1572,
+      "w": 358,
+      "h": 224,
+      "scale": 1.492
+     },
+     "imgs": [
+      {
+       "x": 16,
+       "y": 1212,
+       "w": 358,
+       "h": 292,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 16,
+       "y": 2805,
+       "w": 358,
+       "h": 180,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 390,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 390,
+       "h": 1659
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1859,
+       "w": 390,
+       "h": 914
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2773,
+       "w": 390,
+       "h": 288
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 3061,
+       "w": 390,
+       "h": 529
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3590,
+       "w": 390,
+       "h": 320
+      }
+     ]
+    },
+    "640": {
+     "pageH": 3854,
+     "paintedPct": 9.87,
+     "emptyRuns": 11,
+     "emptyPct": 25,
+     "grid": null,
+     "col": null,
+     "ps3": {
+      "x": 56,
+      "y": 3318,
+      "w": 528,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 2634,
+      "w": 592,
+      "h": 324
+     },
+     "mark": {
+      "x": 64,
+      "y": 1451,
+      "w": 512,
+      "h": 320,
+      "scale": 2.133
+     },
+     "imgs": [
+      {
+       "x": 64,
+       "y": 965,
+       "w": 512,
+       "h": 418,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 24,
+       "y": 2634,
+       "w": 592,
+       "h": 298,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 640,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 640,
+       "h": 1635
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1835,
+       "w": 640,
+       "h": 768
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2602,
+       "w": 640,
+       "h": 388
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2990,
+       "w": 640,
+       "h": 489
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 3478,
+       "w": 640,
+       "h": 320
+      }
+     ]
+    },
+    "1024": {
+     "pageH": 2861,
+     "paintedPct": 7.59,
+     "emptyRuns": 7,
+     "emptyPct": 23.8,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 976,
+      "h": 829
+     },
+     "col": {
+      "x": 696,
+      "y": 136,
+      "w": 304,
+      "h": 829
+     },
+     "ps3": {
+      "x": 524,
+      "y": 2251,
+      "w": 436,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1612,
+      "w": 976,
+      "h": 377
+     },
+     "mark": {
+      "x": 696,
+      "y": 613,
+      "w": 304,
+      "h": 190,
+      "scale": 1.267
+     },
+     "imgs": [
+      {
+       "x": 696,
+       "y": 298,
+       "w": 304,
+       "h": 248,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 163,
+       "y": 1612,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1024,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1024,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1024,
+       "h": 551
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1580,
+       "w": 1024,
+       "h": 441
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2020,
+       "w": 1024,
+       "h": 493
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2513,
+       "w": 1024,
+       "h": 320
+      }
+     ]
+    },
+    "1240": {
+     "pageH": 2805,
+     "paintedPct": 6.7,
+     "emptyRuns": 7,
+     "emptyPct": 24.3,
+     "grid": {
+      "x": 24,
+      "y": 136,
+      "w": 1192,
+      "h": 829
+     },
+     "col": {
+      "x": 840,
+      "y": 136,
+      "w": 376,
+      "h": 829
+     },
+     "ps3": {
+      "x": 632,
+      "y": 2223,
+      "w": 544,
+      "h": 0
+     },
+     "band": {
+      "x": 24,
+      "y": 1612,
+      "w": 1192,
+      "h": 377
+     },
+     "mark": {
+      "x": 840,
+      "y": 620,
+      "w": 376,
+      "h": 235,
+      "scale": 1.567
+     },
+     "imgs": [
+      {
+       "x": 840,
+       "y": 246,
+       "w": 376,
+       "h": 307,
+       "alt": "A hexagon inscribed in a circle, with it",
+       "src": "hero.DSx7PBhB_AReXT.webp",
+       "complete": true
+      },
+      {
+       "x": 271,
+       "y": 1612,
+       "w": 698,
+       "h": 351,
+       "alt": "Arcs cut from two centres, with a circle",
+       "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+       "complete": true
+      }
+     ],
+     "bands": [
+      {
+       "tag": "header",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "inset-shadow-rule",
+       "x": 0,
+       "y": 0,
+       "w": 1240,
+       "h": 72
+      },
+      {
+       "tag": "main",
+       "bg": "rgba(0, 0, 0, 0)",
+       "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+       "x": 0,
+       "y": 136,
+       "w": 1240,
+       "h": 829
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9909 0.0123 91.5)",
+       "cls": "bg-panel py-12",
+       "x": 0,
+       "y": 1029,
+       "w": 1240,
+       "h": 551
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 1580,
+       "w": 1240,
+       "h": 441
+      },
+      {
+       "tag": "section",
+       "bg": "oklch(0.9735 0.0139 88.7)",
+       "cls": "bg-paper py-12",
+       "x": 0,
+       "y": 2020,
+       "w": 1240,
+       "h": 437
+      },
+      {
+       "tag": "footer",
+       "bg": "oklch(0.1892 0.0149 81.4)",
+       "cls": "bg-ink text-band-text",
+       "x": 0,
+       "y": 2457,
+       "w": 1240,
+       "h": 320
+      }
+     ]
+    }
+   },
+   "gate": {
+    "code": 0,
+    "fails": [],
+    "gaps": [],
+    "markLine": "mark  hero 372x232.5 at 832,619.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+    "widths": [
+     1240,
+     640,
+     390,
+     320
+    ],
+    "markBox": {
+     "w": 372,
+     "h": 232.5
+    },
+    "minStrokePx": 1.49
+   },
+   "color": {
+    "390": {
+     "strongPct": 0.856,
+     "chromaticPct": 1.76,
+     "faintPct": 93.72,
+     "hueFamilies": 6
+    },
+    "1240": {
+     "strongPct": 0.417,
+     "chromaticPct": 0.89,
+     "faintPct": 91.92,
+     "hueFamilies": 6
+    }
+   },
+   "shots": {
+    "390": {
+     "file": ".design/tmp-round18/scaled-no-new-art-less-air-390.png",
+     "from": "390x3954",
+     "to": "86x870",
+     "factor": 0.22
+    },
+    "640": {
+     "file": ".design/tmp-round18/scaled-no-new-art-less-air-640.png",
+     "from": "640x3854",
+     "to": "141x848",
+     "factor": 0.22
+    },
+    "1024": {
+     "file": ".design/tmp-round18/scaled-no-new-art-less-air-1024.png",
+     "from": "1024x2861",
+     "to": "225x629",
+     "factor": 0.22
+    },
+    "1240": {
+     "file": ".design/tmp-round18/scaled-no-new-art-less-air-1240.png",
+     "from": "1240x2805",
+     "to": "273x617",
+     "factor": 0.22
+    }
+   },
+   "detail": {
+    "file": ".design/tmp-round18/hero-no-new-art-less-air-scaled.png",
+    "from": "1208x845",
+    "to": "604x423",
+    "factor": 0.5,
+    "at": 1240,
+    "cropOf": "the hero grid"
+   },
+   "cropOf": "the hero grid",
+   "delta": {
+    "390": "-168",
+    "640": "-168",
+    "1024": "-168",
+    "1240": "-168"
+   }
+  }
+ ],
+ "siteFp": "95e96db488",
+ "pageMap": [
+  {
+   "tag": "header",
+   "bg": "rgba(0, 0, 0, 0)",
+   "cls": "inset-shadow-rule",
+   "x": 0,
+   "y": 0,
+   "w": 1240,
+   "h": 72
+  },
+  {
+   "tag": "main",
+   "bg": "rgba(0, 0, 0, 0)",
+   "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+   "x": 0,
+   "y": 136,
+   "w": 1240,
+   "h": 829
+  },
+  {
+   "tag": "section",
+   "bg": "oklch(0.9909 0.0123 91.5)",
+   "cls": "bg-panel py-12",
+   "x": 0,
+   "y": 1029,
+   "w": 1240,
+   "h": 639
+  },
+  {
+   "tag": "section",
+   "bg": "oklch(0.9735 0.0139 88.7)",
+   "cls": "bg-paper py-12",
+   "x": 0,
+   "y": 1668,
+   "w": 1240,
+   "h": 473
+  },
+  {
+   "tag": "section",
+   "bg": "oklch(0.9735 0.0139 88.7)",
+   "cls": "bg-paper py-12",
+   "x": 0,
+   "y": 2140,
+   "w": 1240,
+   "h": 485
+  },
+  {
+   "tag": "footer",
+   "bg": "oklch(0.1892 0.0149 81.4)",
+   "cls": "bg-ink text-band-text",
+   "x": 0,
+   "y": 2625,
+   "w": 1240,
+   "h": 320
+  }
+ ],
+ "baseline": {
+  "at": {
+   "390": {
+    "pageH": 4122,
+    "paintedPct": 10,
+    "emptyRuns": 11,
+    "emptyPct": 25.3,
+    "grid": null,
+    "col": null,
+    "ps3": {
+     "x": 40,
+     "y": 3586,
+     "w": 310,
+     "h": 0
+    },
+    "band": {
+     "x": 16,
+     "y": 2909,
+     "w": 358,
+     "h": 224
+    },
+    "mark": {
+     "x": 16,
+     "y": 1572,
+     "w": 358,
+     "h": 224,
+     "scale": 1.492
+    },
+    "imgs": [
+     {
+      "x": 16,
+      "y": 1212,
+      "w": 358,
+      "h": 292,
+      "alt": "A hexagon inscribed in a circle, with it",
+      "src": "hero.DSx7PBhB_AReXT.webp",
+      "complete": true
+     },
+     {
+      "x": 16,
+      "y": 2909,
+      "w": 358,
+      "h": 180,
+      "alt": "Arcs cut from two centres, with a circle",
+      "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+      "complete": true
+     }
+    ],
+    "bands": [
+     {
+      "tag": "header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "inset-shadow-rule",
+      "x": 0,
+      "y": 0,
+      "w": 390,
+      "h": 72
+     },
+     {
+      "tag": "main",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+      "x": 0,
+      "y": 136,
+      "w": 390,
+      "h": 1659
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9909 0.0123 91.5)",
+      "cls": "bg-panel py-12",
+      "x": 0,
+      "y": 1859,
+      "w": 390,
+      "h": 1002
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 2861,
+      "w": 390,
+      "h": 320
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 3181,
+      "w": 390,
+      "h": 577
+     },
+     {
+      "tag": "footer",
+      "bg": "oklch(0.1892 0.0149 81.4)",
+      "cls": "bg-ink text-band-text",
+      "x": 0,
+      "y": 3758,
+      "w": 390,
+      "h": 320
+     }
+    ]
+   },
+   "640": {
+    "pageH": 4022,
+    "paintedPct": 9.46,
+    "emptyRuns": 12,
+    "emptyPct": 28.1,
+    "grid": null,
+    "col": null,
+    "ps3": {
+     "x": 56,
+     "y": 3466,
+     "w": 528,
+     "h": 0
+    },
+    "band": {
+     "x": 24,
+     "y": 2738,
+     "w": 592,
+     "h": 324
+    },
+    "mark": {
+     "x": 64,
+     "y": 1451,
+     "w": 512,
+     "h": 320,
+     "scale": 2.133
+    },
+    "imgs": [
+     {
+      "x": 64,
+      "y": 965,
+      "w": 512,
+      "h": 418,
+      "alt": "A hexagon inscribed in a circle, with it",
+      "src": "hero.DSx7PBhB_AReXT.webp",
+      "complete": true
+     },
+     {
+      "x": 24,
+      "y": 2738,
+      "w": 592,
+      "h": 298,
+      "alt": "Arcs cut from two centres, with a circle",
+      "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+      "complete": true
+     }
+    ],
+    "bands": [
+     {
+      "tag": "header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "inset-shadow-rule",
+      "x": 0,
+      "y": 0,
+      "w": 640,
+      "h": 72
+     },
+     {
+      "tag": "main",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+      "x": 0,
+      "y": 136,
+      "w": 640,
+      "h": 1635
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9909 0.0123 91.5)",
+      "cls": "bg-panel py-12",
+      "x": 0,
+      "y": 1835,
+      "w": 640,
+      "h": 856
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 2690,
+      "w": 640,
+      "h": 420
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 3110,
+      "w": 640,
+      "h": 537
+     },
+     {
+      "tag": "footer",
+      "bg": "oklch(0.1892 0.0149 81.4)",
+      "cls": "bg-ink text-band-text",
+      "x": 0,
+      "y": 3646,
+      "w": 640,
+      "h": 320
+     }
+    ]
+   },
+   "1024": {
+    "pageH": 3029,
+    "paintedPct": 7.17,
+    "emptyRuns": 8,
+    "emptyPct": 27.9,
+    "grid": {
+     "x": 24,
+     "y": 136,
+     "w": 976,
+     "h": 829
+    },
+    "col": {
+     "x": 696,
+     "y": 136,
+     "w": 304,
+     "h": 829
+    },
+    "ps3": {
+     "x": 524,
+     "y": 2397,
+     "w": 436,
+     "h": 0
+    },
+    "band": {
+     "x": 24,
+     "y": 1716,
+     "w": 976,
+     "h": 377
+    },
+    "mark": {
+     "x": 696,
+     "y": 613,
+     "w": 304,
+     "h": 190,
+     "scale": 1.267
+    },
+    "imgs": [
+     {
+      "x": 696,
+      "y": 298,
+      "w": 304,
+      "h": 248,
+      "alt": "A hexagon inscribed in a circle, with it",
+      "src": "hero.DSx7PBhB_AReXT.webp",
+      "complete": true
+     },
+     {
+      "x": 163,
+      "y": 1716,
+      "w": 698,
+      "h": 351,
+      "alt": "Arcs cut from two centres, with a circle",
+      "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+      "complete": true
+     }
+    ],
+    "bands": [
+     {
+      "tag": "header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "inset-shadow-rule",
+      "x": 0,
+      "y": 0,
+      "w": 1024,
+      "h": 72
+     },
+     {
+      "tag": "main",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+      "x": 0,
+      "y": 136,
+      "w": 1024,
+      "h": 829
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9909 0.0123 91.5)",
+      "cls": "bg-panel py-12",
+      "x": 0,
+      "y": 1029,
+      "w": 1024,
+      "h": 639
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 1668,
+      "w": 1024,
+      "h": 473
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 2140,
+      "w": 1024,
+      "h": 541
+     },
+     {
+      "tag": "footer",
+      "bg": "oklch(0.1892 0.0149 81.4)",
+      "cls": "bg-ink text-band-text",
+      "x": 0,
+      "y": 2681,
+      "w": 1024,
+      "h": 320
+     }
+    ]
+   },
+   "1240": {
+    "pageH": 2973,
+    "paintedPct": 6.32,
+    "emptyRuns": 8,
+    "emptyPct": 28.5,
+    "grid": {
+     "x": 24,
+     "y": 136,
+     "w": 1192,
+     "h": 829
+    },
+    "col": {
+     "x": 840,
+     "y": 136,
+     "w": 376,
+     "h": 829
+    },
+    "ps3": {
+     "x": 632,
+     "y": 2369,
+     "w": 544,
+     "h": 0
+    },
+    "band": {
+     "x": 24,
+     "y": 1716,
+     "w": 1192,
+     "h": 377
+    },
+    "mark": {
+     "x": 840,
+     "y": 620,
+     "w": 376,
+     "h": 235,
+     "scale": 1.567
+    },
+    "imgs": [
+     {
+      "x": 840,
+      "y": 246,
+      "w": 376,
+      "h": 307,
+      "alt": "A hexagon inscribed in a circle, with it",
+      "src": "hero.DSx7PBhB_AReXT.webp",
+      "complete": true
+     },
+     {
+      "x": 271,
+      "y": 1716,
+      "w": 698,
+      "h": 351,
+      "alt": "Arcs cut from two centres, with a circle",
+      "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+      "complete": true
+     }
+    ],
+    "bands": [
+     {
+      "tag": "header",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "inset-shadow-rule",
+      "x": 0,
+      "y": 0,
+      "w": 1240,
+      "h": 72
+     },
+     {
+      "tag": "main",
+      "bg": "rgba(0, 0, 0, 0)",
+      "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+      "x": 0,
+      "y": 136,
+      "w": 1240,
+      "h": 829
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9909 0.0123 91.5)",
+      "cls": "bg-panel py-12",
+      "x": 0,
+      "y": 1029,
+      "w": 1240,
+      "h": 639
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 1668,
+      "w": 1240,
+      "h": 473
+     },
+     {
+      "tag": "section",
+      "bg": "oklch(0.9735 0.0139 88.7)",
+      "cls": "bg-paper py-12",
+      "x": 0,
+      "y": 2140,
+      "w": 1240,
+      "h": 485
+     },
+     {
+      "tag": "footer",
+      "bg": "oklch(0.1892 0.0149 81.4)",
+      "cls": "bg-ink text-band-text",
+      "x": 0,
+      "y": 2625,
+      "w": 1240,
+      "h": 320
+     }
+    ]
+   }
+  },
+  "gate": {
+   "code": 0,
+   "fails": [],
+   "gaps": [],
+   "markLine": "mark  hero 372x232.5 at 832,619.8 (viewBox 240x150, scale 1.55, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+   "widths": [
+    1240,
+    640,
+    390,
+    320
+   ],
+   "markBox": {
+    "w": 372,
+    "h": 232.5
+   },
+   "minStrokePx": 1.49
+  },
+  "color": {
+   "390": {
+    "strongPct": 0.821,
+    "chromaticPct": 1.69,
+    "faintPct": 93.98,
+    "hueFamilies": 6
+   },
+   "1240": {
+    "strongPct": 0.393,
+    "chromaticPct": 0.84,
+    "faintPct": 92.37,
+    "hueFamilies": 6
+   }
+  }
+ },
+ "plates": {
+  "col-plate": {
+   "key": "col-plate",
+   "plate": {
+    "id": "ia-firstsixbooksofe00byrn-176-281",
+    "book": "The first six books of the elements of Euclid… with diagrams in colours (John Byrne, 1847)",
+    "page": "https://insideoutlibrary.com/p/ia-firstsixbooksofe00byrn-176-281",
+    "why": "D149-1b/2b: the operator's pick for PS-1 — the coloured leaf the hero already paints at 376x307"
+   },
+   "w": 376,
+   "h": 574,
+   "where": "the hero column at full height",
+   "srcW": 688,
+   "srcH": 1004,
+   "srcAspect": 0.685,
+   "keepPct": 96,
+   "upscale": 0.55,
+   "crop": {
+    "w": 688,
+    "h": 1050,
+    "namedPct": 9.89,
+    "inkPct": 0.54,
+    "meanL": 0.912,
+    "fam": null
+   },
+   "png": ".design/tmp-round18/plate-col-plate-376x574.png"
+  },
+  "ps3-leaf": {
+   "key": "ps3-leaf",
+   "plate": {
+    "id": "ia-elementsofeuclid1903eucl-297-210",
+    "book": "The elements of Euclid, with corrections and a proposition on the anharmonic ratio (1903)",
+    "page": "https://insideoutlibrary.com/p/ia-elementsofeuclid1903eucl-297-210",
+    "why": "record 0023: colourless line work, native 1024x357, and already a built asset this page does not paint"
+   },
+   "w": 544,
+   "h": 128,
+   "where": "PS-3 at its measured 544-wide box",
+   "srcW": 1024,
+   "srcH": 357,
+   "srcAspect": 2.868,
+   "keepPct": 67,
+   "upscale": 0.53,
+   "crop": {
+    "w": 1024,
+    "h": 241,
+    "namedPct": 0,
+    "inkPct": 7.28,
+    "meanL": 0.734,
+    "fam": null
+   },
+   "png": ".design/tmp-round18/plate-ps3-leaf-544x128.png"
+  }
+ },
+ "shipped": {
+  "pageH": 2973,
+  "paintedPct": 6.32,
+  "emptyRuns": 8,
+  "emptyPct": 28.5,
+  "grid": {
+   "x": 24,
+   "y": 136,
+   "w": 1192,
+   "h": 829
+  },
+  "col": {
+   "x": 840,
+   "y": 136,
+   "w": 376,
+   "h": 829
+  },
+  "ps3": {
+   "x": 632,
+   "y": 2369,
+   "w": 544,
+   "h": 0
+  },
+  "band": {
+   "x": 24,
+   "y": 1716,
+   "w": 1192,
+   "h": 377
+  },
+  "mark": {
+   "x": 840,
+   "y": 620,
+   "w": 376,
+   "h": 235,
+   "scale": 1.567
+  },
+  "imgs": [
+   {
+    "x": 840,
+    "y": 246,
+    "w": 376,
+    "h": 307,
+    "alt": "A hexagon inscribed in a circle, with it",
+    "src": "hero.DSx7PBhB_AReXT.webp",
+    "complete": true
+   },
+   {
+    "x": 271,
+    "y": 1716,
+    "w": 698,
+    "h": 351,
+    "alt": "Arcs cut from two centres, with a circle",
+    "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+    "complete": true
+   }
+  ],
+  "bands": [
+   {
+    "tag": "header",
+    "bg": "rgba(0, 0, 0, 0)",
+    "cls": "inset-shadow-rule",
+    "x": 0,
+    "y": 0,
+    "w": 1240,
+    "h": 72
+   },
+   {
+    "tag": "main",
+    "bg": "rgba(0, 0, 0, 0)",
+    "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+    "x": 0,
+    "y": 136,
+    "w": 1240,
+    "h": 829
+   },
+   {
+    "tag": "section",
+    "bg": "oklch(0.9909 0.0123 91.5)",
+    "cls": "bg-panel py-12",
+    "x": 0,
+    "y": 1029,
+    "w": 1240,
+    "h": 639
+   },
+   {
+    "tag": "section",
+    "bg": "oklch(0.9735 0.0139 88.7)",
+    "cls": "bg-paper py-12",
+    "x": 0,
+    "y": 1668,
+    "w": 1240,
+    "h": 473
+   },
+   {
+    "tag": "section",
+    "bg": "oklch(0.9735 0.0139 88.7)",
+    "cls": "bg-paper py-12",
+    "x": 0,
+    "y": 2140,
+    "w": 1240,
+    "h": 485
+   },
+   {
+    "tag": "footer",
+    "bg": "oklch(0.1892 0.0149 81.4)",
+    "cls": "bg-ink text-band-text",
+    "x": 0,
+    "y": 2625,
+    "w": 1240,
+    "h": 320
+   }
+  ]
+ },
+ "shippedSiteFp": "95e96db488",
+ "phone": {
+  "states": [
+   {
+    "id": "phone-shipped",
+    "name": "a — the band rides down to the phone (today)",
+    "css": null,
+    "at": {
+     "390": {
+      "pageH": 4122,
+      "paintedPct": 10,
+      "emptyRuns": 11,
+      "emptyPct": 25.3,
+      "grid": null,
+      "col": null,
+      "ps3": {
+       "x": 40,
+       "y": 3586,
+       "w": 310,
+       "h": 0
+      },
+      "band": {
+       "x": 16,
+       "y": 2909,
+       "w": 358,
+       "h": 224
+      },
+      "mark": {
+       "x": 16,
+       "y": 1572,
+       "w": 358,
+       "h": 224,
+       "scale": 1.492
+      },
+      "imgs": [
+       {
+        "x": 16,
+        "y": 1212,
+        "w": 358,
+        "h": 292,
+        "alt": "A hexagon inscribed in a circle, with it",
+        "src": "hero.DSx7PBhB_AReXT.webp",
+        "complete": true
+       },
+       {
+        "x": 16,
+        "y": 2909,
+        "w": 358,
+        "h": 180,
+        "alt": "Arcs cut from two centres, with a circle",
+        "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+        "complete": true
+       }
+      ],
+      "bands": [
+       {
+        "tag": "header",
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "inset-shadow-rule",
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 72
+       },
+       {
+        "tag": "main",
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+        "x": 0,
+        "y": 136,
+        "w": 390,
+        "h": 1659
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9909 0.0123 91.5)",
+        "cls": "bg-panel py-12",
+        "x": 0,
+        "y": 1859,
+        "w": 390,
+        "h": 1002
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9735 0.0139 88.7)",
+        "cls": "bg-paper py-12",
+        "x": 0,
+        "y": 2861,
+        "w": 390,
+        "h": 320
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9735 0.0139 88.7)",
+        "cls": "bg-paper py-12",
+        "x": 0,
+        "y": 3181,
+        "w": 390,
+        "h": 577
+       },
+       {
+        "tag": "footer",
+        "bg": "oklch(0.1892 0.0149 81.4)",
+        "cls": "bg-ink text-band-text",
+        "x": 0,
+        "y": 3758,
+        "w": 390,
+        "h": 320
+       }
+      ]
+     }
+    },
+    "gate": {
+     "code": 0,
+     "fails": [],
+     "gaps": [],
+     "markLine": "mark  hero 346x216.3 at 16,1629.2 (viewBox 240x150, scale 1.442, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+     "widths": [
+      390,
+      320
+     ],
+     "markBox": {
+      "w": 346,
+      "h": 216.3
+     },
+     "minStrokePx": 1.49
+    },
+    "color": {
+     "strongPct": 0.821,
+     "chromaticPct": 1.69,
+     "faintPct": 93.98,
+     "hueFamilies": 6
+    },
+    "shot": {
+     "file": ".design/tmp-round18/phone-scaled-phone-shipped.png",
+     "from": "390x4122",
+     "to": "86x907",
+     "factor": 0.22
+    },
+    "delta": "+0"
+   },
+   {
+    "id": "phone-desktop-only",
+    "name": "b — the band stays desktop-only",
+    "why": "the phone meets copy only, and the page loses the whole band — which is what D356 undid for the desktop, so the phone gets priced separately",
+    "at": {
+     "390": {
+      "pageH": 3809,
+      "paintedPct": 9.01,
+      "emptyRuns": 10,
+      "emptyPct": 24.6,
+      "grid": null,
+      "col": null,
+      "ps3": {
+       "x": 40,
+       "y": 3266,
+       "w": 310,
+       "h": 0
+      },
+      "band": {
+       "x": 0,
+       "y": 0,
+       "w": 0,
+       "h": 0
+      },
+      "mark": {
+       "x": 16,
+       "y": 1572,
+       "w": 358,
+       "h": 224,
+       "scale": 1.492
+      },
+      "imgs": [
+       {
+        "x": 16,
+        "y": 1212,
+        "w": 358,
+        "h": 292,
+        "alt": "A hexagon inscribed in a circle, with it",
+        "src": "hero.DSx7PBhB_AReXT.webp",
+        "complete": true
+       }
+      ],
+      "bands": [
+       {
+        "tag": "header",
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "inset-shadow-rule",
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 72
+       },
+       {
+        "tag": "main",
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+        "x": 0,
+        "y": 136,
+        "w": 390,
+        "h": 1659
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9909 0.0123 91.5)",
+        "cls": "bg-panel py-12",
+        "x": 0,
+        "y": 1859,
+        "w": 390,
+        "h": 1002
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9735 0.0139 88.7)",
+        "cls": "bg-paper py-12",
+        "x": 0,
+        "y": 2861,
+        "w": 390,
+        "h": 577
+       },
+       {
+        "tag": "footer",
+        "bg": "oklch(0.1892 0.0149 81.4)",
+        "cls": "bg-ink text-band-text",
+        "x": 0,
+        "y": 3438,
+        "w": 390,
+        "h": 320
+       }
+      ]
+     }
+    },
+    "gate": {
+     "code": 0,
+     "fails": [],
+     "gaps": [],
+     "markLine": "mark  hero 346x216.3 at 16,1629.2 (viewBox 240x150, scale 1.442, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+     "widths": [
+      390,
+      320
+     ],
+     "markBox": {
+      "w": 346,
+      "h": 216.3
+     },
+     "minStrokePx": 1.49
+    },
+    "color": {
+     "strongPct": 0.889,
+     "chromaticPct": 1.83,
+     "faintPct": 97.82,
+     "hueFamilies": 6
+    },
+    "shot": {
+     "file": ".design/tmp-round18/phone-scaled-phone-desktop-only.png",
+     "from": "390x3809",
+     "to": "86x838",
+     "factor": 0.22
+    },
+    "delta": "-313"
+   },
+   {
+    "id": "phone-short-leaf",
+    "name": "c — the phone pays a shorter leaf",
+    "why": "the plate stays in the story and the phone keeps most of the height back",
+    "at": {
+     "390": {
+      "pageH": 4069,
+      "paintedPct": 9.31,
+      "emptyRuns": 11,
+      "emptyPct": 25.8,
+      "grid": null,
+      "col": null,
+      "ps3": {
+       "x": 40,
+       "y": 3527,
+       "w": 310,
+       "h": 0
+      },
+      "band": {
+       "x": 16,
+       "y": 2909,
+       "w": 358,
+       "h": 164
+      },
+      "mark": {
+       "x": 16,
+       "y": 1572,
+       "w": 358,
+       "h": 224,
+       "scale": 1.492
+      },
+      "imgs": [
+       {
+        "x": 16,
+        "y": 1212,
+        "w": 358,
+        "h": 292,
+        "alt": "A hexagon inscribed in a circle, with it",
+        "src": "hero.DSx7PBhB_AReXT.webp",
+        "complete": true
+       },
+       {
+        "x": 75,
+        "y": 2909,
+        "w": 240,
+        "h": 121,
+        "alt": "Arcs cut from two centres, with a circle",
+        "src": "horizon-euler1910.Bfja9Pgx_zXckA.webp",
+        "complete": true
+       }
+      ],
+      "bands": [
+       {
+        "tag": "header",
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "inset-shadow-rule",
+        "x": 0,
+        "y": 0,
+        "w": 390,
+        "h": 72
+       },
+       {
+        "tag": "main",
+        "bg": "rgba(0, 0, 0, 0)",
+        "cls": "mx-auto max-w-screen-xl px-4 mt-16",
+        "x": 0,
+        "y": 136,
+        "w": 390,
+        "h": 1659
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9909 0.0123 91.5)",
+        "cls": "bg-panel py-12",
+        "x": 0,
+        "y": 1859,
+        "w": 390,
+        "h": 1002
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9735 0.0139 88.7)",
+        "cls": "bg-paper py-12",
+        "x": 0,
+        "y": 2861,
+        "w": 390,
+        "h": 260
+       },
+       {
+        "tag": "section",
+        "bg": "oklch(0.9735 0.0139 88.7)",
+        "cls": "bg-paper py-12",
+        "x": 0,
+        "y": 3122,
+        "w": 390,
+        "h": 577
+       },
+       {
+        "tag": "footer",
+        "bg": "oklch(0.1892 0.0149 81.4)",
+        "cls": "bg-ink text-band-text",
+        "x": 0,
+        "y": 3699,
+        "w": 390,
+        "h": 320
+       }
+      ]
+     }
+    },
+    "gate": {
+     "code": 0,
+     "fails": [],
+     "gaps": [],
+     "markLine": "mark  hero 346x216.3 at 16,1629.2 (viewBox 240x150, scale 1.442, shapes 8/8, ratio 0.625 vs 0.625) role=\"img\" \"Two parallel lines leaving a sphere's equator and crossing at its pole\"",
+     "widths": [
+      390,
+      320
+     ],
+     "markBox": {
+      "w": 346,
+      "h": 216.3
+     },
+     "minStrokePx": 1.49
+    },
+    "color": {
+     "strongPct": 0.832,
+     "chromaticPct": 1.71,
+     "faintPct": 96.13,
+     "hueFamilies": 6
+    },
+    "shot": {
+     "file": ".design/tmp-round18/phone-scaled-phone-short-leaf.png",
+     "from": "390x4069",
+     "to": "86x895",
+     "factor": 0.22
+    },
+    "delta": "-53"
+   }
+  ]
+ }
+}
