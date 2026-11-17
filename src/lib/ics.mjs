@@ -33,6 +33,12 @@
 import { publishableRows } from './event-groups.mjs';
 import { feedDescription } from './event-description.mjs';
 import { feedWindow } from './event-window.mjs';
+// D398: the `URL` a subscriber clicks through to is the club's own page for the date, which the resolver in
+// `src/lib/rsvp.mjs` already decides per date from `data/meetup-events.json`. The gate that reads the shipped
+// bytes (`scripts/check-ics.mjs`) re-runs the same lookup, so a feed whose URL field and the page disagree go
+// red rather than shipping two surfaces that promise "the sign-up page" and point at different platforms.
+import { feedUrl } from './rsvp.mjs';
+import meetupSnapshot from '../../data/meetup-events.json' with { type: 'json' };
 
 export const CRLF = '\r\n';
 
@@ -171,7 +177,12 @@ export const vevent = (row, calendar) => {
   // from `calendar.window`, which `renderCalendar` derives from the rows it emitted, so the sentence a subscriber
   // reads is derived from the same rows the subscriber reads.
   lines.push(contentLine('DESCRIPTION', null, escapeText(feedDescription(row, calendar.window))));
-  if (row.url) lines.push(contentLine('URL', null, row.url));
+  // D398 (round-6 review, feed/Revise): the URL a subscriber follows has to be the page the site points at,
+  // not the page the harvester read. `feedUrl()` returns one only when the club's own snapshot holds exactly
+  // one open page for this row's date and hour; when it does not, the source's page stays, because a Meetup
+  // URL this repo cannot look up is a URL the repo cannot claim.
+  const own = feedUrl(row, meetupSnapshot.events);
+  if (own || row.url) lines.push(contentLine('URL', null, own ?? row.url));
   if (row.image) lines.push(contentLine('ATTACH', 'FMTTYPE=image/png', row.image));
   lines.push('END:VEVENT');
   return lines;

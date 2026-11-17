@@ -91,11 +91,19 @@ export const descriptionKind = (row) => {
  * It is deliberately one sentence, used in the file and in `/schedule`'s lede, rather than two: the page and the
  * file would otherwise carry the same window twice in different words, and `check:content` would then need a
  * signature for a pair that is only deliberate because it is the same generated string.
+ *
+ * Round-6 communication review, `/dates`/Remove and feed/Remove (D399): what is deleted is the **framing and
+ * the count**, not the fact. "The calendar file carries the club's 7 dates from…" is this site talking about
+ * itself, delivered into a subscriber's calendar on every event, and a count there is wrong the month the club
+ * adds a date — the reviewer's own words. What stays is the range, in the club's own voice ("The club's dates
+ * run from…"), because q18's answer has to be inside the file: a subscriber holds bare `DTSTART`s and nothing
+ * that says how far the file reaches. One call, two surfaces, so the page and the file cannot be edited apart
+ * (D371); `check:ics`'s `calendar-window` rule still requires the sentence and its new `feed-meta-commentary`
+ * rule fails the framing that was deleted.
  */
 export const windowSentence = (window) => {
   if (!window || !window.first || !window.last || !window.count) return '';
-  if (window.count === 1) return `The calendar file carries one date, ${plainDate(window.first)}.`;
-  return `The calendar file carries the club\u2019s ${window.count} dates from ${plainDate(window.first)} through ${plainDate(window.last)}.`;
+  return `The club\u2019s dates run from ${plainDate(window.first)} through ${plainDate(window.last)}.`;
 };
 
 /**

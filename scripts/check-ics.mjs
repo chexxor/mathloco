@@ -23,6 +23,7 @@ import { renderCalendar, escapeText, contentLine, CRLF } from '../src/lib/ics.mj
 import { publishableRows, meetingKind, venueKey } from '../src/lib/event-groups.mjs';
 import { feedDescription, DESCRIPTIONS, windowSentence } from '../src/lib/event-description.mjs';
 import { feedWindow, plainDate } from '../src/lib/event-window.mjs';
+import { feedUrl } from '../src/lib/rsvp.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -35,6 +36,9 @@ const DIST_DIR = resolve(argOne('--dist', 'dist/client'));
 const ARTIFACT = resolve(DIST_DIR, 'events.ics');
 
 const snapshot = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
+// D398: the same snapshot the pages resolve their sign-up links from, so `feed-url-shape` compares the feed's
+// URL against the lookup `src/lib/ics.mjs` performed rather than against a remembered URL.
+const MEETUP_EVENTS = JSON.parse(readFileSync(resolve('data/meetup-events.json'), 'utf8')).events;
 const BUILD_DATE = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
 // Textual helpers shared by several rules: unfolding joins a folded line back together, so an assertion sees
@@ -519,6 +523,60 @@ const RULES = [
     return out;
   },
 
+  // D399 (round-6 review, feed/Remove): a DESCRIPTION is the club's claim about a meeting, and it lands in
+  // someone's Google Calendar on every event. A sentence about this website, this page, or the file that carries
+  // it is the same class `check:copy`'s sibling D387 removes on the pages — the site talking about itself where
+  // a visitor is deciding whether to walk into a room. The window the file covers stays (D371's answer has to
+  // live inside the file, and it is generated, so it cannot go stale); the framing that named it as "the
+  // calendar file carries" and put a count in it is what fails here.
+  (_data, text) => {
+    const out = [];
+    const META = ['the calendar file carries', 'this site', 'this page', 'our calendar holds', 'the website'];
+    for (const block of eventsOf(text)) {
+      const u = unfold(block);
+      const uid = propOf(u, 'UID')?.value ?? '(no uid)';
+      const desc = propOf(u, 'DESCRIPTION');
+      if (!desc) continue;
+      const lower = desc.value.toLowerCase();
+      for (const phrase of META) {
+        if (!lower.includes(phrase)) continue;
+        out.push({
+          rule: 'feed-meta-commentary',
+          detail: `${uid}: DESCRIPTION says "${phrase}" — a note about this site or about the file carrying it, delivered into a subscriber's calendar on every event (D399). The count in the old sentence was the same defect one word further in: a number of dates a subscriber can see is wrong the month the club adds one. Keep the fact (the dates run from… to…), delete the framing.`,
+        });
+      }
+    }
+    return out;
+  },
+
+  // D398 (round-6 review, feed/Revise): the feed's URL field and `/dates` used to promise "the sign-up page"
+  // and disagree about where it is. The rule re-runs the resolver's own lookup, so it cannot drift from the
+  // renderer any more than the renderer can drift from the page.
+  (data, text) => {
+    const out = [];
+    const rowsByUid = new Map((data.events ?? []).map((r) => [String(r.uid ?? ''), r]));
+    for (const block of eventsOf(text)) {
+      const u = unfold(block);
+      const uid = String(propOf(u, 'UID')?.value ?? '');
+      const row = rowsByUid.get(uid);
+      if (!row) continue;
+      const own = feedUrl(row, MEETUP_EVENTS);
+      const url = propOf(u, 'URL');
+      if (own && !url) {
+        out.push({
+          rule: 'feed-url-shape',
+          detail: `${uid}: the club has its own page for this date (${own}) and the VEVENT carries no URL, so a subscriber's calendar has nothing to click through to (D398)`,
+        });
+      } else if (own && url.value !== own) {
+        out.push({
+          rule: 'feed-url-shape',
+          detail: `${uid}: URL is ${url.value} while the club's own page for this date is ${own} — the feed and the Dates page both promise "the sign-up page" and disagree about where it is, so a subscriber reaches a platform the site never mentions (D398; feedUrl() is the resolver's lookup, and a Meetup URL this snapshot does not carry is a URL this repo cannot claim)`,
+        });
+      }
+    }
+    return out;
+  },
+
   // "the publisher normalizes, it does not proxy" (D150) checkable in the calendar file, and it is the reason
   // the organizer's pre-2026 boilerplate cannot come back on the next harvest while the gate is green.
   (data, text) => {
@@ -739,6 +797,48 @@ if (selftest) {
     // The one clean assertion: a live hatch on a stale snapshot must NOT fail. Planted like the others so the
     // selftest proves both directions of the escape hatch.
     { name: 'live-hatch-on-a-stale-snapshot', clean: true, data: (d) => { for (const e of d.events) moveRow(e, dayShift(-30)); d.stalenessOkUntil = dayShift(7); return d; }, rule: 'runway' },
+    // D398 and D399 (round-6 review, feed): the two new rules. `feed-url-shape` plants the defect the review
+    // found — the feed pointing at a page the club never mentions — by rewriting the URL line back to the
+    // source platform's, folded through the renderer's own contentLine so the planting is a legal line and
+    // only the URL changed. The second planting is the half the review did not name: a row whose club page
+    // exists but whose URL was dropped, which leaves a subscriber with nothing to click through to. Both
+    // directions get a control, because a rule that fires on the shipped snapshot is not a detector.
+    {
+      name: 'the-feed-url-reverts-to-the-source-s-page',
+      text: (t) => {
+        const rowsByUid = new Map((snapshot.events ?? []).map((r) => [String(r.uid ?? ''), r]));
+        return String(t).replace(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g, (block) => {
+          const uid = String(propOf(unfold(block), 'UID')?.value ?? '');
+          const row = rowsByUid.get(uid);
+          if (!row) return block;
+          const own = feedUrl(row, MEETUP_EVENTS);
+          if (!own || !row.url || row.url === own) return block;
+          return block.replace(/^URL:[^\r]*(?:\r\n [^\r]*)*/m, contentLine('URL', null, row.url));
+        });
+      },
+      rule: 'feed-url-shape',
+    },
+    { name: 'the-url-dropped-from-a-row-with-a-page', text: (t) => t.replace(/^URL:[^\r]*(?:\r\n [^\r]*)*/gm, ''), rule: 'feed-url-shape' },
+    { name: 'the-feed-url-is-the-club-s-own-page', clean: true, rule: 'feed-url-shape' },
+    // D399: the framing, not the fact. The sentence is swapped on the **unfolded** logical line and re-folded
+    // through contentLine, the same move `the-window-sentence-lags-the-rows` uses — a naive replace over wire
+    // bytes would miss, because the renderer wrapped the sentence across content lines.
+    {
+      name: 'the-description-talks-about-the-file',
+      text: (t) => {
+        const good = escapeText(windowSentence(feedWindow(publishableRows(snapshot.events).rows)));
+        const framed = good.replace('The club\u2019s dates run from', 'The calendar file carries the club\u2019s 7 dates from');
+        return unfold(String(t).replace(/\r\n$/, ''))
+          .split(CRLF)
+          .map((line) => {
+            if (!line.startsWith('DESCRIPTION:')) return line;
+            return contentLine('DESCRIPTION', null, line.slice('DESCRIPTION:'.length).replace(good, framed));
+          })
+          .join(CRLF) + CRLF;
+      },
+      rule: 'feed-meta-commentary',
+    },
+    { name: 'the-description-states-a-fact', clean: true, rule: 'feed-meta-commentary' },
   ];
 
   let missed = 0;

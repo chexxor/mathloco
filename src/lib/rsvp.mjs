@@ -365,6 +365,20 @@ export const splitPaths = (paths, urls = {}) => {
   };
 };
 
+/** The URL a **subscriber's** calendar should carry for this row (D398): the club's own page for the date when
+ *  the snapshot holds exactly one open page at the row's hour, and null when it does not. Null means "we do
+ *  not have a page of our own for this row", and the caller keeps the source's page rather than inventing one
+ *  — the round-6 review's objection is that a subscriber clicking through their calendar reached a platform the
+ *  site never mentions while every row on `/dates` pointed at Meetup, and the fix has to stay a lookup rather
+ *  than a template, because a composed Meetup URL is a URL that may not exist.
+ */
+export const feedUrl = (row, meetupEvents = []) => {
+  const date = dateOf(row);
+  if (!date) return null;
+  const matching = matchPages(openMeetupEvents(meetupEvents).filter((e) => e.date === date), hourOf(row));
+  return matching.length === 1 ? matching[0].url : null;
+};
+
 /** How many of the open pages printed on this date the record's own clock settles. The same function serves
  *  both calendars, because the contract's key is the same for both: date + wall-clock hour. A settled hour
  *  matches exactly; an unsettled one may only match when the date has exactly one page, so a link is never
@@ -528,8 +542,15 @@ export const preferredFirst = (destinations, preferred) => orderByPreference(des
  *
  * The order is canonical and is NOT reordered by the remembered platform: `/join` is the page that explains
  * the choice, so its shape must not change under a returning visitor (D304).
+ *
+ * Round-6 communication review, `/join`/Revise (D391): the doors now run in **ascending commitment** — a date
+ * you have to attend, a conversation you can read without arriving, a feed you can follow without deciding
+ * anything. The review's objection was the mirror of this one: the old order opened on the lowest-value action
+ * and described the thing the visitor is choosing fourth. `scripts/check-join-page.mjs`'s `join-order` rule
+ * reads THIS list, so the gate follows the reordering rather than pinning the old one — a gate pinned to
+ * `['social','rsvp','chat']` would have gone red on a copy change that was correct (D264).
  */
-export const CHANNEL_KINDS = ['social', 'rsvp', 'chat'];
+export const CHANNEL_KINDS = ['rsvp', 'chat', 'social'];
 
 /** What each kind is, in the visitor's terms. The heading and the one-line answer are copy, so they live
  *  beside the list they describe rather than being re-typed in the page (D118's one-table rule). No cadence
