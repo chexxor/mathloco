@@ -551,7 +551,7 @@
     {
      "zone": "body",
      "section": "How it works",
-     "text": "The club's list of members is its Meetup group page, last read 13 days ago — the list is not the room.",
+     "text": "The club's list of members is its Meetup group page, last read 14 days ago — the list is not the room.",
      "heading": false
     },
     {
@@ -1576,7 +1576,7 @@
   },
   {
    "route": "/dates",
-   "bytes": 37206,
+   "bytes": 37207,
    "words": {
     "nav-chrome": 7,
     "exit-band": 60,
@@ -2108,7 +2108,7 @@
     {
      "zone": "body",
      "section": "Social",
-     "text": "Copied from the club’s own calendar 3 days ago",
+     "text": "Copied from the club’s own calendar 4 days ago",
      "heading": false
     },
     {
@@ -3338,7 +3338,7 @@
      "page": "/dates",
      "zone": "body",
      "section": "Social",
-     "words": "Copied from the club’s own calendar 3 days ago"
+     "words": "Copied from the club’s own calendar 4 days ago"
     },
     {
      "page": "/past",
@@ -3700,7 +3700,7 @@
   {
    "page": "/",
    "section": "How it works",
-   "words": "The club's list of members is its Meetup group page, last read 13 days ago — the list is not the room.",
+   "words": "The club's list of members is its Meetup group page, last read 14 days ago — the list is not the room.",
    "named": [
     "meetup"
    ],
