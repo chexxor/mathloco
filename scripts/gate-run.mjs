@@ -118,8 +118,8 @@ const DEPLOY = [
   // wave. It was scheduled before `build` @measured 2026-11-12: a fresh clone - CI, or anyone's first checkout -
   // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step
   // in the wave passed. The selftest plants in-memory clones of the committed snapshot, so it needs nothing.
-  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, and the built /events.ics bytes', needs: ['build'] },
-  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (38 plantings, each named @measured 2026-11-14 by `node scripts/check-ics.mjs --selftest`)' },
+  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, and the reach the file states about itself (D371)', needs: ['build'] },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (40 plantings, each named @measured 2026-11-16 by `node scripts/check-ics.mjs --selftest`)' },
   // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
   // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
@@ -132,7 +132,7 @@ const DEPLOY = [
   // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
-  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (43 plantings each named, plus a clean control that must pass)' },
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (55 plantings each named, plus 2 clean controls that must pass: the resolver-agrees page, and a past row on a date the harvest made and that finished)' },
   // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a mark. Keyed
   // on anything that outlives a render - a path, a counter - a warm process answers every request after the
   // first with `<use>` refs and no symbols: three empty 16px boxes @measured 2026-11-13 by
@@ -196,7 +196,7 @@ const DEPLOY = [
   // Which dates `/schedule` is allowed to print, checked against the rule module rather than a copy of it. Runs
   // before `build` because it opens no artifact (D118 again: a gate that can go red before anyone builds is a
   // gate that catches the defect on the branch that introduced it).
-  { name: 'check:schedule-window:selftest', desc: 'the schedule-window gate can still fail (17 cases: 9 rule, 8 page plantings)' },
+  { name: 'check:schedule-window:selftest', desc: 'the schedule-window gate can still fail (18 cases: 9 rule, 9 page plantings, @measured 2026-11-16 by `npm run check:schedule-window:selftest`)' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.
@@ -215,7 +215,7 @@ const DEPLOY = [
   { name: 'check:escapes', desc: 'no escape sequence reaches a reader: built text and meta, and template text at the source', needs: ['build'] },
   // The page half of the same rule: `data-date` handles off the built page against `scheduleWindow()`'s plan,
   // plus the requirement that a page hiding dates says so and offers `/events.ics` (D238).
-  { name: 'check:schedule-window', desc: '/schedule prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
+  { name: 'check:schedule-window', desc: '/dates prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
   // The other end of the RSVP rule: `check:rsvp` proves the inputs, this proves the bytes. Recomputes each
   // cluster from `signUpPaths()` and fails a painted page that disagrees with the resolver (D272).
   { name: 'check:rsvp-page', desc: 'every printed date carries one sign-up cluster, and that cluster matches what signUpPaths() returns for it against both event snapshots; no headcount is painted', needs: ['build'] },
@@ -224,7 +224,7 @@ const DEPLOY = [
   // nothing is painted that the resolver does not have. It reads `dist/`, so it waits for `build` (D118).
   // The artifact side of the same rule: walk every emitted page, and require the set that prints a date to be the
   // set a ruling names. It reads `dist/`, so it waits for `build` (D118).
-  { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/schedule` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included; the nav’s subordinate date is chrome and must equal the first date /schedule prints (D311)', needs: ['build'] },
+  { name: 'check:dated-surfaces', desc: 'the pages that print a calendar date are exactly the ones a ruling names (D218, `/dates` alone since D306), each with a data-date handle; no other built page prints a date, year-bearing provenance included; the nav’s subordinate date is chrome and must equal the first date /dates prints (D311)', needs: ['build'] },
   // Which register each "how current is this" line uses (S042, D322): an age inside 30 days, the calendar
   // date beyond it, produced by the one function in `src/lib/provenance.mjs`. The read's D6 found the site
   // running both registers at once; this is the detector that keeps them from drifting back apart.

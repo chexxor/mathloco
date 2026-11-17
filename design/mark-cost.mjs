@@ -32,7 +32,7 @@ const dist = resolve(argv.find((a) => !a.startsWith('--')) || 'dist/client');
 // Every route that paints a cluster, and every route that paints none (`/chat` was the markless case until
 // `/join`, which is markless by decision - D304 - and is measured here so the "a markless page pays for glyph
 // bytes it never paints" claim keeps a number for the newest page rather than the oldest one).
-const PAGES = ['index.html', 'schedule/index.html', 'chat/index.html', 'join/index.html'];
+const PAGES = ['index.html', 'dates/index.html', 'chat/index.html', 'join/index.html'];
 const gz = (s) => gzipSync(Buffer.from(s, 'utf8')).length;
 
 // The sprite element, matched by the attribute the render gate already keys on rather than by a class list

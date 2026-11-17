@@ -247,7 +247,9 @@ if (selftest) {
     {
       name: 'the rsvp row is the club\'s own schedule, not an external URL',
       want: () => { const r = joinChannels({ meetupGroup: 'https://www.meetup.com/g' }).find((c) => c.kind === 'rsvp'); return `${r.href}|${r.external}`; },
-      expect: '/schedule|false',
+      // D373 moved this route on 2026-11-16; the fixture reads whatever the resolver emits, so it names
+      // the route as it is now, not as it was when the fixture was written.
+      expect: '/dates|false',
     },
     {
       name: 'every channel kind is one the list declares',

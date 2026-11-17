@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import config from '../config.json';
 import Footer from '../components/Footer.astro';
 import { JOIN_KIND_COPY, joinChannels, paintedKinds } from '../lib/rsvp.mjs';
+import { refusals } from '../lib/content.ts';
 
 // One action on the homepage lands here (S033, D303): the page's job is the commitment decision — which
 // KIND of relationship the visitor wants — so the rows are grouped by kind and the platforms are values
@@ -95,7 +96,7 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
         The next ones are on the
         <a
-          href="/schedule"
+          href="/dates"
           class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >schedule</a
         >.
@@ -104,13 +105,17 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
 
     <section class="mt-12" aria-labelledby="first-meeting">
       <h2 id="first-meeting" class="text-heading font-bold text-ink">Your first one</h2>
-      {/* Sourced, and deliberately not the homepage's sentences: the hero says "There is no syllabus, no
-          reading list to keep up with" and "Bring a question; you don't need a field", and this page says
-          the same things in its own words so `check:content`'s near-duplicate rule does not see one surface
-          copying the other (and so a reader who lands here first still gets them). */}
+      {/* Sourced, and consolidated (round-4 brief §8, 2026-11-15, D344): this section used to carry the
+          homepage's claims **in its own words**, because the pair were near-duplicates and `check:content` was
+          reading them as one surface copying another. §8 settles it the other way: the reassurances move to the
+          page a reader has already reached when they have decided to come, so the homepage's own words live here
+          and the paraphrase that stood in for them is deleted rather than kept beside them. Nothing is added to
+          the two claims and nothing is dropped: "none of them is a prerequisite for arriving" arrives with the
+          thing it refers to named, since this page does not print the thread list. */}
       <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
-        Nothing to prepare and nothing to read first. Come with a question if you have one, or come and
-        listen; no subject is assumed and no background is required.
+        Nothing to prepare and nothing to read first. Bring a question; you don't need a field. Come and
+        listen if you would rather; no subject is assumed, no background is required, and none of the
+        threads the chat runs is a prerequisite for arriving.
       </p>
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
         Want to ask something before you turn up? Somebody from the club reads
@@ -120,7 +125,56 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
           >the messages we post there</a
         >.
       </p>
+      {/* C1+C2 · q05 and q10 (round-5 communication read, 2026-11-16, D376/D377): the two club-claim gaps, in
+          the open. The read's own recommendation was the operator's word for each — a price, a membership rule —
+          and both are claims about the club rather than about the page, which is why they are one-way and why the
+          operator's letter of 2026-11-16 ruled instead that the gap is DECLINED here: no seat writes a fee, and no
+          seat writes who may arrive. What ships is therefore the page naming what it has never been told, and the
+          only place it can say that from is the slot file: the two sentences come from `cost` and `membershipRule`
+          in `src/content.json` through `refusals()`, which is the same call `/` paints them from, so the pair cannot
+          be edited apart on one surface and left stale on the other (D247's defect class, inverted). Placed with the
+          page's other refusals — the phone line and the directions words — because this section is "Your first one",
+          which is where a reader who has already decided to come asks what they still have to do; the read preferred
+          a clause on the "Come to a meeting" rows, but that clause is the resolver's (`JOIN_KIND_COPY` and
+          `joinChannels()`), it is text-pinned by `check:join-page`'s `join-gives-mismatch` rule, and a refusal inside
+          a row would compete with D342's one way out. 0 boxes, no link, no URL, so `check:join`, `check:ext-links`
+          and the sprite's platform set stay as measured. */}
+      {refusals().length > 0 && (
+        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{refusals().join(' ')}</p>
+      )}
+
+      {/* A4 · q13 (round-5 communication read, 2026-11-16, D368): the phone visitor asks whether the page
+          hands over something to call or tap more than once, and the artifact carries no `tel:` and no email
+          on any route, so the honest answer was a gap nobody could see. Stated here in the form `/` already
+          ships twice for q06 and q07 — the page naming, in its own words, the question it will not answer —
+          which is what moves `node design/visitor-questions.mjs`'s q13 verdict from UNANSWERED to DECLINED.
+          One sentence, 0 boxes, no link, no third party named: a contact this seat cannot ground would be an
+          unsourced claim (D92), so the refusal is the whole of the answer. */}
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
+        The club has no front desk and no phone number; the chat is where you ask.
+      </p>
+      {/* B4 · q25 (round-5 communication read, 2026-11-16, D372): "how do I get to the venue?" was UNANSWERED
+          on every route, because the artifact prints an address and prints no way to reach it. Both halves were
+          measured before writing: the address string ships — `/schedule` row prose reads e.g. "Kowalski's Market,
+          5327 Lyndale Avenue South, Minneapolis, Minnesota" — and no map host ships anywhere (`grep -o 'google.com/maps\|mapbox\|openstreetmap' dist/client/*.html` returns nothing @measured 2026-11-16), so the honest answer is words, not a link. The venue changes with the date — `src/content.json` `venues._rule` says the names are "the pool a date gets a place from" (operator, 2026-11-03) — which is why the site cannot name one door. This is option (b) of the read's B4, and it is placed LAST in the section a visitor reaches after they have decided to come: no `src/config.json` URL key, no map host, no link, no box, so `check:ext-links`, `check:join` and the sprite's platform set stay exactly as they are, and `/schedule`'s row keeps its single way out (D342). Option (a) — a per-row map link — is the costly half: a platform this seat does not declare, and a second way out competing with D342's one inside the same row (D372). */}
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
+        Every date names the place it is in and prints its street address, and that address is how you get
+        there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no
+        single door this site could give directions to.
+      </p>
     </section>
+
+    {/* The legal pair, once, on the page that names the platforms (round-5 communication read A2, 2026-11-16,
+        D366). It used to live in the exit band, which every emitted page ends with, so one fact pair printed
+        TEN statements and the reader met it on `/404` too. `src/components/Footer.astro` now carries one
+        clause beside the two platform names it paints; the sentences themselves are byte-identical to what
+        the band used to print, and the attribution stays a static line rather than a component (round 10's
+        ruling, quoted in DESIGN.md). No link and no box added, so R1's ceiling on outbound anchors and
+        `check:page-exit` are untouched by this paragraph. */}
+    <p class="mt-8 max-w-measure text-micro text-ink-3">
+      Meetup and Discord are trademarks of their owners. This site is the club’s own — not sponsored or
+      endorsed by either.
+    </p>
   </main>
   {/* The exit band on the join page: the ways in are the whole subject of the page, so the band repeats the
      paths a reader reached by scrolling past them, and it is the same band every other emitted page carries

@@ -1,69 +1,86 @@
 ---
 import { Image } from 'astro:assets';
-import euclid1903 from '../assets/photos/horizon-euclid1903.png';
 import euler1910 from '../assets/photos/horizon-euler1910.png';
-import radio1922 from '../assets/photos/horizon-radio1922.png';
 
 /**
- * PS-5 — the horizon: three public-domain plates standing on one baseline between the club's reasons and
- * the schedule, where the page is emptiest by measurement.
+ * PS-5 — the horizon: ONE public-domain plate, captioned, standing on the section break between the club's
+ * reasons and the schedule.
  *
- * Why three and not one (this is the ruling the composition arrived at, 2026-11-03, round 14 option C -> F):
- * the archive serves a widest rung of `/img/1024/`, but that rung returns each leaf's *own* scan width — the
- * 1910 Euler leaf is 698x350 and the Byrne leaf 688x1004 (probed 2026-11-03; `/img/1600/`, `/img/2048/` and
- * `/img/full/` all return 404). A single-leaf band across the 1192px column is therefore a **1.68x upscale
- * that keeps 34% of the drawing** (`design/grill/round14/report.json`, `plates["band-mid"]`). Record 0023
- * answered that in advance: *"if a strip is ever wanted from the archive, compose it from several plates
- * rather than upscale one."* These three are each a whole leaf at **0.38–0.55x** of its native scan.
+ * Round-4 brief §7.2 (2026-11-15, D347) is what put one plate here. The three-leaf ruling below is kept as the
+ * record of what was decided and why it stopped: the brief's own words — "the plates are the site's identity;
+ * three of them in a row is an exhibition, and an exhibition is not a club" — and the measurement that priced
+ * the exhibition: @measured 2026-11-15 by `node design/plates-price.mjs --no-build` on this build, the one plate
+ * this commit ships costs **+320px at 390** (band 319.6px tall, leaf 358px filling the 390px column, page 4152px)
+ * and **+473px at 1240** (band 472.8px, leaf 698x351 at its own scan, page 2905px); the two rungs between cost
+ * +419px at 640 (band 419.5px, leaf 592px of the 592px column) and +284px at 320 (band 284.4px, leaf 288px).
+ * Against the artifact this commit replaces, the same probe printed **three plates stacked at 390 added +715px of
+ * page** - D329's band, kept in the header as of 5cd128f and quoted here as its record, not as this page; the two
+ * figures are close by arithmetic (D329's three-leaf rungs vs one leaf at a wider cap), not by coincidence-checking.
+ *
+ * **D351 (2026-11-15) superseded that cap the same day D347 wrote it, and the operator's rulings letter of 2026-11-16
+ * (R2, D356) undoes that undo: D351's cap deletion is undone and D347's cap is reinstated.** "Full-bleed" was a visual
+ * outcome the archive cannot supply — the widest rung for this leaf is `/img/1024/` and that rung returns the leaf's OWN
+ * scan, 698x351 (`/img/1600/`, `/img/2048/` and `/img/full/` answer 404, probed 2026-11-03) — so full-bleed at 1240 is
+ * 1.71x interpolated pixels of the one asset whose whole value is hairlines. Capped, the plate paints at no more than
+ * 1.0x its widest available source rung, and the plate plus its caption cost the page **+377px at 1240** - the band's own
+ * box is 472.8px, of which 96px is declared `py-12` air, and the leaf paints 698x351, exactly 1.0x the archive's 698x351
+ * scan, on a 2905px page @measured 2026-11-16 by `node design/plates-price.mjs --no-build`. That is inside the 400px the
+ * letter's replacement acceptance names, counting the plate rather than the air around it; the band's whole box, air
+ * included, is 472.8px, and this header says which of the two it means wherever it quotes a figure. Against D351's
+ * **band 721.2px holding a leaf 1192x599.4 on a 3153px page** - a 23% slice of the document for a plate about the
+ * history of geometry, and +248px of page over what ships.
+ *
+ * What that refusal costs, measured on both shapes - @measured 2026-11-16 by `node design/plates-price.mjs --no-build`
+ * (Linux native, Node 24.22.1). What ships is the capped band: at 1240 the band is 472.8px, the leaf 698x351, the page
+ * 2905px; at 640, 419.5 / 592x297.7 on a 3932px page; at 390, 319.6 / 358x180 on a 4152px page; at 320, 284.4 /
+ * 288x144.8 on a 4600px page. D351's full-bleed shape differs from it at exactly ONE width: at 1240 it prints 721.2 /
+ * 1192x599.4 on a 3153px page, and below 1024 it prints the same boxes as the capped band, because the column is
+ * narrower than the 698px scan and the cap never binds. So the 1.71x upscale that made full-bleed a refusal was the
+ * one width band that shape reached, and it was reached only on the widest columns. Half of record 0023's caution
+ * still applies and nothing here argues the other half: under the cap the leaf is never upscaled, so the hairlines stay
+ * one-to-one with the archive's drawing at 1240 and shrink with it below, and `check:ground` - which runs in `verify`,
+ * and is green on this build - is the instrument that decides whether they stay legible on the bytes a browser paints.
+ *
+ * Why three and not one used to be the ruling (this is the composition the site arrived at, 2026-11-03, round
+ * 14 option C -> F): the archive serves a widest rung of `/img/1024/`, but that rung returns each leaf's *own*
+ * scan width — the 1910 Euler leaf is 698x350 and the Byrne leaf 688x1004 (probed 2026-11-03; `/img/1600/`,
+ * `/img/2048/` and `/img/full/` all return 404). A single-leaf band across the 1192px column is therefore a
+ * **1.68x upscale that keeps 34% of the drawing** (`design/grill/round14/report.json`, `plates["band-mid"]`),
+ * and record 0023 answered that in advance: *"if a strip is ever wanted from the archive, compose it from
+ * several plates rather than upscale one."* Those three are each a whole leaf at **0.38–0.55x** of its native
+ * scan. **That is no longer the shape on the page**, and under D351 it was no longer the width either - under D356 it is
+ * again. With one plate the answer to "how wide may it go" was the scan under D347, became the **column** under D351,
+ * and came back to the scan when the operator's letter of 2026-11-16 undid D351: the plate carries `max-width: 698px`,
+ * so it runs to the column edge only where the column is narrower than the scan (every width under 1024) and stops at
+ * its own scan above that. What survives of record 0023 is its other half, the one
+ * that made this component's stylesheet necessary at all: a leaf whose own width is a percentage needs a **definite**
+ * containing block, and left content-sized the shelf measured 434.35px inside a 1228px outer box at 1240 (the leaf sat
+ * 0.62x under its own scan; @measured 2026-11-15 by `node design/plates-price.mjs`), so the shelf declares `width: 100%`
+ * and the leaf reaches the edge instead of shrink-wrapping. What went is the exhibition, and what came is the cap's
+ * removal - see the measured boxes above for what that costs at 1240.
  *
  * What it costs, measured on the built page at the box this component ships (`npm run round14`, option
  * `shelf-lg`, 2026-11-03): page **+321px at 1240** and **+321 at 1024**, **+0 at 640 and 390** (the band was
- * `hidden` below `lg` then, and the phone kept the composition the operator ruled in round 14's phone question),
- * painted area **5.33% -> 7.47%** at 1240, and page chroma >= 0.08 **0.274% -> 0.255%** — three more plates
- * and the page gets *less* loud, because all three are colourless line work (0% at chroma >= 0.08 each).
- * @measured 2026-11-03 by npm run round14
- *
- * **The band is no longer desktop-only (D329, 2026-11-15, lifting D168's park).** The round-3 read asked for
- * 3-up from 900, 2-up from 640, 1-up below, and the re-measure prices what that costs on a phone: the band
- * adds **+332px at 1240** (the round's +321, the same box), **+472px at 640**, **+715px at 390** and
- * **+623px at 320**, so the phone page goes from 4045px to **4760px** at 390 — 18% taller, for three plates
- * stacked one per line at 346px wide (0.45x of the archive's own scan, so the hairlines survive). The rungs
- * are the read's; the *cost* is the number the operator has to weigh, and the cheaper rung is one class
- * (`hidden sm:block`, which pays +472 at 640 and nothing below). @measured 2026-11-15 by `node design/plates-price.mjs`
- * (plates painted: 382.6px x3 at 1240, 282px x2 +1 wrapped at 640, 346px x3 stacked at 390).
+ * `hidden` below `lg` then), painted area **5.33% -> 7.47%** at 1240, and page chroma >= 0.08 **0.274% ->
+ * 0.255%** — three more plates and the page gets *less* loud, because all three are colourless line work
+ * (0% at chroma >= 0.08 each). @measured 2026-11-03 by npm run round14
  *
  * The alt text comes from the source's own picture page (`insideoutlibrary.com/p/<id>`, which carries book,
  * year and leaf), plus the one thing measured about the drawing itself: it is line work, ink at 21.1% of
  * pixels and 0% named colour (`design/grill/round14/report.json`). Nothing here describes a drawing nobody
- * has checked — an alt invented from a slot's mood is the D92 defect class in a `alt` attribute.
+ * has checked — an alt invented from a slot's mood is the D92 defect class in a `alt` attribute. The other two
+ * leaves (`src/assets/photos/horizon-euclid1903.png`, `horizon-radio1922.png`) still sit in the asset folder and
+ * still build from `scripts/plate-asset.mjs`: deleting artwork because no surface paints it is a different
+ * change with its own sweep, and this task's fence is the surface — same ruling as the per-row event art (D343).
  */
-const plates = [
-  {
-    src: euclid1903,
-    // Copied from the picture page's own words (`insideoutlibrary.com/p/<id>`), which labels this leaf and carries
-    // its surrounding text: "Octahedron. Dodecahedron. Icosahedron. 30. A parallelepiped is a solid figure…".
-    // What the drawing is was **guessed wrong here for an hour** (a "Book VI figure on a right triangle", inferred
-    // from the book's title and the id's numbers) — an invented alt is the D92 defect class in an attribute.
-    // 9 words, inside the 12-word cap `check:alt` enforces (D324); the citation lives in the caption.
-    alt: 'Three solids drawn in line work: octahedron, dodecahedron, icosahedron',
-    provenance: 'The elements of Euclid for the use of schools and colleges (1903), leaf 297',
-  },
-  {
-    src: euler1910,
-    // "euler1910" is our **slot key** from D149-2b (the line-work diagram that decision asked for), not a claim
-    // about who drew it — the book is Slaught & Lennes 1910. The page's own text: "with center O tangent to the four
-    // arcs as shown. Suggestion. Take X so that DX = XB. With centers A and B and radius AX draw arcs meeting at O."
-    alt: 'Arcs cut from two centres, with a circle tangent to all four',
-    provenance: 'Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122',
-  },
-  {
-    src: radio1922,
-    // The page's own caption text: "Antenna Current in radiotelephony Transmitting the Sound of a as in father.
-    // Modulates a radio-frequency Wave which can be received with Simple Detector … Beat Reception is Required."
-    alt: 'A radio-frequency wave carrying a spoken sound, caught by a detector',
-    provenance: 'The principles underlying radio communication (National Bureau of Standards, 1922), leaf 514',
-  },
-];
+const plate = {
+  src: euler1910,
+  // "euler1910" is our **slot key** from D149-2b (the line-work diagram that decision asked for), not a claim
+  // about who drew it — the book is Slaught & Lennes 1910. The page's own text: "with center O tangent to the four
+  // arcs as shown. Suggestion. Take X so that DX = XB. With centers A and B and radius AX draw arcs meeting at O."
+  alt: 'Arcs cut from two centres, with a circle tangent to all four',
+  provenance: 'Plane geometry, with problems and applications (Slaught & Lennes, 1910), leaf 122',
+};
 ---
 
 {/* `lg:px-6` rather than the usual `lg:px-8`: the measured band box is 384 CSS px per plate inside 24px side
@@ -76,51 +93,60 @@ const plates = [
     reasons is still **186px**, and the largest run inside a surface on this page is the **join section's 274px** - a
     band moving cannot reach either of those, because both are inside a surface rather than between sections
     (D223). R6 took every landing-page band to a single 48px step (D214). The plates keep their box; only the air
-    around the shelf moves. */}
-<section class="bg-paper py-12" aria-label="Plates from public-domain mathematics books">
+    around the shelf moves. **Re-measured 2026-11-15 with ONE plate (D347), and the ladder did move: `check:space`
+    on this build reads `/` at 390 as 10 runs >= 60px totalling 947px = 23.1% of a page it puts at 4100px, and the
+    band's own section box is 320px of that page with 96px of declared `py-12` air inside it. The dated 186px and
+    274px figures above are the two-event-row ladder of 2026-11-05/06 and are superseded by this run - five event
+    rows and one plate change which surface holds the largest hole, so the only figure quoted here now is the one
+    this build produces. The plate adds a surface between sections; it does not open a hole inside one.** */}
+<section class="bg-paper py-12" aria-label="Plate from a public-domain mathematics book">
   {/* `flex` on the wrapper is not styling: check:space records a `data-slot` box only for a child of a grid or
       flex container, so a PS box inside a plain block is invisible to the survey and to every design round that
       reads it. Measured 2026-11-03: PS-5 was absent from the slot list until its parent became a flex container. */}
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-6 flex">
     <div class="horizon" data-slot="PS-5">
-      {plates.map((p) => (
-        // A plate with a source is a figure (D312, 2026-11-14): the description is the `alt`, the source is the
-        // caption. D170's rule is that alt text is quoted from the picture page, never inferred; putting the book,
-        // year and leaf in the caption lets the alt say what a visitor sees instead of where the file came from.
-        <figure class="horizon__plate">
-          <Image src={p.src} alt={p.alt} class="horizon__img" loading="lazy" decoding="async" />
-          <figcaption class="mt-2 text-micro leading-prose text-ink-3 font-body">{p.provenance}</figcaption>
-        </figure>
-      ))}
+      {/* A plate with a source is a figure (D312, 2026-11-14): the description is the `alt`, the source is the
+          caption. D170's rule is that alt text is quoted from the picture page, never inferred; putting the book,
+          year and leaf in the caption lets the alt say what a visitor sees instead of where the file came from. */}
+      <figure class="horizon__plate">
+        <Image src={plate.src} alt={plate.alt} class="horizon__img" loading="lazy" decoding="async" />
+        <figcaption class="mt-2 text-micro leading-prose text-ink-3 font-body">{plate.provenance}</figcaption>
+      </figure>
     </div>
   </div>
 </section>
 
 <style>
-  /* A shelf, not a grid: the plates share a baseline and keep their own heights, because each box is a whole
-     leaf at its own aspect (2.87 / 1.99 / 2.14) and cropping them to one cell aspect is how a diagram loses
-     its labels. gap 1rem = the 16px the round measured. */
+  /* A shelf, not a grid, and since D347 the shelf holds ONE leaf: the plate keeps its own aspect (a leaf is
+     698x350 at the archive's widest rung, aspect 1.99) and crops nothing, because cropping is how a diagram
+     loses its labels. gap and align stay declared so a reader of the CSS sees the same box the round measured
+     even though one child now fills it. */
   .horizon {
     display: flex;
     flex-wrap: wrap;
+    width: 100%;
     gap: 1rem;
     align-items: flex-end;
+    justify-content: center;
   }
-  /* The plate widths are written HERE rather than as utilities on the element, and they have to be: Astro
-     compiles a component <style> selector to `.horizon__plate[data-astro-cid-…]`, specificity (0,2,0), which
-     beats every Tailwind utility (0,1,0) - so a `w-1/2` on the figure would lose to the `width: 100%` below
-     it and quietly do nothing (measured 2026-11-15: the round-3 read asked for 3-up / 2-up / 1-up and the
-     utilities changed nothing). The three rungs are the read's §10: three plates across from 900, two from
-     640, one per line below, with the gaps subtracted so a line never wraps for want of 16px. */
+  /* The plate width is written HERE rather than as utilities on the element, and it has to be: Astro compiles
+     a component <style> selector to `.horizon__plate[data-astro-cid-…]`, specificity (0,2,0), which beats every
+     Tailwind utility (0,1,0) - a `w-full` on the figure would lose to the `width` below it and quietly do nothing
+     (measured 2026-11-15: the round-3 read asked for 3-up / 2-up / 1-up and the utilities changed nothing).
+     The cap is BACK, and this is whose undo it is: the operator's rulings letter of 2026-11-16 (R2) rules that
+     D351's cap deletion is undone and D347 is reinstated, because "full-bleed" names a visual outcome the archive
+     cannot supply and this site's letter rule says the archive wins where it cannot supply the pixels. So the figure
+     carries `max-width: 698px` - the leaf's own scan at the archive's widest rung - and never paints above 1.0x that
+     scan. `width: 100%` stays: below 698px of column (every width under 1024) the plate still runs to the column
+     edge, and it is the *ceiling* that changes, not the floor. What the cap costs is measured, not argued (see the
+     header): the plate and its caption add +377px of page at 1240, band 472.8px against D351's 721.2px, and `check:ground`
+     clear the legibility bars on the bytes a browser paints. The old cap's own
+     record - the shelf measured 434.35px with no declared width, so the leaf sat 0.62x under its scan - stays in
+     the header above, because it is why a percentage width needs a definite containing block at all. */
   .horizon__plate {
     display: block;
     width: 100%;
-  }
-  @media (min-width: 640px) {
-    .horizon__plate { width: calc((100% - 1rem) / 2); }
-  }
-  @media (min-width: 900px) {
-    .horizon__plate { width: calc((100% - 2rem) / 3); }
+    max-width: 698px;
   }
   .horizon__img {
     display: block;

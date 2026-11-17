@@ -1,0 +1,64 @@
+{
+ "measuredAt": "2026-11-15",
+ "instrument": "design/communication-bandbox.mjs",
+ "cells": [
+  {
+   "route": "/",
+   "width": 1240,
+   "band": {
+    "x": 0,
+    "y": 2834,
+    "w": 1228,
+    "h": 280,
+    "links": 7,
+    "lineHeight": 24,
+    "boxes": 12,
+    "fontSize": "16px"
+   },
+   "legal": [
+    {
+     "x": 32,
+     "y": 3034,
+     "w": 355,
+     "h": 32,
+     "lineHeight": 16,
+     "boxes": 2,
+     "fontSize": "11.1px",
+     "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not sponsored or endorsed by either."
+    }
+   ],
+   "legalBoxes": 2,
+   "facesLoaded": true,
+   "errors": []
+  },
+  {
+   "route": "/",
+   "width": 390,
+   "band": {
+    "x": 0,
+    "y": 3780,
+    "w": 378,
+    "h": 320,
+    "links": 7,
+    "lineHeight": 24,
+    "boxes": 13,
+    "fontSize": "16px"
+   },
+   "legal": [
+    {
+     "x": 16,
+     "y": 4020,
+     "w": 346,
+     "h": 32,
+     "lineHeight": 16,
+     "boxes": 2,
+     "fontSize": "11.1px",
+     "text": "Meetup and Discord are trademarks of their owners. This site is the club's own — not sponsored or endorsed by either."
+    }
+   ],
+   "legalBoxes": 2,
+   "facesLoaded": true,
+   "errors": []
+  }
+ ]
+}

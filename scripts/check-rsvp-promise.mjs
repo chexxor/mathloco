@@ -38,7 +38,7 @@ import { PLATFORMS, LINK_KEYS } from '../src/lib/rsvp.mjs';
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const NAMES = Object.values(PLATFORMS); // ['Meetup', 'Discord', 'Facebook']
-const PAGES = ['client/index.html', 'client/schedule/index.html'];
+const PAGES = ['client/index.html', 'client/dates/index.html'];
 
 const arg = (flag, dflt) => {
   const i = process.argv.indexOf(flag);

@@ -164,7 +164,8 @@ schedule page @measured 2026-11-15 (full dump `.design/tmp-naming-2026-11-15.txt
 | `data/events.json` — `series` (the club's own word) | `MPLS Math Club Social` ×5, `Common Denominator - Study Session` ×2, `Parallel Learning for Mathematical Minds` ×1 | 8 | **3** |
 | `data/events.json` — `summary` (the organizer's, verbatim) | `Matheapolis - Bimonthly Social` ×3, `Common Denominator - Study Session` ×2, `MPLS Math Club - Bimonthly Social` ×2, `Parallel Learning for Mathematical Minds` ×1 | 8 | **4** |
 | `dist/client/events.ics` — `SUMMARY:` | the four organizer strings, one CANCELLED row superseded under D318's grouping note | 7 | **4** |
-| `dist/client/schedule/index.html` — the row's `<h2>` | `MPLS Math Club Social` ×3, `Common Denominator - Study Session` ×2 | 5 | **2** |
+| `dist/client/schedule/index.html` — the row's `<h2>`, **before D339** | `MPLS Math Club Social` ×3, `Common Denominator - Study Session` ×2 | 5 | **2** |
+| `dist/client/schedule/index.html` — the row's `<h2>`, **as shipped since D339** | `Social` ×3, `Study session` ×2 | 5 | **2** |
 
 Three rules follow, and each is a rule a future session would otherwise re-derive:
 
@@ -175,7 +176,9 @@ Three rules follow, and each is a rule a future session would otherwise re-deriv
    *not* settled is the list of members of that vocabulary, and nothing in the gates asserts one:
    `meetingKind` deliberately compares **kinds, not names** (its own comment: "a byte-level gate can
    only compare kinds, not names"), and `check:naming` owns page names, not series names. So the
-   divergence above is not a defect a gate can see — it is an open decision.
+   divergence above is not a defect a gate can see — it was an open decision, and **D339 closed the
+   page-facing half of it**: `SERIES_VOCABULARY` in `src/lib/event-groups.mjs` names the two labels the
+   site paints, and `publishedName` fails the build on a name outside them.
 3. **`seriesNote` is a shape the code already reads and the data never writes — 0 of 8 rows carry one**
    @measured 2026-11-15. A "bold name plus a muted clause" is therefore a new **field**, not markup,
    and the field is the one `event-groups.mjs` already falls back through.
@@ -188,8 +191,26 @@ the operator's letter answer **one question** — the list of series the club ow
 fills `series` and `seriesNote` from that list in one commit, with `check:ics` gaining a rule that
 fails a `series` outside the named list.
 
+**Corrected 2026-11-15 (D339).** Two halves of that paragraph are now false against the artifact and are
+left only in the corrected form. (1) The page no longer prints the organizer's `series`: `asUpcomingItems`
+sets `title: publishedName(row)`, so the built `<h2>` reads `Social` / `Study session` @measured 2026-11-15
+by `grep -o "<h2[^>]*>[^<]*" dist/client/schedule/index.html`, and `grep -rl "MPLS Math Club" dist/client --include=*.html`
+returns **nothing** — the round-4 read's acceptance line. (2) Picking the *page's* words was not this seat
+inventing what the club calls its meetings: the two labels already exist in `src/pages/join.astro` ("A social:",
+"A study session:"), and `Parallel Learning for Mathematical Minds` is mapped because `data/events.json`'s own
+`_series` note says the older and newer spellings are one series. **What is still the operator's** is the
+source side — `series` and `seriesNote` in `data/events.json` (0 of 8 rows write it), which `npm run events:harvest`
+overwrites from Mobilizon, and which is why the round-3 letter's fourth question to the research agent stays
+open. The `check:ics` rule that fails a `series` outside a named list is still owed, and naming one would break
+the round-4 brief's "add no new gates"; the build's own `publishedName` throw is what catches a name reaching
+the page today.
 
-| what | inside the window | outside it |
+
+**Path correction 2026-11-16 (**D373**):** the page of record is now emitted at `dist/client/dates/index.html`,
+so the probe a future session runs over it reads that path. `dist/client/schedule/index.html` in the two
+table rows above, and in the corrected paragraph's `grep`, is the same page under the route as it was
+measured through 2026-11-15 — the rows are records of those measurements, and D373 moved the route, not the page.
+
 |---|---|---|
 | `data/meetup-events.json` | ≤ 14 days (`SNAPSHOT_FRESH_DAYS`, `src/lib/rsvp.mjs`) | > 14 days: `check:rsvp` fails the build. One threshold, one failure, one fix: `node scripts/meetup-events.mjs --write` |
 | `data/events.json` | any (the record is the record) | `check:ics`'s 21-day runway for a *near* row (D188) |

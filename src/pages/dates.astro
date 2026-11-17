@@ -4,7 +4,7 @@ import Schedule from '../components/Schedule.astro';
 import Footer from '../components/Footer.astro';
 
 /**
- * The schedule page — the page of record for the club's dates (D218, built by D227's split; the only surface that
+ * The dates page — the page of record for the club's dates (D218, built by D227's split; the only surface that
  * prints a date since D306).
  *
  * Why a page at all: the homepage used to print up to four rows, and `/events.ics` was the only other place
@@ -15,8 +15,8 @@ import Footer from '../components/Footer.astro';
  * Why it is a page and not a homepage anchor: D117 is the rule that killed `Schedule` and `Members` from the
  * nav, because they targeted paths the build did not emit and rendered the 404. A nav label is a promise
  * about a path, so the path has to be a file. `prerender` makes that true in the most boring way —
- * `dist/client/schedule/index.html` — which is also what makes `scripts/check-content.mjs`'s dead-path rule
- * recognise `/schedule` as an emitted route (it reads routes off the build artifact rather than remembering
+ * `dist/client/dates/index.html` — which is also what makes `scripts/check-content.mjs`'s dead-path rule
+ * recognise `/dates` as an emitted route (it reads routes off the build artifact rather than remembering
  * them), what puts it in the sitemap (`@astrojs/sitemap`), and what keeps it off Worker CPU.
  *
  * It renders `<Schedule />` with no `variant` and no `limit`: the full width, and the windowed list — the next
@@ -29,9 +29,19 @@ import Footer from '../components/Footer.astro';
 export const prerender = true;
 ---
 
-<Layout title="Dates - Matheapolis" path="/schedule">
+<Layout title="Dates - Matheapolis" path="/dates">
   <main>
     <Schedule />
+    {/* The sibling the window names but does not hold (D374): `/dates` is a window of what is **still to
+        come**, and its own copy already says what it left out inside that window. A date that has finished
+        is the other half of the same calendar and answers a different question — "did the club meet last
+        Tuesday?" — so the pointer is an internal path in this page's own copy, not a nav row (D117: a nav
+        label is a promise about a path, and the nav's fit is measured, so a label goes in only with its
+        own ruling) and not a second Meetup exit (R1/D358's ceiling counts an outbound anchor outside the
+        band, and this page already paints the band's six). */}
+    <p class="mt-8 text-label text-ink-3">
+      Looking for a date that has already passed? <a href="/past" class="underline text-ink-2 hover:text-accent">Past meetings</a> lists the ones our own calendar has finished.
+    </p>
   </main>
   <Footer />
 </Layout>

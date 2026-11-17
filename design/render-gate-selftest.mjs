@@ -32,10 +32,10 @@ if (!/data-mark="hero"/.test(original)) { console.error('the built page has no d
 // Two targets since 2026-11-14 (D306): the hero mark, the controls and the ring plantings live on `/`, and the
 // sign-up cluster and its platform marks live on the page of record, because the homepage prints no date and
 // therefore carries no cluster. A case names its target as a fourth element; the default is the homepage.
-const SCHEDULE = resolve('dist/client/schedule/index.html');
+const SCHEDULE = resolve('dist/client/dates/index.html');
 const scheduleHtml = existsSync(SCHEDULE) ? readFileSync(SCHEDULE, 'utf8') : null;
-if (!scheduleHtml) { console.error('dist/client/schedule/index.html missing — the cluster cases need the page of record'); process.exit(1); }
-const target = (name) => (name === 'schedule' ? { file: SCHEDULE, html: scheduleHtml, route: '/schedule' } : { file: page, html: original, route: '/' });
+if (!scheduleHtml) { console.error('dist/client/dates/index.html missing — the cluster cases need the page of record'); process.exit(1); }
+const target = (name) => (name === 'schedule' ? { file: SCHEDULE, html: scheduleHtml, route: '/dates' } : { file: page, html: original, route: '/' });
 
 // Optional case-name substrings as arguments run a subset — each case is a firefox run, so iterating on
 // one case should not cost five.
@@ -191,9 +191,22 @@ const cases = [
   // The size planting drops the Tailwind classes rather than writing `w-6`, because Tailwind's CSS is generated
   // by scanning src at build time and never saw `w-6` (the D110 coupling, in reverse): presentation attributes
   // are what the browser paints.
-  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-meetup"></use></svg>', ''), /paints no platform mark/, 'schedule'],
+  // Re-pointed 2026-11-15 (D342, round-4 D-B): the marks moved surfaces. A row's primary is now a quiet
+  // typographic label with no mark (D341), so `#pm-meetup` is painted by nothing and the two cases that
+  // anchored on it rotted — the gate's own preflight said so, and "the mutation matched nothing" is the only
+  // honest failure a planting can have. The marks the built page still paints live in the standing cluster,
+  // so both cases anchor there now: `grep -o '<svg[^>]*><use href="#^"]*"[^>]*></use></svg>' dist/client/dates/index.html`
+  // @measured 2026-11-16 returns exactly ONE painted mark, `#pm-facebook` — the standing row's Discord mark went away
+  // with D349's URL dedup (the exit band already paints that invite, so the standing row repeats no URL it does not
+  // add). The sprite still defines three symbols (`pm-meetup`, `pm-discord`, `pm-facebook`), so the case that plants a
+  // mark pointing at a symbol the sprite does NOT have still anchors on a definition rather than on a painted use.
+  ['sign-up mark deleted', (h) => h.replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-facebook"></use></svg>', ''), /paints no platform mark/, 'schedule'],
   ['sign-up mark grown to 24px', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="shrink-0 fill-current" width="24" height="24"'), /mark is 24x24px, want the 16px mark/, 'schedule'],
-  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<symbol id="pm-meetup"', '<symbol id="pm-meetupX"'), /sprite has no such symbol/, 'schedule'],
+  // The case plants a **painted** mark that names a symbol the sprite does not have, not a symbol definition nothing
+  // uses: since D349's URL dedup the standing row paints one mark (`#pm-facebook`), so renaming an unused `pm-discord`
+  // definition plants a page whose defect is invisible to the gate — a planting the gate passes is a planting that proves
+  // nothing, and this file's whole contract is that every case must FAIL the gate.
+  ['sign-up mark pointing at a symbol the sprite does not have', (h) => h.replace('<use href="#pm-facebook"></use>', '<use href="#pm-facebookX"></use>'), /sprite has no such symbol/, 'schedule'],
   // The expected string names only the planted mark colour: the label's own rgb moved with the palette round
   // (D316), so a case that pinned `rgb(32,57,39)` went red on a page whose only defect was the mark.
   ['sign-up mark painted a colour of its own', (h) => h.replace('class="w-4 h-4 shrink-0 fill-current"', 'class="w-4 h-4 shrink-0" fill="#111111"'), /mark painted rgb\(17,17,17\)/, 'schedule'],

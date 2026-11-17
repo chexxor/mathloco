@@ -2,7 +2,9 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
-import { content, value } from '../lib/content.ts';
+import { content, value, refusals, upcoming, formatDate, timeSpan } from '../lib/content.ts';
+import { todayIn } from '../lib/events.mjs';
+import { scheduleWindow } from '../lib/event-window.mjs';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
 // 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
@@ -82,6 +84,29 @@ const locator = 'Minneapolis math club';
 // sourced slot says, and an empty slot renders no line — the section below (What we take up) is what carries
 // a subject on the page now, undated by design (src/content.json `threads._rule`).
 const focus = value(content.focus);
+// The site's refusals (q05 cost, D376; q10 membership, D377) come out of `refusals()` in src/lib/content.ts
+// rather than from strings here, because they are claims with sources - the source is the ruling that decided
+// the gap stays open - and because `/join` paints the same two sentences out of the same call, so the pair
+// cannot be edited apart on one surface and left stale on the other (D247's defect class, inverted).
+const refusalLines = refusals();
+// 2026-11-15 (round-4 design brief §5, ruling D340): **the home page states the next meeting**, and the
+// statement lives here rather than in the schedule band below the horizon, because the brief's acceptance test is
+// a stranger on a phone asking "when is the next meeting?" and the answer must be visible without scrolling past
+// the hero (D-A; it reverses the blanket half of D306 — one *computed* date on the homepage, not a band that
+// duplicated `/schedule`). The three rules that make it one fact and not a second calendar:
+//   - It is computed from **the same `scheduleWindow(upcoming(), todayIn())` call the nav chip makes** (`src/
+//     components/Navigation.astro`), so there is no third place a date can come from. If the two ever disagree,
+//     `check:dated-surfaces` fails the build — D311's rule, extended to this surface, and the reason the handle
+//     here is `data-date` rather than prose alone.
+//   - `Central` appears **once per page** (D327's rule, read §5.1): this is the only other surface on the home
+//     page that says it, and the same gate counts it.
+//   - The `<time>` element wraps the **whole date phrase**, so an assistive tech hears a sentence rather than a
+//     bare number, and the machine-readable value is the same ISO date the `data-date` handle carries (D173,
+//     D327 — the same shape `EventRow.astro` writes).
+// The sentence this replaces — "The next date, where the club meets, and where to sign up for it are all on the
+// schedule." — is deleted in `Schedule.astro`, not reworded: a page that says where the answer is, instead of
+// what the answer is, has not answered.
+const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
 ---
 
 {/* The hero's own air is **64px top and bottom at every width**, which is a ruling rather than a tidy
@@ -139,36 +164,63 @@ const focus = value(content.focus);
       </h1>
       <p class='mt-2 text-label uppercase tracking-wide text-ink-3'>{locator}</p>
 
-      <p
-        class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
-      >
+      {/* The operator's rulings letter of 2026-11-16 (R9, D357) is what put one sentence HERE, between the
+          locator and the meeting block. R9 accepts the answers-first order and names the one part of it it
+          would not leave: a first-time visitor now meets an imperative — "Join Our Group" — before any
+          sentence says what the group is. Its fix needs no new copy: hoist one existing sentence above the
+          meeting block, so the page says what it is before it says come. The letter named the tagline line
+          beginning "A book, a room, and whoever shows up"; that line was deleted with `heroLabel()` under
+          D239 (and `check:content` still lists it as banned copy), so the letter's own fallback applies and
+          what moves is the FIRST SENTENCE OF THE LEDE — and this commit says so, which is what the letter
+          asked for in that branch. Order only: the classes below are the lede paragraph's, unchanged, so no
+          type, no spacing, no colour and no new way in — D303's single primary control and the `check:space`
+          ramp stay as they were measured. Measured, not argued — @measured 2026-11-16 by `node design/fold-answers.mjs --no-build`
+          (Linux native, Node 24.22.1): with the hoist in place all 5 answers are above the fold at both phone
+          columns — at 390x844 the when-line and the venue line sit at y=439-487 and y=491-547, the controls at
+          y=571-619 and y=631-679, on a 4265px page; at 320x844 they sit at y=472-520 and y=524-609, the controls
+          at y=633-681 and y=693-741, on a 4741px page. Before the hoist the same probe put them at y=224-272 /
+          y=276-332 and y=356-404 / y=416-464 at 390, and y=224-272 / y=276-361 and y=385-433 / y=445-493 at 320,
+          on pages 4253px and 4729px — so 0 of 5 past 844 at either column BEFORE the hoist as well, and the letter's
+          pre-committed table takes its FIRST row (ship as-is, closed) while its third row — an answer already past
+          844 at 320 without the hoist, the escalation — did not fire. What the hoist itself costs is measured the
+          same way: the meeting block moves down +215px at 390 and +248px at 320, and the page grows **+12px at
+          390 and +12px at 320**, because the sentence left the lede paragraph it came from and the paragraph it
+          left is roughly as tall as the paragraph it joined. Nothing here is past the fold at either column, and
+          the margin at 320 is 103px — this is the one measurement that would change R9's answer, and the letter
+          says the escalation it pre-committed is not to be fixed in this branch. */}
+      <p class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'>
         We meet around a table in a coffee shop or a brewery in the Twin Cities and work through
         something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.
-        Dates go up on Meetup; most of the arguing happens in the chat between meetings.
       </p>
 
-      {/* The last sentence names the old club, once, on the page a returning member or an old link lands on. The
-          wording is the Meetup listing's own name ("Minneapolis Mathematics Book Club"), not the site's old
-          wordmark, because that is the name six years of members, printed flyers and the Meetup URL actually carry.
-          Cost, measured before shipping: one extra line box in this lede at 640/390/320 and +28 to +61px of page
-          @measured 2026-11-07 by `npm run round16`. Keep it for at least a season of the redirect; deleting it is a
-          copy edit, not a migration. */}
-      <p
-        class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
-      >
-        There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an
-        agenda - people bring what they are curious about, and the conversation runs in the club's chat.
-        Bring a question; you don't need a field. Formerly the Minneapolis Mathematics Book Club.
-      </p>
-
-      {focus && (
-        <p
-          class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
-        >
-          {focus}
-        </p>
+      {/* D340 (round-4 §5, 2026-11-15): the answer to "when is the next meeting?", above the fold, computed —
+          and the one thing this block is NOT is a second calendar: `nextMeeting` comes from the same
+          `scheduleWindow(upcoming(), todayIn())` call the nav chip makes, the `data-date` handle is what lets
+          `check:dated-surfaces` compare the two, and the `<time>` element carries the same ISO value so a screen
+          reader hears a sentence rather than "21". `tabular-nums` is the same device the schedule page's dated
+          line uses; the two paragraphs are the meeting's own two facts — when, and where. No link here: the
+          page's one primary control is below, and a second way in from the hero is the defect D303 names.
+          Its position is D350's (round-4 §5, same day): it used to sit after the two lede paragraphs, at y=822
+          and y=874 against a 390x844 fold, which is present-but-not-on-the-first-screen; the brief's own sketch
+          puts the meeting and its controls at the top of the hero, so the block leads the prose now. */}
+      {nextMeeting && (
+        <div data-surface="next-meeting" data-date={nextMeeting.date} class="mt-6 sm:mt-8 max-w-measure">
+          <p class="tabular-nums"><time datetime={nextMeeting.date}><span class="text-label text-ink-3">Next meeting: {formatDate(nextMeeting.date, 'wide')} · {timeSpan(nextMeeting)} Central</span></time></p>
+          {nextMeeting.venue && <p class="mt-1 text-body leading-prose text-ink-2 font-body">{nextMeeting.venue}</p>}
+        </div>
       )}
 
+      {/* Round-4 brief §5 (D350, 2026-11-15): the prose moved BELOW the answer and the controls, and this is
+          the whole of that ruling's effect on reading order. The brief's acceptance is a stranger on a phone
+          getting "when / where / how do I sign up" without scrolling, and the instrument is
+          `node design/fold-answers.mjs` - at 390x844 the when-line and the venue line sat at y=822 and y=874
+          against an 844 fold, with the page's two controls past it, so the answers were present but not on the
+          first screen. Putting the computed meeting and the controls ahead of the two lede paragraphs lands all
+          five answers above the fold at 390; no class in this block changed, so what moved is order, not type,
+          spacing or colour (the fence that forbids the latter three). The lede's paragraphs stay the only prose
+          below the controls, and `check:copy` and `check:content` read words, not positions, so they see the same
+          page they read before this move — and before R9's hoist, which moved the lede's first sentence above
+          this block rather than writing one. */}
       <div>
         <div class='mt-6 sm:mt-8 sm:flex sm:justify-center lg:justify-start'>
           <div>
@@ -187,10 +239,13 @@ const focus = value(content.focus);
               schedule page a dead end one click away from a third-party page. `/schedule` is an emitted route
               now (`dist/client/schedule/index.html`), so the label stays honest and `check:content`'s dead-path
               rule can see the target; Meetup stays one step further on, where the sign-up actually is.
-              No `target`: an internal navigation that a visitor can go back from. */}
+              No `target`: an internal navigation that a visitor can go back from.
+              2026-11-16 (D373): that route is now `/dates` — `dist/client/dates/index.html` — so the href below
+              and the words the visitor reads name one page. The path in this note above is the artifact as it was
+              measured on 2026-11-14. */}
           <div class='mt-3 sm:mt-0 sm:ml-3'>
             <a
-              href="/schedule"
+              href="/dates"
               data-control="secondary"
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
             >
@@ -199,6 +254,59 @@ const focus = value(content.focus);
           </div>
         </div>
       </div>
+
+      {/* R9 (D357, 2026-11-16): this paragraph used to open with the sentence now sitting above the meeting
+          block; what is left here is the paragraph's second sentence, word for word. */}
+      <p
+        class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
+      >
+        Dates go up on Meetup; most of the arguing happens in the chat between meetings.
+      </p>
+
+      {/* The last sentence names the old club, once, on the page a returning member or an old link lands on. The
+          wording is the Meetup listing's own name ("Minneapolis Mathematics Book Club"), not the site's old
+          wordmark, because that is the name six years of members, printed flyers and the Meetup URL actually carry.
+          Cost, measured before shipping: one extra line box in this lede at 640/390/320 and +28 to +61px of page
+          @measured 2026-11-07 by `npm run round16`. Keep it for at least a season of the redirect; deleting it is a
+          copy edit, not a migration.
+
+          Round-4 brief §8 (2026-11-15, D344): this paragraph used to carry two negative claims and a name. The
+          syllabus line stays — it is the voice at its best, and §8's own words keep it — and the name stays. "Bring
+          a question; you don't need a field" is DELETED from here and moves to /join's "Your first one", where a
+          reader who has already decided to come is the right audience for reassurance (§8's ruling); the home page
+          carries exactly two of these claims after this commit instead of the four it carried before it. */}
+      <p
+        class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
+      >
+        There is no syllabus, no reading list to keep up with, and no current focus. Nobody sets an
+        agenda - people bring what they are curious about, and the conversation runs in the club's chat.
+        Formerly the Minneapolis Mathematics Book Club.
+      </p>
+
+      {/* Round-5 communication read (2026-11-16, C1 · q05 and C2 · q10, D376/D377): the first-time visitor's
+          third and fourth questions - "what does it cost?", "must I be a member to come?" - were UNANSWERED on
+          every route, and the read's own recommendation was the operator's word, which is the operator's to give
+          and not a seat's to write. The operator ruled instead that the gap is DECLINED in the open, so what
+          ships is the page naming, in its own words, what it has never been told: two sentences from `src/content.json`
+          (`cost`, `membershipRule`) rendered by `refusals()`, in the voice `/` already ships twice for q06 and q07
+          - plain declarative, 0 boxes, no link, no third party, no new way in. Nothing here is a price and nothing
+          is a rule about the club: no file in the tree carries either, which is D92's defect class and the reason
+          the refusal is the whole of the answer. Placed under the lede's reassurance paragraph, which is the home
+          page's own refusal grammar ("no syllabus, no reading list, no current focus"), so a first-time visitor
+          meets the four things the page will not claim before it meets a path out. `node design/visitor-questions.mjs`
+          moves q05 and q10 from UNANSWERED to DECLINED on both routes this paragraph is on. */}
+      {refusalLines.length > 0 && (
+        <p class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'>{refusalLines.join(' ')}</p>
+      )}
+
+      {focus && (
+        <p
+          class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
+        >
+          {focus}
+        </p>
+      )}
+
     </div>
     <div
       data-slot="PS-1"

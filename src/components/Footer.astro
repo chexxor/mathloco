@@ -20,6 +20,13 @@ import { newTabQualifier } from '../lib/links.mjs';
 //
 // No "Home" link: the serif mark below is the home path, same as in the nav (D100, and the operator
 // confirmed the fourth nav link goes too).
+//
+// The two outbound platform anchors below carry `data-rsvp-platform` handles since 2026-11-15 (round-4
+// §10's ceiling on outbound links outside the band). That attribute is what lets
+// `scripts/check-rsvp-page.mjs` prove the band and the schedule's standing row are one map rather than two
+// copies of it: `src/lib/rsvp.mjs`'s `EXIT_BAND_PLATFORMS` names the club-wide exits the band owns, and a
+// standing row that repeated one of them is now a defect the gate reads off the built bytes instead of a
+// page with the same URL painted twice.
 const year = new Date().getFullYear();
 ---
 
@@ -50,7 +57,7 @@ const year = new Date().getFullYear();
            while the nav read "Dates", which is the alias defect `check:naming` now fails: the band is the
            site's map, and two names for one page is a map with two entries for one place. -->
       <a
-        href='/schedule'
+        href='/dates'
         class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Dates
@@ -77,10 +84,23 @@ const year = new Date().getFullYear();
       >
         Add to a calendar
       </a>
+      <!-- Round-4 brief §9b (2026-11-15, D346): this href used to be `${config.URLs.meetupGroup}/join` - still
+           readable at `git show 5cd128f:src/components/Footer.astro:81` - so the site addressed one group two ways
+           from the band every page ends with. §9b asks for one survivor and the other deleted; the survivor is the
+           **config-declared root**, because it is the string `URLs.meetupGroup` holds, the shape `MEETUP_GROUP_URL_SHAPE`
+           (src/lib/rsvp.mjs:76) requires of it, and the only Meetup group URL carrying a dated `_verified` stamp
+           (`status: 200, verifiedAt: 2026-11-10` in src/config.json). Measured off this commit's artifact @measured
+           2026-11-15 by `grep -o minneapolis-mathematics-book-club/join dist/client/* | wc -l`: the `/join` form now
+           paints **0 times on all five built pages**, and the root paints 2 on `/`, 1 on `/chat`, 2 on `/join`, 1 on
+           `/schedule` (besides 5 per-event pages), 2 on `/404`. The `/join` form survives only inside `joinUrl()`
+           (src/lib/rsvp.mjs:127, called at :416) - the resolver's named "no page yet for this date" state, which is a
+           per-date action with its own stamp that `check:rsvp` reads - so nothing here is dead code, and no unprobed
+           URL is a primary control. -->
       <a
-        href={`${config.URLs.meetupGroup}/join`}
+        href={config.URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
+        data-rsvp-platform={PLATFORMS.meetup}
         class='py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
         >
         Join on Meetup<span class="sr-only">{newTabQualifier('Join on Meetup', PLATFORMS.meetup)}</span>
@@ -89,23 +109,48 @@ const year = new Date().getFullYear();
         href={config.URLs.discordInvite}
         target="_blank"
         rel="noopener noreferrer"
+        data-rsvp-platform={PLATFORMS.discord}
         class='py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
         >
         Discord<span class="sr-only">{newTabQualifier('Discord', PLATFORMS.discord)}</span>
       </a>
     </nav>
 
-    <!-- Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
-         because the club's name is carried by the face (D95/D100). The summand is the club's own glyph,
-         set inline at the size of the word beside it, in accent-on-ink (5.69), and NOT read aloud — it is
-         punctuation here, not a word. -->
+    <!-- The feed's own sentence, in the band beside the path it describes (round-5 communication read A5,
+        2026-11-16, D369). q21 — "am I told when a date moves?" — was answered on `/schedule` and nowhere else,
+        because the clause lived once in `src/components/SignUpLinks.astro`, under that page's own calendar
+        link. The band paints the same offer (`Add to a calendar`, `href='/events.ics'`) on all five emitted
+        pages, so every other page handed the reader the feed link with nothing to qualify it — they subscribe
+        to a file and are never told it moves with the club. Echoed here, **not linked**: the band's existing
+        path is the way in, so no second `/events.ics` anchor and no new URL (R1: do not add URLs to a page
+        for a gate). The band stays one string on all five routes — `node design/communication-price.mjs`
+        before this clause: 6,983 raw octets a page, deleting the whole band 2,269 · 2,332 · 2,342 · 2,303 ·
+        2,296 gzip on /, /404, /chat, /join, /schedule = 11,542 across five pages. Against this commit's
+        artifact the same probe prints the grown band; `node design/communication-census.mjs` clusters the
+        echo with `/schedule`'s standing sentence, and `design/copy-duplicates.json` keeps that pair as
+        `status: deliberate` — the echo is the point, since the fact has to travel with every place the file
+        is offered. -->
+    <p class="mt-2 text-micro max-w-measure">
+      Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.
+    </p>
+
+    {/* Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
+         because the club's name is carried by the face (D95/D100), and the identity is the WORD alone.
+         This is a server-side comment, not an HTML one: an HTML comment in a component ships to every
+         page (measured here — an HTML comment of this length added 384 characters to all six routes),
+         and the prose below is for the reader of the source, never for the visitor. The summand glyph
+         went on 2026-11-16 (S050/D379): the operator's word on it is that it was a fun unique thing,
+         out of place on a page this round has now designed — a mark no route explains is the site
+         claiming something about itself that it cannot ground, the same rule D112 already paid for the
+         display step (a locator's step, never a punchline). Nothing here swaps the accent, changes the
+         size, or adds another mark; the identity line stays the home path (D100). */}
     <p class="mt-8 font-body text-body font-bold">
       <a
         href='/'
         aria-label="Matheapolis, home"
         class='py-1 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
-        Matheapolis <span aria-hidden="true" class="text-accent-on-ink">∑</span>
+        Matheapolis
       </a>
     </p>
 
@@ -119,10 +164,22 @@ const year = new Date().getFullYear();
          that used to sit in the join card was the most saturated colour on the landing page (0.523% of pixels
          at C 0.226) and it was not ours. Naming a platform is nominative use; borrowing its colour and shape
          to do the naming is what gets a site into an argument. If a mark ever comes back it is the official
-         file, unmodified, in clearspace, next to the name it stands for (design/records/0013). -->
+         file, unmodified, in clearspace, next to the name it stands for (design/records/0013).
+
+         The line is ONE clause, not the pair (round-5 communication read A2, 2026-11-16, D366). The two legal
+         sentences used to print here, and the band ends every emitted page, so one fact pair printed TEN
+         statements: the round priced that at 160px and 18 gzip octets a page, and the per-route measurement
+         is retrievable at `git show 5dc58f4:design/communication/price.json` (clusters #1 and #2 — 19 · 19 ·
+         17 · 19 and 26 · 27 · 25 · 26 octets on /404, /chat, /join, /schedule). A reader met the same
+         disclaimer on `/404`, which needs none. Against the artifact this commit ships, `node design/communication-census.mjs`
+         prints ONE cluster of 5 statements for the band's copy and `node design/communication-price.mjs`
+         prices deleting this clause at 20 · 17 · 15 · 19 octets: 5 statements of the fact a reader needs
+         beside two platform names, with the full pair once on the page that talks about the platforms.
+         The clause shares only `meetup` and `discord` with either full sentence — under check:content's
+         floor of 3 shared content words — so it needed no signature in design/copy-duplicates.json, and
+         the gate confirms it: 0 new near-duplicate rows over the 5 built pages. -->
     <p class="mt-1 text-micro max-w-measure">
-      Meetup and Discord are trademarks of their owners. This site is the club's own — not sponsored or
-      endorsed by either.
+      Meetup and Discord are the platforms’ own names.
     </p>
   </div>
 </footer>

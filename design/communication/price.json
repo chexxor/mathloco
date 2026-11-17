@@ -1,0 +1,380 @@
+{
+ "measuredAt": "2026-11-16",
+ "instrument": "design/communication-price.mjs",
+ "unit": "gzip -9 octets of the built page, measured in memory over `dist/client`; the artifact is never written",
+ "baseline": "dist/client as emittedRoutes finds it; the census record (design/communication/report.json) supplies the clusters, so the two probes cannot describe different facts",
+ "bands": [
+  {
+   "route": "/",
+   "rawBytes": 8574,
+   "gzipAlone": 3387,
+   "pageRaw": 26539,
+   "pageGzip": 9041,
+   "saveIfDeleted": 2825,
+   "shareOfPageGzip": 31.2
+  },
+  {
+   "route": "/404",
+   "rawBytes": 8574,
+   "gzipAlone": 3387,
+   "pageRaw": 15706,
+   "pageGzip": 5688,
+   "saveIfDeleted": 2883,
+   "shareOfPageGzip": 50.7
+  },
+  {
+   "route": "/chat",
+   "rawBytes": 8574,
+   "gzipAlone": 3387,
+   "pageRaw": 26093,
+   "pageGzip": 9412,
+   "saveIfDeleted": 2897,
+   "shareOfPageGzip": 30.8
+  },
+  {
+   "route": "/join",
+   "rawBytes": 8574,
+   "gzipAlone": 3387,
+   "pageRaw": 19779,
+   "pageGzip": 6441,
+   "saveIfDeleted": 2858,
+   "shareOfPageGzip": 44.4
+  },
+  {
+   "route": "/schedule",
+   "rawBytes": 8574,
+   "gzipAlone": 3387,
+   "pageRaw": 36814,
+   "pageGzip": 12055,
+   "saveIfDeleted": 2825,
+   "shareOfPageGzip": 23.4
+  }
+ ],
+ "clusters": [
+  {
+   "id": 1,
+   "label": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
+   "pages": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "statements": 6,
+   "routes": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": true,
+   "keep": "/",
+   "perRoute": {
+    "/404": {
+     "found": 1,
+     "gzip": 41
+    },
+    "/chat": {
+     "found": 1,
+     "gzip": 41
+    },
+    "/join": {
+     "found": 1,
+     "gzip": 40
+    },
+    "/schedule": {
+     "found": 2,
+     "gzip": 34
+    }
+   }
+  },
+  {
+   "id": 2,
+   "label": "Meetup and Discord are the platforms’ own names.",
+   "pages": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "statements": 5,
+   "routes": [
+    "/",
+    "/404",
+    "/chat",
+    "/join",
+    "/schedule"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/404": {
+     "found": 1,
+     "gzip": 18
+    },
+    "/chat": {
+     "found": 1,
+     "gzip": 16
+    },
+    "/join": {
+     "found": 1,
+     "gzip": 13
+    },
+    "/schedule": {
+     "found": 1,
+     "gzip": 18
+    }
+   }
+  },
+  {
+   "id": 3,
+   "label": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+   "pages": [
+    "/",
+    "/schedule"
+   ],
+   "statements": 4,
+   "routes": [
+    "/",
+    "/schedule"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": true,
+   "keep": "/",
+   "perRoute": {
+    "/schedule": {
+     "found": 3,
+     "gzip": 18
+    }
+   }
+  },
+  {
+   "id": 4,
+   "label": "on Discord, opens in a new tab",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 3,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": true,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 2,
+     "gzip": -8
+    }
+   }
+  },
+  {
+   "id": 5,
+   "label": "lists every date on the club’s own calendar, and",
+   "pages": [
+    "/404",
+    "/schedule"
+   ],
+   "statements": 3,
+   "routes": [
+    "/404",
+    "/schedule"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": true,
+   "keep": "/404",
+   "perRoute": {
+    "/schedule": {
+     "found": 2,
+     "gzip": 32
+    }
+   }
+  },
+  {
+   "id": 6,
+   "label": "— what breaks, and what gets interesting, if you change how numbers combine",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 1,
+     "gzip": 29
+    }
+   }
+  },
+  {
+   "id": 7,
+   "label": "— Lean, and what it does to a proof when something verifies it line by line",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 1,
+     "gzip": 35
+    }
+   }
+  },
+  {
+   "id": 8,
+   "label": "— Qiskit, and the linear algebra those gates are made of",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 1,
+     "gzip": 30
+    }
+   }
+  },
+  {
+   "id": 9,
+   "label": "— algorithms that lose nothing, drawn as wires and boxes",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 1,
+     "gzip": 27
+    }
+   }
+  },
+  {
+   "id": 10,
+   "label": "— foundations, and why the question keeps coming back",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 1,
+     "gzip": 25
+    }
+   }
+  },
+  {
+   "id": 11,
+   "label": "— about doing mathematics, and about who gets to",
+   "pages": [
+    "/",
+    "/chat"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/chat"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/chat": {
+     "found": 1,
+     "gzip": 18
+    }
+   }
+  },
+  {
+   "id": 12,
+   "label": ", and every date on the schedule links to the page the club posts its sign-up on.",
+   "pages": [
+    "/",
+    "/schedule"
+   ],
+   "statements": 2,
+   "routes": [
+    "/",
+    "/schedule"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": false,
+   "keep": "/",
+   "perRoute": {
+    "/schedule": {
+     "found": 1,
+     "gzip": 29
+    }
+   }
+  },
+  {
+   "id": 13,
+   "label": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+   "pages": [
+    "/schedule"
+   ],
+   "statements": 2,
+   "routes": [
+    "/schedule"
+   ],
+   "weakestPair": 1,
+   "samePageRepeat": true,
+   "keep": "/schedule",
+   "perRoute": {
+    "/schedule": {
+     "found": 0,
+     "gzip": 0,
+     "notFound": 1
+    }
+   }
+  }
+ ],
+ "totals": {
+  "bandRawIdentical": 8574,
+  "bandGzipSavedAcrossPages": 14288
+ }
+}

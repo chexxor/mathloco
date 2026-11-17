@@ -8,6 +8,9 @@
  * Two decisions the renderer owns, so no caller can opt out of them (D318, D319, both 2026-11-14):
  *   - a row the grouping supersedes is not emitted (`src/lib/event-groups.mjs`);
  *   - the `DESCRIPTION` is the club's own copy, not the upstream boilerplate (`src/lib/event-description.mjs`).
+ * A third is now owned here too (round-5 read B2, q18, D371): the `DESCRIPTION` carries the **window the file
+ * itself covers**, computed from the very rows it emits — so no caller, page or gate, can be handed a calendar
+ * whose reach sentence disagrees with its `DTSTART`s.
  * Both are asserted from the bytes by `scripts/check-ics.mjs`.
  *
  * Every rule this file enforces is quoted in `.notes/DECISIONS.md` D72, from `tools.ietf.org/rfc/rfc5545.txt`:
@@ -29,6 +32,7 @@
 
 import { publishableRows } from './event-groups.mjs';
 import { feedDescription } from './event-description.mjs';
+import { feedWindow } from './event-window.mjs';
 
 export const CRLF = '\r\n';
 
@@ -163,8 +167,10 @@ export const vevent = (row, calendar) => {
   if (row.geo) lines.push(contentLine('GEO', null, row.geo));
   // D319: the club's own copy, per meeting type, never the organizer's pre-2026 boilerplate. `blurb` stays in
   // the snapshot as provenance (rule 2 of the harvest: the tool does not author copy, so it stores what the
-  // source said) and is what `check:ics`'s feed-copy rule plants against.
-  lines.push(contentLine('DESCRIPTION', null, escapeText(feedDescription(row))));
+  // source said) and is what `check:ics`'s feed-copy rule plants against. The window clause (D371) is computed
+  // from `calendar.window`, which `renderCalendar` derives from the rows it emitted, so the sentence a subscriber
+  // reads is derived from the same rows the subscriber reads.
+  lines.push(contentLine('DESCRIPTION', null, escapeText(feedDescription(row, calendar.window))));
   if (row.url) lines.push(contentLine('URL', null, row.url));
   if (row.image) lines.push(contentLine('ATTACH', 'FMTTYPE=image/png', row.image));
   lines.push('END:VEVENT');
@@ -181,6 +187,9 @@ export const renderCalendar = (data) => {
   const rows = publishableRows(data.events ?? []).rows.sort((a, b) =>
     `${a.start} ${a.uid}`.localeCompare(`${b.start} ${b.uid}`),
   );
+  // D371: the reach of the file is a fact about the rows this render emits, so it is derived here rather than
+  // passed in — a caller that computed its own window is a caller that can disagree with the file it shipped.
+  cal.window = feedWindow(rows);
   const lines = [
     'BEGIN:VCALENDAR',
     contentLine('PRODID', null, cal.prodid),

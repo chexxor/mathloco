@@ -220,8 +220,10 @@ for (const ev of feed.events) {
     notes.push(
       `COLLISION  ${uid}: the feed re-announces a UID this snapshot has published as CANCELLED (${existing.start} -> ${row.start}) ` +
       `and the harvest refuses to merge it (rule 4, D299). Decide which row lives, then hand-edit data/events.json: ` +
-      "the live row needs a slug that is not '-cancelled' (D223's event-<slug>.png key) and its art mirrored " +
-      "under that slug; the retired one keeps the UID with SEQUENCE raised so subscribers drop it (D72)."
+      "the live row needs a slug that is not '-cancelled' (D223's key story, read below: the SLUG keys the row " +
+      "since 2026-11-16, but the mirrored asset does not — R7/D359 names assets by role + media identity, so " +
+      "its art is mirrored under the `media.asset` name this run prints, not under the slug) and the retired one " +
+      "keeps the UID with SEQUENCE raised so subscribers drop it (D72)."
     );
     continue;
   }
@@ -313,6 +315,87 @@ for (const e of snapshot.events ?? []) {
   }
 }
 
+// ------------------------------------------------------------------ event media, named by identity (R7, D359)
+
+// The operator's rulings letter of 2026-11-16 (R7, D359) is what changed how a mirrored asset gets called.
+// An asset mirrored from event media is named by **role + media identity**, never by date:
+//
+//     <role>-<mediaUid>.<ext>          e.g. social-8f3a2c.webp, study-2b71de.webp
+//     role ∈ { social, study }
+//
+// and the harvest must CLASSIFY reuse rather than silently reuse: when one media UID appears against more
+// than one event, the manifest records `reuseCount > 1` and sets `standing: true`. A standing asset is by
+// definition an illustration OF A FORMAT, not a photograph of a meeting, and may be described as such. The
+// consequence the letter states is the whole point: a filename can then never contradict a row, because no
+// filename asserts a date — which is why R8 replaced §10's vacuous criterion ("no image is painted on a date
+// its filename contradicts", satisfied by having no date-bearing filenames) with one that decides something.
+// The old key, `event-<slug>.png` (D190), put the row's DATE in the asset's name, so one poster mirrored
+// seven ways named seven dates; that is the defect R7 removes, and `src/assets/photos/event-*.png` are gone
+// as of this commit.
+//
+// `mediaUid` is the leading 6 hex of the media id the host serves the file under — Mobilizon's `/media/<64-hex>`
+// path segment, which `sha256sum` of the mirrored file reproduces exactly (the README's rule: content-addressed,
+// never remembered). Six hex is the letter's own example length; the manifest carries the full id beside it, so
+// a truncation collision is checkable rather than assumed.
+const mediaOf = (image) => {
+  const m = /\/media\/([0-9a-f]{8,})\.(png|jpe?g|webp|avif)/i.exec(String(image ?? ''));
+  if (!m) return null;
+  return { mediaId: m[1], mediaUid: m[1].slice(0, 6).toLowerCase(), ext: m[2].toLowerCase() };
+};
+/** Role from the row's own published vocabulary, never invented: the two roles the letter allows. A row whose
+ *  series names neither gets NO role and therefore NO asset name — the run says so, because an asset named by
+ *  a guessed role is a claim about the club's format, and D92 forbids inventing that claim. */
+const roleOf = (row) => {
+  const words = `${row.series ?? ''} ${row.summary ?? ''}`.toLowerCase();
+  if (/study session/.test(words)) return 'study';
+  if (/(?:^|[^a-z])social(?:[^a-z]|$)/.test(words)) return 'social';
+  return null;
+};
+
+/** Attach the media identity to every row of the merged snapshot, then count reuse across rows, so `standing`
+ *  is a property of the manifest the next build can read rather than a fact remembered in a comment. The pass
+ *  collects first and decides second: a media's role belongs to the FILE, not to the row that happened to be
+ *  harvested first, so it is settled once from every row that serves the media (below) and then handed back
+ *  down to those rows. */
+const byMedia = new Map();
+for (const e of snapshot.events ?? []) {
+  const m = mediaOf(e.image);
+  if (!m) continue;
+  const bucket = byMedia.get(m.mediaId) ?? (
+    byMedia.set(
+      m.mediaId,
+      { mediaId: m.mediaId, mediaUid: m.mediaUid, ext: m.ext, role: null, asset: null, roles: new Set(), seriesNames: new Set(), rows: [] },
+    ) && byMedia.get(m.mediaId)
+  );
+  const role = roleOf(e);
+  if (role) bucket.roles.add(role);
+  if (e.series) bucket.seriesNames.add(e.series);
+  bucket.rows.push(e.slug ?? e.uid);
+  e.media = { mediaUid: m.mediaUid, mediaId: m.mediaId, ext: m.ext, role: null, asset: null, reuseCount: 0, standing: false, _rule: '' };
+}
+
+/** Settle ONE role per media from the organizer's own series vocabulary, and refuse when the vocabulary
+ *  disagrees: a media whose rows name two roles would be named by picking one and calling the other row wrong,
+ *  which is the D92 class in this new place. A media whose rows name no role gets no asset name at all — an
+ *  asset named by a guessed role is a claim about the club's format that no one made. */
+for (const b of byMedia.values()) {
+  const roles = [...b.roles];
+  b.role = roles.length === 1 ? roles[0] : null;
+  b.asset = b.role ? `${b.role}-${b.mediaUid}.${b.ext}` : null;
+  b.standing = b.rows.length > 1;
+}
+for (const e of snapshot.events ?? []) {
+  const b = e.media && byMedia.get(e.media.mediaId);
+  if (!b) continue;
+  e.media.reuseCount = b.rows.length;
+  e.media.standing = b.standing;
+  e.media.role = b.role;
+  e.media.asset = b.asset;
+  e.media._rule = b.role
+    ? `named by role + media identity (R7, D359): no filename asserts a date, so a filename cannot contradict a row; standing=true means an illustration of a format, not a photograph of this meeting. The role is the organizer's own series vocabulary, taken from ${roleOf(e) ? `this row's series name` : `the ${b.rows.length} row(s) that serve this media, not from this row's`}; D92 forbids inventing it.`
+    : `no role: the ${b.roles.size ? `${b.roles.size} roles the rows name (${[...b.roles].join(', ')}) disagree` : 'rows naming this media name neither social nor study'}, so the harvest refuses to name an asset it cannot classify (D92)`;
+}
+
 // ------------------------------------------------------------------ report
 
 // Rule 5, stated as a log rather than as a deletion (D318). Computed from the merged snapshot, so what the
@@ -323,6 +406,21 @@ for (const d of grouping.dropped) {
   console.log(
     `superseded ${d.uid} "${d.summary}" (${d.start}) — ${d.reason}; group ${d.group}. ` +
     `The row stays in data/events.json (rule 3), it is only never published (D318).`,
+  );
+}
+
+/** What one media means for the repo, printed rather than remembered: how many rows serve it (that count is
+ *  `standing`), the series names the organizer used for it, and the one asset name the naming rule produces. */
+for (const [, b] of byMedia) {
+  const names = [...b.seriesNames];
+  const roles = [...b.roles];
+  console.log(
+    `media ${b.mediaUid} (id ${b.mediaId}) serves ${b.rows.length} row(s) — ${names.length} series name(s) ${names.join(', ') || '(none named)'}. ` +
+    (b.role
+      ? `Mirror it as \`${b.asset}\` (R7, D359); reuseCount ${b.rows.length} > 1 means standing: true, an illustration of a format rather than a photograph of a meeting. The role \`${b.role}\` is the organizer's own vocabulary (${roles.join(', ')}).`
+      : roles.length > 1
+        ? `No role, so NO asset name: the rows serving this media name ${roles.length} different roles (${roles.join(', ')}); picking one would call the other row wrong.`
+        : `No role, so NO asset name: the rows serving this media name neither social nor study (D92 refuses the guess).`),
   );
 }
 

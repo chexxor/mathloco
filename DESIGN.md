@@ -365,9 +365,15 @@ second colour.
   pages, threshold 30 days** @measured 2026-11-14 by `node scripts/check-provenance.mjs`. No staleness alarm: the
   real harvested feed has gaps of 4, 10 and 4 days, so any 7-day threshold fires in an ordinary month.
 
-**Never** use strikethrough or colour as the only status cue. **Never** hide a cancelled event from the
-page while `/events.ics` announces `STATUS:CANCELLED`. **Never** invent a threshold and call it
-freshness.
+**Never** use strikethrough or colour as the only status cue. A date the club stopped announcing is retired **in the
+file** — `STATUS:CANCELLED` with a raised `SEQUENCE`, the only mechanism RFC 5545 gives a client for dropping a date
+it already holds (D72, D225, D370) — and **not painted on the page** (D223: a page of upcoming dates that shows a
+finished evening is a lie with a friendly face). What used to be a single "**Never** hide a cancelled event from the
+page while `/events.ics` announces `STATUS:CANCELLED`" line is restated here because the shipped design and that gate
+rule contradict it: the page never paints one, and the file says it. `CANCELLED` is the retirement mechanism, not a
+claim that the club called a meeting off — the source stops announcing old rows rather than cancelling them, so the
+note beside any hand-authored cancellation says what is **not** claimed (D370). **Never** invent a threshold and call
+it freshness.
 
 ## States: empty, loading, failed
 
@@ -421,16 +427,20 @@ freshness.
   - **Targets**: band path links pad to 32px like the nav; a link inside a sentence keeps its 24px line
     box, and the gate floor for any band target is 24px.
   - **Identity, not a locator**: the club name in `text-body` serif at every width, never a display step
-    (D112 — the display step belongs to a screen's locator, never to a punchline), with the ∑ glyph inline
-    at the size of the word beside it, `accent-on-ink`, `aria-hidden`, and **static**.
-  - **Small print** carries place and date only. No frequency (D92), and the old "All rights reserved"
-    boilerplate went with the band it lived in.
+    (D112 — the display step belongs to a screen's locator, never to a punchline), and the identity is the
+    word alone: the `∑` summand went on 2026-11-16 under **S050/D379** (the operator's word: a fun unique
+    thing, out of place on a page now designed), before which it sat inline at the size of the word beside
+    it, `accent-on-ink`, `aria-hidden`, and **static**.
+  - **Small print** carries place, date, and the facts the map above it needs qualifying — the calendar
+    clause (round-5 communication read A5, D369) and one clause of attribution (D366, restated under
+    "Attribution is one static line"). It carried place and date only until those two landed; no frequency
+    (D92), and the old "All rights reserved" boilerplate went with the band it lived in.
   - **Every page the build emits ends with this band** (D307, 2026-11-14). `check:render` enforces the band's rules
     for a page that has one, and nothing asked whether a page has one at all: `/chat`, `/join` and `/404` ended on
     their last paragraph, so a visitor arriving from a shared link had the nav above and nothing below. `check:page-exit`
     walks the routes read off `dist/client` (`design/emitted-routes.mjs`, never a remembered list, D117) and requires
-    the band, on the ratified ground, offering at least two paths out — 5 built pages, 5 with the band
-    @measured 2026-11-14 by `npm run check:page-exit`. A route that is genuinely exempt has to say so here and in the
+    the band, on the ratified ground, offering at least two paths out — **6** built pages, **6** with the band
+    @measured 2026-11-16 by `npm run check:page-exit` (`/past` landed the day the count moved, D374). A route that is genuinely exempt has to say so here and in the
     gate's own list, not by omission.
 - **Photo-free by construction**: no surface may require a photograph, because none of the club's
   existing images contains a person (D86/D94). The hero motif may be derived from the operator's own
@@ -440,7 +450,8 @@ freshness.
   boundary is not (D117). The mark is the club's own name — `Matheapolis` since the 2026-11-07 rename, `MPLS Math Club`
   before it — in `font-body` at the `text-body` step, ink, no accent: the old accent-coloured `Math` inside the mark depended on
   "Math" being a word inside the mark, and a coined single word has no word boundary to colour. (The `∑` summand
-  stays, and only on the ink band, where `accent-on-ink` is the hue the contrast oracle allows.) It is the home path, and
+  went on 2026-11-16 under **S050/D379**; until then it sat only on the ink band, where `accent-on-ink` is the hue the
+  contrast oracle allows, and never in the nav, where the row has no room for it — see the nav-fit arithmetic below.) It is the home path, and
   its `aria-label` carries the name. D100 rejected a 13px target, so do
   not shave the padding.
 - **The label set is the mark plus `Dates`, `Chat` and `Ways in`.** `Schedule` and `Members` were dropped on
@@ -473,7 +484,7 @@ freshness.
   it needs **257 of 276**; at 390 the row with the chip needs **306 of 346**, so the chip paints from 380 up and the
   round-3 read's criterion 5 ("visible at 390px") is met @measured 2026-11-15 by `npm run check:render:dist`. A date in the
   nav is chrome, not a dated surface: `check:dated-surfaces` fails a chip whose date is not the first date
-  `/schedule` prints, and a chip when the page prints no date.
+  `/dates` prints (the route moved from `/schedule` on 2026-11-16 under **D373**), and a chip when the page prints no date.
 - **One name per page** (D309, 2026-11-14): the nav label is the page's name, and the `<title>` stem, the exit-band
   label and the page's own opening block must carry that word. `npm run check:naming` is the detector; aliases in
   prose ("When We Meet", "All 5 dates →") are counted and reported, not failed, because they do a different job.
@@ -494,6 +505,12 @@ band and drew it with the same three parts; that card (and the sign-up cluster i
 operator's `/join` objective — "`/schedule` stays the only surface that prints dates" — recorded as **D306** and
 enforced by `check:dated-surfaces`, which fails any built page that prints a date without a ruling. The homepage now
 points at this page and prints none; the row below is what `/schedule` prints, in this order:
+
+> **The route moved on 2026-11-16 (**D373**): `/schedule` → `/dates`, and the round-5 read's Batch D gave the page of
+> record a sibling `/past` for the finished half of the same calendar.** Two rules, both enforced in `check:dated-surfaces`'s
+> own `RULED` map, so a third dated surface is still refused. Every `/schedule` below in a `@measured` line is that page
+> as it was named on the stamp's date — same page, same rules, older path; the commands quoted there are the ones that
+> ran then and are kept as records, not re-run against today's artifact.
 
 - **leaf** — month, day number, weekday, stacked, `bg-tint` **fill**, `EventLeaf.astro`. It is `aria-hidden`:
   the same date is spelled out in prose beside it, and a screen reader should hear a date once.
@@ -526,6 +543,15 @@ Rules that are not decoration:
   up to two 4px hairline edges under its preview card; the card and the deck went together, because a deck under a
   pointer is a picture of dates the page no longer shows. What survives is the part that was always the accessible
   one: the **link text** (`Next 8 dates →`), which is where assistive tech reads the count.
+- **The reach of the file is said where the file is offered, and it is generated** (round-5 communication read B2,
+  q18, D371). `/dates`'s lede names the window the published `/events.ics` carries — first `DTSTART`, last
+  `DTSTART`, how many rows — and every row's `DESCRIPTION` carries the **identical** sentence, both from
+  `windowSentence(feedWindow(…))`. It is never hand-written, because a date in prose is a claim that expires with
+  the next harvest; `check:ics`'s `calendar-window` rule derives the window from the file's own `DTSTART`s and
+  `check:schedule-window` compares the page's sentence against the same generator, so a sentence the rows do not
+  support goes red rather than shipping. One sentence in two places rather than two sentences is deliberate: the
+  page and the file naming one window twice in different words is a near-duplicate `check:content` would have to be
+  signed off for no new fact.
 - **The plate cap is one number, read from the drawing code.** `node design/schedule-geometry.mjs` parses the
   323px out of `EventArt.astro`'s scoped style rather than remembering it, so a cap change cannot leave a probe
   reporting a number nothing decides (same reasoning as the route lists in D230).
@@ -652,6 +678,14 @@ a source exists. **In markup text write the character, never an escape:** `club�
 `\uXXXX` syntax, so an escape written between tags is painted as those eight characters and it did ship on
 `/schedule`. Inside a JavaScript string or a JSON file the escape is correct and decodes — which is why the rule
 is enforced by a gate that reads rendered text (`npm run check:escapes`), not by a grep for backslashes.
+
+**Name a gap the site cannot fill, in the open** (round-5 communication read A4, D368): the page says so in
+its own words — "There is no syllabus, no reading list to keep up with, and no current focus." on `/`,
+"…is not something a page can tell you." on `/`, "The club has no front desk and no phone number; the chat
+is where you ask." on `/join`. A gap the reader can see and a gap the page does not know it has are **different
+defects**, and only the second is worth finding; `node design/visitor-questions.mjs` keeps them apart as
+DECLINED vs UNANSWERED (3 declined in the open, 7 unanswered @measured 2026-11-16 by that probe). Refusing is
+never a substitute for a source: an ungrounded contact, price or room description would be a claim (D92).
 
 ## Motion
 
@@ -882,8 +916,11 @@ and the screen can disagree.
   18-word cap and the five event plates' "The club's own event image for this social", 8 words about the file rather
   than the picture). `npm run check:alt` reads every `.html` in the artifact and fails a missing alt, an undeclared
   empty alt, an alt over 12 words, an alt that names the file's role, a citation in an alt with no caption, and an
-  `<img>` with no intrinsic size: **4 described alts, 5 declared-decorative plates, longest 12 words, 5 built pages**
-  @measured 2026-11-14 by `node scripts/check-alt.mjs`.
+  `<img>` with no intrinsic size: **2 described alts, 0 declared-decorative plates, longest 12 words, 6 built pages**, word counts `10x1 12x1` @measured 2026-11-16 by `npm run check:alt`. The **4 alts and 5 plates** this
+  bullet carried on 2026-11-14 counted things that are no longer on the page: three of the alts were horizon leaves,
+  and D347 kept one of them on 2026-11-15; the five decorative plates were the event art, and **D359**'s sweep of
+  2026-11-16 deleted it. What ships now is two `<img>` on the home page — the hero plate and one horizon leaf — and
+  no event asset at all.
   The **review** state (placeholder mode, reachable only from `src/content.local/`) draws the measured box with
   `inset-shadow-accent` and **no fill**: a `rule` ring over a `tint` fill puts the ring on two grounds at once
   (D149-3c, record 0024 measured 2.74 inside / 3.01 outside on the pre-D316 palette; `rule` now reads 3.10 on
@@ -892,6 +929,21 @@ and the screen can disagree.
   ground on both sides.
   No browser gate can see this state on the shipped page, so it has to be right by construction; the review-build
   recipe (`src/content.local/` + `check:render:dist`) is in record 0024.
+- **No image filename contains a date, and an asset shared by more than one event is named by media UID and
+  marked `standing: true` in the manifest** (the operator's rulings letter of 2026-11-16, R8, **D360**, and
+  **D359**'s naming rule, which supersedes D190's `event-<slug>.<ext>` key). This sentence replaces the round-4 brief's
+  criterion "no image is painted on a date its filename contradicts", which was **vacuous**: it was satisfied by
+  having no filenames that bear dates, so it decided nothing and could not be failed. What ships today satisfies the
+  half that matters in the stronger way — seven mirrored `src/assets/photos/event-*.png` were deleted in D359's
+  sweep, so `src/assets/photos/` carries four PNGs and **no event asset at all** — and it decides the future half:
+  an asset a re-mirror would name is `<role>-<mediaUid>.<ext>` (`social`, `study`), and `npm run events:harvest` prints
+  the reuse count that sets `standing: true` rather than leaving it to a comment (media `1f54c2` serves 5 rows,
+  media `0e26aa` serves 3 @measured 2026-11-16 by `npm run events:harvest`). It is checkable with a `find` for digits
+  in a filename — but that census **over-reports here**: `find src/assets/photos -name '*[0-9]*'` prints 3 of the
+  4 PNGs @measured 2026-11-16, and every digit run in them is a book year (Euclid 1903, Euler 1910, the 1922 radio
+  text) under D167's provenance keys, not a meeting date, so what decides is that **no filename names a row** a date
+  could contradict. What ships: 6 built pages carrying **2 `<img>` in total**, both on `/` (the hero plate and one
+  horizon leaf) @measured 2026-11-16 by `find dist/client -name '*.html' -exec grep -o '<img' {} \;`.
 - **The aspect ratio is declared in CSS, never left to the file.** Tailwind preflight's `img { height: auto }`
   makes an HTML height attribute inert — the png this page shipped asked for `200x80` and rendered **200×192** —
   and a lazy image whose box is undeclared reflows the page: measured **2495px → 2607px, 112px**, which is also
@@ -941,9 +993,17 @@ and the screen can disagree.
   third-party mark is a different risk from a recoloured word, and it is the one the retrievable terms (Discord's)
   name explicitly. Meetup's own brand terms are **not retrievable from this rig** (JS shell / 403), so nobody may
   assert them from memory. Applied: the Meetup png is out of `public/` and out of the join card.
-- **Attribution is one static line in the footer, not a component.** Written: "Meetup and Discord are trademarks of
-  their owners. This site is the club's own — not sponsored or endorsed by either." It is capped at
-  `max-w-measure` like any prose block.
+- **Attribution is one static line, and it is not the same line on every page.** The exit band carries one
+   clause — "Meetup and Discord are the platforms’ own names." — beside the two platform names it paints,
+   and `/join`, the page that talks about the platforms, carries the full pair in its small print: "Meetup
+   and Discord are trademarks of their owners. This site is the club’s own — not sponsored or endorsed by
+   either." Neither block is a component, and both stay capped at `max-w-measure` like any prose block
+   (round-5 communication read A2, 2026-11-16, **D366**). What this replaces: the pair used to live in the band,
+   so one fact pair printed **10 statements** — the census calls the pair TWO clusters of 5 statements across
+   the five emitted pages, and `node design/communication-price.mjs` prices deleting them per route at
+   **19 · 19 · 17 · 19** and **26 · 27 · 25 · 26** gzip octets on `/404`, `/chat`, `/join`, `/schedule`
+   (@measured 2026-11-16, record `design/communication/price.json` clusters #1 and #2); a reader met the
+   same disclaimer on `/404`, which is the page that needs no disclaimer at all.
 - **Measured, so the trade-off is visible** (`npm run check:color`, whole-page crop, settled images — see the
   instrument note under Enforcement). Before, at 1240: **0.49%** of the page was colour a reader would name
   (chroma ≥ 0.08) and **0.48 points of that was Meetup's red** — i.e. **96% of the site's visible colour belonged
@@ -1018,15 +1078,15 @@ npm run check:scale             # every margin/padding/gap step written in src/ 
                                 # mt-7, gap-3.5, p-[13px] and a responsive-prefix case, plus a comment quoting the
                                 # defect that must NOT fire). `check:classes` proves a class *resolves*; this is the
                                 # gate that proves it is on the scale.
-npm run check:outline           # one h1 per built page and no skipped level: 5 pages, every ladder starting at h1
-                                # @measured 2026-11-14 by `node scripts/check-outline.mjs` (12-case selftest)
+npm run check:outline           # one h1 per built page and no skipped level: 6 pages, every ladder starting at h1
+                                # @measured 2026-11-16 by `node scripts/check-outline.mjs` (12-case selftest)
 npm run check:ext-links         # every anchor that leaves the site: rel carries noopener, it opens a new tab, the
                                 # "opens in a new tab" words are sr-only, no platform is named twice in one
-                                # accessible name, and no club route is painted target=_blank — 33 outbound anchors,
-                                # 33 qualified @measured 2026-11-14 by `node scripts/check-ext-links.mjs` (15 cases)
+                                # accessible name, and no club route is painted target=_blank — 28 outbound anchors,
+                                # 28 qualified @measured 2026-11-16 by `node scripts/check-ext-links.mjs` (15 cases)
 npm run check:provenance        # every "how current is this" line goes through `provenanceStamp()` in
                                 # `src/lib/provenance.mjs`: relative inside 30 days, absolute beyond (D322). 43
-                                # source files, 5 built pages @measured 2026-11-14 by `node scripts/check-provenance.mjs`
+                                # source files, 6 built pages @measured 2026-11-16 by `node scripts/check-provenance.mjs`
 npm run check:line-art          # every `<figure data-line-art>` is a captioned `role="img"` drawing under 1200
                                 # bytes, strokes currentColor, nothing filled: the one original drawing on the site,
                                 # `/chat "undoable-steps"`, 622 bytes, 9 strokes @measured 2026-11-14 by
@@ -1036,6 +1096,14 @@ npm run check:threads           # the home page paints exactly min(cap, items) t
                                 # 6 painted, 3 reachable @measured 2026-11-14 by `node scripts/check-threads.mjs`
 npm run verify                  # the browser-free CI gate set (everything above except the pixel gates)
 ```
+
+**Claims about absence are made against a byte census of the built HTML, not a text extraction** (the operator's
+rulings letter of 2026-11-16, R6, **D364**, closing round 4's nav/footer item): "The round-3 finding was produced by
+a text extraction that drops `position: fixed` chrome; the artifact was never missing its nav. Claims about absence
+must be made against a byte census of the built HTML. The honest instruments are `npm run check:render:dist` (nav-fit
+and mark cells) and `node design/nav-fit.mjs`." Every built page carries 2 `<nav>` and 1 `<footer>`, so the class of
+finding that reported a missing nav was an instrument's blindness rather than an artifact's defect — and `check:space`
+saying "position: fixed elements are excluded and the count is printed" is the same trap from the other side.
 
 **These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
 assumed.** @measured 2026-11-14 by `npm run verify:browser` (Linux native, 16 CPU, Firefox 159.0, load 2.9 →
@@ -1095,12 +1163,40 @@ accepted, each with the gate that keeps it true.
 - **Nothing sits above a page's first heading.** The eyebrow is gone; where it carried meaning it became a
   subtitle *under* the h1 (S040, D309). `check:naming` plants an eyebrow above the h1 and a section h2 that is
   another page's h1; `check:outline` (12 cases) fails a second h1, a page starting at h2, an h1 → h3 jump, an
-  empty heading and a heading whose only content is an image. Shipped: **5 built pages, every ladder starting at
-  h1 and never skipping a level** @measured 2026-11-14 by `node scripts/check-outline.mjs`.
+  empty heading and a heading whose only content is an image. Shipped: **6 built pages, every ladder starting at
+  h1 and never skipping a level** @measured 2026-11-16 by `node scripts/check-outline.mjs` — the h1 → h3 jump
+  `check:outline` caught on `/past`'s empty state is why that notice's title is an `h2` and not the `h3` its
+  sibling on `/dates` may use (there, rows carry the `h2` the ladder needs; a page whose list is empty has no
+  row to carry it, and that is the one place a notice title has to sit at level 2).
 - **A link that leaves the site says so, once.** `rel="noopener noreferrer"`, an arrow, and
   `, opens in a new tab` in an `sr-only` span — the words are written once, in `src/lib/links.mjs`, and derived
-  from the label so a label that already names the platform does not name it twice (S041, D317). **33 outbound
-  anchors, 33 carrying the qualifier, 33 held to the rules** @measured 2026-11-14 by `node scripts/check-ext-links.mjs`.
+  from the label so a label that already names the platform does not name it twice (S041, D317). **28 outbound
+  anchors, 28 carrying the qualifier, 28 held to the rules** @measured 2026-11-16 by `npm run check:ext-links`
+  (the 33 this bullet carried on 2026-11-14 counted the four standing platforms each schedule row used to repeat;
+  D342 moved them out of the row, and a count that only ever grows by repetition is the reason the count is printed
+  rather than ruled).
+- **Two tiers of outbound link, and they are not the same decision** (the operator's rulings letter of 2026-11-16,
+  R4, **D361**). A row's primary link goes to **that event's** page — the way out for a visitor deciding about one
+  specific date. The standing row's link and the exit band's go to the **group root** — joining a thing that persists,
+  which is not a question about a date. Two purposes, two URLs, **not an inconsistency and nothing to dedupe**: a
+  page that pointed both tiers at one URL would be answering "how do I come to this date" with "join the club".
+  `signUpPaths()` is where the first tier comes from and `splitPaths().standing` is where the second comes from,
+  so the two are computed from different calls and a future reader cannot mistake a mismatch for a defect.
+- **The link ceiling, as accepted** (the operator's rulings letter of 2026-11-16, R1, **(a)** — same-origin is not
+  an exit, and the ceiling is not bought back by adding a door to a page). The acceptance, verbatim, replaces the
+  round-4 brief's §6 parenthetical and its §10 clause:
+
+  > `/schedule` at 390px offers five row primaries (one per printed date, distinct event URLs), one standing
+  > platform whose URL the footer does not already paint, and one same-origin calendar route. Absolute URLs
+  > outside the `<footer>` element: 6. No page on the site exceeds 6 absolute URLs outside its own `<footer>`.
+
+  The instrument is the built artifact, not a source read: count `<a href="http…">` anchors outside each page's
+  own `<footer>` in `dist/client` @measured 2026-11-16 by `node design/link-ceiling.mjs` over the **6** built pages
+  — `/dates` 6, `/join` 3, `/chat` 3, `/` 2, `/404` 1, `/past` 1, so the page's ceiling is met and `/dates` is the
+  page that defines it. The instrument counts `<a … href="http…">` anchors outside each page's own `<footer>`,
+  attribute order included; the 2026-11-16 run before D374 listed five pages and read `/chat` 2, which is the same
+  anchors counted with `href` required to be `<a>`'s first attribute — the ceiling never moved, only the count of
+  one page's anchors did, and the ceiling is a maximum, not a sum.
 - **Spacing steps are audited, not remembered.** Tailwind v4's dynamic scale makes `mt-23` resolve, so
   "the class exists" was never "the value is on the ladder" — `/join` shipped `gap-5` under a green `check:classes`
   (S042). `check:scale`: **45 source files, 52 distinct spacing utilities, 0 off-ladder** @measured 2026-11-14 by
@@ -1114,6 +1210,7 @@ accepted, each with the gate that keeps it true.
   900 with each **410px**, and **592x434** in a single column below the flip @measured 2026-11-15 by
   `node design/whitespace-survey.mjs --routes / --widths 1024 900 768 640 390 320` — the two columns save 161px of
   page height exactly where the read wanted them switched off, and `--breakpoint-900` does not exist in this repo.
+- **A thread's gloss is standing copy, not a duplicate to fold** (round-5 communication read A1, 2026-11-16). The six thread glosses each print twice — the home page's *What we take up* list is the **signpost** and `/chat`'s *What the club is pulling on* list is the **thread** — and both read the one `threads` field in `src/content.json`, so one edit moves both surfaces and neither can drift (same one-home rule as D361's two tiers of link). Cost of the duplication, @measured 2026-11-16 by `node design/communication-price.mjs` (record `design/communication/price.json`, clusters #4–#9 at this artifact): **363 characters, 158 gzip bytes on `/chat`**, per-gloss deltas 29 · 34 · 28 · 25 · 24 · 18 — the probe's figures move when the band's own copy moves (the round quoted 363 characters / 157 gzip, and D366's band clause moved it to 158), so the number comes from the probe, not from this line. `node design/communication-census.mjs` prints those six as clusters of 2 statements across `/` ↔ `/chat`. Folding was refused: option (a) — print the name alone on `/chat` — costs 0 bytes but leaves that page's thread list a bare list of names, and the operator has not accepted that. Kept as **deliberate standing copy**, like D218's provenance pair: 12 statements of 6 facts, and `npm run check:threads` (cap 6, 9 in `content.json`, 6 painted, 3 reachable) is what keeps the two surfaces in step. The measurement that would change the ranking is printed by the census either way: whether `/chat`'s own summaries already re-state a gloss.
 - **A drawing the club owns is drawn, not borrowed** (D323). One figure, `data-line-art`, hairlines only,
   `currentColor`, no fill, under 1200 bytes, `role="img"` with a ≤ 12-word label and a caption. `/chat
   "undoable-steps"`: **622 bytes, 9 strokes** @measured 2026-11-14 by `node scripts/check-line-art.mjs`.

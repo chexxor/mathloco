@@ -156,11 +156,12 @@ export const joinFindings = (painted, headings, urls = {}, { today = new Date(),
     }
   }
 
-  // 1c. The page prints no date. `/schedule` is the surface that does (D218), and a second copy of a date is a
+  // 1c. The page prints no date. `/dates` is the surface that does (D218 made it the page of record,
+  // and it was `/schedule` until D373 moved the route on 2026-11-16), and a second copy of a date is a
   // copy that can be stale while the schedule beside it is right.
   if (pageText) {
     const m = DATE_RE.exec(pageText);
-    if (m) fail('join-date-painted', `/join paints the date "${m[0]}" — /schedule is where dates live (D218); a join page that repeats one goes stale on its own`);
+    if (m)       fail('join-date-painted', `/join paints the date "${m[0]}" — /dates is where dates live (D218's page of record, renamed by D373); a join page that repeats one goes stale on its own`);
   }
   const order = (list) => list.map((c) => `${c.kind}/${c.platform}`).join(',');
   if (got.length && order(got) !== order(want.filter((w) => got.some((g) => g.kind === w.kind && g.platform === w.platform && g.href === w.href)))) {
@@ -218,8 +219,11 @@ export const joinFindings = (painted, headings, urls = {}, { today = new Date(),
 if (selftest) {
   const FIX = resolve('.design', 'tmp-join-page');
   rmSync(FIX, { recursive: true, force: true });
-  mkdirSync(resolve(FIX, 'schedule'), { recursive: true });
-  writeFileSync(resolve(FIX, 'schedule', 'index.html'), '<html><body>fixture</body></html>');
+  // The fixture's build tree must emit the routes the live resolver actually points at: the rsvp
+  // channel's href is D373's `/dates` now, so a fixture that ships only `schedule/` reports the
+  // live route as missing and every case fails for the wrong reason (D155's rule, fixtures again).
+  mkdirSync(resolve(FIX, 'dates'), { recursive: true });
+  writeFileSync(resolve(FIX, 'dates', 'index.html'), '<html><body>fixture</body></html>');
 
   const urls = {
     meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club',

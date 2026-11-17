@@ -20,7 +20,12 @@
 // table shows it. Deleting an applied option is how a ruling stops being measured (the D173 rule, applied to spacing
 // rather than to a planting).
 
-export const BAND = 'section[aria-label="Plates from public-domain mathematics books"]';
+// The section's `aria-label` is the only handle its stylesheet can reach (a CSS rule cannot select a parent,
+// and the `data-slot` handle sits on the shelf inside it), so this string has to track the label the component
+// writes. D347 (2026-11-15) took the band to one plate, and the label went singular with it; a variant whose
+// selector matches nothing changes nothing, and `npm run check:rhythm` would report a row that moved the page
+// by 0px - so the label is here in one place, and round 15 throws on an option that changed nothing at every width.
+export const BAND = 'section[aria-label="Plate from a public-domain mathematics book"]';
 export const SCHED = 'section[aria-labelledby="when-we-meet"]';
 
 export const VARIANTS = [
@@ -50,12 +55,12 @@ section.bg-panel ul > li { padding-top: 8px !important; padding-bottom: 8px !imp
   },
   {
     label: 'band-sm',
-    what: 'the horizon shelf shows from 640px instead of 1024px (640/390/320 currently show no plates at all)',
+    what: 'the horizon shelf shows from 640px instead of 1024px — since D347 the shipped band already shows at every width, so this row now prices a NO-OP against this page (measured 2026-11-15: PS-5 paints at 1240, 640, 390 and 320); kept because deleting an option is how a ruling stops being measured',
     css: `@media (min-width: 640px) { ${BAND} { display: block !important; } }`,
   },
   {
     label: 'band-up',
-    what: 'same shelf, same size, moved up: it sits under the hero instead of between the reasons and the schedule, where the emptiness lives (biggest run 148px at 1240, was 196px before R6; the two largest runs after R6 are 148px and 145px)',
+    what: 'same shelf, same size, moved up: it sits under the hero instead of between the reasons and the schedule, where the emptiness lives (on this build at 1240 the ladder is 7 runs >=60px totalling 741px, largest 162px @measured 2026-11-15 by check:space; the 148px/145px/196px figures were the three-plate page of 2026-11-05)',
     css: `body { display: flex !important; flex-direction: column !important; }
 ${BAND} { order: -1; }`,
   },

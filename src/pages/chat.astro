@@ -36,6 +36,30 @@ const items = threads();
     </h1>
     <p class="text-label uppercase tracking-wide text-ink-3 mb-8">Written by our bot, after the noise settles</p>
 
+    {/* A3 (round-5 communication read, 2026-11-16, D367): the page's ONE way out used to sit 1,720px down at
+        1240 and y=2,075 at 390 — a phone visitor scrolled two screens of prose before reaching the only action
+        `/chat` offers, which the read called the worst communication defect on the artifact. So the invite the
+        page already owns moves UP into the first screen as a declared control: `data-control="secondary"`, the
+        ratified secondary construction (paper fill, `inset-shadow-rule`, `text-label`, 48px — D139's single
+        pressable step, D140's declared role), on `paper` and not inside a tinted card or a notice (D149-3c's
+        one-boundary rule, which `check:render` enforces as "a notice contains a block action"). It reuses
+        `config.URLs.discordInvite` — the one home for the invite, named in the comment above — so R1's ceiling
+        moves from 2 outbound anchors outside the band to 3, under the cap of 6 that `check:rsvp-page` prints,
+        and `check:ext-links` still sees a qualifier on it. The CTA below keeps its words and its role: this is
+        the same path met earlier, which is why it is a secondary and not a second primary — "a band with two
+        primaries has no primary" (Schedule.astro's own note). */}
+    <div class="mt-8">
+      <a
+        href={DISCORD_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        data-control="secondary"
+        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
+      >
+        Join the chat<span class="sr-only">{newTabQualifier('Join the chat', PLATFORMS.discord)}</span>
+      </a>
+    </div>
+
     <!-- `visible`, not `load`: the summary block is below the fold on phones, and this island
          drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the
          server-rendered heading and the "Join the chat" CTA interactive immediately and skips
