@@ -53,7 +53,11 @@ const nextDate = window.shown[0]?.date ?? null;
 const navItems = [
   { href: '/dates', label: 'Dates', date: nextDate },
   { href: '/chat', label: 'Chat' },
-  { href: '/join', label: 'Ways in' },
+  // Round-6 review (2026-11-16), `/join`/Revise (D390): the third label is `Join`, not `Ways in`. A first-timer
+  // scans for a verb they can act on, and `check:naming`'s name-not-on-page rule is what ties the label to the
+  // page: `/join`'s h1 is now "Join the club". The width this buys is measured, not guessed - see the note below
+  // the row, which `node design/nav-fit.mjs` re-prices every run.
+  { href: '/join', label: 'Join' },
 ];
 
 // The chip's own words, in the order the anchor paints them. `chipWords` is used twice on the date-bearing

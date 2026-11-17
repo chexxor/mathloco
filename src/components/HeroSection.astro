@@ -2,9 +2,17 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
-import { content, value, refusals, upcoming, formatDate, timeSpan } from '../lib/content.ts';
-import { todayIn } from '../lib/events.mjs';
+import { content, value, answers, upcoming, formatDate, timeSpan } from '../lib/content.ts';
+import { todayIn, snapshot } from '../lib/events.mjs';
 import { scheduleWindow } from '../lib/event-window.mjs';
+// The rhythm is generated from the rows this build publishes, by the same module the schedule surfaces use,
+// so there is no hand-written cadence sentence to go stale (D383).
+import { rhythmSentence } from '../lib/rhythm.mjs';
+// The primary control's destination is the resolver's answer for the date the hero prints, so the hero cannot
+// point at a page the row under it disagrees with (D384). One call to the same `signUpPaths()` the rows use.
+import meetupSnapshot from '../../data/meetup-events.json';
+import discordSnapshot from '../../data/discord-events.json';
+import { signUpPaths, splitPaths } from '../lib/rsvp.mjs';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
 // 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
@@ -88,7 +96,11 @@ const focus = value(content.focus);
 // rather than from strings here, because they are claims with sources - the source is the ruling that decided
 // the gap stays open - and because `/join` paints the same two sentences out of the same call, so the pair
 // cannot be edited apart on one surface and left stale on the other (D247's defect class, inverted).
-const refusalLines = refusals();
+const answerLines = answers();
+// The club's cadence, in one sentence, derived from the calendar file's own rows (D383). No cadence word:
+// `src/lib/cadence.mjs` is the list `check:content` fails a page on when a source does not name the word, and
+// this sentence names days and hours instead of a frequency.
+const rhythm = rhythmSentence(snapshot.events);
 // 2026-11-15 (round-4 design brief §5, ruling D340): **the home page states the next meeting**, and the
 // statement lives here rather than in the schedule band below the horizon, because the brief's acceptance test is
 // a stranger on a phone asking "when is the next meeting?" and the answer must be visible without scrolling past
@@ -107,6 +119,15 @@ const refusalLines = refusals();
 // schedule." — is deleted in `Schedule.astro`, not reworded: a page that says where the answer is, instead of
 // what the answer is, has not answered.
 const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
+// Round-6 review (2026-11-16), Home/Revise + "what to do this week" item 3: the primary control sends a
+// visitor who has already decided two clicks from the sign-up. The destination is the one `signUpPaths()`
+// returns for the date the hero prints — the same call every row under it makes — so the hero's button and
+// the row for that date can never name different pages (D384). When the calendar holds no date, or no
+// sign-up page exists for it, the control falls back to `/join`, the club's own route, and the label says
+// what it is: a way in, not a sign-up for a date that does not exist.
+const signUpFor = nextMeeting
+  ? splitPaths(signUpPaths(nextMeeting, meetupSnapshot.events, config.URLs, discordSnapshot.events), config.URLs).row[0] ?? null
+  : null;
 ---
 
 {/* The hero's own air is **64px top and bottom at every width**, which is a ruling rather than a tidy
@@ -207,6 +228,13 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
         <div data-surface="next-meeting" data-date={nextMeeting.date} class="mt-6 sm:mt-8 max-w-measure">
           <p class="tabular-nums"><time datetime={nextMeeting.date}><span class="text-label text-ink-3">Next meeting: {formatDate(nextMeeting.date, 'wide')} · {timeSpan(nextMeeting)} Central</span></time></p>
           {nextMeeting.venue && <p class="mt-1 text-body leading-prose text-ink-2 font-body">{nextMeeting.venue}</p>}
+          {/* Round-6 review, Home/Add and "this week" item 2 (D383): the rhythm sits here, beside the date,
+              because a rhythm is only useful next to a date a visitor can act on. It is generated from the
+              rows the calendar publishes, so it cannot name a cadence the club stopped keeping. The review's
+              own wording ("Saturdays at noon, most months") is not used: "most months" is a cadence word in
+              `src/lib/cadence.mjs`, and `check:content` fails a page for a cadence word its source does not
+              name (D92, D301). */}
+          {rhythm && <p class="mt-1 text-body leading-prose text-ink-2 font-body">{rhythm}</p>}
         </div>
       )}
 
@@ -221,18 +249,37 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
           below the controls, and `check:copy` and `check:content` read words, not positions, so they see the same
           page they read before this move — and before R9's hoist, which moved the lede's first sentence above
           this block rather than writing one. */}
+      {/* Round-6 review, "what to do this week" item 1 and the Home/`Remove` row on the cost paragraph
+          (D381): the two questions a stranger asks before deciding — what does it cost, do I have to belong —
+          are answered here in the two sentences `src/content.json` carries, in the order the review ranked
+          them. Both are operator-granted draft claims, and the ledger in
+          `docs/reply-to-the-communication-review-round-6-2026-11-16.md` names them and their correction path.
+          The paragraph this replaces — "Nothing here says what a meeting costs, and no price is printed."
+          — is deleted, not reworded; the review's own verdict was that a sentence pointing at an unresolved
+          cost converts an unasked question into an anxious one. */}
+      {answerLines.length > 0 && (
+        <p class='mt-3 text-body leading-prose text-ink-2 font-body'>{answerLines.join(' ')}</p>
+      )}
+
       <div>
         <div class='mt-6 sm:mt-8 sm:flex sm:justify-center lg:justify-start'>
           <div>
-            {/* The one action on the page, and it is the club's own route rather than Meetup's join page: the
-                page it lands on is where the three kinds of joining are explained (S033, D303, D304). The
-                label is unchanged, so the control a returning visitor knows still says what it said; only its
-                destination moved, and `check:content`'s dead-path rule now requires `/join` to exist. */}
+            {/* Round-6 review, Home/Revise and "this week" item 3 (D384): one click to conversion instead of
+                three. The destination is `signUpPaths()`'s answer for the date the hero prints — the same call
+                `EventRow.astro` makes for that row — and `scripts/check-rsvp-page.mjs` compares the painted
+                bytes with that call, so the button cannot drift from the row. The label names the date, so the
+                control says the outcome rather than the group (the review's note that "Join Our Group" is the
+                only Title Case string on the site is true, and the fix is to stop capitalising a verb phrase).
+                When no sign-up page exists for a printed date, `signUpFor` is null and the control falls back
+                to `/join`, the club's own route (S033, D303), with a label that says what it is. */}
             <a
-              href="/join"
+              href={signUpFor ? signUpFor.href : '/join'}
+              target={signUpFor ? '_blank' : undefined}
+              rel={signUpFor ? 'noopener noreferrer' : undefined}
               data-control="primary"
+              data-rsvp-date={nextMeeting?.date ?? undefined}
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
-              >Join Our Group</a
+              >{signUpFor ? `Sign up for ${formatDate(nextMeeting.date, 'short')}` : 'Join the club'}{signUpFor && <span class="sr-only">{signUpFor.srOnly}</span>}</a
             >
           </div>
           {/* The secondary used to be `target=_blank` at Meetup's own events page, which made the site's own
@@ -249,7 +296,7 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
               data-control="secondary"
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
             >
-              See the dates
+              All dates
             </a>
           </div>
         </div>
@@ -283,21 +330,10 @@ const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
         Formerly the Minneapolis Mathematics Book Club.
       </p>
 
-      {/* Round-5 communication read (2026-11-16, C1 · q05 and C2 · q10, D376/D377): the first-time visitor's
-          third and fourth questions - "what does it cost?", "must I be a member to come?" - were UNANSWERED on
-          every route, and the read's own recommendation was the operator's word, which is the operator's to give
-          and not a seat's to write. The operator ruled instead that the gap is DECLINED in the open, so what
-          ships is the page naming, in its own words, what it has never been told: two sentences from `src/content.json`
-          (`cost`, `membershipRule`) rendered by `refusals()`, in the voice `/` already ships twice for q06 and q07
-          - plain declarative, 0 boxes, no link, no third party, no new way in. Nothing here is a price and nothing
-          is a rule about the club: no file in the tree carries either, which is D92's defect class and the reason
-          the refusal is the whole of the answer. Placed under the lede's reassurance paragraph, which is the home
-          page's own refusal grammar ("no syllabus, no reading list, no current focus"), so a first-time visitor
-          meets the four things the page will not claim before it meets a path out. `node design/visitor-questions.mjs`
-          moves q05 and q10 from UNANSWERED to DECLINED on both routes this paragraph is on. */}
-      {refusalLines.length > 0 && (
-        <p class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'>{refusalLines.join(' ')}</p>
-      )}
+      {/* Round-6 review, Home/Remove (D381): the refusal paragraph the round-5 read put here is gone. The two
+          questions it declined to answer are answered above, in the hero, next to the date. `node
+          design/visitor-questions.mjs` reads this artifact again after the change and moves q05 and q10 from
+          DECLINED to ANSWERED; the record it writes is regenerated in the same commit as the copy. */}
 
       {focus && (
         <p

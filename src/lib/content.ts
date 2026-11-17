@@ -99,17 +99,23 @@ export type Content = {
   venue: Slot;
   membership: Slot;
   /**
-   * The site's refusal to state what a meeting costs (q05, D376). A value here is never a price: it is the
-   * sentence naming the gap, which is the only claim this seat can ground (D92's class - "no cover charge"
-   * would be a claim about the club's practice, and no file in the tree carries one).
+   * What a meeting costs (q05). D376 shipped a refusal here because no source in the tree carried the answer;
+   * the round-6 review called that sentence the worst paragraph on the site and the operator granted the
+   * answer (D381). A value here is a claim about the club, so its `source` field is the grant itself.
    */
   cost: Slot;
   /**
-   * The site's refusal to state a rule for arriving (q10, D377). Not the member LIST - that is `membership`
+   * Whether you have to belong to come (q10, D377 -> D381). Not the member LIST - that is `membership`
    * above, whose tally stays off the page (D276). This is the question a first-time visitor asks between
-   * "when" and "how do I get in", and the answer the artifact can give is that it has never been told one.
+   * "when" and "how do I get in".
    */
   membershipRule: Slot;
+  /**
+   * How many people are at a table (D385). The only painted headcount the site carries, and the reason
+   * `scripts/check-rsvp-page.mjs`'s headcount rule reads this file: a count of people on a page must be a
+   * slot with a source and a date, never a leftover from a third-party snapshot (D136, D265).
+   */
+  turnout: Slot;
   photos: { placeholders: boolean };
 };
 
@@ -167,18 +173,21 @@ export const threads = (): { label: string; gloss: string | null }[] =>
     .map((t) => ({ label: t.value, gloss: typeof t.gloss === 'string' && t.gloss !== '' ? t.gloss : null }));
 
 /**
- * The site's own refusals, in reading order: the club-practice questions it will not answer because no
- * source in the tree carries the answer (q05 cost, D376; q10 membership, D377). They are data in `src/content.json`
- * rather than markup because they are claims with sources - the source is the ruling that decided the gap
- * stays open - and because the operator's word is what replaces them one day, from a phone, without anyone
- * touching a component.
+ * The answers, in reading order, to the two questions a stranger asks before they decide whether to come:
+ * what it costs (q05) and whether you have to belong (q10). They are data in `src/content.json` rather than
+ * markup because they are claims with sources - the source is the operator's grant (D381), not a ruling that
+ * left the gap open - and because the operator's corrected word is what replaces them one day, from a phone,
+ * without anyone touching a component.
  *
  * One helper, two call sites: `/` (HeroSection.astro) and `/join` (join.astro) paint the SAME strings out of
- * this one call, which is what keeps the pair from being edited apart (D247's "two of three is this defect
- * class", inverted: a refusal that lives in one place cannot disagree with itself). A surface that renders
- * them renders the whole set; an empty slot drops its sentence rather than painting a bracket (record 0010).
+ * this one call, which is what keeps the pair from being edited apart (D247's defect class, inverted: an
+ * answer that lives in one place cannot disagree with itself). A surface that renders them renders the whole
+ * set; an empty slot drops its sentence rather than painting a bracket (record 0010).
+ *
+ * The name changed from `refusals()` on 2026-11-16 (D381) with the round-6 review's first "what to do this
+ * week" item: the page answers these questions now instead of declining to.
  */
-export const refusals = (): string[] =>
+export const answers = (): string[] =>
   [value(content.cost), value(content.membershipRule)].filter((s) => s !== null);
 
 /**
