@@ -118,11 +118,11 @@ each of those and requires a named failure. Both are in `verify`.
    holds are two different numbers — read both.** Today's run of each, @measured 2026-11-16 by the runner
    itself (Linux native, Node 24.22.1, 16 CPU, load 9.9 → 16.7/16cpu — a contended rig): `verify` is the
    deploy set, **71 steps**, 70.7s wall / 108.8s of work; `verify:rig` is 3 steps, 5.5s wall / 10.4s; `verify:browser`
-   is 9 steps, 122.5s wall / 122.5s. The **frozen** baselines in `design/gate-cost.json` are a smaller set: deploy
-   69 steps at 33.6s wall / 52.8s of work (frozen 2026-11-15, load 7.6 → 5.5/16cpu), browser 9 steps at 96.7s
-   (2026-11-15), rig 3 steps at 3.9s / 7.5s (2026-11-13). A contended run's like-for-like percentage is not a
-   regression — the guard prints the normalised figure beside it (-34% for that deploy run) and the load, and
-   only a run that started and ended at or below 6/16cpu can call a rise a defect (D269).
+   is 9 steps, 122.5s wall / 122.5s. The **frozen** baselines in `design/gate-cost.json` were re-frozen 2026-11-17
+   by `npm run cost:save` off a quiet run (**D417**): deploy **71 steps** at 24.2s wall / **41.4s** of work
+   (load 5.2 → 4.7/16cpu), browser 9 steps at 96.0s (load 5.1 → 2.3), rig 3 steps at 3.9s wall / 7.4s —
+   so the bar and the set are the same 71 steps today, which is the pair of figures this paragraph exists to
+   keep apart.
    It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
@@ -253,8 +253,8 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
   than the guess, taken from **what the sets cost when run**, not from the frozen bars alone: measured
   @measured 2026-11-16 by `npm run verify` / `npm run verify:rig` / `npm run verify:browser` (Linux native,
   Node 24.22.1, 16 CPU, load 9.9 → 16.7/16cpu) — deploy 71 steps at 70.7s wall / 108.8s work, rig 3 steps at
-  5.5s / 10.4s, browser 9 steps at 122.5s / 122.5s; the frozen bars are smaller (deploy 69 steps / 52.8s of
-  work, frozen 2026-11-15). So the honest budgets are **90s rig, 180s deploy, 300s browser** — not 600s, and
+  5.5s / 10.4s, browser 9 steps at 122.5s / 122.5s; the frozen bars are now the same 71 steps (deploy 41.4s of
+  work, rig 7.4s, browser 96.0s, re-frozen 2026-11-17 off a run at 5.2 → 4.7/16cpu, **D417**). So the honest budgets are **90s rig, 180s deploy, 300s browser** — not 600s, and
   not the 120s/180s a 40-step deploy set used to fit.
   Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
   the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
