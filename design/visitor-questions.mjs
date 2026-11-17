@@ -62,8 +62,21 @@ const QUESTIONS = [
     anyOf: [[/no syllabus|no reading list|nothing to prepare|nobody sets an agenda/i],
             [/bring a question|no background is required/i]] },
 
+  // D413 (round-6 communication review, 2026-11-16): the probe follows the copy it audits, the class D371
+  // named — an instrument left alone keeps reporting a closed item as an open gap forever. Every shape moved
+  // below is written against a string this build really contains, so it stays falsifiable: the probe re-runs
+  // in ~1s and prints its own evidence. What is NOT moved here is recorded in the reply doc instead:
+  // q13's decline left the copy with the sentence that carried it (D393), so the route now reports UNANSWERED
+  // and the evidence for the decline lives in D403's dig output, not in a page; q24's answer on `/dates` left
+  // with the link D404 deleted; q25's answer on `/` was D387 deleting a sentence about the site's own
+  // capabilities, which was never an answer to how to get there.
   { id: 'q05', who: 'first-time', ask: 'What does it cost — is there a cover charge or a fee?', where: ['/', '/join'],
-    anyOf: [[/cover charge|no cover|\bcost\b|\bprice\b|\bticket\b|\bfee\b|free of charge|\$\s?\d/i]],
+    // D413: the round-6 grant shipped `src/content.json` `cost` = "Free." — one word, and no shape above
+    // matched it, so the probe kept the item open after it closed. `\bfree\b` joins the alternation rather
+    // than replacing it: `grep -o -i 'free[^<>]' dist/client --include='*.html'` returns one prose hit a
+    // route (`Free. No membership needed - you just come.`) and one hit inside a shipped HTML comment,
+    // which `dist-pages.mjs`'s comment strip (line 60) removes before this probe reads a sentence.
+    anyOf: [[/cover charge|no cover|\bfree\b|\bcost\b|\bprice\b|\bticket\b|\bfee\b|free of charge|\$\s?\d/i]],
     // C1 (round-5 read) landed as a decline under D376, 2026-11-16: the operator ruled the gap open rather
     // than stating a price, so `src/content.json` `cost` carries the sentence "Nothing here says what a meeting
     // costs, and no price is printed." — which is an `anyOf` hit AND a refusal, exactly as q13's "phone number"
@@ -87,7 +100,10 @@ const QUESTIONS = [
 
   { id: 'q10', who: 'first-time', ask: 'Do I have to be a member to come?', where: ['/', '/join'],
     anyOf: [[/without being a member|need to be a member|membership is (free|not required)/i],
-            [/anyone can (come|attend|bring)/i]],
+            [/anyone can (come|attend|bring)/i],
+            // D413: the granted sentence is `src/content.json` `membershipRule` = "No membership needed -
+            // you just come." — it says "needed", not "need to be", so no alt above matched it.
+            [/no membership needed|you just come/i]],
     // C2 under D377, same shape as q05's refusal: `src/content.json` `membershipRule` ships "Nothing here says
     // whether you must be a member to come, and no rule is kept." The read's own recommendation was the operator's
     // word — a claim about the club's practice no seat may write — so what a probe can measure today is the refusal,
@@ -108,9 +124,16 @@ const QUESTIONS = [
     // "no phone number" is the page naming the gap, and counting it as an offer would hide the class.
     declinedBy: [[/no front desk|no phone number|nothing to call|no phone line/i]] },
 
-  { id: 'q14', who: 'share-link', ask: 'Does the page name itself in what a share card carries?', where: ['/', '/dates', '/chat', '/join', '/404'], formsIn: ['meta'],
-    anyOf: [[/^matheapolis - a minneapolis math club$/i], [/^dates - matheapolis$/i], [/^chat - matheapolis$/i],
-            [/^ways in - matheapolis$/i], [/^page not found - matheapolis$/i]] },
+  // D413: these shapes were pinned to the five title strings the artifact carried, and D396 moved `og:title`
+  // and `twitter:title` onto the **page** title with the city descriptor on every route — so four of five
+  // pinned strings stopped existing and the probe reported a closed item as open. The shape is now the
+  // grammar the letter asked for: a page named for itself, the site, and the city. `/past` joins `where`
+  // because the route is built and carries its own title (D404 unlinks it and noindexes it, it does not
+  // unbuild it: D117's rule keeps a path a file).
+  { id: 'q14', who: 'share-link', ask: 'Does the page name itself in what a share card carries?', where: ['/', '/dates', '/chat', '/join', '/404', '/past'], formsIn: ['meta'],
+    anyOf: [[/^matheapolis - a minneapolis math club$/i],
+            [/^[a-z][a-z'\u2019 -]{2,28} - matheapolis, a minneapolis math club$/i],
+            [/^page not found - matheapolis$/i]] },
 
   { id: 'q15', who: 'calendar-subscriber', ask: 'Does the file know my timezone?', where: ['/events.ics'],
     anyOf: [[/x-wr-timezone|america\/chicago/i]] },
@@ -125,7 +148,10 @@ const QUESTIONS = [
   // that cannot go red. Both halves have to match inside ONE carrier, and that carrier is an **unfolded VEVENT**:
   // the sentence lives in a folded `DESCRIPTION`, so no single wire line carries it (D371).
   { id: 'q17', who: 'calendar-subscriber', ask: 'Does the file say which of its dates have already passed?', where: ['/events.ics', '/dates'],
-    anyOf: [[/status:(past|complete|expired)/i], [/already (passed|gone|ended|happened)/i], [/starts? in the past|past date/i], [/status:cancelled/i, /the calendar file carries/i]] },
+    // D413: alt 4 matched the mechanism (a cancelled row) **plus the framing** this round deleted — D399's
+    // `feed-meta-commentary` rule fails "the calendar file carries", so the probe was still reading the
+    // generator's own new sentence, which is what the file ships now (D371: the answer lives inside the file).
+    anyOf: [[/status:(past|complete|expired)/i], [/already (passed|gone|ended|happened)/i], [/starts? in the past|past date/i], [/status:cancelled/i, /the club\u2019s dates run from/i]] },
 
   { id: 'q18', who: 'calendar-subscriber', ask: 'Does anything say how far ahead the file reaches?', where: ['/events.ics', '/dates', '/'],
     anyOf: [[/through (20\d\d|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec))/i], [/window|horizon|unbounded|uncapped|no cap\b/i]] },
@@ -134,7 +160,12 @@ const QUESTIONS = [
     anyOf: [[/threads|pulling on|argu|summar/i]] },
 
   { id: 'q20', who: 'returning', ask: 'What happened at a meeting I missed?', where: ['/chat', '/'], formsIn: ['prose', 'heading', 'label'],
-    anyOf: [[/summaries from the chat|what happened|recap|minutes of/i]] },
+    anyOf: [[/summaries from the chat|what happened|recap|minutes of/i]],
+    // D413: the heading over a void became a warm static state in D409's own words, and the probe had no
+    // shape for it either way — it answered through a heading that promised nothing under it, which is the
+    // defect the letter deleted. Naming the refusal is the honest verdict: the page says in its own words
+    // that it will not tell you what happened, and the channel is where the live thing is.
+    declinedBy: [[/no summary (written|posted) this week/i]] },
 
   { id: 'q21', who: 'returning', ask: 'Am I told when a date moves?', where: ['/dates', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/it changes when the club changes a date|when a date changes|subscribe/i]] },
@@ -162,7 +193,11 @@ const QUESTIONS = [
 
   { id: 'q27', who: 'assistive-tech', ask: 'Does the page explain its own section names?', where: ['/chat', '/join', '/dates', '/'], formsIn: ['prose', 'heading', 'label'],
     anyOf: [[/what we take up|what the club is pulling on|ways in\b|what we do\b/i],
-            [/dropped mid-sentence|threads that are open/i]] },
+            [/dropped mid-sentence|threads that are open/i],
+            // D413: D405 added the five-word definition of the two format words at their first use on `/dates`
+            // and D395 deleted the band's "Ways in" link that used to satisfy this rule there. The definition
+            // is what answers the question on that route now.
+            [/a social is an afternoon|a study session is an evening/i]] },
 
   { id: 'q28', who: 'assistive-tech', ask: 'What does the mark the wordmark carries mean?', where: ['/', '/dates', '/chat', '/join', '/404'], onlyIf: /∑/u,
     anyOf: [[/∑ (is|means)|the mark means|wordmark means|sigma\b|an equator and a pole/i]] },

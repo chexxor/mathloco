@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-16",
+ "measuredAt": "2026-11-17",
  "instrument": "design/communication-census.mjs",
  "artifact": "dist/client",
  "claimBar": 0.34,
@@ -7,14 +7,14 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 26417,
+   "bytes": 24711,
    "words": {
-    "nav-chrome": 7,
-    "exit-band": 59,
-    "body": 489
+    "nav-chrome": 6,
+    "exit-band": 68,
+    "body": 408
    },
-   "bodySentences": 46,
-   "bodyWords": 489,
+   "bodySentences": 45,
+   "bodyWords": 408,
    "headings": [
     "Matheapolis",
     "What we take up",
@@ -22,11 +22,11 @@
     "How it works"
    ],
    "anchors": {
-    "total": 19,
-    "internal": 15,
-    "external": 4,
+    "total": 16,
+    "internal": 11,
+    "external": 5,
     "nav-chrome": 4,
-    "exit-band": 7,
+    "exit-band": 4,
     "body": 8
    },
    "anchorList": [
@@ -47,17 +47,17 @@
     },
     {
      "href": "/join",
-     "label": "Ways in",
+     "label": "Join",
      "zone": "nav-chrome"
     },
     {
-     "href": "/join",
-     "label": "Join Our Group",
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+     "label": "Sign up for Sat, Nov 21 , opens in a new tab",
      "zone": "body"
     },
     {
      "href": "/dates",
-     "label": "See the dates",
+     "label": "All dates",
      "zone": "body"
     },
     {
@@ -91,21 +91,6 @@
      "zone": "body"
     },
     {
-     "href": "/dates",
-     "label": "Dates",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/chat",
-     "label": "Chat",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/join",
-     "label": "Ways in",
-     "zone": "exit-band"
-    },
-    {
      "href": "/events.ics",
      "label": "Add to a calendar",
      "zone": "exit-band"
@@ -129,31 +114,27 @@
    "destinations": [
     {
      "href": "/dates",
-     "n": 4,
+     "n": 3,
      "labels": [
       "Dates 21 Nov",
-      "See the dates",
-      "All 5 dates →",
-      "Dates"
+      "All dates",
+      "All 5 dates →"
      ],
      "zones": [
       "nav-chrome",
       "body",
-      "body",
-      "exit-band"
+      "body"
      ]
     },
     {
-     "href": "/join",
-     "n": 4,
+     "href": "ext:www.meetup.com",
+     "n": 3,
      "labels": [
-      "Ways in",
-      "Join Our Group",
-      "Join the club",
-      "Ways in"
+      "Sign up for Sat, Nov 21 , opens in a new tab",
+      "Meetup , opens in a new tab",
+      "Join on Meetup , opens in a new tab"
      ],
      "zones": [
-      "nav-chrome",
       "body",
       "body",
       "exit-band"
@@ -172,27 +153,15 @@
      ]
     },
     {
-     "href": "/chat",
+     "href": "/join",
      "n": 2,
      "labels": [
-      "Chat",
-      "Chat"
+      "Join",
+      "Join the club"
      ],
      "zones": [
       "nav-chrome",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "ext:www.meetup.com",
-     "n": 2,
-     "labels": [
-      "Meetup , opens in a new tab",
-      "Join on Meetup , opens in a new tab"
-     ],
-     "zones": [
-      "body",
-      "exit-band"
+      "body"
      ]
     },
     {
@@ -217,6 +186,16 @@
      "zones": [
       "body",
       "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 1,
+     "labels": [
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome"
      ]
     },
     {
@@ -275,7 +254,7 @@
     {
      "zone": "nav-chrome",
      "section": "(no heading above it)",
-     "text": "Ways in",
+     "text": "Join",
      "heading": false
     },
     {
@@ -311,13 +290,37 @@
     {
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Join Our Group",
+     "text": "Saturdays at noon for a social, Wednesdays at 6 pm for a study session.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "Matheapolis",
-     "text": "See the dates",
+     "text": "Free.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "No membership needed - you just come.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Sign up for Sat, Nov 21",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "All dates",
      "heading": false
     },
     {
@@ -342,18 +345,6 @@
      "zone": "body",
      "section": "Matheapolis",
      "text": "Formerly the Minneapolis Mathematics Book Club.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Matheapolis",
-     "text": "Nothing here says what a meeting costs, and no price is printed.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Matheapolis",
-     "text": "Nothing here says whether you must be a member to come, and no rule is kept.",
      "heading": false
     },
     {
@@ -479,13 +470,7 @@
     {
      "zone": "body",
      "section": "What we take up",
-     "text": ", and every date on the schedule links to the page the club posts its sign-up on.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What we take up",
-     "text": "Whether the room is your kind of room is not something a page can tell you.",
+     "text": ", and every date we list links to the page the club posts its sign-up on.",
      "heading": false
     },
     {
@@ -502,30 +487,6 @@
     },
     {
      "zone": "body",
-     "section": "When we meet",
-     "text": "All 5 dates",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "When we meet",
-     "text": "→",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "When we meet",
-     "text": "Add to a calendar",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "When we meet",
-     "text": "→",
-     "heading": false
-    },
-    {
-     "zone": "body",
      "section": "How it works",
      "text": "How it works",
      "heading": true
@@ -533,31 +494,43 @@
     {
      "zone": "body",
      "section": "How it works",
-     "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",
+     "text": "Walk in, find a table, buy a coffee if you want one — that is the rent.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "How it works",
-     "text": "The club has used 15 of them.",
+     "text": "Bring nothing, prepare nothing, and bring a question if you have one.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "How it works",
-     "text": "If you would rather hear what is being argued about before you go, the chat invite is below.",
+     "text": "Usually six to twelve people at a table.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "How it works",
-     "text": "The club's list of members is its Meetup group page, last read 14 days ago — the list is not the room.",
+     "text": "All 5 dates",
      "heading": false
     },
     {
      "zone": "body",
      "section": "How it works",
-     "text": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
+     "text": "→",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "Add to a calendar",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "How it works",
+     "text": "→",
      "heading": false
     },
     {
@@ -576,24 +549,6 @@
      "zone": "body",
      "section": "How it works",
      "text": "on Discord, opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "How it works",
-     "text": "Dates",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "How it works",
-     "text": "Chat",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "How it works",
-     "text": "Ways in",
      "heading": false
     },
     {
@@ -653,17 +608,17 @@
     {
      "zone": "exit-band",
      "section": "How it works",
-     "text": "Meetup and Discord are the platforms’ own names.",
+     "text": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either.",
      "heading": false
     }
    ]
   },
   {
    "route": "/404",
-   "bytes": 15234,
+   "bytes": 13708,
    "words": {
-    "nav-chrome": 7,
-    "exit-band": 59,
+    "nav-chrome": 6,
+    "exit-band": 68,
     "body": 65
    },
    "bodySentences": 11,
@@ -672,11 +627,11 @@
     "We could not find that page"
    ],
    "anchors": {
-    "total": 15,
-    "internal": 12,
+    "total": 12,
+    "internal": 9,
     "external": 3,
     "nav-chrome": 4,
-    "exit-band": 7,
+    "exit-band": 4,
     "body": 4
    },
    "anchorList": [
@@ -697,7 +652,7 @@
     },
     {
      "href": "/join",
-     "label": "Ways in",
+     "label": "Join",
      "zone": "nav-chrome"
     },
     {
@@ -719,21 +674,6 @@
      "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
      "label": "our Meetup group , opens in a new tab",
      "zone": "body"
-    },
-    {
-     "href": "/dates",
-     "label": "Dates",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/chat",
-     "label": "Chat",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/join",
-     "label": "Ways in",
-     "zone": "exit-band"
     },
     {
      "href": "/events.ics",
@@ -773,42 +713,26 @@
     },
     {
      "href": "/dates",
-     "n": 3,
+     "n": 2,
      "labels": [
       "Dates 21 Nov",
-      "Our dates page",
-      "Dates"
+      "Our dates page"
      ],
      "zones": [
       "nav-chrome",
-      "body",
-      "exit-band"
+      "body"
      ]
     },
     {
      "href": "/chat",
-     "n": 3,
-     "labels": [
-      "Chat",
-      "Recent Discord summaries",
-      "Chat"
-     ],
-     "zones": [
-      "nav-chrome",
-      "body",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "/join",
      "n": 2,
      "labels": [
-      "Ways in",
-      "Ways in"
+      "Chat",
+      "Recent Discord summaries"
      ],
      "zones": [
       "nav-chrome",
-      "exit-band"
+      "body"
      ]
     },
     {
@@ -821,6 +745,16 @@
      "zones": [
       "body",
       "exit-band"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 1,
+     "labels": [
+      "Join"
+     ],
+     "zones": [
+      "nav-chrome"
      ]
     },
     {
@@ -873,7 +807,7 @@
     {
      "zone": "nav-chrome",
      "section": "(no heading above it)",
-     "text": "Ways in",
+     "text": "Join",
      "heading": false
     },
     {
@@ -951,24 +885,6 @@
     {
      "zone": "exit-band",
      "section": "We could not find that page",
-     "text": "Dates",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "We could not find that page",
-     "text": "Chat",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "We could not find that page",
-     "text": "Ways in",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "We could not find that page",
      "text": "Add to a calendar",
      "heading": false
     },
@@ -1023,34 +939,34 @@
     {
      "zone": "exit-band",
      "section": "We could not find that page",
-     "text": "Meetup and Discord are the platforms’ own names.",
+     "text": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either.",
      "heading": false
     }
    ]
   },
   {
    "route": "/chat",
-   "bytes": 25603,
+   "bytes": 24026,
    "words": {
-    "nav-chrome": 7,
-    "exit-band": 59,
-    "body": 293
+    "nav-chrome": 6,
+    "exit-band": 68,
+    "body": 297
    },
-   "bodySentences": 35,
-   "bodyWords": 293,
+   "bodySentences": 30,
+   "bodyWords": 297,
    "headings": [
-    "Summaries from the chat",
-    "The bot's reading of the channels",
+    "The club’s chat",
+    "No summary written this week",
     "What the club is pulling on",
     "The chat itself"
    ],
    "anchors": {
-    "total": 14,
-    "internal": 9,
-    "external": 5,
+    "total": 10,
+    "internal": 6,
+    "external": 4,
     "nav-chrome": 4,
-    "exit-band": 7,
-    "body": 3
+    "exit-band": 4,
+    "body": 2
    },
    "anchorList": [
     {
@@ -1070,7 +986,7 @@
     },
     {
      "href": "/join",
-     "label": "Ways in",
+     "label": "Join",
      "zone": "nav-chrome"
     },
     {
@@ -1080,28 +996,8 @@
     },
     {
      "href": "https://discord.com/invite/wx5S7YJSkU",
-     "label": "Discord , opens in a new tab",
-     "zone": "body"
-    },
-    {
-     "href": "https://discord.com/invite/wx5S7YJSkU",
      "label": "Join the chat on Discord, opens in a new tab",
      "zone": "body"
-    },
-    {
-     "href": "/dates",
-     "label": "Dates",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/chat",
-     "label": "Chat",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/join",
-     "label": "Ways in",
-     "zone": "exit-band"
     },
     {
      "href": "/events.ics",
@@ -1127,15 +1023,13 @@
    "destinations": [
     {
      "href": "ext:discord.com",
-     "n": 4,
+     "n": 3,
      "labels": [
       "Join the chat on Discord, opens in a new tab",
-      "Discord , opens in a new tab",
       "Join the chat on Discord, opens in a new tab",
       "Discord , opens in a new tab"
      ],
      "zones": [
-      "body",
       "body",
       "body",
       "exit-band"
@@ -1155,38 +1049,32 @@
     },
     {
      "href": "/dates",
-     "n": 2,
+     "n": 1,
      "labels": [
-      "Dates 21 Nov",
-      "Dates"
+      "Dates 21 Nov"
      ],
      "zones": [
-      "nav-chrome",
-      "exit-band"
+      "nav-chrome"
      ]
     },
     {
      "href": "/chat",
-     "n": 2,
+     "n": 1,
      "labels": [
-      "Chat",
       "Chat"
      ],
      "zones": [
-      "nav-chrome",
-      "exit-band"
+      "nav-chrome"
      ]
     },
     {
      "href": "/join",
-     "n": 2,
+     "n": 1,
      "labels": [
-      "Ways in",
-      "Ways in"
+      "Join"
      ],
      "zones": [
-      "nav-chrome",
-      "exit-band"
+      "nav-chrome"
      ]
     },
     {
@@ -1239,67 +1127,49 @@
     {
      "zone": "nav-chrome",
      "section": "(no heading above it)",
-     "text": "Ways in",
+     "text": "Join",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Summaries from the chat",
-     "text": "Summaries from the chat",
+     "section": "The club’s chat",
+     "text": "The club’s chat",
      "heading": true
     },
     {
      "zone": "body",
-     "section": "Summaries from the chat",
-     "text": "Written by our bot, after the noise settles",
+     "section": "The club’s chat",
+     "text": "The live channel, the threads worth reading, and the dates the club set",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Summaries from the chat",
+     "section": "The club’s chat",
      "text": "Join the chat",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Summaries from the chat",
+     "section": "The club’s chat",
      "text": "on Discord, opens in a new tab",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": "The bot's reading of the channels",
+     "section": "No summary written this week",
+     "text": "No summary written this week",
      "heading": true
     },
     {
      "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": "They are written by our bot from recent channel activity.",
+     "section": "No summary written this week",
+     "text": "The channel is the live thing, and the button above goes to it.",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": "Read the same thing where it is posted:",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": "Discord",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": ".",
+     "section": "No summary written this week",
+     "text": "Our bot writes this section from recent channel activity, after the noise settles.",
      "heading": false
     },
     {
@@ -1311,7 +1181,7 @@
     {
      "zone": "body",
      "section": "What the club is pulling on",
-     "text": "The threads the home page lists, in full.",
+     "text": "Every thread on the list, each with what the club says it is, and the club's own drawing of one of them underneath.",
      "heading": false
     },
     {
@@ -1431,13 +1301,7 @@
     {
      "zone": "body",
      "section": "What the club is pulling on",
-     "text": "“Steps you can undo,” drawn for this site in the plates’ line language: ink hairlines, no fills.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What the club is pulling on",
-     "text": "Not a scan of a book.",
+     "text": "Drawn for this site in the plates’ line language: ink hairlines, no fills, not a scan of a book.",
      "heading": false
     },
     {
@@ -1445,12 +1309,6 @@
      "section": "The chat itself",
      "text": "The chat itself",
      "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "The chat itself",
-     "text": "The summaries above are the bot's reading of the channel.",
-     "heading": false
     },
     {
      "zone": "body",
@@ -1474,24 +1332,6 @@
      "zone": "body",
      "section": "The chat itself",
      "text": "on Discord, opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "The chat itself",
-     "text": "Dates",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "The chat itself",
-     "text": "Chat",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "The chat itself",
-     "text": "Ways in",
      "heading": false
     },
     {
@@ -1551,21 +1391,21 @@
     {
      "zone": "exit-band",
      "section": "The chat itself",
-     "text": "Meetup and Discord are the platforms’ own names.",
+     "text": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either.",
      "heading": false
     }
    ]
   },
   {
    "route": "/dates",
-   "bytes": 36795,
+   "bytes": 35537,
    "words": {
-    "nav-chrome": 7,
-    "exit-band": 59,
-    "body": 285
+    "nav-chrome": 6,
+    "exit-band": 68,
+    "body": 295
    },
-   "bodySentences": 48,
-   "bodyWords": 285,
+   "bodySentences": 47,
+   "bodyWords": 295,
    "headings": [
     "Dates",
     "Social",
@@ -1575,12 +1415,12 @@
     "Social"
    ],
    "anchors": {
-    "total": 19,
-    "internal": 11,
+    "total": 15,
+    "internal": 7,
     "external": 8,
     "nav-chrome": 4,
-    "exit-band": 7,
-    "body": 8
+    "exit-band": 4,
+    "body": 7
    },
    "anchorList": [
     {
@@ -1600,7 +1440,7 @@
     },
     {
      "href": "/join",
-     "label": "Ways in",
+     "label": "Join",
      "zone": "nav-chrome"
     },
     {
@@ -1637,26 +1477,6 @@
      "href": "/events.ics",
      "label": "Add to a calendar",
      "zone": "body"
-    },
-    {
-     "href": "/past",
-     "label": "Past meetings",
-     "zone": "body"
-    },
-    {
-     "href": "/dates",
-     "label": "Dates",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/chat",
-     "label": "Chat",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/join",
-     "label": "Ways in",
-     "zone": "exit-band"
     },
     {
      "href": "/events.ics",
@@ -1713,42 +1533,6 @@
      ]
     },
     {
-     "href": "/dates",
-     "n": 2,
-     "labels": [
-      "Dates 21 Nov",
-      "Dates"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "/chat",
-     "n": 2,
-     "labels": [
-      "Chat",
-      "Chat"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "/join",
-     "n": 2,
-     "labels": [
-      "Ways in",
-      "Ways in"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
-     ]
-    },
-    {
      "href": "/events.ics",
      "n": 2,
      "labels": [
@@ -1761,20 +1545,40 @@
      ]
     },
     {
+     "href": "/dates",
+     "n": 1,
+     "labels": [
+      "Dates 21 Nov"
+     ],
+     "zones": [
+      "nav-chrome"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 1,
+     "labels": [
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 1,
+     "labels": [
+      "Join"
+     ],
+     "zones": [
+      "nav-chrome"
+     ]
+    },
+    {
      "href": "ext:www.facebook.com",
      "n": 1,
      "labels": [
       "Join the Facebook group , opens in a new tab"
-     ],
-     "zones": [
-      "body"
-     ]
-    },
-    {
-     "href": "/past",
-     "n": 1,
-     "labels": [
-      "Past meetings"
      ],
      "zones": [
       "body"
@@ -1820,7 +1624,7 @@
     {
      "zone": "nav-chrome",
      "section": "(no heading above it)",
-     "text": "Ways in",
+     "text": "Join",
      "heading": false
     },
     {
@@ -1832,6 +1636,18 @@
     {
      "zone": "body",
      "section": "Dates",
+     "text": "Saturdays at noon for a social, Wednesdays at 6 pm for a study session.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
+     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Dates",
      "text": "These dates are copied from the club’s own calendar.",
      "heading": false
     },
@@ -1839,12 +1655,6 @@
      "zone": "body",
      "section": "Dates",
      "text": "Each one links to the page the club posts its sign-up on.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Dates",
-     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
      "heading": false
     },
     {
@@ -1916,7 +1726,7 @@
     {
      "zone": "body",
      "section": "Social",
-     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
+     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm Central",
      "heading": false
     },
     {
@@ -1964,7 +1774,7 @@
     {
      "zone": "body",
      "section": "Study session",
-     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
+     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm Central",
      "heading": false
     },
     {
@@ -2012,7 +1822,7 @@
     {
      "zone": "body",
      "section": "Social",
-     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm",
+     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm Central",
      "heading": false
     },
     {
@@ -2060,7 +1870,7 @@
     {
      "zone": "body",
      "section": "Study session",
-     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm",
+     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm Central",
      "heading": false
     },
     {
@@ -2126,43 +1936,13 @@
     {
      "zone": "body",
      "section": "Social",
-     "text": "The address printed with a line is the address to give directions to, and no page here draws a route to it.",
+     "text": "The club’s dates run from Nov 7, 2026 through Dec 19, 2026.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "Social",
-     "text": "Looking for a date that has already passed?",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "Past meetings",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Social",
-     "text": "lists the ones our own calendar has finished.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Social",
-     "text": "Dates",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Social",
-     "text": "Chat",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Social",
-     "text": "Ways in",
+     "text": "The street address printed with each date is the address to give directions to.",
      "heading": false
     },
     {
@@ -2222,35 +2002,35 @@
     {
      "zone": "exit-band",
      "section": "Social",
-     "text": "Meetup and Discord are the platforms’ own names.",
+     "text": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either.",
      "heading": false
     }
    ]
   },
   {
    "route": "/join",
-   "bytes": 19851,
+   "bytes": 17912,
    "words": {
-    "nav-chrome": 7,
-    "exit-band": 59,
-    "body": 379
+    "nav-chrome": 6,
+    "exit-band": 68,
+    "body": 287
    },
-   "bodySentences": 33,
-   "bodyWords": 379,
+   "bodySentences": 32,
+   "bodyWords": 287,
    "headings": [
-    "Ways in",
-    "Follow the club",
+    "Join the club",
+    "What we do",
     "Come to a meeting",
     "Talk with us now",
-    "What we do",
+    "Follow the club",
     "Your first one"
    ],
    "anchors": {
-    "total": 17,
-    "internal": 12,
+    "total": 14,
+    "internal": 9,
     "external": 5,
     "nav-chrome": 4,
-    "exit-band": 7,
+    "exit-band": 4,
     "body": 6
    },
    "anchorList": [
@@ -2271,17 +2051,12 @@
     },
     {
      "href": "/join",
-     "label": "Ways in",
+     "label": "Join",
      "zone": "nav-chrome"
     },
     {
-     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
-     "label": "Join the Meetup group , opens in a new tab",
-     "zone": "body"
-    },
-    {
-     "href": "https://www.facebook.com/groups/matheapolis",
-     "label": "Join the Facebook group , opens in a new tab",
+     "href": "/dates",
+     "label": "dates page",
      "zone": "body"
     },
     {
@@ -2295,29 +2070,19 @@
      "zone": "body"
     },
     {
-     "href": "/dates",
-     "label": "schedule",
+     "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+     "label": "Join the Meetup group , opens in a new tab",
+     "zone": "body"
+    },
+    {
+     "href": "https://www.facebook.com/groups/matheapolis",
+     "label": "Join the Facebook group , opens in a new tab",
      "zone": "body"
     },
     {
      "href": "/chat",
      "label": "the messages we post there",
      "zone": "body"
-    },
-    {
-     "href": "/dates",
-     "label": "Dates",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/chat",
-     "label": "Chat",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/join",
-     "label": "Ways in",
-     "zone": "exit-band"
     },
     {
      "href": "/events.ics",
@@ -2343,32 +2108,16 @@
    "destinations": [
     {
      "href": "/dates",
-     "n": 4,
-     "labels": [
-      "Dates 21 Nov",
-      "See the dates",
-      "schedule",
-      "Dates"
-     ],
-     "zones": [
-      "nav-chrome",
-      "body",
-      "body",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "/chat",
      "n": 3,
      "labels": [
-      "Chat",
-      "the messages we post there",
-      "Chat"
+      "Dates 21 Nov",
+      "dates page",
+      "See the dates"
      ],
      "zones": [
       "nav-chrome",
       "body",
-      "exit-band"
+      "body"
      ]
     },
     {
@@ -2384,14 +2133,26 @@
      ]
     },
     {
-     "href": "/join",
+     "href": "/chat",
      "n": 2,
      "labels": [
-      "Ways in",
-      "Ways in"
+      "Chat",
+      "the messages we post there"
      ],
      "zones": [
       "nav-chrome",
+      "body"
+     ]
+    },
+    {
+     "href": "ext:discord.com",
+     "n": 2,
+     "labels": [
+      "Join the chat on Discord , opens in a new tab",
+      "Discord , opens in a new tab"
+     ],
+     "zones": [
+      "body",
       "exit-band"
      ]
     },
@@ -2408,15 +2169,13 @@
      ]
     },
     {
-     "href": "ext:discord.com",
-     "n": 2,
+     "href": "/join",
+     "n": 1,
      "labels": [
-      "Join the chat on Discord , opens in a new tab",
-      "Discord , opens in a new tab"
+      "Join"
      ],
      "zones": [
-      "body",
-      "exit-band"
+      "nav-chrome"
      ]
     },
     {
@@ -2469,19 +2228,115 @@
     {
      "zone": "nav-chrome",
      "section": "(no heading above it)",
-     "text": "Ways in",
+     "text": "Join",
      "heading": false
     },
     {
      "zone": "body",
-     "section": "Ways in",
-     "text": "Ways in",
+     "section": "Join the club",
+     "text": "Join the club",
      "heading": true
     },
     {
      "zone": "body",
-     "section": "Ways in",
-     "text": "Each way in is a different kind of thing, and you only need one to start: somewhere to follow along, something to turn up to, or somebody to talk to.",
+     "section": "Join the club",
+     "text": "Three ways in, and you only need one to start: come to a meeting, read the chat, or follow the club's feeds.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "What we do",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "A study session: an evening working side by side on whatever each person is learning, with help when someone asks for it.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "Whether the room is your kind of room is not something a page can tell you.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "The next ones are on the",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": "dates page",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "What we do",
+     "text": ".",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "Come to a meeting",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "Pick a date that works and sign up for that one.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "See the dates",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Come to a meeting",
+     "text": "The dates page lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "Talk with us now",
+     "heading": true
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "The people, on an ordinary day.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "Join the chat on Discord",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": ", opens in a new tab",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Talk with us now",
+     "text": "The conversation that runs between meetings.",
      "heading": false
     },
     {
@@ -2534,96 +2389,6 @@
     },
     {
      "zone": "body",
-     "section": "Come to a meeting",
-     "text": "Come to a meeting",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "Come to a meeting",
-     "text": "Pick a date that works and sign up for that one.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Come to a meeting",
-     "text": "See the dates",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Come to a meeting",
-     "text": "The schedule lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Talk with us now",
-     "text": "Talk with us now",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "Talk with us now",
-     "text": "The people, on an ordinary day.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Talk with us now",
-     "text": "Join the chat on Discord",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Talk with us now",
-     "text": ", opens in a new tab",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Talk with us now",
-     "text": "The conversation that runs between meetings.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What we do",
-     "text": "What we do",
-     "heading": true
-    },
-    {
-     "zone": "body",
-     "section": "What we do",
-     "text": "A social: an afternoon around a table at a bakery or a coffee shop, with no agenda to prepare for.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What we do",
-     "text": "A study session: an evening working side by side on whatever each person is learning, with help when someone asks for it.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What we do",
-     "text": "The next ones are on the",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What we do",
-     "text": "schedule",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "What we do",
-     "text": ".",
-     "heading": false
-    },
-    {
-     "zone": "body",
      "section": "Your first one",
      "text": "Your first one",
      "heading": true
@@ -2631,19 +2396,43 @@
     {
      "zone": "body",
      "section": "Your first one",
-     "text": "Nothing to prepare and nothing to read first.",
+     "text": "Walk in, find a table, buy a coffee if you want one — that is the rent.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "Your first one",
-     "text": "Bring a question; you don't need a field.",
+     "text": "Bring nothing.",
      "heading": false
     },
     {
      "zone": "body",
      "section": "Your first one",
-     "text": "Come and listen if you would rather; no subject is assumed, no background is required, and none of the threads the chat runs is a prerequisite for arriving.",
+     "text": "There is nothing to prepare and no reading to keep up with.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Expect nothing.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "People work on what they brought, and nobody sets an agenda.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "Free.",
+     "heading": false
+    },
+    {
+     "zone": "body",
+     "section": "Your first one",
+     "text": "No membership needed - you just come.",
      "heading": false
     },
     {
@@ -2668,60 +2457,6 @@
      "zone": "body",
      "section": "Your first one",
      "text": ".",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Nothing here says what a meeting costs, and no price is printed.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Nothing here says whether you must be a member to come, and no rule is kept.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Your first one",
-     "text": "The club has no front desk and no phone number; the chat is where you ask.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Meetup and Discord are trademarks of their owners.",
-     "heading": false
-    },
-    {
-     "zone": "body",
-     "section": "Your first one",
-     "text": "This site is the club’s own — not sponsored or endorsed by either.",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Your first one",
-     "text": "Dates",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Your first one",
-     "text": "Chat",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Your first one",
-     "text": "Ways in",
      "heading": false
     },
     {
@@ -2781,17 +2516,17 @@
     {
      "zone": "exit-band",
      "section": "Your first one",
-     "text": "Meetup and Discord are the platforms’ own names.",
+     "text": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either.",
      "heading": false
     }
    ]
   },
   {
    "route": "/past",
-   "bytes": 14964,
+   "bytes": 13519,
    "words": {
-    "nav-chrome": 7,
-    "exit-band": 59,
+    "nav-chrome": 6,
+    "exit-band": 68,
     "body": 74
    },
    "bodySentences": 9,
@@ -2801,11 +2536,11 @@
     "No finished date on our calendar"
    ],
    "anchors": {
-    "total": 13,
-    "internal": 10,
+    "total": 10,
+    "internal": 7,
     "external": 3,
     "nav-chrome": 4,
-    "exit-band": 7,
+    "exit-band": 4,
     "body": 2
    },
    "anchorList": [
@@ -2826,7 +2561,7 @@
     },
     {
      "href": "/join",
-     "label": "Ways in",
+     "label": "Join",
      "zone": "nav-chrome"
     },
     {
@@ -2838,21 +2573,6 @@
      "href": "/dates",
      "label": "The dates still to come",
      "zone": "body"
-    },
-    {
-     "href": "/dates",
-     "label": "Dates",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/chat",
-     "label": "Chat",
-     "zone": "exit-band"
-    },
-    {
-     "href": "/join",
-     "label": "Ways in",
-     "zone": "exit-band"
     },
     {
      "href": "/events.ics",
@@ -2877,20 +2597,6 @@
    ],
    "destinations": [
     {
-     "href": "/dates",
-     "n": 3,
-     "labels": [
-      "Dates 21 Nov",
-      "The dates still to come",
-      "Dates"
-     ],
-     "zones": [
-      "nav-chrome",
-      "body",
-      "exit-band"
-     ]
-    },
-    {
      "href": "/",
      "n": 2,
      "labels": [
@@ -2903,27 +2609,15 @@
      ]
     },
     {
-     "href": "/chat",
+     "href": "/dates",
      "n": 2,
      "labels": [
-      "Chat",
-      "Chat"
+      "Dates 21 Nov",
+      "The dates still to come"
      ],
      "zones": [
       "nav-chrome",
-      "exit-band"
-     ]
-    },
-    {
-     "href": "/join",
-     "n": 2,
-     "labels": [
-      "Ways in",
-      "Ways in"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
+      "body"
      ]
     },
     {
@@ -2936,6 +2630,26 @@
      "zones": [
       "body",
       "exit-band"
+     ]
+    },
+    {
+     "href": "/chat",
+     "n": 1,
+     "labels": [
+      "Chat"
+     ],
+     "zones": [
+      "nav-chrome"
+     ]
+    },
+    {
+     "href": "/join",
+     "n": 1,
+     "labels": [
+      "Join"
+     ],
+     "zones": [
+      "nav-chrome"
      ]
     },
     {
@@ -2988,7 +2702,7 @@
     {
      "zone": "nav-chrome",
      "section": "(no heading above it)",
-     "text": "Ways in",
+     "text": "Join",
      "heading": false
     },
     {
@@ -3060,24 +2774,6 @@
     {
      "zone": "exit-band",
      "section": "No finished date on our calendar",
-     "text": "Dates",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "No finished date on our calendar",
-     "text": "Chat",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "No finished date on our calendar",
-     "text": "Ways in",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "No finished date on our calendar",
      "text": "Add to a calendar",
      "heading": false
     },
@@ -3132,7 +2828,7 @@
     {
      "zone": "exit-band",
      "section": "No finished date on our calendar",
-     "text": "Meetup and Discord are the platforms’ own names.",
+     "text": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either.",
      "heading": false
     }
    ]
@@ -3204,37 +2900,37 @@
      "page": "/",
      "zone": "exit-band",
      "section": "How it works",
-     "words": "Meetup and Discord are the platforms’ own names."
+     "words": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
     },
     {
      "page": "/404",
      "zone": "exit-band",
      "section": "We could not find that page",
-     "words": "Meetup and Discord are the platforms’ own names."
+     "words": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
     },
     {
      "page": "/chat",
      "zone": "exit-band",
      "section": "The chat itself",
-     "words": "Meetup and Discord are the platforms’ own names."
+     "words": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
     },
     {
      "page": "/dates",
      "zone": "exit-band",
      "section": "Social",
-     "words": "Meetup and Discord are the platforms’ own names."
+     "words": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
     },
     {
      "page": "/join",
      "zone": "exit-band",
      "section": "Your first one",
-     "words": "Meetup and Discord are the platforms’ own names."
+     "words": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
     },
     {
      "page": "/past",
      "zone": "exit-band",
      "section": "No finished date on our calendar",
-     "words": "Meetup and Discord are the platforms’ own names."
+     "words": "Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
     }
    ],
    "routes": [
@@ -3326,7 +3022,7 @@
      "page": "/",
      "zone": "body",
      "section": "What we take up",
-     "words": ", and every date on the schedule links to the page the club posts its sign-up on."
+     "words": ", and every date we list links to the page the club posts its sign-up on."
     },
     {
      "page": "/dates",
@@ -3361,7 +3057,7 @@
     {
      "page": "/chat",
      "zone": "body",
-     "section": "Summaries from the chat",
+     "section": "The club’s chat",
      "words": "on Discord, opens in a new tab"
     },
     {
@@ -3385,41 +3081,18 @@
      "page": "/",
      "zone": "body",
      "section": "Matheapolis",
-     "words": "Nothing here says what a meeting costs, and no price is printed."
+     "words": "Saturdays at noon for a social, Wednesdays at 6 pm for a study session."
     },
     {
-     "page": "/join",
+     "page": "/dates",
      "zone": "body",
-     "section": "Your first one",
-     "words": "Nothing here says what a meeting costs, and no price is printed."
+     "section": "Dates",
+     "words": "Saturdays at noon for a social, Wednesdays at 6 pm for a study session."
     }
    ],
    "routes": [
     "/",
-    "/join"
-   ],
-   "repeatedOnSamePage": false
-  },
-  {
-   "bar": 0.34,
-   "weakestPair": 1,
-   "fact": [
-    {
-     "page": "/",
-     "zone": "body",
-     "section": "Matheapolis",
-     "words": "Nothing here says whether you must be a member to come, and no rule is kept."
-    },
-    {
-     "page": "/join",
-     "zone": "body",
-     "section": "Your first one",
-     "words": "Nothing here says whether you must be a member to come, and no rule is kept."
-    }
-   ],
-   "routes": [
-    "/",
-    "/join"
+    "/dates"
    ],
    "repeatedOnSamePage": false
   },
@@ -3558,6 +3231,29 @@
    "routes": [
     "/",
     "/chat"
+   ],
+   "repeatedOnSamePage": false
+  },
+  {
+   "bar": 0.34,
+   "weakestPair": 1,
+   "fact": [
+    {
+     "page": "/",
+     "zone": "body",
+     "section": "How it works",
+     "words": "Walk in, find a table, buy a coffee if you want one — that is the rent."
+    },
+    {
+     "page": "/join",
+     "zone": "body",
+     "section": "Your first one",
+     "words": "Walk in, find a table, buy a coffee if you want one — that is the rent."
+    }
+   ],
+   "routes": [
+    "/",
+    "/join"
    ],
    "repeatedOnSamePage": false
   },
@@ -3588,20 +3284,7 @@
   {
    "page": "/",
    "section": "Matheapolis",
-   "words": "Join Our Group",
-   "named": [
-    "join"
-   ],
-   "hrefs": [
-    "/join",
-    "/dates"
-   ],
-   "isLabelItself": true
-  },
-  {
-   "page": "/",
-   "section": "Matheapolis",
-   "words": "See the dates",
+   "words": "All dates",
    "named": [
     "dates"
    ],
@@ -3638,52 +3321,30 @@
   },
   {
    "page": "/",
-   "section": "When we meet",
+   "section": "How it works",
    "words": "All 5 dates",
    "named": [
     "dates"
    ],
    "hrefs": [
     "/dates",
-    "/events.ics"
+    "/events.ics",
+    "/join"
    ],
    "isLabelItself": false
   },
   {
    "page": "/",
-   "section": "When we meet",
+   "section": "How it works",
    "words": "Add to a calendar",
    "named": [
     "calendar"
    ],
    "hrefs": [
-    "/events.ics"
+    "/events.ics",
+    "/join"
    ],
    "isLabelItself": true
-  },
-  {
-   "page": "/",
-   "section": "How it works",
-   "words": "The club's list of members is its Meetup group page, last read 14 days ago — the list is not the room.",
-   "named": [
-    "meetup"
-   ],
-   "hrefs": [
-    "/join"
-   ],
-   "isLabelItself": false
-  },
-  {
-   "page": "/",
-   "section": "How it works",
-   "words": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
-   "named": [
-    "dates"
-   ],
-   "hrefs": [
-    "/join"
-   ],
-   "isLabelItself": false
   },
   {
    "page": "/",
@@ -3761,13 +3422,25 @@
   },
   {
    "page": "/chat",
-   "section": "Summaries from the chat",
-   "words": "Summaries from the chat",
+   "section": "The club’s chat",
+   "words": "The club’s chat",
    "named": [
     "chat"
    ],
    "hrefs": [
     "/chat",
+    "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/chat",
+   "section": "The club’s chat",
+   "words": "The live channel, the threads worth reading, and the dates the club set",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
     "/join"
    ],
    "isLabelItself": false
@@ -3782,7 +3455,7 @@
    "hrefs": [
     "/join"
    ],
-   "isLabelItself": true
+   "isLabelItself": false
   },
   {
    "page": "/dates",
@@ -3809,27 +3482,41 @@
    "isLabelItself": true
   },
   {
-   "page": "/dates",
-   "section": "Social",
-   "words": "lists the ones our own calendar has finished.",
+   "page": "/join",
+   "section": "Join the club",
+   "words": "Join the club",
    "named": [
-    "calendar"
+    "join"
    ],
    "hrefs": [
-    "/past"
+    "/chat",
+    "/join"
    ],
    "isLabelItself": false
   },
   {
    "page": "/join",
-   "section": "Ways in",
-   "words": "Ways in",
+   "section": "Join the club",
+   "words": "Three ways in, and you only need one to start: come to a meeting, read the chat, or follow the club's feeds.",
    "named": [
+    "chat",
     "ways in"
    ],
    "hrefs": [
-    "/chat",
     "/join"
+   ],
+   "isLabelItself": false
+  },
+  {
+   "page": "/join",
+   "section": "What we do",
+   "words": "dates page",
+   "named": [
+    "dates"
+   ],
+   "hrefs": [
+    "/dates",
+    "/dates"
    ],
    "isLabelItself": true
   },
@@ -3844,30 +3531,6 @@
     "/dates"
    ],
    "isLabelItself": true
-  },
-  {
-   "page": "/join",
-   "section": "What we do",
-   "words": "schedule",
-   "named": [
-    "schedule"
-   ],
-   "hrefs": [
-    "/dates"
-   ],
-   "isLabelItself": true
-  },
-  {
-   "page": "/join",
-   "section": "Your first one",
-   "words": "Come and listen if you would rather; no subject is assumed, no background is required, and none of the threads the chat runs is a prerequisite for arriving.",
-   "named": [
-    "chat"
-   ],
-   "hrefs": [
-    "/chat"
-   ],
-   "isLabelItself": false
   },
   {
    "page": "/past",
@@ -3906,6 +3569,6 @@
    "isLabelItself": true
   }
  ],
- "wayfindingProseCount": 26,
+ "wayfindingProseCount": 23,
  "wayfindingProseReal": 14
 }

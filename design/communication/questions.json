@@ -1,8 +1,8 @@
 {
- "measuredAt": "2026-11-16",
+ "measuredAt": "2026-11-17",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-17T02:05:33.014Z",
+ "artifactBuilt": "2026-11-17T10:38:40.568Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -126,7 +126,8 @@
     "/": {
      "status": "answered",
      "forms": [
-      "prose"
+      "prose",
+      "label"
      ],
      "zones": [
       "body"
@@ -172,7 +173,8 @@
     "/dates"
    ],
    "forms": [
-    "prose/body"
+    "prose/body",
+    "label/body"
    ],
    "outsideRoutes": [],
    "outsideCount": 0,
@@ -190,6 +192,22 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
+     "text": "Sign up for Sat, Nov 21",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Sign up for Sat, Nov 21 , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
      "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
      "shape": 1
     },
@@ -198,14 +216,6 @@
      "form": "prose",
      "zone": "body",
      "section": "Dates",
-     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Dates",
      "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
      "shape": 0
     },
@@ -214,7 +224,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Social",
-     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
+     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm Central",
      "shape": 0
     },
     {
@@ -222,7 +232,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Study session",
-     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm",
+     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm Central",
      "shape": 0
     },
     {
@@ -230,7 +240,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Social",
-     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm",
+     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm Central",
      "shape": 0
     },
     {
@@ -238,24 +248,16 @@
      "form": "prose",
      "zone": "body",
      "section": "Study session",
-     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm",
+     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm Central",
      "shape": 0
     },
     {
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Dates",
-     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
-     "shape": 1
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
      "section": "Social",
-     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm",
-     "shape": 1
+     "text": "The club’s dates run from Nov 7, 2026 through Dec 19, 2026.",
+     "shape": 0
     }
    ],
    "declinedEvidence": []
@@ -336,7 +338,7 @@
     "/join",
     "/events.ics"
    ],
-   "outsideCount": 18,
+   "outsideCount": 16,
    "evidence": [
     {
      "route": "/",
@@ -344,14 +346,6 @@
      "zone": "body",
      "section": "Matheapolis",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "shape": 0
-    },
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "body",
-     "section": "How it works",
-     "text": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
      "shape": 0
     },
     {
@@ -371,52 +365,60 @@
      "shape": 1
     },
     {
-     "route": "/",
+     "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "How it works",
-     "text": "Coffee shops, bakeries and breweries in the Twin Cities - always a place where you are allowed to talk over a table.",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Study session",
+     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "The street address printed with each date is the address to give directions to.",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Social",
+     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 1
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
-     "shape": 0
     }
    ],
    "declinedEvidence": []
@@ -425,6 +427,128 @@
    "id": "q04",
    "who": "first-time",
    "ask": "Do I need to bring or prepare anything?",
+   "where": [
+    "/",
+    "/join"
+   ],
+   "verdict": "ANSWERED",
+   "perRoute": {
+    "/": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/404": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/chat": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/dates": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/join": {
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
+    },
+    "/past": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    },
+    "/events.ics": {
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
+    }
+   },
+   "answeredOn": [
+    "/",
+    "/dates",
+    "/join"
+   ],
+   "forms": [
+    "prose/body"
+   ],
+   "outsideRoutes": [
+    "/dates"
+   ],
+   "outsideCount": 1,
+   "evidence": [
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "There is no syllabus, no reading list to keep up with, and no current focus.",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat.",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "How it works",
+     "text": "Bring nothing, prepare nothing, and bring a question if you have one.",
+     "shape": 1
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "There is nothing to prepare and no reading to keep up with.",
+     "shape": 0
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "People work on what they brought, and nobody sets an agenda.",
+     "shape": 0
+    }
+   ],
+   "declinedEvidence": []
+  },
+  {
+   "id": "q05",
+   "who": "first-time",
+   "ask": "What does it cost — is there a cover charge or a fee?",
    "where": [
     "/",
     "/join"
@@ -490,15 +614,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "There is no syllabus, no reading list to keep up with, and no current focus.",
-     "shape": 0
-    },
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "body",
-     "section": "Matheapolis",
-     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat.",
+     "text": "Free.",
      "shape": 0
     },
     {
@@ -506,95 +622,11 @@
      "form": "prose",
      "zone": "body",
      "section": "Your first one",
-     "text": "Nothing to prepare and nothing to read first.",
+     "text": "Free.",
      "shape": 0
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Bring a question; you don't need a field.",
-     "shape": 1
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Come and listen if you would rather; no subject is assumed, no background is required, and none of the threads the chat runs is a prerequisite for arriving.",
-     "shape": 1
     }
    ],
    "declinedEvidence": []
-  },
-  {
-   "id": "q05",
-   "who": "first-time",
-   "ask": "What does it cost — is there a cover charge or a fee?",
-   "where": [
-    "/",
-    "/join"
-   ],
-   "verdict": "DECLINED",
-   "perRoute": {
-    "/": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/404": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/chat": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/dates": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/join": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/past": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    },
-    "/events.ics": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
-    }
-   },
-   "answeredOn": [],
-   "forms": [],
-   "outsideRoutes": [],
-   "outsideCount": 0,
-   "evidence": [],
-   "declinedEvidence": [
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "body",
-     "section": "Matheapolis",
-     "text": "Nothing here says what a meeting costs, and no price is printed."
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Nothing here says what a meeting costs, and no price is printed."
-    }
-   ]
   },
   {
    "id": "q06",
@@ -662,18 +694,18 @@
      "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat."
     },
     {
-     "route": "/events.ics",
-     "form": "ics-line",
-     "zone": "feed",
-     "section": " \\, a puzzle with a strange answer. There is no syllabus\\, no reading to ke",
-     "text": " \\, a puzzle with a strange answer. There is no syllabus\\, no reading to ke"
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Your first one",
+     "text": "People work on what they brought, and nobody sets an agenda."
     },
     {
      "route": "/events.ics",
      "form": "ics-line",
      "zone": "feed",
-     "section": " ep up with and nobody sets an agenda",
-     "text": " ep up with and nobody sets an agenda: people bring what they are curious a"
+     "section": " \\, a puzzle with a strange answer. There is no syllabus\\, no reading to ke",
+     "text": " \\, a puzzle with a strange answer. There is no syllabus\\, no reading to ke"
     }
    ]
   },
@@ -730,10 +762,10 @@
    "evidence": [],
    "declinedEvidence": [
     {
-     "route": "/",
+     "route": "/join",
      "form": "prose",
      "zone": "body",
-     "section": "What we take up",
+     "section": "What we do",
      "text": "Whether the room is your kind of room is not something a page can tell you."
     }
    ]
@@ -792,6 +824,7 @@
      "status": "answered",
      "forms": [
       "prose",
+      "heading",
       "label"
      ],
      "zones": [
@@ -826,7 +859,8 @@
     "prose/body",
     "prose/exit-band",
     "label/body",
-    "label/exit-band"
+    "label/exit-band",
+    "heading/body"
    ],
    "outsideRoutes": [
     "/404",
@@ -841,7 +875,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Join Our Group",
+     "text": "Sign up for Sat, Nov 21",
      "shape": 0
     },
     {
@@ -873,7 +907,7 @@
      "form": "label",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Join Our Group",
+     "text": "Sign up for Sat, Nov 21 , opens in a new tab",
      "shape": 0
     },
     {
@@ -952,7 +986,8 @@
     "/dates": {
      "status": "answered",
      "forms": [
-      "heading"
+      "heading",
+      "prose"
      ],
      "zones": [
       "body"
@@ -1039,6 +1074,14 @@
      "shape": 1
     },
     {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
+     "shape": 2
+    },
+    {
      "route": "/join",
      "form": "prose",
      "zone": "body",
@@ -1065,12 +1108,16 @@
     "/",
     "/join"
    ],
-   "verdict": "DECLINED",
+   "verdict": "ANSWERED",
    "perRoute": {
     "/": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/404": {
      "status": "unanswered",
@@ -1088,9 +1135,13 @@
      "zones": []
     },
     "/join": {
-     "status": "unanswered",
-     "forms": [],
-     "zones": []
+     "status": "answered",
+     "forms": [
+      "prose"
+     ],
+     "zones": [
+      "body"
+     ]
     },
     "/past": {
      "status": "unanswered",
@@ -1103,27 +1154,34 @@
      "zones": []
     }
    },
-   "answeredOn": [],
-   "forms": [],
+   "answeredOn": [
+    "/",
+    "/join"
+   ],
+   "forms": [
+    "prose/body"
+   ],
    "outsideRoutes": [],
    "outsideCount": 0,
-   "evidence": [],
-   "declinedEvidence": [
+   "evidence": [
     {
      "route": "/",
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Nothing here says whether you must be a member to come, and no rule is kept."
+     "text": "No membership needed - you just come.",
+     "shape": 2
     },
     {
      "route": "/join",
      "form": "prose",
      "zone": "body",
      "section": "Your first one",
-     "text": "Nothing here says whether you must be a member to come, and no rule is kept."
+     "text": "No membership needed - you just come.",
+     "shape": 2
     }
-   ]
+   ],
+   "declinedEvidence": []
   },
   {
    "id": "q11",
@@ -1219,7 +1277,7 @@
      "route": "/",
      "form": "href",
      "zone": "body",
-     "section": "When we meet",
+     "section": "How it works",
      "text": "/events.ics",
      "shape": 0
     },
@@ -1385,7 +1443,7 @@
     "/join",
     "/"
    ],
-   "verdict": "DECLINED",
+   "verdict": "UNANSWERED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -1428,15 +1486,7 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": [
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "The club has no front desk and no phone number; the chat is where you ask."
-    }
-   ]
+   "declinedEvidence": []
   },
   {
    "id": "q14",
@@ -1447,7 +1497,8 @@
     "/dates",
     "/chat",
     "/join",
-    "/404"
+    "/404",
+    "/past"
    ],
    "verdict": "ANSWERED",
    "perRoute": {
@@ -1522,10 +1573,8 @@
    "forms": [
     "meta/head"
    ],
-   "outsideRoutes": [
-    "/past"
-   ],
-   "outsideCount": 2,
+   "outsideRoutes": [],
+   "outsideCount": 0,
    "evidence": [
     {
      "route": "/",
@@ -1555,57 +1604,57 @@
      "route": "/404",
      "form": "meta",
      "zone": "head",
-     "section": "og:title",
-     "text": "Matheapolis - a Minneapolis math club",
-     "shape": 0
-    },
-    {
-     "route": "/404",
-     "form": "meta",
-     "zone": "head",
-     "section": "twitter:title",
-     "text": "Matheapolis - a Minneapolis math club",
-     "shape": 0
-    },
-    {
-     "route": "/404",
-     "form": "meta",
-     "zone": "head",
      "section": "title",
      "text": "Page not found - Matheapolis",
-     "shape": 4
+     "shape": 2
     },
     {
-     "route": "/chat",
+     "route": "/404",
      "form": "meta",
      "zone": "head",
      "section": "og:title",
-     "text": "Matheapolis - a Minneapolis math club",
-     "shape": 0
+     "text": "Page not found - Matheapolis",
+     "shape": 2
     },
     {
-     "route": "/chat",
+     "route": "/404",
      "form": "meta",
      "zone": "head",
      "section": "twitter:title",
-     "text": "Matheapolis - a Minneapolis math club",
-     "shape": 0
+     "text": "Page not found - Matheapolis",
+     "shape": 2
     },
     {
      "route": "/chat",
      "form": "meta",
      "zone": "head",
      "section": "title",
-     "text": "Chat - Matheapolis",
-     "shape": 2
+     "text": "Chat - Matheapolis, a Minneapolis math club",
+     "shape": 1
+    },
+    {
+     "route": "/chat",
+     "form": "meta",
+     "zone": "head",
+     "section": "og:title",
+     "text": "Chat - Matheapolis, a Minneapolis math club",
+     "shape": 1
+    },
+    {
+     "route": "/chat",
+     "form": "meta",
+     "zone": "head",
+     "section": "twitter:title",
+     "text": "Chat - Matheapolis, a Minneapolis math club",
+     "shape": 1
     },
     {
      "route": "/dates",
      "form": "meta",
      "zone": "head",
-     "section": "og:title",
-     "text": "Matheapolis - a Minneapolis math club",
-     "shape": 0
+     "section": "title",
+     "text": "Dates - Matheapolis, a Minneapolis math club",
+     "shape": 1
     }
    ],
    "declinedEvidence": []
@@ -1818,7 +1867,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1826,7 +1875,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1834,7 +1883,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261121T120000\r\nDTEND;TZID=America/Chicago:20261121T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261121T120000\r\nDTEND;TZID=America/Chicago:20261121T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1842,7 +1891,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:bccd6c33-c3c1-487f-b52d-887374e79134\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261125T180000\r\nDTEND;TZID=America/Chicago:20261125T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/bccd6c33-c3c1-487f-b52d-887374e79134\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:bccd6c33-c3c1-487f-b52d-887374e79134\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261125T180000\r\nDTEND;TZID=America/Chicago:20261125T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1850,7 +1899,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:ad58ce62-65e3-47c1-9806-74166b7c6808\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261205T120000\r\nDTEND;TZID=America/Chicago:20261205T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/ad58ce62-65e3-47c1-9806-74166b7c6808\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:ad58ce62-65e3-47c1-9806-74166b7c6808\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261205T120000\r\nDTEND;TZID=America/Chicago:20261205T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1858,7 +1907,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:97b75e15-af79-4aa5-a87b-d8938baf1464\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261209T180000\r\nDTEND;TZID=America/Chicago:20261209T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/97b75e15-af79-4aa5-a87b-d8938baf1464\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:97b75e15-af79-4aa5-a87b-d8938baf1464\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261209T180000\r\nDTEND;TZID=America/Chicago:20261209T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1866,7 +1915,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:e69a8833-0c07-41cd-a235-329b369239b7\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261219T120000\r\nDTEND;TZID=America/Chicago:20261219T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/e69a8833-0c07-41cd-a235-329b369239b7\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:e69a8833-0c07-41cd-a235-329b369239b7\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261219T120000\r\nDTEND;TZID=America/Chicago:20261219T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -1922,13 +1971,9 @@
      "zones": []
     },
     "/dates": {
-     "status": "answered",
-     "forms": [
-      "prose"
-     ],
-     "zones": [
-      "body"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/join": {
      "status": "unanswered",
@@ -1955,7 +2000,6 @@
     }
    },
    "answeredOn": [
-    "/dates",
     "/past",
     "/events.ics"
    ],
@@ -1968,14 +2012,6 @@
    ],
    "outsideCount": 2,
    "evidence": [
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Looking for a date that has already passed?",
-     "shape": 1
-    },
     {
      "route": "/past",
      "form": "prose",
@@ -1997,7 +2033,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
      "shape": 3
     },
     {
@@ -2005,7 +2041,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
      "shape": 3
     }
    ],
@@ -2083,32 +2119,64 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Dates",
-     "text": "The calendar file carries the club’s 7 dates from Nov 7, 2026 through Dec 19, 2026.",
+     "section": "Social",
+     "text": "The club’s dates run from Nov 7, 2026 through Dec 19, 2026.",
      "shape": 0
     },
     {
      "route": "/events.ics",
      "form": "ics-line",
      "zone": "feed",
-     "section": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
-     "text": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "section": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
+     "text": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
      "shape": 0
     },
     {
      "route": "/events.ics",
      "form": "ics-line",
      "zone": "feed",
-     "section": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
-     "text": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "section": " her keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, ",
+     "text": " her keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, ",
      "shape": 0
     },
     {
      "route": "/events.ics",
      "form": "ics-line",
      "zone": "feed",
-     "section": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
-     "text": " , 2026 through Dec 19\\, 2026. The club’s chat is where the conversation ",
+     "section": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
+     "text": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " her keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, ",
+     "text": " her keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
+     "text": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " her keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, ",
+     "text": " her keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, ",
+     "shape": 0
+    },
+    {
+     "route": "/events.ics",
+     "form": "ics-line",
+     "zone": "feed",
+     "section": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
+     "text": " bout. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The ",
      "shape": 0
     },
     {
@@ -2116,7 +2184,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:1\r\nDTSTART;TZID=America/Chicago:20261107T120000\r\nDTEND;TZID=America/Chicago:20261107T130000\r\nSUMMARY:MPLS Math Club - Bimonthly Social\r\nSTATUS:CANCELLED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
      "shape": 0
     },
     {
@@ -2124,39 +2192,7 @@
      "form": "ics-event",
      "zone": "feed",
      "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
-     "shape": 0
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-event",
-     "zone": "feed",
-     "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:649bf59a-1989-43c2-b336-46f79ce403b1\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261121T120000\r\nDTEND;TZID=America/Chicago:20261121T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/649bf59a-1989-43c2-b336-46f79ce403b1\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
-     "shape": 0
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-event",
-     "zone": "feed",
-     "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:bccd6c33-c3c1-487f-b52d-887374e79134\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261125T180000\r\nDTEND;TZID=America/Chicago:20261125T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/bccd6c33-c3c1-487f-b52d-887374e79134\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
-     "shape": 0
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-event",
-     "zone": "feed",
-     "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:ad58ce62-65e3-47c1-9806-74166b7c6808\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261205T120000\r\nDTEND;TZID=America/Chicago:20261205T130000\r\nSUMMARY:Matheapolis - Bimonthly Social\r\nSTATUS:CONFIRMED\r\nLOCATION:Angel Food Bakery 8100 Minnetonka Boulevard 55426 Saint Louis Park Minnesota United States\r\nGEO:44.9498412;-93.3824443\r\nDESCRIPTION:Around a table in a coffee shop or a bakery in Minneapolis\\, working through something together — a paper\\, a proof\\, a proof assistant\\, a puzzle with a strange answer. There is no syllabus\\, no reading to keep up with and nobody sets an agenda: people bring what they are curious about. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/ad58ce62-65e3-47c1-9806-74166b7c6808\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/1f54c290ca5eaeb84354d3351f6a00f4e0e079fbe5cd1bb93c51a4423e52c70c.png?name=bimonthly_social.png\r\nEND:VEVENT",
-     "shape": 0
-    },
-    {
-     "route": "/events.ics",
-     "form": "ics-event",
-     "zone": "feed",
-     "section": "VEVENT",
-     "text": "BEGIN:VEVENT\r\nUID:97b75e15-af79-4aa5-a87b-d8938baf1464\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:0\r\nDTSTART;TZID=America/Chicago:20261209T180000\r\nDTEND;TZID=America/Chicago:20261209T200000\r\nSUMMARY:Common Denominator - Study Session\r\nSTATUS:CONFIRMED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The calendar file carries the club’s 7 dates from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://mobilizon.labradorius.com/events/97b75e15-af79-4aa5-a87b-d8938baf1464\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
+     "text": "BEGIN:VEVENT\r\nUID:1605e0e6-aff0-46df-b342-a2e2a19af6e0\r\nDTSTAMP:20261113T170533Z\r\nSEQUENCE:2\r\nDTSTART;TZID=America/Chicago:20261111T180000\r\nDTEND;TZID=America/Chicago:20261111T200000\r\nSUMMARY:Parallel Learning for Mathematical Minds\r\nSTATUS:CANCELLED\r\nLOCATION:Kowalski's Market 5327 Lyndale Avenue South 55419 Minneapolis Minnesota United States\r\nGEO:44.9057455;-93.2878163\r\nDESCRIPTION:Work on your own mathematics while the table works on its own — a textbook\\, a problem set\\, a project you are carrying. Bring your books or notes and your curiosity\\; the point of the room is to help each other keep going. The club’s dates run from Nov 7\\, 2026 through Dec 19\\, 2026. The club’s chat is where the conversation happens: https://discord.com/invite/wx5S7YJSkU\r\nURL:https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/\r\nATTACH;FMTTYPE=image/png:https://mobilizon.labradorius.com/media/0e26aa48943e22b6b77facd39b069b15caeef101a260c3d884d58f039cf7e3ec.png?name=parallel_studies.png\r\nEND:VEVENT",
      "shape": 0
     }
    ],
@@ -2207,13 +2243,9 @@
      "zones": []
     },
     "/join": {
-     "status": "answered",
-     "forms": [
-      "prose"
-     ],
-     "zones": [
-      "body"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/past": {
      "status": "unanswered",
@@ -2229,8 +2261,7 @@
    "answeredOn": [
     "/",
     "/404",
-    "/chat",
-    "/join"
+    "/chat"
    ],
    "forms": [
     "prose/body",
@@ -2238,10 +2269,9 @@
     "heading/body"
    ],
    "outsideRoutes": [
-    "/404",
-    "/join"
+    "/404"
    ],
-   "outsideCount": 3,
+   "outsideCount": 2,
    "evidence": [
     {
      "route": "/",
@@ -2257,14 +2287,6 @@
      "zone": "body",
      "section": "What we take up",
      "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes when the chat changes.",
-     "shape": 0
-    },
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "body",
-     "section": "How it works",
-     "text": "If you would rather hear what is being argued about before you go, the chat invite is below.",
      "shape": 0
     },
     {
@@ -2287,8 +2309,8 @@
      "route": "/chat",
      "form": "prose",
      "zone": "body",
-     "section": "What the club is pulling on",
-     "text": "The threads the home page lists, in full.",
+     "section": "The club’s chat",
+     "text": "The live channel, the threads worth reading, and the dates the club set",
      "shape": 0
     },
     {
@@ -2304,14 +2326,6 @@
      "form": "prose",
      "zone": "body",
      "section": "The chat itself",
-     "text": "The summaries above are the bot's reading of the channel.",
-     "shape": 0
-    },
-    {
-     "route": "/chat",
-     "form": "prose",
-     "zone": "body",
-     "section": "The chat itself",
      "text": "The channel itself is where the club talks — what it is pulling on, what it is arguing about, where and when it is next meeting.",
      "shape": 0
     },
@@ -2319,8 +2333,16 @@
      "route": "/chat",
      "form": "heading",
      "zone": "body",
-     "section": "Summaries from the chat",
-     "text": "Summaries from the chat",
+     "section": "No summary written this week",
+     "text": "No summary written this week",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "heading",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "What the club is pulling on",
      "shape": 0
     }
    ],
@@ -2334,7 +2356,7 @@
     "/chat",
     "/"
    ],
-   "verdict": "ANSWERED",
+   "verdict": "DECLINED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -2347,13 +2369,9 @@
      "zones": []
     },
     "/chat": {
-     "status": "answered",
-     "forms": [
-      "heading"
-     ],
-     "zones": [
-      "body"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/dates": {
      "status": "unanswered",
@@ -2376,25 +2394,20 @@
      "zones": []
     }
    },
-   "answeredOn": [
-    "/chat"
-   ],
-   "forms": [
-    "heading/body"
-   ],
+   "answeredOn": [],
+   "forms": [],
    "outsideRoutes": [],
    "outsideCount": 0,
-   "evidence": [
+   "evidence": [],
+   "declinedEvidence": [
     {
      "route": "/chat",
      "form": "heading",
      "zone": "body",
-     "section": "Summaries from the chat",
-     "text": "Summaries from the chat",
-     "shape": 0
+     "section": "No summary written this week",
+     "text": "No summary written this week"
     }
-   ],
-   "declinedEvidence": []
+   ]
   },
   {
    "id": "q21",
@@ -2722,14 +2735,9 @@
      "zones": []
     },
     "/dates": {
-     "status": "answered",
-     "forms": [
-      "prose",
-      "label"
-     ],
-     "zones": [
-      "body"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/join": {
      "status": "unanswered",
@@ -2752,33 +2760,14 @@
     }
    },
    "answeredOn": [
-    "/dates",
     "/past"
    ],
    "forms": [
-    "prose/body",
-    "label/body",
     "heading/body"
    ],
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Past meetings",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "label",
-     "zone": "body",
-     "section": "Social",
-     "text": "Past meetings",
-     "shape": 0
-    },
     {
      "route": "/past",
      "form": "heading",
@@ -2801,13 +2790,9 @@
    "verdict": "ANSWERED",
    "perRoute": {
     "/": {
-     "status": "answered",
-     "forms": [
-      "prose"
-     ],
-     "zones": [
-      "body"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/404": {
      "status": "unanswered",
@@ -2829,13 +2814,9 @@
      ]
     },
     "/join": {
-     "status": "answered",
-     "forms": [
-      "prose"
-     ],
-     "zones": [
-      "body"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/past": {
      "status": "unanswered",
@@ -2849,40 +2830,20 @@
     }
    },
    "answeredOn": [
-    "/",
-    "/dates",
-    "/join"
+    "/dates"
    ],
    "forms": [
     "prose/body"
    ],
-   "outsideRoutes": [
-    "/join"
-   ],
-   "outsideCount": 1,
+   "outsideRoutes": [],
+   "outsideCount": 0,
    "evidence": [
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "body",
-     "section": "How it works",
-     "text": "Directions go to the street address printed with the date above, and to one per date on the dates page; the club keeps no door of its own, and this site drops no pin.",
-     "shape": 0
-    },
     {
      "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Social",
-     "text": "The address printed with a line is the address to give directions to, and no page here draws a route to it.",
-     "shape": 0
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "Every date names the place it is in and prints its street address, and that address is how you get there: the club meets in coffee shops, bakeries and breweries around the Twin Cities, so there is no single door this site could give directions to.",
+     "text": "The street address printed with each date is the address to give directions to.",
      "shape": 0
     }
    ],
@@ -2980,15 +2941,9 @@
      ]
     },
     "/404": {
-     "status": "chrome only",
-     "forms": [
-      "prose",
-      "label"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/chat": {
      "status": "answered",
@@ -3001,19 +2956,18 @@
      ]
     },
     "/dates": {
-     "status": "chrome only",
+     "status": "answered",
      "forms": [
-      "prose",
-      "label"
+      "prose"
      ],
      "zones": [
-      "nav-chrome",
-      "exit-band"
+      "body"
      ]
     },
     "/join": {
      "status": "answered",
      "forms": [
+      "prose",
       "heading"
      ],
      "zones": [
@@ -3021,15 +2975,9 @@
      ]
     },
     "/past": {
-     "status": "chrome only",
-     "forms": [
-      "prose",
-      "label"
-     ],
-     "zones": [
-      "nav-chrome",
-      "exit-band"
-     ]
+     "status": "unanswered",
+     "forms": [],
+     "zones": []
     },
     "/events.ics": {
      "status": "unanswered",
@@ -3039,64 +2987,23 @@
    },
    "answeredOn": [
     "/",
-    "/404",
     "/chat",
     "/dates",
-    "/join",
-    "/past"
+    "/join"
    ],
    "forms": [
-    "prose/nav-chrome",
-    "prose/exit-band",
     "heading/body",
-    "label/nav-chrome",
-    "label/exit-band",
     "prose/body"
    ],
-   "outsideRoutes": [
-    "/404",
-    "/past"
-   ],
-   "outsideCount": 8,
+   "outsideRoutes": [],
+   "outsideCount": 0,
    "evidence": [
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "nav-chrome",
-     "section": "(no heading above it)",
-     "text": "Ways in",
-     "shape": 0
-    },
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "exit-band",
-     "section": "How it works",
-     "text": "Ways in",
-     "shape": 0
-    },
     {
      "route": "/",
      "form": "heading",
      "zone": "body",
      "section": "What we take up",
      "text": "What we take up",
-     "shape": 0
-    },
-    {
-     "route": "/",
-     "form": "label",
-     "zone": "nav-chrome",
-     "section": "(no heading above it)",
-     "text": "Ways in",
-     "shape": 0
-    },
-    {
-     "route": "/",
-     "form": "label",
-     "zone": "exit-band",
-     "section": "How it works",
-     "text": "Ways in",
      "shape": 0
     },
     {
@@ -3108,35 +3015,43 @@
      "shape": 1
     },
     {
-     "route": "/404",
+     "route": "/chat",
+     "form": "heading",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "What the club is pulling on",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
      "form": "prose",
-     "zone": "nav-chrome",
-     "section": "(no heading above it)",
-     "text": "Ways in",
-     "shape": 0
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Any of them can be dropped mid-sentence, and none of them is a prerequisite for arriving.",
+     "shape": 1
     },
     {
-     "route": "/404",
+     "route": "/dates",
      "form": "prose",
-     "zone": "exit-band",
-     "section": "We could not find that page",
-     "text": "Ways in",
+     "zone": "body",
+     "section": "Dates",
+     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
+     "shape": 2
+    },
+    {
+     "route": "/join",
+     "form": "prose",
+     "zone": "body",
+     "section": "Join the club",
+     "text": "Three ways in, and you only need one to start: come to a meeting, read the chat, or follow the club's feeds.",
      "shape": 0
     },
     {
-     "route": "/404",
-     "form": "label",
-     "zone": "nav-chrome",
-     "section": "(no heading above it)",
-     "text": "Ways in",
-     "shape": 0
-    },
-    {
-     "route": "/404",
-     "form": "label",
-     "zone": "exit-band",
-     "section": "We could not find that page",
-     "text": "Ways in",
+     "route": "/join",
+     "form": "heading",
+     "zone": "body",
+     "section": "What we do",
+     "text": "What we do",
      "shape": 0
     }
    ],
@@ -3293,6 +3208,14 @@
      "route": "/",
      "form": "label",
      "zone": "body",
+     "section": "Matheapolis",
+     "text": "Sign up for Sat, Nov 21 , opens in a new tab",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "label",
+     "zone": "body",
      "section": "What we take up",
      "text": "Meetup , opens in a new tab",
      "shape": 0
@@ -3349,16 +3272,8 @@
      "route": "/chat",
      "form": "label",
      "zone": "body",
-     "section": "Summaries from the chat",
+     "section": "The club’s chat",
      "text": "Join the chat on Discord, opens in a new tab",
-     "shape": 0
-    },
-    {
-     "route": "/chat",
-     "form": "label",
-     "zone": "body",
-     "section": "The bot's reading of the channels",
-     "text": "Discord , opens in a new tab",
      "shape": 0
     },
     {
@@ -3374,17 +3289,6 @@
   }
  ],
  "gaps": [
-  {
-   "id": "q05",
-   "who": "first-time",
-   "ask": "What does it cost — is there a cover charge or a fee?",
-   "verdict": "DECLINED",
-   "where": [
-    "/",
-    "/join"
-   ],
-   "answeredOn": []
-  },
   {
    "id": "q06",
    "who": "first-time",
@@ -3407,23 +3311,23 @@
    "answeredOn": []
   },
   {
-   "id": "q10",
-   "who": "first-time",
-   "ask": "Do I have to be a member to come?",
-   "verdict": "DECLINED",
+   "id": "q13",
+   "who": "phone",
+   "ask": "Does the page hand me something to call or tap more than once?",
+   "verdict": "UNANSWERED",
    "where": [
-    "/",
-    "/join"
+    "/join",
+    "/"
    ],
    "answeredOn": []
   },
   {
-   "id": "q13",
-   "who": "phone",
-   "ask": "Does the page hand me something to call or tap more than once?",
+   "id": "q20",
+   "who": "returning",
+   "ask": "What happened at a meeting I missed?",
    "verdict": "DECLINED",
    "where": [
-    "/join",
+    "/chat",
     "/"
    ],
    "answeredOn": []
@@ -3431,11 +3335,11 @@
  ],
  "counts": {
   "questions": 29,
-  "ANSWERED": 23,
-  "DECLINED": 5,
+  "ANSWERED": 24,
+  "DECLINED": 3,
   "ANSWERED-IN-CHROME": 0,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 0,
+  "UNANSWERED": 1,
   "NOT-ASKED": 1
  }
 }
