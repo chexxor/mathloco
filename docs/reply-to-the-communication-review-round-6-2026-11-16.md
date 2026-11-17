@@ -45,8 +45,13 @@ intent rather than its literal instruction (rows C3 and S2), and both say so in 
 
 ## 2. The inventory — every line item, once
 
-35 rows: the letter's five Move tables carry 9 (Home) + 8 (`/dates`) + 8 (`/join`) + 5 (`/chat`) + 5 (Site-wide,
-the feed, the 404). Row ids are this reply's, in the letter's own order. **Verdicts:** `landed` (the copy or the
+34 rows answer the letter's **35** line items: its five Move tables carry **10** (Home) + 8 (`/dates`) + **7**
+(`/join`) + 5 (`/chat`) + 5 (Site-wide, the feed, the 404) @measured 2026-11-17 by counting the blockquoted `**Remove**`
+/ `**Revise**` / `**Add**` / `**Keep**` rows under each table heading in this doc. The reply's own ids read H1–H9 (9),
+D1–D8 (8), J1–J7 (7), C1–C5 (5), S1–S5 (5) @measured 2026-11-17 by counting the ids in this section, and the mapping
+is one-to-one **except H9**, which answers the letter's last two Home Adds — "Three lines: what happens when you walk
+in…" and "One number about the room…" — in one row, because both landed in one section of the page (**D420** corrects
+this header: it used to read 9 + 8 + 8 + 5 + 5, which mis-counted Home low and `/join` high, and claimed 35 rows). **Verdicts:** `landed` (the copy or the
 state shipped), `landed + gate` (the invariant that keeps it shipped changed in the same commit), `took the
 letter's alternative` (the letter offered a second option and that option shipped), `declined with evidence`
 (the item is a ruling, with the probe and the trigger that ships it), `kept` (the letter said keep, and nothing
@@ -84,7 +89,7 @@ touched it).
 | C4 | `/chat` / Revise — "H1 'Summaries from the chat'… The page is named for a thing that isn't on it" | landed + gate — H1 is now "The club's chat", named for what the page holds; the lede names the three things it carries (**D411**'s rename, shipped with the state in **D409**) | `src/pages/chat.astro`, `src/layouts/Layout.astro` | `check:naming`, `check:copy` |
 | C5 | `/chat` / Revise — "The illustration caption: 'drawn for this site in the plates' line language: ink hairlines, no fills. Not a scan of a book.'" | landed + gate — the caption keeps the provenance and loses the **thread name quoted inside it**; the demotion was already shipped as a small caption under the figure, and the repetition is what made the line read as part of the list (**D412**) | `src/components/ThreadFigure.astro` | `check:line-art` |
 | S1 | Feed / Remove — "From `events.ics`: 'The calendar file carries the club's 7 dates from Nov 7, 2026 through Dec 19, 2026.'" | landed + gate — same generated sentence as D1: the fact (the window the file reaches) stays inside the file because a subscriber holds bare `DTSTART`s; the framing and the count leave (**D399**). `grep "calendar file carries" dist/client/events.ics` prints 0 | `src/lib/ics.mjs`, `src/lib/event-description.mjs` | `check:ics` — `feed-meta-commentary` with 2 plantings and 2 clean controls, 45 plantings 0 undetected @measured 2026-11-17 |
-| S2 | Feed / Revise — "The feed's `URL` field points to `mobilizon.labradorius.com` while every row on `/dates` points to Meetup" | took neither literal option, and says so — the letter offered "make the feed's URL the Meetup event URL" or "name Mobilizon on `/dates`". Naming a platform on `/dates` reintroduces the "platform the site never mentions" one surface over, and a Meetup event URL is not always in this snapshot. `feedUrl()` is a **lookup** resolved through the same resolver the pages use, so the URL a subscriber follows is the club's own page for that date, and `check:ics` re-runs that lookup instead of remembering a URL (**D398**) | `src/lib/ics.mjs`, `src/lib/rsvp.mjs` | `check:ics` gained `feed-url-shape` (plantings both directions: a URL reverted to the source platform's, folded through the renderer's own `contentLine`; and a row whose URL was dropped) |
+| S2 | Feed / Revise — "The feed's `URL` field points to `mobilizon.labradorius.com` while every row on `/dates` points to Meetup" | landed + gate — the letter's **first** literal option is what ships today, and the mechanism is the lookup rather than a typed URL. `feedUrl()` resolves a row through the same resolver the pages use and returns the club's own Meetup event page for **6 of 7** rows, and `null` for the cancelled row, whose source page stays because the club holds no open page for a meeting it retired @measured 2026-11-17 by running the lookup over `publishableRows(data.events)` against `data/meetup-events.json`; the built feed agrees — **6** `URL:` lines under `meetup.com` and **1** under `mobilizon.labradorius.com` in `dist/client/events.ics` @measured 2026-11-17 by `grep -c`. The letter's second option (name Mobilizon on `/dates`) did not ship: a platform named there is a surface the site never mentions, which is the defect one level up. `check:ics`'s `feed-url-shape` re-runs the renderer's own lookup rather than remembering a URL (**D398**; the row's earlier wording said "took neither literal option", which is what **D420** corrects) | `src/lib/ics.mjs`, `src/lib/rsvp.mjs` | `check:ics` gained `feed-url-shape` (plantings both directions: a URL reverted to the source platform's, folded through the renderer's own `contentLine`; and a row whose URL was dropped) |
 | S3 | Site-wide / Revise — "Nav: three labels plus the chip… `/past` is reachable only from a line at the bottom of `/dates`, i.e. it is an orphan that exists to be found and disappoint" | landed + gate — the chip stays (the letter called it excellent), the nav gains **no** fourth label, and the orphan's only door is deleted with D404's trigger, so the orphan and the empty shelf are one ruling (**D404**, same letter as D3) | `src/pages/dates.astro`, `src/components/Navigation.astro` | `check:site-host`, `design/link-ceiling.mjs` |
 | S4 | Site-wide / Keep — "The 404… 'Everything we have sits behind one of these links.' Don't touch it." | kept — `git log --format="%h %s" staging..HEAD -- src/pages/404.astro` prints **nothing**: the round touched no line of the 404 page. The artifact still prints "Everything we have sits behind one of these links." | none | none — `check:page-exit` and the band rules cover it unchanged |
 | S5 | Site-wide / Add — "Page titles with the category and the city… `Dates — Matheapolis, a Minneapolis math club`" | landed + gate — every page's title names the page, the site and the city, and `og:title` mirrors the **page** title instead of one site-wide string (**D396**). Artifact: `Dates - Matheapolis, a Minneapolis math club`, `Join the club - …`, `Chat - …` | `src/layouts/Layout.astro`, `src/config.json` | `check:copy`, `check:copy:selftest`, `check:site-host` (the canonical/og/twitter tag set) |
@@ -158,15 +163,16 @@ The peer table's twelve dimensions are the letter's own ranking, and each now ha
 
 ## 6. The gate changes this round made, and the decision that justifies each
 
-Every row below changed an invariant in the **same commit** as the copy that made it stale, and each ships with
-plantings in each direction so the rule is a detector and not an assertion. Run them to see it:
+Every row below names the invariant the round moved and the commit that carried it, **as the history shows it** —
+where that is not the commit that shipped the copy, the row says so rather than dressing the pair up as one change.
+Each ships with plantings in each direction, so the rule is a detector and not an assertion. Run them to see it:
 
 | gate | what the round added | plantings @measured 2026-11-17 | decision |
 |---|---|---|---|
 | `check:page-exit` | refuses a band nav carrying a path the page's own nav printed above the body | 14 cases, 0 wrong — planting in each direction plus a clean control that the band's identity line to `/` is not a repeat | **D407**, with **D395**'s copy |
 | `check:row-geometry` | the zone word opens every venue group, keyed off a re-derived `data-venue-key` handle | 23 cases, 0 wrong (two venue groups each opening with the word, two dates at one venue naming it once) | **D397** |
 | `check:ics` | `feed-url-shape` (re-runs the renderer's own `feedUrl()`) and `feed-meta-commentary` | 45 plantings, 0 undetected, 2 of them clean controls for the new rules | **D398**, **D399** |
-| `check:rsvp-page` | `COUNT_RE` catches spelled-out numbers as well as digits, exempted only inside a sourced slot | shipped with the headcount in the same commit | **D385** |
+| `check:rsvp-page` | `COUNT_RE` catches spelled-out numbers as well as digits, exempted only inside a sourced slot | **not one commit**: the headcount shipped in `fe1bb9b` (HeroSection and `content.json`), and the rule moved in `31aae87` — three commits later @measured 2026-11-17 by `git log --format=%h -6 -- scripts/check-rsvp-page.mjs` and `git show 31aae87:scripts/check-rsvp-page.mjs` carrying `SPELL_RE` while `git show fe1bb9b:scripts/check-rsvp-page.mjs` carries none. So a spelled headcount reached the page with no detector for three commits; **D406** is the rule and **D420** is the correction of the claim that they landed together | **D385**, **D406**, **D420** |
 | `check:copy` | the legal line is a band rule, and the page titles name page + site + city | shipped with the colophon and the titles | **D394**, **D396** |
 | `check-rsvp` / `check-join-page` | the door order is **read** from `CHANNEL_KINDS` rather than re-typed | canonical order derived from the list | **D391** |
 | `check-content` | `draft-claim-uncorrectable`: an operator-granted slot must carry a `correction` path and an `asOf`, and the slots print as the ledger | 25 cases, 0 wrong — the plant is the shipped `cost` slot carrying only the grant as its source, and the clean control is the same slot carrying `asOf` and `correction` @measured 2026-11-17 by `npm run check:content:selftest` | **S053**, **D415** |
@@ -211,3 +217,21 @@ gates that moved are copy gates and route gates rather than render gates.
 - **MS32** — the meeting photograph (both clauses of its trigger, in one letter).
 - **MS25/MS27** — the OG engraving crop, the N1 series names, the mobile date chip, and the bot-credentials
   half of C7.
+
+## 9. What this reply corrects in its own records and in the tracked prose
+
+Four claims this round wrote were contradicted by the history or by the artifact, and each is corrected **in the
+commit that contradicts it** (the standing rule), not left standing. Read this section before quoting the ones above.
+
+| the claim, as first written | what the command prints | where the corrected text lives |
+|---|---|---|
+| §2 said "35 rows… 9 (Home) + 8 + 8 + 5 + 5" | the letter's five Move tables carry **10 + 8 + 7 + 5 + 5 = 35 items**; this reply's ids read **9 + 8 + 7 + 5 + 5 = 34 rows**, with H9 carrying two Home Adds | §2's header, rewritten above the table |
+| §2's S2 row said the feed "took neither literal option" | `feedUrl()` resolves **6 of 7** rows to the club's own Meetup event page and `null` for the cancelled row, so the built `dist/client/events.ics` carries **6** `meetup.com` URL lines and **1** `mobilizon.labradorius.com` line — the letter's **first** option shipped | §2's S2 row, rewritten |
+| §6 said the spelled-headcount rule "shipped with the headcount in the same commit" | the headcount landed in `fe1bb9b`; `SPELL_RE` appears first in `scripts/check-rsvp-page.mjs` at `31aae87`, three commits later — `git show fe1bb9b:scripts/check-rsvp-page.mjs` carries **0** occurrences and `git show 31aae87:` carries **2** | §6's `check:rsvp-page` row, rewritten to name both commits and the window |
+| `MILESTONES.md`'s MS33 row said the plan row and the projection row landed in the same commit | `.notes/` is **gitignored** (`.gitignore:62`), so no commit can carry the plan row; the verifiable half is that `MILESTONES.md`'s MS33 row landed in `e8015a5` with the two docs, and `check:plan` fails the projection and the host-local plan row disagreeing | `MILESTONES.md`'s MS33 exit-gate cell, reworded to name the tracked half and the gate that binds the untracked half |
+
+**The lesson that generalises (**D420**, ruling **S054**):** a claim about *what shipped* is checked against the built
+artifact, and a claim about *which commit carried a change* is checked against `git log --format=%h -- <path>` and
+`git show <sha>:<path>`, **before** it is written into a doc. Both classes hide behind prose that reads as though it
+were measured — and both were cheap to catch (one `git show`, one `grep -c`), which is why the correction is in a
+section of its own rather than folded quietly back into the rows that a reader has already trusted.

@@ -422,5 +422,7 @@ and a renumber silently re-points every one of them at a different decision.
 - **D416** (2026-11-16) — `check:tables` takes the round's two docs into its `FILES`, because in them a table row **is** the contract: a row that loses a cell loses the line item it was mapping (round-6 communication review, the reply's inventory and claims ledger, 2026-11-16; `reversible` — two entries in a `FILES` list; Linux native, Node 24.22.1, `npm run check:tables`, `npm run check:tables:selftest`)
 - **D417** (2026-11-17) — all three cost baselines re-frozen from one quiet run, and `AGENTS.md`'s set figures corrected in the same commit (round-6 clock-out, 2026-11-17; `reversible` — a baseline is a bar, and re-freezing one is one command)
 - **D418** (2026-11-17) — a cited measurement names the **command** that produces it, because a gate set's own run rewrites the tracked record beside it (round-6 clock-out, 2026-11-17; `reversible` — one clause in a doc and one row in the register)
+- **D419** (2026-11-17) — a claim about **what shipped** is read off the built artifact before it is written, because a mechanism and an outcome are not interchangeable (round-6 communication review, the reply's §2 row S2, corrected 2026-11-17; `reversible` — one row of prose in a tracked doc; Linux native, Node 24.22.1)
+- **D420** (2026-11-17) — a claim about **which commit carried a change**, a **count across docs**, or a **same-commit pair**, is checked against `git log`/`git show` and against the counted tables **before** it is written (round-6 clock-out, 2026-11-17; `reversible` — four records corrected; Linux native, Node 24.22.1)
 
-Defined: 414 (D1-D418). Unused ids: D315, D400, D401, D402.
+Defined: 416 (D1-D420). Unused ids: D315, D400, D401, D402.
