@@ -118,9 +118,15 @@ const items = threads();
       <div class="text-center">
         <h2 class="text-heading font-bold text-ink mb-4">The chat itself</h2>
         <p class="text-lede leading-prose text-ink-2 mb-6 max-w-measure mx-auto">
-          The summaries above are the bot's reading of the channel. The channel itself is where the club
-          talks — what it is pulling on, what it is arguing about, where and when it is next meeting. The
-          invite is the button below.
+          {/* Round-6 review's own residue (2026-11-16, D414): this sentence used to open by claiming that
+              summaries sit above. D409 replaced the heading over a void with a warm state that says there is
+              none written this week, so the claim went false in the same round that changed what sits above
+              it — the class D387 polices, the site talking about itself where a reader is deciding whether
+              to join a channel. The clause is deleted rather than reworded, because the server-rendered
+              branch cannot know whether a summary exists and a hedge would be the site describing its own
+              uncertainty. The two clauses that survive are facts this page shows. */}
+          The channel itself is where the club talks — what it is pulling on, what it is arguing about,
+          where and when it is next meeting. The invite is the button below.
         </p>
         <a
           href={DISCORD_URL}
