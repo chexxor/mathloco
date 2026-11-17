@@ -206,8 +206,8 @@ const DEPLOY = [
   // rebrand defect no other gate sees (D261): robots.txt named the apex being retired while the sitemap
   // itself was correct.
   { name: 'check:site-host', desc: 'the artifact names one host about itself: robots, sitemap locs, canonical, og, twitter', needs: ['build'] },
-  { name: 'check:content', desc: 'no placeholder, no unsourced claim, no fabricated number ships', needs: ['build'] },
-  { name: 'check:content:selftest', desc: 'the content gate can still fail', needs: ['build'] },
+  { name: 'check:content', desc: 'no placeholder, no unsourced claim, no fabricated number, no uncorrectable operator-granted draft ships', needs: ['build'] },
+  { name: 'check:content:selftest', desc: 'the content gate can still fail (25 cases incl. D415\u2019s draft-claim planting and its clean control)', needs: ['build'] },
   // What shipped on /schedule: `club\u2019s` painted literally, at every width, through a green `verify`.
   // This reads the bytes a reader sees (page text, `<meta>`, and the attributes a screen reader speaks) plus
   // the rendered-text context of every `.astro`/`.svelte` source, because the same bytes are correct inside a

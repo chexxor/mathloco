@@ -107,18 +107,21 @@
     "value": "Free.",
     "source": "operator grant, 2026-11-16 (D381): the round-6 review's draft line shipped on the operator's word - 'All ~40 items, including anything needing a fact about the club' - and the operator's own letter of 2026-11-16 says the copy 'is a draft, and we can correct errors when you are complete'. No source in this tree states a price, so the grant IS the source, and `docs/reply-to-the-communication-review-round-6-2026-11-16.md` carries this sentence in its claims ledger",
     "asOf": "2026-11-16",
+    "correction": "docs/reply-to-the-communication-review-round-6-2026-11-16.md §4 ledger C1 — the operator corrects this claim by editing this value; the row stays to record what was shipped and when",
     "note": "History, so a later session does not re-derive it: D376 shipped a refusal ('Nothing here says what a meeting costs, and no price is printed') because no source in the tree carried the answer, and the round-6 review called that sentence 'the worst paragraph on the site' - it converts an unasked question into an anxious one. The operator granted the answer, which supersedes D376's content while keeping its mechanism: the value is data here, not markup, so the operator's word can replace it from a phone without touching a component. `answers()` in src/lib/content.ts renders it on `/` and `/join`. It is a DRAFT CLAIM: correct it by editing this value, and the claims ledger row for it in the reply doc is where the correction path is written. Nothing here is an age-bearing date on a page: `check:dated-surfaces` still names `/dates` and `/past` as the only surfaces that print a calendar date."
   },
   "membershipRule": {
     "value": "No membership needed - you just come.",
     "source": "operator grant, 2026-11-16 (D381): the round-6 review's draft line shipped on the operator's word, the same grant that covers `cost` above; no source in this tree states a rule for arriving",
     "asOf": "2026-11-16",
+    "correction": "docs/reply-to-the-communication-review-round-6-2026-11-16.md §4 ledger C2 — the operator corrects this claim by editing this value",
     "note": "Supersedes D377's content, not its mechanism: the value is here so the operator's word replaces it without a component edit. Distinct from `membership` above, which is the member LIST (its tally stays off the page under D276); this slot is the rule for arriving, the question a first-time visitor asks between 'when' and 'how do I get in'. DRAFT CLAIM - the correction path is the ledger row in the reply doc. The hyphen is an en dash because DESIGN.md's type rule pairs clauses with one; `check:escapes` reads the built bytes, so a stray escape here would show up as a build failure rather than a typo."
   },
   "turnout": {
     "value": "Usually six to twelve people at a table.",
     "source": "operator grant, 2026-11-16 (D385): the round-6 review asked for one number about the room and the operator granted the figure as draft copy; the club has no attendance record in this tree",
     "asOf": "2026-11-16",
+    "correction": "docs/reply-to-the-communication-review-round-6-2026-11-16.md §4 ledger C3 — the operator corrects this claim by editing this value; keep the sentence in the slot, since check:rsvp-page exempts a spelled-out count only inside a sourced slot",
     "note": "This is the site's first painted headcount, and D265's rule is that a headcount may reach a page only from a slot carrying a source and an asOf date. `scripts/check-rsvp-page.mjs` was changed in the same commit that shipped this sentence: its `COUNT_RE` now catches spelled-out numbers as well as digits, and a match is exempted only when it sits inside the span of a value that this file sources. That is the whole invariant - a count of people on a page must be a grounded claim, not a leftover from a third-party snapshot (D136's random member count is the defect this rule was born from). DRAFT CLAIM: replace `value` with the operator's number and the gate needs no change."
   },
   "photos": {

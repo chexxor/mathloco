@@ -30,7 +30,9 @@
 // retired fabricated string; a cadence word with no `source` beside it, or one whose word the source does
 // not name (D301); `Math.random()` in copy generation;
 // an internal link to a route the build does not emit; a cross-surface near-duplicate sentence that
-// `design/copy-duplicates.json` does not already record (see the rule block above the scanner).
+// `design/copy-duplicates.json` does not already record (see the rule block above the scanner);
+// a slot whose `source` is an **operator grant** — a draft, not a fact this tree can read — and which
+// carries no `asOf` or no `correction` naming where the operator's hand corrects it (D415).
 //
 // What is REPORTED, not failed: the open placeholder slots in `src/content.json` — the operator's punch
 // list (photographs, the venue line, the member count and its source, the calendar source from D132) — and
@@ -38,7 +40,7 @@
 // the operator has not filled yet is the "make the build fail so someone notices" answer they rejected
 // (record 0010).
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs';
-import { openSlots, unsourcedSlots } from '../src/lib/content-slots.mjs';
+import { openSlots, unsourcedSlots, draftSlots } from '../src/lib/content-slots.mjs';
 import { cadenceWords, sourceNamesWord } from '../src/lib/cadence.mjs';
 import { join, resolve } from 'node:path';
 
@@ -285,7 +287,7 @@ function scanPage(html, file, emitted, distDir) {
     const raw = m[1].split('#')[0].split('?')[0];
     if (!raw.startsWith('/')) continue;
     const path = raw.replace(/\/$/, '') || '/';
-    const onDisk = existsSync(resolve(distDir, '.' + raw));
+    const onDisk = existsSync(resolve(distDir, `.${raw}`));
     if (!onDisk && !emitted.includes(path) && !emitted.some((r) => r !== '/' && path.startsWith(`${r}/`))) {
       fails.push({ rule: 'dead-path', file, detail: `href="${m[1]}" — no emitted route and no file behind it (emits ${emitted.join(', ')})` });
     }
@@ -321,7 +323,7 @@ function checkConfig(trackedJson, builtHtml) {
       .map((m) => /content="([^"]*)"/i.exec(m[0])?.[1] ?? '')
       .filter(Boolean)
       .join(' ');
-    for (const [w, n] of cadenceWords(visibleText(html) + ' ' + meta)) {
+    for (const [w, n] of cadenceWords(`${visibleText(html)} ${meta}`)) {
       cadenceHits.set(w, (cadenceHits.get(w) ?? 0) + n);
     }
   }
@@ -347,7 +349,25 @@ function checkConfig(trackedJson, builtHtml) {
       });
     }
   }
-  return { fails, warns, cadenceHits, cadenceSource: source };
+  /* D415 — a draft claim has to be correctable. The operator's grant of 2026-11-16 (S052) said the
+   *  copy is a draft and "we can correct errors when you are complete", which makes a sentence about
+   *  the club legal to ship before anything in this tree grounds it. "the ledger is prose" is only a
+   *  promise until the claim carries its own way back: a slot whose source IS the grant must name the
+   *  day the word was true (`asOf`) and the place the correction is made (`correction`), or a later
+   *  session reads "Free." as a fact about the club with no hand to correct it. The rule is on the
+   *  slot, not on the doc: the ledger can be written and the slot left unmarked, and the slot is what
+   *  the next build paints. */
+  const drafts = draftSlots(trackedJson);
+  for (const d of drafts) {
+    const missing = [!d.asOf && '`asOf` (the day the word was true)', !d.correction && '`correction` (where the operator corrects it)'].filter(Boolean);
+    if (!missing.length) continue;
+    fails.push({
+      rule: 'draft-claim-uncorrectable',
+      file: 'src/content.json',
+      detail: `draft claim ${d.path} = "${d.value}" shipped on an operator grant (${d.source.slice(0, 72)}…) and missing ${missing.join(' and ')} — to the next session an unmarked draft reads as a fact about the club (D415)`,
+    });
+  }
+  return { fails, warns, cadenceHits, cadenceSource: source, drafts };
 }
 
 /** The operator's punch list: which facts are still holes, and what each hole is waiting for. The walks
@@ -372,7 +392,7 @@ function run(distDir, srcDir, tracked) {
     ...cfg.fails,
     ...dup.fails,
   ];
-  return { fails, built, cadenceHits: cfg.cadenceHits, emitted, dupOpens: dup.opens, dupFurniture: dup.furniture, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
+  return { fails, built, cadenceHits: cfg.cadenceHits, drafts: cfg.drafts, emitted, dupOpens: dup.opens, dupFurniture: dup.furniture, staleBaseline: (baseline.pairs || []).filter((p) => !dup.opens.concat(dup.fails).some((d) => d.signature === p.signature)) };
 }
 
 // ---- selftest: can this gate fail? (D118 — a gate whose failure mode is a green line is no gate) ----
@@ -382,6 +402,22 @@ if (selftest) {
   mkdirSync(`${FIX}/clean`, { recursive: true });
   const clean = `<html><body><a href="/chat">chat</a><p>Dates are set in the club Discord and posted on Meetup.</p></body></html>`;
   const plants = [
+    // D415's defect class, planted from the bytes that actually shipped on 2026-11-16: the operator
+    // granted a fact about the club so a seat could answer the reviewer, and the slot's `source` IS
+    // that grant. A draft with no `asOf` and no `correction` is indistinguishable from a fact to the
+    // next session, which is the failure this round exists to prevent — so it is planted, not prose.
+    {
+      name: 'draft-claim-uncorrectable', rule: 'draft-claim-uncorrectable',
+      tracked: { cadence: { source: 'operator ruling, 2026-10-31' }, photos: { placeholders: false }, cost: { value: 'Free.', source: 'operator grant, 2026-11-16 (D381): the round-6 review asked what a meeting costs and the operator granted the answer as draft copy' } },
+      html: clean,
+    },
+    // The control: the same draft, dated and pointed at the hand that corrects it, is green. Without
+    // this the rule drifts into "no slot may name an operator grant", which would refuse the round.
+    {
+      name: 'draft-claim-correctable', rule: 'draft-claim-uncorrectable', negative: true,
+      tracked: { cadence: { source: 'operator ruling, 2026-10-31' }, photos: { placeholders: false }, cost: { value: 'Free.', source: 'operator grant, 2026-11-16 (D381): the round-6 review asked what a meeting costs and the operator granted the answer as draft copy', asOf: '2026-11-16', correction: 'docs/reply-to-the-communication-review-round-6-2026-11-16.md §4 ledger C1' } },
+      html: clean,
+    },
     { name: 'bracket', html: clean.replace('</body>', '<p>at [VENUE NAME]</p></body>') },
     { name: 'placeholder-fill', html: clean.replace('</body>', '<div data-placeholder="PS-1"></div></body>') },
     { name: 'retired-fabrication', html: clean.replace('</body>', '<p>Local Library - Study Room B</p></body>') },
@@ -545,7 +581,7 @@ if (!existsSync(distDir)) {
   process.exit(1);
 }
 
-const { fails, built, cadenceHits, dupOpens, dupFurniture, staleBaseline } = run(distDir, srcDir, tracked);
+const { fails, built, cadenceHits, drafts, dupOpens, dupFurniture, staleBaseline } = run(distDir, srcDir, tracked);
 
 // `--print-baseline` is a paste helper, not a write. A baseline row means "this repeat is known and ruled", and an
 // gate that can write its own exemptions is a gate that eventually has none.
@@ -561,7 +597,16 @@ if (cadenceHits.size) {
   const src = tracked.cadence?.source ?? '';
   const named = [...cadenceHits.keys()].filter((w) => sourceNamesWord(src, w));
   const unnamed = [...cadenceHits].filter(([w]) => !sourceNamesWord(src, w));
-  console.log(`  cadence words in what a visitor reads: ${[...cadenceHits].map(([w, n]) => `${w} x${n}`).join(', ')} — source: ${src ? src.slice(0, 72) + '…' : 'NONE (that is a failure)'}${src ? ` — names: ${named.join(', ') || 'none of them'}` : ''}${unnamed.length ? ` — NOT NAMED: ${unnamed.map(([w, n]) => `${w} x${n}`).join(', ')} (that is a failure, D301)` : ''}`);
+  const srcLabel = src ? `${src.slice(0, 72)}…` : 'NONE (that is a failure)';
+  console.log(`  cadence words in what a visitor reads: ${[...cadenceHits].map(([w, n]) => `${w} x${n}`).join(', ')} — source: ${srcLabel}${src ? ` — names: ${named.join(', ') || 'none of them'}` : ''}${unnamed.length ? ` — NOT NAMED: ${unnamed.map(([w, n]) => `${w} x${n}`).join(', ')} (that is a failure, D301)` : ''}`);
+}
+
+// D415's ledger, printed every run: every painted draft, the grant that let it ship, and where the
+// operator's correction lands. This is the artifact the round's objective asks for — a later session
+// reading this block cannot mistake a granted draft for a grounded fact.
+if (drafts.length) {
+  console.log(`\n  draft claims shipped on an operator grant (${drafts.length}) — NOT facts this tree can read; the operator corrects each by editing the slot's \`value\`:`);
+  for (const d of drafts) console.log(`   # ${d.path}: "${d.value}" — granted ${d.source.slice(0, 88)}… asOf ${d.asOf ?? 'MISSING'} — correct at ${d.correction ?? 'MISSING (that is a failure, D415)'}`);
 }
 
 const holes = openSlots(tracked);
@@ -595,5 +640,5 @@ if (fails.length) {
   console.log('review-only state is in an artifact that carries the apex triggers.');
   process.exit(1);
 }
-console.log(`\nNo placeholder, no fabricated number, no dead path, no unsourced cadence and no new near-duplicate sentence in the built pages.`);
+console.log(`\nNo placeholder, no fabricated number, no dead path, no unsourced cadence, no uncorrectable draft claim and no new near-duplicate sentence in the built pages.`);
 console.log(`Run \`npm run check:content:selftest\` to see that these checks can still fail.`);

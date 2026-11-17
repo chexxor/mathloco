@@ -40,6 +40,37 @@ export const openSlots = (c) => {
   return out;
 };
 
+/** Every claim the tree states **on an operator grant** — the words the operator let a seat ship as a
+ *  draft, not a fact this tree can read (D381, D385: round-6 copy the reviewer asked for and the operator
+ *  granted: "All ~40 items, including anything needing a fact about the club"… "It's a draft, and we can
+ *  correct errors when you are complete"). A source that IS the grant still has to be correctable, so a
+ *  draft slot carries `asOf` (the day the word was true) and `correction` (where the operator's correction
+ *  is made). `check:content`'s `draft-claim-uncorrectable` rule is what turns "the ledger is prose" into
+ *  an invariant: a painted draft with no path back to its author's hand fails the build (D415). */
+export const draftSlots = (c) => {
+  const out = [];
+  const GRANT = /^\s*operator grant\b/i;
+  const walk = (v, path, granted, correction) => {
+    if (isObj(v)) {
+      const own = typeof v.source === 'string' && v.source !== '' ? v.source : null;
+      const g = own && GRANT.test(own) ? own : granted;
+      const corr = typeof v.correction === 'string' && v.correction !== '' ? v.correction : correction;
+      if (typeof v.value === 'string' && v.value !== '' && g) {
+        out.push({
+          path,
+          value: v.value,
+          source: g,
+          asOf: typeof v.asOf === 'string' && v.asOf !== '' ? v.asOf : null,
+          correction: corr,
+        });
+      }
+      for (const [k, child] of Object.entries(v)) if (!k.startsWith('_')) walk(child, path ? `${path}.${k}` : k, g, corr);
+    } else if (Array.isArray(v)) v.forEach((child, i) => walk(child, `${path}[${i}]`, granted, correction));
+  };
+  walk(c, '', null, null);
+  return out;
+};
+
 /** Every claim the tree states that cannot name a source at or above itself. */
 export const unsourcedSlots = (c) => {
   const out = [];
