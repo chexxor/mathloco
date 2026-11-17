@@ -164,7 +164,7 @@ const QUESTIONS = [
     anyOf: [[/what we take up|what the club is pulling on|ways in\b|what we do\b/i],
             [/dropped mid-sentence|threads that are open/i]] },
 
-  { id: 'q28', who: 'assistive-tech', ask: 'What does the mark the wordmark carries mean?', where: ['/', '/dates', '/chat', '/join', '/404'],
+  { id: 'q28', who: 'assistive-tech', ask: 'What does the mark the wordmark carries mean?', where: ['/', '/dates', '/chat', '/join', '/404'], onlyIf: /∑/u,
     anyOf: [[/∑ (is|means)|the mark means|wordmark means|sigma\b|an equator and a pole/i]] },
 
   { id: 'q29', who: 'assistive-tech', ask: 'Does a link that leaves the site say so?', where: ['/', '/dates', '/chat', '/join', '/404'], formsIn: ['label'],
@@ -248,6 +248,18 @@ function matchIn(carriers, alt, allowed) {
 }
 
 function judge(q) {
+  // A question about a thing no route carries is not a gap: the `∑` wordmark mark went on 2026-11-16
+  // (S050/D379), and a probe that still asks about it reports a closed item as an open gap forever — the
+  // instrument and the artifact out of step in silence, the class D371 named. `onlyIf` names the needle the
+  // page must still carry for the question to be a question at all.
+  if (q.onlyIf && !pages.some((p) => p.carriers.some((c) => q.onlyIf.test(c.text)))) {
+    return {
+      id: q.id, who: q.who, ask: q.ask, where: q.where, verdict: 'NOT-ASKED',
+      perRoute: Object.fromEntries(ROUTES.map((r) => [r, { status: 'not asked', forms: [], zones: [] }])),
+      answeredOn: [], forms: [], outsideRoutes: [], outsideCount: 0, evidence: [], declinedEvidence: [],
+      reason: `no route carries ${String(q.onlyIf)} — the thing the question asks about is no longer on the site`,
+    };
+  }
   const allowed = new Set(q.formsIn ?? []);
   const answers = [];
   for (const p of pages) for (const alt of q.anyOf) {
@@ -294,7 +306,7 @@ function judge(q) {
 }
 
 const results = QUESTIONS.map(judge);
-const gaps = results.filter((r) => r.verdict !== 'ANSWERED');
+const gaps = results.filter((r) => r.verdict !== 'ANSWERED' && r.verdict !== 'NOT-ASKED');
 
 // The share card, counted rather than remembered: how many distinct descriptions do the built pages carry?
 const cardPerRoute = {};
@@ -319,6 +331,7 @@ const report = {
     'ANSWERED-IN-CHROME': results.filter((r) => r.verdict === 'ANSWERED-IN-CHROME').length,
     'ANSWERED-ELSEWHERE': results.filter((r) => r.verdict === 'ANSWERED-ELSEWHERE').length,
     UNANSWERED: results.filter((r) => r.verdict === 'UNANSWERED').length,
+    'NOT-ASKED': results.filter((r) => r.verdict === 'NOT-ASKED').length,
   },
 };
 mkdirSync(dirname(OUT), { recursive: true });
@@ -326,13 +339,13 @@ writeFileSync(OUT, `${JSON.stringify(report, null, 1)}\n`);
 
 // ---------------------------------------------------------------- printed
 console.log(`visitor questions — ${ROOT} (built ${report.artifactBuilt}, ${report.artifactFresh ? 'fresh' : 'STALE'}), measured ${report.measuredAt}`);
-console.log(`${report.counts.questions} questions across ${report.visitorClasses.length} visitor classes · ${report.routes.length} surfaces: ${report.counts.ANSWERED} answered where asked · ${report.counts['ANSWERED-IN-CHROME']} only in chrome · ${report.counts['ANSWERED-ELSEWHERE']} only off-page · ${report.counts.DECLINED} declined in the open · ${report.counts.UNANSWERED} unanswered`);
+console.log(`${report.counts.questions} questions across ${report.visitorClasses.length} visitor classes · ${report.routes.length} surfaces: ${report.counts.ANSWERED} answered where asked · ${report.counts['ANSWERED-IN-CHROME']} only in chrome · ${report.counts['ANSWERED-ELSEWHERE']} only off-page · ${report.counts.DECLINED} declined in the open · ${report.counts.UNANSWERED} unanswered · ${report.counts['NOT-ASKED']} about a thing no route carries any more`);
 console.log(`share card: ${metaDistinct} distinct og:description across ${Object.keys(cardPerRoute).length} built routes\n`);
 
 if (!argv.includes('--json')) {
   for (const r of results) {
     console.log(`${r.id} ${r.who}: ${r.ask}`);
-    console.log(`  belongs on ${r.where.join(' ')} — verdict ${r.verdict}`);
+    console.log(`  belongs on ${r.where.join(' ')} — verdict ${r.verdict}${r.reason ? ` (${r.reason})` : ''}`);
     for (const route of ROUTES) {
       const s = r.perRoute[route];
       let label = 'not asked';

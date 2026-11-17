@@ -427,8 +427,10 @@ it freshness.
   - **Targets**: band path links pad to 32px like the nav; a link inside a sentence keeps its 24px line
     box, and the gate floor for any band target is 24px.
   - **Identity, not a locator**: the club name in `text-body` serif at every width, never a display step
-    (D112 — the display step belongs to a screen's locator, never to a punchline), with the ∑ glyph inline
-    at the size of the word beside it, `accent-on-ink`, `aria-hidden`, and **static**.
+    (D112 — the display step belongs to a screen's locator, never to a punchline), and the identity is the
+    word alone: the `∑` summand went on 2026-11-16 under **S050/D379** (the operator's word: a fun unique
+    thing, out of place on a page now designed), before which it sat inline at the size of the word beside
+    it, `accent-on-ink`, `aria-hidden`, and **static**.
   - **Small print** carries place, date, and the facts the map above it needs qualifying — the calendar
     clause (round-5 communication read A5, D369) and one clause of attribution (D366, restated under
     "Attribution is one static line"). It carried place and date only until those two landed; no frequency
@@ -448,7 +450,8 @@ it freshness.
   boundary is not (D117). The mark is the club's own name — `Matheapolis` since the 2026-11-07 rename, `MPLS Math Club`
   before it — in `font-body` at the `text-body` step, ink, no accent: the old accent-coloured `Math` inside the mark depended on
   "Math" being a word inside the mark, and a coined single word has no word boundary to colour. (The `∑` summand
-  stays, and only on the ink band, where `accent-on-ink` is the hue the contrast oracle allows.) It is the home path, and
+  went on 2026-11-16 under **S050/D379**; until then it sat only on the ink band, where `accent-on-ink` is the hue the
+  contrast oracle allows, and never in the nav, where the row has no room for it — see the nav-fit arithmetic below.) It is the home path, and
   its `aria-label` carries the name. D100 rejected a 13px target, so do
   not shave the padding.
 - **The label set is the mark plus `Dates`, `Chat` and `Ways in`.** `Schedule` and `Members` were dropped on

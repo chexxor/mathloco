@@ -134,17 +134,23 @@ const year = new Date().getFullYear();
       Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.
     </p>
 
-    <!-- Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
-         because the club's name is carried by the face (D95/D100). The summand is the club's own glyph,
-         set inline at the size of the word beside it, in accent-on-ink (5.69), and NOT read aloud — it is
-         punctuation here, not a word. -->
+    {/* Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
+         because the club's name is carried by the face (D95/D100), and the identity is the WORD alone.
+         This is a server-side comment, not an HTML one: an HTML comment in a component ships to every
+         page (measured here — an HTML comment of this length added 384 characters to all six routes),
+         and the prose below is for the reader of the source, never for the visitor. The summand glyph
+         went on 2026-11-16 (S050/D379): the operator's word on it is that it was a fun unique thing,
+         out of place on a page this round has now designed — a mark no route explains is the site
+         claiming something about itself that it cannot ground, the same rule D112 already paid for the
+         display step (a locator's step, never a punchline). Nothing here swaps the accent, changes the
+         size, or adds another mark; the identity line stays the home path (D100). */}
     <p class="mt-8 font-body text-body font-bold">
       <a
         href='/'
         aria-label="Matheapolis, home"
         class='py-1 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
-        Matheapolis <span aria-hidden="true" class="text-accent-on-ink">∑</span>
+        Matheapolis
       </a>
     </p>
 

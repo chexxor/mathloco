@@ -7,10 +7,10 @@
  "pages": [
   {
    "route": "/",
-   "bytes": 26829,
+   "bytes": 26417,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 60,
+    "exit-band": 59,
     "body": 489
    },
    "bodySentences": 46,
@@ -122,7 +122,7 @@
     },
     {
      "href": "/",
-     "label": "Matheapolis ∑",
+     "label": "Matheapolis",
      "zone": "exit-band"
     }
    ],
@@ -164,7 +164,7 @@
      "n": 2,
      "labels": [
       "Matheapolis",
-      "Matheapolis ∑"
+      "Matheapolis"
      ],
      "zones": [
       "nav-chrome",
@@ -641,12 +641,6 @@
     {
      "zone": "exit-band",
      "section": "How it works",
-     "text": "∑",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "How it works",
      "text": "Minneapolis, Minnesota",
      "heading": false
     },
@@ -666,10 +660,10 @@
   },
   {
    "route": "/404",
-   "bytes": 15646,
+   "bytes": 15234,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 60,
+    "exit-band": 59,
     "body": 65
    },
    "bodySentences": 11,
@@ -758,7 +752,7 @@
     },
     {
      "href": "/",
-     "label": "Matheapolis ∑",
+     "label": "Matheapolis",
      "zone": "exit-band"
     }
    ],
@@ -769,7 +763,7 @@
      "labels": [
       "Matheapolis",
       "Back to the home page",
-      "Matheapolis ∑"
+      "Matheapolis"
      ],
      "zones": [
       "nav-chrome",
@@ -1017,12 +1011,6 @@
     {
      "zone": "exit-band",
      "section": "We could not find that page",
-     "text": "∑",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "We could not find that page",
      "text": "Minneapolis, Minnesota",
      "heading": false
     },
@@ -1042,10 +1030,10 @@
   },
   {
    "route": "/chat",
-   "bytes": 26015,
+   "bytes": 25603,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 60,
+    "exit-band": 59,
     "body": 293
    },
    "bodySentences": 35,
@@ -1132,7 +1120,7 @@
     },
     {
      "href": "/",
-     "label": "Matheapolis ∑",
+     "label": "Matheapolis",
      "zone": "exit-band"
     }
    ],
@@ -1158,7 +1146,7 @@
      "n": 2,
      "labels": [
       "Matheapolis",
-      "Matheapolis ∑"
+      "Matheapolis"
      ],
      "zones": [
       "nav-chrome",
@@ -1551,12 +1539,6 @@
     {
      "zone": "exit-band",
      "section": "The chat itself",
-     "text": "∑",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "The chat itself",
      "text": "Minneapolis, Minnesota",
      "heading": false
     },
@@ -1576,10 +1558,10 @@
   },
   {
    "route": "/dates",
-   "bytes": 37207,
+   "bytes": 36795,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 60,
+    "exit-band": 59,
     "body": 285
    },
    "bodySentences": 48,
@@ -1693,7 +1675,7 @@
     },
     {
      "href": "/",
-     "label": "Matheapolis ∑",
+     "label": "Matheapolis",
      "zone": "exit-band"
     }
    ],
@@ -1723,7 +1705,7 @@
      "n": 2,
      "labels": [
       "Matheapolis",
-      "Matheapolis ∑"
+      "Matheapolis"
      ],
      "zones": [
       "nav-chrome",
@@ -2228,12 +2210,6 @@
     {
      "zone": "exit-band",
      "section": "Social",
-     "text": "∑",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Social",
      "text": "Minneapolis, Minnesota",
      "heading": false
     },
@@ -2253,10 +2229,10 @@
   },
   {
    "route": "/join",
-   "bytes": 20263,
+   "bytes": 19851,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 60,
+    "exit-band": 59,
     "body": 379
    },
    "bodySentences": 33,
@@ -2360,7 +2336,7 @@
     },
     {
      "href": "/",
-     "label": "Matheapolis ∑",
+     "label": "Matheapolis",
      "zone": "exit-band"
     }
    ],
@@ -2400,7 +2376,7 @@
      "n": 2,
      "labels": [
       "Matheapolis",
-      "Matheapolis ∑"
+      "Matheapolis"
      ],
      "zones": [
       "nav-chrome",
@@ -2793,12 +2769,6 @@
     {
      "zone": "exit-band",
      "section": "Your first one",
-     "text": "∑",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "Your first one",
      "text": "Minneapolis, Minnesota",
      "heading": false
     },
@@ -2818,10 +2788,10 @@
   },
   {
    "route": "/past",
-   "bytes": 15376,
+   "bytes": 14964,
    "words": {
     "nav-chrome": 7,
-    "exit-band": 60,
+    "exit-band": 59,
     "body": 74
    },
    "bodySentences": 9,
@@ -2901,7 +2871,7 @@
     },
     {
      "href": "/",
-     "label": "Matheapolis ∑",
+     "label": "Matheapolis",
      "zone": "exit-band"
     }
    ],
@@ -2925,7 +2895,7 @@
      "n": 2,
      "labels": [
       "Matheapolis",
-      "Matheapolis ∑"
+      "Matheapolis"
      ],
      "zones": [
       "nav-chrome",
@@ -3145,12 +3115,6 @@
      "zone": "exit-band",
      "section": "No finished date on our calendar",
      "text": "Matheapolis",
-     "heading": false
-    },
-    {
-     "zone": "exit-band",
-     "section": "No finished date on our calendar",
-     "text": "∑",
      "heading": false
     },
     {

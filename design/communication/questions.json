@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-16",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-17T00:04:59.942Z",
+ "artifactBuilt": "2026-11-17T02:05:33.014Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -3153,40 +3153,40 @@
     "/join",
     "/404"
    ],
-   "verdict": "UNANSWERED",
+   "verdict": "NOT-ASKED",
    "perRoute": {
     "/": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     },
     "/404": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     },
     "/chat": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     },
     "/dates": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     },
     "/join": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     },
     "/past": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     },
     "/events.ics": {
-     "status": "unanswered",
+     "status": "not asked",
      "forms": [],
      "zones": []
     }
@@ -3196,7 +3196,8 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": []
+   "declinedEvidence": [],
+   "reason": "no route carries /∑/u — the thing the question asks about is no longer on the site"
   },
   {
    "id": "q29",
@@ -3426,20 +3427,6 @@
     "/"
    ],
    "answeredOn": []
-  },
-  {
-   "id": "q28",
-   "who": "assistive-tech",
-   "ask": "What does the mark the wordmark carries mean?",
-   "verdict": "UNANSWERED",
-   "where": [
-    "/",
-    "/dates",
-    "/chat",
-    "/join",
-    "/404"
-   ],
-   "answeredOn": []
   }
  ],
  "counts": {
@@ -3448,6 +3435,7 @@
   "DECLINED": 5,
   "ANSWERED-IN-CHROME": 0,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 1
+  "UNANSWERED": 0,
+  "NOT-ASKED": 1
  }
 }
