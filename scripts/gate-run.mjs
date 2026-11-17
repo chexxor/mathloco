@@ -113,13 +113,13 @@ const DEPLOY = [
   // The descriptor is one phrase in three files (`const locator`, `seo.title`, the page `<Layout title>`), and the
   // tree sat 2-of-3 for a day with every gate green. Reads source, so it runs before `build` (D118's rule).
   { name: 'check:copy', desc: 'the club descriptor: three slots, one phrase, no superseded form, no date' },
-  { name: 'check:copy:selftest', desc: 'the copy gate can still fail (9 plantings, each into a fixture copy)' },
+  { name: 'check:copy:selftest', desc: 'the copy gate can still fail (10 plantings, each into a fixture copy)' },
   // `check:ics` reads `dist/client/events.ics` (scripts/check-ics.mjs:31-32), so it belongs in the artifact
   // wave. It was scheduled before `build` @measured 2026-11-12: a fresh clone - CI, or anyone's first checkout -
   // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step
   // in the wave passed. The selftest plants in-memory clones of the committed snapshot, so it needs nothing.
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, and the reach the file states about itself (D371)', needs: ['build'] },
-  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (40 plantings, each named @measured 2026-11-16 by `node scripts/check-ics.mjs --selftest`)' },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (45 plantings, each named @measured 2026-11-17 by `node scripts/check-ics.mjs --selftest`)' },
   // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
   // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
@@ -132,7 +132,7 @@ const DEPLOY = [
   // guild event painted as a sign-up path, an event page swapped for the bare invite, stale Meetup and Discord
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
-  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (55 plantings each named, plus 2 clean controls that must pass: the resolver-agrees page, and a past row on a date the harvest made and that finished)' },
+  { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (57 plantings each named, plus 4 clean controls that must pass: the resolver-agrees page, a past row on a date the harvest made and that finished, the sourced turnout slot painted in its own words, and a tally that lives only in a shipped comment)' },
   // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a mark. Keyed
   // on anything that outlives a render - a path, a counter - a warm process answers every request after the
   // first with `<use>` refs and no symbols: three empty 16px boxes @measured 2026-11-13 by
@@ -155,7 +155,7 @@ const DEPLOY = [
   // The band half of D115 ("at most one dark band per screen, and the band is the site's EXIT") was only ever
   // half-checked: `check:render` counts dark regions on a page that HAS a band and never asked whether a page
   // has one. In-memory fixtures, so before `build` (D118). Cost @measured 2026-11-14 by this step: 0.20s.
-  { name: 'check:page-exit:selftest', desc: 'the page-exit gate can still fail (7 cases: no band, a band on the wrong ground, a band with no paths, a band with one path, plus two clean controls and a swapped-class control)' },
+  { name: 'check:page-exit:selftest', desc: 'the page-exit gate can still fail (14 cases: no band, a band on the wrong ground, a band with no paths, a band with one path, a band whose nav repeats a path the page\u2019s own nav carries (D407), plus six clean controls incl. the swapped-class band, the band nav carrying only what the page nav does not, and the band\u2019s identity link to / which is not a nav repeat)' },
   // One page, one name (2026-11-14, the commissioned UX read's finding 1, D309). `/schedule` answered to five
   // names depending on where the visitor stood: nav "Dates", title "Schedule", h1 "When We Meet", band
   // "Schedule", homepage button "View Schedule". Every one is fine alone; together they are an alias map the
@@ -218,7 +218,7 @@ const DEPLOY = [
   { name: 'check:schedule-window', desc: '/dates prints exactly the windowed dates the rule module lists, in order, and names what it left out', needs: ['build'] },
   // The other end of the RSVP rule: `check:rsvp` proves the inputs, this proves the bytes. Recomputes each
   // cluster from `signUpPaths()` and fails a painted page that disagrees with the resolver (D272).
-  { name: 'check:rsvp-page', desc: 'every printed date carries one sign-up cluster, and that cluster matches what signUpPaths() returns for it against both event snapshots; no headcount is painted', needs: ['build'] },
+  { name: 'check:rsvp-page', desc: 'every printed date carries one sign-up cluster, and that cluster matches what signUpPaths() returns for it against both event snapshots; no headcount is painted on the page, in digits or in words, that src/content.json does not source (D265, D406)', needs: ['build'] },
   // The page half of the join rule (S033, D303): every channel the resolver lists is painted on /join, in
   // canonical order, under a heading for its kind, at a URL its platform can have, with a stamp under 60 days;
   // nothing is painted that the resolver does not have. It reads `dist/`, so it waits for `build` (D118).
@@ -233,7 +233,7 @@ const DEPLOY = [
   // The artifact half of the same rule: every route the build emits (read off `dist/`, never remembered, D117)
   // closes with the band, on the ratified ground, offering at least two paths out. It reads `dist/`, so it waits
   // for `build` (D118). Cost @measured 2026-11-14 by this step: 0.21s.
-  { name: 'check:page-exit', desc: 'every page the build emits ends with the exit band on the ink ground and at least two paths out — /chat, /join and /404 included', needs: ['build'] },
+  { name: 'check:page-exit', desc: 'every page the build emits ends with the exit band on the ink ground, offers at least two paths out, links home, and its band nav never repeats a path the page\u2019s own nav already carries (D407)', needs: ['build'] },
   // The name surfaces of every emitted page: the nav label is the chosen name, and the <title>, the exit-band
   // link and the page's own opening block have to say it too (D309). Routes are read off `dist/`, never
   // remembered (D117). It also prints an alias census - every other label the artifact attaches to an internal
@@ -283,8 +283,8 @@ const DEPLOY = [
   // measured 0.455 em per serif character (32em = ~70 @measured 2026-11-14 by
   // `node design/line-length.mjs /schedule 1240 1024 640 320 --no-build`). Selftest is in-memory (D118).
   // Cost @measured 2026-11-14 by this step: 0.03s selftest, 0.05s gate.
-  { name: 'check:row-geometry:selftest', desc: 'the row-geometry gate can still fail (17 cases: 11 plantings — head deleted, prose uncapped, date sentence after the title, plate before the copy, measure token gone, cap widened to 60em, cap cut to 12em, the <time> wrapper gone, the <time> value disagreeing with data-date, the zone word missing, the zone word on the second row, the zone repeated — plus 5 clean controls and the parser assertion that a shipped row parses as one row)' },
-  { name: 'check:row-geometry', desc: 'every date row in the artifact is three zones in order — leaf, copy (head + capped prose + cluster), plate — the date sentence in the head above the title and wrapped in <time datetime> matching the row’s data-date, the zone named once per page on the first row only, and the emitted --container-measure inside DESIGN.md’s 40-75 character band (D313, D327)', needs: ['build'] },
+  { name: 'check:row-geometry:selftest', desc: 'the row-geometry gate can still fail (23 cases: 17 plantings — head deleted, prose uncapped, date sentence after the title, plate before the copy, measure token gone, cap widened to 60em, cap cut to 12em, the <time> wrapper gone, the <time> value disagreeing with data-date, the zone word missing, the zone word on the second row, the zone repeated, a second venue group starting without the word, a dated row losing its venue handle, a handle naming a room the row never prints — plus 5 clean controls (incl. two venue groups each opening with the word, and two dates at one venue naming it once) and the parser assertion that a shipped row parses as one row)' },
+  { name: 'check:row-geometry', desc: 'every date row in the artifact is two zones in order — the date rail and a copy zone (head above the title, capped prose, one primary link) with no plate painted — the date sentence wrapped in <time datetime> matching the row’s data-date, the zone word opening each venue group rather than each page (D397, supersedes D327) off a grounded data-venue-key handle, and the emitted --container-measure inside DESIGN.md’s 40-75 character band (D313, D327, D397)', needs: ['build'] },
   // The artifact side of the promise gate: it opens the built pages, so it waits for `build` (D118).
   { name: "check:rsvp-promise", desc: "the platforms MS12's row promises are exactly the platforms the config declares and the built pages paint, in the plan and in the tracked projection alike", needs: ['build'] },
   // Report-only, not a correctness gate (D253): Tailwind v4 scans every tracked file, so a class name

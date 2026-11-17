@@ -53,31 +53,15 @@ const year = new Date().getFullYear();
       aria-label="Where to next"
       class="flex flex-wrap items-center gap-x-6 gap-y-2"
     >
-      <!-- 2026-11-14 (D309): the band says the word the nav says. This link used to read "Schedule"
-           while the nav read "Dates", which is the alias defect `check:naming` now fails: the band is the
-           site's map, and two names for one page is a map with two entries for one place. -->
-      <a
-        href='/dates'
-        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
-      >
-        Dates
-      </a>
-      <a
-        href='/chat'
-        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
-      >
-        Chat
-      </a>
-      <a
-        href='/join'
-        class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
-      >
-        Ways in
-      </a>
-      <!-- The feed was the one path the site's own map did not carry: /events.ics appeared on `/schedule`
-           and on the homepage, and nowhere in the band every page ends with (2026-11-14, the commissioned
-           read's footer finding). It is an internal file, so it wears the band's own text colour, not a
-           path hue — the `--color-path-*-*-on-ink` steps mark paths that LEAVE the site. -->
+      {/* Round-6 review (2026-11-16), `/dates`/Remove: "the footer nav that repeats the header nav verbatim"
+          (D395). Dates, Chat and Ways in are deleted from the band rather than reworded: every page the build
+          emits carries those three paths in its own nav at the top, so the band printed the same three hrefs a
+          second time on every route - 3 anchors × 5 routes - while the body of the page already offers them.
+          What the band keeps is what only the band carries: the feed, and the two platform exits. The pair of
+          rules that makes this safe lives in `scripts/check-page-exit.mjs`: the band still needs two paths out,
+          and a new rule `exit-band-nav-repeat` fails a band that starts repeating the header nav again.
+          D309's band-name-drift rule in `check:naming` is untouched; with these links gone it is simply never
+          asked. The band's identity line (`href="/"`) is not part of this nav, so the page still links home. */}
       <a
         href='/events.ics'
         class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
@@ -166,20 +150,18 @@ const year = new Date().getFullYear();
          to do the naming is what gets a site into an argument. If a mark ever comes back it is the official
          file, unmodified, in clearspace, next to the name it stands for (design/records/0013).
 
-         The line is ONE clause, not the pair (round-5 communication read A2, 2026-11-16, D366). The two legal
-         sentences used to print here, and the band ends every emitted page, so one fact pair printed TEN
-         statements: the round priced that at 160px and 18 gzip octets a page, and the per-route measurement
-         is retrievable at `git show 5dc58f4:design/communication/price.json` (clusters #1 and #2 — 19 · 19 ·
-         17 · 19 and 26 · 27 · 25 · 26 octets on /404, /chat, /join, /schedule). A reader met the same
-         disclaimer on `/404`, which needs none. Against the artifact this commit ships, `node design/communication-census.mjs`
-         prints ONE cluster of 5 statements for the band's copy and `node design/communication-price.mjs`
-         prices deleting this clause at 20 · 17 · 15 · 19 octets: 5 statements of the fact a reader needs
-         beside two platform names, with the full pair once on the page that talks about the platforms.
-         The clause shares only `meetup` and `discord` with either full sentence — under check:content's
-         floor of 3 shared content words — so it needed no signature in design/copy-duplicates.json, and
-         the gate confirms it: 0 new near-duplicate rows over the 5 built pages. -->
+         The line is the whole legal sentence, in the colophon (round-6 review, 2026-11-16, D394, superseding
+         D366's split). D366 had put a short clause here and the full pair on `/join`; the reviewer's
+         complaint was a legal line sitting in the body of the page a visitor has just decided to come to, which
+         is the peak-end rule the same round applied to the room sentence — the last thing read was the coldest
+         thing said. What ships now is one sentence, in the band, and the band is the only place it prints:
+         it appears on all six emitted pages @measured 2026-11-17 by counting the sentence across `dist/client`,
+         and the wording change costs 71 raw octets a page (121 against D366's 50), 426 across the artifact —
+         the same probe before this round's copy changes, and `git grep "not sponsored" HEAD -- src` returns
+         nothing, which is what says the `/join` half of D366's split had already left the tree. -->
     <p class="mt-1 text-micro max-w-measure">
-      Meetup and Discord are the platforms’ own names.
+      Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or
+      endorsed by either.
     </p>
   </div>
 </footer>

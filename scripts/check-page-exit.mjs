@@ -37,6 +37,13 @@ const OPEN_TAG = /<footer\b[^>]*>/;
 const BAND_ANY = /<footer\b[\s\S]*?<\/footer>/;
 const isRatifiedBand = (tag) => /\bbg-ink\b/.test(tag) && /\btext-band-text\b/.test(tag);
 const PATHS_IN = (band) => [...band.matchAll(/<a\b[^>]*href=["']([^"']+)["']/g)];
+/** A `<nav>` element and its contents. Two of these matter on every page: the one the header paints above
+ *  the body, and the one the exit band paints below it. D407 (round-6 review, 2026-11-16, `/dates`/Remove:
+ *  "the footer nav that repeats the header nav verbatim") is the rule that keeps the second from being a
+ *  copy of the first, and the comparison is between the two navs rather than between the band and the page -
+ *  the band's identity line (`href="/"`) is a paragraph, not this nav, and `/` is the wordmark's path as
+ *  well, so a band-to-page comparison would forbid the site's own name at the foot of every page. */
+const NAV_BLOCK = /<nav\b[\s\S]*?<\/nav>/g;
 // `href="/"` in any form: bare, trailing slash, or with a fragment. The round-3 read (§1, criterion 1) asked
 // for proof that every page links home, and the way to make that proof permanent is a gate, not a curl.
 const HOME_LINK = /<a\b[^>]*href=["']\/(?:#[^"']*)?["']/;
@@ -67,6 +74,21 @@ export const pageExitFindings = (pages) => {
         detail: `${route}'s band offers ${paths.length} path(s) out. D115: the band is the site's exit, so it must offer the paths — the band that used to sit here was a sentence with zero links and a pulsing glyph.`,
       });
     }
+    // D407 (round-6 review, `/dates`/Remove: "the footer nav that repeats the header nav verbatim"). The band
+    // is the site's **exit**: it carries what only the band carries — the feed, and the two platform doors. A
+    // path the page's own nav already printed above the body is the same link twice on one screen, which is
+    // what the letter called "doubles the link count to no benefit and competes with the body's single action";
+    // the copy round deleted the three internal links the band repeated (D395), and this rule is what makes
+    // the deletion an invariant rather than one edit a later session can undo by hand.
+    const bandNavHrefs = new Set([...band[0].matchAll(NAV_BLOCK)].flatMap((n) => PATHS_IN(n[0]).map((a) => a[1])));
+    const pageNavHrefs = new Set([...html.replace(band[0], '').matchAll(NAV_BLOCK)].flatMap((n) => PATHS_IN(n[0]).map((a) => a[1])));
+    const dups = [...bandNavHrefs].filter((href) => pageNavHrefs.has(href));
+    if (dups.length) {
+      fails.push({
+        rule: 'exit-band-nav-repeat',
+        detail: `${route}'s exit band repeats ${dups.join(', ')} — a path the page's own nav already carries above the body (D407): the band is the site's exit and carries what only it carries, so a band nav that copies the header nav doubles the link count and competes with the body's one action.`,
+      });
+    }
     // (S043, round-3 read §1 criterion 1) A page the build emits must link to `/` somewhere in the served HTML,
     // in the JS-off branch, before any island runs. The nav's wordmark and the band's identity line are the two
     // paths home; if either is ever deleted the page becomes a dead end for a reader with JavaScript off, and
@@ -83,6 +105,7 @@ export const pageExitFindings = (pages) => {
 
 if (selftest) {
   const band = (links) => `<footer class="bg-ink text-band-text">${links.map((l) => `<a href="${l}">${l}</a>`).join('')}</footer>`;
+  const bandNav = (links) => `<footer class="bg-ink text-band-text"><nav aria-label="Where to next">${links.map((l) => `<a href="${l}">${l}</a>`).join('')}</nav></footer>`;
   const bandOn = (ground, links) => `<footer class="${ground}">${links.map((l) => `<a href="${l}">${l}</a>`).join('')}</footer>`;
   const page = (body) => `<html><body>${body}</body></html>`;
   const cases = [
@@ -97,6 +120,9 @@ if (selftest) {
     { name: 'a page whose only internal link is to itself', pages: [{ route: '/join', html: page(`<main><a href="/join">Ways in</a></main>${band(['/schedule', '/chat'])}`) }], want: ['page-no-home-path'] },
     { name: 'clean control: the band may carry external paths too', pages: [{ route: '/', html: page(`<nav><a href="/">Matheapolis</a></nav>${band(['/schedule', 'https://www.meetup.com/x', 'https://discord.com/invite/y'])}`) }], want: [] },
     { name: 'clean control: the bare wordmark link counts as home', pages: [{ route: '/404', html: page(`<header><a href="/" aria-label="Matheapolis, home">Matheapolis</a></header>${band(['/schedule', '/chat'])}`) }], want: [] },
+    { name: 'clean control: the band nav carries only what the page nav does not', pages: [{ route: '/dates', html: page(`<nav><a href="/">Matheapolis</a><a href="/dates">Dates</a><a href="/chat">Chat</a></nav><main>x</main>${bandNav(['/events.ics', 'https://www.meetup.com/x'])}`) }], want: [] },
+    { name: 'a band nav repeating a path the page nav already carries', pages: [{ route: '/dates', html: page(`<nav><a href="/">Matheapolis</a><a href="/dates">Dates</a></nav><main>x</main>${bandNav(['/dates', '/events.ics'])}`) }], want: ['exit-band-nav-repeat'] },
+    { name: 'clean control: the band\u2019s identity line to / is not the nav, so / is not a repeat', pages: [{ route: '/', html: page(`<nav><a href="/">Matheapolis</a><a href="/dates">Dates</a></nav><main>x</main>${bandNav(['/events.ics', 'https://www.meetup.com/x'])}<p><a href="/">Matheapolis</a></p>`) }], want: [] },
   ];
   let bad = 0;
   for (const c of cases) {

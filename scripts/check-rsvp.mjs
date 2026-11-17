@@ -234,10 +234,15 @@ if (selftest) {
   // worth planting here are the ones a page cannot check for itself: the canonical kind order, no dead row
   // for a platform the config left empty, and an internal rsvp row that never pretends to be an external URL.
   const joinCases = [
+    // D391 (round-6 review, `/join`/Revise: order the doors by ascending commitment). The expectation is
+    // **derived from `CHANNEL_KINDS`**, not pinned to one order: the invariant is that the rows come out in
+    // the order the shared list declares, and that list is a copy decision the round changed. A literal
+    // `'social,social,rsvp,chat'` here would have made a correct copy change go red (D264's rule: one list
+    // owns the order, and a gate that re-types it is the drift it exists to prevent).
     {
       name: 'join channels paint the kinds in canonical order',
       want: () => joinChannels({ meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/g' }).map((c) => c.kind).join(','),
-      expect: 'social,social,rsvp,chat',
+      expect: (() => { const ch = joinChannels({ meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/g' }); return CHANNEL_KINDS.flatMap((k) => ch.filter((c) => c.kind === k).map((c) => c.kind)).join(','); })(),
     },
     {
       name: 'a platform the config leaves empty paints no row',

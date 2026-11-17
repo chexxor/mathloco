@@ -634,7 +634,11 @@ export const joinChannels = (urls = {}) => {
       // audit, twice). What IS provable is what the schedule carries, which is also what the row sends you to:
       // every date, and whatever the club has posted for it. It still names the platform, so the reader knows
       // what they are choosing, and `check:join` compares this clause with the painted bytes byte for byte.
-      gives: 'The schedule lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.',
+      // Round-6 review (2026-11-16), `/join`/Revise terminology: the site called this page `the schedule`
+      // here while the nav chip said `Dates`, which is the alias D309 forbids on the four navigated surfaces
+      // wearing into prose. The word is now the nav's own word (D386); `check:join` compares this clause with
+      // the painted bytes byte for byte, so the clause and the page it describes change in one edit.
+      gives: 'The dates page lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.',
     },
     {
       kind: 'chat',

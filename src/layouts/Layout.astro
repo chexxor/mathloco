@@ -14,6 +14,14 @@ export interface Props {
 const { title = seo.title, noindex = false, path = '' } = Astro.props;
 const canonical = seo.canonical.replace(/\/$/, '') + path;
 const robots = noindex ? 'noindex,nofollow' : 'index,follow';
+// Round-6 review (2026-11-16), Site-wide/Add: "page titles with the category and the city". Only the home page's
+// title said what the site is, and every other page's title was its own name alone (D396). The share card and a
+// search result are the surfaces where that phrase matters most, so `og:title` and `twitter:title` now mirror the
+// PAGE's title rather than a single site-wide one - and `title` defaults to `seo.title`, so a page that passes no
+// title still gets the site's descriptor. `scripts/check-copy.mjs`'s `meta-mirror-bound` rule was changed in the
+// same commit that made this the shape: it now asserts the mirror is bound to the page title AND that the page
+// title defaults to `seo.title`, which is the pair of facts that keeps a page from shipping a card with no
+// descriptor on it.
 // The ratified serif pair, latin subset only (design/decisions.json typeFamily: 33,116 B + 29,588 B).
 // `import "@fontsource/pt-serif"` pulled every subset — the build was shipping cyrillic woff2 for a
 // site whose copy is English.
@@ -36,7 +44,7 @@ import Navigation from '../components/Navigation.astro';
     <meta name="googlebot" content={robots} />
     <meta name="description" content={seo.description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={seo.title} />
+    <meta property="og:title" content={title} />
     <meta property="og:description" content={seo.description} />
     <meta property="og:type" content="website" />
     <meta property="og:image" content={seo.canonical + seo.image} />
@@ -45,7 +53,7 @@ import Navigation from '../components/Navigation.astro';
     <meta property="og:site_name" content={seo.name} />
     <meta property="og:locale" content={seo.locale} />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={seo.title} />
+    <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={seo.description} />
 
     <title>{title}</title>

@@ -70,6 +70,7 @@ const MEETUP_SNAP = resolve(argOne('--snap', 'data/meetup-events.json'));
 const DISCORD_SNAP = resolve(argOne('--discord', 'data/discord-events.json'));
 const EVENTS_SNAP = resolve(argOne('--events', 'data/events.json'));
 const CONFIG = resolve(argOne('--config', 'src/config.json'));
+const CONTENT = resolve(argOne('--content', 'src/content.json'));
 
 const PAGES = [
   // `dates: false` is a contract, not a description: since D306 the homepage prints no date (its one date moved
@@ -139,6 +140,30 @@ const SPRITE_RE = /<svg class="hidden" aria-hidden="true">[\s\S]*?<\/symbol>\s*<
  *  itself once printed: "280 on the Meetup list" is a count of people with a date attached to it, and a date
  *  on a number does not make it not a headcount (D276). */
 const COUNT_RE = /data-(going|headcount|attendees|user-count|usercount|rsvp-count)|\b\d[\d,.]*\s+(going|people|attendees|members?|rsvp(?:s)?|sign-ups)\b|\b\d[\d,.]*\s+(on|in) the [a-z][a-z ]*list\b/i;
+/** D406 (round-6 communication review, 2026-11-16, Home/Add "one number about the room"): a tally written
+ *  IN WORDS is the same headcount as one written in digits. The review's own recommendation - "usually
+ *  six to twelve people" - is spelled out, and COUNT_RE above matches only digits, so the sentence this
+ *  round ships would have walked past the gate that exists for attendance figures. This is an invariant
+ *  change, not a new permission: the probe for a painted headcount is the SLOT. `src/content.json`'s
+ *  `turnout` slot is the one headcount the site is allowed to paint, and it carries a `source` and an
+ *  `asOf`; the exemption below is that slot's OWN WORDS, read out of the file rather than remembered. So
+ *  "six to twelve people" painted from `turnout` passes, "Twelve people come on most nights" typed into a
+ *  component fails, and so does the digits form of a tally nobody sourced (D265, D276: a date on a number
+ *  does not make it not a headcount).
+ *
+ *  The gap between the number word and the noun excludes `<`, `>` and `.` on purpose: a spelled tally is one
+ *  run of prose inside one sentence, so "five" in one element and "people" in the next is not a tally. */
+const SPELL_RE = /\b(?:one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred)\b[^.<>]{0,24}?\b(?:people|persons?|attendees?|members?|going|sign-?ups?|rsvps?)\b/i;
+/** The words a sourced slot carries - the only tallies this gate lets reach a page. A slot VALUE only, never
+ *  its `source` prose: `content.membership` sources "280 members" and "about ten regular attendees", and D265
+ *  forbids both on a page. A source that names a number is not permission to paint it. */
+const sourcedSlotValues = (() => {
+  const parsed = JSON.parse(readFileSync(CONTENT, 'utf8'));
+  return Object.values(parsed)
+    .filter((slot) => typeof slot === 'object' && typeof slot?.value === 'string' && slot.source && slot.asOf)
+    .map((slot) => String(slot.value).toLowerCase());
+})();
+const paintedFromSource = (hit) => sourcedSlotValues.some((v) => v.includes(String(hit).toLowerCase()));
 
 /** (F3(b), D294) A sprite is glyph bytes a page pays for whether or not it draws them. @measured 2026-11-13 by
  *  `node design/mark-cost.mjs` (Linux native, Node 24.22.1, gzip of the built page): +2,197 gzip on `/` and
@@ -579,10 +604,19 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
   //     cluster on the page, so a page with no cluster carries no glyph bytes.
   fails.push(...spriteFindings(html, pageName));
 
-  // 8. No headcount reaches the page, in text or in an attribute (D265).
-  const counts = [...html.matchAll(new RegExp(COUNT_RE.source, 'gi'))];
+  // 8. No headcount reaches the page, in text or in an attribute (D265), **in digits or in words** (D406).
+  //     The scan runs on the **painted** surface, not on the file: Astro ships its source comments into the
+  //     artifact, and a tally inside `<!-- -->` costs the shipped bytes but no browser paints it - `/dates`
+  //     carries "five sign-up links" in SignUpLinks.astro's own comment, and D265 forbids a headcount on the
+  //     page, not in the note beside it. The island's `<!--[-->` / `<!--]-->` delimiters strip without hiding
+  //     what is between them, so a real cluster stays real to this rule (D406).
+  const painted = html.replace(/<!--[\s\S]*?-->/g, '');
+  const counts = [
+    ...[...painted.matchAll(new RegExp(COUNT_RE.source, 'gi'))].map((m) => m[0]),
+    ...[...painted.matchAll(new RegExp(SPELL_RE.source, 'gi'))].map((m) => m[0]),
+  ].filter((hit) => !paintedFromSource(hit));
   if (counts.length) {
-    fails.push(`${pageName} paints a headcount: ${counts.slice(0, 3).map((m) => `"${m[0]}"`).join(', ')} — the site prints dates, not attendance (D265)`);
+    fails.push(`${pageName} paints a headcount: ${counts.slice(0, 3).map((m) => `"${m}"`).join(', ')} — the site prints dates, not attendance (D265), and a tally in words is the same headcount as one in digits (D406: the only painted headcount allowed is the words src/content.json's sourced turnout slot carries)`);
   }
 
   // 10. (D374, round-5 read Batch D half 2) The ruled **past** surface. `/past` answers q24 from data the
@@ -624,6 +658,11 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
 if (selftest) {
   const FETCHED = '2026-11-09T06:42:38.507Z';
   const AGE = 1.7;
+  // D406: the exemption is a SLOT, not a sentence. The fixture reads the slot out of src/content.json rather
+  // than remembering "six to twelve people", so the clean control tests the rule and not a paraphrase of it.
+  const turnoutSlot = JSON.parse(readFileSync(CONTENT, 'utf8')).turnout;
+  if (typeof turnoutSlot?.value !== 'string') throw new Error('selftest needs src/content.json\'s turnout slot to carry a value string to build D406\'s clean control');
+  const turnoutWords = turnoutSlot.value;
   const DISFETCHED = '2026-11-10T12:00:00.000Z';
   const DISAGE = 0.2;
   const TODAY = '2026-11-10';
@@ -775,6 +814,15 @@ if (selftest) {
     { name: 'an RSVP tally painted where a Discord link is', html: page([['2026-11-11', '18:00']]).replace('Sign up on Discord', 'Sign up on Discord (14 RSVPs)'), ctx, want: ['paints a headcount', '14 RSVPs']},
     { name: 'a headcount painted in an attribute', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-cluster', 'data-rsvp-cluster data-going="12"'), ctx, want: ['headcount']},
     { name: 'a Discord user_count painted in an attribute', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot', 'data-user-count="7" data-rsvp-discord-snapshot'), ctx, want: ['headcount', 'user-count']},
+    // D406: a tally IN WORDS is the same headcount as one in digits, so the two plantings below are the forms
+    // COUNT_RE alone walked past. The first is a number typed into a component - no slot, no source, and the
+    // words appear in no sourced value. The second is the trap that keeps the exemption from becoming a free
+    // pass: "Six people at a table." states the sourced slot's own number but is not the slot's words, and a
+    // paraphrased tally is not a sourced one.
+    { name: 'a spelled tally typed into a component', html: `${clean}<section class="mt-8"><p>Twenty people show up on a good night.</p></section>`, ctx, want: ['paints a headcount', 'Twenty people']},
+    { name: 'a paraphrase of the sourced turnout slot painted as its own words', html: `${clean}<section class="mt-8"><p>Six people at a table.</p></section>`, ctx, want: ['paints a headcount', 'Six people']},
+    { name: 'clean control: the sourced turnout slot painted in its own words', html: `${clean}<section class="mt-8"><p>${turnoutWords}</p></section>`, ctx, want: []},
+    { name: 'clean control: a tally that lives only in a shipped comment', html: `${clean}<!-- Twenty people at a table. -->`, ctx, want: []},
     { name: 'the guild event link dropped from the standing row', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: splitPaths(p, urls).standing.filter((d) => d.platform !== 'Discord') }); })()), ctx, want: ['paints 1 link(s)', 'returns 2 standing link(s) (Discord, Facebook)']},
     { name: 'a completed guild event painted as a standing link', html: page([['2026-11-28', '18:00']]).replace(clusterHtml({ date: '2026-11-28', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-28', time: '18:00' }, { links: [...splitPaths(p, urls).standing, { platform: 'Discord', href: 'https://discord.com/events/111/444/', label: 'Sign up on Discord', srOnly: ', opens in a new tab' }] }); })()), ctx, want: ['paints 2 link(s)', 'returns 1 standing link(s) (Facebook)'] },
     // Rule 6c (2026-11-15, round-4 §6 and §10): the band owns the club-wide exits, paints the URL the config

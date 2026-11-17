@@ -13,6 +13,16 @@ export default defineConfig({
   // <loc>, so this comment is the only thing keeping the two apexes in step.
   site: 'https://matheapolis.com',
   integrations: [sitemap(), svelte()],
+  // D408 (round-6 communication review, `/dates`/Add: "a redirect `/schedule` → `/dates`… It 404s today. Old
+  // links, bookmarks and any past brief that named it now dead-end"). The route moved on D373 and the sweep left
+  // the old name answering the site's 404, so the one URL that has ever been published is the one that dead-ends.
+  // A 301 rather than a meta refresh or a second page: the old name has to answer with the new one for a client,
+  // a crawler and a bookmark alike, and a redirect page would be a second route promising a page that does not
+  // exist. Verified against this config @measured 2026-11-17 by `curl -i` against `npm run preview`'s dev server
+  // and against the built artifact (see the reply doc for what the artifact ships).
+  redirects: {
+    '/schedule': { status: 301, destination: '/dates' },
+  },
   output: 'server',
   // Nothing in this app reads Astro sessions, but @astrojs/cloudflare v14 enables a KV-backed session
   // driver unless this is explicitly false (node_modules/@astrojs/cloudflare/dist/index.js:85). Left on,

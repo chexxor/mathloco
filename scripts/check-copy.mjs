@@ -138,12 +138,16 @@ const RULES = [
   },
   {
     name: 'meta-mirror-bound',
-    why: 'og:title and twitter:title are bound to `seo.title`, so the phrase reaches a crawler without the body being read (D248)',
+    why: 'og:title and twitter:title mirror the page’s own title, and that title falls back to `seo.title` (D248; D396 moved the mirror onto the page title so a share card names the page and the city)',
     check: (_view, root) => {
       const layout = readFileSync(join(root, 'src/layouts/Layout.astro'), 'utf8');
       const problems = [];
-      if (!/property=["']og:title["']\s+content=\{seo\.title\}/.test(layout)) problems.push('Layout.astro no longer binds og:title to `seo.title`');
-      if (!/name=["']twitter:title["']\s+content=\{seo\.title\}/.test(layout)) problems.push('Layout.astro no longer binds twitter:title to `seo.title`');
+      const bound = (attr, tag) => new RegExp(`${attr}=["']${tag}["']\\s+content=\\{(?:title|seo\\.title)\\}`).test(layout);
+      if (!bound('property', 'og:title')) problems.push('Layout.astro no longer binds og:title to the page title (`content={title}`, which defaults to `seo.title`)');
+      if (!bound('name', 'twitter:title')) problems.push('Layout.astro no longer binds twitter:title to the page title (`content={title}`, which defaults to `seo.title`)');
+      // The mirror is only as safe as its default: a page title that stops falling back to `seo.title` lets a
+      // page ship a card whose title carries no descriptor at all, which is the half of D248 this rule exists for.
+      if (!/const\s*\{[^}]*\btitle\s*=[^,}]*seo\.title/.test(layout)) problems.push('Layout.astro’s `title` prop no longer defaults to `seo.title`, so a page that passes no title ships a card with no descriptor on it (D396)');
       return problems.length ? problems.join('; ') : null;
     },
   },
@@ -237,9 +241,16 @@ const MUTATIONS = [
     expect: ['lane-stays-undated'],
   },
   {
-    name: 'og:title stops mirroring seo.title',
+    name: 'og:title stops mirroring the page title',
     file: 'src/layouts/Layout.astro',
-    apply: (t) => t.replace('property="og:title" content={seo.title}', 'property="og:title" content="Matheapolis"'),
+    apply: (t) => t.replace('property="og:title" content={title}', 'property="og:title" content="Matheapolis"'),
+    expect: ['meta-mirror-bound'],
+  },
+  {
+    // D396's second half: the mirror is only safe while the page title has a default to fall back to.
+    name: 'the page title loses its fallback to seo.title',
+    file: 'src/layouts/Layout.astro',
+    apply: (t) => t.replace('const { title = seo.title,', 'const { title,'),
     expect: ['meta-mirror-bound'],
   },
   {
