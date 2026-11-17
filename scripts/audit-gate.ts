@@ -39,6 +39,21 @@ const ALLOWLIST: AllowlistEntry[] = [
       '@astrojs/svelte to 0.1.2. Build-time tooling, not shipped code. Re-check when ' +
       '@sveltejs/vite-plugin-svelte drops deepmerge or ships a fixed release.',
   },
+  {
+    name: 'picomatch',
+    severity: 'high',
+    reason:
+      'GHSA-fc5q-39xc-vjpf - ReDoS in picomatch\'s glob matcher (the advisory covers <=4.0.7, and '
+      + 'npm\'s only remediation for the cone is a semver-major upgrade of astro, @measured 2026-11-17 '
+      + 'by `npm audit --json --omit=dev`: `fixAvailable` is `{astro 5.3.0, isSemVerMajor: true}`). '
+      + 'This is the ONLY own advisory in the cone: @measured 2026-11-17 from the same JSON that 13 '
+      + 'packages report `via` strings only - astro 5.3.0 -> vite/tinyglobby/fdir and @parcel/watcher '
+      + '-> anymatch inherit it, and every one of those names is build-time tooling. Shipped bytes '
+      + 'were measured with `grep -rl <name> dist | wc -l` = **0** for picomatch, tinyglobby, fdir, '
+      + 'anymatch, parcel, watcher and unstorage against the built artifact, so none of this code '
+      + 'reaches a page or the Worker. Re-check when astro ships a release whose picomatch is >4.0.7, '
+      + 'and re-check the cone (not this entry) if a NEW advisory lands on a shipped runtime package.',
+  },
 ];
 
 const RANK: Record<string, number> = { low: 1, moderate: 2, high: 3, critical: 4 };

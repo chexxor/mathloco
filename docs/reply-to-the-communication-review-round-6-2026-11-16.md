@@ -9,7 +9,7 @@ in §4 so a later session cannot read them as grounded.
 
 | | |
 |---|---|
-| **This doc lives on** | `communication-round-6`, cut from `staging` @ `65d406e` and carrying this round's work. **S046**/**D354**'s rule: a read and its execution live on **one** branch, so a fresh clone cannot find the letter without the reply. The merge into `staging` and the push come at the end of the round under the grant already in force (**S050**, **S051**, **D124**); `main`, every merge into `main`, and every deploy stay the operator's (**D42**). Verify with `git branch -v --no-color` and `git log --oneline staging..HEAD \| cat` — the pointer row follows the ref rather than pinning a sha, because **S051** deleted a branch mid-round and every gate stayed green over five citations to a ref that no longer exists |
+| **This doc lives on** | `staging`, at the tip of this round. The round was cut on `communication-round-6` from `staging` @ `65d406e`, and **2026-11-17 the operator granted the merge into `staging`, the push, and the deletion of that branch (**S057**)**, so the ref named here no longer exists and the work it carried is on `staging`. **S046**/**D354**'s rule still holds — a read and its execution live on **one** branch — it is the *ref* that is gone, not the work. Verify with `git log --oneline 65d406e..staging \| cat`. A pointer row that names a deleted ref silently loses the trail, and `check:tables` does not see it: its ref pattern matches `refs/heads/(main\|staging\|qa/[a-z-]+)` and `origin/`, which cover neither a feature branch nor the `staging..HEAD` range form (**D425**, ruling **S059**) |
 | **What the round measured against** | the built artifact in `dist/client`, not a preview and not production. The route set the artifact emits at this tip: `/`, `/404`, `/chat`, `/dates`, `/join`, `/past` plus `/events.ics`. Every quoted string below was read out of that artifact with `node .design/tmp-page-text.mjs <page>` (scratch) or a `grep` against `dist/client`, and the probe lines name the command that printed them |
 | **The probes this reply ran, at the tip** | `node design/visitor-questions.mjs --no-build` → 29 questions across 8 classes · 7 surfaces: **24 ANSWERED where asked · 0 only in chrome · 0 only off-page · 3 DECLINED in the open (q06, q07, q20) · 1 UNANSWERED (q13) · 1 NOT-ASKED (q28)**, **4 gaps** @measured 2026-11-17; `node design/communication-census.mjs --no-build` → **15** duplicate-claim clusters, wayfinding prose **14 of 23** sentences, `/` 24,711 bytes / 408 body words / 45 sentences / 16 anchors → 8 destinations @measured 2026-11-17; `node design/fold-answers.mjs --no-build` → at 390x844 the five acceptance answers sit at 136–176, 439–487, 551–607, 700–748, 760–808 with **0 of 5 past the fold** on a 4,212px page @measured 2026-11-17; `npm run probe:live` for what the live surfaces serve (D245's gap, unchanged: production still answers a 2026-10-31 artifact) |
 | **What this reply is not** | not a judgment about type, spacing or composition. The letter itself says it had "the copy and the markup, not the rendered pixels", and this reply answers at the same altitude. The one thing the letter said it still owes — the rendered hero — is answered in §7 with the two PNGs, not with prose |
@@ -82,7 +82,7 @@ touched it).
 | J4 | `/join` / Revise — "H1 'Ways in', and nav label 'Ways in'… Recommend nav `Join`, H1 `Join the club`, and 'Ways in' demoted to the lede line" | landed + gate — nav label `Join`, H1 `Join the club`, `<title>` stem `Join the club` moved in one commit, because `check:naming`'s name-not-on-page rule ties the nav word to the page's own heading (**D390**). `grep "Ways in"` over the built pages prints 0; the lede keeps the phrase in words | `src/pages/join.astro`, `src/components/Navigation.astro`, `src/layouts/Layout.astro` | `check:naming` |
 | J5 | `/join` / Revise — "'Your first one'… Rewrite as three short rules — what happens in the first ten minutes, what to bring (nothing), what's expected (nothing) — and add the one sentence no peer omits: *buy a coffee; that's the rent.*" | landed — three rules ship, on the coffee line first: "Walk in, find a table, buy a coffee if you want one — that is the rent." / "Bring nothing…" / "Expect nothing…" A prediction parses faster than four negations (**D392**) | `src/pages/join.astro`, `src/components/Schedule.astro` | none — copy only |
 | J6 | `/join` / Add — "Cost, in one line" | landed + gate — the same sourced `cost` slot as H1: "Free." | `src/content.json`, `src/pages/join.astro` | `check:content` |
-| J7 | `/join` / Add — "A mailto" | **declined with evidence** — `dig +short MX matheapolis.com` and `dig +short MX minneapolismathbookclub.com` each printed **no record at all** @measured 2026-11-17 CST (Linux native), so neither zone carries an address service and printing one would invent it (**D403**). Trigger: the day the operator provisions Cloudflare Email Routing (or any address) for the zone, the line lands on `/join`; the probe keeps q13 reporting UNANSWERED with `declinedBy` naming the shapes that used to satisfy it, so the next session sees an open question with a ruled answer | `src/pages/join.astro` (unchanged for this item), `design/visitor-questions.mjs` | `check:ext-links` (no new outbound path shipped) |
+| J7 | `/join` / Add — "A mailto" | **declined with evidence** — `dig +short MX matheapolis.com` and `dig +short MX minneapolismathbookclub.com` each printed **no record at all** @measured 2026-11-17 CST (Linux native), so neither zone carries an address service and printing one would invent it (**D403**). Trigger: **§10 now carries the setup** — the operator asked for guidance on standing up an address on `matheapolis.com` and for a recommended local part, and §10 answers it with the free-plan product, the commands, and the recommendation; the address lands on `/join` as a `mailto:`; the probe keeps q13 reporting UNANSWERED with `declinedBy` naming the shapes that used to satisfy it, so the next session sees an open question with a ruled answer | `src/pages/join.astro` (unchanged for this item), `design/visitor-questions.mjs` | `check:ext-links` (no new outbound path shipped) |
 | C1 | `/chat` / Remove — "The empty section: `The bot's reading of the channels` — a heading, one sentence, then the next H2… Kill the heading until there is content under it" | took the letter's alternative — the letter offered, under C4, "ship a warm static state — 'No summary this week. The channel is the live thing.'" That state shipped, in DESIGN.md's notice grammar: "No summary written this week" with one body line, on the branch the server paints — so it is an operator-granted draft and §4 names it (**D409**) | `src/components/DiscordSummary.svelte`, `src/pages/chat.astro` | `check:render:dist`, `check:ics` (the empty state is a designed state, never silence — record 0010) |
 | C2 | `/chat` / Remove — "One of the three Discord invites on this page… Three identical buttons is a choice the reader has to make for no reason (Hick's law)" | landed + gate — the invite the pending state **carried inline** is the one deleted, because it is the same path the page already offers twice in the ratified construction (**D410**). The page keeps three Discord anchors (fold secondary, card primary, exit band) and prints 2 outbound anchors outside the band against a cap of 6 @measured 2026-11-17 | `src/components/DiscordSummary.svelte`, `src/pages/chat.astro` | `check:page-exit`, `check:ext-links` |
 | C3 | `/chat` / Remove — "The duplicated thread list… The destination must add something the teaser didn't" | took the letter's own criterion rather than its Move — the list **stays** (it is the page's substance, and deleting it leaves `/chat` with one button), and what changes is the lead: the page stopped restating what the home teaser already said and now says what this page adds over it (**D411**) | `src/pages/chat.astro` | `check:content`'s near-duplicate-surface rule fired on the subtitle/lead pair and the pair was resolved in the same commit; `check:threads` |
@@ -123,11 +123,17 @@ ledger section and fails a draft-granted slot that carries no correction path �
 an invariant for the data-backed claims (**D415**). The markup rows below have no slot to hold a correction, so
 their correction path is a file and a line.
 
-| id | the sentence as shipped | painted on | granted by | grounded? | correction path | the gate that would notice |
+**Three rows were corrected on 2026-11-17** by the operator's letter that opened this round's residuals — C1
+(cost re-confirmed), C2 (the membership rule, plus the one thing the club does ask: an RSVP with a name), C3
+(turnout three to seven, historically). The rows below keep the sentence as it was *shipped* and carry the
+correction beside it, because the ledger's job is to record what reached a page and when; **D421** is
+where the corrected values and their `asOf` dates live, and nothing in the table still stands uncorrected.
+
+| id | the sentence as shipped | painted on | granted by (and by whom it was corrected) | grounded? | correction path | the gate that would notice |
 |---|---|---|---|---|---|---|
-| C1 | "Free." | `/` (the acceptance block), `/join` ("Your first one") | operator grant 2026-11-16, **D381**; no source in this tree states a price | **draft** | `src/content.json` → `cost.value` (a slot, not markup: the operator's word replaces it without touching a component) | `check:content` (a painted claim with no source fails); `check-content`'s `draft-claim-uncorrectable` (a draft slot without a `correction` fails) |
-| C2 | "No membership needed - you just come." | `/`, `/join` | operator grant 2026-11-16, **D381** | **draft** | `src/content.json` → `membershipRule.value` | as C1 |
-| C3 | "Usually six to twelve people at a table." | `/` (the acceptance block) | operator grant 2026-11-16, **D385**; the club keeps no attendance record in this tree | **draft** | `src/content.json` → `turnout.value`. Do **not** move this line into prose: `check:rsvp-page` exempts a spelled-out count only when it sits inside a sourced slot, so prose copy of the same sentence would fail the build | as C1, plus `check:rsvp-page`'s count rule (D265) |
+| C1 | "Free." | `/` (the acceptance block), `/join` ("Your first one") | operator grant 2026-11-16, **D381**, **re-confirmed 2026-11-17 (**D421**)**; no source in this tree states a price, so the grant is still the source and only `asOf` moved | **draft** | `src/content.json` → `cost.value` (a slot, not markup: the operator's word replaces it without touching a component) | `check:content` (a painted claim with no source fails); `check-content`'s `draft-claim-uncorrectable` (a draft slot without a `correction` fails) |
+| C2 | "No membership needed - you just come." — as shipped 2026-11-16; **corrected 2026-11-17 (**D421**) to "No membership needed - you just come; an RSVP with your name is all the club asks."** | `/`, `/join` | operator grant 2026-11-16, **D381**, **corrected 2026-11-17 by the operator's letter: 'no membership required except an rsvp with a name' (**D421**)** | **draft** | `src/content.json` → `membershipRule.value` | as C1 |
+| C3 | "Usually six to twelve people at a table." — as shipped 2026-11-16; **corrected 2026-11-17 (**D421**) to "Three to seven people at a table, historically."** | `/` (the acceptance block) | operator grant 2026-11-16, **D385**, **corrected 2026-11-17 by the operator's letter: 'turnout is 3-7 people historically' (**D421**)**; the club keeps no attendance record in this tree, so the letter is the source | **draft** | `src/content.json` → `turnout.value`. Do **not** move this line into prose: `check:rsvp-page` exempts a spelled-out count only when it sits inside a sourced slot, so prose copy of the same sentence would fail the build | as C1, plus `check:rsvp-page`'s count rule (D265) |
 | C4 | "Walk in, find a table, buy a coffee if you want one — that is the rent." | `/` (How it works), `/join` (Your first one) | the round-6 review's recommendation, shipped on the operator's grant (**D392**); no source states what a visitor does on arrival | **draft** | `src/components/Schedule.astro` and `src/pages/join.astro` (markup, not a slot). If the operator's correction is long enough to want a phone, the line moves to a `content.json` slot in the same commit that changes it | `check:copy` (the pair printed on both surfaces is one string: change one and the gate sees the other), `check:content`'s near-duplicate pair |
 | C5 | "Bring nothing, prepare nothing, and bring a question if you have one." (and `/join`'s two sibling rules) | `/`, `/join` | as C4 (**D392**) | **draft** | as C4 | as C4 |
 | C6 | "Sign up for Sat, Nov 21" → `https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/` | `/` hero primary | the **URL is grounded** (the row is in `data/meetup-events.json`, harvested from the club's feed, and `check:rsvp` fails the build if the snapshot is older than 14 days); what is **draft** is that the label names a date the next harvest can move | draft label, grounded URL | nothing to edit by hand: the label is generated from the printed date by `signUpPaths()`, so the next harvest re-labels it. If the club posts the sign-up somewhere other than that event page, the operator's word changes `src/lib/rsvp.mjs`'s resolver | `check:rsvp` (snapshot freshness), `check:rsvp-page` (the primary control must answer the printed date) |
@@ -207,13 +213,18 @@ gates that moved are copy gates and route gates rather than render gates.
 
 ## 8. What stays the operator's
 
-- **Merges and deploys.** `staging` receives this branch and `origin/staging` is pushed under the grant already
-  in force (**S050**, **S051**, **D124**); `main`, every merge into `main`, and every deploy stay the operator's
-  (**D42**). The production URL cutover for the three names is a Cloudflare-dashboard rule behind that grant
-  (MS25's row), and **D245**'s gap is still open: production answers a 2026-10-31 artifact while every gate
-  reads `dist/`.
-- **The claims in §4.** The operator's correction of each row is the next letter; the correction paths are in the
-  table, and **D415**'s rule is what makes an uncorrected draft slot fail a build rather than ship silently.
+- **Merges, deploys, and the promotion.** 2026-11-17: the operator's letter said **"we are not ready to promote
+  this to the main branch, which backs production. We stay on staging.matheapolis.com for now"** and, separately,
+  granted the branch management — **merge into `staging`, push, delete the feature branch** (**ruling S057**). So
+  `staging` received the branch, `origin/staging` is pushed, and `communication-round-6` is deleted; **`main`
+  stayed where it was**, every merge into `main` and every production deploy stay the operator's (**D42**), and
+  **MS02's cutover row stays `blocked`** with that sentence as its un-park trigger. The production URL cutover
+  for the three names is a Cloudflare-dashboard rule behind that grant (MS25's row), and **D245**'s gap is
+  unchanged: production answers a 2026-10-31 artifact while every gate reads `dist/`.
+- **The claims in §4.** C1, C2 and C3 were corrected by the letter that opened this round (**D421**, landed
+  2026-11-17 in `src/content.json`); **C4 and C5 still wait** for a letter, and their correction paths are the
+  markup rows in the table. **D415**'s rule is what makes an uncorrected draft *slot* fail a build rather than
+  ship silently; the markup rows have no slot, so their correction is a file and a line.
 - **MS32** — the meeting photograph (both clauses of its trigger, in one letter).
 - **MS25/MS27** — the OG engraving crop, the N1 series names, the mobile date chip, and the bot-credentials
   half of C7.
@@ -235,3 +246,72 @@ artifact, and a claim about *which commit carried a change* is checked against `
 `git show <sha>:<path>`, **before** it is written into a doc. Both classes hide behind prose that reads as though it
 were measured — and both were cheap to catch (one `git show`, one `grep -c`), which is why the correction is in a
 section of its own rather than folded quietly back into the rows that a reader has already trusted.
+
+## 10. The mailto the club does not have yet — how to stand one up on `matheapolis.com`, and the one to pick
+
+This section exists because **J7** left `/join` without a contact address, the operator asked for the setup
+rather than for invention, and a future session that reads only this repo must not re-derive it. Nothing here
+was run against the live zone: the commands below are for the operator's dashboard, and no address was invented
+into the page.
+
+**What is true now, measured 2026-11-17 (Linux native, CST):** `dig +short MX matheapolis.com` and
+`dig +short MX minneapolismathbookclub.com` each print **no record at all**, and `dig +short NS` for both
+returns Cloudflare's own nameservers, so both zones are Cloudflare-managed and neither carries a mail service.
+A Cloudflare-managed zone with no mail service on it is the situation Email Routing exists for.
+
+**The product, and why it is free:** the free path is **Email Routing** — an alias on the club's own domain that
+forwards into whatever mailbox the operator already uses. The docs (`https://developers.cloudflare.com/email-service/`,
+reached today; `developers.cloudflare.com/email-routing/` now redirects there) say, verbatim, *"Arbitrary-recipient
+sending requires Workers Paid, while routing supports Workers Free and Paid"* and *"Email Routing … Available on
+Free and Paid plans"*, with the note *"Sending to verified destination addresses in your account is free on Workers
+Free and Paid plans, even when only Email Routing is configured."* **Do not plan on Email Sending** (outbound,
+arbitrary recipients): it needs **Workers Paid**, and the operator's whole ceiling is $1/month (**D32**) — routing
+costs nothing.
+
+**The commands** (the vendored `pi-cloudflare` skill's `cloudflare-email-service/references/cli-and-mcp.md` is the
+map; the docs are the source of truth if they disagree):
+
+```bash
+npx wrangler email routing enable matheapolis.com
+npx wrangler email routing dns get matheapolis.com        # the records the product needs
+npx wrangler email routing addresses create <your-mailbox>@<somewhere>.com
+npx wrangler email routing rules create                  # match -> destination
+```
+
+**The address to pick: `hello@matheapolis.com`**, forwarded to the operator's existing mailbox. Why that local
+part: it is the word a visitor reads as an invitation to reply, it is not a name the club has to keep true when
+an organizer changes, and it does not promise a service the club does not run (`help`, `support`, `booking`,
+`president`). **Second choice `bookclub@matheapolis.com`** — safer if the operator wants the address to say what
+it is for, costlier because it is longer to type and the domain already says "mathe". Third choice, and the one
+I would not pick: `hi@` — shortest, but it reads as a personal blog. If the operator also stands up an external
+mailbox named for the club, use the same string — `hello` — so the address and the account never disagree.
+
+**Where the address goes in this repo once it exists:** `/join`'s "How to get in" band, in
+`src/pages/join.astro`, as a `mailto:` in the same construction the other paths use. Its verification class is
+**unverifiable by design** — a `mailto:` has nothing to GET — so it becomes a `LINK_SHAPES` key in
+`src/lib/rsvp.mjs` carrying `confirmedBy`/`confirmedAt` (the named-human evidence **D280** requires), exactly
+like `facebookGroup`, and `scripts/check-ext-links.mjs` already exempts `mailto`/`tel` from the `target="_blank"`
+rule and plants a `mailto` case in its selftest (**D403** measured, lines 87 and 155). It does **not** become a
+`_verified` URL in `src/config.json`: that file's `URLs` block holds things the probe fetches, and a `mailto:`
+is not fetchable.
+
+**The effect on the open question:** q13 ("Does the page hand me something to call or tap more than once?") is
+the round's only UNANSWERED gap, and its `anyOf` already matches a `mailto:`, so the day the address ships the
+question flips to ANSWERED with **no probe change** — which is the point of **D413**'s rule.
+
+**Recommendation to the operator (item 4), ranked:**
+
+1. **Stand up `hello@matheapolis.com` on Email Routing now, and do not print it on the site until it forwards.**
+   *Pro:* free on the plan the club already pays for; costs nothing to the site; the mailbox stays the operator's;
+   the address is real the same day. *Con:* it is a step behind the page, so q13 stays UNANSWERED until it exists.
+   *Access:* the operator's Cloudflare dashboard, the `matheapolis.com` zone only.
+2. **Print the mailto only after the routing exists** — adding `mailto:hello@matheapolis.com` today would print an
+   address that reaches no human, which is D403's rule.
+3. **Buy outbound mail (Email Sending, Workers Paid) only if the club ever needs to *send*** — an RSVP-bot-style
+   email. *Pro:* real outbound email from the domain. *Con:* Workers Paid costs money, so it stays out of scope
+   until an outbound path is written.
+
+**The one measurement that would change this ranking:** whether the operator's existing mailbox already accepts a
+forwarded alias as a **verified destination** — `npx wrangler email routing addresses create` prints what is
+verified. If forwarding lands clean, option 1 moves ahead of everything; if it needs a second zone's DNS, the
+cost of that second zone is the only honest alternative.
