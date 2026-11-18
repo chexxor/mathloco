@@ -443,5 +443,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D437** (2026-11-18) — `/chat` keeps **one** pressable Discord control: the card's primary is deleted and the fold secondary survives (round-7 communication review, `/chat`/Remove "Two of the three Discord invites" + its copy line "keep one Discord button, not two", 2026-11-18; `reversible` — one control deleted from one page, its lede's clause with it; Linux native, Node 24.22.1)
 - **D438** (2026-11-18) — 2026-11-18: the plan file carried a second copy of itself, and a new rule makes that class visible
 - **D439** (2026-11-18) — 2026-11-18: the operator's letter granted this item's merge into `staging`, its push, and the branch delete
+- **D440** (2026-11-18) — 2026-11-18: an external `GAP` verdict graduates to a gate only when this repo can name the defect its selftest plants, and a mandated rule ships its guard beside the gate
 
-Defined: 435 (D1-D439). Unused ids: D315, D400, D401, D402.
+Defined: 436 (D1-D440). Unused ids: D315, D400, D401, D402.
