@@ -81,18 +81,26 @@ export const meetingKind = (row) => {
  * into two kinds, and `/join` already defines the two formats a visitor can come to — "A social:" and "A
  * study session:" (`src/pages/join.astro`). The page's row heading is one of those two words, so the
  * vocabulary that decides it belongs beside the kind that groups them, in one module, and not copied into
- * a component. `check:row-geometry` and `check:naming` read the built page, so they see the mapped string;
- * nothing here touches the **feed**, which keeps the organizer's own `SUMMARY` verbatim (D189: a source
- * name is the organizer's quotation, and the quotation is what a subscriber holds).
+ * a component.
+ *
+ * **D429 (round-7 review) supersedes the half of D189 that kept the feed apart.** Until that round the
+ * feed put the organizer's own `SUMMARY` in the file verbatim, so the page said "Social" and a subscriber's
+ * calendar said `MPLS Math Club - Bimonthly Social` — a name the website never mentions, in a row the
+ * subscriber cannot edit. The feed now calls **this** function, through `src/lib/ics.mjs`, so one lookup
+ * decides both surfaces; what stays of D189 is the **`LOCATION`**, which keeps the organizer's own venue
+ * string verbatim (D92) because it was already the right city and the body was the thing disagreeing with
+ * it. An organizer name outside this list still **fails the build** and names the string it could not map
+ * (D339: the site owns the event vocabulary, and a series the site does not define must not reach a
+ * subscriber's calendar either).
  *
  * A name outside this list **fails the build** and names the string it could not map: a series the site
- * does not define must not reach the page (round-4 read §3, which is also what settles the "Joyful Math"
- * question). The spellings below are every name in the club's own snapshot as of 2026-11-15 — @measured by
- * tabulating `data/events.json`: `series` carries 3 distinct names over 8 rows, `summary` carries 4 — and
- * `Parallel Learning for Mathematical Minds` is the older spelling of the Wednesday series, which `data/events.json`
- * itself says (its `2026-11-25` row's `_series` note names the older row as "the same series now appearing
- * under two names", and `2026-12-09` prints the newer one), so it maps to the study-session format rather
- * than becoming a third one.
+ * does not define must not reach the page, or a subscriber's calendar (round-4 read §3, which is also what
+ * settles the "Joyful Math" question). The spellings below are every name in the club's own snapshot as of
+ * 2026-11-15 — @measured by tabulating `data/events.json`: `series` carries 3 distinct names over 8 rows,
+ * `summary` carries 4 — and `Parallel Learning for Mathematical Minds` is the older spelling of the
+ * Wednesday series, which `data/events.json` itself says (its `2026-11-25` row's `_series` note names the
+ * older row as "the same series now appearing under two names", and `2026-12-09` prints the newer one), so
+ * it maps to the study-session format rather than becoming a third one.
  */
 const SERIES_VOCABULARY = new Map([
   ['Social', ['MPLS Math Club Social', 'MPLS Math Club - Bimonthly Social', 'Matheapolis - Bimonthly Social']],

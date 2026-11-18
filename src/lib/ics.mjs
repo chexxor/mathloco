@@ -11,6 +11,9 @@
  * A third is now owned here too (round-5 read B2, q18, D371): the `DESCRIPTION` carries the **window the file
  * itself covers**, computed from the very rows it emits — so no caller, page or gate, can be handed a calendar
  * whose reach sentence disagrees with its `DTSTART`s.
+ * A fourth (D429, round-7 review): the `SUMMARY` is the name the **site** owns, produced by the same
+ * `publishedName` the page paints its row heading with, so a subscriber's calendar and the Dates page cannot
+ * disagree about what kind of meeting a row is; the organizer's own spelling stays in `data/events.json`.
  * Both are asserted from the bytes by `scripts/check-ics.mjs`.
  *
  * Every rule this file enforces is quoted in `.notes/DECISIONS.md` D72, from `tools.ietf.org/rfc/rfc5545.txt`:
@@ -30,7 +33,7 @@
  * Node/Vite only: `src/` is build-time and Worker code, so this module uses no `node:` built-ins.
  */
 
-import { publishableRows } from './event-groups.mjs';
+import { publishableRows, publishedName } from './event-groups.mjs';
 import { feedDescription } from './event-description.mjs';
 import { feedWindow } from './event-window.mjs';
 // D398: the `URL` a subscriber clicks through to is the club's own page for the date, which the resolver in
@@ -167,9 +170,24 @@ export const vevent = (row, calendar) => {
     lines.push(contentLine('DTEND', 'VALUE=DATE', nextDay(dateStamp(row.start))));
   }
 
-  lines.push(contentLine('SUMMARY', null, escapeText(row.summary)));
+  // D429 (round-7 review, feed/Remove "dead brand in every subscriber's calendar"): the `SUMMARY` a
+  // subscriber's calendar shows is the **name the site owns**, produced by the same `publishedName` the
+  // page paints its row heading with. Round 4's mapping was render-only, so the page said "Social" and
+  // the file said `MPLS Math Club - Bimonthly Social` — a name the website never mentions, in a row that
+  // stays in the subscriber's software permanently. The file's `X-WR-CALNAME` already carries the club's
+  // own name, so the series word is the whole title a subscriber needs. This supersedes the feed half of
+  // D189 ("the quotation is what a subscriber holds"): the quotation stays in `data/events.json`, which
+  // is where the organizer's spelling is still readable, and what a subscriber sees is the club's word.
+  // An organizer name outside `SERIES_VOCABULARY` fails the build here rather than painting a calendar
+  // with a series the site never defines (D339's rule, the same call, so the page and the file cannot be
+  // edited apart).
+  lines.push(contentLine('SUMMARY', null, escapeText(publishedName(row))));
   lines.push(contentLine('STATUS', null, status));
   if (row.venue?.raw) lines.push(contentLine('LOCATION', null, escapeText(row.venue.raw)));
+  // D429 keeps this line as it was: `LOCATION` is the organizer's own string verbatim, and it already
+  // names the right city (Angel Food Bakery in Saint Louis Park, Kowalski's Market in Minneapolis).
+  // What was wrong was the **body** naming a city that disagrees with it, and that is D429's fix in
+  // `src/lib/event-description.mjs`, not a change to this line.
   if (row.geo) lines.push(contentLine('GEO', null, row.geo));
   // D319: the club's own copy, per meeting type, never the organizer's pre-2026 boilerplate. `blurb` stays in
   // the snapshot as provenance (rule 2 of the harvest: the tool does not author copy, so it stores what the

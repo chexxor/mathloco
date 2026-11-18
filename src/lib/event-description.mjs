@@ -27,6 +27,15 @@
  * `scripts/check-ics.mjs` compares every published DESCRIPTION against `feedDescription`, so the feed cannot
  * drift back to upstream boilerplate while the gate is green.
  *
+ * **D429 (round-7 review, feed/Remove "wrong city, generic body"): the city is read, not written.** The
+ * social template said "in Minneapolis" over seven rows, four of which sit at Kowalski's Market in
+ * Minneapolis and three at Angel Food Bakery in Saint Louis Park, and the file's own `LOCATION` line has
+ * always named the right one. A body naming a city the row's own venue contradicts is D92's defect seen
+ * from the other side — a claim whose source is a sentence rather than the row — so the city in the body is
+ * a slot filled from `row.venue.city`, the same field `src/lib/ics.mjs` folds into `LOCATION`. Nothing the
+ * club says stops being sourced, and no city the snapshot does not carry can be invented: an unrecognised
+ * venue falls to "the Twin Cities", which is true of either.
+ *
  * Node/Vite only: no `node:` built-ins, so `scripts/check-ics.mjs` imports it the same way a page does. The
  * `with { type: 'json' }` attribute on the config import is what lets a plain `node script.mjs` read the same
  * file Astro reads — plain JSON ESM imports need the attribute, and `src/lib/events.mjs`'s header records the
@@ -35,6 +44,21 @@
 import config from '../config.json' with { type: 'json' };
 import { meetingKind } from './event-groups.mjs';
 import { plainDate } from './event-window.mjs';
+
+/**
+ * The city a row's own venue names, in the short form a sentence reads.
+ *
+ * D429: this is the city the body of the event names, and it comes from the same field `src/lib/ics.mjs`
+ * folds into the `LOCATION` line, so the two cannot be edited apart. `data/events.json` carries `venue.city`
+ * as `"Saint Louis Park, Minnesota"`; the state is what a subscriber's map already knows and is not what a
+ * sentence adds, so it is cut. With no city on the row the fallback is "the Twin Cities", which is true of
+ * every venue the club has — an invented city is what a fallback must never become.
+ */
+export const rowCity = (row) => {
+  const city = String(row?.venue?.city ?? '').trim();
+  const m = /^([^,]+)/.exec(city);
+  return m ? m[1] : 'the Twin Cities';
+};
 
 /** The one line every published description ends with: where the club actually talks. */
 const CHAT_LINE = `The club’s chat is where the conversation happens: ${config.URLs.discordInvite}`;
@@ -46,10 +70,13 @@ const CHAT_LINE = `The club’s chat is where the conversation happens: ${config
 export const DESCRIPTIONS = {
   social: {
     sentences: [
-      'Around a table in a coffee shop or a bakery in Minneapolis, working through something together — a paper, a proof, a proof assistant, a puzzle with a strange answer.',
+      // D429: `{city}` is a slot, filled from `rowCity(row)` — the organizer's own venue city, the same
+      // field `LOCATION` carries. Writing a city here is writing a claim about the club's venues rather
+      // than about the meeting, and it went wrong on three of the seven rows this file publishes.
+      'Around a table in a coffee shop or a bakery in {city}, working through something together — a paper, a proof, a proof assistant, a puzzle with a strange answer.',
       'There is no syllabus, no reading to keep up with and nobody sets an agenda: people bring what they are curious about.',
     ],
-    _source: 'src/config.json seo.description (D273) and the hero lede in src/components/HeroSection.astro; the operator emptied the club’s focus on 2026-11-03 (src/content.json, focus._rule).',
+    _source: 'src/config.json seo.description (D273) and the hero lede in src/components/HeroSection.astro; the operator emptied the club’s focus on 2026-11-03 (src/content.json, focus._rule); the city slot is venue.city in data/events.json, the organizer’s own LOCATION string (D92).',
   },
   study: {
     sentences: [
@@ -107,13 +134,15 @@ export const windowSentence = (window) => {
 };
 
 /**
- * The text a `VEVENT`'s DESCRIPTION carries: two sentences for the meeting's kind, then the window the file
- * carries, then the chat link. `window` is required, not defaulted — a DESCRIPTION that silently loses the
- * window clause is the defect `check:ics`'s `calendar-window` rule exists to catch, and a default would hide
- * exactly the drift that rule is written to fail on.
+ * The text a `VEVENT`'s DESCRIPTION carries: two sentences for the meeting's kind — with the meeting's own
+ * city filled into the slot D429 opened — then the window the file carries, then the chat link. `window` is
+ * required, not defaulted — a DESCRIPTION that silently loses the window clause is the defect `check:ics`'s
+ * `calendar-window` rule exists to catch, and a default would hide exactly the drift that rule is written to
+ * fail on.
  */
 export const feedDescription = (row, window) => {
   const template = DESCRIPTIONS[descriptionKind(row)] ?? DESCRIPTIONS.general;
   const clause = windowSentence(window);
-  return [template.sentences.join(' '), clause, CHAT_LINE].filter((s) => s).join(' ');
+  const sentences = template.sentences.map((s) => s.replace('{city}', rowCity(row)));
+  return [sentences.join(' '), clause, CHAT_LINE].filter((s) => s).join(' ');
 };

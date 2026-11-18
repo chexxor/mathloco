@@ -20,7 +20,7 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { renderCalendar, escapeText, contentLine, CRLF } from '../src/lib/ics.mjs';
-import { publishableRows, meetingKind, venueKey } from '../src/lib/event-groups.mjs';
+import { publishableRows, meetingKind, venueKey, publishedNameOrNull, publishedSeriesNames } from '../src/lib/event-groups.mjs';
 import { feedDescription, DESCRIPTIONS, windowSentence } from '../src/lib/event-description.mjs';
 import { feedWindow, plainDate } from '../src/lib/event-window.mjs';
 import { feedUrl } from '../src/lib/rsvp.mjs';
@@ -577,6 +577,30 @@ const RULES = [
     return out;
   },
 
+  // D429 (round-7 review, feed/Remove "dead brand in every subscriber's calendar"): the `SUMMARY` a
+  // subscriber's calendar shows has to be one of the names the site owns. Round 4's series mapping was
+  // render-only, so the Dates page said "Social" while the file said `MPLS Math Club - Bimonthly Social`
+  // and `Common Denominator - Study Session` — the club's former name and an internal series title, in a
+  // row that stays in a subscriber's software permanently, next to a `LOCATION` naming a bakery they have
+  // never heard of. The test is against the vocabulary's own labels, so a SUMMARY that drifted back to the
+  // organizer's spelling, or to a series nobody named, fails by name rather than painting a calendar.
+  (_data, text) => {
+    const out = [];
+    const labels = publishedSeriesNames().map((s) => String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim());
+    for (const block of eventsOf(text)) {
+      const sum = propOf(unfold(block), 'SUMMARY');
+      if (!sum) continue;
+      const norm = String(sum.value).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      if (labels.includes(norm)) continue;
+      const as = publishedNameOrNull(sum.value);
+      out.push({
+        rule: 'feed-brand',
+        detail: `SUMMARY is ${JSON.stringify(sum.value)}${as ? `, which is the organizer's own title for the ${as} series` : ', which is no series the site defines'}; a subscriber's calendar shows a name the website never mentions (D429: the feed paints the row with the same publishedName the page uses)`,
+      });
+    }
+    return out;
+  },
+
   // "the publisher normalizes, it does not proxy" (D150) checkable in the calendar file, and it is the reason
   // the organizer's pre-2026 boilerplate cannot come back on the next harvest while the gate is green.
   (data, text) => {
@@ -839,6 +863,17 @@ if (selftest) {
       rule: 'feed-meta-commentary',
     },
     { name: 'the-description-states-a-fact', clean: true, rule: 'feed-meta-commentary' },
+    // D429 (round-7 review, feed/Remove "dead brand in every subscriber's calendar"): round 4 mapped the
+    // series name for the **page** only, so the shipped file carried the organizer's own title on all seven
+    // rows while the page said "Social". The planting reverts one `SUMMARY` to the organizer's spelling —
+    // a legal line, only the name changed — and the control is the shipped bytes, so a rule that fires on
+    // the artifact today is a detector and not a permanent red.
+    {
+      name: 'the-summary-reverts-to-the-organizer-s-title',
+      text: (t) => t.replace(/^SUMMARY:Social\r\n/m, 'SUMMARY:MPLS Math Club - Bimonthly Social\r\n'),
+      rule: 'feed-brand',
+    },
+    { name: 'the-summary-is-a-name-the-site-owns', clean: true, rule: 'feed-brand' },
   ];
 
   let missed = 0;
