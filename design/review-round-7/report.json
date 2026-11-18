@@ -4,10 +4,10 @@
     "dayStamp": "2026-11-17",
     "distState": {
       "fresh": true,
-      "built": "dist/client/sitemap-index.xml",
-      "builtAt": 1794973663000.7366,
-      "input": "src/pages/join.astro",
-      "inputAt": 1794973634716.5676
+      "built": "dist/client/sitemap-0.xml",
+      "builtAt": 1794975356594.6682,
+      "input": "src/lib/claude.ts",
+      "inputAt": 1794975102602.306
     },
     "feedEvents": 7,
     "feedCancelled": 2,
@@ -482,49 +482,55 @@
     {
       "id": "C1",
       "route": "/chat",
-      "kind": "plain",
+      "kind": "model",
       "want": "absent",
       "needle": "Chat Topics Summary",
-      "where": "/chat",
-      "hits": 0,
-      "verdict": "CLOSED",
-      "why": "a fourth label all saying summary",
-      "evidence": []
+      "where": "src/lib/claude.ts",
+      "hits": 1,
+      "verdict": "NOT MEASURABLE",
+      "why": "a fourth label all saying summary - the model titles its own block, so the fix is the instruction that titles it (src/lib/claude.ts)",
+      "evidence": [
+        "src/lib/claude.ts: 'Skip notices about the running of the club itself: a gathering being cancelled or moved, a venue being closed or reopened, a channel renamed. Those are dates and places, and the site lists them on its own dates page.',",
+        "src/lib/claude.ts: 'Name the heading for what the items are - the thread, the question, the thing being pulled on - never \"Summary\", \"Chat Topics Summary\", or a restatement of the section.',"
+      ]
     },
     {
       "id": "C2",
       "route": "/chat",
-      "kind": "plain",
+      "kind": "source",
       "want": "absent",
       "needle": "UTC",
-      "where": "/chat",
+      "where": "src/components/DiscordSummary.svelte",
       "hits": 0,
       "verdict": "CLOSED",
-      "why": "UTC stamped on a Central-time site",
+      "why": "UTC stamped on a Central-time site (the island is client-rendered: the built page never carries it)",
       "evidence": []
     },
     {
       "id": "C3",
       "route": "/chat",
-      "kind": "plain",
+      "kind": "source",
       "want": "present",
       "needle": "Central",
-      "where": "/chat",
-      "hits": 0,
-      "verdict": "OPEN",
+      "where": "src/components/DiscordSummary.svelte",
+      "hits": 2,
+      "verdict": "CLOSED",
       "why": "the summary stamped in the zone the club runs in",
-      "evidence": []
+      "evidence": [
+        "src/components/DiscordSummary.svelte: <p class=\"text-label text-ink-3 mt-3\">Last summary written {lastUpdatedLabel} Central</p>",
+        "src/components/DiscordSummary.svelte: Written by our bot from recent channel activity · last updated {lastUpdatedLabel} Central"
+      ]
     },
     {
       "id": "C4",
       "route": "/chat",
-      "kind": "plain",
+      "kind": "source",
       "want": "absent",
       "needle": "Channel summary",
-      "where": "/chat",
+      "where": "src/components/DiscordSummary.svelte",
       "hits": 0,
       "verdict": "CLOSED",
-      "why": "the summary window written M/D/Y",
+      "why": "the fourth nested label saying summary, and the window printed M/D/Y",
       "evidence": []
     },
     {
@@ -558,26 +564,32 @@
     {
       "id": "C7",
       "route": "/chat",
-      "kind": "plain",
+      "kind": "model",
       "want": "absent",
       "needle": "closed for the day",
-      "where": "/chat",
+      "where": "src/lib/claude.ts",
       "hits": 0,
-      "verdict": "CLOSED",
-      "why": "operational noise (a cafe closure) printed beside mathematics",
-      "evidence": []
+      "verdict": "NOT MEASURABLE",
+      "why": "operational noise (a cafe closure) printed beside mathematics - the summary is live model output, so the row measures the instruction that forbids it",
+      "evidence": [
+        "src/lib/claude.ts: 'Skip notices about the running of the club itself: a gathering being cancelled or moved, a venue being closed or reopened, a channel renamed. Those are dates and places, and the site lists them on its own dates page.',",
+        "src/lib/claude.ts: 'Name the heading for what the items are - the thread, the question, the thing being pulled on - never \"Summary\", \"Chat Topics Summary\", or a restatement of the section.',"
+      ]
     },
     {
       "id": "C8",
       "route": "/chat",
-      "kind": "plain",
+      "kind": "model",
       "want": "absent",
       "needle": "Cancellation",
-      "where": "/chat",
+      "where": "src/lib/claude.ts",
       "hits": 0,
-      "verdict": "CLOSED",
+      "verdict": "NOT MEASURABLE",
       "why": "the same noise, the cancellation form",
-      "evidence": []
+      "evidence": [
+        "src/lib/claude.ts: 'Skip notices about the running of the club itself: a gathering being cancelled or moved, a venue being closed or reopened, a channel renamed. Those are dates and places, and the site lists them on its own dates page.',",
+        "src/lib/claude.ts: 'Name the heading for what the items are - the thread, the question, the thing being pulled on - never \"Summary\", \"Chat Topics Summary\", or a restatement of the section.',"
+      ]
     },
     {
       "id": "C9",

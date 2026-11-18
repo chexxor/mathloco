@@ -22,6 +22,15 @@
 
   // Pinned locale and timezone on purpose: this renders on the server and in the browser, and any
   // difference between the two strings is a hydration mismatch.
+  //
+  // Round-7 communication review (2026-11-18), `/chat`/Revise "UTC on a Minnesota site": the stamp used to
+  // print an epoch's zone, which is 5-6 hours off for every reader of a club that meets in Minneapolis, so
+  // a summary stamped 2:44 reads as overnight-stale to the one person who decides whether to come. The zone
+  // is the club's own - the rows above print D397's zone word, `data/events.json` carries TZID=America/Chicago
+  // on every date, and `src/lib/discord.ts` names it as `SUMMARY_ZONE`. The literal is repeated here because
+  // the island runs in the browser and that module is a Worker module with Cloudflare bindings: importing it
+  // to say one word drags the whole summary service into the page. The two move together - if one changes, so
+  // must the other, and `scripts/check-cache.mjs` reads the Worker side.
   const lastUpdatedLabel = $derived(data ? formatStamp(data.lastUpdated) : '');
 
   function formatStamp(value: Date | string): string {
@@ -31,7 +40,7 @@
     return new Intl.DateTimeFormat('en-US', {
       dateStyle: 'medium',
       timeStyle: 'short',
-      timeZone: 'UTC',
+      timeZone: 'America/Chicago',
     }).format(date);
   }
 
@@ -161,7 +170,7 @@
         Discord channel</a>.
       </p>
       {#if lastUpdatedLabel}
-        <p class="text-label text-ink-3 mt-3">Last summary written {lastUpdatedLabel} UTC</p>
+        <p class="text-label text-ink-3 mt-3">Last summary written {lastUpdatedLabel} Central</p>
       {/if}
     </div>
   {:else}
@@ -175,8 +184,17 @@
              guess about a schedule that does not exist. `check:content` could not see it: its cadence rule
              asks whether the PAGE has a cadence source, and this page has one for the club's meeting rhythm,
              which is not a source for a cache. The dated line is the fact; nothing here claims a rhythm. -->
+        <!-- Round-7 communication review (2026-11-18), `/chat`/Add "one line of human framing above the bot
+            text": until this line the page was machine voice end to end, which the read called the opposite of
+            a club. Placed above the dated label rather than below it, so the reader meets the sentence that says
+            what these lines are before they meet the moment those lines were written at. It claims what the page
+            shows: a machine wrote them, nobody here typed them, and the words the bot offers are not a person's. -->
+        <p class="text-body leading-prose text-ink-2">
+          Nobody typed these lines. A summary service reads the last fortnight of the channel and writes them,
+          and the channel above is where the club actually talks.
+        </p>
         <p class="text-label text-ink-3">
-          Written by our bot from recent channel activity · last updated {lastUpdatedLabel} UTC
+          Written by our bot from recent channel activity · last updated {lastUpdatedLabel} Central
         </p>
       {/if}
       {#each data?.channels ?? [] as channel (channel.id)}
@@ -194,16 +212,21 @@
              against paper, under the 1.35 flat bar) was never doing the separation. -->
         <div class="rounded-card overflow-hidden inset-shadow-rule">
           <div class="px-4 py-3">
-            <span class="text-label font-medium text-ink">#{channel.name}</span>
+            <h2 class="text-label font-medium text-ink">#{channel.name}</h2>
           </div>
           {#if summary?.summary}
             {@const blocks = parseSummaryBlocks(summary.summary)}
             {#if blocks.length > 0}
               <div class="px-4 pb-4 space-y-3">
                 {#if summary.timeRange}
-                  <h3 class="text-lede font-bold text-ink font-body">
-                    Channel summary: {summary.timeRange}
-                  </h3>
+                  <!-- Round-7 communication review (2026-11-18), `/chat`/Revise ("Title Case, and a fourth
+                      nested label all saying 'summary'": the page had H1 -> "Channel summary" -> "Chat Topics
+                      Summary"). The card's own heading is now the window it covers, in the register `summaryWindow`
+                      builds in `src/lib/discord.ts` (words, not `11/1/2026 - 11/12/2026`), and the channel name
+                      above it is the h2 the heading ladder was missing (H1 -> h2 -> h3 -> h4, no skipped level).
+                      The model's own headings stay h4. Nothing here says "summary" a fourth time: what sits under
+                      the window is the summary, and the window says which weeks it covers. -->
+                  <h3 class="text-lede font-bold text-ink font-body">{summary.timeRange}</h3>
                 {/if}
                 <!-- Model output is rendered as text in our own markup: no raw HTML. The typography
                      ramp is written in tokens here, because `prose prose-blue` coloured the same text

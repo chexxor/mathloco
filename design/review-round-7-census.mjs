@@ -94,14 +94,22 @@ const CHECKS = [
   { id: 'J9', route: '/join', want: 'absent', needle: 'reads the messages we post there', why: 'the ask-us door that lands on bot output' },
   { id: 'J10', route: '/join', want: 'present', needle: 'nobody is teaching', why: 'the uneven bars named honestly' },
   // ---- /chat ----
-  { id: 'C1', route: '/chat', want: 'absent', needle: 'Chat Topics Summary', why: 'a fourth label all saying summary' },
-  { id: 'C2', route: '/chat', want: 'absent', needle: 'UTC', why: 'UTC stamped on a Central-time site' },
-  { id: 'C3', route: '/chat', want: 'present', needle: 'Central', why: 'the summary stamped in the zone the club runs in' },
-  { id: 'C4', route: '/chat', want: 'absent', needle: 'Channel summary', why: 'the summary window written M/D/Y' },
+// The island's copy is not in the built HTML: `DiscordSummary.svelte` fetches `/api/discord-summary` in the
+// browser, so the strings the letter quotes about the bot section live in the component, and Svelte ships the
+// component's text in its own template function, not in the page. @measured 2026-11-18: `Last summary written`
+// returns 0 hits in `dist/client/chat/index.html` and 2 in the component. A row that read the built page for
+// those lines reported CLOSED for a string the page never had a chance to have, so those rows read the
+// component instead - `kind: 'source'`, comments stripped, because a source note quoting the defect is not a
+// page printing it (D431's rule, applied the other way). The pending branch is the exception: it IS server-
+// rendered, so D409's warm state and C9's framing line are still readable in the artifact.
+  { id: 'C1', route: '/chat', want: 'absent', kind: 'model', needle: 'Chat Topics Summary', owns: 'src/lib/claude.ts', why: 'a fourth label all saying summary - the model titles its own block, so the fix is the instruction that titles it (src/lib/claude.ts)' },
+  { id: 'C2', route: '/chat', want: 'absent', kind: 'source', file: 'src/components/DiscordSummary.svelte', needle: 'UTC', why: 'UTC stamped on a Central-time site (the island is client-rendered: the built page never carries it)' },
+  { id: 'C3', route: '/chat', want: 'present', kind: 'source', file: 'src/components/DiscordSummary.svelte', needle: 'Central', why: 'the summary stamped in the zone the club runs in' },
+  { id: 'C4', route: '/chat', want: 'absent', kind: 'source', file: 'src/components/DiscordSummary.svelte', needle: 'Channel summary', why: 'the fourth nested label saying summary, and the window printed M/D/Y' },
   { id: 'C5', route: '/chat', want: 'present', needle: 'The chat itself', why: 'the section the letter says restates the H1 - kept, so the row records where it sits' },
   { id: 'C6', route: '/chat', want: 'present', needle: 'Not a scan of a book', why: 'the provenance line the letter wants demoted to a caption' },
-  { id: 'C7', route: '/chat', want: 'absent', needle: 'closed for the day', why: 'operational noise (a cafe closure) printed beside mathematics' },
-  { id: 'C8', route: '/chat', want: 'absent', needle: 'Cancellation', why: 'the same noise, the cancellation form' },
+  { id: 'C7', route: '/chat', want: 'absent', kind: 'model', needle: 'closed for the day', owns: 'src/lib/claude.ts', why: 'operational noise (a cafe closure) printed beside mathematics - the summary is live model output, so the row measures the instruction that forbids it' },
+  { id: 'C8', route: '/chat', want: 'absent', kind: 'model', needle: 'Cancellation', owns: 'src/lib/claude.ts', why: 'the same noise, the cancellation form' },
   { id: 'C9', route: '/chat', want: 'present', needle: 'the live thing', why: 'one line of human framing above the bot voice' },
   // ---- the feed ----
   { id: 'F1', route: 'feed', want: 'absent', needle: 'MPLS Math Club', why: 'the dead brand in every subscriber\'s calendar' },
@@ -120,6 +128,16 @@ const CHECKS = [
 ];
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+/** The island's copy is client-rendered (see the `/chat` block above), so those rows read the component.
+ *  Comments are stripped first, so a note that quotes the defect it fixed does not count as a page printing
+ *  it - the same rule `check-schedule-window.mjs` pays over built text, pointed at source instead. */
+const stripComments = (t) => t.replace(/<!--[\s\S]*?-->/g, ' ').replace(/\/\*[\s\S]*?\*\//g, ' ')
+  // Leading `//` lines and block-continuation lines, rather than every `//`: a URL in a string contains the
+  // same two characters, and a strip that eats them is a strip that can eat real copy.
+  .replace(/^[ 	]*(?:\/\/|\*)[^\n]*$/gm, ' ');
+const SOURCE_FILE = (f) => {
+  try { return stripComments(readFileSync(resolve(f), 'utf8')); } catch { return null; }
+};
 const titleOf = (p) => {
   const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(p.raw);
   return m ? decode(m[1].replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim() : '(no title)';
@@ -128,12 +146,35 @@ const titleOf = (p) => {
 const rows = [];
 for (const check of CHECKS) {
   const kind = check.kind ?? 'plain';
+  if (kind === 'model') {
+    // The summary is model output fetched at runtime: no seat here can re-read the text a subscriber's
+    // browser will get, so the row's evidence is the instruction that owns the shape and the row says so.
+    const src = SOURCE_FILE(check.owns) ?? '';
+    rows.push({
+      id: check.id,
+      route: check.route,
+      kind,
+      want: check.want,
+      needle: check.needle,
+      where: check.owns,
+      hits: (src.match(new RegExp(esc(check.needle), 'gi')) ?? []).length,
+      verdict: 'NOT MEASURABLE',
+      why: check.why,
+      evidence: src.split('\n').filter((l) => new RegExp(esc(check.needle), 'i').test(l) || /Skip notices|Name the heading/.test(l)).slice(0, 2).map((l) => `${check.owns}: ${l.trim()}`),
+    });
+    continue;
+  }
   const re = new RegExp(check.re ? check.needle : esc(check.needle), 'gi');
   let haystack, where, evidence = [];
   if (check.route === 'feed') {
     haystack = feed;
     where = 'dist/client/events.ics';
     if (haystack.match(re)) evidence = (haystack.match(new RegExp(re.source, 'gi')) ?? []).slice(0, 3);
+  } else if (kind === 'source') {
+    where = check.file;
+    haystack = SOURCE_FILE(check.file) ?? '';
+    if (!haystack) throw new Error(`census row ${check.id} names a source file that is not there: ${check.file}`);
+    if (haystack.match(re)) evidence = haystack.split('\n').filter((l) => re.test(l)).slice(0, 2).map((l) => `${check.file}: ${l.trim()}`);
   } else {
     const p = pages[check.route];
     where = check.route;
@@ -148,8 +189,7 @@ for (const check of CHECKS) {
   }
   const count = (haystack.match(re) ?? []).length;
   const present = count > 0;
-  const satisfied = check.want === 'absent' ? !present : present;
-  rows.push({
+  const satisfied = check.want === 'absent' ? !present : present;  rows.push({
     id: check.id,
     route: check.route,
     kind,
@@ -221,7 +261,9 @@ for (const r of rows) {
   for (const e of r.evidence) console.log(`\t\t  ${e}`);
 }
 const open = rows.filter((r) => r.verdict === 'OPEN');
-console.log(`\nOPEN ${open.length} of ${rows.length}; CLOSED ${rows.length - open.length}`);
+const unmeasurable = rows.filter((r) => r.verdict === 'NOT MEASURABLE');
+console.log(`\nOPEN ${open.length} of ${rows.length}; CLOSED ${rows.length - open.length - unmeasurable.length}; NOT MEASURABLE from this seat ${unmeasurable.length}`);
+if (unmeasurable.length) console.log(`\nunmeasurable from this seat (live model output, or a fetch no seat runs): ${unmeasurable.map((r) => r.id).join(', ')}`);
 console.log(`\n## the counts the letter argues with, priced off the same read`);
 console.log(`page titles: ${JSON.stringify(metrics.titles)}`);
 console.log(`absolute URLs painted outside each page's own <footer>: ${JSON.stringify(metrics.outboundOutsideFooter)} (the ceiling R1 ratified is 6)`);
