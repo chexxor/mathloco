@@ -5,9 +5,9 @@
     "distState": {
       "fresh": true,
       "built": "dist/client/sitemap-0.xml",
-      "builtAt": 1794994758517.4253,
-      "input": "src/components/DiscordSummary.svelte",
-      "inputAt": 1794989642879.6033
+      "builtAt": 1795028918646.9688,
+      "input": "src/pages/join.astro",
+      "inputAt": 1795028546154.1729
     },
     "feedEvents": 7,
     "feedCancelled": 2,
