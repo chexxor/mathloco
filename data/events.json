@@ -6,15 +6,8 @@
     "timezone": "America/Chicago",
     "_timezone": "The club meets in the Twin Cities, so the published instants carry this TZID with a VTIMEZONE (D72). `check:ics` asserts the offsets against the runtime's tz database rather than trusting this string."
   },
-  "source": {
-    "kind": "mobilizon",
-    "url": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
-    "software": "-//Elixir ICalendar//Mobilizon 5.2.4//EN",
-    "fetchedAt": "2026-11-13T17:05:33Z",
-    "_fetchedAt": "The stamp every VEVENT's DTSTAMP derives from (RFC 5545 3.8.7: the moment the information was put in the calendar object). Deliberately a committed value, not `new Date()`: a build-time DTSTAMP would make every deploy a change to every subscriber's calendar, and would make D72's byte-identity assertion unmeasurable.",
-    "_rule": "Read as served 2026-11-06 05:46Z (curl, 200, `text/calendar; charset=utf-8`, 4,184 octets, 3 VEVENTs, no RRULE, no VTIMEZONE, LF-only line endings, longest unfolded content line 721 chars, PRODID `-//Elixir ICalendar//Mobilizon 5.2.4//EN`). Every DTSTART/DTEND now carries `TZID=America/Chicago` (6 occurrences) - the shape changed under us: the 2026-11-04 read of the same feed was 2,578 octets with 2 VEVENTs, bare `Z` on every instant and no zone at all, which is what D169 ruled on. Two reads 90 seconds apart were byte-identical, so the 05:44:52Z edit is settled; the shape is still a thing to re-measure rather than remember (D222, D225).",
-    "_churn": "This feed across three reads on two days, each one measured at the time it is quoted: read 2026-11-04T07:15:30Z (the previous `source.fetchedAt`) - 2,578 octets, 2 VEVENTs, no TZID. Read 2026-11-06, rows upstream-stamped 04:12:55Z - 2,818 octets, 2 VEVENTs, TZID on every instant, the Nov 7 social gone, a Nov 21 social present. Read 2026-11-06 ~05:44Z, rows upstream-stamped 05:44:52Z - 4,184 octets, 3 VEVENTs, the Nov 7 social back under a new UID with a one-hour-shorter end; that read was confirmed by a second fetch 90s later, byte-identical. Two shapes in under two hours on the second day: the organizer was editing. Consequence for anyone who subscribes: every harvest moves `source.fetchedAt`, and `check:ics`'s dtstamp rule requires every published DTSTAMP to equal it, so each harvest reads to every subscriber's client as an edit to every row. Harvesting on a cadence is therefore a product decision, not an operational one (D225)."
-  },
+  "_dropped": "The instance feed (GET /feed/instance/ics, 6,584 bytes, 5 VEVENTs as fetched 2026-11-04) also carries three past `Bimonthly Social` rows — 2026-05-08, 2026-05-22, 2026-06-05, each at 17:00Z, each its own UID. They are not published: there is no past-events page (D117: a path needs a page) and the group feed the harvest reads does not return them (it lists upcoming only, per D74's reading of the source). If a `Past meetings` page is ever ruled, they are in the harvest, not lost.",
+  "_runway": "A8's rule, written into the file it guards: `npm run check:ics` FAILS when no upcoming row sits within 21 days (RUNWAY_DAYS in scripts/check-ics.mjs) and prints a warning inside 42 days. 21 = one 14-day series spacing (D175) plus a week of slack — the operator's ruling 2026-11-04, with the instruction that there is no env var (D188). The escape hatch is one dated field, `\"stalenessOkUntil\": \"YYYY-MM-DD\"`, set here by hand for a genuine gap between series. It expires on its own date, `npm run events:harvest` never sets or clears it (the harvester mutates rows in place and leaves top-level fields alone), and the name misspelled fails the `snapshot-keys` rule rather than silencing the gate for free.",
   "events": [
     {
       "uid": "76a29f38-e8f3-46a3-ab36-3009d69afe65",
@@ -292,6 +285,26 @@
       }
     }
   ],
-  "_dropped": "The instance feed (GET /feed/instance/ics, 6,584 bytes, 5 VEVENTs as fetched 2026-11-04) also carries three past `Bimonthly Social` rows — 2026-05-08, 2026-05-22, 2026-06-05, each at 17:00Z, each its own UID. They are not published: there is no past-events page (D117: a path needs a page) and the group feed the harvest reads does not return them (it lists upcoming only, per D74's reading of the source). If a `Past meetings` page is ever ruled, they are in the harvest, not lost.",
-  "_runway": "A8's rule, written into the file it guards: `npm run check:ics` FAILS when no upcoming row sits within 21 days (RUNWAY_DAYS in scripts/check-ics.mjs) and prints a warning inside 42 days. 21 = one 14-day series spacing (D175) plus a week of slack — the operator's ruling 2026-11-04, with the instruction that there is no env var (D188). The escape hatch is one dated field, `\"stalenessOkUntil\": \"YYYY-MM-DD\"`, set here by hand for a genuine gap between series. It expires on its own date, `npm run events:harvest` never sets or clears it (the harvester mutates rows in place and leaves top-level fields alone), and the name misspelled fails the `snapshot-keys` rule rather than silencing the gate for free."
+  "source": {
+    "kind": "mobilizon",
+    "url": "https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics",
+    "software": "-//Elixir ICalendar//Mobilizon 5.2.4//EN",
+    "fetchedAt": "2026-11-13T17:05:33Z",
+    "_fetchedAt": "The stamp every VEVENT's DTSTAMP derives from (RFC 5545 3.8.7: the moment the information was put in the calendar object). Deliberately a committed value, not `new Date()`: a build-time DTSTAMP would make every deploy a change to every subscriber's calendar, and would make D72's byte-identity assertion unmeasurable.",
+    "_rule": "Read as served 2026-11-06 05:46Z (curl, 200, `text/calendar; charset=utf-8`, 4,184 octets, 3 VEVENTs, no RRULE, no VTIMEZONE, LF-only line endings, longest unfolded content line 721 chars, PRODID `-//Elixir ICalendar//Mobilizon 5.2.4//EN`). Every DTSTART/DTEND now carries `TZID=America/Chicago` (6 occurrences) - the shape changed under us: the 2026-11-04 read of the same feed was 2,578 octets with 2 VEVENTs, bare `Z` on every instant and no zone at all, which is what D169 ruled on. Two reads 90 seconds apart were byte-identical, so the 05:44:52Z edit is settled; the shape is still a thing to re-measure rather than remember (D222, D225).",
+    "_churn": "This feed across three reads on two days, each one measured at the time it is quoted: read 2026-11-04T07:15:30Z (the previous `source.fetchedAt`) - 2,578 octets, 2 VEVENTs, no TZID. Read 2026-11-06, rows upstream-stamped 04:12:55Z - 2,818 octets, 2 VEVENTs, TZID on every instant, the Nov 7 social gone, a Nov 21 social present. Read 2026-11-06 ~05:44Z, rows upstream-stamped 05:44:52Z - 4,184 octets, 3 VEVENTs, the Nov 7 social back under a new UID with a one-hour-shorter end; that read was confirmed by a second fetch 90s later, byte-identical. Two shapes in under two hours on the second day: the organizer was editing. Consequence for anyone who subscribes: every harvest moves `source.fetchedAt`, and `check:ics`'s dtstamp rule requires every published DTSTAMP to equal it, so each harvest reads to every subscriber's client as an edit to every row. Harvesting on a cadence is therefore a product decision, not an operational one (D225)."
+  },
+  "superseded": [
+    {
+      "uid": "99df9996-f213-498e-a661-8bffddfdf115",
+      "group": "2026-11-21|angel food bakery 8100 minnetonka boulevard 55426 saint louis park minnesota united states|social",
+      "kept": [
+        "649bf59a-1989-43c2-b336-46f79ce403b1"
+      ],
+      "reason": "a live row in the same group (649bf59a-1989-43c2-b336-46f79ce403b1) supersedes this CANCELLED row",
+      "sequence": 1,
+      "start": "2026-11-21T12:00",
+      "summary": "MPLS Math Club - Bimonthly Social"
+    }
+  ]
 }
