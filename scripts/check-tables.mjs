@@ -26,6 +26,11 @@ const FILES = [
   'DECISIONS.index.md',
   'docs/communication-review-round-6-2026-11-16.md',
   'docs/reply-to-the-communication-review-round-6-2026-11-16.md',
+  // D436 (round 7): the pair's inventory IS the contract — a row that loses a cell loses the line item it was
+  // mapping, and the claims ledger is how the operator finds their own hand back. The letter doc's tables sit
+  // inside a blockquote, which this auditor does not read, so the pair audits the reply's tables only.
+  'docs/communication-review-round-7-2026-11-18.md',
+  'docs/reply-to-the-communication-review-round-7-2026-11-18.md',
 ];
 
 // Split a row on unescaped pipes only. `split('|')` on a cell containing `\|` invents a column.

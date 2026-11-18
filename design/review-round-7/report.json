@@ -1,13 +1,13 @@
 {
-  "day": "2026-11-17",
+  "day": "2026-11-18",
   "metrics": {
-    "dayStamp": "2026-11-17",
+    "dayStamp": "2026-11-18",
     "distState": {
       "fresh": true,
       "built": "dist/client/sitemap-index.xml",
-      "builtAt": 1794977005197.321,
-      "input": "src/components/Schedule.astro",
-      "inputAt": 1794976866588.5073
+      "builtAt": 1794980165367.812,
+      "input": "src/components/DiscordSummary.svelte",
+      "inputAt": 1794979807392.6853
     },
     "feedEvents": 7,
     "feedCancelled": 2,
@@ -363,9 +363,10 @@
       "needle": "google\\.com/maps|\\bmaps\\.",
       "where": "/dates",
       "hits": 0,
-      "verdict": "OPEN",
+      "verdict": "DECLINED",
       "why": "a directions link per row (the letter's ask; the site declines pins)",
-      "evidence": []
+      "evidence": [],
+      "declined": "the page sits at 6 of 6 absolute outbound anchors outside <footer>, and 6 is the ceiling ratified in round 4 (D358) and held by check-rsvp-page; a per-row maps link is 5 more. Raising the ceiling is one-way, so this row records the stance, not owed work"
     },
     {
       "id": "D6",
@@ -375,9 +376,10 @@
       "needle": "bing\\.com/maps|openstreetmap",
       "where": "/dates",
       "hits": 0,
-      "verdict": "OPEN",
+      "verdict": "DECLINED",
       "why": "same ask, the two other map hosts a directions link could name",
-      "evidence": []
+      "evidence": [],
+      "declined": "same ask as D5, against the same measured ceiling"
     },
     {
       "id": "D7",
@@ -704,12 +706,13 @@
       "needle": "STATUS:CANCELLED",
       "where": "dist/client/events.ics",
       "hits": 2,
-      "verdict": "OPEN",
+      "verdict": "DECLINED",
       "why": "cancelled events published to a subscriber who cannot unsubscribe from a ghost",
       "evidence": [
         "STATUS:CANCELLED",
         "STATUS:CANCELLED"
-      ]
+      ],
+      "declined": "the operator ruled 2026-11-06 that a row the feed dropped is published AS STATUS:CANCELLED with its SEQUENCE raised (D223), and D299 keeps a cancelled UID un-merged; RFC 5545 makes CANCELLED a legal status. The letter's fix list and the feed-p0 task both ask for the opposite; the ruling is the source, so the row carries the stance"
     },
     {
       "id": "F4",
@@ -728,27 +731,43 @@
       "route": "feed",
       "kind": "plain",
       "want": "absent",
-      "needle": "mobilizon",
+      "needle": "URL:https://mobilizon",
       "where": "dist/client/events.ics",
-      "hits": 8,
-      "verdict": "OPEN",
-      "why": "a sign-up destination the site never mentions",
+      "hits": 1,
+      "verdict": "DECLINED",
+      "why": "the sign-up destination a subscriber reaches: the source platform's page, not the club's",
       "evidence": [
-        "mobilizon",
-        "mobilizon",
-        "mobilizon"
-      ]
+        "URL:https://mobilizon"
+      ],
+      "declined": "6 of 7 rows already carry the club's own Meetup URL (D398's resolver); the one that stays on the source platform is a retired row its date and hour has no open page for, and a Meetup URL this repo cannot look up is a URL this repo cannot claim. The 7 further hits are ATTACH image links to art no copy of which is in this tree (src/assets holds only photos/)"
+    },
+    {
+      "id": "F5b",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "ATTACH[^\r]*mobilizon",
+      "where": "dist/client/events.ics",
+      "hits": 7,
+      "verdict": "DECLINED",
+      "why": "the same host reached through the image attachment instead of the sign-up link",
+      "evidence": [
+        "ATTACH;FMTTYPE=image/png:https://mobilizon",
+        "ATTACH;FMTTYPE=image/png:https://mobilizon",
+        "ATTACH;FMTTYPE=image/png:https://mobilizon"
+      ],
+      "declined": "the event art a subscriber's calendar shows is hosted by the source platform; this repo holds no copy (src/assets holds only photos/) and re-hosting a third party's poster is an errand with no source here, so it is declined rather than owed"
     },
     {
       "id": "F6",
       "route": "feed",
       "kind": "plain",
       "want": "absent",
-      "needle": "dates from Nov",
+      "needle": "calendar file carries|[0-9]+ dates",
       "where": "dist/client/events.ics",
       "hits": 0,
       "verdict": "CLOSED",
-      "why": "the website meta-note with a hardcoded count, in every event body",
+      "why": "the website meta-note with a hardcoded count, in every event body (D399 deletes the framing and the count and keeps the range fact generated; the needle that matched only \"dates from Nov\" read the shipped stance as absent without ever matching the defect, so this row now names the framing the letter asked to delete)",
       "evidence": []
     },
     {
@@ -770,16 +789,31 @@
     {
       "id": "X1",
       "route": "/past",
+      "kind": "source",
+      "want": "present",
+      "needle": "noindex",
+      "where": "dist/client/past/index.html",
+      "hits": 2,
+      "verdict": "CLOSED",
+      "why": "the letter's remedy was \"remove the route or noindex it until three meetings have passed\": D404 keeps the shelf and loses the door, D435 puts noindex on the page and the sitemap filter on one home both read",
+      "evidence": [
+        "dist/client/past/index.html: <!DOCTYPE html><html lang=\"en-US\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\"><link rel=\"canonical\" href=\"https://matheapolis.com/past\"><meta name=\"robots\" content=\"noindex,nofol"
+      ]
+    },
+    {
+      "id": "X1b",
+      "route": "/past",
       "kind": "plain",
-      "want": "absent",
+      "want": "present",
       "needle": "Nothing listed yet",
       "where": "/past",
       "hits": 1,
-      "verdict": "OPEN",
-      "why": "an empty archive that is indexable",
+      "verdict": "DECLINED",
+      "why": "the empty shelf the letter calls \"worse than no archive\"",
       "evidence": [
         "body/Past meetings: Nothing listed yet"
-      ]
+      ],
+      "declined": "D404 rules the empty shelf as a state, not an error, and D374 landed the route to answer \"did a date already pass\"; the letter's real demand was indexability, which X1 measures"
     },
     {
       "id": "X2",
@@ -831,6 +865,34 @@
       "verdict": "CLOSED",
       "why": "same, on /dates",
       "evidence": []
+    },
+    {
+      "id": "X6",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "not sponsored or endorsed",
+      "where": "/",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the endorsement line: the letter found it in the body on /join and absent on home, and asked for one home — all six built pages now print it in the exit band and none in a body (D394)",
+      "evidence": [
+        "exit-band/How it works: Meetup and Discord are the platforms’ own names; this site is the club’s, and is not sponsored or endorsed by either."
+      ]
+    },
+    {
+      "id": "X7",
+      "route": "/",
+      "kind": "source",
+      "want": "present",
+      "needle": "/schedule",
+      "where": "dist/client/_redirects",
+      "hits": 2,
+      "verdict": "CLOSED",
+      "why": "the letter reads /schedule as a 404 for the third round; the built artifact ships a 301 for both /schedule and /schedule/, and the live edge answers 301 (D373’s sweep, D408)",
+      "evidence": [
+        "dist/client/_redirects: /schedule/    /dates    301"
+      ]
     }
   ]
 }

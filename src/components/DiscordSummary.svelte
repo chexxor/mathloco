@@ -30,7 +30,7 @@
   // on every date, and `src/lib/discord.ts` names it as `SUMMARY_ZONE`. The literal is repeated here because
   // the island runs in the browser and that module is a Worker module with Cloudflare bindings: importing it
   // to say one word drags the whole summary service into the page. The two move together - if one changes, so
-  // must the other, and `scripts/check-cache.mjs` reads the Worker side.
+  // must the other, and `npm run check:cache` (`scripts/check-summary-cache.ts`) reads the Worker side.
   const lastUpdatedLabel = $derived(data ? formatStamp(data.lastUpdated) : '');
 
   function formatStamp(value: Date | string): string {

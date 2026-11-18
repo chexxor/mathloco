@@ -59,7 +59,11 @@ const feed = readFileSync(resolve(ROOT, 'events.ics'), 'utf8');
 // `want` is what the letter asks the page to look like AFTER the fix:
 //   absent  -> the copy it names should no longer be there
 //   present -> the affordance it asks for should be there
-// `probe` says how this probe can see it at all. A row may also carry `zone: [...]` — only for rows whose defect
+// `probe` says how this probe can see it at all. A row may carry `declined: '<evidence>'` — the item is settled as a
+// stance this tree keeps rather than a fix it owes, so its verdict is DECLINED whatever the hit count is: an OPEN row
+// is a promise that work remains, and a declined item that stays OPEN is an instrument that asks for the same letter
+// every round (D413's class, one step further: the row that cannot be shipped still has a verdict).
+// A row may also carry `zone: [...]` — only for rows whose defect
 // is a sentence in one part of the page, so a move between parts is a fix rather than a miss — and `metric`, which
 // reads one of the counts the table prints instead of a string.
 // ---------------------------------------------------------------------------
@@ -89,8 +93,8 @@ const CHECKS = [
   { id: 'D2', route: '/dates', want: 'absent', needle: 'address to give directions to', why: 'a sentence describing the page\'s own layout' },
   { id: 'D3', route: '/dates', want: 'absent', needle: 'days ago', why: 'a relative age that ages into an apology' },
   { id: 'D4', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'events\.ics', why: 'the calendar action the page offers at all' },
-  { id: 'D5', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'google\\.com/maps|\\bmaps\\.', why: 'a directions link per row (the letter\'s ask; the site declines pins)' },
-  { id: 'D6', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'bing\\.com/maps|openstreetmap', why: 'same ask, the two other map hosts a directions link could name' },
+  { id: 'D5', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'google\\.com/maps|\\bmaps\\.', declined: 'the page sits at 6 of 6 absolute outbound anchors outside <footer>, and 6 is the ceiling ratified in round 4 (D358) and held by check-rsvp-page; a per-row maps link is 5 more. Raising the ceiling is one-way, so this row records the stance, not owed work', why: 'a directions link per row (the letter\'s ask; the site declines pins)' },
+  { id: 'D6', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'bing\\.com/maps|openstreetmap', declined: 'same ask as D5, against the same measured ceiling', why: 'same ask, the two other map hosts a directions link could name' },
   { id: 'D7', route: '/dates', want: 'present', needle: 'Study session', why: 'the format word defined where it is printed' },
   // ---- /join ----
   { id: 'J1', route: '/join', want: 'absent', needle: 'what a meeting costs', why: 'the cost refusal, second surface' },
@@ -126,17 +130,21 @@ const CHECKS = [
   // ---- the feed ----
   { id: 'F1', route: 'feed', want: 'absent', needle: 'MPLS Math Club', why: 'the dead brand in every subscriber\'s calendar' },
   { id: 'F2', route: 'feed', want: 'absent', needle: 'Common Denominator - Study Session', why: 'an organizer title with an internal codename, as the event\'s name' },
-  { id: 'F3', route: 'feed', want: 'absent', needle: 'STATUS:CANCELLED', why: 'cancelled events published to a subscriber who cannot unsubscribe from a ghost' },
+  { id: 'F3', route: 'feed', want: 'absent', needle: 'STATUS:CANCELLED', declined: 'the operator ruled 2026-11-06 that a row the feed dropped is published AS STATUS:CANCELLED with its SEQUENCE raised (D223), and D299 keeps a cancelled UID un-merged; RFC 5545 makes CANCELLED a legal status. The letter\'s fix list and the feed-p0 task both ask for the opposite; the ruling is the source, so the row carries the stance', why: 'cancelled events published to a subscriber who cannot unsubscribe from a ghost' },
   { id: 'F4', route: 'feed', want: 'absent', needle: 'in Minneapolis', why: 'the wrong city in the body of a Saint Louis Park event' },
-  { id: 'F5', route: 'feed', want: 'absent', needle: 'mobilizon', why: 'a sign-up destination the site never mentions' },
-  { id: 'F6', route: 'feed', want: 'absent', needle: 'dates from Nov', why: 'the website meta-note with a hardcoded count, in every event body' },
+  { id: 'F5', route: 'feed', want: 'absent', needle: 'URL:https://mobilizon', re: true, declined: '6 of 7 rows already carry the club\'s own Meetup URL (D398\'s resolver); the one that stays on the source platform is a retired row its date and hour has no open page for, and a Meetup URL this repo cannot look up is a URL this repo cannot claim. The 7 further hits are ATTACH image links to art no copy of which is in this tree (src/assets holds only photos/)', why: 'the sign-up destination a subscriber reaches: the source platform\'s page, not the club\'s' },
+  { id: 'F5b', route: 'feed', want: 'absent', needle: 'ATTACH[^\r]*mobilizon', re: true, declined: 'the event art a subscriber\'s calendar shows is hosted by the source platform; this repo holds no copy (src/assets holds only photos/) and re-hosting a third party\'s poster is an errand with no source here, so it is declined rather than owed', why: 'the same host reached through the image attachment instead of the sign-up link' },
+  { id: 'F6', route: 'feed', want: 'absent', needle: 'calendar file carries|[0-9]+ dates', re: true, why: 'the website meta-note with a hardcoded count, in every event body (D399 deletes the framing and the count and keeps the range fact generated; the needle that matched only "dates from Nov" read the shipped stance as absent without ever matching the defect, so this row now names the framing the letter asked to delete)' },
   { id: 'F7', route: 'feed', want: 'present', needle: 'SUMMARY:Social', why: 'the feed naming the event the way the page does' },
   // ---- cross-cutting ----
-  { id: 'X1', route: '/past', want: 'absent', needle: 'Nothing listed yet', why: 'an empty archive that is indexable' },
+  { id: 'X1', route: '/past', want: 'present', kind: 'source', file: 'dist/client/past/index.html', needle: 'noindex', why: 'the letter\'s remedy was "remove the route or noindex it until three meetings have passed": D404 keeps the shelf and loses the door, D435 puts noindex on the page and the sitemap filter on one home both read' },
+  { id: 'X1b', route: '/past', want: 'present', needle: 'Nothing listed yet', declined: 'D404 rules the empty shelf as a state, not an error, and D374 landed the route to answer "did a date already pass"; the letter\'s real demand was indexability, which X1 measures', why: 'the empty shelf the letter calls "worse than no archive"' },
   { id: 'X2', route: '/dates', want: 'present', needle: 'Central', why: 'the zone word on every venue group (D397)' },
   { id: 'X3', route: '/join', want: 'present', kind: 'title', re: true, needle: 'Matheapolis.*Minneapolis|Minneapolis.*Matheapolis', why: 'the title carrying the page, the site and the city (D396)' },
   { id: 'X4', route: '/chat', want: 'present', kind: 'title', re: true, needle: 'Matheapolis.*Minneapolis|Minneapolis.*Matheapolis', why: 'same, on /chat' },
   { id: 'X5', route: '/dates', want: 'present', kind: 'title', re: true, needle: 'Matheapolis.*Minneapolis|Minneapolis.*Matheapolis', why: 'same, on /dates' },
+  { id: 'X6', route: '/', want: 'present', kind: 'plain', zone: ['exit-band'], needle: 'not sponsored or endorsed', why: 'the endorsement line: the letter found it in the body on /join and absent on home, and asked for one home — all six built pages now print it in the exit band and none in a body (D394)' },
+  { id: 'X7', route: '/', want: 'present', kind: 'source', file: 'dist/client/_redirects', needle: '/schedule', why: 'the letter reads /schedule as a 404 for the third round; the built artifact ships a 301 for both /schedule and /schedule/, and the live edge answers 301 (D373\u2019s sweep, D408)' },
 ];
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -186,7 +194,7 @@ for (const check of CHECKS) {
     where = check.file;
     haystack = SOURCE_FILE(check.file) ?? '';
     if (!haystack) throw new Error(`census row ${check.id} names a source file that is not there: ${check.file}`);
-    if (haystack.match(re)) evidence = haystack.split('\n').filter((l) => re.test(l)).slice(0, 2).map((l) => `${check.file}: ${l.trim()}`);
+    if (haystack.match(re)) evidence = haystack.split('\n').filter((l) => re.test(l)).slice(0, 2).map((l) => `${check.file}: ${l.trim()}`.slice(0, 300));
   } else if (kind === 'metric') {
     where = `metrics.${check.metric}`;
     haystack = check.metric === 'joinLabels' ? joinLabelSet.join(' | ') : '';
@@ -220,6 +228,7 @@ for (const check of CHECKS) {
     verdict: satisfied ? 'CLOSED' : 'OPEN',
     why: check.why,
     evidence,
+    ...(check.declined ? { declined: check.declined, verdict: 'DECLINED' } : {}),
   });
 }
 
@@ -280,7 +289,9 @@ for (const r of rows) {
 }
 const open = rows.filter((r) => r.verdict === 'OPEN');
 const unmeasurable = rows.filter((r) => r.verdict === 'NOT MEASURABLE');
-console.log(`\nOPEN ${open.length} of ${rows.length}; CLOSED ${rows.length - open.length - unmeasurable.length}; NOT MEASURABLE from this seat ${unmeasurable.length}`);
+const declined = rows.filter((r) => r.verdict === 'DECLINED');
+console.log(`\nOPEN ${open.length} of ${rows.length}; CLOSED ${rows.length - open.length - unmeasurable.length - declined.length}; DECLINED with evidence ${declined.length}; NOT MEASURABLE from this seat ${unmeasurable.length}`);
+if (declined.length) console.log(`\ndeclined, each with the ruling that holds it: ${declined.map((r) => `${r.id} ${r.needle}`).join(' | ')}`);
 if (unmeasurable.length) console.log(`\nunmeasurable from this seat (live model output, or a fetch no seat runs): ${unmeasurable.map((r) => r.id).join(', ')}`);
 console.log(`\n## the counts the letter argues with, priced off the same read`);
 console.log(`page titles: ${JSON.stringify(metrics.titles)}`);
