@@ -14,9 +14,13 @@ Claim rows available for this analysis: 996 @measured 2026-11-18 by `.design/tmp
 run per system — govuk 191, carbon 195, atlassian 209, spectrum 186, material 215 — with 0 hard misses,
 0 quotes over 40 words, 0 no-quote rows and 0 locators that are not a fetched URL, on all five.
 
-**Verdict vocabulary, used and no other:** `MATCH` · `GAP` · `DIVERGENT-KEEP` (must cite a real `D###`
-or `S###`) · `CONTRADICTED` · `N-A`. A gap for which no detector can be written demotes to
-`DIVERGENT-KEEP` with a written reason, never to a silent `GAP`.
+**THE RANKED OUTPUT THIS DOCUMENT EXISTS TO PRODUCE — §2, twenty `GAP` rows, under the ≤25 cap**: one row per
+gap, ranked by what a visitor would notice first, each carrying **our state** (an artifact line, or `SILENT` plus the
+probe that establishes the silence), **the source rows** (each a `<system>/<domain>.md#<id>` citation into a claim row
+this pass verified), **a proposed detector**, **that detector's selftest planted defect** (plus its clean controls), and
+**an evidence cost** read off `design/gate-cost.json`. Read §2 first; §0 and §1 exist to make §2's claims re-runnable,
+and §3–§5 exist so a reader cannot mistake a refusal for a gap. The ranked table is the whole deliverable; nothing in
+this file is wired, and nothing in this file is a decision.
 
 ---
 
