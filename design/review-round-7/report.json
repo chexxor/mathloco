@@ -1,0 +1,763 @@
+{
+  "day": "2026-11-17",
+  "metrics": {
+    "dayStamp": "2026-11-17",
+    "distState": {
+      "fresh": true,
+      "built": "dist/client/dates/index.html",
+      "builtAt": 1794970526160.914,
+      "input": "src/components/Footer.astro",
+      "inputAt": 1794970358061.9077
+    },
+    "feedEvents": 7,
+    "feedCancelled": 2,
+    "feedSummary": [
+      "SUMMARY:Social",
+      "SUMMARY:Study session"
+    ],
+    "feedUrl": [
+      "URL:https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d6",
+      "URL:https://www.meetup.com/minneapolis-mathematics-book-club/events/3170975",
+      "URL:https://www.meetup.com/minneapolis-mathematics-book-club/events/3172424",
+      "URL:https://www.meetup.com/minneapolis-mathematics-book-club/events/3173067",
+      "URL:https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvy",
+      "URL:https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvy"
+    ],
+    "outboundOutsideFooter": {
+      "/": 3,
+      "/dates": 6,
+      "/join": 3,
+      "/chat": 2,
+      "/past": 1,
+      "/404": 1
+    },
+    "joinLabels": [
+      "Join",
+      "Sign up for Sat, Nov 21 , opens in a new tab",
+      "Join the club",
+      "Join the chat on Discord, opens in a new tab",
+      "Join on Meetup , opens in a new tab",
+      "Sign up on Meetup , opens in a new tab",
+      "Join the Facebook group , opens in a new tab",
+      "Join the chat on Discord , opens in a new tab",
+      "Join the Meetup group , opens in a new tab"
+    ],
+    "icsLinks": {
+      "/": 2,
+      "/dates": 2,
+      "/join": 1,
+      "/chat": 1,
+      "/past": 1,
+      "/404": 1
+    },
+    "titles": {
+      "/": "Matheapolis - a Minneapolis math club",
+      "/dates": "Dates - Matheapolis, a Minneapolis math club",
+      "/join": "Join the club - Matheapolis, a Minneapolis math club",
+      "/chat": "Chat - Matheapolis, a Minneapolis math club",
+      "/past": "Past meetings - Matheapolis, a Minneapolis math club",
+      "/404": "Page not found - Matheapolis"
+    }
+  },
+  "rows": [
+    {
+      "id": "H1",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "(D312)",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "an internal decision number printed in the hero figcaption",
+      "evidence": []
+    },
+    {
+      "id": "H2",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "what a meeting costs",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the cost refusal, third round",
+      "evidence": []
+    },
+    {
+      "id": "H3",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "kind of room",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the sentence conceding what a page cannot say about the room",
+      "evidence": []
+    },
+    {
+      "id": "H4",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "last read",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "relative staleness painted as a selling point",
+      "evidence": []
+    },
+    {
+      "id": "H5",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "list is not the room",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "an aphorism about data provenance in a deciding reader's way",
+      "evidence": []
+    },
+    {
+      "id": "H6",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "drops no pin",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "a disclaimer about the site's own capability where a directions link belongs",
+      "evidence": []
+    },
+    {
+      "id": "H7",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Join Our Group",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the Title Case CTA that points at a page that points at a page",
+      "evidence": []
+    },
+    {
+      "id": "H8",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Saturdays at noon",
+      "where": "/",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the rhythm stated near the hero date",
+      "evidence": [
+        "body/Matheapolis: Saturdays at noon for a social, Wednesdays at 6 pm for a study session."
+      ]
+    },
+    {
+      "id": "H9",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "buy a coffee",
+      "where": "/",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "cost and membership in one line",
+      "evidence": [
+        "body/How it works: Walk in, find a table, buy a coffee if you want one — that is the rent."
+      ]
+    },
+    {
+      "id": "H10",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Three to seven",
+      "where": "/",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the one headcount a stranger wants, on the operator's word",
+      "evidence": [
+        "body/How it works: Three to seven people at a table, historically."
+      ]
+    },
+    {
+      "id": "H11",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "six to twelve",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the letter's invented turnout figure against the operator's 3-7",
+      "evidence": []
+    },
+    {
+      "id": "H12",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "All 5 dates",
+      "where": "/",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "a fourth name for one route (D386 keeps one word)",
+      "evidence": [
+        "body/How it works: All 5 dates"
+      ]
+    },
+    {
+      "id": "H13",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "the schedule",
+      "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "a fifth name for the same route, and one that 404s",
+      "evidence": []
+    },
+    {
+      "id": "H14",
+      "route": "/",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Formerly the Minneapolis Mathematics Book Club",
+      "where": "/",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "the former name spliced into a sentence about agendas",
+      "evidence": [
+        "exit-band/How it works: Formerly the Minneapolis Mathematics Book Club."
+      ]
+    },
+    {
+      "id": "H15",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Nothing to bring",
+      "where": "/",
+      "hits": 0,
+      "verdict": "OPEN",
+      "why": "three rules for arriving, asserted not disclaimed",
+      "evidence": []
+    },
+    {
+      "id": "D1",
+      "route": "/dates",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "dates run from",
+      "where": "/dates",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "a stated range that contradicts the rows under it",
+      "evidence": [
+        "body/Social: The club’s dates run from Nov 7, 2026 through Dec 19, 2026."
+      ]
+    },
+    {
+      "id": "D2",
+      "route": "/dates",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "address to give directions to",
+      "where": "/dates",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "a sentence describing the page's own layout",
+      "evidence": [
+        "body/Social: The street address printed with each date is the address to give directions to."
+      ]
+    },
+    {
+      "id": "D3",
+      "route": "/dates",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "days ago",
+      "where": "/dates",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "a relative age that ages into an apology",
+      "evidence": [
+        "body/Social: Copied from the club’s own calendar 5 days ago"
+      ]
+    },
+    {
+      "id": "D4",
+      "route": "/dates",
+      "kind": "href",
+      "want": "present",
+      "needle": "events.ics",
+      "where": "/dates",
+      "hits": 2,
+      "verdict": "CLOSED",
+      "why": "the calendar action the page offers at all",
+      "evidence": [
+        "body: Add to a calendar -> /events.ics"
+      ]
+    },
+    {
+      "id": "D5",
+      "route": "/dates",
+      "kind": "href",
+      "want": "present",
+      "needle": "google\\.com/maps|\\bmaps\\.",
+      "where": "/dates",
+      "hits": 0,
+      "verdict": "OPEN",
+      "why": "a directions link per row (the letter's ask; the site declines pins)",
+      "evidence": []
+    },
+    {
+      "id": "D6",
+      "route": "/dates",
+      "kind": "href",
+      "want": "present",
+      "needle": "bing\\.com/maps|openstreetmap",
+      "where": "/dates",
+      "hits": 0,
+      "verdict": "OPEN",
+      "why": "same ask, the two other map hosts a directions link could name",
+      "evidence": []
+    },
+    {
+      "id": "D7",
+      "route": "/dates",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Study session",
+      "where": "/dates",
+      "hits": 4,
+      "verdict": "CLOSED",
+      "why": "the format word defined where it is printed",
+      "evidence": [
+        "body/Dates: Saturdays at noon for a social, Wednesdays at 6 pm for a study session.",
+        "body/Study session: Study session"
+      ]
+    },
+    {
+      "id": "J1",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "what a meeting costs",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the cost refusal, second surface",
+      "evidence": []
+    },
+    {
+      "id": "J2",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "front desk",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "institutional absence stated as a feature",
+      "evidence": []
+    },
+    {
+      "id": "J3",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "single door",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "a paragraph explaining why the site cannot do what peers do",
+      "evidence": []
+    },
+    {
+      "id": "J4",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "or nothing yet",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "promises an empty state the rows never show",
+      "evidence": [
+        "body/Come to a meeting: The dates page lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet."
+      ]
+    },
+    {
+      "id": "J5",
+      "route": "/join",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Join the club",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the H1 the nav already uses",
+      "evidence": [
+        "body/Join the club: Join the club"
+      ]
+    },
+    {
+      "id": "J6",
+      "route": "/join",
+      "kind": "heading",
+      "want": "absent",
+      "needle": "Ways in",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the heading the nav fix made mismatch worse (D390 moves the phrase into the lede)",
+      "evidence": []
+    },
+    {
+      "id": "J6b",
+      "route": "/join",
+      "kind": "heading",
+      "want": "present",
+      "needle": "Join the club",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the H1 the nav already uses",
+      "evidence": [
+        "h1: Join the club"
+      ]
+    },
+    {
+      "id": "J7",
+      "route": "/join",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Your first one",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the first-ten-minutes rules (D392 rewrites the paragraph, the heading may stay)",
+      "evidence": [
+        "body/Your first one: Your first one"
+      ]
+    },
+    {
+      "id": "J8",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "mailto",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the private door the letter asks for five times",
+      "evidence": []
+    },
+    {
+      "id": "J9",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "reads the messages we post there",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "the ask-us door that lands on bot output",
+      "evidence": []
+    },
+    {
+      "id": "J10",
+      "route": "/join",
+      "kind": "plain",
+      "want": "present",
+      "needle": "nobody is teaching",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "OPEN",
+      "why": "the uneven bars named honestly",
+      "evidence": []
+    },
+    {
+      "id": "C1",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Chat Topics Summary",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "a fourth label all saying summary",
+      "evidence": []
+    },
+    {
+      "id": "C2",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "UTC",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "UTC stamped on a Central-time site",
+      "evidence": []
+    },
+    {
+      "id": "C3",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Central",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "OPEN",
+      "why": "the summary stamped in the zone the club runs in",
+      "evidence": []
+    },
+    {
+      "id": "C4",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Channel summary",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the summary window written M/D/Y",
+      "evidence": []
+    },
+    {
+      "id": "C5",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "present",
+      "needle": "The chat itself",
+      "where": "/chat",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the section the letter says restates the H1 - kept, so the row records where it sits",
+      "evidence": [
+        "body/The chat itself: The chat itself"
+      ]
+    },
+    {
+      "id": "C6",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Not a scan of a book",
+      "where": "/chat",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the provenance line the letter wants demoted to a caption",
+      "evidence": [
+        "body/What the club is pulling on: Drawn for this site in the plates’ line language: ink hairlines, no fills, not a scan of a book."
+      ]
+    },
+    {
+      "id": "C7",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "closed for the day",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "operational noise (a cafe closure) printed beside mathematics",
+      "evidence": []
+    },
+    {
+      "id": "C8",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Cancellation",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the same noise, the cancellation form",
+      "evidence": []
+    },
+    {
+      "id": "C9",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "present",
+      "needle": "the live thing",
+      "where": "/chat",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "one line of human framing above the bot voice",
+      "evidence": [
+        "body/No summary written this week: The channel is the live thing, and the button above goes to it."
+      ]
+    },
+    {
+      "id": "F1",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "MPLS Math Club",
+      "where": "dist/client/events.ics",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the dead brand in every subscriber's calendar",
+      "evidence": []
+    },
+    {
+      "id": "F2",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Common Denominator - Study Session",
+      "where": "dist/client/events.ics",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "an organizer title with an internal codename, as the event's name",
+      "evidence": []
+    },
+    {
+      "id": "F3",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "STATUS:CANCELLED",
+      "where": "dist/client/events.ics",
+      "hits": 2,
+      "verdict": "OPEN",
+      "why": "cancelled events published to a subscriber who cannot unsubscribe from a ghost",
+      "evidence": [
+        "STATUS:CANCELLED",
+        "STATUS:CANCELLED"
+      ]
+    },
+    {
+      "id": "F4",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "in Minneapolis",
+      "where": "dist/client/events.ics",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the wrong city in the body of a Saint Louis Park event",
+      "evidence": []
+    },
+    {
+      "id": "F5",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "mobilizon",
+      "where": "dist/client/events.ics",
+      "hits": 8,
+      "verdict": "OPEN",
+      "why": "a sign-up destination the site never mentions",
+      "evidence": [
+        "mobilizon",
+        "mobilizon",
+        "mobilizon"
+      ]
+    },
+    {
+      "id": "F6",
+      "route": "feed",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "dates from Nov",
+      "where": "dist/client/events.ics",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the website meta-note with a hardcoded count, in every event body",
+      "evidence": []
+    },
+    {
+      "id": "F7",
+      "route": "feed",
+      "kind": "plain",
+      "want": "present",
+      "needle": "SUMMARY:Social",
+      "where": "dist/client/events.ics",
+      "hits": 4,
+      "verdict": "CLOSED",
+      "why": "the feed naming the event the way the page does",
+      "evidence": [
+        "SUMMARY:Social",
+        "SUMMARY:Social",
+        "SUMMARY:Social"
+      ]
+    },
+    {
+      "id": "X1",
+      "route": "/past",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "Nothing listed yet",
+      "where": "/past",
+      "hits": 1,
+      "verdict": "OPEN",
+      "why": "an empty archive that is indexable",
+      "evidence": [
+        "body/Past meetings: Nothing listed yet"
+      ]
+    },
+    {
+      "id": "X2",
+      "route": "/dates",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Central",
+      "where": "/dates",
+      "hits": 5,
+      "verdict": "CLOSED",
+      "why": "the zone word on every venue group (D397)",
+      "evidence": [
+        "body/Dates: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+        "body/Social: Wednesday, Nov 25 · 6:00 pm – 8:00 pm Central"
+      ]
+    },
+    {
+      "id": "X3",
+      "route": "/join",
+      "kind": "title",
+      "want": "present",
+      "needle": "Matheapolis.*Minneapolis|Minneapolis.*Matheapolis",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the title carrying the page, the site and the city (D396)",
+      "evidence": []
+    },
+    {
+      "id": "X4",
+      "route": "/chat",
+      "kind": "title",
+      "want": "present",
+      "needle": "Matheapolis.*Minneapolis|Minneapolis.*Matheapolis",
+      "where": "/chat",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "same, on /chat",
+      "evidence": []
+    },
+    {
+      "id": "X5",
+      "route": "/dates",
+      "kind": "title",
+      "want": "present",
+      "needle": "Matheapolis.*Minneapolis|Minneapolis.*Matheapolis",
+      "where": "/dates",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "same, on /dates",
+      "evidence": []
+    }
+  ]
+}
