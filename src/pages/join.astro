@@ -2,8 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import config from '../config.json';
 import Footer from '../components/Footer.astro';
-import { JOIN_KIND_COPY, joinChannels, paintedKinds } from '../lib/rsvp.mjs';
-import { answers } from '../lib/content.ts';
+import { JOIN_KIND_COPY, joinChannels, paintedKinds, PLATFORMS } from '../lib/rsvp.mjs';
+import { answers, content, value } from '../lib/content.ts';
+import { newTabQualifier } from '../lib/links.mjs';
 
 // One action on the homepage lands here (S033, D303): the page's job is the commitment decision — which
 // KIND of relationship the visitor wants — so the rows are grouped by kind and the platforms are values
@@ -26,6 +27,14 @@ const copy: Record<string, { heading: string; line: string }> = JOIN_KIND_COPY;
 // the member list (src/content.json `membership.value`), so it leads, and every other channel is a 48px
 // secondary — the same two heights DESIGN.md fixes (D139), no third tier.
 const lead = channels[0];   // identity, not href: two channels may one day share a destination
+// Round-7 review (2026-11-18), `/join`/Add "The uneven bars named honestly" (D432). The review's point is a
+// placement one: a study session is intimidating to the visitor who assumes everyone else at the table is
+// further along, and the reassurance lives on neither surface they land on - it was in the calendar boilerplate
+// and in `/join`'s format sentence. The sentence is an operator-granted DRAFT CLAIM in `src/content.json`
+// (`studySessionShape`, with its `asOf` and its `correction` path, because D415 requires a grant-shipped claim
+// to carry its way back and only a slot can), so the operator corrects the club's own words by editing that
+// value rather than this page. Rendered on `/join` only, beside the format it describes.
+const studyShape = value(content.studySessionShape);
 ---
 
 <Layout title="Join the club - Matheapolis, a Minneapolis math club" path="/join">
@@ -62,6 +71,15 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
         A study session: an evening working side by side on whatever each person is learning, with help
         when someone asks for it.
       </p>
+      {/* Round-7 review (2026-11-18), `/join`/Add (D432): the uneven bars, named. The review called this "the
+          fix that converts the most common reason to not come" - a visitor who assumes the rest of the table is
+          further along than they are reads "working side by side" as an invitation to be outperformed. Placed
+          under the format sentence because it is that sentence's reassurance, and sourced from the slot rather
+          than typed here because the words are the reviewer's draft, not a fact this tree can read (D415's
+          rule, the same shape D381 and D385 paid for the cost line and the membership line). */}
+      {studyShape && (
+        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{studyShape}</p>
+      )}
       {/* Round-6 review, Home/Remove (D389): the sentence the homepage used to close with lives here now, on the
         page a reader reaches after they have decided. It is the site naming its own limit honestly, and it is
         not the last thing on the page. Its trigger for deletion is the MS32 photograph: a room the reader can
@@ -172,13 +190,27 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
         and `dig +short MX minneapolismathbookclub.com` each returned no record at all @measured 2026-11-17
         (Linux native), so neither zone carries an address service and printing one would invent it. The trigger
         that ships the mailto is written in the reply doc: the day the operator provisions Cloudflare Email
-        Routing on the apex zone. */}
+        Routing on the apex zone. The sentence below still carries that path in words, so D393's half of the
+        deletion (the negation) survives; only the door it lands on moved, in round 7 - see the note there.
+      */}
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
-        Want to ask something before you turn up? Somebody from the club reads
+        Want to ask something before you turn up? Somebody from the club reads the channel, and the place to
+        ask is{' '}
+        {/* Round-7 review (2026-11-18), `/join`/Revise, the "broken door" (D432). The letter's read is exact:
+            the anchor promised a place to ask and landed on `/chat`, which is machine summaries you cannot
+            ask a question on. The letter offers two doors and only one is available here - the mailto is
+            declined with evidence (D403, and the operator confirmed on 2026-11-18 that no address is
+            provisioned), so this points at the invite, where a question can actually be typed. The URL is
+            `config.URLs.discordInvite`, the one home the invite has (chat.astro names it too), so `/join`
+            cannot be edited apart from the band and the card. The label names the platform, so `newTabQualifier`
+            adds only the mode (S041); no `data-rsvp-platform` here, because `check-rsvp-preference` counts one
+            per route and this is prose, not a band exit. */}
         <a
-          href="/chat"
+          href={config.URLs.discordInvite}
+          target="_blank"
+          rel="noopener noreferrer"
           class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >the messages we post there</a
+          >the club&#x2019;s Discord<span class="sr-only">{newTabQualifier('the club\u2019s Discord', PLATFORMS.discord)}</span></a
         >.
       </p>
       {/* Round-6 review, `/join`/Remove (D393): the directions paragraph leaves the page. q25's answer is the

@@ -116,6 +116,16 @@ export type Content = {
    * slot with a source and a date, never a leftover from a third-party snapshot (D136, D265).
    */
   turnout: Slot;
+  /**
+   * What a person brings to a study session, and what the room does not do (D432, round-7 review's
+   * `/join`/Add "the uneven bars named honestly"). A claim about the club, so its `source` is the
+   * operator's grant and D415 requires it to carry `asOf` and the place the correction lands; that is
+   * why it is a slot and not markup on the page. Painted on `/join` only, under the format sentence it
+   * reassures. It is NOT the first-meeting rule (`check:content` sees the two as near-duplicates and
+   * `design/copy-duplicates.json` carries the pair - they answer what a person carries and what the
+   * room does), so deleting one does not silently orphan the other.
+   */
+  studySessionShape: Slot;
   photos: { placeholders: boolean };
 };
 

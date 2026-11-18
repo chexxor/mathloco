@@ -4,10 +4,10 @@
     "dayStamp": "2026-11-17",
     "distState": {
       "fresh": true,
-      "built": "dist/client/dates/index.html",
-      "builtAt": 1794970526160.914,
-      "input": "src/components/Footer.astro",
-      "inputAt": 1794970358061.9077
+      "built": "dist/client/sitemap-index.xml",
+      "builtAt": 1794973663000.7366,
+      "input": "src/pages/join.astro",
+      "inputAt": 1794973634716.5676
     },
     "feedEvents": 7,
     "feedCancelled": 2,
@@ -26,7 +26,7 @@
     "outboundOutsideFooter": {
       "/": 3,
       "/dates": 6,
-      "/join": 3,
+      "/join": 4,
       "/chat": 2,
       "/past": 1,
       "/404": 1
@@ -257,12 +257,10 @@
       "want": "absent",
       "needle": "dates run from",
       "where": "/dates",
-      "hits": 1,
-      "verdict": "OPEN",
+      "hits": 0,
+      "verdict": "CLOSED",
       "why": "a stated range that contradicts the rows under it",
-      "evidence": [
-        "body/Social: The club’s dates run from Nov 7, 2026 through Dec 19, 2026."
-      ]
+      "evidence": []
     },
     {
       "id": "D2",
@@ -271,12 +269,10 @@
       "want": "absent",
       "needle": "address to give directions to",
       "where": "/dates",
-      "hits": 1,
-      "verdict": "OPEN",
+      "hits": 0,
+      "verdict": "CLOSED",
       "why": "a sentence describing the page's own layout",
-      "evidence": [
-        "body/Social: The street address printed with each date is the address to give directions to."
-      ]
+      "evidence": []
     },
     {
       "id": "D3",
@@ -285,12 +281,10 @@
       "want": "absent",
       "needle": "days ago",
       "where": "/dates",
-      "hits": 1,
-      "verdict": "OPEN",
+      "hits": 0,
+      "verdict": "CLOSED",
       "why": "a relative age that ages into an apology",
-      "evidence": [
-        "body/Social: Copied from the club’s own calendar 5 days ago"
-      ]
+      "evidence": []
     },
     {
       "id": "D4",
@@ -388,12 +382,10 @@
       "want": "absent",
       "needle": "or nothing yet",
       "where": "/join",
-      "hits": 1,
-      "verdict": "OPEN",
+      "hits": 0,
+      "verdict": "CLOSED",
       "why": "promises an empty state the rows never show",
-      "evidence": [
-        "body/Come to a meeting: The dates page lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet."
-      ]
+      "evidence": []
     },
     {
       "id": "J5",
@@ -468,8 +460,8 @@
       "want": "absent",
       "needle": "reads the messages we post there",
       "where": "/join",
-      "hits": 1,
-      "verdict": "OPEN",
+      "hits": 0,
+      "verdict": "CLOSED",
       "why": "the ask-us door that lands on bot output",
       "evidence": []
     },
@@ -480,10 +472,12 @@
       "want": "present",
       "needle": "nobody is teaching",
       "where": "/join",
-      "hits": 0,
-      "verdict": "OPEN",
+      "hits": 1,
+      "verdict": "CLOSED",
       "why": "the uneven bars named honestly",
-      "evidence": []
+      "evidence": [
+        "body/What we do: People bring textbooks, problem sets, and half-finished projects; nobody is teaching and nobody is being tested."
+      ]
     },
     {
       "id": "C1",
