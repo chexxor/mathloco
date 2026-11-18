@@ -54,9 +54,15 @@ const shown = items.slice(0, VISIBLE);
 const rest = items.length - shown.length;
 ---
 
-{/* `py-12` (48px), not `py-16` (64px): the band air was ruled down on 2026-11-05 (D214, R6) and measured
-    again on 2026-11-06 (see the hero's note for the pair's number). Every landing-page band carries the
-    same step, so this section's edge is a number the reader meets four times, not four numbers.
+{/* `py-8` (32px), not `py-12` (48px): the band air was ruled down on 2026-11-05 (D214, R6) and measured
+    again on 2026-11-06, and round 18 ruled it down one step more on 2026-11-17 — the operator accepted the
+    grill's row F (`no-new-art-less-air`), which prices 44.3k `mt-6` + 40.6k `mt-12` as 84.9k of section
+    padding and asks whether the whole section can come off one step of the spacing scale. That row's evidence
+    was the first composition row whose claim is LESS of the thing that made the emptiness rather than more
+    colour, and it moved the fold 168px at all four widths; see DESIGN.md §Spacing and
+    docs/reply-to-the-composition-review-round-18-2026-11-16.md. D214's one-step rule still holds for the
+    hero and for `py-6 py-4` inside surfaces; it does not hold across bands any more, and this note says so
+    rather than pretending the four bands still share one number.
 
     The section is a *named* landmark (D331, 2026-11-15): a `<section>` is only a region for assistive tech
     when it has an accessible name, and axe-core's `region` rule - moderate impact - called this band, the
@@ -64,7 +70,7 @@ const rest = items.length - shown.length;
     at 1440 @measured 2026-11-15 by `node design/axe-check.mjs`. The name is the section's own heading by
     reference, not a second copy of the words: `aria-labelledby` keeps one string in the page. `HorizonBand.astro`
     and `Schedule.astro` were already named this way; this is the last band brought up to the same rule. */}
-<section class="bg-panel py-12" aria-labelledby="what-we-take-up">
+<section class="bg-panel py-8" aria-labelledby="what-we-take-up">
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="max-w-measure">
       <h2 id="what-we-take-up" class="text-heading font-extrabold text-ink">
@@ -97,9 +103,9 @@ const rest = items.length - shown.length;
           on this section's bg-panel ground (record 0018) — and D316 retired it: rule is 3.85 on panel
           @measured 2026-11-14 by node design/grill/palette-remap.mjs, so a hairline here would now pass. It
           stays absent because the label/gloss weight difference already does the grouping the rule was going
-          to do. Rows sit on 8px padding with 24px above the list and 32px between the two columns (DESIGN.md,
-          Spacing; the trim from 12/32/48 is R6, D214). */}
-      <ul class="mt-6 grid grid-cols-1 gap-x-8 md:grid-cols-2">
+          to do. Rows sit on 8px padding with 8px above the list and 32px between the two columns (DESIGN.md,
+          Spacing; the air above the list came off one more step on 2026-11-17 when row F shipped, S061). */}
+      <ul class="mt-2 grid grid-cols-1 gap-x-8 md:grid-cols-2">
         {shown.map(({ label, gloss }) => (
           <li class="py-2 text-body leading-prose font-body">
             <span class="font-semibold text-ink">{label}</span>
@@ -136,11 +142,11 @@ const rest = items.length - shown.length;
       // with an accent word, 6.07 on panel and 5.77 on paper, both over the 4.5 text bar. The state genuinely
       // is a caution: an empty list is a fact about this page's wiring, not about the club, and the sentence
       // says exactly that. check:render asserts every inset ring's pair, so if this branch ever renders it is
-      // measured. mt-6, matching the list this notice stands in place of, so the two states of this one slot
+      // measured. mt-2, matching the list this notice stands in place of, so the two states of this one slot
       // do not sit on different grids. The notice's own px-4 py-3 stays: DESIGN.md puts notice padding at
       // 12/16, and R6 ruled about rows, not notices. Nothing in the pair's measurement covers this branch —
       // the shipped page always has threads — so it is a consistency edit, declared as one.
-      <div class="mt-6 inset-shadow-accent rounded-control px-4 py-3 max-w-measure">
+      <div class="mt-2 inset-shadow-accent rounded-control px-4 py-3 max-w-measure">
         <p class="text-body font-medium text-accent">Nothing is on the list right now.</p>
         <p class="mt-1 text-body leading-prose text-ink-2">
           What the club is pulling on is decided in its chat, so an empty list here means the page has not
@@ -172,7 +178,7 @@ const rest = items.length - shown.length;
         while the chip above it said `Dates`; the sentence now drops the name rather than coining a fifth one,
         because the thing it states is about the dates the page prints, not about the page's label. `check:naming`'s
         alias census over the built artifact prints 0 prose aliases for `/dates` after this (see the reply doc). */}
-    <p class="mt-12 max-w-measure text-body leading-prose text-ink-2 font-body">
+    <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
       Dates and places go up on{' '}
       <a
         class="underline hover:text-accent"
