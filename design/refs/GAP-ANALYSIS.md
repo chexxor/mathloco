@@ -146,6 +146,47 @@ artifact-side gates 0.11–0.12s on top of the `build` the runner already pays (
 | 19 · TASTE | A notice's length is bounded in our prose but not gated | PARTLY: the grammar fixes the box (one-line 48px, two-line body 64px) and `check:render` fails a block under 48px; nothing bounds the **lines of text** inside, so a five-line notice today ships as a taller box | `atlassian/feedback-notices-status.md#A11-msg-10` ("Keep content to a maximum of five lines (truncation is not accessible)"), `carbon/feedback-notices-status.md#C11-notif-02` (exactly two visual styles, a mixing ban), `spectrum/feedback-notices-status.md#S11-feedback-04` (toasts must include text, "as concisely as possible while still being clear") | `check:notice-length` — a notice's text span is at most the ruled number of lines, and the ruling is written in `DESIGN.md` before the gate can demand it | a planted four-sentence notice; clean control: the shipped two-line body | artifact-side ~0.11s; **TASTE**: the number is a ruling (an operator decision), the gate is only the enforcer |
 | 20 · TASTE | Case is a rule in four systems and a tier in ours | Our system makes case a **tier**: uppercase exists only in `text-label`/`text-micro` chrome, while every label a visitor navigates or presses is sentence-case (`Dates`, `Chat`, `Ways in`) — and the nav's fit is priced in pixels, so an all-caps tier would move every one of those numbers (`Material#M9-ctl-13`'s all-caps button label is recorded, not proposed) | `atlassian/controls-buttons.md#A09-button-05` (case is a rule), `govuk/controls-buttons.md#G9-btn-02` (sentence case), `carbon/controls-buttons.md#C9-btn-02` (a label grammar formula with named exceptions), `material/controls-buttons.md#M9-ctl-13` ("The text is 14pt, Roboto, Medium, and all caps") | `check:case-role` — a control or nav label may not carry the uppercase tier; the two chrome tiers are exempt by name | a planted uppercase control label; clean controls: the shipped kicker and the `text-micro` focus line | source-side ~0.11s; **TASTE** — it only becomes real if we ever adopt an all-caps tier, and the fit numbers say it would cost a re-price |
 
+**Graduated on 2026-11-18 under MS35 — ranks 1–4 landed, and the name each shipped under is not the name proposed above.**
+The proposed detector names were the plan's; the shipped gates are this repo's, and their row-by-row record:
+
+| Rank | Shipped as | Its selftest, planted | Cost @measured 2026-11-18 |
+|---|---|---|---|
+| 1 | `check:route-targets` | 11 cases, 0 wrong — 6 plantings (a dead `/schedule` citation, a trailing-slash route, an `index.html` suffix, an anchor moved off its page, an in-page anchor with no id, and the 404 page's own dead path, which must NOT fire) + 5 clean controls | gate 0.17s, selftest 0.14s |
+| 2 | `check:primary-action` | 8 cases, 0 wrong — the shipped `Schedule` fixture with its notice's quiet label promoted to `primary`, and a join page whose computed lead paints twice + 6 clean controls | gate 0.15s, selftest 0.13s |
+| 3 | `check:notice-announcement` | 8 cases, 0 wrong — the shipped `/past` notice with its `role` deleted and prose first, and the `empty` state with its region removed AND a sentence before its title + 6 clean controls | gate 0.15s, selftest 0.16s |
+| 4 | `check:reduced-motion` | 9 cases, 0 wrong — the shipped sheet with the guard block deleted, a guard written but commented out, a guard that sets only a colour, a guard scoped to `.notice`, and a guard written into the built sheet and never into `src/` + 4 clean controls | gate 0.17s, selftest 0.15s |
+
+Three records §2's own rows no longer state, and why:
+
+- **rank 2 graduated on its primary half only.** `check:primary-action` bounds `data-control="primary"` at one per
+  built page — `/`, `/join` and `/404` carry one each, `/chat`, `/dates` and `/past` carry none. The corpus's
+  "at most two `secondary`" is **contradicted by what `staging` ships**: `/` and `/join` carry **three** secondary
+  roles each @measured 2026-11-18 by `node scripts/check-primary-action.mjs`, so the secondary count is
+  **printed, not bounded**, and the bound stays a `DRAFT·secondary-budget` — never minted as a `D###`, because
+  raising it is the operator's letter and our own artifact is the evidence that the corpus's number is not ours.
+- **rank 3 needed its exemption written out loud**, not implied by a passing case: a painted notice may announce
+  itself by a region **OR** by its own first `<h*>` (**D442**). The strict region-only form would have demanded
+  a markup edit outside this milestone's fence (`src/components/DiscordSummary.svelte:165`, the `empty` state),
+  and a gate that fails code the operator has not agreed to change is escalation, not enforcement. The handle is
+  anchored at the **front** of a block's class list, because controls write `rounded-control … inset-shadow-rule`
+  in the other order and rows and headers carry `inset-shadow-rule` mid-list — 8 controls and every schedule row
+  would otherwise read as notices. Two painted notices ship today (the pending Discord notice on `/chat`, the
+  empty-calendar notice on `/past`), both announced.
+- **rank 4 is the one row `DESIGN.md` already mandates**, so both halves landed: the detector **and** the artifact
+  (**D441**). Its "42 transition writes" is superseded by the gate's own census — **12 transition writes, 0
+  animations** in `src/` @measured 2026-11-18 by `node scripts/check-reduced-motion.mjs` (the grep that reads
+  19 counts comment words; the built sheet carries 46 `transition` occurrences). The guard left no metric
+  otherwise: the shipped page reads 2791px / 6.68% painted at 1240 and 3907px / 10.42% at 390 with the block
+  present and with it deleted, so `check:rhythm`, `check:render:dist` and `check:space` are green either side of it.
+- **rank 5 stayed escalated, not refused.** `check:label-words` is cheap (0.11s), but every number in it — the
+  generic-label list, the word cap, the case tier — is a register judgement §2 itself calls `TASTE` class, so
+  it is the operator's letter, not a delegate default. Recorded as `DRAFT·label-words`, with the ask and its
+  un-park trigger in `PLAN.md` §Parked.
+
+And the cost preamble above prices against the **old** bar: **71 steps at 24.2s wall / 41.4s of work** @measured
+2026-11-17. The bar in `design/gate-cost.json` today is **81 steps at 39.5s wall / 71.9s of work**, frozen
+2026-11-18 under **D443**'s `--force`. Both are printed so a reader of §2's cost column knows which one priced it.
+
 ### Pre-loading decisions before we build it — domains we do not ship, kept as drafts and not ranked
 
 These are **not gaps**: each domain's own probe establishes that we have nothing to compare against, so

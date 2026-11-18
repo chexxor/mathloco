@@ -324,6 +324,18 @@ is D116's rule — the specimen and the built page must report the same thing �
 An in-sentence path stays a **link**, not a control: "a link inside a sentence keeps its 24px line". That is
 how a block gets a second way out without a second button.
 
+**One page, one primary** (MS35, S068). A built page carries **at most one** `data-control="primary"`: a second
+primary on the same page is two answers to one question, and the schedule component has kept that fact in a
+comment since the notice grammar landed — `src/components/Schedule.astro:378` reads "Printing it in the notice
+too would put two `data-control=\"primary\"` controls in one…", a fact a reader can only find by opening the file.
+`npm run check:primary-action` asserts it instead. Shipped: **6 built pages, one primary on `/`, `/join` and
+`/404`, none on `/chat`, `/dates` or `/past`** @measured 2026-11-18 by `node scripts/check-primary-action.mjs`.
+The **secondary** count is **not** bounded here: the artifact carries three secondary roles on `/` and three on
+`/join` @measured 2026-11-18 by the same gate, so the corpus's "at most two secondary" is a foreign numeric
+budget contradicted by our own shipped tree — refused as `DRAFT·secondary-budget`, the same class as §1's
+refusal of Carbon's carrier count. What is ruled is that a control **names** its role (D140) and that one page
+owns one primary.
+
 ## Buttons and chips
 
 | Component | Construction | Measured |
@@ -366,6 +378,18 @@ second colour.
   `check:render` fails a `role="status"`/`role="alert"` block containing any `a`/`button` that paints a fill, an
   inset ring, or declares a control role (`design/grill/render-measure.js` reports `actions` per notice).
   Outside a notice, the 48px block roles above still apply — this rule is about edges, not about size.
+- **A painted notice is announced** (MS35, S068). The handle that paints the box — `inset-shadow-rule rounded-control`
+  at the front of a block's class list — must also say what the box is to a reader who cannot see it: a **live
+  region** (`role="status"` or `aria-live`) for a state the page may change into after load, an **assertive
+  region** (`role="alert"`) for a failure, or **its own title as its first content** (an `<h*>`) when the state
+  is there at load and reading order carries it. Before this rule the pairing existed only in the other direction:
+  `check:render` styles the block **from** the role, and `grep -rn 'inset-shadow-rule' scripts` returned **0
+  lines** @measured 2026-11-18 — a notice could be painted with no announcement and stay green. `npm run
+  check:notice-announcement` is the detector now, and it prints the census so the exemption is visible: which
+  handles carry a region and which announce themselves by title. What it **cannot** see, from static markup, is
+  which of those states can change after load — that is why a title-only notice passes rather than fails, and
+  whether the Discord `empty` state (`src/components/DiscordSummary.svelte:165`, title-first) should take a live
+  region anyway is an operator question, not a gate's.
 - Status is a **word**: `Scheduled` / `Cancelled` / `Past` in the series lane when stacked, in its own
   24px chip column when wide (measured: a word reflows +0px, a chip costs +7px). Cancelled title goes to
   `ink-2`.
@@ -711,6 +735,37 @@ never a substitute for a source: an ungrounded contact, price or room descriptio
 Tailwind v4 has no `--duration-*` namespace (measured: `duration-color` resolves to nothing), so the
 two steps are written as the numbers above. **Never** use `duration-300` or a 400ms tier. **Always**
 guard animation with `prefers-reduced-motion: reduce` — and a guard inside a comment does not count.
+
+**The reduced-motion guard is a gate now, and it ships.** The line above mandates the guard; nothing could fail
+its absence. Before it landed the mandate was prose twice over: `grep -rn 'prefers-reduced-motion' src` → **1 line**,
+the `@theme` comment at `src/styles/global.css:203` that says the guard "lands with the markup in design-apply", and
+`grep -rl 'prefers-reduced-motion' dist/client` → **0 files** while the built sheet carried `transition` declarations
+on every hover state. `ratify-check` is named here and in `src/layouts/Layout.astro`'s comment but appears in
+**neither** `package.json` **nor** `scripts/gate-run.mjs`, so the thing that was supposed to fail the absence is not
+runnable at all — which is why `npm run check:reduced-motion` exists and why the guard itself landed in
+`src/styles/global.css` in the same round (D441): an `@media (prefers-reduced-motion: reduce)` block that zeroes
+`transition-duration`, `transition-delay` and `animation-*` for every element, so a hover state changes **instantly**
+instead of over the 150/250ms tiers. As shipped the same greps read **3 lines in src** (the `@theme` comment at :203,
+the block's own comment at :229, the block itself at :241) and **2 files in dist** — `_astro/Footer.Cf8uTf39.css`
+and its `.rel.css` sibling @measured 2026-11-18 by `grep -rn 'prefers-reduced-motion' src` and
+`grep -rl 'prefers-reduced-motion' dist/client`. The block sits at the end of the stylesheet, after `@theme`, so a
+utility cannot out-specify it; it selects `*` plus the two pseudo-elements rather than a class list, because a guard
+that lists today's controls silently misses the next one written; the declarations carry `!important` because they
+are the one rule that must beat a utility. It changes no colour and no geometry, and the paint agrees with itself
+across the two builds: the shipped page measures **2791px tall / 6.68% painted at 1240 and 3907px / 10.42% at 390**
+with the block present **and** with it deleted @measured 2026-11-18 by `npm run check:rhythm` against a build of
+each — `check:contrast`, `check:render:dist`, `check:rhythm` and `check:space` all exit 0 with it in.
+
+Tailwind emits `@keyframes spin` and `.animate-spin{animation:var(--animate-spin)}` in **every** sheet whether or
+not a page paints them, so a gate that fires on a sheet-level `@keyframes` fires on a utility no visitor sees
+(`check:css-utilities`, D253, is the same trap from the other side). The gate reads the motion a page **writes**,
+not the motion a sheet happens to carry: `transition` 19, `ease-out` 2, `duration-250` 2, `ease-in` 1, `duration-150`
+1, **0 `animate-*`** @measured 2026-11-18 by `grep -rhoE '(duration-[0-9]+|ease-[a-z]+|animate-[a-z]+|transition)'
+src | sort | uniq -c` — that grep counts the words inside stylesheet comments too (the mandate sentence and the
+block's own note are two of the 19), which is why the gate's own census prints **12 transition writes and 0 animations**
+with comments and the guard's declarations excluded @measured 2026-11-18 by `npm run check:reduced-motion`; the
+built sheet now carries 46 `transition` occurrences of its own @measured 2026-11-18 by `grep -o transition
+dist/client/_astro/*.css | wc -l`.
 
 **No keyframe animation ships in `src/` at all.** The footer's sum glyph used to pulse
 `0.5s infinite linear alternate-reverse`, which has no tier here: 150ms and 250ms are both *transitions*,
@@ -1108,6 +1163,33 @@ npm run check:line-art          # every `<figure data-line-art>` is a captioned 
 npm run check:threads           # the home page paints exactly min(cap, items) thread bullets and, when the set is
                                 # larger, links "the rest of the list" to /chat#threads — cap 6, 9 in content.json,
                                 # 6 painted, 3 reachable @measured 2026-11-14 by `node scripts/check-threads.mjs`
+npm run check:route-targets   # MS35: every <a href="/…"> a built page paints names a path the build emits
+                                # (a page, or an emitted file like /events.ics, which is not an .html page), and
+                                # every #fragment is an id on the page the anchor lands on — 6 pages, 6 distinct
+                                # internal hrefs, 0 dead @measured 2026-11-18 by `node scripts/check-route-targets.mjs`
+                                # (its 11-case selftest plants a dead /schedule citation, a trailing-slash route, an
+                                # index.html suffix, an anchor moved off its page and an in-page anchor with no id,
+                                # and exempts the dead paths the /404 page cites on purpose; 0.17s gate, 0.14s selftest)
+npm run check:primary-action    # MS35: at most one data-control="primary" per built page — / and /join and /404
+                                # carry one, /chat /dates /past carry none; the secondary count is printed, not
+                                # bounded (see "One page, one primary") @measured 2026-11-18 by
+                                # `node scripts/check-primary-action.mjs` (8-case selftest: it plants the shipped
+                                # Schedule fixture with its notice's quiet label promoted to primary and a join page
+                                # whose computed lead paints twice; 0.15s gate, 0.13s selftest)
+npm run check:notice-announcement # MS35: a painted notice handle (inset-shadow-rule rounded-control) carries a
+                                # live region, an assertive region, or its own title first — compiled island code
+                                # is skipped, so `dist/client/_astro/*.js` strings never read as markup; 2 painted
+                                # notices today, both announced @measured 2026-11-18 by
+                                # `node scripts/check-notice-announcement.mjs` (8-case selftest: the shipped /past
+                                # notice with its role deleted, and the empty state with a sentence before its title)
+npm run check:reduced-motion    # MS35: the stylesheet that ships a transition ships a @media (prefers-reduced-motion:
+                                # reduce) block that neutralises it; a guard inside a comment does not count, and
+                                # Tailwind's own unused `@keyframes spin` does not count as a shipped animation — 12
+                                # transition writes in src/, 1 guard authored, 1 built @measured 2026-11-18 by
+                                # `node scripts/check-reduced-motion.mjs` (9-case selftest: the shipped sheet with the
+                                # block deleted, a block written but commented out, a block that sets only a colour,
+                                # a block scoped to `.notice`, and a block written into dist/ and never into src/;
+                                # 0.17s gate, 0.15s selftest)
 npm run verify                  # the browser-free CI gate set (everything above except the pixel gates)
 ```
 
@@ -1189,6 +1271,18 @@ accepted, each with the gate that keeps it true.
   (the 33 this bullet carried on 2026-11-14 counted the four standing platforms each schedule row used to repeat;
   D342 moved them out of the row, and a count that only ever grows by repetition is the reason the count is printed
   rather than ruled).
+- **An internal route is a route the build emits** (MS35, S068). Every `<a href="/…">` a built page paints names
+  a path the build emits — a page (`<p>/index.html` or `<p>.html`) or an emitted **file** (`/events.ics`, which
+  is not an `.html` page and would read as dead if routes came only from `emittedRoutes`) — and a `#fragment`
+  must be an `id` on the page the anchor **lands on**, not on the page carrying it. `404.html` is the one exempt
+  self-reference, since the build emits it precisely to answer paths that do not exist. Before this rule nothing
+  in the set read an internal href at all: `check:ext-links` reads anchors that leave, `check:site-host` reads
+  hosts, `check:indexable` reads which routes may be listed. Shipped: **6 built pages, 6 distinct internal hrefs
+  — `/` 13, `/dates` 12, `/events.ics` 8, `/chat` 7, `/join` 7, `/chat#threads` 1 — all resolving** @measured
+  2026-11-18 by `node scripts/check-route-targets.mjs`; the corpus's census said 5 because `src/components/Footer.astro:66`
+  writes `/events.ics` single-quoted and its own character class excludes the dot. `npm run check:route-targets`
+  is the detector, so a moved page or a renamed route fails on the branch that did it rather than 8 visitors' way
+  out disappearing.
 - **Two tiers of outbound link, and they are not the same decision** (the operator's rulings letter of 2026-11-16,
   R4, **D361**). A row's primary link goes to **that event's** page — the way out for a visitor deciding about one
   specific date. The standing row's link and the exit band's go to the **group root** — joining a thing that persists,

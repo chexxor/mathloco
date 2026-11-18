@@ -224,3 +224,27 @@ button:focus-visible {
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-body: "PT Serif", ui-serif, Georgia, serif;
 }
+
+/* ---- MS35 (S068): the reduced-motion guard, and `npm run check:reduced-motion` is what keeps it true.
+   DESIGN.md's Motion section mandates it - "Always guard animation with `prefers-reduced-motion: reduce` -
+   and a guard inside a comment does not count" - and until this round the mandate existed only as the prose
+   sentence above and as the comment inside `@theme` saying the guard "lands with the markup in design-apply";
+   nothing shipped and nothing could fail the absence. `check:render` measures the 150ms/250ms fades' effect on
+   contrast, never whether they can be turned off, and `ratify-check` is named in DESIGN.md but exists in neither
+   `package.json` nor `scripts/gate-run.mjs`. So this block is the artifact half of the milestone: it selects
+   `*` (and the two pseudo-elements, which `*` does not reach) rather than a class list, because a guard that
+   lists the controls written today silently misses the next one; the declarations carry `!important` because
+   they are the one rule that must beat a utility, and the block sits after `@theme` so it is last in the sheet.
+   It changes no colour and no geometry - `check:contrast`, `check:render:dist`, `check:rhythm` and `check:space`
+   print the same figures with it present - and it makes a hover state change INSTANTLY rather than over the
+   tiers, which is what "reduced motion" has to mean here: there is nothing to slow down, only motion to remove. ---- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+    animation-name: none !important;
+    animation-duration: 0s !important;
+  }
+}
