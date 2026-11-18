@@ -5,7 +5,7 @@
     "distState": {
       "fresh": true,
       "built": "dist/client/sitemap-index.xml",
-      "builtAt": 1794993521059.7715,
+      "builtAt": 1794994088038.3496,
       "input": "src/components/DiscordSummary.svelte",
       "inputAt": 1794989642879.6033
     },
