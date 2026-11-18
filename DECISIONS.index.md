@@ -431,5 +431,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D425** (2026-11-17) — a pointer row must be re-keyed in the same change that deletes the ref it names, and `check:tables` cannot be the instrument that catches it (2026-11-17; `reversible` — a citation rule, and a named gap in a gate)
 - **D426** (2026-11-17) — the composition pass the operator's (b) grant asked for is a **new round, numbered 18**: rounds are append-only, and this page's composition question has never been on a table (2026-11-17; `reversible` — a design round mutates `dist/` scratch only, and no `src/` file changed)
 - **D427** (2026-11-17) — the accepted round-18 row F is applied **authored**, as classes in `src/`, not as the grill's `<style>` override, and that is what makes D214's one-step rule supersede across bands rather than beside them (2026-11-17; `costly` — three components and one island move, and a ruled spacing number in `DESIGN.md` changes against a measurement)
+- **D428** (2026-11-17) — the granted merge of `composition-round-18` into `staging`, its push, and its delete: measured before scheduled, and `origin/staging` was already one ahead of the cut (2026-11-17; `costly` — it moves a branch on origin, deletes the branch that carried the item, and publishes a Worker Preview)
 
-Defined: 423 (D1-D427). Unused ids: D315, D400, D401, D402.
+Defined: 424 (D1-D428). Unused ids: D315, D400, D401, D402.
