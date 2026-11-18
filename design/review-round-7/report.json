@@ -4,8 +4,8 @@
     "dayStamp": "2026-11-18",
     "distState": {
       "fresh": true,
-      "built": "dist/client/sitemap-index.xml",
-      "builtAt": 1794994088038.3496,
+      "built": "dist/client/sitemap-0.xml",
+      "builtAt": 1794994758517.4253,
       "input": "src/components/DiscordSummary.svelte",
       "inputAt": 1794989642879.6033
     },
