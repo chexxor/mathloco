@@ -4,10 +4,10 @@
     "dayStamp": "2026-11-17",
     "distState": {
       "fresh": true,
-      "built": "dist/client/sitemap-0.xml",
-      "builtAt": 1794975356594.6682,
-      "input": "src/lib/claude.ts",
-      "inputAt": 1794975102602.306
+      "built": "dist/client/sitemap-index.xml",
+      "builtAt": 1794977005197.321,
+      "input": "src/components/Schedule.astro",
+      "inputAt": 1794976866588.5073
     },
     "feedEvents": 7,
     "feedCancelled": 2,
@@ -205,11 +205,52 @@
       "want": "absent",
       "needle": "All 5 dates",
       "where": "/",
-      "hits": 1,
-      "verdict": "OPEN",
-      "why": "a fourth name for one route (D386 keeps one word)",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "a fourth name for one route (D386 keeps one word); the count in the label goes with it, the word stays",
+      "evidence": []
+    },
+    {
+      "id": "H12b",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "All dates",
+      "where": "/",
+      "hits": 2,
+      "verdict": "CLOSED",
+      "why": "what the label says instead: the nav chip’s own word, and D309 keeps the remaining prose registers as INFO rather than defects",
       "evidence": [
-        "body/How it works: All 5 dates"
+        "body/Matheapolis: All dates",
+        "body/How it works: All dates"
+      ]
+    },
+    {
+      "id": "H16",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Next meeting",
+      "where": "/",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the letter wants `## When we meet` to lead with a date; this tree states the date once, in the hero block above the band (D340), and D306 keeps the compact card date-free so the page never grows a second calendar",
+      "evidence": [
+        "body/Matheapolis: Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"
+      ]
+    },
+    {
+      "id": "H17",
+      "route": "/",
+      "kind": "heading",
+      "want": "present",
+      "needle": "How it works",
+      "where": "/",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the heading the letter wants spent on the first ten minutes rather than on venue count and data policy",
+      "evidence": [
+        "h3: How it works"
       ]
     },
     {
@@ -231,9 +272,21 @@
       "want": "absent",
       "needle": "Formerly the Minneapolis Mathematics Book Club",
       "where": "/",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the former name spliced into a sentence about agendas (D430 moved it out of the body; a row that reads the whole page counts the new home as the defect still being there)",
+      "evidence": []
+    },
+    {
+      "id": "H14b",
+      "route": "/",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Formerly the Minneapolis Mathematics Book Club",
+      "where": "/",
       "hits": 1,
-      "verdict": "OPEN",
-      "why": "the former name spliced into a sentence about agendas",
+      "verdict": "CLOSED",
+      "why": "the other half of the letter’s own remedy: \"it belongs in the page title or a footer line\" — the colophon is that footer line",
       "evidence": [
         "exit-band/How it works: Formerly the Minneapolis Mathematics Book Club."
       ]
@@ -243,12 +296,14 @@
       "route": "/",
       "kind": "plain",
       "want": "present",
-      "needle": "Nothing to bring",
+      "needle": "bring nothing|nothing to bring|prepare nothing",
       "where": "/",
-      "hits": 0,
-      "verdict": "OPEN",
-      "why": "three rules for arriving, asserted not disclaimed",
-      "evidence": []
+      "hits": 2,
+      "verdict": "CLOSED",
+      "why": "three rules for arriving, asserted not disclaimed — the letter’s words pinned this row to one wording; the site ships D388’s",
+      "evidence": [
+        "body/How it works: Bring nothing, prepare nothing, and bring a question if you have one."
+      ]
     },
     {
       "id": "D1",
@@ -478,6 +533,18 @@
       "evidence": [
         "body/What we do: People bring textbooks, problem sets, and half-finished projects; nobody is teaching and nobody is being tested."
       ]
+    },
+    {
+      "id": "J11",
+      "route": "/join",
+      "kind": "metric",
+      "want": "absent",
+      "needle": "Join Our Group|Ways in|View Schedule",
+      "where": "metrics.joinLabels",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the letter’s five join-variants against the two this tree ratified (D386 one word per route, D390 the H1)",
+      "evidence": []
     },
     {
       "id": "C1",

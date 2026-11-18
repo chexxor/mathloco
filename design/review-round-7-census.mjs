@@ -43,6 +43,11 @@ const pages = {};
 for (const route of ['/', '/dates', '/join', '/chat', '/past', '/404']) {
   pages[route] = onePage(pageFileFor(route, ROOT), route);
 }
+/** Join-word labels across the built pages, hoisted above the rows so a row can read them (H12b, J11) and the
+ *  footer of the table can still print them. */
+const joinLabelSet = [...new Set(
+  Object.values(pages).flatMap((p) => p.anchors.filter((a) => /^(join|sign up|come|attend)/i.test(a.label)).map((a) => a.label))
+)];
 /** The visible text with the tags folded away, and whitespace normalised — what a reader's eye gets. */
 for (const p of Object.values(pages)) {
   p.plain = decode(p.text.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ');
@@ -54,7 +59,9 @@ const feed = readFileSync(resolve(ROOT, 'events.ics'), 'utf8');
 // `want` is what the letter asks the page to look like AFTER the fix:
 //   absent  -> the copy it names should no longer be there
 //   present -> the affordance it asks for should be there
-// `probe` says how this probe can see it at all.
+// `probe` says how this probe can see it at all. A row may also carry `zone: [...]` — only for rows whose defect
+// is a sentence in one part of the page, so a move between parts is a fix rather than a miss — and `metric`, which
+// reads one of the counts the table prints instead of a string.
 // ---------------------------------------------------------------------------
 const CHECKS = [
   // ---- Home ----
@@ -69,10 +76,14 @@ const CHECKS = [
   { id: 'H9', route: '/', want: 'present', needle: 'buy a coffee', why: 'cost and membership in one line' },
   { id: 'H10', route: '/', want: 'present', needle: 'Three to seven', why: 'the one headcount a stranger wants, on the operator\'s word' },
   { id: 'H11', route: '/', want: 'absent', needle: 'six to twelve', why: 'the letter\'s invented turnout figure against the operator\'s 3-7' },
-  { id: 'H12', route: '/', want: 'absent', needle: 'All 5 dates', why: 'a fourth name for one route (D386 keeps one word)' },
+  { id: 'H12', route: '/', want: 'absent', needle: 'All 5 dates', why: 'a fourth name for one route (D386 keeps one word); the count in the label goes with it, the word stays' },
+  { id: 'H12b', route: '/', want: 'present', needle: 'All dates', why: 'what the label says instead: the nav chip\u2019s own word, and D309 keeps the remaining prose registers as INFO rather than defects' },
+  { id: 'H16', route: '/', want: 'present', needle: 'Next meeting', why: 'the letter wants `## When we meet` to lead with a date; this tree states the date once, in the hero block above the band (D340), and D306 keeps the compact card date-free so the page never grows a second calendar' },
+  { id: 'H17', route: '/', want: 'present', kind: 'heading', needle: 'How it works', why: 'the heading the letter wants spent on the first ten minutes rather than on venue count and data policy' },
   { id: 'H13', route: '/', want: 'absent', needle: 'the schedule', why: 'a fifth name for the same route, and one that 404s' },
-  { id: 'H14', route: '/', want: 'absent', needle: 'Formerly the Minneapolis Mathematics Book Club', why: 'the former name spliced into a sentence about agendas' },
-  { id: 'H15', route: '/', want: 'present', needle: 'Nothing to bring', why: 'three rules for arriving, asserted not disclaimed' },
+  { id: 'H14', route: '/', want: 'absent', zone: ['body'], needle: 'Formerly the Minneapolis Mathematics Book Club', why: 'the former name spliced into a sentence about agendas (D430 moved it out of the body; a row that reads the whole page counts the new home as the defect still being there)' },
+  { id: 'H14b', route: '/', want: 'present', zone: ['exit-band'], needle: 'Formerly the Minneapolis Mathematics Book Club', why: 'the other half of the letter\u2019s own remedy: "it belongs in the page title or a footer line" — the colophon is that footer line' },
+  { id: 'H15', route: '/', want: 'present', re: true, needle: 'bring nothing|nothing to bring|prepare nothing', why: 'three rules for arriving, asserted not disclaimed — the letter\u2019s words pinned this row to one wording; the site ships D388\u2019s' },
   // ---- /dates ----
   { id: 'D1', route: '/dates', want: 'absent', needle: 'dates run from', why: 'a stated range that contradicts the rows under it' },
   { id: 'D2', route: '/dates', want: 'absent', needle: 'address to give directions to', why: 'a sentence describing the page\'s own layout' },
@@ -93,6 +104,7 @@ const CHECKS = [
   { id: 'J8', route: '/join', want: 'absent', needle: 'mailto', why: 'the private door the letter asks for five times' },
   { id: 'J9', route: '/join', want: 'absent', needle: 'reads the messages we post there', why: 'the ask-us door that lands on bot output' },
   { id: 'J10', route: '/join', want: 'present', needle: 'nobody is teaching', why: 'the uneven bars named honestly' },
+  { id: 'J11', route: '/join', want: 'absent', kind: 'metric', metric: 'joinLabels', needle: 'Join Our Group|Ways in|View Schedule', why: 'the letter\u2019s five join-variants against the two this tree ratified (D386 one word per route, D390 the H1)' },
   // ---- /chat ----
 // The island's copy is not in the built HTML: `DiscordSummary.svelte` fetches `/api/discord-summary` in the
 // browser, so the strings the letter quotes about the bot section live in the component, and Svelte ships the
@@ -175,17 +187,25 @@ for (const check of CHECKS) {
     haystack = SOURCE_FILE(check.file) ?? '';
     if (!haystack) throw new Error(`census row ${check.id} names a source file that is not there: ${check.file}`);
     if (haystack.match(re)) evidence = haystack.split('\n').filter((l) => re.test(l)).slice(0, 2).map((l) => `${check.file}: ${l.trim()}`);
+  } else if (kind === 'metric') {
+    where = `metrics.${check.metric}`;
+    haystack = check.metric === 'joinLabels' ? joinLabelSet.join(' | ') : '';
+    if (haystack && haystack.match(re)) evidence = joinLabelSet.filter((l) => re.test(l)).slice(0, 3).map((l) => `join label: ${l}`);
   } else {
     const p = pages[check.route];
     where = check.route;
+    // A row may scope itself to a zone of the page (`zone: ['body']`, `['exit-band']`): D430 moved a sentence from
+    // one zone to another, and a row that reads the whole page counts the new home as the defect still being there.
+    const sentences = check.zone ? p.sentences.filter((s) => check.zone.includes(s.zone)) : p.sentences;
+    const zonePlain = sentences.map((s) => s.text).join(' ');
     haystack =
       kind === 'href' ? p.anchors.map((a) => a.href).join(' '):
       kind === 'heading' ? p.headings.map((h) => h.text).join(' '):
       kind === 'title' ? titleOf(p):
-      p.plain;
+      check.zone ? zonePlain : p.plain;
     if (kind === 'href') evidence = p.anchors.filter((a) => re.test(a.href)).slice(0, 3).map((a) => `${a.zone}: ${a.label} -> ${a.href}`);
     if (kind === 'heading') evidence = p.headings.filter((h) => re.test(h.text)).slice(0, 3).map((h) => `${h.tag}: ${h.text}`);
-    if (kind === 'plain' && haystack.match(re)) evidence = p.sentences.filter((s) => re.test(s.text)).slice(0, 2).map((s) => `${s.zone}/${s.section}: ${s.text}`);
+    if (kind === 'plain' && haystack.match(re)) evidence = sentences.filter((s) => re.test(s.text)).slice(0, 2).map((s) => `${s.zone}/${s.section}: ${s.text}`);
   }
   const count = (haystack.match(re) ?? []).length;
   const present = count > 0;
@@ -230,9 +250,7 @@ const metrics = {
     ])
   ),
   // join-word labels across the built pages: how many variants of "join" the site really paints
-  joinLabels: [...new Set(
-    Object.values(pages).flatMap((p) => p.anchors.filter((a) => /^(join|sign up|come|attend)/i.test(a.label)).map((a) => a.label))
-  )],
+  joinLabels: joinLabelSet,
   // how many calendar actions /dates offers, and where
   icsLinks: Object.fromEntries(
     Object.entries(pages).map(([route, p]) => [

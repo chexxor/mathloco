@@ -499,7 +499,13 @@ const lede = compact
                   {/* The label has to match what the target page actually lists: `/dates` shows a window, not the
                       whole future, so promising "all fourteen dates" on a page that prints eight would be a link that
                       lies about its own destination (D238). */}
-                  {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All ${win.shown.length} dates`} <span aria-hidden="true">→</span>
+                  {/* Round-7 communication review (2026-11-18), Home/Revise ("four names for one route — use 'dates'
+                      everywhere, matching the nav chip"): the count leaves the label, the word stays. The count was
+                      never wrong — it is computed off the same `win` the target page prints, which is D238's rule —
+                      but it is a number a visitor reads while deciding to leave, and D410 already declined that kind
+                      of count on this page for that reason. Where the number is what makes the label honest (the
+                      window hides rows, so the page lists the *next* N rather than everything) it stays. */}
+                  {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All dates`} <span aria-hidden="true">→</span>
                 </a>
               )}
               <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
