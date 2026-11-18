@@ -9,10 +9,13 @@ import {
 // The window rules live outside this component so the gate that reads the built page (`scripts/check-schedule-window.mjs`)
 // can compare it against the same rule rather than a copy of it (D238).
 import { todayIn, snapshot } from '../lib/events.mjs';
-import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow, feedWindow } from '../lib/event-window.mjs';
+import { HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from '../lib/event-window.mjs';
 import type { UpcomingItem } from '../lib/content.ts';
-import { publishableRows } from '../lib/event-groups.mjs';
-import { windowSentence } from '../lib/event-description.mjs';
+// Round-7 review (2026-11-18), `/dates`/Remove: the reach sentence leaves the page (D431), so the page no longer
+// computes a file window. `feedWindow`, `publishableRows` and `windowSentence` keep exactly one consumer each -
+// `scripts/check-schedule-window.mjs` (which still checks that a reach sentence the page *does* print is the
+// generated one) and `src/lib/ics.mjs` (which puts it in every published `DESCRIPTION`). An import that has no
+// call behind it is how a future session would re-add a sentence that no row owns.
 // The rhythm is generated from the rows this build publishes (D383), by the same module the home hero calls,
 // so `/dates`'s opening line and the hero's clause cannot be edited apart.
 import { rhythmSentence } from '../lib/rhythm.mjs';
@@ -188,10 +191,14 @@ const zoneStarts = (() => {
 // bakeries and breweries - and "no pin", "no route" is the absence D372 verified (`grep` for a map host in
 // `dist/client` returns nothing), which is why no `URLs.*` key, no map binding and no absolute URL is added.
 // Round-6 review (2026-11-16), `/dates`/Remove: "no page here draws a route to it" is a disclaimer about what
-// this site can do, not a fact about getting there (D387). The address is still named, because q25's answer is
-// the address itself; the sentence about the site's capabilities is gone. The compact width's whole directions
-// paragraph comes off `/` for the same reason - the review's list of provenance marketing.
-const directionsDates = 'The street address printed with each date is the address to give directions to.';
+// this site can do, not a fact about getting there (D387). Round-7 review (2026-11-18), same route, same Remove
+// column (**D431**): what remains after that cut — "The street address printed with each date is the address to
+// give directions to." — describes the page's own layout to the reader, which is the same class of sentence the
+// round-6 read cut above it. q25's answer is the address itself, and it is printed in the row, beside the date;
+// the row needs no sentence about rows. Nothing about getting there is lost: `src/lib/ics.mjs` still puts the
+// venue's street, city and state in `LOCATION`, and the site still prints no map link (D372's absence, re-verified
+// by this round's census - `design/review-round-7-census.mjs` rows D5 and D6 return zero anchors for the four map
+// hosts a directions link could name).
 const empty = content.schedule?.empty;
 const venueLine = value(empty?.venueLine);
 // The status word distinguishes "nothing scheduled" from "we have not wired the calendar yet" — the first
@@ -277,22 +284,16 @@ const headingText = compact ? 'When we meet' : 'Dates';
 // two is the same defect class as a button labelled "Details and sign-up" that happens to go to Meetup. The
 // claim the band can back up is the one the resolver decides per date: each printed date links to whatever
 // sign-up page the club has posted for it.
-// D371 (round-5 communication read B2, q18): the file's reach is printed nowhere — "How far ahead does the file
-// reach?" and "Which of its dates have already passed?" are both answered only by the seven bare `DTSTART`s a
-// subscriber reads. The clause is **generated from the rows this same build publishes** (the grouping applied,
-// cancellations included, since the question is what the file holds), through `windowSentence` — the identical
-// call `src/lib/ics.mjs` puts in every `DESCRIPTION`. One call in two places is the point: a hand-written date
-// in a lede is a claim that expires with the next harvest, and two hand-written sentences naming the same window
-// are a near-duplicate `check:content` would have to be talked into accepting. The homepage band does not carry
-// it: D306 keeps `/schedule` the only surface that prints dates, and the compact lede has no room for a third
-// fact beside its two paths.
-// The window is still computed (the omitted-row paragraph and the standing row both need it), but the sentence
-// about it no longer sits in the lede (D387, D388): the review's `/dates`/Remove item is that a paragraph about
-// the file reads as meta-commentary next to the dates themselves, and it invites the reader to notice that the
-// file holds 7 rows while the page prints 5. The reach sentence belongs beside the path to the file, where the
-// reader is already thinking about the file.
-const fileWindow = feedWindow(publishableRows(snapshot.events).rows);
-const windowClause = windowSentence(fileWindow);
+// D371 (round-5 communication read B2, q18) asked where the file's reach is answered, and `windowSentence` was
+// the one call both the page and the file went through. Round-7 review (2026-11-18) closed the page half of that
+// answer (**D431**): the sentence it printed — "The club\u2019s dates run from Nov 7, 2026 through Dec 19, 2026."
+// — reads as a claim about the club's dates, and the rows under it run Nov 21 → Dec 19, because Nov 7 and Nov 11
+// are cancelled and D223 keeps cancellations off the page. A stated range that disagrees with the visible list is
+// not a style preference; the review called it "the kind of small wrongness that costs a lot of trust". The
+// reach stays **inside the file** (every published `DESCRIPTION` still carries the generated sentence, and
+// `check:ics`'s `calendar-window` rule still fails a `VEVENT` that loses it), so q18's answer still lives where
+// the subscriber holds it. What the page states instead is what its own rows support: the omission paragraph
+// below, which is generated only when the window rule actually hides a row.
 const rhythm = rhythmSentence(snapshot.events);
 // Round-6 review, `/dates`/Revise (D405): "the format words are never defined on this page. A visitor arriving
 // from search learns what a 'Study session' is only by going to `/join`. Add five words at first use." The
@@ -425,18 +426,13 @@ const lede = compact
               still keys the cluster on a printed date. `/events.ics` lives in this row rather than in a second
               paragraph below it: one path to one file, and the sentence under it is about that path. */}
           <SignUpLinks item={items[0]} />
-          {/* Round-6 review, `/dates`/Remove and the feed/Revise (D387, D388): the reach sentence leaves the lede
-              and sits here, under the path to the file it describes. It is still generated from the rows the file
-              carries (`windowSentence`, D371), so the page cannot name a window the file does not have; what is
-              gone is the count and the "the calendar file carries" framing, which the reviewer read as the site
-              talking about itself next to the dates themselves. */}
-          {windowClause && (
-            <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{windowClause}</p>
-          )}
-          {/* D375 (q25): after the standing row rather than between the rows and it, so the copied line keeps
-              its adjacency to the calendar path it sits over (D372's trap: an insertion that moves a sentence
-              off its link moves a measurement). The sentence names no destination and spends no link. */}
-          <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{directionsDates}</p>
+          {/* Round-7 review (2026-11-18), `/dates`/Remove (D431): the reach sentence and the address meta-note are
+              both gone from the page. The reach stays inside the file, where the subscriber holds it (`src/lib/ics.mjs`
+              + `check:ics`'s `calendar-window` rule); the address is stated in each row. What keeps the page honest
+              about the gap between its rows and the file's is `omittedText` above - generated from the same plan that
+              hid rows, and empty when the window hid none. `scripts/check-schedule-window.mjs` no longer demands a
+              reach sentence here; it still fails one that is printed and is not the generated one, so a hand-written
+              window cannot come back while the gate is green. */}
         </>
       )}
 

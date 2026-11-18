@@ -29,10 +29,16 @@
  *     carries everything (D150: the page limit is a layout rule, not a fact about the club);
  *   - **a cancelled date painted on the page** — the feed publishes cancellations with a raised SEQUENCE; the page
  *     does not (D223);
- *   - **the reach of the file left unsaid** (round-5 communication read B2, q18, D371) — the page that offers
- *     `/events.ics` also has to say how far that file reaches, in the same generated sentence the file carries
- *     inside itself. A lede that names no window, or names one the rows do not support, is the half of q18 the
- *     page owns; `check:ics`'s `calendar-window` rule owns the half inside the file.
+ *   - **a reach of the file printed on the page that is not the reach the file has** (round-5 communication
+ *     read B2, q18, D371; **D431** 2026-11-18 keeps the detector and drops the demand) — `/dates` offers
+ *     `/events.ics`, so it used to have to say how far that file reaches, in the same generated sentence the
+ *     file carries inside itself. Round-7 review deleted that sentence from the page: it read as a claim about
+ *     the club's dates, and the range it named (Nov 7 → Dec 19) disagreed with the five rows under it (Nov 7 and
+ *     Nov 11 are cancelled, and D223 keeps cancellations off the page). The reach still lives **inside the file** —
+ *     every published `DESCRIPTION` carries the generated sentence, and `check:ics`'s `calendar-window` rule still
+ *     fails a `VEVENT` that loses it. What this gate keeps is the half that is still a defect: a page that prints
+ *     a window in that shape has to print the generated one, so a hand-written reach cannot come back while the
+ *     gate is green.
  *
  * The snapshot is read the way `src/lib/events.mjs` reads it: the tracked file, with gitignored
  * `src/content.local/events-*.json` merged over it, so a review build made over an overlay is checked against the
@@ -97,6 +103,15 @@ const planFor = (rows, today) => {
 };
 
 /**
+ * The reach sentence a built page prints, in `windowSentence`'s shape. Comments are stripped first, because
+ * a source note quoting the sentence is not a page printing it (D116's trap, met here by the shape).
+ */
+const printedReachSentences = (html) => {
+  const text = html.replace(/<!--[\s\S]*?-->/g, ' ').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  return [...text.matchAll(/The club\u2019s dates run from [^.]+? through [^.]+?\./g)].map((m) => m[0]);
+};
+
+/**
  * The rules, as a list of failures against (html, plan). Pure, so the selftest can plant each defect in a string
  * and require a verdict without rebuilding the site eight times.
  */
@@ -124,11 +139,15 @@ const verdict = (html, plan, today) => {
   for (const d of plan.cancelledOnly) {
     if (printed.includes(d)) fails.push(`${d} is cancelled and has no open row, but the page prints it (D223)`);
   }
-  // D371: the page offers the file, so it names the file's reach — in the generated sentence, not a paraphrase,
-  // because a paraphrased window is a claim that expires with the next harvest.
   const reach = windowSentence(plan.reach);
-  if (reach && !html.includes(reach)) {
-    fails.push(`the page never names the reach of the file it offers: it should say ${JSON.stringify(reach)} (D371)`);
+  // D371, kept by D431 as a detector rather than a demand: a page may now print **no** reach sentence (the
+  // round-7 review deleted `/dates`'s, because the range it named contradicted the rows under it), but a page
+  // that prints one in that shape may not print a window its own rows do not have. The generated sentence is
+  // the only acceptable text, so a hand-written window in a lede still goes red.
+  for (const s of printedReachSentences(html)) {
+    if (s !== reach) {
+      fails.push(`the page prints a reach sentence that is not the reach the file has: ${JSON.stringify(s)} against ${JSON.stringify(reach)} (D371's shape, D431's demand)`);
+    }
   }
   if (plan.hiddenHorizon + plan.hiddenCap > 0) {
     if (!/events\.ics/.test(html)) fails.push('rows are hidden and the page offers no /events.ics path');
@@ -274,13 +293,23 @@ if (selftest) {
       expect: ['never says so'],
     },
     {
-      // D371. The window the page prints is not the window the rows it printed have: what a hand-written reach
-      // sentence in a lede looks like once the harvest moves a date. Fixture: 12 weekly dates from 2026-11-09,
-      // eight printed — a file that reaches 2027-01-25, lede claiming one that stops after five rows.
+      // D371, kept by D431: the page prints a reach sentence, and the window it names is not the window the
+      // rows it printed have — what a hand-written reach sentence in a lede looks like once the harvest moves
+      // a date. Fixture: 12 weekly dates from 2026-11-09, eight printed — a file that reaches 2027-01-25, lede
+      // claiming one that stops after five rows.
       name: 'the reach sentence the page prints is not the reach the file has',
       snap: long,
       html: () => pageOf(weekly('2026-11-09', 8), long, said(4, 0), windowSentence({ first: '2026-11-09', last: '2026-12-07', count: 5 })),
-      expect: ['reach of the file'],
+      expect: ['not the reach the file has'],
+    },
+    {
+      // D431's other half, planted so the deletion is visible rather than assumed: the page that prints no
+      // reach sentence at all stays green, because the reach now lives inside the file (`check:ics`'s
+      // `calendar-window` rule owns that half).
+      name: 'clean control: the page prints no reach sentence (D431 retired the demand)',
+      snap: long,
+      html: () => `<main><ul>${weekly('2026-11-09', 8).map((d) => `<li data-surface="row" data-date="${d}">x</li>`).join('')}</ul>${said(4, 0)}</main>`,
+      expect: [],
     },
   ];
 
