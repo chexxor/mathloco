@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-17",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-17T21:34:26.956Z",
+ "artifactBuilt": "2026-11-17T22:30:33.311Z",
  "artifactFresh": true,
  "routes": [
   "/",
