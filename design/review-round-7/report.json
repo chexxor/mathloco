@@ -5,9 +5,9 @@
     "distState": {
       "fresh": true,
       "built": "dist/client/sitemap-index.xml",
-      "builtAt": 1794980165367.812,
+      "builtAt": 1794993521059.7715,
       "input": "src/components/DiscordSummary.svelte",
-      "inputAt": 1794979807392.6853
+      "inputAt": 1794989642879.6033
     },
     "feedEvents": 7,
     "feedCancelled": 2,
@@ -27,7 +27,7 @@
       "/": 3,
       "/dates": 6,
       "/join": 4,
-      "/chat": 2,
+      "/chat": 1,
       "/past": 1,
       "/404": 1
     },
@@ -42,6 +42,40 @@
       "Join the chat on Discord , opens in a new tab",
       "Join the Meetup group , opens in a new tab"
     ],
+    "controls": {
+      "/": {
+        "primary": 1,
+        "secondary": 3
+      },
+      "/dates": {
+        "primary": 0,
+        "secondary": 0
+      },
+      "/join": {
+        "primary": 1,
+        "secondary": 3
+      },
+      "/chat": {
+        "primary": 0,
+        "secondary": 1
+      },
+      "/past": {
+        "primary": 0,
+        "secondary": 0
+      },
+      "/404": {
+        "primary": 1,
+        "secondary": 1
+      }
+    },
+    "bandRepeat": {
+      "/": 2,
+      "/dates": 0,
+      "/join": 3,
+      "/chat": 1,
+      "/past": 1,
+      "/404": 1
+    },
     "icsLinks": {
       "/": 2,
       "/dates": 2,
@@ -131,6 +165,20 @@
       "verdict": "CLOSED",
       "why": "a disclaimer about the site's own capability where a directions link belongs",
       "evidence": []
+    },
+    {
+      "id": "H18",
+      "route": "/",
+      "kind": "metric",
+      "want": "present",
+      "needle": "/:primary=1",
+      "where": "metrics.controls",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the letter's \"One of the two hero CTAs — Two equal-weight controls and neither is an RSVP\": home now declares exactly ONE control in the primary role, and it is the sign-up CTA (`data-control`, D140 — the role a pressable block publishes, not a class string the gate has to trust)",
+      "evidence": [
+        "controls: /:primary=1"
+      ]
     },
     {
       "id": "H7",
@@ -318,6 +366,21 @@
       "evidence": []
     },
     {
+      "id": "D8",
+      "route": "/dates",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "can all follow",
+      "where": "/dates",
+      "hits": 2,
+      "verdict": "DECLINED",
+      "evidence": [
+        "body/Social: Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
+        "exit-band/Social: Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date."
+      ],
+      "declined": "the pair the letter calls a duplicate is registered `status: deliberate` in design/copy-duplicates.json under D369 (round-5 read A5): the offer and its qualification print beside EACH place the file is offered — the standing row under the rows, and the exit band on every emitted page — so deleting either side leaves a route that hands the reader a feed link with no qualification, which is the defect A5 closed rather than one it found. `node scripts/check-content.mjs --print-baseline` prints that pair with its status today, and its note says the pair goes away only when one side is deleted or a ruling settles it"
+    },
+    {
       "id": "D2",
       "route": "/dates",
       "kind": "plain",
@@ -330,6 +393,20 @@
       "evidence": []
     },
     {
+      "id": "D9",
+      "route": "/dates",
+      "kind": "metric",
+      "want": "present",
+      "needle": "/dates=0",
+      "where": "metrics.bandRepeat",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the footer platform row, and the letter's arithmetic behind it: it counts 8 absolute URLs outside the band because the standing row repeated the band's Meetup and Discord. D407's `splitPaths(paths, config.URLs)` deletes that repeat against `EXIT_BAND_PLATFORMS`, so 0 URL the band paints is painted a second time outside it on /dates",
+      "evidence": [
+        "bandRepeat: /dates=0"
+      ]
+    },
+    {
       "id": "D3",
       "route": "/dates",
       "kind": "plain",
@@ -340,6 +417,36 @@
       "verdict": "CLOSED",
       "why": "a relative age that ages into an apology",
       "evidence": []
+    },
+    {
+      "id": "D10",
+      "route": "/dates",
+      "kind": "source",
+      "want": "present",
+      "needle": "aria-hidden=\"true\" data-leaf class=\"bg-tint rounded-control w-28",
+      "where": "dist/client/dates/index.html",
+      "hits": 5,
+      "verdict": "CLOSED",
+      "why": "the letter's \"Nov / 21 / Sat as three separate list elements\": its own remedy — mark the block `aria-hidden` and let the full sentence carry it — is on the date rail of all five rows, and the rail keeps its `data-leaf` handle so `check:row-geometry` can still read the row. The row reads the built artifact, so this is the shipped bytes, not the source (X1's form)",
+      "evidence": [
+        "dist/client/dates/index.html: <!DOCTYPE html><html lang=\"en-US\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width\"><link rel=\"icon\" type=\"image/svg+xml\" href=\"/favicon.svg\"><link rel=\"canonical\" href=\"https://matheapolis.com/dates\"><meta name=\"robots\" content=\"index,follo"
+      ]
+    },
+    {
+      "id": "D11",
+      "route": "/dates",
+      "kind": "heading",
+      "want": "present",
+      "needle": "Social|Study session",
+      "where": "/dates",
+      "hits": 5,
+      "verdict": "CLOSED",
+      "why": "the row headings, which the letter grades rather than asks: \"Correct, and defined — but defined in the lede above, not in the row. Keep as-is; this is now good.\" The format words open each venue group (D397) and nothing in this round moved them",
+      "evidence": [
+        "h2: Social",
+        "h2: Social",
+        "h2: Social"
+      ]
     },
     {
       "id": "D4",
@@ -433,6 +540,18 @@
       "evidence": []
     },
     {
+      "id": "J12",
+      "route": "/join",
+      "kind": "plain",
+      "want": "absent",
+      "needle": "not sponsored or endorsed",
+      "where": "/join",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "the trademark disclaimer out of the body of the page a visitor has just decided to come to (peak-end, the same rule that retired the room sentence). It prints once, in the exit band — X6 is that half",
+      "evidence": []
+    },
+    {
       "id": "J4",
       "route": "/join",
       "kind": "plain",
@@ -485,6 +604,18 @@
       ]
     },
     {
+      "id": "J13",
+      "route": "/join",
+      "kind": "heading",
+      "want": "present",
+      "needle": "What we do.*Come to a meeting.*Talk with us now.*Follow the club",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the letter's section order: the club described FIRST, then the doors in ascending commitment — come to a meeting · talk with the club · follow the feed. The headings are read in document order, so a page that describes the club last fails this row whatever its words are",
+      "evidence": []
+    },
+    {
       "id": "J7",
       "route": "/join",
       "kind": "plain",
@@ -508,6 +639,18 @@
       "hits": 0,
       "verdict": "CLOSED",
       "why": "the private door the letter asks for five times",
+      "evidence": []
+    },
+    {
+      "id": "J14",
+      "route": "/join",
+      "kind": "plain",
+      "want": "present",
+      "needle": "Free. No membership needed",
+      "where": "/join",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the letter's \"Cost, one line\" on `/join` — the same ask as home (H9), measured on the page the letter found it missing on",
       "evidence": []
     },
     {
@@ -673,6 +816,30 @@
       "evidence": [
         "body/No summary written this week: The channel is the live thing, and the button above goes to it."
       ]
+    },
+    {
+      "id": "C10",
+      "route": "/chat",
+      "kind": "metric",
+      "want": "absent",
+      "needle": "/chat:primary=[1-9]",
+      "where": "metrics.controls",
+      "hits": 0,
+      "verdict": "CLOSED",
+      "why": "round 7's re-opened Hick's-law item — \"Two of the three Discord invites — two identical buttons, no choice made by the reader, same destination\", and its copy line \"keep one Discord button, not two\": the card's primary control is deleted (D437), so `/chat` declares ONE pressable control, the fold secondary D367 moved into the first screen. The survivor is that one, not this one, because deleting the fold control would return the page to D367's measured defect — the only way out 1,720px down at 1240 and y=2,075 at 390",
+      "evidence": []
+    },
+    {
+      "id": "C11",
+      "route": "/chat",
+      "kind": "plain",
+      "want": "present",
+      "needle": "New since|Which three|new since",
+      "where": "/chat",
+      "hits": 0,
+      "verdict": "DECLINED",
+      "evidence": [],
+      "declined": "nothing marks which three threads are new, and this tree keeps it that way on two rules and one refusal. (a) A marker has to know the cap, and D320's one-home rule keeps exactly one cap literal in the tree — `WhyJoinUs.astro`'s `const VISIBLE = 6` — which `check-threads.mjs:33` reads by regex out of THAT file only, so a second cap in `chat.astro` is a rule with two homes and moving the cap breaks the gate. (b) A label that named what the home page had left out would be the site talking about itself, on the one page whose reader is deciding whether to join a channel — D387 and D414's class, and D411 already ruled that what this page adds over the teaser is the gloss and the drawing, not a count. (c) The letter's alternative — hand-edit before publish — is a standing maintenance promise of the class D346 refused. What ships is D411's answer: the list stays (its absence fails `check-threads`'s `rest-link-missing`), every entry carries the club's own gloss, and the lead says so in words a reader can use"
     },
     {
       "id": "F1",
@@ -892,6 +1059,34 @@
       "why": "the letter reads /schedule as a 404 for the third round; the built artifact ships a 301 for both /schedule and /schedule/, and the live edge answers 301 (D373’s sweep, D408)",
       "evidence": [
         "dist/client/_redirects: /schedule/    /dates    301"
+      ]
+    },
+    {
+      "id": "C12",
+      "route": "/chat",
+      "kind": "source",
+      "want": "present",
+      "needle": "<h2 class=\"text-label font-medium text-ink\">#{channel.name}",
+      "where": "src/components/DiscordSummary.svelte",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the heading ladder: the letter's remedy — \"H1 -> #general (not a heading in the markup) -> H3 -> H4. Skipped level at the top. Make #general an H2\" — landed inside the island, so the page now runs h1 (the page's name) -> h2 (the channel's own name) -> h3 (the window) -> h4 (a block), no skipped level. Client-rendered, so the row reads the component the way C2/C3/C4 do",
+      "evidence": [
+        "src/components/DiscordSummary.svelte: <h2 class=\"text-label font-medium text-ink\">#{channel.name}</h2>"
+      ]
+    },
+    {
+      "id": "X8",
+      "route": "/dates",
+      "kind": "metric",
+      "want": "present",
+      "needle": "/dates=6",
+      "where": "metrics.outbound",
+      "hits": 1,
+      "verdict": "CLOSED",
+      "why": "the cross-cutting \"Absolute links outside <footer>: /dates is at 8 against a ratified ceiling of 6. The duplication is the cause, not the ceiling\" — the duplication is what D407 deleted, and the page now sits AT the ceiling D358 ratified, 6 of 6, so the letter's 8 stays its own number (D382). If a row ever gains an anchor this row goes OPEN, which is the gate for the ceiling, not a note",
+      "evidence": [
+        "outbound: /dates=6"
       ]
     }
   ]

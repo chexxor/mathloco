@@ -10,10 +10,10 @@ in §6, and the work it must not do on our behalf is in §8.
 
 | | |
 |---|---|
-| **Where this reply lives** | `review-round-7`, cut from `staging` @ `4d6f751`; this doc is the round's last commit. **Nothing was merged into `main` and nothing was pushed** from this branch (**D42**, **D124**) — the merge grant was not asked for this item, and **S063**/**D428** shows a grant is per item, not a habit. Re-verify with `git log --oneline -9 \| cat`; read the pointer as a cut point plus a range, never a commit count (**S051**, **D425**) |
-| **The artifact this reply measured** | the tree this branch builds: `npm run build`, then `node design/dist-fresh.mjs` verdict **fresh** — newest build `2026-11-18T05:36:05Z` (`dist/client/sitemap-index.xml`) against newest input `2026-11-18T05:30:07Z` (`src/components/DiscordSummary.svelte`) @measured 2026-11-18 UTC by the probe itself (Linux native, Node 24.22.1, 16 CPU) |
-| **The instrument** | `node design/review-round-7-census.mjs` (tracked) writes `design/review-round-7/report.json`: **63 rows, one per line item of the letter**, verdicts **54 CLOSED / 6 DECLINED / 3 NOT MEASURABLE / 0 OPEN** @measured 2026-11-18 UTC by that command. The instrument was written for this letter and extended twice inside the round: row kinds `source`/`model`/`metric` (**D434**) and a `DECLINED` verdict (**D436**) |
-| **The gate sets at this tip** | `npm run verify` **72 ok / 1 failed** — 42.3s wall / 69.3s of work, load 9.8→11.7/16cpu @measured 2026-11-18 UTC by the runner (Linux native, Node 24.22.1, 16 CPU, jobs=4); the one failure is `check:design`, and **every one of its 24 flagged path literals is inside an untracked directory this session did not create** — `design/refs/`, a vendor-research library left in a tracked area by another session (dir mtime 2026-11-17 21:53, `git ls-files design/refs \| wc -l` = 0, in no commit on any branch). It is escalated in `NEXT.md` §Operator ToDo rather than edited here, because it is not this item's notes. The 25th literal — `scripts/check-cache.mjs` cited from `src/components/DiscordSummary.svelte` — **was** this round's, and is fixed: the comment now names `npm run check:cache` (`scripts/check-summary-cache.ts`) |
+| **Where this reply lives** | `review-round-7`, cut from `staging` @ `4d6f751`. **Nothing was merged into `main` and nothing was pushed** from this branch (**D42**, **D124**) — the merge grant was not asked for this item, and **S063**/**D428** shows a grant is per item, not a habit. The branch is shared: another item's **two** commits, `24c7c5b` and `821ae7d` (the `design/refs/` corpus, 102 tracked files, `git ls-files design/refs \| wc -l` = 102 @measured 2026-11-18), sit between the round's docs commit and this one, so this doc is the branch's **twelfth** commit from the cut rather than its eleventh. Re-verify with `git log --oneline -12 \| cat` and `git branch -v --no-color \| cat`; read the pointer as a cut point plus a range, never a branch name (**S051**, **D425**) |
+| **The artifact this reply measured** | the tree this branch builds: `npm run build`, then `node design/dist-fresh.mjs` verdict **fresh** — newest build `2026-11-18T08:38:31Z` (`dist/client/sitemap-0.xml`) against newest input `2026-11-18T08:14:02Z` (`src/components/DiscordSummary.svelte`, the `/chat` control's deletion round) @measured 2026-11-18 UTC by the probe itself (Linux native, Node 24.22.1, 16 CPU) |
+| **The instrument** | `node design/review-round-7-census.mjs` (tracked) writes `design/review-round-7/report.json`: **75 rows, one per line item of the letter**, verdicts **64 CLOSED / 8 DECLINED / 3 NOT MEASURABLE / 0 OPEN** @measured 2026-11-18 UTC by that command. The instrument was written for this letter and extended three times inside the round: row kinds `source`/`model`/`metric` (**D434**), a `DECLINED` verdict (**D436**), and two priced structural counts a row can be satisfied by — declared pressable **controls** per role, and absolute URLs a page paints **twice** (body and exit band) (**D437**). §2 carries one row per census row, and every row-count move is in §9 |
+| **The gate sets at this tip** | `npm run verify` **73 ok / 0 failed** — 30.3s wall / 57.9s of work, load 6.1→9.2/16cpu @measured 2026-11-18 UTC by the runner (Linux native, Node 24.22.1, 16 CPU, jobs=4), and `npm run verify:rig` **3 ok / 0 failed** — 6.5s wall / 12.2s of work @measured 2026-11-18 UTC. **`check:design` is green here**: it prints `BROKEN path literals in code, skills and DESIGN.md: none` and reports the `.notes/` literals separately as advisory — the earlier claim in this doc that it was red on 24 literals inside an untracked `design/refs/` is superseded in §9, because that corpus landed **tracked** in another item's commit `24c7c5b`. The cost guard's verdict is a WARN, not a block: load above 6/16cpu (D269) @measured 2026-11-18 UTC. Read the manifest at `.design/tmp-gate-logs/deploy/manifest.txt` rather than a pipe's exit code (D144) |
 | **The day, in both clocks** | the letter is dated **2026-11-18** (the reviewer's day, UTC). The rig is Linux native in **CST** and its clock read **2026-11-17 23:3x** for the same window. Stamps here name the **UTC** day and say so, so the pair and the plan do not read as two different days (**D32**'s "name the OS and clock in every measurement", generalized) |
 | **What the letter is not** | not a measurement. It carries no instrument and no stamp, so its figures are quoted as the letter's throughout; where this reply disagrees with one, it prints the command that produced its own number (**D382**) |
 
@@ -55,6 +55,16 @@ builds; **CLOSED (already true)** = it was met at the branch's cut, and the row 
 re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fact, with the evidence beside it;
 **NOT MEASURABLE** = no seat here can re-read the text the row is about, and the row names what does own it.
 
+**75 rows, and they are the census's 75 rows**: `node design/review-round-7-census.mjs --no-build` prints
+**75 line items — 64 CLOSED / 8 DECLINED / 3 NOT MEASURABLE / 0 OPEN** @measured 2026-11-18 UTC, and §2 below has
+75 rows in the five columns this gate reads (`npm run check:tables` audits the row, so a row that loses a cell
+loses the line item it was mapping — D416's rule). The letter's line items in its own tables are 63 (Home 7 + 6 + 5,
+`/dates` 5 + 3 + 3, `/join` 4 + 6 + 3, `/chat` 4 + 4 + 1, the feed 5, cross-cutting 5, and the five things it
+names twice across pages); the instrument splits four of them into the pair each item is (H12/H12b, H14/H14b,
+D5/D6, X1/X1b, and J5/J6/J6b), declines six, and never leaves an item without a row — which is the property MS34's
+exit gate insists on and the round's first self-inflicted defect taught (§9: two items had no row until this round
+gave them one, and twelve more had none until the rework gave them one).
+
 | id | the letter's item, in its words | verdict | what this tree does now, and where | the decision or gate that owns it |
 |---|---|---|---|---|
 | H1 | hero caption ends "…cropped from that leaf **(D312)**" | CLOSED | the four characters are gone from built home; the number stays in the comment that owns it | D430, `check:copy` |
@@ -63,6 +73,7 @@ re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fac
 | H4 | "last read 14 days ago" | CLOSED | relative ages became absolute dates; `/dates` prints "Copied from the club's own calendar on Nov 13, 2026" | D431, `check:provenance` |
 | H5 | "the list is not the room" | CLOSED | gone from home | D430 |
 | H6 | "this site drops no pin" | CLOSED | gone from home; see D5/D6 for what replaces it | D430 |
+| H18 | "One of the two hero CTAs — two equal-weight controls and neither is an RSVP" | CLOSED | home declares exactly **one** control in the `primary` role, and that one **is** the sign-up CTA; the rest declare `secondary`, so the pair the letter names is no longer equal-weight (row **H18**, 1 hit on `/:primary=1`) | D437, D140, `check:render` `CONTROL_ROLES` |
 | H7 | primary CTA "Join Our Group" | CLOSED | the home CTA signs up for the next event directly; built home prints "Sign up for Sat, Nov 21" | D430 over D384's CTA, `check:rsvp-page` |
 | H8 | "the rhythm… home doesn't" | CLOSED (already true) | "Saturdays at noon for a social, Wednesdays at 6 pm for a study session." on home | round 6 |
 | H9 | "Cost, in one line" | CLOSED (already true) | "Walk in, find a table, buy a coffee if you want one — that is the rent." | D381's slot, `check:content` |
@@ -77,7 +88,11 @@ re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fac
 | H16 | "`## When we meet` still contains no date" | CLOSED (alternative) | the date is stated once, above the band: "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central"; a second calendar block is what D306 keeps out of home | D340, D306 |
 | H17 | "`### How it works` spends the highest-value heading on venue count and data policy" | CLOSED | the h3 holds the arrival script and the headcount, not the venue tally | D430 |
 | D1 | "The club's dates run from Nov 7, 2026 through Dec 19, 2026." on `/dates` | CLOSED | gone from the page (the window sentence stays only in the file, where it is the subscriber's own answer) | D431, `check-schedule-window` |
+| D8 | "The duplicated calendar paragraph — 'Add to a calendar' appears twice, explained twice, in the same footer region. Say it once." | DECLINED | the repeat is still there (2 hits: the standing row's line and the band's) and is **ruled deliberate**, not owed: the qualification travels with every place the file is offered, so deleting either side leaves a route whose feed link has none | D369, `design/copy-duplicates.json` (`status: deliberate`), `check:content` |
+| D9 | "The footer platform row — with the rows, that makes 8 absolute URLs outside `<footer>`" | CLOSED | the repeat the letter blames is gone: **0** URL the exit band paints is painted a second time outside it on `/dates` (row **D9**, `bandRepeat` `/dates=0`) — `splitPaths(paths, config.URLs)` dedups against `EXIT_BAND_PLATFORMS` | D407, D437, `check-rsvp-page` standing-row rule |
 | D2 | "The street address printed with each date is the address to give directions to." | CLOSED | gone from `/dates` | D431 |
+| D10 | "'Nov / 21 / Sat' as three separate list elements — mark the block `aria-hidden` and let the full sentence carry it" | CLOSED | the letter's own remedy ships on **all five** date rails: 5 built elements carry `aria-hidden="true" data-leaf`, and the sentence under each row is what a screen reader and an ear get | D397's rails, D437 (row reads the built bytes, 5 hits) |
+| D11 | "Row heading 'Social' / 'Study session' — correct, and defined in the lede; keep as-is, this is now good" | CLOSED (already true) | 5 venue-group headings open with the format word and nothing in this round moved them; the letter graded the surface rather than asking | D397, D431 |
 | D3 | "Copied from the club's own calendar 4 days ago" | CLOSED | absolute date, and the gate that reads the relative age now prints INFO rather than a defect | D431, `check:provenance` |
 | D4 | "Per-event 'add to calendar'… every row offers only a site-wide feed" | CLOSED (alternative) | the page carries 2 `events.ics` anchors and one feed for the whole schedule; the letter's per-`.ics`-per-row ask is declined in §8 because it multiplies the same ceiling | D407, `check-rsvp-page` rule 10 |
 | D5 | "A directions link per row" (google/bing/OSM host 1) | DECLINED | 0 maps hosts on `/dates`; the page is **at** the ratified ceiling | D358's ceiling, `check-rsvp-page:138` `OUTSIDE_BAND_LIMIT = 6` |
@@ -86,12 +101,15 @@ re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fac
 | J1 | "Nothing here says what a meeting costs…" on `/join` | CLOSED | gone; the cost line prints there instead | D432, D430's rule |
 | J2 | "The club has no front desk and no phone number" | CLOSED | gone from `/join` | D432 |
 | J3 | "there is no single door this site could give directions to" | CLOSED | gone from `/join` | D432 |
+| J12 | "The trademark disclaimer from the body" | CLOSED | 0 in the body zones of `/join`; it prints once, in the exit band (X6 is that half) | D394, D436's `zone:` rows, D437 |
 | J4 | "or nothing yet" | CLOSED | the three words are gone; the rows never promise an empty state | D432 |
 | J5 | H1 "Ways in" → "Join the club" | CLOSED | built `/join` h1 is "Join the club", matching the nav word | D432, D390 |
 | J6 | the heading "Ways in" | CLOSED | 0 headings say it; the phrase now opens the lede, where it is charming | D432 |
 | J6b | the H1 the nav already uses | CLOSED | h1: Join the club | D432 |
+| J13 | "Section order — Follow → Come → Talk → What we do; describe the club first, then the doors by ascending commitment" | CLOSED | `/join`'s headings read in document order **What we do → Come to a meeting → Talk with us now → Follow the club → Your first one**, which is the letter's order (row **J13** reads the heading sequence, so a page that describes the club last fails whatever its words are) | D432, D437 |
 | J7 | "Your first one" — a 60-word paragraph, five negations | CLOSED | rewritten as the three arrival rules under that heading | D392, D432 |
 | J8 | "A mailto address" | CLOSED | 0 `mailto` anywhere: the address is not provisioned, so the door is not shipped (see §7) | D403, S058, `grep -ric mailto dist` = 0 |
+| J14 | "Cost, one line" on `/join` | CLOSED | the page prints its own cost line — "Free. No membership needed — you just come; an RSVP with your name is all the club asks" — the surface the letter found it missing on | D432, D381's slot, `check:content` |
 | J9 | "Somebody from the club reads the messages we post there" → `/chat` | CLOSED | the ask-us sentence now lands on the club's Discord invite, where a question can actually be typed; `/chat` is no longer the door | D432 |
 | J10 | "The uneven bars named honestly" | CLOSED | "People bring textbooks, problem sets, and half-finished projects; nobody is teaching and nobody is being tested." — a **draft claim on the operator grant**, in a slot (§5 row C4) | D432, D415, `check:content` |
 | J11 | "Five variants of 'join' across four pages. Keep two." | CLOSED | the painted join-label set is what D386 ratified; no "Join Our Group", no "Ways in", no "View Schedule" | D386, D432, `check-rsvp-page` |
@@ -103,7 +121,10 @@ re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fac
 | C6 | "Not a scan of a book." as a body paragraph | CLOSED | demoted into the figure's caption line: "Drawn for this site in the plates' line language: ink hairlines, no fills, not a scan of a book." | D433, `check:alt` |
 | C7 | "A cafe being closed for the day" among the summary bullets | NOT MEASURABLE | the summary is live model output; `src/lib/claude.ts` carries the operational-noise exclusion, and no seat here can re-read what a browser will get | D433 |
 | C8 | "Cancellation of a math gathering" | NOT MEASURABLE | same row, the cancellation form | D433 |
-| C9 | "One line of human framing above the bot text" | CLOSED | "The channel is the live thing, and the button above goes to it." prints above the summary block | D433 |
+| C9 | "One line of human framing above the bot text" | CLOSED | "The channel is the live thing, and the button above goes to it." prints above the summary block — and after this round's control deletion, the button it names still exists | D433, D437 |
+| C10 | "Two of the three Discord invites — two identical buttons, no choice made by the reader (Hick's law), same destination", and its copy line "keep one Discord button, not two" | CLOSED | **shipped this round**: the card's `primary` control is deleted, so `/chat` declares **one** pressable control — the fold secondary D367 moved into the first screen (row **C10** reads `/chat:primary=[1-9]`, 0 hits). The survivor is that one because deleting it would return the page to **D367**'s measured defect — the only way out 1,720px down at 1240, y=2,075 at 390. Discord stays named twice: the button and the band's map row | D437 over D410 and D367 |
+| C11 | "The duplicated thread list — word-for-word home's list plus three; nothing marks which three are new" | DECLINED | no marker ships, on two rules and one refusal (see §7 item 11): the cap has one home and a gate reads it by regex out of that file, a label about the home page would be the site talking about itself, and hand-editing is a standing promise of a class already refused. What ships is D411's answer: the list, every entry's own gloss, and the club's own drawing | D411, D320, D346, D437 |
+| C12 | "Heading ladder — H1 → `#general` (not a heading in the markup) → H3 → H4. Skipped level at the top. Make `#general` an H2" | CLOSED | the island renders the channel's own name as an **h2**, so the page runs h1 → h2 (the channel) → h3 (the window) → h4 (a block) with no skipped level; client-rendered, so the row reads the component, comments stripped (row **C12**, 1 hit) | D433, D434's `source` rows, D437 |
 | F1 | `SUMMARY:MPLS Math Club - Bimonthly Social` | CLOSED | 0 in the feed | D429, `check-ics` feed-brand |
 | F2 | `SUMMARY:Common Denominator - Study Session` | CLOSED | 0 in the feed | D429 |
 | F3 | `STATUS:CANCELLED` ×2, "drop cancelled events from the published feed" | DECLINED | kept on the operator's ruling, not missed — see §7; `npm run check:ics` audits rather than greps it away | D223, D299, D429 |
@@ -120,6 +141,7 @@ re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fac
 | X5 | `/dates` title | CLOSED | "Dates - Matheapolis, a Minneapolis math club" | D396 |
 | X6 | "Legal boilerplate: footer on /dates, body on /join, absent on home. Pick the footer." | CLOSED | the endorsement line prints in the exit band on all six built pages and in no body; the letter's census row for it was measured zone by zone | D394, `check-rsvp-page` |
 | X7 | "`/schedule`… 404. Add the redirect." | CLOSED (already true) | `dist/client/_redirects` carries `/schedule` and `/schedule/`, and the live edge answers `301 → …/dates`; the letter's fetcher did not follow it | D373, D408 |
+| X8 | "Absolute links outside `<footer>`: /dates is at 8 against a ratified ceiling of 6. The duplication is the cause, not the ceiling" | CLOSED | both halves: the **duplication** is deleted (D9, 0 band repeats), and the page now sits **at** the ceiling rather than over it — 6 of 6 (row **X8**, 1 hit). The letter's 8 stays quoted as the letter's, never restated as this repo's | D358, D407, D437 (`check-rsvp-page` `OUTSIDE_BAND_LIMIT`) |
 
 ## 3. The letter's "If you ship five things", mapped
 
@@ -142,6 +164,8 @@ re-ask it; **DECLINED** = this tree keeps the current shape on a ruling or a fac
 | `check-content.mjs` grew the audit-trail rule (no decision id, ruling number or slot name on a built page) | `(D312)`-shaped leakage anywhere on any route | **D430** |
 | `design/review-round-7-census.mjs` row kinds `source`/`model`/`metric` and `zone:` filtering | an island whose copy is client-rendered, a row that is model output, a sentence that moved between page zones and read as a miss | **D434** |
 | the same instrument's `DECLINED` verdict | a declined item that stays `OPEN` forever, so the instrument asks the same letter every round | **D436** |
+| the same instrument's two priced structural counts — `controls` (pressable blocks per declared role, per page) and `bandRepeat` (absolute URLs a page paints in its body AND in its exit band), and a `kind: 'metric'` row that **throws** if it asks for a count the instrument does not price | a letter item that is a **count** rather than a string — two buttons to one destination, a page at 8 outbound anchors, a control repeated above the band — read as a number instead of hoped for; a row silently reading an empty string for a count it never priced, which is D413's class (an assertion that cannot fail) in a new hat | **D437** |
+| `scripts/check-plan.mjs` rule 12, `duplicateSections()` — the plan's top-level heading and every `## ` section heading must appear once, planted by doubling the `## Gates` section (20 plantings, all detected) | a planning file that carries a **second copy of itself**: 562 pasted lines sat in `.notes/PLAN.md` with every ruling written twice and `check:plan` green, because rulings are audited as a `Set` of ids and the duplicate-id rule reads **rows** — the copy in the file carried no milestone rows, so no rule had anything to double. A plan with two of a section has two answers to "what is next", and an edit whose anchor is prose can match the copy a reader never sees | **D438** |
 
 ## 5. The claims ledger — the sentences shipped on an operator grant rather than a fact this tree can read
 
@@ -167,10 +191,11 @@ after the copy landed, against the build this reply measured:
 node design/grill/rsvp-card-shot.mjs --routes / /dates --widths 1440 390 --out .design/render
 ```
 
-Run @measured 2026-11-18 UTC (23:36 CST, Linux native, Firefox 159.0 build of chromium-family `--screenshot`, Node 24.22.1,
-16 CPU), ~28s for both pages at both widths. It shoots **whole documents**, in two passes per page: pass 1 asks the
-page's own `docHeight` in a 1400-tall frame, pass 2 sets `--window-size=<width>,<docHeight>` and screenshots once, so
-nothing is clipped and no scroll stitch is needed. The four files the critiquer wants:
+Run @measured 2026-11-18 UTC — **09:19 UTC, 03:19 CST** (Linux native, Firefox 159.0 build of chromium-family `--screenshot`, Node 24.22.1,
+16 CPU), **28.6s** for both pages at both widths, re-taken against the fresh build at this tip rather than reused from the docs commit
+(the four byte counts below are that run's, and they are identical to the earlier run's — which is itself the evidence that
+neither page changed between the two builds); nothing is
+clipped and no scroll stitch is needed. The four files the critiquer wants:
 
 | file | what it is |
 |---|---|
@@ -237,6 +262,27 @@ None is a judgment about the writing.
    subscriber holds" for the feed half): a subscriber sees the club's word, and the platform's own name remains where
    the organizer's title is still readable. Meetup and Discord stay named in the colophon as the platforms' own names
    (**D189**), which is a quotation, not a claim of endorsement.
+10. **The calendar paragraph pair on `/dates` (D8)** — the letter says "'Add to a calendar' appears twice, explained
+    twice, in the same footer region. Say it once." It still appears twice, and that is **D369**'s ruled design rather
+    than a defect: the standing row under the rows and the exit band on every emitted page each carry the offer **and
+    its qualification**, because the fact that has to travel is "what follows the file, and that it moves with the
+    club". Deleting either side leaves a route that hands a reader a feed link with nothing qualifying it — which is
+    the defect the round-5 read (A5) closed, not one it found. The pair is registered `status: deliberate` in
+    `design/copy-duplicates.json`, and the command that shows the registration is still true today is
+    `node scripts/check-content.mjs --print-baseline`, which prints it with its status and its `why`. The letter's
+    demand is therefore declined with the ruling, and its other half — one path to one file, no second `/events.ics`
+    anchor — shipped (D4 counts 2 anchors on `/dates`, both the same route).
+11. **"Nothing marks which three threads are new" on `/chat` (C11)** — the marker is declined, and the decline is
+    load-bearing rather than editorial. (a) A marker has to know the cap, and **D320**'s one-home rule keeps exactly
+    one cap literal in the tree — `src/pages/WhyJoinUs.astro`'s `const VISIBLE = 6` — which `scripts/check-threads.mjs:33`
+    reads **by regex out of that file only**; a second cap in `src/pages/chat.astro` would be a rule with two homes,
+    and moving the cap breaks the gate's own detector. (b) A label naming what the home page left out is the site
+    talking about itself, on the one page whose reader is deciding whether to join a channel — **D387**'s and
+    **D411**'s class, and **D411** already ruled what this page adds over the teaser: the glosses and the drawing, not
+    a count. (c) The letter's alternative — hand-edit before publish — is a standing maintenance promise of the class
+    **D346** refused. The command that shows (a) today is `grep -n 'const VISIBLE' src/pages/WhyJoinUs.astro` and
+    `grep -n 'const VISIBLE =' scripts/check-threads.mjs`, i.e. one home and one reader of it. **What would ship it:**
+    the operator's letter naming which rule gets a second home — the cap, or a visitor-state the site does not keep.
 
 ## 8. What stays the operator's
 
@@ -263,12 +309,14 @@ the alternative chosen, in writing, before the change ships.
 4. **The photograph (MS32)** and with it the event art (F5b) — both clauses in one letter: an actual meeting
    photograph ≥1600px on the long edge, 3:2, natural light, no filter, named `<role>-<mediaUid>.<ext>` with no date in
    the filename. Refused 2026-11-17: *"I can't do this now"* — a record, not an un-park (**S062**).
-5. **`design/refs/`** — the foreign untracked directory. It is in no commit on any branch, it names no gate, and it is
-   what makes `check:design` red today. Two ways to make the set green and one of them is a scope decision for the
-   operator: move it into gitignored scratch (`.design/refs/`, per `design/README.md`, which is what the repo's own
-   convention says a vendor-research library is), or track it and add vendor-path exemptions to
-   `design/audit-references.mjs`'s pending list. **Recommend the move**, because the alternative makes the audit gate
-   skip a whole class of path literal, and a gate that skips is a gate that cannot catch a moved probe.
+5. **`design/refs/`** — **superseded since this reply's first draft, and this round has nothing left to decide.**
+   When §0 was written the directory was untracked and `check:design` was red on its literals; it has since landed
+   **tracked** across that other item's two commits — `24c7c5b` ("refs: five external design systems enter as a quote-required
+   corpus") and its follow-up `821ae7d` (the corpus's own gap analysis) — `git ls-files design/refs | wc -l` = **102** @measured 2026-11-18 — and `check:design` at this tip prints
+   `BROKEN path literals in code, skills and DESIGN.md: none`, reporting `.notes/` literals separately as advisory. So
+   the move-into-scratch recommendation this reply made is no longer this item's call, and it was never this seat's
+   to reverse: a corpus another item decided to track is that item's decision. What stays the operator's is the
+   corpus's own review — it is in no round's copy, and nothing in this item's gates reads it.
 
 ## 9. What this reply corrects in its own records
 
@@ -279,13 +327,34 @@ the alternative chosen, in writing, before the change ships.
   reads 0 honestly. **Nothing about the artifact was wrong here** — D399's deletion is real — but the record that
   justified the row was. A row that cannot fail is an assertion, not a detector, and this is the same class the
   round's selftests exist to keep honest (**D413**, **D420**).
-- **The census's own row count moved three times inside the round** and every move is in this doc: **54 rows at the
+- **The census's own row count moved four times inside the round** and every move is in this doc: **54 rows at the
   census commit** (`40abc6e`, 15 OPEN), **59 after the row kinds landed** (**D434**, the `source`/`model`/`metric` rows
   and the `H12b`/`H14b`/`X` splits), **61 after the declines landed** (**D436**, which added `F5b` and `X1b` and gave
-  six rows a `DECLINED` verdict), and **63 at this tip** once the letter's last two cross-cutting items — the
-  endorsement line (**X6**) and the `/schedule` sweep (**X7**) — got rows of their own, which they had not had until
-  this round. A doc that quoted a row count from an earlier run is stale the minute the instrument follows the copy,
-  which is why §0 and §2 quote the run and the command together.
+  six rows a `DECLINED` verdict), **63 at the docs commit** once the letter's last two cross-cutting items — the
+  endorsement line (**X6**) and the `/schedule` sweep (**X7**) — got rows of their own, and **75 at this tip** once the
+  rework gave the twelve items that had no row one each: **H18** (the two hero CTAs), **D8**/**D9**/**D10**/**D11**
+  (the calendar paragraph, the footer platform row, the `aria-hidden` date rail, the row headings), **J12**/**J13**/**J14**
+  (the disclaimer out of `/join`'s body, the section order, the cost line on `/join`), **C10**/**C11**/**C12** (the
+  Discord controls, the thread-list marker, the heading ladder) and **X8** (the outbound-anchor ceiling). Nothing in that
+  batch is cosmetic: the round's first draft claimed "every line item appears exactly once" over an inventory that was
+  arithmetically short, and a claim an instrument can count is the only kind of claim that survives a reviewer with
+  grep. A doc that quotes a row count from an earlier run is stale the minute the instrument follows the copy, which is
+  why §0 and §2 quote the run and the command together.
+- **The two `/chat` items the letter named and this round had never touched are now handled, one each way.** The
+  Discord buttons shipped — the card's `primary` control is deleted and the page declares one control (row **C10**,
+  0 hits) — and the thread-list marker declined (row **C11**), because shipping it would have put a second copy of the
+  list's cap in the tree or made the page talk about itself. `grep -o 'href="https://discord[^"]*"' dist/client/chat/index.html`
+  went from 3 anchors to **2** (the fold secondary and the band), and the `grep` for "thread"-marker copy in this doc
+  that a reviewer first ran now returns the §7 item and §2's **C11** row.
+- **`check:design` was red when §0 first wrote its gate row, and is green at this tip** — and the reason is not this
+  item's. The literals it flagged were the foreign `design/refs/` corpus, which has since landed **tracked** in another
+  item's commit (`24c7c5b`, 102 files), and the audit now prints `BROKEN path literals in code, skills and DESIGN.md:
+  none` with the `.notes/` literals reported separately as advisory. The older sentence survives in §0 rather than being
+  deleted because it is the record of a run, and this bullet is what points a reader at the current one.
+- **The renders in §6 were re-taken at this tip**, not reused from the docs commit: the `/chat` control deletion touches
+  neither page the critiquer asked for, but a render named in a reply is a claim about the artifact, so the stamp and the
+  byte counts in §6 are the run that produced the files now on disk (same dimensions, same sizes — which is itself the
+  evidence that neither page changed).
 - **The letter's own count of absolute outbound anchors (8) is superseded as a description of the artifact**, the same
   clause **MS30**'s and **MS33**'s rows carry: it describes the artifact the reviewer read, not this tip, where the
   standing row is deduped against the band and the count is 6 (**D407**, **D358**). The number stays in this doc as the
@@ -295,12 +364,24 @@ the alternative chosen, in writing, before the change ships.
   it, and it is green on every path this pair cites (**D282**).
 - **The feed-p0 task's `greps 0 for STATUS:CANCELLED` clause is superseded, not met** — by **D223**/**D299** (§7 item 4),
   and the row is recorded as DECLINED rather than quietly deleted from the task that carried it.
+- **The plan file itself was carrying a second copy of itself, and this round repaired it.** `.notes/PLAN.md` was
+  1,166 lines with a second `# PLAN — stages, gates, milestones` at line 605 and a second copy of every section
+  except `## Milestones`; every ruling S015–S064 appeared twice, and `npm run check:plan` stayed green over all of
+  it — `definedRulings` is a `Set` of ids, so 50 rulings doubled still read 52, and the duplicate-id rule reads
+  milestone **rows**, which the copy had none of. The halves were diffed before anything was deleted (an
+  9-line diff against the first copy with its own `## Milestones` removed, which is what licenses deleting 562
+  lines), and the class then became a rule instead of a hand repair: `duplicateSections()` in `check-plan.mjs`,
+  planted by doubling `## Gates` (**D438**, ruling **S066**). What a reader of the old plan would have gotten
+  wrong is named in §Pitfall register, and the reason this belongs in a reply about a communication review is
+  that the plan is what told this round what the round's items are — a plan with two of every section is a plan
+  a fresh session cannot be trusted to read.
 
 ## 10. What a fresh session runs first
 
 ```
 npm run check:plan && npm run check:plan:selftest
-npm run verify                       # the one failure is check:design, whose literals are all in design/refs/
-node design/review-round-7-census.mjs --no-build   # 63 rows: 54 CLOSED / 6 DECLINED / 3 NOT MEASURABLE / 0 OPEN
+npm run verify                       # 73 ok / 0 failed at this tip; read .design/tmp-gate-logs/deploy/manifest.txt
+npm run verify:rig                   # 3 ok; the rig set is not in verify (S028, D291)
+node design/review-round-7-census.mjs --no-build   # 75 rows: 64 CLOSED / 8 DECLINED / 3 NOT MEASURABLE / 0 OPEN
 node design/grill/rsvp-card-shot.mjs --routes / /dates --widths 1440 390 --out .design/render
 ```

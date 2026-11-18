@@ -30,6 +30,8 @@
 //   9. NEXT.md carrying a queue          -> two sources of "next" is the defect this plan replaces
 //  10. an S/MS id cited with no entry    -> an id that resolves to nothing reads like evidence (D151)
 //  11. a parked row with no trigger      -> the same class as 5, one row at a time
+//  12. a section or title defined twice  -> the plan carries a second copy of itself; row scanners read
+//     both tables, so the plan has two answers to "what's next" and a hand edit can match either copy
 import { readFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -73,6 +75,25 @@ const hasTrigger = (row) => /trigger|unblock|resume|until|closes|when |headroom/
 const parkedRows = (plan) => sectionText(plan, 'Parked').split('\n')
   .filter((l) => /^\|/.test(l) && !/^\|[\s|-]*\|$/.test(l) && !/^\|\s*parked\s*\|/.test(l))   // a separator row is not a parked item (the old regex let `|---|---|` through)
   .map((l) => rowCells(l));
+
+// A planning file is one document. When a bad edit leaves a **second copy** of a section - or of the
+// whole file - every row scanner reads both: two Milestones tables mean two "current milestone" rows,
+// and a unique-text edit silently matches the copy a reader never sees. Only one of them is the plan.
+// The match mirrors sectionText's own, so this audits what the parser actually reads.
+const duplicateSections = (text) => {
+  const head = '\n' + text;
+  const twice = (probe) => head.split(probe).length - 1;
+  const word = (n) => n === 2 ? 'twice' : n + ' times';
+  const out = [];
+  const title = twice('\n# ');
+  // a second top-level `# ` heading means the document itself is doubled, not one section
+  if (title > 1) out.push(`${PLAN} carries its top-level heading ${word(title)} - the document is pasted twice, so the plan a session reads may be either copy`);
+  for (const s of SECTIONS) {
+    const n = twice('\n## ' + s);
+    if (n > 1) out.push(`"## ${s}" is defined ${word(n)} in ${PLAN} - a file that carries a second copy of a section gives every row scanner two answers, and only one of them is the plan`);
+  }
+  return out;
+};
 
 const definedRulings = (plan) => new Set([...sectionText(plan, 'Rulings').matchAll(/\*\*S(\d{3})\b/g)].map((m) => Number(m[1])));
 const openQuestions = (plan) => sectionText(plan, 'Open questions').split('\n').filter((l) => /^\d+\.\s/.test(l));
@@ -141,7 +162,8 @@ function audit(plan, proj, next, citations) {
   // 1. sections
   for (const s of SECTIONS) if (!new RegExp('^## ' + s, 'm').test(plan)) problems.push(`plan section missing: "## ${s}"`);
 
-  // 2-5, 7. the plan's own rows
+  // 2-5, 7, 12. the plan's own rows, and the plan's own shape
+  problems.push(...duplicateSections(plan));
   problems.push(...rowProblems(planRows, PLAN, 5));
 
   // 6. the tracked projection must match, and must be complete
@@ -254,6 +276,15 @@ function selftest(base) {
     // CI mode: the clone has no plan, so the projection alone is audited - and it must still catch a bad row.
     ['clone: projection row with no exit gate', () => ({ proj: rewriteRow(proj, 'MS02', 2, 'make production match the repo') }), ['no exit gate'], true],
     ['clone: plan and projection both gone', () => ({ plan: '', proj: '' }), ['no milestone rows'], true],
+    // A section pasted a second time: the plan now has two of it, so a hand edit can match either copy
+    // and a row scanner reads both. The Gates section is chosen because it carries no milestone rows -
+    // duplicating Milestones would be caught by the duplicate-id rule instead, and the planting would
+    // then prove nothing about this class (D438).
+    ['plan carrying a second copy of a section', () => {
+      const m = /^## Gates[\s\S]*?(?=\n## )/m.exec(plan);
+      if (!m) throw new Error('no Gates section to duplicate - nothing to plant into');
+      return { plan: plan + '\n' + m[0].trim() + '\n' };
+    }, ['defined twice', 'document is pasted twice'], false],
   ];
   const control = audit(plan, proj, next, cites);
   if (control.problems.length) {

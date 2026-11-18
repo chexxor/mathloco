@@ -118,7 +118,12 @@
         - "the button above" - which is D369's precedent, echoed rather than linked. That keeps the built
         page's Discord anchors at three (fold secondary, card primary, exit band) instead of four, and the
         `failed` and `empty` branches keep their path out, since there the link is the answer to a state the
-        browser established. -->
+        browser established.
+        **Corrected in the same commit as round 7's `/chat` copy** (2026-11-18, D437): round 7's letter re-opened
+        the same Hick's-law item against a page that still carried **two buttons**, and deleted the card's primary
+        control. So the built page's Discord anchors are **two** — the fold secondary and the exit band — and "the
+        button above" in the pending state still names a button that exists. `node design/review-round-7-census.mjs`
+        row C10 is the instrument that re-counts it, and it reads 0 buttons in the card today. -->
     <div
       class="inset-shadow-rule rounded-control px-4 py-3 min-h-20 flex flex-col justify-center gap-1"
       role="status"

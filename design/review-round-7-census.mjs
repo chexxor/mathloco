@@ -75,6 +75,7 @@ const CHECKS = [
   { id: 'H4', route: '/', want: 'absent', needle: 'last read', why: 'relative staleness painted as a selling point' },
   { id: 'H5', route: '/', want: 'absent', needle: 'list is not the room', why: 'an aphorism about data provenance in a deciding reader\'s way' },
   { id: 'H6', route: '/', want: 'absent', needle: 'drops no pin', why: 'a disclaimer about the site\'s own capability where a directions link belongs' },
+  { id: 'H18', route: '/', want: 'present', kind: 'metric', metric: 'controls', re: true, needle: '/:primary=1', why: 'the letter\'s "One of the two hero CTAs — Two equal-weight controls and neither is an RSVP": home now declares exactly ONE control in the primary role, and it is the sign-up CTA (`data-control`, D140 \u2014 the role a pressable block publishes, not a class string the gate has to trust)' },
   { id: 'H7', route: '/', want: 'absent', needle: 'Join Our Group', why: 'the Title Case CTA that points at a page that points at a page' },
   { id: 'H8', route: '/', want: 'present', needle: 'Saturdays at noon', why: 'the rhythm stated near the hero date' },
   { id: 'H9', route: '/', want: 'present', needle: 'buy a coffee', why: 'cost and membership in one line' },
@@ -90,8 +91,12 @@ const CHECKS = [
   { id: 'H15', route: '/', want: 'present', re: true, needle: 'bring nothing|nothing to bring|prepare nothing', why: 'three rules for arriving, asserted not disclaimed — the letter\u2019s words pinned this row to one wording; the site ships D388\u2019s' },
   // ---- /dates ----
   { id: 'D1', route: '/dates', want: 'absent', needle: 'dates run from', why: 'a stated range that contradicts the rows under it' },
+  { id: 'D8', route: '/dates', want: 'absent', needle: 'can all follow', declined: 'the pair the letter calls a duplicate is registered `status: deliberate` in design/copy-duplicates.json under D369 (round-5 read A5): the offer and its qualification print beside EACH place the file is offered — the standing row under the rows, and the exit band on every emitted page — so deleting either side leaves a route that hands the reader a feed link with no qualification, which is the defect A5 closed rather than one it found. `node scripts/check-content.mjs --print-baseline` prints that pair with its status today, and its note says the pair goes away only when one side is deleted or a ruling settles it' },
   { id: 'D2', route: '/dates', want: 'absent', needle: 'address to give directions to', why: 'a sentence describing the page\'s own layout' },
+  { id: 'D9', route: '/dates', want: 'present', kind: 'metric', metric: 'bandRepeat', re: true, needle: '/dates=0', why: 'the footer platform row, and the letter\'s arithmetic behind it: it counts 8 absolute URLs outside the band because the standing row repeated the band\'s Meetup and Discord. D407\'s `splitPaths(paths, config.URLs)` deletes that repeat against `EXIT_BAND_PLATFORMS`, so 0 URL the band paints is painted a second time outside it on /dates' },
   { id: 'D3', route: '/dates', want: 'absent', needle: 'days ago', why: 'a relative age that ages into an apology' },
+  { id: 'D10', route: '/dates', want: 'present', kind: 'source', file: 'dist/client/dates/index.html', re: true, needle: 'aria-hidden="true" data-leaf class="bg-tint rounded-control w-28', why: 'the letter\'s "Nov / 21 / Sat as three separate list elements": its own remedy — mark the block `aria-hidden` and let the full sentence carry it — is on the date rail of all five rows, and the rail keeps its `data-leaf` handle so `check:row-geometry` can still read the row. The row reads the built artifact, so this is the shipped bytes, not the source (X1\'s form)' },
+  { id: 'D11', route: '/dates', want: 'present', kind: 'heading', re: true, needle: 'Social|Study session', why: 'the row headings, which the letter grades rather than asks: "Correct, and defined — but defined in the lede above, not in the row. Keep as-is; this is now good." The format words open each venue group (D397) and nothing in this round moved them' },
   { id: 'D4', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'events\.ics', why: 'the calendar action the page offers at all' },
   { id: 'D5', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'google\\.com/maps|\\bmaps\\.', declined: 'the page sits at 6 of 6 absolute outbound anchors outside <footer>, and 6 is the ceiling ratified in round 4 (D358) and held by check-rsvp-page; a per-row maps link is 5 more. Raising the ceiling is one-way, so this row records the stance, not owed work', why: 'a directions link per row (the letter\'s ask; the site declines pins)' },
   { id: 'D6', route: '/dates', want: 'present', kind: 'href', re: true, needle: 'bing\\.com/maps|openstreetmap', declined: 'same ask as D5, against the same measured ceiling', why: 'same ask, the two other map hosts a directions link could name' },
@@ -100,12 +105,15 @@ const CHECKS = [
   { id: 'J1', route: '/join', want: 'absent', needle: 'what a meeting costs', why: 'the cost refusal, second surface' },
   { id: 'J2', route: '/join', want: 'absent', needle: 'front desk', why: 'institutional absence stated as a feature' },
   { id: 'J3', route: '/join', want: 'absent', needle: 'single door', why: 'a paragraph explaining why the site cannot do what peers do' },
+  { id: 'J12', route: '/join', want: 'absent', zone: ['body'], needle: 'not sponsored or endorsed', why: 'the trademark disclaimer out of the body of the page a visitor has just decided to come to (peak-end, the same rule that retired the room sentence). It prints once, in the exit band — X6 is that half' },
   { id: 'J4', route: '/join', want: 'absent', needle: 'or nothing yet', why: 'promises an empty state the rows never show' },
   { id: 'J5', route: '/join', want: 'present', needle: 'Join the club', why: 'the H1 the nav already uses' },
   { id: 'J6', route: '/join', want: 'absent', kind: 'heading', needle: 'Ways in', why: 'the heading the nav fix made mismatch worse (D390 moves the phrase into the lede)' },
   { id: 'J6b', route: '/join', want: 'present', kind: 'heading', needle: 'Join the club', why: 'the H1 the nav already uses' },
+  { id: 'J13', route: '/join', want: 'present', kind: 'heading', re: true, needle: 'What we do.*Come to a meeting.*Talk with us now.*Follow the club', why: 'the letter\'s section order: the club described FIRST, then the doors in ascending commitment — come to a meeting · talk with the club · follow the feed. The headings are read in document order, so a page that describes the club last fails this row whatever its words are' },
   { id: 'J7', route: '/join', want: 'present', needle: 'Your first one', why: 'the first-ten-minutes rules (D392 rewrites the paragraph, the heading may stay)' },
   { id: 'J8', route: '/join', want: 'absent', needle: 'mailto', why: 'the private door the letter asks for five times' },
+  { id: 'J14', route: '/join', want: 'present', re: true, needle: 'Free\. No membership needed', why: 'the letter\'s "Cost, one line" on `/join` — the same ask as home (H9), measured on the page the letter found it missing on' },
   { id: 'J9', route: '/join', want: 'absent', needle: 'reads the messages we post there', why: 'the ask-us door that lands on bot output' },
   { id: 'J10', route: '/join', want: 'present', needle: 'nobody is teaching', why: 'the uneven bars named honestly' },
   { id: 'J11', route: '/join', want: 'absent', kind: 'metric', metric: 'joinLabels', needle: 'Join Our Group|Ways in|View Schedule', why: 'the letter\u2019s five join-variants against the two this tree ratified (D386 one word per route, D390 the H1)' },
@@ -127,6 +135,8 @@ const CHECKS = [
   { id: 'C7', route: '/chat', want: 'absent', kind: 'model', needle: 'closed for the day', owns: 'src/lib/claude.ts', why: 'operational noise (a cafe closure) printed beside mathematics - the summary is live model output, so the row measures the instruction that forbids it' },
   { id: 'C8', route: '/chat', want: 'absent', kind: 'model', needle: 'Cancellation', owns: 'src/lib/claude.ts', why: 'the same noise, the cancellation form' },
   { id: 'C9', route: '/chat', want: 'present', needle: 'the live thing', why: 'one line of human framing above the bot voice' },
+  { id: 'C10', route: '/chat', want: 'absent', kind: 'metric', metric: 'controls', re: true, needle: '/chat:primary=[1-9]', why: 'round 7\'s re-opened Hick\'s-law item — "Two of the three Discord invites — two identical buttons, no choice made by the reader, same destination", and its copy line "keep one Discord button, not two": the card\'s primary control is deleted (D437), so `/chat` declares ONE pressable control, the fold secondary D367 moved into the first screen. The survivor is that one, not this one, because deleting the fold control would return the page to D367\'s measured defect — the only way out 1,720px down at 1240 and y=2,075 at 390' },
+  { id: 'C11', route: '/chat', want: 'present', needle: 'New since|Which three|new since', declined: 'nothing marks which three threads are new, and this tree keeps it that way on two rules and one refusal. (a) A marker has to know the cap, and D320\'s one-home rule keeps exactly one cap literal in the tree — `WhyJoinUs.astro`\'s `const VISIBLE = 6` — which `check-threads.mjs:33` reads by regex out of THAT file only, so a second cap in `chat.astro` is a rule with two homes and moving the cap breaks the gate. (b) A label that named what the home page had left out would be the site talking about itself, on the one page whose reader is deciding whether to join a channel — D387 and D414\'s class, and D411 already ruled that what this page adds over the teaser is the gloss and the drawing, not a count. (c) The letter\'s alternative — hand-edit before publish — is a standing maintenance promise of the class D346 refused. What ships is D411\'s answer: the list stays (its absence fails `check-threads`\'s `rest-link-missing`), every entry carries the club\'s own gloss, and the lead says so in words a reader can use' },
   // ---- the feed ----
   { id: 'F1', route: 'feed', want: 'absent', needle: 'MPLS Math Club', why: 'the dead brand in every subscriber\'s calendar' },
   { id: 'F2', route: 'feed', want: 'absent', needle: 'Common Denominator - Study Session', why: 'an organizer title with an internal codename, as the event\'s name' },
@@ -145,6 +155,8 @@ const CHECKS = [
   { id: 'X5', route: '/dates', want: 'present', kind: 'title', re: true, needle: 'Matheapolis.*Minneapolis|Minneapolis.*Matheapolis', why: 'same, on /dates' },
   { id: 'X6', route: '/', want: 'present', kind: 'plain', zone: ['exit-band'], needle: 'not sponsored or endorsed', why: 'the endorsement line: the letter found it in the body on /join and absent on home, and asked for one home — all six built pages now print it in the exit band and none in a body (D394)' },
   { id: 'X7', route: '/', want: 'present', kind: 'source', file: 'dist/client/_redirects', needle: '/schedule', why: 'the letter reads /schedule as a 404 for the third round; the built artifact ships a 301 for both /schedule and /schedule/, and the live edge answers 301 (D373\u2019s sweep, D408)' },
+  { id: 'C12', route: '/chat', want: 'present', kind: 'source', file: 'src/components/DiscordSummary.svelte', re: true, needle: '<h2 class="text-label font-medium text-ink">#\{channel\.name\}', why: 'the heading ladder: the letter\'s remedy — "H1 -> #general (not a heading in the markup) -> H3 -> H4. Skipped level at the top. Make #general an H2" — landed inside the island, so the page now runs h1 (the page\'s name) -> h2 (the channel\'s own name) -> h3 (the window) -> h4 (a block), no skipped level. Client-rendered, so the row reads the component the way C2/C3/C4 do' },
+  { id: 'X8', route: '/dates', want: 'present', kind: 'metric', metric: 'outbound', re: true, needle: '/dates=6', why: 'the cross-cutting "Absolute links outside <footer>: /dates is at 8 against a ratified ceiling of 6. The duplication is the cause, not the ceiling" — the duplication is what D407 deleted, and the page now sits AT the ceiling D358 ratified, 6 of 6, so the letter\'s 8 stays its own number (D382). If a row ever gains an anchor this row goes OPEN, which is the gate for the ceiling, not a note' },
 ];
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -161,6 +173,32 @@ const SOURCE_FILE = (f) => {
 const titleOf = (p) => {
   const m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(p.raw);
   return m ? decode(m[1].replace(/<[^>]*>/g, ' ')).replace(/\s+/g, ' ').trim() : '(no title)';
+};
+
+// ---------------------------------------------------------------------------
+// Two structural counts the letter argues with instead of quoting: how many **pressable controls** a page
+// declares, per role, and how many absolute URLs a page paints **twice** - once in its body and once in the
+// exit band. Both are read off the same anchors the copy rows read, and both are hoisted above the rows so a
+// `kind: 'metric'` row can be satisfied by a number rather than by a string (D434's `metric` rows, extended
+// under the same rule by D437). `controls` counts the `data-control` roles D140 makes a pressable block
+// publish, because a class string is not a role the gate can trust. `bandRepeat` counts D407's defect: a URL
+// the band paints at the foot of a page, painted a second time above it.
+// ---------------------------------------------------------------------------
+const outsideAbsolute = (p) => p.anchors.filter((a) => /^https?:/i.test(a.href) && a.zone !== 'exit-band');
+const controlsByRoute = Object.fromEntries(Object.entries(pages).map(([route, p]) => {
+  const roles = { primary: 0, secondary: 0 };
+  for (const m of p.raw.matchAll(/<a[^>]*data-control="(primary|secondary)"/g)) roles[m[1]]++;
+  return [route, roles];
+}));
+const bandRepeatByRoute = Object.fromEntries(Object.entries(pages).map(([route, p]) => {
+  const band = new Set(p.anchors.filter((a) => a.zone === 'exit-band').map((a) => a.href));
+  return [route, outsideAbsolute(p).filter((a) => band.has(a.href)).length];
+}));
+const METRIC_TEXT = {
+  joinLabels: joinLabelSet.join(' | '),
+  outbound: Object.entries(pages).map(([route, p]) => `${route}=${outsideAbsolute(p).length}`).join(' '),
+  bandRepeat: Object.entries(bandRepeatByRoute).map(([route, n]) => `${route}=${n}`).join(' '),
+  controls: Object.entries(controlsByRoute).flatMap(([route, roles]) => Object.entries(roles).map(([role, n]) => `${route}:${role}=${n}`)).join(' '),
 };
 
 const rows = [];
@@ -197,8 +235,11 @@ for (const check of CHECKS) {
     if (haystack.match(re)) evidence = haystack.split('\n').filter((l) => re.test(l)).slice(0, 2).map((l) => `${check.file}: ${l.trim()}`.slice(0, 300));
   } else if (kind === 'metric') {
     where = `metrics.${check.metric}`;
-    haystack = check.metric === 'joinLabels' ? joinLabelSet.join(' | ') : '';
-    if (haystack && haystack.match(re)) evidence = joinLabelSet.filter((l) => re.test(l)).slice(0, 3).map((l) => `join label: ${l}`);
+    haystack = METRIC_TEXT[check.metric] ?? '';
+    if (!haystack) throw new Error(`census row ${check.id} asks for a metric this instrument does not price: ${check.metric}`);
+    if (haystack && haystack.match(re)) evidence = check.metric === 'joinLabels'
+      ? joinLabelSet.filter((l) => re.test(l)).slice(0, 3).map((l) => `join label: ${l}`)
+      : haystack.split(' ').filter((t) => re.test(t)).slice(0, 4).map((t) => `${check.metric}: ${t}`);
   } else {
     const p = pages[check.route];
     where = check.route;
@@ -260,6 +301,10 @@ const metrics = {
   ),
   // join-word labels across the built pages: how many variants of "join" the site really paints
   joinLabels: joinLabelSet,
+  // the two structural counts a `kind: 'metric'` row reads (D437): controls per declared role per page,
+  // and absolute URLs a page paints in its body AND in its exit band (D407's dedup deletes such repeats)
+  controls: controlsByRoute,
+  bandRepeat: bandRepeatByRoute,
   // how many calendar actions /dates offers, and where
   icsLinks: Object.fromEntries(
     Object.entries(pages).map(([route, p]) => [
@@ -297,6 +342,8 @@ console.log(`\n## the counts the letter argues with, priced off the same read`);
 console.log(`page titles: ${JSON.stringify(metrics.titles)}`);
 console.log(`absolute URLs painted outside each page's own <footer>: ${JSON.stringify(metrics.outboundOutsideFooter)} (the ceiling R1 ratified is 6)`);
 console.log(`/events.ics anchors per page: ${JSON.stringify(metrics.icsLinks)}`);
+console.log(`pressable controls per page, per declared role: ${JSON.stringify(metrics.controls)}`);
+console.log(`absolute URLs a page paints in its body AND in its exit band: ${JSON.stringify(metrics.bandRepeat)} (D407's dedup is the rule that deletes such a repeat)`);
 console.log(`join-word labels the artifact paints: ${metrics.joinLabels.map((s) => JSON.stringify(s)).join(' | ')}`);
 console.log(`feed: ${metrics.feedEvents} VEVENTs, ${metrics.feedCancelled} of them STATUS:CANCELLED`);
 console.log(`feed SUMMARYs: ${metrics.feedSummary.join(' | ')}`);
