@@ -1,0 +1,29 @@
+# Carbon — tokens governance & versioning
+
+Domain 18 of the fixed 18. Status: **EVIDENCED**. This is the domain about *how a token system is
+kept*, which is the thing our enforcement model is closest to and therefore the most useful source.
+
+Pages reached: `…/foundations/themes/overview`, `…/getting-started/migrating/guide/overview`,
+`…/foundations/color/overview`.
+
+| id | claim | kind | locator | quote | enforcement in source |
+|---|---|---|---|---|---|
+| C18-gov-01 | A token system is three nouns, defined: theme (a collection of values on tokens), token (a role-based identifier), role (the systematic usage), value (the actual style). | rule | `https://www.carbondesignsystem.com/building-blocks/foundations/themes/overview#theme-terms` | "A role-based identifier that assigns a value to a theme. Tokens are universal and never change across themes" | none |
+| C18-gov-02 | A theme is a **patch** on a default theme, not a fork: altering some values yields a new theme; the default remains the starting point. | pattern | `https://www.carbondesignsystem.com/building-blocks/foundations/themes/overview#customizing-a-theme` | "The default theme acts as a starting point; from there designers and developers can define how their own components and styles deviate from the default." | none |
+| C18-gov-03 | Components consume tokens, never values: changing a set of universal variables replaces the need to touch components. | rule | `https://www.carbondesignsystem.com/building-blocks/foundations/themes/overview#theming-basics` | "Themes are used to modify existing components to fit a specific visual style. By using Carbon's tokens, developers can easily customize all of their components by changing a set of universal variables, eliminating the need to modify individual components." | none |
+| C18-gov-04 | The relationship is published as a table: same token, same role, one value per theme — which is a machine-readable governance artifact. | token | `https://www.carbondesignsystem.com/building-blocks/foundations/themes/overview#theming-applied` | "Each theme shares the same variables and roles, with only the value changing for each individual theme." | none |
+| C18-gov-05 | Versioning is opt-in and gradual: "You are not required to use any of the new features introduced in this release." | behavior | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#updates` | "You are not required to use any of the new features introduced in this release. Instead, they are meant to be gradually adopted over time" | none — the migration guide is the record, not a check |
+| C18-gov-06 | A rename is a governed event: type tokens changed names in v11 while "The values and roles of these tokens remain the same between v10 and v11." | behavior | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#typography` | "The values and roles of these tokens remain the same between v10 and v11." | none |
+| C18-gov-07 | Why a rename happened is recorded as a user complaint plus a deliberation ("rounds of feedback on GitHub") — the *why* beside the *what*. | pattern | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#theming` | "After discussing these various options and going through rounds of feedback on GitHub, we decided on an approach that makes it easier to understand and apply tokens based on their usage." | none |
+| C18-gov-08 | A release is scoped by what it does **not** change: "With no changes to the IBM Design Language, v11 will not require any brand-driven product redesigns." | behavior | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#overview` | "With no changes to the IBM Design Language, v11 will not require any brand-driven product redesigns." | none |
+| C18-gov-09 | Breaking change is a term they use for their own kit: new Figma features "may result in breaking changes to some of our components", and old and new kits are kept separate. | behavior | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#figma` | "To meet team's migration preferences, we have separate v11 and v10 libraries." | none |
+| C18-gov-10 | Accessibility fixes ship as either a change or a removal: "In order to ship accessible versions of some of our components, we've made updates or breaking changes to either change or remove inaccessible behavior." | behavior | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#accessibility-updates` | "we've made updates or breaking changes to either change or remove inaccessible behavior" | none |
+| C18-gov-11 | Page-level versioning is published: fetched component pages carry "Stable" and "Last updated Sep 30, 2026". | behavior | `https://www.carbondesignsystem.com/building-blocks/core/components/breadcrumb/guidelines` | "Stable Last updated Sep 30, 2026 Carbon Core Library React" | none — it is a page stamp, not a check |
+| C18-gov-12 | Nothing in this system fails a build when a rule is broken: their governance is a package plus prose, so a project that hand-writes CSS inherits **none** of it. | absence | `https://www.carbondesignsystem.com/getting-started/migrating/guide/overview#new-packages` | "the styles, React components, and icons are all available under the @carbon/react package" | none |
+
+**Read against our system:** our governance is the opposite shape — one file, one `@theme` block,
+and a rule that is not enforced by the package but by a named detector with a selftest. C18-gov-01…04
+say our role names should also be **theme-patchable** (a future dark ground without touching a
+component) — the mechanism is already ours, so this is a `MATCH`-plus. C18-gov-06 is the interesting
+one: we forbid a token rename without a record, and their answer to a rename is a migration guide.
+C18-gov-12 is recorded in `GAP-ANALYSIS.md` §3 as evidence our enforcement model is the keeper.
