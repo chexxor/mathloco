@@ -89,14 +89,16 @@
     return () => window.removeEventListener('rsvp-platform', onPick);
   });
 
-  // Same markup, same classes, same attributes as before the island existed; only the order of the
-  // anchors can differ. `orderByPreference` never drops an entry (D281), so a cluster with a remembered
+  // Same markup, same classes, same attributes as before the island existed, except the top margin: round
+  // 18's accepted row F (2026-11-17, S061) took the margins inside the `when-we-meet` section — where this
+  // cluster stands on `/dates` — off one step, so this root carries `mt-2`. Only the order of the anchors can
+  // differ otherwise. `orderByPreference` never drops an entry (D281), so a cluster with a remembered
   // platform still prints every platform the club has declared.
   const ordered = $derived(orderByPreference(destinations, preferred));
 </script>
 
 <div
-  class="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1"
+  class="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1"
   data-rsvp-cluster
   data-rsvp-state={signupState}
   data-rsvp-date={date}

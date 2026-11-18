@@ -325,7 +325,14 @@ const lede = compact
       .join(' ');
 ---
 
-<section class="bg-paper py-12" aria-labelledby={headingId}>
+{/* `py-8` (32px), not `py-12`: round 18 (2026-11-17) asked whether the emptiness is answered with less of the
+    thing that made it rather than with more colour, and the operator accepted the row that made the three below-fold
+    bands and the margins inside them come off one step of the spacing scale (S061). At 1240 that row measured a
+    168px shorter page and 24.3% of it in empty runs, against the shipped page's 168px more page and 28.5% empty;
+    its cost was the reader meeting 8px above 11 blocks instead of 48. See DESIGN.md §Spacing and
+    docs/reply-to-the-composition-review-round-18-2026-11-16.md. The inner `mt-6` keeps its step: the row named the
+    bands' air, the card margins and the copy margins, not this divider. */}
+<section class="bg-paper py-8" aria-labelledby={headingId}>
   <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="text-center">
       {/* Written out rather than assembled with `class:list={[...]}`: `check:classes` reads the literal word
@@ -364,7 +371,7 @@ const lede = compact
                 days, the calendar date beyond it. `allowDate: !compact` is not a second format; it is D306's
                 rule expressed as an argument, because `check:dated-surfaces` refuses any date-shaped string on
                 `/` and lists `/schedule` as the one surface that may carry one. */}
-            <p class="mt-3 text-label text-ink-3 tabular-nums">This page was built {provenanceStamp(new Date().toISOString().slice(0, 10), { allowDate: !compact })}{snapshot.source?.fetchedAt ? `, and the club’s calendar was last read ${provenanceStamp(String(snapshot.source.fetchedAt).slice(0, 10), { allowDate: !compact })}.` : '; no calendar source is wired to it yet.'}</p>
+            <p class="mt-2 text-label text-ink-3 tabular-nums">This page was built {provenanceStamp(new Date().toISOString().slice(0, 10), { allowDate: !compact })}{snapshot.source?.fetchedAt ? `, and the club’s calendar was last read ${provenanceStamp(String(snapshot.source.fetchedAt).slice(0, 10), { allowDate: !compact })}.` : '; no calendar source is wired to it yet.'}</p>
           </div>
           {/* The primary button belongs to the band, and the compact band has one below with the chat path
               beside it. Printing it in the notice too would put two `data-control="primary"` controls in one
@@ -382,7 +389,7 @@ const lede = compact
               </a>
             </div>
           )}
-          <p class="mt-3 text-body leading-prose text-ink-2 font-body">
+          <p class="mt-2 text-body leading-prose text-ink-2 font-body">
             Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Ask in the chat</a> —
             someone from the club reads it.
           </p>
@@ -404,11 +411,11 @@ const lede = compact
               what every published `DTSTAMP` in `/events.ics` derives from \u2014 so the page and the file a
               subscriber holds cannot disagree about when the club was last read. */}
           {copied && (
-            <p class="mt-3 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar {copied}</span></p>
+            <p class="mt-2 tabular-nums"><span class="text-label text-ink-3">Copied from the club’s own calendar {copied}</span></p>
           )}
           {/* What the window hid, as its own paragraph now that the standing row owns the calendar path. */}
           {omittedText && (
-            <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{omittedText}</p>
+            <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{omittedText}</p>
           )}
           {/* Round-4 brief §6, ruling D-B (2026-11-15): the standing row, ONCE per page, after the last row.
               The chat, the group and the calendar file are properties of the club, not of a date, so they used to
@@ -429,7 +436,7 @@ const lede = compact
           {/* D375 (q25): after the standing row rather than between the rows and it, so the copied line keeps
               its adjacency to the calendar path it sits over (D372's trap: an insertion that moves a sentence
               off its link moves a measurement). The sentence names no destination and spends no link. */}
-          <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{directionsDates}</p>
+          <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{directionsDates}</p>
         </>
       )}
 
@@ -446,7 +453,7 @@ const lede = compact
           straddle is the half of that record that still applies. */}
       {compact && (
         <>
-          <div class="mt-8 bg-panel rounded-card p-6 sm:p-8">
+          <div class="mt-2 bg-panel rounded-card p-6 sm:p-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
                 <h3 class="text-subhead font-semibold text-ink">How it works</h3>
@@ -461,7 +468,7 @@ const lede = compact
                     ledger in docs/reply-to-the-communication-review-round-6-2026-11-16.md names both and the
                     command that corrects them. The one number is data, not markup, so the operator's corrected
                     figure is a one-line edit to `src/content.json`. */}
-                <div class="mt-3 space-y-3 text-body leading-prose text-ink-2 font-body">
+                <div class="mt-2 space-y-3 text-body leading-prose text-ink-2 font-body">
                   <p>Walk in, find a table, buy a coffee if you want one — that is the rent.</p>
                   <p>Bring nothing, prepare nothing, and bring a question if you have one.</p>
                   {turnout && <p>{turnout}</p>}
@@ -490,7 +497,7 @@ const lede = compact
               links, not controls. The empty-state branch keeps its links where they were, because there the notice
               IS the content. */}
           {items.length > 0 && (
-            <div class="mt-3 flex flex-wrap items-baseline gap-x-6 gap-y-2">
+            <div class="mt-2 flex flex-wrap items-baseline gap-x-6 gap-y-2">
               {hidden > 0 && (
                 <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                   {/* The label has to match what the target page actually lists: `/dates` shows a window, not the

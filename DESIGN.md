@@ -94,13 +94,27 @@ hue-35.7 candidate that clears 0.135 (`#915848`, 5.27 on paper) is the operator'
 | px | 4 | 8 | 12 | 16 | 24 | 32 | 48 | 64 |
 
 Rows and lists sit on **8px row padding, 16px between rows, 24px above a list, 32px between grid columns** (R6 /
-D214, applied 2026-11-05; this replaced round 6 Q4's "comfy" pair of 12px padding with 24/32/48 gaps). Notice
-padding is 12/16 - R6 ruled rows, not notices.
+D214, applied 2026-11-05; this replaced round 6 Q4's "comfy" pair of 12px padding with 24/32/48 gaps). The one
+exception is the thread list on `/`: row F (2026-11-17, **S061**) took the air above that list and above the notice
+that stands in its place to **8px** (`mt-2`), because that is the margin inside a band, not a row. Notice padding is
+12/16 - R6 ruled rows, not notices.
 
 **Section air is one step at every width, not a responsive ramp:** **48px** (`py-12`) on every landing-page band -
 reasons, the horizon shelf, the schedule, the join section - and **64px** (`mt-16 mb-16`) at the page's own top and
 bottom edges. Round 6's ramp (48/32 base, 48/48 at `sm`, 128/96 at `md`) is gone: the operator ruled one number, and
 the phone pays the same trim as the desktop (D214).
+
+**That one number is superseded across bands as of 2026-11-17 (**S061**, **D427**, the operator accepting round 18's
+row F).** The three below-fold bands - the reasons section, the horizon shelf, the schedule - now carry **32px**
+(`py-8`), and the margins inside them - the card margins, the copy margins, the air above the thread list - carry
+**8px** (`mt-2`). What keeps 48px is `/join`'s sections (`mt-12`) and the hero's own air, and the page's own edges keep
+`mt-16 mb-16`: row F's selector named three accessible section names, not the page. Measured as a pair by the round
+that decided it and reproduced by the shipped page: `edges` and `rows` are the 2026-11-05 pair, and F's row took
+**168px off the document at 1240, 1024, 640 and 390** - the shipped page went from **2973px / 28.5% empty in 8 runs
+(847px, biggest 164px) / 6.32% painted** to **2805px / 24.3% empty in 7 runs (682px) / 6.7% painted** @measured
+2026-11-17 by `npm run round18` and re-measured on the shipped tree by `npm run check:rhythm`, which now prints the
+F row's numbers for `shipped`. What it costs the reader is meeting **8px above eleven blocks instead of 48** inside
+those three bands; the ladder did not move, and `py-8` and `mt-2` are steps 4 and 2 of the eight.
 
 **What that bought, measured as a pair rather than assumed** - the two `design/rhythm/report.json` rows in git, same
 instrument, same six widths (the page then carried **one** upcoming row; today it carries two, see "Vertical rhythm
@@ -1199,8 +1213,11 @@ accepted, each with the gate that keeps it true.
   one page's anchors did, and the ceiling is a maximum, not a sum.
 - **Spacing steps are audited, not remembered.** Tailwind v4's dynamic scale makes `mt-23` resolve, so
   "the class exists" was never "the value is on the ladder" — `/join` shipped `gap-5` under a green `check:classes`
-  (S042). `check:scale`: **45 source files, 52 distinct spacing utilities, 0 off-ladder** @measured 2026-11-14 by
-  `node scripts/check-scale.mjs`.
+  (S042). `check:scale`: **47 source files, 51 distinct spacing utilities, 0 off-ladder** @measured 2026-11-17 by
+  `node scripts/check-scale.mjs`; the 2026-11-14 run read 45/52, and both counts move as items move — the
+  2026-11-17 composition ruling took four inner margins down to `mt-2`, and `mt-12` still appears in
+  `src/` — the hero's figure and `/join`'s bands keep it, only the three landing-page bands ruled on 2026-11-17
+  stopped carrying it. Every number here comes from the probe, not from this line.
 - **The homepage thread list is capped at six, with the remainder linked** (S042, D320). The cap lives in
   `WhyJoinUs.astro` as `const VISIBLE = 6`; `check:threads` reads that number rather than restating it, and fails
   a page that paints more, paints fewer without a reason, promises the rest with no link, aims the link anywhere
@@ -1309,10 +1326,12 @@ accepted, each with the gate that keeps it true.
   (`.design/tmp-whitespace/dist-<option>/`) and measuring there — the shipped artifact is never mutated, a cached
   variant report is invalidated when the built page's fingerprint changes, and the options live in one module
   (`design/grill/rhythm-variants.mjs`) so the gate table and the photographed specimen cannot drift (D160).
-  Shipped now: **1240 4221px, 22.6% of the height in 9 empty runs (biggest 148px), 10.28% painted**; 1024 **4275px /
-  24.6%**; 640 **5151px / 22.0%**; 390 **5707px / 16.1% in 9 runs**, 14.06% painted; 320 **6463px / 19.9% in 11
-  runs** @measured 2026-11-06 by `npm run check:rhythm`. (Those are the numbers with **three** art-bearing rows in
-  the schedule; the R6 pair above was measured when the page had one row and no event art. The two rows the 2026-11-06
+  Shipped now: **1240 2805px, 24.3% of the height in 7 empty runs (biggest 164px), 6.7% painted**; 1024 **2861px /
+  23.8%**; 640 **3854px / 25.0%**; 390 **3954px / 22.1% in 10 runs**, 10.42% painted; 320 **4356px / 21.9% in 10
+  runs** @measured 2026-11-17 by `npm run check:rhythm` on the row-F page (**S061**). The row this bullet used to
+  carry - **4221px / 22.6% / 10.28%** at 1240, and 5707px at 390 - describes the page before two things: the 2026-11-06
+  harvest's rows and, since 2026-11-17, row F's one step off three bands. It stays as the record of what D214 and D220
+  bought, not as what the tree ships. The two rows the 2026-11-06
   harvest added are **+513px of page at 1240** — **+197px** for the second, **+316px** for the third, the difference
   being each row's own plate and blurb — and they changed **no** empty-run pixels at desktop: 953px in 9 runs,
   biggest 148px, identical at 1 row, 2 rows and 3 rows. So the empty *share* fell 25.7% → 24.4% → 22.6% only because

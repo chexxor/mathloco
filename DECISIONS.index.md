@@ -430,5 +430,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D424** (2026-11-17) — `audit:gate` went red on **one own advisory** (GHSA-fc5q-39xc-vjpf, ReDoS in picomatch) that makes 14 packages report vulnerable; the allowlist grows by the **root cause**, measured against the built artifact (2026-11-17; `reversible` — one entry, and the gate still bites)
 - **D425** (2026-11-17) — a pointer row must be re-keyed in the same change that deletes the ref it names, and `check:tables` cannot be the instrument that catches it (2026-11-17; `reversible` — a citation rule, and a named gap in a gate)
 - **D426** (2026-11-17) — the composition pass the operator's (b) grant asked for is a **new round, numbered 18**: rounds are append-only, and this page's composition question has never been on a table (2026-11-17; `reversible` — a design round mutates `dist/` scratch only, and no `src/` file changed)
+- **D427** (2026-11-17) — the accepted round-18 row F is applied **authored**, as classes in `src/`, not as the grill's `<style>` override, and that is what makes D214's one-step rule supersede across bands rather than beside them (2026-11-17; `costly` — three components and one island move, and a ruled spacing number in `DESIGN.md` changes against a measurement)
 
-Defined: 422 (D1-D426). Unused ids: D315, D400, D401, D402.
+Defined: 423 (D1-D427). Unused ids: D315, D400, D401, D402.
