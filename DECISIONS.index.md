@@ -444,5 +444,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D438** (2026-11-18) — 2026-11-18: the plan file carried a second copy of itself, and a new rule makes that class visible
 - **D439** (2026-11-18) — 2026-11-18: the operator's letter granted this item's merge into `staging`, its push, and the branch delete
 - **D440** (2026-11-18) — 2026-11-18: an external `GAP` verdict graduates to a gate only when this repo can name the defect its selftest plants, and a mandated rule ships its guard beside the gate
+- **D441** (2026-11-18) — 2026-11-18: the mandated reduced-motion guard ships in `src/styles/global.css` in the same commit as its gate, selecting `*` and carrying `!important`
+- **D442** (2026-11-18) — 2026-11-18: a painted notice may announce itself by its own first heading, so the announcement rule is a region OR a title, not a region only
+- **D443** (2026-11-18) — 2026-11-18: the gate-cost baseline is re-frozen under a 8.2 → 14.2/16cpu load with `--force`, because the step set grew and the honest window is not available here
 
-Defined: 436 (D1-D440). Unused ids: D315, D400, D401, D402.
+Defined: 439 (D1-D443). Unused ids: D315, D400, D401, D402.
