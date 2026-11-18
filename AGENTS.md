@@ -128,6 +128,12 @@ each of those and requires a named failure. Both are in `verify`.
    is a **different step set** and is not comparable to today's: the set grew by ten steps (MS35's four gates
    and their selftests, plus `check:indexable` and its selftest), so a +74% reading against the old bar is
    ten steps plus rig contention, not a set that doubled.
+   The bar's own provenance matters here: a **second** reading of the same 81 steps the same day,
+   @measured 2026-11-18 by a later `npm run verify` at load 7.4 → 8.9/16cpu, cost **34.2s wall / 57.6s of
+   work** — so the frozen 71.9s sits ~25% above a quieter reading of the same set, because D443 froze off
+   the more contended run. That direction is the safe one (a bar too high never blocks a ship step; a bar
+   frozen off contention would make the next honest run look like drift), and it is exactly what the parked
+   quiet-window trigger is for: the next run that starts and ends at or below 6/16cpu should re-freeze lower.
    It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
