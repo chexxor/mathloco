@@ -15,9 +15,19 @@
 // What it enforces:
 //   FAIL  second-register     — a component computing a provenance age with `ageSince()`/`formatSince()`
 //                               instead of `provenanceStamp()`, i.e. a second implementation of the rule
-//   FAIL  age-out-of-window   — a printed "N days ago" where N >= 30; the rule says the date form by then
-//   FAIL  date-inside-window  — a printed "on <date>" for a stamp younger than 30 days; the rule says the
-//                               age form by then
+//   FAIL  age-past-honest     — a printed "N days ago" past `AGE_HONEST` days; the rule says the date form
+//                               by then (**D431** moved the switch from D322's 30 days to 1 day)
+//
+// **D431 (2026-11-18) deletes this gate's `date-inside-window` rule.** That rule asserted D322's second half —
+// inside 30 days a date-bearing surface must print an age — and the round-7 review of `/dates` found the half of
+// it that was never true here: the only stamp this site prints is `data/events.json`'s `source.fetchedAt`, set by
+// a step a human runs (`npm run events:harvest`; the 2026-11-13 stamp was still in the file the day the review
+// was written), so an age is never corrected against a newer read and grows into a self-pitying number rather
+// than a stale one. The date form is therefore legal at any age, which is the form every date-bearing surface
+// prints; the age form is legal for a stamp taken today or yesterday, and on a surface ruled date-free
+// (`allowDate: false`, D306), where an age is the only freshness there is to carry. The rule was not left firing
+// at 30 days under its old name: a gate that still green-lights the defect a review just paid for is a gate that
+// does not know it happened.
 //   INFO  the lines           — every provenance sentence the artifact prints, with its register, so a
 //                               reviewer sees the census rather than only the verdict
 //
@@ -27,7 +37,7 @@ import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { emittedRoutes } from '../design/emitted-routes.mjs';
-import { daysSince, WINDOW } from '../src/lib/provenance.mjs';
+import { daysSince, AGE_HONEST } from '../src/lib/provenance.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -90,17 +100,18 @@ export const provenanceFindings = (pages, now = new Date()) => {
         if (age) {
           const n = Number(age[0].split(' ')[0]);
           const days = /\b(today|yesterday)\b/i.test(age[0]) ? (/\btoday\b/i.test(age[0]) ? 0 : 1) : n;
-          if (days >= WINDOW) {
-            fails.push({ rule: 'age-out-of-window', detail: `${p.route}: "${tail.slice(0, 80)}" prints an age of ${days} days; past ${WINDOW} the ruled format is the calendar date (D322)` });
+          if (days > AGE_HONEST) {
+            fails.push({ rule: 'age-past-honest', detail: `${p.route}: "${tail.slice(0, 80)}" prints an age of ${days} days; past ${AGE_HONEST} the age is a claim about a stamp no run has corrected, and the ruled format is the calendar date (D431, superseding D322's 30-day switch)` });
           }
           lines.push(`${p.route}: age — ${tail.slice(0, 70)}`);
         } else if (date) {
+          // D431 retired `date-inside-window`: a date form is legal at any age, and it is the form every
+          // date-bearing surface prints. The age is still computed and reported as INFO, because the question
+          // the rule moved on is a question a reviewer still asks of a printed stamp - how old is the read it
+          // reports? - and printing the register without its age hides the answer this gate exists to show.
           const iso = parseDate(date[1]);
           const days = iso ? daysSince(iso, now) : null;
-          if (days !== null && days < WINDOW) {
-            fails.push({ rule: 'date-inside-window', detail: `${p.route}: "${tail.slice(0, 80)}" prints an absolute date for a stamp ${days} days old; inside ${WINDOW} days the ruled format is the age (D322)` });
-          }
-          lines.push(`${p.route}: date — ${tail.slice(0, 70)}`);
+          lines.push(`${p.route}: date — ${tail.slice(0, 70)} (${days === null ? 'stamp not parseable as a calendar date' : `${days} day(s) old`})`);
         }
       }
     }
@@ -145,11 +156,11 @@ const sourceFiles = (base) => {
 const runSelftest = () => {
   const today = new Date('2026-11-14T00:00:00Z');
   const cases = [
-    { name: 'clean control: a fresh stamp prints an age', text: '<p>the club\u2019s list, last read 11 days ago \u2014 the list is not the room</p>', want: [] },
+    { name: 'the round-7 defect: an age past the day it was read', text: '<p>the club\u2019s list, last read 11 days ago</p>', want: ['age-past-honest'] },
     { name: 'clean control: a stale stamp prints the date', text: '<p>Copied from the club\u2019s own calendar on Sep 3, 2026</p>', want: [] },
     { name: 'clean control: built today', text: '<p>This page was built today, and the club\u2019s calendar was last read yesterday.</p>', want: [] },
-    { name: 'an age that outlived the window: 45 days ago', text: '<p>last read 45 days ago</p>', want: ['age-out-of-window'] },
-    { name: 'an absolute date inside the window', text: '<p>Copied from the club\u2019s own calendar on Nov 13, 2026</p>', want: ['date-inside-window'] },
+    { name: 'an age that outlived even the coarse forms', text: '<p>last read 45 days ago</p>', want: ['age-past-honest'] },
+    { name: 'clean control: a date form at any age (D431 retires date-inside-window)', text: '<p>Copied from the club\u2019s own calendar on Nov 13, 2026</p>', want: [] },
     { name: 'both registers on one line', text: '<p>last read 12 days ago, on Nov 2, 2026</p>', want: ['mixed-register'] },
     { name: 'a phrase with no register is not a failure', text: '<p>Copied from the club\u2019s own calendar, which the club keeps itself.</p>', want: [] },
     { name: 'a year in a URL is not a provenance line', text: '<a href="https://www.meetup.com/club/2026/">the calendar</a>', want: [] },
@@ -201,7 +212,7 @@ const runReal = () => {
     }
   }
   const { fails, lines } = provenanceFindings(pages);
-  console.log(`check:provenance \u2014 ${files.length} source file(s), ${pages.length} built page(s), threshold ${WINDOW} days @measured ${new Date().toISOString().slice(0, 10)} by this gate`);
+  console.log(`check:provenance \u2014 ${files.length} source file(s), ${pages.length} built page(s), threshold ${AGE_HONEST} day(s) @measured ${new Date().toISOString().slice(0, 10)} by this gate`);
   for (const l of lines) console.log(`  ${l}`);
   for (const f of [...srcFails, ...fails]) console.log(`  FAIL ${f.rule}  ${f.detail}`);
   const total = srcFails.length + fails.length;

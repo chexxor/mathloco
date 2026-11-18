@@ -94,6 +94,7 @@ const PENDING = [
   // The two check-rsvp scripts and SignUpLinks.astro were listed here while MS12 was still unwritten.
   // They exist now, so an exemption would be a dead exemption: an entry that can never fire is how this
   // list rots (D268).
+  [/^scripts\/check-cache\.mjs$/, 'the dead pointer the round-7 communication review found and fixed in place (D282, and this very --stale run is what found it): the live script is scripts/check-summary-cache.ts, run as `npm run check:cache`. A doc that names the dead one is recording the defect it corrected, so the citation IS the lesson - same shape as the design/decision-audit.mjs entry below'],
 ];
 const pending = (p) => PENDING.find(([re]) => re.test(p));
 

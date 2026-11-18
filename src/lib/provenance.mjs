@@ -12,8 +12,23 @@
  * still live here.
  */
 
-/** The ruled window, in days (D322). */
-export const WINDOW = 30;
+/**
+ * How long an **age** form stays honest, in days, on an artifact this repo ships (**D431**, 2026-11-18; supersedes
+ * the 30-day threshold `WINDOW` of D322, which is kept as a decision rather than renumbered).
+ *
+ * D322's reason for 30 was register: one site, one register, so a reader can compare two stamps. It left a second
+ * fact unexamined - the only stamp this site prints is `data/events.json`'s `source.fetchedAt`, and that is set by a
+ * step a human runs (`npm run events:harvest`; the 2026-11-13 stamp is still in the file on 2026-11-18 because no
+ * harvest has run since). So an age is never corrected against a newer read, and it grows into a self-pitying number:
+ * "5 days ago" reads as *apologetic* rather than as *stale*, and it spends the reader's arithmetic on an epoch the
+ * page never states. Round-7 review put that in words the reviewer used - "an absolute date ('checked Nov 17') ages
+ * honestly; '4 days ago' ages into an apology" - and the page agreed with it. Past this constant the form is the
+ * calendar date, which a reader can check against their own clock and which cannot decay. The age form is still what
+ * a surface ruled date-free prints (D306's ruling, carried as `allowDate: false`): such a surface has no date to
+ * print, so an age is the only honest freshness it can carry, and `ageSince`'s own coarsening (days → months → years)
+ * is what keeps a stale age from pretending precision.
+ */
+export const AGE_HONEST = 1;
 
 /** Whole days between an ISO calendar date and `now`, or null when the string is not a date. */
 export const daysSince = (iso, now = new Date()) => {
@@ -48,14 +63,15 @@ export const ageSince = (iso, now = new Date()) => {
 };
 
 /**
- * One provenance format for every "how current is this" line on the site: relative inside `WINDOW`
- * days, absolute beyond it. A surface ruled date-free (`/`, D306) passes `allowDate: false` and gets
- * the age form of the same rule.
+ * One provenance format for every "how current is this" line on the site: **an age only for a stamp taken
+ * today or yesterday, the calendar date beyond that** (D322's register, D431's threshold). A surface ruled
+ * date-free (`/`, D306) passes `allowDate: false` and gets the age form of the same rule, coarsened by
+ * `ageSince` - it has no date to print, so an age is the only freshness it can carry.
  */
 export const provenanceStamp = (iso, { allowDate = true, now = new Date() } = {}) => {
   const days = daysSince(iso, now);
   if (days === null || days < 0) return 'recently';
   const stamp = String(iso ?? '').slice(0, 10);
-  if (!allowDate || days < WINDOW) return ageSince(stamp, now);
+  if (!allowDate || days <= AGE_HONEST) return ageSince(stamp, now);
   return `on ${formatSince(stamp)}`;
 };

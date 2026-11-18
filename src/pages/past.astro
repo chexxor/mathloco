@@ -10,6 +10,7 @@ import { publishableRows, publishedName } from '../lib/event-groups.mjs';
 // rule 10) can compare them against the same rule rather than a copy of it (D238's lesson, applied to the
 // past half by D374).
 import { pastWindow, isPast, dateOf, plainDate } from '../lib/event-window.mjs';
+import { forbidsIndexing } from '../lib/index-rules.mjs';
 
 /**
  * The page of record for dates that have **finished** (D374, round-5 read Batch D half 2).
@@ -77,7 +78,7 @@ const olderText = win.hiddenCap > 0
     built (D117: a path the build does not emit is a 404, and the band, the sitemap and the dead-path rule all
     read the built routes); only the crawler is told not to index an empty shelf. `404.astro` is the precedent
     for this attribute in this repo. */}
-<Layout title="Past meetings - Matheapolis, a Minneapolis math club" noindex path="/past">
+<Layout title="Past meetings - Matheapolis, a Minneapolis math club" noindex={forbidsIndexing('/past')} path="/past">
   <main class="mx-auto max-w-4xl px-4 py-16 text-center">
     <h1 class="text-display-1 font-extrabold text-ink">Past meetings</h1>
     <p class="mt-2 text-lede leading-prose text-ink-2 mb-8 max-w-measure mx-auto">

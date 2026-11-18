@@ -81,6 +81,8 @@
     "check:lsp": "node scripts/check-lsp-config.mjs",
     "check:lsp:selftest": "node scripts/check-lsp-config.mjs --selftest",
     "check:site-host": "node scripts/check-site-host.mjs",
+    "check:indexable": "node scripts/check-indexable.mjs",
+    "check:indexable:selftest": "node scripts/check-indexable.mjs --selftest",
     "check:plan": "node scripts/check-plan.mjs",
     "check:plan:selftest": "node scripts/check-plan.mjs --selftest",
     "decisions:index": "node scripts/decision-index.mjs",

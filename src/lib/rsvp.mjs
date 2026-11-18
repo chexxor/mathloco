@@ -638,7 +638,15 @@ export const joinChannels = (urls = {}) => {
       // here while the nav chip said `Dates`, which is the alias D309 forbids on the four navigated surfaces
       // wearing into prose. The word is now the nav's own word (D386); `check:join` compares this clause with
       // the painted bytes byte for byte, so the clause and the page it describes change in one edit.
-      gives: 'The dates page lists each date and whatever the club has posted for it: a Meetup page, the chat, or nothing yet.',
+      // Round-7 review (2026-11-18), `/join`/Remove: the last four words of that clause are deleted. The clause
+      // promised an empty state - "or nothing yet" - that the page it describes never shows: measured on that
+      // build, all **5** rows printed on `/dates` carried exactly one anchor each, a `meetup.com` event URL, so
+      // a reader following this sentence to `/dates` finds no row in the state the sentence names. The resolver's
+      // third state is still real code (`signUpPaths()` falls back to the group page), which is why the claim is
+      // deleted rather than the state, and why D273's objection above stays true. The surviving two-item list gets
+      // its conjunction ("or the chat") - a copy edit the letter did not ask for, recorded as such in the reply
+      // doc so the next session knows the sentence is not the letter's words verbatim.
+      gives: 'The dates page lists each date and whatever the club has posted for it: a Meetup page or the chat.',
     },
     {
       kind: 'chat',

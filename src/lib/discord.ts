@@ -51,6 +51,31 @@ const MEMORY_CACHE_TTL_MS = 1000 * 60 * 60 * 24; // 24 hours, per isolate
 const KV_CACHE_TTL_SECONDS = 60 * 60 * 24; // 24 hours, shared
 // If Discord or Claude is failing, a summary up to this old is still better than a 502.
 const STALE_GRACE_MS = 1000 * 60 * 60 * 24 * 7;
+/** The zone the club runs in, in the words the rows already use (D397's zone word). Every moment this site
+ *  names - a stamp, a window - is named in the club's own zone, not in the epoch's, because a Minnesota club's
+ *  freshness claim read in UTC is 5-6 hours off for every reader (round-7 communication review, `/chat`/Revise). */
+export const SUMMARY_ZONE = 'America/Chicago';
+
+/** The window a channel summary covers, in the site's own date register: `Nov 1 - 12` style, with the month
+ *  stated once when both ends fall inside it and the year only when the window crosses one. That is the rule
+ *  `provenanceStamp` already pays on the pages - print the least a reader needs to place a date - applied to
+ *  the window the island prints above its own summaries (round-7 communication review called the slash form
+ *  "the only M/D/Y string on a site that uses 'Nov 21' everywhere"). Exported so an instrument can plant two
+ *  moments and read the window it must print, rather than quote a string this file remembers. */
+export const summaryWindow = (from: Date, to: Date): string => {
+  const day = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', timeZone: SUMMARY_ZONE });
+  const year = new Intl.DateTimeFormat('en-US', { year: 'numeric', timeZone: SUMMARY_ZONE });
+  const a = day.format(from);
+  const b = day.format(to);
+  const month = a.slice(0, a.indexOf(' '));
+  const right = year.format(from) !== year.format(to)
+    ? `${b} ${year.format(to)}`
+    : b.startsWith(`${month} `)
+      ? b.slice(month.length + 1)
+      : b;
+  return `${a} \u2013 ${right}`;
+};
+
 const CACHE_KEY_PREFIX = 'discord-summary:v1';
 
 /** JSON-safe form of CachedData (`lastUpdated` is a Date in memory, an ISO string in KV). */
@@ -217,12 +242,18 @@ export async function getDiscordSummary(env: DiscordEnv): Promise<CachedData> {
           .map((msg) => `${msg.author.username}: ${msg.content}`)
           .join('\n');
 
-        // Get time range
+        // The window the summary covers, in the site's own date register (round-7 review, `/chat`/Revise:
+        // "print the summary window in words ('Nov 1-12'), not `11/1/2026 - 11/12/2026` — the only M/D/Y
+        // string on a site that uses 'Nov 21' everywhere"). D397 keeps that register on the rows, and a
+        // slash-date here is the one string on the page a reader has to decode as a fraction. The month is
+        // stated once when both ends fall inside it, and the year only when the window crosses one, which is
+        // the same rule `provenanceStamp` pays on the pages: print the least a reader needs to place it.
+        // The zone is the club's own (`America/Chicago`), because the window names the days the channel ran
+        // on, and the stamp beside it now reads Central too - see `formatStamp` in the island.
+        // A KV entry written before this change still carries the slash form until the 24h TTL rotates it.
         const latestMessage = channelMessages[0];
         const oldestMessage = channelMessages[channelMessages.length - 1];
-        const timeRange = `${new Date(oldestMessage.timestamp).toLocaleDateString()} - ${new Date(
-          latestMessage.timestamp,
-        ).toLocaleDateString()}`;
+        const timeRange = summaryWindow(new Date(oldestMessage.timestamp), new Date(latestMessage.timestamp));
 
         // Generate summary using Claude
         const summary = await generateSummary(env, messageContent);

@@ -141,6 +141,20 @@ const year = new Date().getFullYear();
     <!-- Small print carries the place and the date, and nothing else: no frequency claim (D92), and the
          old "All rights reserved" boilerplate is gone with the rest of the old band. -->
     <p class="mt-6 text-micro">Minneapolis, Minnesota</p>
+    <!-- The old name, in the colophon rather than spliced into the middle of a paragraph about agendas
+        (round-7 review, Home/Revise "Formerly the Minneapolis Mathematics Book Club": "if the former name
+        matters for search, it belongs in the page title or a footer line, not spliced into the middle of a
+        sentence about agendas"). The wording stays the Meetup listing's own name — "Minneapolis Mathematics
+        Book Club", not the site's old wordmark — because that is the name six years of members, printed
+        flyers and the Meetup group URL actually carry, and it is the string a returning member or an old
+        bookmark searches. It moved out of the hero lede because that paragraph is about what a meeting is;
+        the colophon is where a page says who it is. The page title keeps D396's shape (the letter offered
+        the title as the alternative; the city is what search needs there, and a former name in the title
+        would make six titles a subscriber cannot scan). Cost, measured before this move: one extra line box
+        in the band at every width, and +28 to +61px of page @measured 2026-11-07 by `npm run round16` when
+        the same sentence sat in the lede — the band pays the box once per page, and `check:render`'s band
+        section reports whether it still reads as one dark region. -->
+    <p class="mt-1 text-micro">Formerly the Minneapolis Mathematics Book Club.</p>
     <p class="mt-1 text-micro">&#169; {year} Matheapolis</p>
 
     <!-- One static line, not a component (round 10 ruling on third-party marks). The site names Meetup and

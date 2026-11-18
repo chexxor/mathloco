@@ -116,6 +116,16 @@ export type Content = {
    * slot with a source and a date, never a leftover from a third-party snapshot (D136, D265).
    */
   turnout: Slot;
+  /**
+   * What a person brings to a study session, and what the room does not do (D432, round-7 review's
+   * `/join`/Add "the uneven bars named honestly"). A claim about the club, so its `source` is the
+   * operator's grant and D415 requires it to carry `asOf` and the place the correction lands; that is
+   * why it is a slot and not markup on the page. Painted on `/join` only, under the format sentence it
+   * reassures. It is NOT the first-meeting rule (`check:content` sees the two as near-duplicates and
+   * `design/copy-duplicates.json` carries the pair - they answer what a person carries and what the
+   * room does), so deleting one does not silently orphan the other.
+   */
+  studySessionShape: Slot;
   photos: { placeholders: boolean };
 };
 
@@ -271,17 +281,21 @@ export const timeSpan = (row: { time?: string | null; endTime?: string | null })
 // surface that prints a date, and `check:dated-surfaces` refuses ANY date-shaped string on a page it does not
 // list - year-bearing provenance included, which is the hole the 2026-11-14 audit found ("last read Nov 3,
 // 2026" on the homepage). An age keeps the freshness a sourced claim owes its reader without putting a
-// calendar date on the page; past `WINDOW` (30) days the same rule switches to the date, because a stamp a
-// month old says *when* more usefully than *how stale*.
+// calendar date on such a page. **D431 (2026-11-18) moved the switch, not the exemption:** the date form is now
+// required past `AGE_HONEST` = 1 day rather than past 30, because the only stamp this site prints is set by a
+// step a human runs, so an age is never corrected against a newer read - it grows into an apology. On a surface
+// ruled date-free, `allowDate: false` keeps the age form, coarsened by `ageSince`: there is no date to print
+// there, so an age is the only freshness that surface can carry.
 
 /** The build's own date, for the dated lane of a prerendered page. The only age a static page can compute (D103). */
 export const builtOn = (): string => formatSince(new Date().toISOString().slice(0, 10));
 
-// The provenage itself is `provenanceStamp` in `src/lib/provenance.mjs`; `WINDOW` is the 30-day threshold
-// that gate and site both read. Nothing here recomputes it.
+// The provenance itself is `provenanceStamp` in `src/lib/provenance.mjs`; `AGE_HONEST` is the one-day window
+// that gate and site both read (D431 superseded D322's 30). Nothing here recomputes it.
 
 /**
- * The day the club's own calendar was last read — "6 Nov 2026", or null when the snapshot does not say.
+ * The day the club's own calendar was last read — "on Nov 13, 2026" under D431's threshold ("yesterday" for
+ * a stamp taken today or yesterday), or null when the snapshot does not say.
  *
  * It is the stamp every published `DTSTAMP` in `/events.ics` derives from (`data/events.json`'s
  * `source.fetchedAt`, which `check:ics`'s dtstamp rule asserts row by row), which is the reason the site's

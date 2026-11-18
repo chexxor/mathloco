@@ -1,0 +1,19 @@
+# Material — PRIOR.md (quarantine)
+
+Anything we know about Material 2 **without a locator on a page fetched this session** goes here.
+Everything in this file is marked `UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS`: it may be a hint about
+where to look, and it may not be quoted, counted, ranked, or cited in `GAP-ANALYSIS.md`.
+
+| Item | Why it is here |
+|---|---|
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — Material's colour palette (the primary/secondary/accent ramps, the 900→50 tone numbering, and every hex in them) | `the-color-system.html` and `applying-color-to-ui.html` were reached and returned the **shell** (md5 `617b93271e5fae4f99bf0aef64d43582`); the twin probes returned no markdown. The only hexes in the fetched corpus are ones a page quotes as an example or a default (`#6200EE`, `#121212`, `#B00020`, `#FFFFFF`, `#000000`). No hue from this system may be proposed for our palette, and none is. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — every shadow recipe (x/y offset, blur radius, spread, opacity per elevation level) | `light-shadows.html` and `surfaces.html` were reached and returned the shell. The elevation page states shadows qualitatively — size and diffusion — and gives no numbers. Our system's elevation is binary and ships two named shadows; a Material shadow table would have been the comparison, and we do not have it. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — the per-component corner-radius ranges in the "shape value ranges" table | `about-shape.html` says the table exists ("A table of shape value ranges indicates recommended value ranges for each component") and renders only the tool's blurb. The default 4dp is stated in prose and is used; the ranges are not. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — Material's accessibility page (the usability/accessibility guidance, its contrast and touch-target summaries) | Reached twice (m2 host and twin), no markdown. The accessibility domain therefore quotes thresholds from `text-legibility`, `dark-theme`, `states`, `system-icons` and `data-visualization`, and says so. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — the validation contract: what a failed submission shows, where the message goes, whether answers are kept | The 83-URL index has no forms/validation page; `communication/data-formats.html` was probed and returned nothing. This is recorded as NO EVIDENCE in `forms-validation.md`, and nothing here may be promoted without a fetched locator. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — Material 3 (m3.material.io): its tokens, its components, its Expressive/dynamic-colour model | Only `m3.material.io/sitemap.xml` (721,312 B) and one component page (digest 3 B, client-rendered) were touched. The successor is **named, not ingested**, so no claim of any kind is made about what it publishes — including the claim that it publishes a token package, which is what would have made it the strongest governance evidence in the five systems. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — Material's `components/*` pages (buttons, cards, dialogs, tooltips, navigation drawer, bottom sheets) | The component library is not in the 83-URL guidelines index and renders client-side. Every state-inheritance and elevation claim in this corpus therefore comes from the guidelines page that states it (`states.html`, `elevation.html`), not from a component spec. |
+| UNGROUNDED — NOT ELIGIBLE FOR GAP ANALYSIS — the Material 3 / Material 2 migration: which numbers changed | The banner "Material 2 is no longer maintained. Upgrade to Material 3" is in the fetched digests; the mapping is not. A future session that wants this must ingest m3, not re-read m2. |
+
+**Rule for anyone extending this file:** if you promote a line from here into a domain file, it must
+acquire a fetched locator and a ≤40-word verbatim quote in the same commit, or it stays.

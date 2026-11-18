@@ -82,6 +82,17 @@
       "surfaces": "section:Social (/schedule standing row, under the calendar link) <> footer:Social (the exit band on all five emitted pages - the footer paragraph inherits the last row's heading because the band's small print has no heading of its own)",
       "why": "The same fact - what follows the calendar file, and that it moves with the club - stated once beside each place the file is offered: /schedule's standing row and the band's `Add to a calendar` path. A5's whole point is that the fact travels with the offer, so the repeat is the design; the band's copy is the same string on all five routes, which is D307's standing band. Deleting either side would leave one place where the reader gets a feed link and no qualification, which is the defect A5 closes. Signature is stable against wording that keeps the shared words; a re-word that drops below 3 shared content words retires it.",
       "measuredAt": "2026-11-16"
+    },
+    {
+      "signature": "people bring textbooks problem sets and halffinished projects nobody is teaching and nobody is being tested <> people work on what they brought and nobody sets an agenda",
+      "shared": 3,
+      "jaccard": 0.214,
+      "overlap": 0.5,
+      "status": "deliberate",
+      "ruled": "D432 (round-7 communication review, `/join`/Add 'the uneven bars named honestly', 2026-11-18)",
+      "surfaces": "section:What we do (/join, the sentence under the two format names) <> section:Your first one (/join, the third of the three arrival rules - D392's rule, 'Expect nothing. People work on what they brought, and nobody sets an agenda.')",
+      "why": "Two claims that answer different questions on one page: what a person carries into a study session (the round-7 review's reassurance about the uneven bars, shipped as the operator-granted slot `studySessionShape`), and what the room does with nobody's help (D392's first-meeting rule). `check:content`'s near-duplicate rule is a content-word detector, not a semantic one, and this pair sits at its floor - 3 shared content words, jaccard 0.214, overlap exactly 0.5 - so it is registered here rather than reworded, because the review's words are the reviewer's draft and D415 keeps them correctable in the slot instead of edited to satisfy a detector. A re-word that drops the shared words below 3 retires this row on its own, per the gate's own note.",
+      "measuredAt": "2026-11-18"
     }
   ]
 }
