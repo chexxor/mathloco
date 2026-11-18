@@ -274,13 +274,13 @@ None is a judgment about the writing.
     anchor — shipped (D4 counts 2 anchors on `/dates`, both the same route).
 11. **"Nothing marks which three threads are new" on `/chat` (C11)** — the marker is declined, and the decline is
     load-bearing rather than editorial. (a) A marker has to know the cap, and **D320**'s one-home rule keeps exactly
-    one cap literal in the tree — `src/pages/WhyJoinUs.astro`'s `const VISIBLE = 6` — which `scripts/check-threads.mjs:33`
+    one cap literal in the tree — `src/components/WhyJoinUs.astro`'s `const VISIBLE = 6` — which `scripts/check-threads.mjs:33`
     reads **by regex out of that file only**; a second cap in `src/pages/chat.astro` would be a rule with two homes,
     and moving the cap breaks the gate's own detector. (b) A label naming what the home page left out is the site
     talking about itself, on the one page whose reader is deciding whether to join a channel — **D387**'s and
     **D411**'s class, and **D411** already ruled what this page adds over the teaser: the glosses and the drawing, not
     a count. (c) The letter's alternative — hand-edit before publish — is a standing maintenance promise of the class
-    **D346** refused. The command that shows (a) today is `grep -n 'const VISIBLE' src/pages/WhyJoinUs.astro` and
+    **D346** refused. The command that shows (a) today is `grep -n 'const VISIBLE' src/components/WhyJoinUs.astro` and
     `grep -n 'const VISIBLE =' scripts/check-threads.mjs`, i.e. one home and one reader of it. **What would ship it:**
     the operator's letter naming which rule gets a second home — the cap, or a visitor-state the site does not keep.
 
