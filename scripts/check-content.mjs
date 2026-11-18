@@ -278,6 +278,16 @@ function scanPage(html, file, emitted, distDir) {
   for (const s of RETIRED) {
     if (text.includes(s)) fails.push({ rule: 'retired-fabrication', file, detail: `"${s}" is back — it was measured as invented (.notes/roadmap-events.md, D136)` });
   }
+  // Round-7 review, Home diagnosis: **"D312 is an internal decision number, printed on the home page."**
+  // The site is edited against an audit trail, and the trail leaks into the artifact — a `D###`, `S###` or
+  // `q##` id is a citation for whoever reads this repo, never a word for a visitor, and a reader used to
+  // leading websites reads a bare code in a caption as a bug. The rule is for the **class**, not for that
+  // one deletion: the next id would leak the same way and nothing would notice. `visibleText` strips
+  // comments and scripts, so this is what a visitor's eyes can land on, not what a source comment carries
+  // (D312's own note is a server-side comment for that same reason).
+  for (const m of text.matchAll(/\(([dDsSqQ]\d{2,3})\)/g)) {
+    fails.push({ rule: 'audit-trail-in-the-artifact', file, detail: `"(${m[1]})" is a ${/^[dD]/.test(m[1]) ? 'decision' : /^[sS]/.test(m[1]) ? 'ruling' : 'question'} id from this repo's audit trail, printed in what a visitor reads — the trail belongs to the reader of the code (round-7 review)` });
+  }
   // Links the build has nothing behind (D117: a path needs a page — this is how /schedule and /members
   // 404'd). "Nothing behind" is checked against the artifact, not a remembered route list: a href is fine
   // if it is an emitted route or a real file under dist/client (favicon.svg, /_astro/*.css, sitemap.xml are
@@ -421,6 +431,11 @@ if (selftest) {
     { name: 'bracket', html: clean.replace('</body>', '<p>at [VENUE NAME]</p></body>') },
     { name: 'placeholder-fill', html: clean.replace('</body>', '<div data-placeholder="PS-1"></div></body>') },
     { name: 'retired-fabrication', html: clean.replace('</body>', '<p>Local Library - Study Room B</p></body>') },
+    // Round-7 review, Home diagnosis: an audit-trail id in what a visitor reads. Planted as the string the
+    // letter named, because the class is a code in visible text — the control is the shipped page, which is
+    // what makes this a detector rather than a permanent red after the deletion landed.
+    { name: 'audit-trail-id-in-the-artifact', rule: 'audit-trail-in-the-artifact', html: clean.replace('</body>', '<p>Detail of an engraving (D312)</p></body>') },
+    { name: 'the-artifact-carries-no-audit-id', rule: 'audit-trail-in-the-artifact', negative: true, html: clean },
     // the six-card grid the operator deleted on 2026-11-03: a pasted-back template heading has to be as
     // catchable as an invented venue, or the retired list only remembers the last round's mistakes
     { name: 'retired-marketing-grid', rule: 'retired-fabrication', html: clean.replace('</body>', '<h3>Expert Guidance</h3><p>Learn from experienced mathematicians and educators</p></body>') },
