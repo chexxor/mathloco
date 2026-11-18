@@ -206,6 +206,14 @@ const DEPLOY = [
   // rebrand defect no other gate sees (D261): robots.txt named the apex being retired while the sitemap
   // itself was correct.
   { name: 'check:site-host', desc: 'the artifact names one host about itself: robots, sitemap locs, canonical, og, twitter', needs: ['build'] },
+  // One claim, two machines: D404 put a `noindex,nofollow` meta tag on `/past` while its shelf is empty, and
+  // the sitemap still published a `<loc>` for it @measured 2026-11-18 — `grep -c past dist/client/sitemap-0.xml`
+  // printed 1 beside a page printing noindex. `check:site-host` compares the host of every `<loc>`, not which
+  // routes the sitemap may name at all, so the pair had no detector (D245’s class: parts of one artifact
+  // disagreeing while every gate reading them stays green). `src/lib/index-rules.mjs` is the one home both the
+  // page’s meta tag and `astro.config.mjs`’s sitemap filter read.
+  { name: 'check:indexable', desc: 'a route that prints a noindex meta tag is not a route the sitemap lists, and every route NOINDEX_ROUTES forbids is built and marked', needs: ['build'] },
+  { name: 'check:indexable:selftest', desc: 'the indexability gate can still fail (3 plantings: the sitemap naming a self-forbidding page, a forbidden route whose page lost its meta tag, a forbidden route the build never emits; plus the clean control)', needs: ['build'] },
   { name: 'check:content', desc: 'no placeholder, no unsourced claim, no fabricated number, no uncorrectable operator-granted draft ships', needs: ['build'] },
   { name: 'check:content:selftest', desc: 'the content gate can still fail (25 cases incl. D415\u2019s draft-claim planting and its clean control)', needs: ['build'] },
   // What shipped on /schedule: `club\u2019s` painted literally, at every width, through a green `verify`.

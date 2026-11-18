@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 import cloudflare from '@astrojs/cloudflare';
 import svelte from '@astrojs/svelte';
+import { NOINDEX_ROUTES } from './src/lib/index-rules.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -12,7 +13,20 @@ export default defineConfig({
   // the one inconsistency in a domain move that a 301 cannot undo. Nothing in the gate set reads the host in
   // <loc>, so this comment is the only thing keeping the two apexes in step.
   site: 'https://matheapolis.com',
-  integrations: [sitemap(), svelte()],
+  // Round-7 communication review (2026-11-18), `/past` indexability. D404 already put a
+  // `noindex,nofollow` meta tag on `/past` while its shelf is empty; the sitemap still published a
+  // `<loc>` for it, so the artifact told a crawler both — the class D245 names, an artifact whose parts
+  // disagree while every gate reading those parts stays green. The integration's own `filter` (the only
+  // option in its schema that can see more than a literal path list: node_modules/@astrojs/sitemap/dist/
+  // schema.js exposes `filter`, not a per-page opt-out) reads `NOINDEX_ROUTES`, the same list the page
+  // reads for its meta tag, so the two cannot be edited apart and `/past` re-enters the sitemap in the
+  // same commit that drops it from the list (the trigger is written in that module).
+  integrations: [
+    sitemap({
+      filter: (loc) => !NOINDEX_ROUTES.includes(new URL(loc).pathname.replace(/\/+$/, '') || '/'),
+    }),
+    svelte(),
+  ],
   // D408 (round-6 communication review, `/dates`/Add: "a redirect `/schedule` → `/dates`… It 404s today. Old
   // links, bookmarks and any past brief that named it now dead-end"). The route moved on D373 and the sweep left
   // the old name answering the site's 404, so the one URL that has ever been published is the one that dead-ends.
