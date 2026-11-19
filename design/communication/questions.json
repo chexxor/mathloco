@@ -1,8 +1,8 @@
 {
- "measuredAt": "2026-11-17",
+ "measuredAt": "2026-11-19",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-18T03:47:43.000Z",
+ "artifactBuilt": "2026-11-19T20:05:27.808Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -107,7 +107,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities.",
      "shape": 1
     }
    ],
@@ -146,7 +146,8 @@
     "/dates": {
      "status": "answered",
      "forms": [
-      "prose"
+      "prose",
+      "heading"
      ],
      "zones": [
       "body"
@@ -174,7 +175,8 @@
    ],
    "forms": [
     "prose/body",
-    "label/body"
+    "label/body",
+    "heading/body"
    ],
    "outsideRoutes": [],
    "outsideCount": 0,
@@ -185,6 +187,14 @@
      "zone": "body",
      "section": "Matheapolis",
      "text": "Next meeting: Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
+     "shape": 0
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "Matheapolis",
+     "text": "Copied from the club’s own calendar on Nov 13, 2026",
      "shape": 0
     },
     {
@@ -215,48 +225,40 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Dates",
-     "text": "Saturday, Nov 21 · 12:00 pm – 1:00 pm Central",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Wednesday, Nov 25 · 6:00 pm – 8:00 pm Central",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Saturday, Dec 5 · 12:00 pm – 1:00 pm Central",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Wednesday, Dec 9 · 6:00 pm – 8:00 pm Central",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Saturday, Dec 19 · 12:00 pm – 1:00 pm Central",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
-     "zone": "body",
-     "section": "Social",
+     "section": "Sat, Dec 19 — Social",
      "text": "Copied from the club’s own calendar on Nov 13, 2026",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Sat, Nov 21 — Social",
+     "text": "Sat, Nov 21 — Social",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Wed, Nov 25 — Study session",
+     "text": "Wed, Nov 25 — Study session",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Sat, Dec 5 — Social",
+     "text": "Sat, Dec 5 — Social",
+     "shape": 0
+    },
+    {
+     "route": "/dates",
+     "form": "heading",
+     "zone": "body",
+     "section": "Wed, Dec 9 — Study session",
+     "text": "Wed, Dec 9 — Study session",
      "shape": 0
     }
    ],
@@ -353,7 +355,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities.",
      "shape": 1
     },
     {
@@ -368,7 +370,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Social",
+     "section": "Sat, Nov 21 — Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 0
     },
@@ -376,7 +378,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Study session",
+     "section": "Wed, Nov 25 — Study session",
      "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
      "shape": 0
     },
@@ -384,7 +386,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Social",
+     "section": "Sat, Dec 5 — Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 0
     },
@@ -392,7 +394,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Study session",
+     "section": "Wed, Dec 9 — Study session",
      "text": "Kowalski's Market, 5327 Lyndale Avenue South, Minneapolis, Minnesota",
      "shape": 0
     },
@@ -400,7 +402,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Social",
+     "section": "Sat, Dec 19 — Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 0
     },
@@ -408,7 +410,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Social",
+     "section": "Sat, Nov 21 — Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 1
     },
@@ -416,7 +418,7 @@
      "route": "/dates",
      "form": "prose",
      "zone": "body",
-     "section": "Social",
+     "section": "Sat, Dec 5 — Social",
      "text": "Angel Food Bakery, 8100 Minnetonka Boulevard, Saint Louis Park, Minnesota",
      "shape": 1
     }
@@ -507,7 +509,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat.",
+     "text": "Nobody sets an agenda.",
      "shape": 0
     },
     {
@@ -523,15 +525,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Dates",
-     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
-     "shape": 0
-    },
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "Your first one",
-     "text": "There is nothing to prepare and no reading to keep up with.",
+     "text": "A social is an afternoon around a table, nothing to prepare.",
      "shape": 0
     },
     {
@@ -621,7 +615,7 @@
      "route": "/join",
      "form": "prose",
      "zone": "body",
-     "section": "Your first one",
+     "section": "Join the club",
      "text": "Free.",
      "shape": 0
     }
@@ -691,7 +685,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Nobody sets an agenda - people bring what they are curious about, and the conversation runs in the club's chat."
+     "text": "Nobody sets an agenda."
     },
     {
      "route": "/join",
@@ -868,7 +862,7 @@
     "/dates",
     "/past"
    ],
-   "outsideCount": 24,
+   "outsideCount": 22,
    "evidence": [
     {
      "route": "/",
@@ -986,7 +980,6 @@
     "/dates": {
      "status": "answered",
      "forms": [
-      "heading",
       "prose"
      ],
      "zones": [
@@ -1019,8 +1012,7 @@
     "/join"
    ],
    "forms": [
-    "prose/body",
-    "heading/body"
+    "prose/body"
    ],
    "outsideRoutes": [],
    "outsideCount": 0,
@@ -1030,55 +1022,31 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities and work through something together - a paper, a proof, a proof assistant, a puzzle with a strange answer.",
+     "text": "We meet around a table in a coffee shop or a brewery in the Twin Cities.",
      "shape": 2
     },
     {
-     "route": "/dates",
-     "form": "heading",
+     "route": "/",
+     "form": "prose",
      "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "heading",
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "heading",
-     "zone": "body",
-     "section": "Social",
-     "text": "Social",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "heading",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Study session",
-     "shape": 1
-    },
-    {
-     "route": "/dates",
-     "form": "heading",
-     "zone": "body",
-     "section": "Study session",
-     "text": "Study session",
-     "shape": 1
+     "section": "Matheapolis",
+     "text": "We work through something together.",
+     "shape": 2
     },
     {
      "route": "/dates",
      "form": "prose",
      "zone": "body",
      "section": "Dates",
-     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
+     "text": "A social is an afternoon around a table, nothing to prepare.",
+     "shape": 2
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "A study session is an evening working side by side.",
      "shape": 2
     },
     {
@@ -1176,7 +1144,7 @@
      "route": "/join",
      "form": "prose",
      "zone": "body",
-     "section": "Your first one",
+     "section": "Join the club",
      "text": "No membership needed - you just come; an RSVP with your name is all the club asks.",
      "shape": 2
     }
@@ -1301,7 +1269,7 @@
      "route": "/chat",
      "form": "href",
      "zone": "exit-band",
-     "section": "The chat itself",
+     "section": "What the club is pulling on",
      "text": "/events.ics",
      "shape": 0
     },
@@ -1309,7 +1277,7 @@
      "route": "/dates",
      "form": "href",
      "zone": "body",
-     "section": "Social",
+     "section": "Sat, Dec 19 — Social",
      "text": "/events.ics",
      "shape": 0
     },
@@ -1317,7 +1285,7 @@
      "route": "/dates",
      "form": "href",
      "zone": "exit-band",
-     "section": "Social",
+     "section": "Sat, Dec 19 — Social",
      "text": "/events.ics",
      "shape": 0
     },
@@ -2254,7 +2222,7 @@
      "form": "prose",
      "zone": "body",
      "section": "Matheapolis",
-     "text": "Dates go up on Meetup; most of the arguing happens in the chat between meetings.",
+     "text": "Most of the arguing happens in the chat between meetings.",
      "shape": 0
     },
     {
@@ -2262,7 +2230,7 @@
      "form": "prose",
      "zone": "body",
      "section": "What we take up",
-     "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes when the chat changes.",
+     "text": "Threads that are open in the club's chat.",
      "shape": 0
     },
     {
@@ -2286,7 +2254,15 @@
      "form": "prose",
      "zone": "body",
      "section": "The club’s chat",
-     "text": "The live channel, the threads worth reading, and the dates the club set",
+     "text": "The live channel, and the threads worth reading",
+     "shape": 0
+    },
+    {
+     "route": "/chat",
+     "form": "prose",
+     "zone": "body",
+     "section": "What the club is pulling on",
+     "text": "Nine threads the club is pulling on.",
      "shape": 0
     },
     {
@@ -2301,16 +2277,8 @@
      "route": "/chat",
      "form": "prose",
      "zone": "body",
-     "section": "The chat itself",
-     "text": "The channel itself is where the club talks — what it is pulling on, what it is arguing about, where and when it is next meeting.",
-     "shape": 0
-    },
-    {
-     "route": "/chat",
-     "form": "heading",
-     "zone": "body",
-     "section": "No summary written this week",
-     "text": "No summary written this week",
+     "section": "What the club is pulling on",
+     "text": "No summary this week.",
      "shape": 0
     },
     {
@@ -2332,7 +2300,7 @@
     "/chat",
     "/"
    ],
-   "verdict": "DECLINED",
+   "verdict": "UNANSWERED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -2375,15 +2343,7 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": [
-    {
-     "route": "/chat",
-     "form": "heading",
-     "zone": "body",
-     "section": "No summary written this week",
-     "text": "No summary written this week"
-    }
-   ]
+   "declinedEvidence": []
   },
   {
    "id": "q21",
@@ -2393,7 +2353,7 @@
     "/dates",
     "/"
    ],
-   "verdict": "ANSWERED",
+   "verdict": "ANSWERED-IN-CHROME",
    "perRoute": {
     "/": {
      "status": "chrome only",
@@ -2423,12 +2383,12 @@
      ]
     },
     "/dates": {
-     "status": "answered",
+     "status": "chrome only",
      "forms": [
       "prose"
      ],
      "zones": [
-      "body"
+      "exit-band"
      ]
     },
     "/join": {
@@ -2464,8 +2424,7 @@
     "/past"
    ],
    "forms": [
-    "prose/exit-band",
-    "prose/body"
+    "prose/exit-band"
    ],
    "outsideRoutes": [
     "/404",
@@ -2495,23 +2454,15 @@
      "route": "/chat",
      "form": "prose",
      "zone": "exit-band",
-     "section": "The chat itself",
+     "section": "What the club is pulling on",
      "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
      "shape": 0
     },
     {
      "route": "/dates",
      "form": "prose",
-     "zone": "body",
-     "section": "Social",
-     "text": "Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.",
-     "shape": 0
-    },
-    {
-     "route": "/dates",
-     "form": "prose",
      "zone": "exit-band",
-     "section": "Social",
+     "section": "Sat, Dec 19 — Social",
      "text": "Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.",
      "shape": 0
     },
@@ -2970,7 +2921,15 @@
      "form": "prose",
      "zone": "body",
      "section": "What we take up",
-     "text": "Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes when the chat changes.",
+     "text": "Threads that are open in the club's chat.",
+     "shape": 1
+    },
+    {
+     "route": "/",
+     "form": "prose",
+     "zone": "body",
+     "section": "What we take up",
+     "text": "Any of them can be dropped mid-sentence, and the list changes when the chat changes.",
      "shape": 1
     },
     {
@@ -2986,7 +2945,7 @@
      "form": "prose",
      "zone": "body",
      "section": "What the club is pulling on",
-     "text": "Any of them can be dropped mid-sentence, and none of them is a prerequisite for arriving.",
+     "text": "Any can be dropped mid-sentence; none is a prerequisite for arriving.",
      "shape": 1
     },
     {
@@ -2994,7 +2953,15 @@
      "form": "prose",
      "zone": "body",
      "section": "Dates",
-     "text": "A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.",
+     "text": "A social is an afternoon around a table, nothing to prepare.",
+     "shape": 2
+    },
+    {
+     "route": "/dates",
+     "form": "prose",
+     "zone": "body",
+     "section": "Dates",
+     "text": "A study session is an evening working side by side.",
      "shape": 2
     },
     {
@@ -3238,9 +3205,9 @@
     {
      "route": "/chat",
      "form": "label",
-     "zone": "body",
-     "section": "The chat itself",
-     "text": "Join the chat on Discord, opens in a new tab",
+     "zone": "exit-band",
+     "section": "What the club is pulling on",
+     "text": "Join on Meetup , opens in a new tab",
      "shape": 0
     }
    ],
@@ -3284,12 +3251,30 @@
    "id": "q20",
    "who": "returning",
    "ask": "What happened at a meeting I missed?",
-   "verdict": "DECLINED",
+   "verdict": "UNANSWERED",
    "where": [
     "/chat",
     "/"
    ],
    "answeredOn": []
+  },
+  {
+   "id": "q21",
+   "who": "returning",
+   "ask": "Am I told when a date moves?",
+   "verdict": "ANSWERED-IN-CHROME",
+   "where": [
+    "/dates",
+    "/"
+   ],
+   "answeredOn": [
+    "/",
+    "/404",
+    "/chat",
+    "/dates",
+    "/join",
+    "/past"
+   ]
   },
   {
    "id": "q25",
@@ -3305,11 +3290,11 @@
  ],
  "counts": {
   "questions": 29,
-  "ANSWERED": 23,
-  "DECLINED": 3,
-  "ANSWERED-IN-CHROME": 0,
+  "ANSWERED": 22,
+  "DECLINED": 2,
+  "ANSWERED-IN-CHROME": 1,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 2,
+  "UNANSWERED": 3,
   "NOT-ASKED": 1
  }
 }
