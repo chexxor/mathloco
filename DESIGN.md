@@ -750,8 +750,12 @@ beside the `audiences` and `styles` vocabularies it draws on - and one gate read
 in `verify` after `build`. It fails a section with no row, a row for a section the build no longer makes, a reader
 or a register nobody declared, one page addressing two readers without saying why, and a copy round that makes
 the sentences carrying no reader-usable fact more numerous than the floor the record keeps. That floor is **4**
-sentences on the built pages carrying no place, time, price, person, platform, thing to carry, or action beside no
-link, @measured 2026-11-19 by `npm run check:copy-contract --print-hollow` (Linux native, Node 24.22.1) - and it is
+sentences on the built pages carrying no place, time, price, person, platform, thing to carry, or action, and **no
+stated year** beside no link - the year alternation landed 2026-11-19 in `FACT_RE` with the author's first-year
+sentence, because "The club's first year was 2019." changes what a reader believes and a detector that calls it
+hollow is a detector that refuses a fact the author supplied (**D449**); a stated year is a fact and a frequency
+word is not, which is **D92**'s own distinction - @measured 2026-11-19 by `npm run check:copy-contract --print-hollow`
+(Linux native, Node 24.22.1) - and it is
 a **floor, not a goal**: rewriting a shipped sentence is an edit to copy, and a re-write that invents a fact is
 D92's defect, so a copy round takes sentences **off** the worklist and the gate fails when the number rises.
 Sentences that are *meant* to be about the surface itself are registered in `hollowRuled`, each with the ruling
@@ -759,8 +763,13 @@ and the reason it stays; an entry whose signature matches no current sentence fa
 round 7's F6 was a needle that never matched its defect and read as a green light that was never a detector.
 Read `.agents/skills/copy-vision/SKILL.md` before editing a shipped sentence - it carries the diagnosis and the
 exercises. The ask that settles the reader is the author's, not the delegate's: `docs/the-authors-vision-2026-11-19.md`,
-five questions in the author's own words, whose slots stay bracketed until the author fills them and whose `status:
-unsent` keeps every row's `settledBy` honest.
+five questions in the author's own words, whose slots stay bracketed until the author fills them. **The author answered
+part of it on 2026-11-19** - question 1 for all five pages, question 2 for `/join` and `/chat`, and the facts under
+question 3 - and those answers landed in the letter's slots beside their date (**D449**), so the rows whose **reader**
+the letter settles now name the letter in `settledBy` while their `goal` and `style` still read a delegate draft.
+`status` stayed `unsent`, because brackets remain (after `/` and after `/dates` in question 2, question 4's three
+sentences, question 5's one sentence) and the gate fails a `sent` letter carrying a bracket - `vision-letter-shipped-while-unfilled`
+is what keeps a half-answer from standing in for the site's vision.
 
 ## Motion
 

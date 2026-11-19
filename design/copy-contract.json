@@ -8,10 +8,10 @@
   "vision": {
     "letter": "docs/the-authors-vision-2026-11-19.md",
     "status": "unsent",
-    "note": "The site's one vision belongs to the author of the club, not to the delegate. The letter exists as a scaffold, and its slots stay bracketed until the author fills them (DESIGN.md's Copy rule: brackets stay until a source exists). The gate fails a letter that calls itself sent while any slot is still bracketed; an unsent letter prints and exits 0, because sending it is the operator's ask, parked with its trigger in PLAN.md §Milestones. Until the letter is sent, every row below carries settledBy naming the delegate as its author, and the rows are a draft the author corrects rather than a vision anyone owns."
+    "note": "The site's one vision belongs to the author of the club, not to the delegate. The letter exists as a scaffold, and its slots stay bracketed until the author fills them (DESIGN.md's Copy rule: brackets stay until a source exists). The gate fails a letter that calls itself sent while any slot is still bracketed; an unsent letter prints and exits 0, because sending it is the operator's ask, parked with its trigger in PLAN.md §Milestones. Until the letter is sent, every row below carries settledBy naming the delegate as its author, and the rows are a draft the author corrects rather than a vision anyone owns. The author answered parts of the letter on 2026-11-19: question 1 for all five pages, question 2 for `/join` and `/chat` only, and most of question 3. Those answers are landed in the letter's slots beside their date, and the rows whose reader the letter settles now say so in `settledBy` instead of reading a blanket draft. `status` stays `unsent` because brackets remain - after `/` and `/dates` in question 2, question 4's three sentences, question 5's one sentence - and the gate fails a `sent` letter with a bracket under it."
   },
   "audiences": {
-    "first-visitor": "a person who has never met the club and is deciding whether to come - the reader the whole site is written for today",
+    "first-visitor": "the author's words, 2026-11-19: 'visitors who have never attended an event' - a person who has never met the club and is deciding whether to come; the author ruled this reader for every page, so no page is written for a member or for a feed subscriber",
     "member": "a person who already comes, checking what happens next",
     "subscriber": "whoever's calendar client or feed reader follows the club's own file",
     "anyone": "chrome and states a stranger and a member both need, written once - a 404, a nav, an exit band"
@@ -32,21 +32,21 @@
           "audience": "first-visitor",
           "goal": "they can name the club, place it in a city, see the next date and the place it is at, and start by signing up for that date or reading the chat",
           "style": "club-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "What we take up",
           "audience": "first-visitor",
           "goal": "they can recognise at least one subject as something they would want to think about, and they know the chat is where a thread lives",
           "style": "club-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "How it works",
           "audience": "first-visitor",
           "goal": "they can decide whether to come: what to carry, what it costs, how many people sit around the table, and where the dates are",
           "style": "invitation",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         }
       ]
     },
@@ -59,7 +59,7 @@
           "audience": "first-visitor",
           "goal": "they can tell which of the two formats is theirs, and they can trust the dates below as read from the club's own calendar rather than typed by the page",
           "style": "data-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         }
       ]
     },
@@ -70,44 +70,44 @@
         {
           "section": "Join the club",
           "audience": "first-visitor",
-          "goal": "they know the page offers doors into the club and that one door is enough to start",
+          "goal": "the author, 2026-11-19: 'they should have a path from this page to a page that is dedicated towards persuading the visitor that joining is a good choice for them' - no such page is emitted today, so this row names a surface the build does not have (a scope call, priced in PLAN.md MS39's row)",
           "style": "club-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "What we do",
           "audience": "first-visitor",
           "goal": "they can tell which room is the one they want, and what a person brings into a study session",
           "style": "club-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "Come to a meeting",
           "audience": "first-visitor",
           "goal": "they can reach the dates page and sign up for a date",
           "style": "invitation",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "Talk with us now",
           "audience": "first-visitor",
           "goal": "they can read the conversation before coming to a meeting, and ask in it if the room is not theirs",
           "style": "invitation",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "Follow the club",
           "audience": "first-visitor",
           "goal": "they can get a date without using Meetup, by following a feed",
           "style": "invitation",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "Your first one",
           "audience": "first-visitor",
           "goal": "they can walk into a meeting with nothing prepared, and they know where to ask if they are unsure",
           "style": "invitation",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         }
       ]
     },
@@ -118,16 +118,16 @@
         {
           "section": "The club’s chat",
           "audience": "first-visitor",
-          "goal": "they can get to the live channel, which is where the club's conversation actually is",
+          "goal": "the author, 2026-11-19, same answer: they leave knowing the club is alive and that real people are behind it - which needs a date and an activity, and the shipped page gives one door and no date",
           "style": "invitation",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader and goal ruled by the operator's letter of 2026-11-19; style still a delegate draft"
         },
         {
           "section": "What the club is pulling on",
           "audience": "first-visitor",
-          "goal": "they can see how wide the club's range is without inferring a schedule or a prerequisite for arriving",
+          "goal": "the author, 2026-11-19: 'an understanding of what the group has chatted about recently, so they can be sure the group is alive recently and still taking actions and that there are real humans active behind the scenes' - what the shipped page gives today is an undated list, so this goal is stated and not yet met",
           "style": "club-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader and goal ruled by the operator's letter of 2026-11-19; style still a delegate draft"
         }
       ]
     },
@@ -140,14 +140,14 @@
           "audience": "first-visitor",
           "goal": "they can tell what this page holds and where the club's finished sessions are written down",
           "style": "state-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
         {
           "section": "No finished date on our calendar",
           "audience": "first-visitor",
           "goal": "they leave the page with a path to the record rather than an empty list",
           "style": "state-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         }
       ]
     },
@@ -160,7 +160,7 @@
           "audience": "anyone",
           "goal": "they get back to a date, the chat, or home, rather than a dead end",
           "style": "state-voice",
-          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         }
       ]
     }

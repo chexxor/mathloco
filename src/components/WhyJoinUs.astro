@@ -55,11 +55,19 @@ const items = threads();
 // which only a slot can do. The review's own copy line carries a literal `[host name]`; a bracket on
 // the page is a hole in our knowledge and `check:content` fails a build that ships one, so the
 // shipped sentence says "the host" (no roster in this tree names one) and the name comes back by
-// editing the value. `pastLine` ships EMPTY for the same reason the operator's 2026-11-03 ruling above
+// editing the value. `pastLine` shipped EMPTY for the same reason the operator's 2026-11-03 ruling above
 // gives: nothing here may sketch the club's past densely enough to let a pattern emerge, and no file
 // in this tree names a first meeting - so the slot is the home for the operator's year, and today it
 // paints nothing (the operator's ruling quoted two paragraphs above holds that emptiness, not a decision
 // we minted here).
+// 2026-11-19: it paints something now. The operator's vision letter (docs/the-authors-vision-2026-11-19.md
+// §3) supplies one fact - "The first year was 2019" - and it lives in that slot, so this section prints it
+// under `hostLine`. What the ruling above forbids is unchanged: one year, one sentence, no dense history a
+// pattern could emerge from, and no derived age ("over seven years of mathematics") which would be a count
+// with no source (D92). A bare year is not a calendar date to `check:dated-surfaces`, whose DATE_TEXT wants
+// a month name or an ISO date, so this adds no date string and the ruled set of dated surfaces is untouched
+// (D449, and the record's own fact lexicon gained a stated year the same day so the sentence is a fact and
+// not worklist).
 const hostLine = value(content.hostLine);
 const pastLine = value(content.pastLine);
 const VISIBLE = 6;

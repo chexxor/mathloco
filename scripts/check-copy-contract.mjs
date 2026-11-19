@@ -118,8 +118,19 @@ function readPages(distRoot) {
 
 /** ---------- the hollow detector: the falsifiable class ---------- */
 
-/** The ratified nouns a reader can act on or believe: time, place, price, platform, thing to carry, action. */
+/** The ratified nouns a reader can act on or believe: time, place, price, platform, thing to carry, action,
+ *  and **a stated year** (four digits, 19xx or 20xx - the alternation is deliberately wider than "about the
+ *  club", because the page is the site's and a year on it is the club's to state).
+ *
+ *  The year alternation landed 2026-11-19 with the operator's first-year sentence (`src/content.json`'s
+ *  `pastLine` = "The club's first year was 2019.", from the vision letter's question 3). Without it the
+ *  detector called that sentence hollow - a reader who learns the club started in 2019 has learned something
+ *  they can use - and the alternative was raising `hollow.count` to carry a sentence the author supplied, which
+ *  is the defect this floor exists to prevent. D92's own words are the reason a year is a fact and a frequency
+ *  word is not: publish series names and real dates.
+ */
 const FACT_RE = new RegExp([
+  '\\b(19|20)\\d{2}\\b',
   '\\b(january|february|march|april|may|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|noon|midnight|morning|evening|afternoon)\\b',
   '\\b\\d{1,2}(:\\d{2})?\\s*(am|pm)\\b',
   '\\b(minneapolis|twin cities|saint paul|coffee shop|coffee|bakery|bakeries|brewery|breweries|cafe|market|table|lounge|chat)\\b',
@@ -426,6 +437,24 @@ function runSelftest(base) {
     const rec = clone(base.record);
     rec.hollowRuled = [...(rec.hollowRuled ?? []), { signature: 'a signature for a sentence that is on no page', ruled: 'the planted exemption, not a real ruling', why: 'planted by the selftest' }];
     plant('an exemption whose needle matches no sentence (hollow-rule-stale)', rec, base.pages, base.letter, ['hollow-rule-stale']);
+  }
+  // 10 - the year control: the lexicon must not refuse a fact the author supplied.
+  //      Planted as a sentence the shape of the shipped one, so a lexicon that drops the year alternation
+  //      fails THIS case as well as the shipped gate.
+  {
+    const pgs = clone(base.pages);
+    const all = () => pgs.flatMap((p) => p.sections.filter((s) => !s.row).map((s) => ({ ...s, route: p.route })));
+    const before = hollow(all(), base.record?.hollowRuled ?? []).hits.length;
+    const target = all().find((s) => s.sentences.length);
+    target.sentences.push({ at: 1e9 + 11, text: 'The club' + "'" + 's first year was 1999.' });
+    const after = hollow(all(), base.record?.hollowRuled ?? []).hits.length;
+    cases.push({
+      name: 'a year-bearing sentence is a fact, not worklist (control)',
+      fired: [`count ${before} -> ${after}`],
+      caught: after === before,
+      want: 'no new finding',
+      sample: `the planted sentence is the shape of the shipped one; a lexicon without the year alternation puts it on the worklist and this case misses`,
+    });
   }
 
   console.log('check:copy-contract:selftest - each planting must produce its named finding; the control must be clean');
