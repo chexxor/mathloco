@@ -183,11 +183,23 @@ const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS
           screen reader and a gate can both read it. `check:row-geometry` fails a row whose date sentence is not
           inside a `<time>`, or whose `datetime` disagrees with `data-date` — semantics that cannot rot back
           into prose. */}
-      <p class="tabular-nums"><time datetime={item.date}><span class="text-label text-ink-3">{formatDate(item.date, 'wide')} · {timeSpan(item)}{zoneWord}</span></time></p>
+      <p class="tabular-nums"><time datetime={item.date}><span class="text-label text-ink-3">{timeSpan(item)}{zoneWord}</span></time></p>
+      {/* Round-8 review (2026-11-18), `/dates` copy line "row headings: date leads": the date moved INTO the
+          heading below, so this sentence stops printing it a second time and carries only the hour and the zone
+          word. The span's class list stays exactly `text-label text-ink-3` — that is the handle `check:row-geometry`
+          anchors on, and the `<time>` still carries the row's own `data-date` value, so the semantics D327 put
+          there survive; only the words the sentence repeats go. D397's zone word stays at the end of it. */}
       {/* h2, not h3 (S040 §7 D8, 2026-11-14): `/schedule` is h1 then rows, so an h3 row title skipped a level,
           which is what `npm run check:outline` now fails the build on. The row is a direct child of the page's
           one heading; there is no section between them to level down to. */}
-      {filled(item.title) && <h2 class="mt-1 text-lede font-bold text-ink font-body">{item.title}</h2>}
+      {/* Round-8 review (2026-11-18), `/dates` Revise: "row headings: date leads. 'Sat, Nov 21 — Social' as the
+          heading; 'Social' becomes a label inside the row. Five headings must be five dates, not two format names."
+          The date leads, generated from the row's own `item.date` through `formatDate(…, 'short')` — never typed,
+          so the heading cannot disagree with the `data-date` handle on the row or with the nav chip. The format
+          word stays inside the heading after the em dash, which is what the letter means by "a label inside the row";
+          the heading now answers "which date" and "what kind" in one breath, and a heading lifted out of the page
+          by a screen reader says which day rather than which format. */}
+      {filled(item.title) && <h2 class="mt-1 text-lede font-bold text-ink font-body">{formatDate(item.date, 'short')} — {item.title}</h2>}
     </div>
     {/* `max-w-measure` (32em) is the MS04 copy-lane fix: uncapped, a row's prose ran the whole lane -
        633px at 1240, ~145 characters of PT Serif - past the 75-character reading band. `data-copy-prose` is

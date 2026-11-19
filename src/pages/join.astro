@@ -87,13 +87,24 @@ const studyShape = value(content.studySessionShape);
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
         Whether the room is your kind of room is not something a page can tell you.
       </p>
+      {/* Round-8 review (2026-11-18), `/join` copy line on line 21: "'The next ones are on the[dates page](/dates).'
+          → 'Next: Sat, Nov 21, noon — [all the dates](/dates).'" — the letter's fix names the date so the pointer
+          becomes the answer. What ships here is the pointer rewritten and NOT the date: `/join` printing a date
+          fails two gates this tree will not contradict — `scripts/check-join-page.mjs`'s rule 1c (`join-date-painted`,
+          "`/dates` is where dates live (D218's page of record…); a join page that repeats one goes stale on its
+          own") and `scripts/check-dated-surfaces.mjs`, whose `RULED` map names `/dates`, `/past` and `/` only, so
+          a fourth date-bearing surface fails `dated-surface-unruled`. Both rules trace to the operator's own
+          `/join` objective ("no page grows a second source of truth for links, dates or claims"), and editing a
+          gate script is outside this item's `src/` fence. So the vague phrase — "the next ones", which makes a
+          reader leave to find out what it names — is what dies, and the sentence now says what the page it points
+          at does. The date the reader wants is on that page, one click away, stated from the same window call.
+          The decline and the ask that would ship it are rows J3 and J4 in the reply doc, and its §8 item 5. */}
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
-        The next ones are on the
-        <a
+        The <a
           href="/dates"
           class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >dates page</a
-        >.
+        > names the next one.
       </p>
     </section>
 
@@ -153,10 +164,20 @@ const studyShape = value(content.studySessionShape);
         Walk in, find a table, buy a coffee if you want one — that is the rent.
       </p>
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
-        Bring nothing. There is nothing to prepare and no reading to keep up with.
+        Bring nothing.
       </p>
+      {/* Round-8 review (2026-11-18), `/join` Remove "delete the second sentence of line 58 ('There is nothing
+          to prepare…'); home already says it." The pair is D344's and D369's registered deliberate duplicate
+          across the two surfaces — the home hero states the reassurance on the surface that says what a meeting
+          is, and this page restated it. Deleting the `/join` half leaves it on the surface that owns it, which is
+          what a duplicate is for. The rule of the room stays: "Bring nothing." is the shortest of the three and
+          the one a reader acts on. */}
+      {/* Round-8 review (2026-11-18), `/join` copy line on line 60: "'Expect nothing.' → 'Nothing is expected
+          of you.'" — the two-word imperative reads as a command barked at a stranger; the sentence that answers
+          "what do I have to do" is the one with a subject in it. The clause after it is the letter's Keep of the
+          same row and stays byte for byte. */}
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
-        Expect nothing. People work on what they brought, and nobody sets an agenda.
+        Nothing is expected of you. People work on what they brought, and nobody sets an agenda.
       </p>
 
       {/* C1+C2 · q05 and q10 (round-5 communication read, 2026-11-16, D376/D377): the two club-claim gaps, in
@@ -170,7 +191,7 @@ const studyShape = value(content.studySessionShape);
           page's other refusals — the phone line and the directions words — because this section is "Your first one",
           which is where a reader who has already decided to come asks what they still have to do; the read preferred
           a clause on the "Come to a meeting" rows, but that clause is the resolver's (`JOIN_KIND_COPY` and
-          `joinChannels()`), it is text-pinned by `check:join-page`'s `join-gives-mismatch` rule, and a refusal inside
+          `joinChannels()`), it is text-pinned by `check:join`'s `join-gives-mismatch` rule, and a refusal inside
           a row would compete with D342's one way out. 0 boxes, no link, no URL, so `check:join`, `check:ext-links`
           and the sprite's platform set stay as measured. */}
       {/* Round-6 review, `/join`/Add (week item 1, D381): the cost line and the membership line, in one

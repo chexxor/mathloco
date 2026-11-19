@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.svelte';
 import Footer from '../components/Footer.astro';
 import ThreadFigure from '../components/ThreadFigure.astro';
-import { threads } from '../lib/content.ts';
+import { threads, countWord } from '../lib/content.ts';
 import config from '../config.json';
 import { PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
@@ -46,7 +46,12 @@ const items = threads();
     <h1 class="text-display-1 font-extrabold text-ink mb-4">
       The club’s chat
     </h1>
-    <p class="text-label uppercase tracking-wide text-ink-3 mb-8">The live channel, the threads worth reading, and the dates the club set</p>
+    {/* Round-8 review (2026-11-18), `/chat`/Revise: "Lede promises 'the dates the club set' — the page
+        contains no dates. Delete those four words, or add the two upcoming dates." The four words are deleted
+        rather than the dates added: `/chat` is not the page of record for dates, and D218 keeps dates on the
+        surfaces its `RULED` map names, so a fourth date-bearing surface is the defect `check-dated-surfaces`
+        exists to catch. The subtitle now names the two things this page does hold. */}
+    <p class="text-label uppercase tracking-wide text-ink-3 mb-8">The live channel, and the threads worth reading</p>
 
     {/* A3 (round-5 communication read, 2026-11-16, D367): the page's ONE way out used to sit 1,720px down at
         1240 and y=2,075 at 390 — a phone visitor scrolled two screens of prose before reaching the only action
@@ -72,11 +77,15 @@ const items = threads();
       </a>
     </div>
 
-    <!-- `visible`, not `load`: the summary block is below the fold on phones, and this island
+    {/* `visible`, not `load`: the summary block is below the fold on phones, and this island
          drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the
          server-rendered heading and the "Join the chat" CTA interactive immediately and skips
-         the API fetch entirely for visitors who never scroll to it. -->
-    <DiscordSummary client:visible discordUrl={DISCORD_URL} />
+         the API fetch entirely for visitors who never scroll to it.
+         Round-8 review (2026-11-18), `/chat`/Revise "move 'No summary written this week' to the end… a
+        scanner's first impression is that nothing is here": the island moves BELOW the thread list, so the
+        page's first screen carries the list the visitor can act on and the bot's section — the only part
+        that can be empty — is last, one quiet line above the band. Nothing about the island itself changed:
+        same component, same `visible` hydration, same states. */}
 
     {/* The threads, in full (S042). `id="threads"` is the anchor the home page's "the rest of the list ->"
         link points at; a link that lands on a page with no list is the D273 defect class, so the anchor and
@@ -98,9 +107,8 @@ const items = threads();
             No count is written here: `check:threads` reads the cap out of `WhyJoinUs.astro`'s `const VISIBLE`,
             and a second cap in this file would be a copy of a rule with two homes (D320). */}
         <p class="text-lede leading-prose text-ink-2 mb-6 font-body">
-          Every thread on the list, each with what the club says it is, and the club's own drawing of one of
-          them underneath. Any of them can be dropped mid-sentence, and none of them is a prerequisite for
-          arriving.
+          {countWord(items.length)} threads the club is pulling on. Any can be dropped mid-sentence; none is a
+          prerequisite for arriving.
         </p>
         <ul class="grid grid-cols-1 gap-x-8 md:grid-cols-2">
           {items.map(({ label, gloss }) => (
@@ -114,36 +122,17 @@ const items = threads();
       </section>
     )}
 
-    <div class="mt-16 bg-panel rounded-card p-8">
-      <div class="text-center">
-        <h2 class="text-heading font-bold text-ink mb-4">The chat itself</h2>
-        <p class="text-lede leading-prose text-ink-2 mb-6 max-w-measure mx-auto">
-          {/* Round-6 review's own residue (2026-11-16, D414): this sentence used to open by claiming that
-              summaries sit above. D409 replaced the heading over a void with a warm state that says there is
-              none written this week, so the claim went false in the same round that changed what sits above
-              it — the class D387 polices, the site talking about itself where a reader is deciding whether
-              to join a channel. The clause is deleted rather than reworded, because the server-rendered
-              branch cannot know whether a summary exists and a hedge would be the site describing its own
-              uncertainty. The two clauses that survive are facts this page shows. */}
-          The channel itself is where the club talks — what it is pulling on, what it is arguing about,
-          where and when it is next meeting.
-        </p>
-        {/* Round-7 communication review (2026-11-18), `/chat`/Remove "Two of the three Discord invites — Two
-            identical buttons, no choice made by the reader (Hick's law), same destination", and its copy line
-            "keep one Discord button, not two" (D437): **this control is the one deleted**, and its lede's clause
-            "The invite is the button below." goes with it — it named a button that no longer exists, which is the
-            same residue D414 deleted in the line above rather than rewording around it.
-            The survivor is the fold secondary above, and that choice is ruled, not arbitrary: deleting that one
-            instead would return `/chat` to D367's measured defect — the page's ONE way out sitting 1,720px down at
-            1240 and at y=2,075 at 390, which the read called the worst communication defect on the artifact. So
-            the button stays in the first screen, and the card keeps its words without a second box: DESIGN.md's
-            "A control names its role in the markup" says a block gets its second way out as an in-sentence path,
-            not as a second button, and the band below already names the same exit as the site's map (D115).
-            What the page paints now is **one pressable Discord control** (the fold secondary) and one band link to
-            the same destination, so the count `check:rsvp-page` prints as absolute URLs outside the band moves from
-            2 to 1 on `/chat`, against the ratified ceiling of 6 (D358). Nothing here adds an anchor or a URL. */}
-      </div>
-    </div>
+    {/* Round-8 review (2026-11-18), `/chat`/Revise: "'The channel is the live thing' appears three times…
+        Cut lines 37-40 entirely — 'The chat itself' says nothing the first two didn't." The section is deleted,
+        not reworded, and with it goes the sentence that was this page talking about itself.
+        What the deletions in this card were for, kept so the next read does not re-derive it: D414 deleted a
+        clause that claimed summaries sat above, D437 deleted the card's own Discord control rather than the
+        fold secondary (deleting that one instead would return `/chat` to D367's measured defect — the page's
+        one way out 1,720px down at 1240 and at y=2,075 at 390), and both left `/chat` painting ONE pressable
+        Discord control plus the band's link, which is the count `check:rsvp-page` prints as 1 outside the band
+        against the ceiling of 6 D358 ratified. Deleting the card moves no anchor and adds no URL. */}
+
+    <DiscordSummary client:visible discordUrl={DISCORD_URL} />
   </main>
   {/* Every page the build emits closes with the exit band (D115, enforced by check:page-exit). This page has
      one island and one CTA; without the band a visitor who arrives here from a shared link has the nav above

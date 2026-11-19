@@ -558,7 +558,12 @@ export const CHANNEL_KINDS = ['rsvp', 'chat', 'social'];
 export const JOIN_KIND_COPY = {
   social: {
     heading: 'Follow the club',
-    line: 'A feed you already read, where the club can put a date.',
+    // Round-8 review (2026-11-18), `/join`/Revise line 44: "A feed you already read, where the club can put
+    // a date." → "Two feeds, if you’d rather not use Meetup." The old line assumed the reader had already
+    // read a feed, which reads as a shrug; the new one names the choice the reader has. The count is the
+    // two `social` rows this module paints (Meetup’s group and Facebook’s group), and the noun is `feeds`,
+    // not a headcount noun, so D406’s tally rule has nothing to flag (D265 stays where it is).
+    line: 'Two feeds, if you’d rather not use Meetup.',
   },
   rsvp: {
     heading: 'Come to a meeting',
@@ -602,7 +607,14 @@ export const joinChannels = (urls = {}) => {
       external: true,
       label: 'Join the Meetup group',
       // srOnly is derived below, not written here: one derivation, so no row can carry a hand-typed suffix
-      gives: "The club's member list, and where a date gets announced.",
+      // Round-8 review (2026-11-18), `/join`/Revise line 48: "The club's member list, and where a date gets
+      // announced." → "Where the club announces dates, and keeps the RSVP list." The old clause led on the
+      // member list, which made `/join` contradict home's "Free. No membership needed" — a visitor reading
+      // both inferred a membership after all (the letter's Frame consistency row). Leading on the announcement
+      // keeps both claims true at once. `check:join` compares this clause with the painted bytes byte for byte,
+      // so the clause and the page it describes change in one edit; the source behind each half is unchanged
+      // (the group is the club's list of members, and a date gets announced on it — `src/content.json` membership).
+      gives: 'Where the club announces dates, and keeps the RSVP list.',
     },
     {
       kind: 'social',

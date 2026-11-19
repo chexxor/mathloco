@@ -243,7 +243,16 @@ const copied = copiedOn();
 // probe handle (design/grill/round14-options.mjs selects the section by this exact attribute), and the rule
 // for a probe handle is that it does not follow the copy.
 const headingId = 'when-we-meet';
-const Heading = compact ? 'h2' : 'h1';
+// The heading this component owns is now the **page's own** heading only. Round-8 review (2026-11-18),
+// Home copy line: "delete the H2 'When we meet' OR move line 7-9 under it. Do not leave a 'when' heading
+// with no when in it." The operator's answer is the first option — delete the heading and the promise under
+// it, and keep `/` date-free in the band — so the compact width renders no heading of its own here: a
+// heading whose section prints no date is a "when" heading with no when in it (D306 took the date out of
+// this band on 2026-11-14, and D340 put the one stated date in the hero). The band's section keeps its
+// accessible name, because the card under it now carries `id={headingId}` on its own heading, and every
+// probe handle that selects this section by `section[aria-labelledby="when-we-meet"]` still resolves —
+// a handle does not follow the copy (D173), and the id stays `when-we-meet` for the same reason.
+const Heading = 'h1';
 // 2026-11-14 (S040, second design read §1): the eyebrow is gone from both surfaces. `check:naming` (D309) used
 // to require the nav's word in the opening block, and the eyebrow was how this section satisfied it - the h1
 // keeps its voice ("When We Meet") and the eyebrow carried the name. Two things changed: the read's rule is that
@@ -257,7 +266,7 @@ const Heading = compact ? 'h2' : 'h1';
 // is exactly the alias defect `check:naming` was built for (D309). The name goes on the page that is the page;
 // the voice goes to the homepage band, where a section heading is prose rather than a page name. The order also
 // removes the collision the read spotted: a section on `/` can no longer wear `/schedule`'s h1 as its own h2.
-const headingText = compact ? 'When we meet' : 'Dates';
+const headingText = 'Dates';
 // The compact lede used to be the join band's sentence, kept verbatim when the bands merged (D228): "One place to
 // say you are coming, one place to argue. Neither takes a commitment, and one evening is enough to tell whether
 // this is your kind of room." The operator asked for the join copy rewritten (2026-11-07), and the clause that did
@@ -304,7 +313,14 @@ const rhythm = rhythmSentence(snapshot.events);
 // built file, so one definition on each of two pages is not a defect the gate has to be talked into accepting.
 // No cadence word here (`src/lib/cadence.mjs`), and no claim past what the row titles and the feed's own
 // DESCRIPTIONs already carry (D92).
-const kindDefinitions = 'A social is an afternoon around a table, with nothing to prepare; a study session is an evening working side by side.';
+// Round-8 review (2026-11-18), `/dates` copy line: the lede's one long paragraph becomes three short ones,
+// and the two formats get their own sentences — "A social is an afternoon around a table, nothing to prepare.
+// A study session is an evening working side by side." The semicolon that chained them into one 22-word
+// sentence is the thing being deleted; the words are `src/lib/event-groups.mjs`'s two series names kept as
+// they are, and the two clauses are `join.astro`'s own definitions shortened (D405), so neither page invents
+// a format. `check:content`'s near-duplicate rule is per built file, so the definition living on each of two
+// pages is not a defect the gate has to be talked into accepting.
+const kindDefinitions = 'A social is an afternoon around a table, nothing to prepare. A study session is an evening working side by side.';
 const lede = compact
   // 2026-11-15 (D340, round-4 §5): the sentence that used to live here — "The next date, where the club meets,
   // and where to sign up for it are all on the schedule." — is DELETED, not reworded. A page that says where the
@@ -340,7 +356,12 @@ const lede = compact
           `list` out of that syntax and reports it as a class that generates no CSS, so the assembled form
           buys a false failure. A conditional template string keeps every token literal in the source the
           gate reads. */}
-      <Heading id={headingId} class={`font-extrabold text-ink ${compact ? 'text-heading' : 'text-display-1'}`}>{headingText}</Heading>
+      {/* Full width only: `/dates` is the page that prints dates, so it opens with its own name. The compact
+          width's heading is deleted (see the note on `Heading` above); the compact card below carries the
+          `when-we-meet` id so the section still names itself. */}
+      {!compact && (
+        <Heading id={headingId} class="font-extrabold text-ink text-display-1">{headingText}</Heading>
+      )}
       {/* D340 (2026-11-15): the compact band has no lede while it has rows, so the paragraph is conditional —
           an empty <p> under a heading is a hole the reader pays for and `check:render` would measure. */}
       {lede && <p class={`mt-4 leading-prose text-ink-2 font-body max-w-measure mx-auto ${compact ? 'text-lede' : 'text-body'}`}>{lede}</p>}
@@ -452,7 +473,11 @@ const lede = compact
           <div class="mt-2 bg-panel rounded-card p-6 sm:p-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
-                <h3 class="text-subhead font-semibold text-ink">How it works</h3>
+                {/* Round-8 review (2026-11-18), Home: with the band's "When we meet" deleted, this is the
+                    heading the compact section opens under, so it takes the section's probe id and the level
+                    the ladder needs (an h3 with no h2 above it would skip a level, which `check:outline`
+                    fails). Its classes are unchanged: this is a level and an id, not a restyle. */}
+                <h2 id={headingId} class="text-subhead font-semibold text-ink">How it works</h2>
                 {/* Round-6 review (2026-11-16), Home/Revise + "what to do this week" item 4 (D388): this heading
                     spent itself on the website's data policy - 15 venues, the roster's age, no map pin - which is
                     the material the reviewer called "written for an auditor, not for a visitor". What ships here is
@@ -508,7 +533,12 @@ const lede = compact
                   {win.hiddenHorizon + win.hiddenCap > 0 ? `Next ${win.shown.length} dates` : `All dates`} <span aria-hidden="true">→</span>
                 </a>
               )}
-              <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+              {/* MS36 (D444): the calendar path's own hue, as on `SignUpLinks.astro`'s anchor — `text-path-calendar`
+                  replaces `text-ink` here so the two "Add to a calendar" anchors on this page carry the one
+                  reserved hue for the one route it was reserved for (`/events.ics`, global.css:102). On `paper`, on
+                  both anchors: this row stands below the tinted card, on the page's own ground, which is also why
+                  D149-3c's straddle never applies to it. Hover stays the stated `hover:text-accent`. */}
+              <a href="/events.ics" class="text-label font-medium text-path-calendar underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                 Add to a calendar <span aria-hidden="true">→</span>
               </a>
             </div>

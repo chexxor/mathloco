@@ -159,12 +159,25 @@ const discordAge = snapshotAgeDays(discordSnapshot);
   />
   {/* The calendar file, in the standing row rather than in a second paragraph below it: one path to one file,
       and the sentence under it is about that path. `check:dated-surfaces` and `check:ics` own the bytes of
-      the file itself; this is only the way to it. */}
-  <a href="/events.ics" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add to a calendar</a>
+      the file itself; this is only the way to it.
+      MS36 (D444): this anchor wears the calendar path's hue — `text-path-calendar` instead of `text-ink` — so
+      the hue that round 2 reserved for "our own /events.ics" (global.css:102) is now painted where that file is,
+      which is the one thing the token was reserved for and which nothing shipped until now. The pair is an
+      asserted pair, not a hope: `path-calendar on paper` is a row in design/grill/palette-remap.mjs's PAIRS and
+      `npm run check:contrast` measures it (4.90, over the 4.5 text bar) on every run. The hover stays the
+      stated `hover:text-accent` this anchor already carried — 5.77 on paper, the same pair as the page's other
+      quiet links — so the hue carries which path this is at rest, and the hover stays the one motion-colour
+      rule the whole page uses. */}
+  <a href="/events.ics" class="text-label font-medium text-path-calendar underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add to a calendar</a>
 </div>
-<p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
-  Google, Apple and Outlook can all follow that link, and it changes when the club changes a date.
-</p>
+{/* Round-8 review (2026-11-18), `/dates` Remove "delete line 95 (repeated explanation)": this sentence and the
+    band's copy beside it are the same explanation on one page twice. `check:page-exit`'s rule D407 keeps the
+    band's copy (the band must not repeat what the page's own nav carries, and the band is standing chrome on
+    every emitted page, D115), so the body's copy is the half that goes — deleting the band's instead is the other
+    defect, and `check-notice`/`check:page-exit` would then read a band with fewer paths out. Nothing about the
+    calendar file is lost here: the path is the link above, its words say what it is, and `/events.ics`'s own bytes
+    carry the format claim (`check:ics`'s rules own that file). No anchor is removed, so the page's outbound count
+    and the ratified 6-anchor ceiling do not move (`node design/link-ceiling.mjs` prints it). */}
 
 <!-- One standing row per page, and one island per standing row. The cluster itself lives in
   `src/components/SignUpLinksCluster.svelte` (S022, D281): this file decides *what* the standing row offers,

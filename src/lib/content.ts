@@ -126,6 +126,19 @@ export type Content = {
    * room does), so deleting one does not silently orphan the other.
    */
   studySessionShape: Slot;
+  /**
+   * Who a visitor asks for at the table (round-8 review, Home/Add "one sentence naming a human").
+   * The sentence the review wrote names a **host name** this tree has no record of, so the shipped
+   * value says "the host" rather than inventing one; the name itself comes back by editing this
+   * value, which is why D415 makes it a slot and not markup (D444).
+   */
+  hostLine: Slot;
+  /**
+   * How long the club has been meeting (round-8 review, Home/Add "one sentence of past"). Nothing
+   * in this tree records a first meeting, so the slot ships **empty** and paints nothing: the row
+   * is a home for the operator's year, not a fact a seat may fill in (D444).
+   */
+  pastLine: Slot;
   photos: { placeholders: boolean };
 };
 
@@ -181,6 +194,14 @@ export const threads = (): { label: string; gloss: string | null }[] =>
   (Array.isArray(content.threads?.items) ? content.threads.items : [])
     .filter((t) => typeof t?.value === 'string' && t.value !== '')
     .map((t) => ({ label: t.value, gloss: typeof t.gloss === 'string' && t.gloss !== '' ? t.gloss : null }));
+
+/** A list counted in words, capitalised to open a sentence — the round-8 review's "Nine threads the club is
+ *  pulling on." The count is read out of `threads()` at the call site rather than typed into markup, so the
+ *  sentence cannot disagree with the list under it (D320's one home per rule; `check:threads` fails a `/chat`
+ *  that does not carry the list home promises). A spelled count is also the form `check:rsvp-page`'s tally rule
+ *  reads, and the noun here is `threads`, not a headcount noun, so nothing painted is a headcount. */
+export const countWord = (n: number): string =>
+  (['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'])[n] ?? String(n);
 
 /**
  * The answers, in reading order, to the two questions a stranger asks before they decide whether to come:

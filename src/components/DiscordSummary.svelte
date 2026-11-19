@@ -129,10 +129,18 @@
       role="status"
       aria-live="polite"
     >
-      <h2 class="text-lede font-bold text-ink font-body">No summary written this week</h2>
       <p class="text-body leading-prose text-ink-2 font-body">
-        The channel is the live thing, and the button above goes to it. Our bot writes this section from
-        recent channel activity, after the noise settles.
+        <!-- Round-8 review (2026-11-18), `/chat`/Revise: "move 'No summary written this week' to the end, as one
+            line, no heading: 'No summary this week. The channel is the live thing.'" The heading over the void is
+            gone — this state is one body line, in the reviewer's own words — and the island now sits below the
+            thread list, so the note is the last thing before the band (D409's defect, one step further: the void
+            was the page's #2 heading and its first impression). The box keeps its notice grammar and its live
+            region because DESIGN.md's "A painted notice is announced" and MS35's `check:notice-announcement` read
+            that role, and `check:render` styles the box from it: quiet here means no heading and no ring of
+            emphasis beyond the one boundary, not an unannounced state. The sentence that says how the section is
+            made is the round's Keep row, kept byte for byte. -->
+        No summary this week. The channel is the live thing. Our bot writes this section from recent channel
+        activity, after the noise settles.
       </p>
     </div>
   {:else if phase === 'failed'}

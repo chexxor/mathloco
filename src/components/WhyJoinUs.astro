@@ -1,6 +1,6 @@
 ---
 import config from '../config.json';
-import { threads } from '../lib/content.ts';
+import { content, threads, value } from '../lib/content.ts';
 import { PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
 
@@ -49,6 +49,19 @@ const items = threads();
  * already the ruled one: DESIGN.md rules 8px row padding and 16px between rows (R6, D214), which is what
  * `py-2` on each `li` produces.
  */
+// Round-8 review (2026-11-18), Home/Add "one sentence naming a human" and "one sentence of past".
+// Both come from `src/content.json` and not from markup: they are claims about the club, and D415's
+// rule is that a claim whose source is a grant ships with `asOf` and a `correction` path attached,
+// which only a slot can do. The review's own copy line carries a literal `[host name]`; a bracket on
+// the page is a hole in our knowledge and `check:content` fails a build that ships one, so the
+// shipped sentence says "the host" (no roster in this tree names one) and the name comes back by
+// editing the value. `pastLine` ships EMPTY for the same reason the operator's 2026-11-03 ruling above
+// gives: nothing here may sketch the club's past densely enough to let a pattern emerge, and no file
+// in this tree names a first meeting - so the slot is the home for the operator's year, and today it
+// paints nothing (the operator's ruling quoted two paragraphs above holds that emptiness, not a decision
+// we minted here).
+const hostLine = value(content.hostLine);
+const pastLine = value(content.pastLine);
 const VISIBLE = 6;
 const shown = items.slice(0, VISIBLE);
 const rest = items.length - shown.length;
@@ -84,8 +97,12 @@ const rest = items.length - shown.length;
           prerequisite for arriving" - is a reassurance, not a provenance, and it moves to /join's "Your first one".
           §8 forbids cutting it, so it travels rather than evaporates; what stays here is what the list's own
           source is, which is the half D92 needs. The protected room line at the bottom of this band is untouched. */}
+      {/* Round-8 review (2026-11-18), the same Home/Revise row that asks for the lede split: this round prices
+          the item as a number, so `/`'s longest sentence of its own prose must land under 20 words. This line
+          opened at 23. The colon becomes a full stop; no word is added, moved or re-inflected, and the provenance
+          D92 needs (where the list comes from) is still the sentence a reader meets first. */}
       <p class="mt-4 text-lede leading-prose text-ink-2 font-body">
-        Threads that are open in the club's chat: any of them can be dropped mid-sentence, and the list changes
+        Threads that are open in the club's chat. Any of them can be dropped mid-sentence, and the list changes
         when the chat changes.
       </p>
     </div>
@@ -125,6 +142,15 @@ const rest = items.length - shown.length;
             the rest of the list <span aria-hidden="true">→</span>
           </a>
         </p>
+      )}
+      {/* Round-8 review, Home/Add: the two sentences the review asked for after the list, both from
+          slots above. They sit after the pointer, not before it, so the list and its rest-link stay
+          one node (S042) and what a reader meets last is a human, not another exit. */}
+      {hostLine && (
+        <p class="mt-4 max-w-measure text-body leading-prose text-ink-2 font-body">{hostLine}</p>
+      )}
+      {pastLine && (
+        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{pastLine}</p>
       )}
       </>
     )}

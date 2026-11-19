@@ -447,5 +447,8 @@ and a renumber silently re-points every one of them at a different decision.
 - **D441** (2026-11-18) — 2026-11-18: the mandated reduced-motion guard ships in `src/styles/global.css` in the same commit as its gate, selecting `*` and carrying `!important`
 - **D442** (2026-11-18) — 2026-11-18: a painted notice may announce itself by its own first heading, so the announcement rule is a region OR a title, not a region only
 - **D443** (2026-11-18) — 2026-11-18: the gate-cost baseline is re-frozen under a 8.2 → 14.2/16cpu load with `--force`, because the step set grew and the honest window is not available here
+- **D444** (2026-11-19) — 2026-11-19: a `@theme` token travels when the ARTIFACT says so, not when the built sheet does — and GAP §2 rank 10 lands as `check:token-usage` with a written reservation record beside it
+- **D445** (2026-11-19) — 2026-11-19: a dead-utility exemption is only worth its reason, so `check:css-utilities` gains exactly one hard failure and the exemption file gains a `reasons` map beside the names
+- **D446** (2026-11-19) — 2026-11-19: a copy letter is worked by an instrument that prices **every line item as a hit or a count**, and the reply that answers it is checked **against that instrument** (round-8 communication review, the round's own census + `docs/reply-to-the-communication-review-round-8-2026-11-18.md`, 2026-11-19; `reversible` — one instrument, two tracked docs, copy in five components and one slot file; no ceiling moved, no route cut, no gate rule edited, no id reused; Linux native, Node 24.22.1)
 
-Defined: 439 (D1-D443). Unused ids: D315, D400, D401, D402.
+Defined: 442 (D1-D446). Unused ids: D315, D400, D401, D402.

@@ -31,6 +31,11 @@ const FILES = [
   // inside a blockquote, which this auditor does not read, so the pair audits the reply's tables only.
   'docs/communication-review-round-7-2026-11-18.md',
   'docs/reply-to-the-communication-review-round-7-2026-11-18.md',
+  // Round 8, same rule: the letter's tables sit inside a blockquote (every line starts `>`), which this
+  // auditor does not read, so the pair audits the reply's inventory and claims ledger only — 53 inventory
+  // rows and 8 ledger rows whose ids `node design/review-round-8-census.mjs --reply` also counts.
+  'docs/communication-review-round-8-2026-11-18.md',
+  'docs/reply-to-the-communication-review-round-8-2026-11-18.md',
 ];
 
 // Split a row on unescaped pipes only. `split('|')` on a cell containing `\|` invents a column.
