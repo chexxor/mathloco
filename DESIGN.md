@@ -1,7 +1,9 @@
 # Design System
 
 Ratified 2026-11-01 (`design-ratify`, phase 3). Decisions with their reasoning: `.notes/DECISIONS.md`
-D82–D109 and `design/records/`. Machine record: `design/decisions.json` (42 keys). Every ratio below
+D82–D109 and `design/records/`. Machine record: `design/decisions.json` (61 keys, @measured 2026-11-18 by
+`design/decisions.json` — the count its own top-level keys; the file has grown since the ratify, so a session that
+re-reads it gets a bigger number and that is the truth, not a drift). Every ratio below
 was read back out of the Firefox renderer (`design/grill/contrast-oracle.mjs`), not computed from the
 oklch by hand — where the two disagree, the renderer won and the older number is corrected in
 `design/grill/contrast/gen-ratify-cfg.mjs`'s header.
@@ -343,7 +345,7 @@ owns one primary.
 | primary | `ink` fill, `band-text` label, 48px | 16.43, hover 7.83 |
 | secondary | `paper` fill, `inset-shadow-rule`, `ink` label, **48px** (D139 — same height as primary; the difference is the fill), hover fill `tint`, and **on `paper` only** — a ringed control inside a tinted card straddles two grounds (D149-3c) | 17.15 label, 3.66 ring, 14.53 hover |
 | quiet | `accent` label, 32px standalone; **no keyline inside a notice** | 5.77 |
-| chip | its own component, not a button: `ink-2` label on `path-*-tint`, `inset-shadow-path-*`, 24px | 5.95–6.09 label, 3.18–3.25 edge |
+| chip | **reserved, not shipped** — nothing on any page is a chip. What the join paths carry their hue in is the **word** (`text-path-calendar` on the two "Add to a calendar" anchors, `text-path-meetup-on-ink` and `text-path-discord-on-ink` on the band); the only surface called a chip is the nav date chip, `src/components/Navigation.astro:135`, which is `class="hidden xs:inline text-label text-ink-3 tabular-nums"` — sr-only hidden text with a date in it, so it has **no ground, no keyline and no 24px box**: it is the label an assistive tech reads, not this construction. The `ink-2` label on `path-*-tint` with an `inset-shadow-path-*` ring at 24px stays **defined and reserved** (MS36, D444): `node scripts/check-token-usage.mjs` reports the four tints and the four path keylines as `reserved`, with 0 class writes for any of them @measured 2026-11-18 by `node scripts/check-token-usage.mjs`, and `git log --all -S 'inset-shadow-path-'` returns only the token block and the round that wrote it, so the ring has never shipped. It stays in the token file because the machinery it needs is derived, not chosen: the track is a hue at 93% lightness flat against paper on purpose (1.12–1.15 vs paper, under the 1.35 layer bar, so a track is never the only cue), and the keyline is an inset shadow because a border adds 2px and silently breaks the control-height arithmetic (D98). A chip inside a tinted card would also straddle two grounds (D149-3c) — the placement is priced in its own round, never assumed. | 5.95–6.09 label, 3.18–3.25 edge (token pairs the palette solved; no page paints them yet) |
 
 Every number in that table is a token pair, @measured 2026-11-14 by `node design/grill/palette-remap.mjs` — the
 same table `npm run check:contrast` prints, and the same one the gate fails on.

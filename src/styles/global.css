@@ -2,7 +2,8 @@
 @plugin "@tailwindcss/typography";
 
 /* Design tokens — ratified 2026-11-01 by `design-ratify` (phase 3 of the design-system pipeline).
-   Machine record: design/decisions.json (34 keys) + design/state.json. Measured numbers:
+   Machine record: design/decisions.json (61 keys @measured 2026-11-18 by design/decisions.json — its own
+   top-level key count) + design/state.json. Measured numbers:
    design/grill/contrast/out/*.txt — every ratio below was read back out of the Firefox renderer,
    not computed from the oklch by hand (design/grill/contrast-oracle.mjs). Rules and "never" lines:
    DESIGN.md at the repo root. Expensive-to-reverse reasoning: design/records/.
@@ -99,7 +100,9 @@ button:focus-visible {
      mobilizon's olive (105) is now 24 degrees from the ink — a tint of the ink, not a channel — and
      discord's orange (35) is the accent's hue exactly. Discord takes its own brand's blue (262), which
      is 134 degrees from the accent and 57 from the calendar. `check:contrast` prints every gap. ---- */
-  --color-path-calendar: oklch(51% 0.11 205);  /* #007784 — 4.90 — our own /events.ics */
+  --color-path-calendar: oklch(51% 0.11 205);  /* #007784 — 4.90 on paper — OUR OWN /events.ics: painted by
+      `text-path-calendar` on both "Add to a calendar" anchors (src/components/Schedule.astro, src/components/SignUpLinks.astro,
+      MS36 D444), so the hue round 2 reserved for this route now marks the route it was reserved for. */
   --color-path-meetup: oklch(49% 0.15 315);    /* #7f409a — 6.27 */
   --color-path-discord: oklch(52% 0.15 262);   /* #3664be — 5.23 */
   --color-path-mobilizon: oklch(51% 0.11 145); /* #38763c — 5.09 */
