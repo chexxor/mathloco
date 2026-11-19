@@ -737,10 +737,18 @@ is enforced by a gate that reads rendered text (`npm run check:escapes`), not by
 
 **Name a gap the site cannot fill, in the open** (round-5 communication read A4, D368): the page says so in
 its own words — "There is no syllabus, no reading list to keep up with, and no current focus." on `/`,
-"…is not something a page can tell you." on `/`, "The club has no front desk and no phone number; the chat
-is where you ask." on `/join`. A gap the reader can see and a gap the page does not know it has are **different
-defects**, and only the second is worth finding; `node design/visitor-questions.mjs` keeps them apart as
-DECLINED vs UNANSWERED (3 declined in the open, 7 unanswered @measured 2026-11-16 by that probe). Refusing is
+"Whether the room is your kind of room is not something a page can tell you." on `/join` @measured 2026-11-19
+by `grep -rl "not something a page can tell you" dist/client` (which prints `dist/client/join/index.html`
+only — this paragraph used to cite that sentence on `/`, where it has never printed). A gap the reader can see
+and a gap the page does not know it has are **different defects**, and only the second is worth finding;
+`node design/visitor-questions.mjs` keeps them apart as DECLINED vs UNANSWERED — **6 gaps today: 2 DECLINED in
+the open, 3 UNANSWERED, 1 answered only in chrome** @measured 2026-11-19 by that probe (Linux native, Node
+24.22.1). It printed 3 declined and 7 unanswered on 2026-11-16, and the difference is instructive rather than
+arithmetic: the round-6 review took the front-desk sentence off `/join` (D393), and that sentence is the only
+string the probe's `declinedBy` pattern for q13 matches (`no front desk|no phone number|nothing to call|no
+phone line`), so **q13 is UNANSWERED today** — deleting a refusal does not close a question, it only removes the
+page's way of saying it cannot answer. The mailto that would answer it is declined with evidence
+(D403: no MX record on either zone) and un-parks when the operator provisions Email Routing on the zone (S058). Refusing is
 never a substitute for a source: an ungrounded contact, price or room description would be a claim (D92).
 
 **Every section of a page is a function of three inputs** (**S074**, **D448**): the **reader** it is written
