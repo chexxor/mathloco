@@ -58,7 +58,13 @@ each of those and requires a named failure. Both are in `verify`.
    - anything visual - colour, spacing, type, icons, motion, empty states → `design-system/SKILL.md`
      (it sequences design-extract -> grill -> ratify -> apply -> enforce); `beautify`,
      `apply-transitions`, `choose-icons`, `empty-states` are the smaller follow-ons
-   - before merging anything → `code-review-and-quality/SKILL.md`
+   - before writing or editing **any shipped sentence** - who a page is written for, what a reader can do
+    after it, whether it reads as the club's own voice → `copy-vision/SKILL.md` - one record, `design/copy-contract.json`,
+    holds one row per body section of every built page carrying its **reader**, what that reader can **do or
+    believe** after it, and its **register**; `npm run check:copy-contract` fails a section with no row, a row
+    for a section the build no longer makes, a reader or register nobody declared, one page addressing two readers
+    in one voice, and a copy round that makes the sentences carrying no reader-usable fact **more** numerous
+  - before merging anything → `code-review-and-quality/SKILL.md`
    - at the start of a session → `resume-checkin/SKILL.md` - one command prints branch, HEAD, dirty paths,
      the active milestone row, the gate list and whether the last gate run predates the commit you are on
    - before adding a check to `verify` → `add-a-gate/SKILL.md` - a gate not in `scripts/gate-run.mjs` runs

@@ -24,6 +24,8 @@
     "check:sanitize": "tsx scripts/check-sanitize.ts",
     "check:copy": "node scripts/check-copy.mjs",
     "check:copy:selftest": "node scripts/check-copy.mjs --selftest",
+    "check:copy-contract": "node scripts/check-copy-contract.mjs",
+    "check:copy-contract:selftest": "node scripts/check-copy-contract.mjs --selftest",
     "check:content": "node scripts/check-content.mjs",
     "check:content:selftest": "node scripts/check-content.mjs --selftest",
     "check:escapes": "node scripts/check-escapes.mjs",

@@ -743,6 +743,25 @@ defects**, and only the second is worth finding; `node design/visitor-questions.
 DECLINED vs UNANSWERED (3 declined in the open, 7 unanswered @measured 2026-11-16 by that probe). Refusing is
 never a substitute for a source: an ungrounded contact, price or room description would be a claim (D92).
 
+**Every section of a page is a function of three inputs** (**S074**, **D448**): the **reader** it is written
+for, what that reader can **do** or **believe** once they leave the section, and the **register** it is written
+in. One record holds that address - `design/copy-contract.json`, one row per body section of every built page,
+beside the `audiences` and `styles` vocabularies it draws on - and one gate reads it: `npm run check:copy-contract`,
+in `verify` after `build`. It fails a section with no row, a row for a section the build no longer makes, a reader
+or a register nobody declared, one page addressing two readers without saying why, and a copy round that makes
+the sentences carrying no reader-usable fact more numerous than the floor the record keeps. That floor is **4**
+sentences on the built pages carrying no place, time, price, person, platform, thing to carry, or action beside no
+link, @measured 2026-11-19 by `npm run check:copy-contract --print-hollow` (Linux native, Node 24.22.1) - and it is
+a **floor, not a goal**: rewriting a shipped sentence is an edit to copy, and a re-write that invents a fact is
+D92's defect, so a copy round takes sentences **off** the worklist and the gate fails when the number rises.
+Sentences that are *meant* to be about the surface itself are registered in `hollowRuled`, each with the ruling
+and the reason it stays; an entry whose signature matches no current sentence fails on its own account, because
+round 7's F6 was a needle that never matched its defect and read as a green light that was never a detector.
+Read `.agents/skills/copy-vision/SKILL.md` before editing a shipped sentence - it carries the diagnosis and the
+exercises. The ask that settles the reader is the author's, not the delegate's: `docs/the-authors-vision-2026-11-19.md`,
+five questions in the author's own words, whose slots stay bracketed until the author fills them and whose `status:
+unsent` keeps every row's `settledBy` honest.
+
 ## Motion
 
 | Kind | Duration | Easing |

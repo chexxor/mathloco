@@ -216,6 +216,18 @@ const DEPLOY = [
   { name: 'check:indexable:selftest', desc: 'the indexability gate can still fail (3 plantings: the sitemap naming a self-forbidding page, a forbidden route whose page lost its meta tag, a forbidden route the build never emits; plus the clean control)', needs: ['build'] },
   { name: 'check:content', desc: 'no placeholder, no unsourced claim, no fabricated number, no uncorrectable operator-granted draft ships', needs: ['build'] },
   { name: 'check:content:selftest', desc: 'the content gate can still fail (25 cases incl. D415\u2019s draft-claim planting and its clean control)', needs: ['build'] },
+  // Every section of a built page is a function of three inputs — the reader it is written for, what that reader
+  // can do or believe once they leave the section, and the voice register it is written in. The communication
+  // reviews (rounds 6, 7, 8) priced LINES of copy against rules about SHAPE — word count, near-duplication
+  // (check:content and design/copy-duplicates.json), anchor ceilings, sources, dated surfaces, escapes. None of
+  // them ever asked the three questions of a SECTION, so a sentence can pass every one of those gates while
+  // changing nothing a reader can do or believe — which is what the operator’s word of 2026-11-19 met:
+  // “it feels like fluff … it doesn’t feel authentic or like it’s consistent in communication to our target
+  // audience”. This gate reads the built pages through design/dist-pages.mjs against design/copy-contract.json,
+  // and it prints the sentences that carry no club fact and no path out as a worklist (S074, D448). The selftest
+  // mutates the record and in-memory pages, so the row can go red before anyone builds (D118).
+  { name: 'check:copy-contract', desc: 'every section of every built page has a contract naming a reader, a goal and a register; one reader per page unless the shift is declared; the sentences carrying no reader-usable fact do not get more numerous', needs: ['build'] },
+  { name: 'check:copy-contract:selftest', desc: 'the copy-contract gate can still fail (9 plantings: a row deleted, a row renamed away, a row with no goal, a reader nobody declared, an undeclared audience shift, an unfilled letter shipped as sent, the letter missing, a hollow sentence unregistered, an exemption whose needle matches no sentence; plus the clean control)' },
   // What shipped on /schedule: `club\u2019s` painted literally, at every width, through a green `verify`.
   // This reads the bytes a reader sees (page text, `<meta>`, and the attributes a screen reader speaks) plus
   // the rendered-text context of every `.astro`/`.svelte` source, because the same bytes are correct inside a

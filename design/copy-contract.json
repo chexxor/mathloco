@@ -1,0 +1,196 @@
+{
+  "rule": "section-contract",
+  "gate": "npm run check:copy-contract",
+  "measuredAt": "2026-11-19",
+  "howToRegenerate": "the record is hand-kept, like design/copy-duplicates.json: `npm run check:copy-contract --print-sections` prints which sections the build carries and which have no row, and `--print-hollow` prints the worklist the count is kept against. The gate never rewrites this file.",
+  "ruleOfExit": "A row leaves when its section is deleted, renamed away, or promoted into another page - a row for a section the build no longer makes is contract-stale, and the gate says so. A hollow sentence leaves the worklist when it is rewritten to carry a fact a reader can use, or when a ruling settles why it stays; it is NOT kept with a status of 'fixed', because a signature in hollowRuled is an exemption and an exemption for a defect that is no longer there is itself a defect (round 7's F6: a needle that never matched its defect read as a green light).",
+  "why": "Every section of a built page is a function of three inputs: the reader it is written for, what that reader can do or believe once they leave the section, and the voice register it is written in. The communication reviews priced lines of copy (rounds 6, 7, 8) and never once asked those three questions of a section, so thirty-odd rounds of line edits produced a patchwork: sentences that pass every shape rule - length, duplication, source, anchor ceiling, escapes, dated surfaces - while carrying nothing a reader can act on. This record is the missing address: it names the reader per section, and npm run check:copy-contract fails when a section has no reader, when a page addresses two readers in one voice, or when the count of sentences carrying no reader-usable fact gets longer.",
+  "vision": {
+    "letter": "docs/the-authors-vision-2026-11-19.md",
+    "status": "unsent",
+    "note": "The site's one vision belongs to the author of the club, not to the delegate. The letter exists as a scaffold, and its slots stay bracketed until the author fills them (DESIGN.md's Copy rule: brackets stay until a source exists). The gate fails a letter that calls itself sent while any slot is still bracketed; an unsent letter prints and exits 0, because sending it is the operator's ask, parked with its trigger in PLAN.md §Milestones. Until the letter is sent, every row below carries settledBy naming the delegate as its author, and the rows are a draft the author corrects rather than a vision anyone owns."
+  },
+  "audiences": {
+    "first-visitor": "a person who has never met the club and is deciding whether to come - the reader the whole site is written for today",
+    "member": "a person who already comes, checking what happens next",
+    "subscriber": "whoever's calendar client or feed reader follows the club's own file",
+    "anyone": "chrome and states a stranger and a member both need, written once - a 404, a nav, an exit band"
+  },
+  "styles": {
+    "club-voice": "the club speaking about itself: present tense, no marketing, no promise the tree cannot ground (D92, D379's register)",
+    "invitation": "a sentence that says do something, addressed to a person: come, bring, ask, sign up",
+    "data-voice": "a line naming a fact and where it came from, in D322's provenance register",
+    "state-voice": "a designed state naming what is missing, where the record lives, and the path out (record 0010: missing content is a designed state, never a blank)"
+  },
+  "pages": [
+    {
+      "route": "/",
+      "audience": "first-visitor",
+      "sections": [
+        {
+          "section": "Matheapolis",
+          "audience": "first-visitor",
+          "goal": "they can name the club, place it in a city, see the next date and the place it is at, and start by signing up for that date or reading the chat",
+          "style": "club-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "What we take up",
+          "audience": "first-visitor",
+          "goal": "they can recognise at least one subject as something they would want to think about, and they know the chat is where a thread lives",
+          "style": "club-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "How it works",
+          "audience": "first-visitor",
+          "goal": "they can decide whether to come: what to carry, what it costs, how many people sit around the table, and where the dates are",
+          "style": "invitation",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        }
+      ]
+    },
+    {
+      "route": "/dates",
+      "audience": "first-visitor",
+      "sections": [
+        {
+          "section": "Dates",
+          "audience": "first-visitor",
+          "goal": "they can tell which of the two formats is theirs, and they can trust the dates below as read from the club's own calendar rather than typed by the page",
+          "style": "data-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        }
+      ]
+    },
+    {
+      "route": "/join",
+      "audience": "first-visitor",
+      "sections": [
+        {
+          "section": "Join the club",
+          "audience": "first-visitor",
+          "goal": "they know the page offers doors into the club and that one door is enough to start",
+          "style": "club-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "What we do",
+          "audience": "first-visitor",
+          "goal": "they can tell which room is the one they want, and what a person brings into a study session",
+          "style": "club-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "Come to a meeting",
+          "audience": "first-visitor",
+          "goal": "they can reach the dates page and sign up for a date",
+          "style": "invitation",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "Talk with us now",
+          "audience": "first-visitor",
+          "goal": "they can read the conversation before coming to a meeting, and ask in it if the room is not theirs",
+          "style": "invitation",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "Follow the club",
+          "audience": "first-visitor",
+          "goal": "they can get a date without using Meetup, by following a feed",
+          "style": "invitation",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "Your first one",
+          "audience": "first-visitor",
+          "goal": "they can walk into a meeting with nothing prepared, and they know where to ask if they are unsure",
+          "style": "invitation",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        }
+      ]
+    },
+    {
+      "route": "/chat",
+      "audience": "first-visitor",
+      "sections": [
+        {
+          "section": "The club’s chat",
+          "audience": "first-visitor",
+          "goal": "they can get to the live channel, which is where the club's conversation actually is",
+          "style": "invitation",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "What the club is pulling on",
+          "audience": "first-visitor",
+          "goal": "they can see how wide the club's range is without inferring a schedule or a prerequisite for arriving",
+          "style": "club-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        }
+      ]
+    },
+    {
+      "route": "/past",
+      "audience": "first-visitor",
+      "sections": [
+        {
+          "section": "Past meetings",
+          "audience": "first-visitor",
+          "goal": "they can tell what this page holds and where the club's finished sessions are written down",
+          "style": "state-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        },
+        {
+          "section": "No finished date on our calendar",
+          "audience": "first-visitor",
+          "goal": "they leave the page with a path to the record rather than an empty list",
+          "style": "state-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        }
+      ]
+    },
+    {
+      "route": "/404",
+      "audience": "anyone",
+      "sections": [
+        {
+          "section": "We could not find that page",
+          "audience": "anyone",
+          "goal": "they get back to a date, the chat, or home, rather than a dead end",
+          "style": "state-voice",
+          "settledBy": "delegate draft, 2026-11-19 - the author corrects it in the vision letter"
+        }
+      ]
+    }
+  ],
+  "hollowRuled": [
+    {
+      "signature": "these dates are copied from the club",
+      "ruled": "D218, D322 (and design/copy-duplicates.json's deliberate pair)",
+      "why": "the /dates lede naming where its dates came from, in the one provenance register the site runs. It is a stamp line, not a paragraph, and check:provenance already rules its wording; deleting it would leave the list with no source."
+    },
+    {
+      "signature": "nothing is expected of you",
+      "ruled": "D392 (the first-meeting rule), answered by the round-8 letter",
+      "why": "the author-approved form of the club's first-meeting rule. Its payload is what a person carries, and the answer is nothing; the classifier reads the word 'nothing' and calls the sentence hollow, which is why it is registered rather than rewritten."
+    },
+    {
+      "signature": "our bot writes this section from recent channel activity",
+      "ruled": "the round-8 letter's Keep register (MS37, D446)",
+      "why": "the one sentence on /chat naming how the summary gets written, kept by the letter rather than cut. It is about the machinery, and that is the point: it tells a reader which words are machine-written and which are the club's."
+    },
+    {
+      "signature": "whether the room is your kind of room",
+      "ruled": "D368 (name a gap the site cannot fill, in the open)",
+      "why": "the open gap statement this rule exists to require: a gap the reader can see is a different defect from a gap the page does not know it has. DESIGN.md's Copy section quotes this sentence as the rule's own example."
+    }
+  ],
+  "hollow": {
+    "count": 4,
+    "note": "set from a run: the gate counts sentences on the built body sections that carry no club fact (place, time, price, person, platform, thing to carry, a number, an action) and no path out, and fails when the count rises above this number. The count is a floor rather than a zero because rewriting a sentence is an edit to shipped copy, and a re-write that invents a fact is D92's defect: the number is the worklist a copy round has to reduce, and it may not grow.",
+    "measuredAt": "2026-11-19",
+    "probe": "npm run check:copy-contract --print-hollow @measured 2026-11-19 by that command (8 flagged before the four ruled signatures were registered)"
+  }
+}
