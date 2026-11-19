@@ -1,4 +1,46 @@
 {
-  "_why": "Utilities that Tailwind emits with no occurrence in src/, deliberately allowed. Every entry must carry a reason; an empty list means every dead utility is visible in the check:css-utilities report (D253). The typography plugin and Tailwind's own defaults cannot be scoped out, so if one ever needs exempting, name it and say why here.",
-  "exempt": []
+  "_why": "Utilities Tailwind emits with no occurrence in src/, each one explained by the tracked file whose SENTENCE names it (D253: Tailwind v4's automatic content detection scans design/, .agents/, .notes/ and the tracked prose, so a class name written in prose becomes CSS every visitor downloads). This is not a waiver: it says the bytes are understood rather than hunted, and every name here must carry a reason or `check:css-utilities` exits 1. The bytes still ship - tailwindcss@4.3.3's plugin surface declares only `optimize`/`minify` (verified in node_modules/@tailwindcss/vite/dist/index.d.mts), there is no `ignore`/`detectClasses` to scope a file out, so a named exemption is what makes the count legible, not what removes it. Read the file next to `node scripts/check-css-utilities.mjs`, whose report counts everything NOT in this list.",
+  "_grounded": "The name -> file map below was produced @measured 2026-11-19 by `grep -rnwl -m 4 <name> src design docs scripts .agents MILESTONES.md DESIGN.md README.md AGENTS.md` with --exclude-dir on dist, node_modules, .pi, .design, .git, .notes (the report is .design/tmp-css-util-grounds.txt). The 19 names are exactly `check:css-utilities`'s `new since baseline:` line at this tip: 105 dead utilities / 7,240 b of a 53,350 b sheet against a baseline of 94 / 6,269 b (2026-11-09), so +11 names / +971 b. `text-path-calendar` left that list when MS36 painted it in src/components/Schedule.astro and src/components/SignUpLinks.astro.",
+  "exempt": [
+    "order-first",
+    "mt-7",
+    "mt-9",
+    "mr-2",
+    "h-5",
+    "w-5",
+    "animate-pulse",
+    "items-start",
+    "gap-5",
+    "gap-x-3",
+    "gap-y-4",
+    "bg-path-calendar-tint",
+    "bg-path-discord-tint",
+    "p-2",
+    "italic",
+    "drop-shadow",
+    "grayscale",
+    "duration-300",
+    "outline-none"
+  ],
+  "reasons": {
+    "order-first": "design/refs/GAP-ANALYSIS.md §2 rank 13 quotes `order-*` as the defect its PROPOSED `check:source-order` would plant, and its own probe says 0 `order-` writes ship today. The proposal is a plan row, not a rule we obey, so the utility exists only because the plan names it.",
+    "mt-7": "DESIGN.md's pitfall register, docs/reply-to-the-design-read-2026-11-14b.md and scripts/check-scale.mjs (whose selftest plants `mt-7`) name the off-ladder step that shipped green while the scale was ungated. The mention is the record of a fixed defect; no src/ writes it.",
+    "mt-9": "scripts/check-scale.mjs's planting list and scripts/gate-run.mjs's row name `mt-9` as a planted off-ladder margin. No markup writes it.",
+    "mr-2": "design/drift.json (design-extract's census), design/grill/round16/report.json and design/grill/round-16-copy.html: the round-16 grill measured a step and refused it. The records are kept so the measurement is re-runnable, which is what emits the rule.",
+    "h-5": "design/drift.json, design/apply-batch3.mjs and the round-16 grill files name the sizing step that is deliberately outside check:scale (sizing is not spacing), and scripts/check-token-usage.mjs names it in its selftest fixture ladder. No page sizes with it.",
+    "w-5": "Same pair as h-5: design/drift.json, design/apply-batch3.mjs, design/grill/round16/report.json, design/state.json, plus scripts/check-token-usage.mjs's fixture ladder `p-2 gap-4 w-5 h-5`.",
+    "animate-pulse": "scripts/check-reduced-motion.mjs plants `animate-*` writes and names `.animate-spin` in its clean control (Tailwind's own unused keyframes must NOT read as shipped motion). The gate's vocabulary is what puts the name in the scan; src/ ships 0 animation writes.",
+    "items-start": "scripts/check-notice-announcement.mjs's fixture class lists name it while planting the notice handle in the other order (`items-start` is in a control's class list, never in markup).",
+    "gap-5": "DESIGN.md's pitfall register, docs/reply-to-the-design-read-2026-11-14b.md, scripts/check-contrast.mjs, scripts/check-scale.mjs and scripts/gate-run.mjs name `gap-5` as the off-ladder gap that shipped under a green gate before the scale existed. Fixed by writing `gap-4`; the sentence is the evidence.",
+    "gap-x-3": "scripts/check-notice-announcement.mjs names it in a fixture class list. No src/ axis-gap of 3 exists.",
+    "gap-y-4": "scripts/check-scale.mjs names it in a planting and scripts/check-notice-announcement.mjs in a fixture. No src/ writes an axis gap here.",
+    "bg-path-calendar-tint": "scripts/check-token-usage.mjs's selftest plants a chip inside a tint (`bg-path-calendar-tint rounded-card`) twice, to get the named verdicts allowlist-entry-written and reserved-rule-in-sheet. The fixture is in memory; no built page carries the class (the gate proves it), and MS36 kept the chip construction reserved rather than shipped.",
+    "bg-path-discord-tint": "Same planting as bg-path-calendar-tint, on the discord path: scripts/check-token-usage.mjs's fixture for the reservation-contradiction rule.",
+    "p-2": "scripts/check-token-usage.mjs's fixture ladder (`p-2 gap-4 w-5 h-5`) is what its comment-only planting mutates. A page padding 8px on all sides writes `p-2` in src/; here it is a fixture string.",
+    "italic": "design/round5-math.json, design/round5-math's byte records, design/fonts/bytes.json and the grill rounds' HTML name `italic` as a style the type rounds measured and refused (the serif carries emphasis as weight, not slant). scripts/check-dated-surfaces.mjs reads it as an absence probe.",
+    "drop-shadow": "design/refs/spectrum/COVERAGE.md and design/refs/spectrum/elevation-surfaces.md quote a drop-shadow rule as corpus evidence (the corpus landed tracked across commits 24c7c5b and 821ae7d). We carry elevation as inset keylines instead (D98), and no filter ships.",
+    "grayscale": "design/refs/carbon/feedback-notices-status.md quotes Carbon's grayscale status icon. Refused on the same ground as every other system's signal colour (D102: the system has no red and no amber; severity is the keyline role plus the word), so the utility exists only inside the quoted corpus file.",
+    "duration-300": "design/drift.json, design/round5-math.json, design/token-plan.md, design/apply-batch1.mjs, design/decisions.json, DESIGN.md's motion paragraph and scripts/check-reduced-motion.mjs name `duration-300` as a tier the extract measured. The ratified band is 150ms and 250ms with no tier above (D115), so 300ms never shipped.",
+    "outline-none": "scripts/check-focus.mjs and scripts/gate-run.mjs name it as the defect the focus gate plants: a focus ring deleted is invisible to a keyboard and is exactly what the gate exists to fail. src/ ships outline-2 with outline-accent instead, so the utility is the gate's vocabulary, not a paint."
+  }
 }

@@ -82,6 +82,8 @@
     "check:notice-announcement:selftest": "node scripts/check-notice-announcement.mjs --selftest",
     "check:reduced-motion": "node scripts/check-reduced-motion.mjs",
     "check:reduced-motion:selftest": "node scripts/check-reduced-motion.mjs --selftest",
+    "check:token-usage": "node scripts/check-token-usage.mjs",
+    "check:token-usage:selftest": "node scripts/check-token-usage.mjs --selftest",
     "check:classes": "tsx scripts/check-classes.ts",
     "check:design": "node design/audit-references.mjs --stale",
     "check:contrast": "node scripts/check-contrast.mjs",

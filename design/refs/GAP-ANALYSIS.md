@@ -8,8 +8,10 @@ hazard 2: `check:decisions` reads every tracked file, so a proposed id that pars
 `verify` red on the branch).
 
 Inputs, as read this pass: `DESIGN.md`, the `@theme` block in `src/styles/global.css`, and the printed
-output of `node scripts/gate-run.mjs --list` (73 lines, 69 of them `check:` steps — @measured 2026-11-18
-into `.design/tmp-refs/our-gates.txt`), plus `design/gate-cost.json` for the evidence costs.
+output of `node scripts/gate-run.mjs --list` (**83 lines, 78 of them `check:` steps, 34 of those `:selftest`
+steps — @measured 2026-11-19 by `node scripts/gate-run.mjs --list`; the pass that wrote this document read 73
+lines / 69 of them `check:` on 2026-11-18 into `.design/tmp-refs/our-gates.txt`, and the set has grown by four
+gates and four selftests since**), plus `design/gate-cost.json` for the evidence costs.
 Claim rows available for this analysis: 996 @measured 2026-11-18 by `.design/tmp-refs/verify-quotes.py`
 run per system — govuk 191, carbon 195, atlassian 209, spectrum 186, material 215 — with 0 hard misses,
 0 quotes over 40 words, 0 no-quote rows and 0 locators that are not a fetched URL, on all five.
@@ -73,9 +75,12 @@ candidates returned no markdown), and Spectrum's printed-duration absence.
 
 ### Enforcement ledger — where each system is behind our gate model
 
-Our model is a **detector per rule**: `gate-run.mjs --list` prints 69 `check:` steps, and each
-`check-<thing>` ships a `check-<thing>:selftest` that plants the defect it exists to catch
-(`AGENTS.md`: *"A check without a selftest is an assertion, not a detector"*). Every system in the
+Our model is a **detector per rule**: `gate-run.mjs --list` prints 78 `check:` steps at this tip — 44 gates and
+34 `:selftest` steps @measured 2026-11-19 by `node scripts/gate-run.mjs --list` (this document's own pass read
+69 on 2026-11-18) — and `AGENTS.md` demands that each `check-<thing>` ship a `check-<thing>:selftest` that plants
+the defect it exists to catch (*"A check without a selftest is an assertion, not a detector"*). What it does **not**
+done yet: `node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --audit` lists 15 gates with no selftest beside
+them @measured 2026-11-19, and those are the class a milestone owes its own planting to. Every system in the
 corpus publishes rules with a mechanism that is not a build-failing check. That is the corpus's
 cleanest evidence for keeping our enforcement model and importing their rules instead.
 
@@ -147,14 +152,16 @@ artifact-side gates 0.11–0.12s on top of the `build` the runner already pays (
 | 20 · TASTE | Case is a rule in four systems and a tier in ours | Our system makes case a **tier**: uppercase exists only in `text-label`/`text-micro` chrome, while every label a visitor navigates or presses is sentence-case (`Dates`, `Chat`, `Ways in`) — and the nav's fit is priced in pixels, so an all-caps tier would move every one of those numbers (`Material#M9-ctl-13`'s all-caps button label is recorded, not proposed) | `atlassian/controls-buttons.md#A09-button-05` (case is a rule), `govuk/controls-buttons.md#G9-btn-02` (sentence case), `carbon/controls-buttons.md#C9-btn-02` (a label grammar formula with named exceptions), `material/controls-buttons.md#M9-ctl-13` ("The text is 14pt, Roboto, Medium, and all caps") | `check:case-role` — a control or nav label may not carry the uppercase tier; the two chrome tiers are exempt by name | a planted uppercase control label; clean controls: the shipped kicker and the `text-micro` focus line | source-side ~0.11s; **TASTE** — it only becomes real if we ever adopt an all-caps tier, and the fit numbers say it would cost a re-price |
 
 **Graduated on 2026-11-18 under MS35 — ranks 1–4 landed, and the name each shipped under is not the name proposed above.**
-The proposed detector names were the plan's; the shipped gates are this repo's, and their row-by-row record:
+The proposed detector names were the plan's; the shipped gates are this repo's, and their row-by-row record — plus
+**rank 10, graduated 2026-11-19 under MS36 (S070, D444)**:
 
-| Rank | Shipped as | Its selftest, planted | Cost @measured 2026-11-18 |
+| Rank | Shipped as | Its selftest, planted | Cost @measured 2026-11-19 |
 |---|---|---|---|
 | 1 | `check:route-targets` | 11 cases, 0 wrong — 6 plantings (a dead `/schedule` citation, a trailing-slash route, an `index.html` suffix, an anchor moved off its page, an in-page anchor with no id, and the 404 page's own dead path, which must NOT fire) + 5 clean controls | gate 0.17s, selftest 0.14s |
 | 2 | `check:primary-action` | 8 cases, 0 wrong — the shipped `Schedule` fixture with its notice's quiet label promoted to `primary`, and a join page whose computed lead paints twice + 6 clean controls | gate 0.15s, selftest 0.13s |
 | 3 | `check:notice-announcement` | 8 cases, 0 wrong — the shipped `/past` notice with its `role` deleted and prose first, and the `empty` state with its region removed AND a sentence before its title + 6 clean controls | gate 0.15s, selftest 0.16s |
 | 4 | `check:reduced-motion` | 9 cases, 0 wrong — the shipped sheet with the guard block deleted, a guard written but commented out, a guard that sets only a colour, a guard scoped to `.notice`, and a guard written into the built sheet and never into `src/` + 4 clean controls | gate 0.17s, selftest 0.15s |
+| 10 | `check:token-usage` | 11 cases, 0 wrong — 9 plantings: a planted `@theme` colour no class names, a hue written only inside a comment, a numeric ladder named only in prose, a line-height companion with no base step, a page still writing the class of a token the token file records RETIRED, an allowlist entry for a token `@theme` no longer declares, the same reservation contradicted by `src/` and again by a **built page**, and a planted breakpoint tier never written + 2 clean controls (a fixture tree, and the shipped tree at this tip) | gate 0.52s, selftest 0.25s inside the 83-step deploy set — 0.54s / 0.28s in a 6-step run of the same steps, both @measured 2026-11-19 (it waits on `build`: its clean control reads the shipped artifact, and run in `build`'s wave it raced a half-written dist and crashed) |
 
 Three records §2's own rows no longer state, and why:
 
@@ -183,9 +190,24 @@ Three records §2's own rows no longer state, and why:
   it is the operator's letter, not a delegate default. Recorded as `DRAFT·label-words`, with the ask and its
   un-park trigger in `PLAN.md` §Parked.
 
-And the cost preamble above prices against the **old** bar: **71 steps at 24.2s wall / 41.4s of work** @measured
-2026-11-17. The bar in `design/gate-cost.json` today is **81 steps at 39.5s wall / 71.9s of work**, frozen
-2026-11-18 under **D443**'s `--force`. Both are printed so a reader of §2's cost column knows which one priced it.
+- **rank 10 landed on the artifact, not on the sheet** (**D444**): a `var(--token)` inside a built rule proves
+  only that Tailwind saw the class name somewhere in the scanned tree — and prose names class names, which is
+  D253's whole finding. So a token travels when a class for it is written in `src/` outside a comment or when a
+  built page carries it in a `class=` attribute, and a reserved token whose rule sits in the built sheet because a
+  sentence names it is a **NOTE** whose bytes are `check:css-utilities`'s count (4 such notes at this tip). Without
+  that split the reservation record and the artifact argued with each other five ways. Its census at the tip:
+  **61 `@theme` tokens, 39 written / 8 emitted / 14 reserved, 0 findings** @measured 2026-11-19 by
+  `node scripts/check-token-usage.mjs`, and the two "Add to a calendar" anchors now carry the reserved
+  `text-path-calendar` hue on `paper` at 4.90 @measured 2026-11-19 by `npm run check:contrast` (39 asserted pairs,
+  0 fails) and the probe over `design/grill/okcolor.mjs`.
+
+And the cost preamble above prices against the **oldest** of three bars, all three printed so a reader of §2's cost
+column knows which one priced it: **71 steps at 24.2s wall / 41.4s of work** @measured 2026-11-17 (load 5.2 → 4.7/16cpu,
+the last freeze that did not need `--force`), then **81 steps at 39.5s wall / 71.9s of work** @measured 2026-11-18
+(force-frozen at load 8.2 → 14.2/16cpu), and the bar in `design/gate-cost.json` today — **83 steps at 35.9s wall /
+60.5s of work**, frozen 2026-11-19 under **D443**'s rule with `--force` at load 4.5 → 7.0/16cpu. The 81 → 83 step set
+is MS36's `check:token-usage` (0.52s) and its selftest (0.25s), 0.77s of new work; the bar then moved **down** 71.9s →
+60.5s because the 2026-11-19 run ran at about half the load of the 2026-11-18 one, not because the set got cheaper.
 
 ### Pre-loading decisions before we build it — domains we do not ship, kept as drafts and not ranked
 
@@ -281,5 +303,6 @@ below is declared **unpriceable** for an honest reason.
 
 **Where they are behind us, restated as the thing worth keeping:** all five publish rules with no
 mechanism that fails a build (§0's enforcement ledger, with the probe numbers per system), while our
-69 `check:` steps each ship a selftest that plants its defect. Nothing in §2 to §5 proposes adopting
+**78** `check:` steps at this tip — 44 gates and 34 selftests @measured 2026-11-19 by `node scripts/gate-run.mjs --list`
+— are that mechanism, and `gate-skeleton.mjs --audit` names the 15 gates that still have no selftest to plant. Nothing in §2 to §5 proposes adopting
 their mechanism. Every adopted row is a **rule** with **our** mechanism.

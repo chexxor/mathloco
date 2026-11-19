@@ -115,25 +115,27 @@ each of those and requires a named failure. Both are in `verify`.
    (the set lives in `scripts/gate-run.mjs`, and `node scripts/gate-run.mjs --list` prints it. It used to be
    enumerated in this file and went stale twice, so the enumeration is gone - read the list rather than trusting
    this sentence). There are three sets (S028, D291), and **what a set holds today and what its baseline
-   holds are two different numbers — read both.** Today's run of each, @measured 2026-11-18 by the runner
-   itself (Linux native, Node 24.22.1, 16 CPU, load 8.2 → 14.2/16cpu — a contended rig, other seats building):
-   `verify` is the deploy set, **81 steps**, 39.5s wall / **71.9s** of work; `verify:rig` is 3 steps, 5.1s wall /
-   9.8s of work; `verify:browser` is 9 steps, 109.4s wall / 109.4s of work. The **frozen** baselines in
-   `design/gate-cost.json` were re-frozen 2026-11-18 off that same run (**D443**, under `--force`, because
-   the run started and ended above 6/16cpu and no quiet window was available — see that entry's rule and its
-   un-park trigger): deploy **81 steps** at 39.5s wall / **71.9s** of work (load 8.2 → 14.2/16cpu), browser 9
-   steps at 109.4s (load 14.0 → 9.1), rig 3 steps at 5.1s wall / 9.8s of work (14.2 → 14.0) — so the bar and
-   the set are the same 81 steps today, which is the pair of figures this paragraph exists to keep apart.
-   The bar that was there before — **71 steps at 41.4s of work**, frozen 2026-11-17 at load 5.2 → 4.7/16cpu —
-   is a **different step set** and is not comparable to today's: the set grew by ten steps (MS35's four gates
-   and their selftests, plus `check:indexable` and its selftest), so a +74% reading against the old bar is
-   ten steps plus rig contention, not a set that doubled.
-   The bar's own provenance matters here: a **second** reading of the same 81 steps the same day,
-   @measured 2026-11-18 by a later `npm run verify` at load 7.4 → 8.9/16cpu, cost **34.2s wall / 57.6s of
-   work** — so the frozen 71.9s sits ~25% above a quieter reading of the same set, because D443 froze off
-   the more contended run. That direction is the safe one (a bar too high never blocks a ship step; a bar
-   frozen off contention would make the next honest run look like drift), and it is exactly what the parked
-   quiet-window trigger is for: the next run that starts and ends at or below 6/16cpu should re-freeze lower.
+   holds are two different numbers — read both.** Today's run of each, @measured 2026-11-19 by the runner
+   itself (Linux native, Node 24.22.1, 16 CPU, jobs=4, load 4.5 → 7.0/16cpu — a busy rig, another seat mid-item):
+   `verify` is the deploy set, **83 steps**, 35.9s wall / **60.5s** of work; `verify:rig` is 3 steps, 5.6s wall /
+   10.8s of work (load 7.0 → 7.7/16cpu); `verify:browser` is 9 steps, 105.9s wall / 105.9s of work (load 6.8 → 6.4/16cpu).
+   The **frozen** baselines in `design/gate-cost.json` were re-frozen 2026-11-19 off that same run (**D443**'s
+   rule, under `--force`, because all three sets ended above 6/16cpu and no quiet window was available — see that
+   entry's rule and its un-park trigger): deploy **83 steps** at 35.9s wall / **60.5s** of work (load 4.5 → 7.0/16cpu),
+   browser 9 steps at 105.9s (load 6.8 → 6.4), rig 3 steps at 5.6s wall / 10.8s of work (load 7.0 → 7.7) — so the bar
+   and the set are the same 83 steps today, which is the pair of figures this paragraph exists to keep apart.
+   The bar that was there before — **81 steps at 71.9s of work**, force-frozen 2026-11-18 at load 8.2 → 14.2/16cpu
+   under **D443** — is a **different step set** and is not comparable to today's: the set grew by two steps
+   (MS36's `check:token-usage` at 0.52s and its selftest at 0.25s), so the bar moving **down** 71.9s → 60.5s is
+   0.77s of new work against a rig running at about half the load, not a set that got cheaper. The bar before
+   that — **71 steps at 41.4s of work**, frozen 2026-11-17 at load 5.2 → 4.7/16cpu, the last freeze that did not
+   need `--force` — is two step sets back.
+   Provenance still matters: the 81-step set was read **twice** on 2026-11-18 — **39.5s wall / 71.9s of work**
+   at load 8.2 → 14.2/16cpu and **34.2s / 57.6s** at load 7.4 → 8.9/16cpu — so D443 froze the more contended
+   of two honest readings, ~25% above the quieter one; that direction is the safe one (a bar too high never
+   blocks a ship step; a bar frozen off contention would make the next honest run look like drift), and it is
+   what the parked quiet-window trigger is for: the next run that starts and ends at or below 6/16cpu should
+   re-freeze lower. Every freeze since 2026-11-17 has needed `--force`; none has met that bar.
    It is
    one script so CI, the Cloudflare repo hook and your own shell run the identical gates - and
    `npm run deploy` / `preview:deploy` run it before any wrangler command, so a red gate cannot ship. If
@@ -164,13 +166,13 @@ each of those and requires a named failure. Both are in `verify`.
    (the steps the baseline knows; new steps are listed with their cost) and **fails only when the run started
    and ended at or below 6/16cpu** - a contended rig is a WARN with the load printed, not a blocked ship step
    (D269). `npm run cost:save` refuses to freeze a baseline from a run above that load unless you pass
-   `--force` and say why. Baselines now exist per set, as `design/gate-cost.json` carries them @read 2026-11-18:
-   deploy **81 steps at 39.5s wall / 71.9s of work** frozen 2026-11-18 (load 8.2 → 14.2/16cpu, saved under
-   **D443**'s `--force`), browser 9 steps at 109.4s frozen 2026-11-18, rig 3 steps at 5.1s wall / 9.8s of work
-   frozen 2026-11-18. The deploy freeze covers **all 81 of the set's 81 steps** — the two the previous bar
-   missed (`check:indexable` and `check:indexable:selftest`, 0.6s together) are now inside it, and so are MS35's
-   four gates and their selftests, 0.13–0.17s each. Re-freezing needs a run that started and ended at or below
-   6/16cpu, which a working session's rig is not (today: 8.2 → 14.2/16cpu); the only run here that met that bar
+   `--force` and say why. Baselines now exist per set, as `design/gate-cost.json` carries them @read 2026-11-19:
+   deploy **83 steps at 35.9s wall / 60.5s of work** frozen 2026-11-19 (load 4.5 → 7.0/16cpu, saved under
+   **D443**'s rule with `--force`), browser 9 steps at 105.9s frozen 2026-11-19 (load 6.8 → 6.4/16cpu), rig 3 steps at 5.6s wall / 10.8s of work
+   frozen 2026-11-19 (load 7.0 → 7.7/16cpu). The deploy freeze covers **all 83 of the set's 83 steps** — inside it now: MS36's
+   `check:token-usage` (0.52s) and its selftest (0.25s), MS35's four gates and their selftests, 0.13–0.17s each,
+   and `check:indexable`'s pair, which the 71-step bar missed. Re-freezing needs a run that started and ended at or below
+   6/16cpu, which a working session's rig is not (today: 4.5 → 7.0/16cpu, and 9.9 → 16.7/16cpu on 2026-11-16); the only run here that met that bar
    was 2026-11-17 at 5.2 → 4.7/16cpu, and D443 parks the trigger that un-parks a quiet re-freeze.
 5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
@@ -264,11 +266,11 @@ Each of these paid for itself in a real session; each has a cost attached in `.n
   default timeout**, so an unbounded command - a build, a browser probe, a `wrangler` call waiting on a
   network - runs until the session does. Guess the wall time first, then pass a timeout a little higher
   than the guess, taken from **what the sets cost when run**, not from the frozen bars alone (the two are now
-  the same 81 steps, but their work seconds are not the same thing): measured
-  @measured 2026-11-18 by `npm run verify` / `npm run verify:rig` / `npm run verify:browser` (Linux native,
-  Node 24.22.1, 16 CPU, load 8.2 → 14.2/16cpu) — deploy **81 steps** at 39.5s wall / 71.9s work, rig 3 steps at
-  5.1s / 9.8s, browser 9 steps at 109.4s / 109.4s; the frozen bars are now the same 81 steps (deploy 71.9s of
-  work, rig 9.8s, browser 109.4s, re-frozen 2026-11-18 under **D443**'s `--force` at load 8.2 → 14.2/16cpu). So the honest budgets are **90s rig, 180s deploy, 300s browser** — not 600s, and
+  the same 83 steps, but their work seconds need not be the same thing): measured
+  @measured 2026-11-19 by `npm run verify` / `npm run verify:rig` / `npm run verify:browser` (Linux native,
+  Node 24.22.1, 16 CPU, jobs=4, load 4.5 → 7.0/16cpu) — deploy **83 steps** at 35.9s wall / 60.5s work, rig 3 steps at
+  5.6s / 10.8s, browser 9 steps at 105.9s / 105.9s; the frozen bars are now the same 83 steps (deploy 60.5s of
+  work, rig 10.8s, browser 105.9s, re-frozen 2026-11-19 under **D443**'s rule with `--force` at load 4.5 → 7.0/16cpu). So the honest budgets are **90s rig, 180s deploy, 300s browser** — not 600s, and
   not the 120s/180s a 40-step deploy set used to fit.
   Round up generously when the rig is loaded (a green `verify` has ended at 8.0/16cpu, D269), and when
   the command is new - an unmeasured command's timeout is a hypothesis, so give it room. If something
