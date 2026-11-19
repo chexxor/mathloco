@@ -398,12 +398,26 @@ second colour.
 - "Time not set" is stated **in the date lane** where the clock would be (`ink-3`), never defaulted to
   12:00 am, and never rendered as a date.
 - Freshness is **one line, one register**, in the same slot on every surface: `ink-3`, tabular numerals, and the
-  wording comes from `provenanceStamp()` in `src/lib/provenance.mjs` — **relative inside 30 days** ("last read 11
-  days ago"), **absolute beyond** ("Copied from the club’s own calendar on Nov 13, 2026") (D322, 2026-11-14). A
-  surface ruled date-free passes `allowDate: false` and still gets the age form of the same rule.
-  `npm run check:provenance` fails a page that computes its own age outside that module: **43 source files, 5 built
-  pages, threshold 30 days** @measured 2026-11-14 by `node scripts/check-provenance.mjs`. No staleness alarm: the
-  real harvested feed has gaps of 4, 10 and 4 days, so any 7-day threshold fires in an ordinary month.
+  wording comes from `provenanceStamp()` in `src/lib/provenance.mjs` — **an age only for a stamp taken today or
+  yesterday** ("today", "yesterday"), **the calendar date beyond** ("Copied from the club’s own calendar on Nov 13,
+  2026") (**D322**'s register, **D431**'s threshold: `AGE_HONEST = 1`, and its reason — the only stamp this site prints
+  is `data/events.json`'s `source.fetchedAt`, set by a step a human runs, so an age is never corrected against a newer
+  read and grows into an apology instead of a fact; past the threshold the form is a calendar date, which a reader can
+  check against their own clock and which cannot decay). A surface ruled date-free passes `allowDate: false` and still
+  gets the age form of the same rule, coarsened by `ageSince`.
+  `npm run check:provenance` fails a page that computes its own age outside that module: **46 source file(s), 6 built
+  page(s), threshold 1 day(s)** @measured 2026-11-19 by `node scripts/check-provenance.mjs`, and it prints the register
+  beside each page's date — `/` reads "Copied from the club’s own calendar on Nov 13, 2026 (6 day(s) old)". No staleness
+  alarm: the harvested feed has gaps of 4, 10 and 4 days, so a short alarm threshold fires in an ordinary month; the age
+  is stated, never alarm-raised.
+- **The homepage carries the register beside its one date** (MS38, **D447**, ruling **S073**). The hero's when-line and
+  the line naming which read it came from are one object in the hero block, so the date reads as maintained data rather
+  than as copy the page typed. "Dynamically updated" is not a claim this tree can make, and three rulings make it so
+  rather than leaving it open: the schedule is a derived snapshot nobody fetches at request time (**D73**), every route
+  is prerendered, and the motion tiers stop at 150ms colour / 250ms movement with no pulse (**D115**, `check:reduced-motion`,
+  whose rank-5 refusal `DRAFT·in-control-progress` is still parked). What the page can honestly carry is source plus
+  read date. The styling half of the operator's word — fill, colour tier, the nav's date chip, placement — is priced in
+  grill round 19 (`npm run round19`, `npm run round19:specimen`) and stays the operator's pick.
 
 **Never** use strikethrough or colour as the only status cue. A date the club stopped announcing is retired **in the
 file** — `STATUS:CANCELLED` with a raised `SEQUENCE`, the only mechanism RFC 5545 gives a client for dropping a date
@@ -544,7 +558,9 @@ The schedule has **one dated surface**. Until 2026-11-14 the homepage printed th
 band and drew it with the same three parts; that card (and the sign-up cluster inside it) was removed on the
 operator's `/join` objective — "`/schedule` stays the only surface that prints dates" — recorded as **D306** and
 enforced by `check:dated-surfaces`, which fails any built page that prints a date without a ruling. The homepage now
-points at this page and prints none; the row below is what `/schedule` prints, in this order:
+prints the next meeting's own when-line and, beside it, the register line naming which read it came from (**MS38**,
+**D447**); `npm run check:dated-surfaces` reads **2 of 5 built page(s) printing a date** — `/` and `/dates` — @measured
+2026-11-19. The row below is what `/dates` prints, in this order:
 
 > **The route moved on 2026-11-16 (**D373**): `/schedule` → `/dates`, and the round-5 read's Batch D gave the page of
 > record a sibling `/past` for the finished half of the same calendar.** Two rules, both enforced in `check:dated-surfaces`'s
@@ -1156,8 +1172,11 @@ npm run check:ext-links         # every anchor that leaves the site: rel carries
                                 # accessible name, and no club route is painted target=_blank — 28 outbound anchors,
                                 # 28 qualified @measured 2026-11-16 by `node scripts/check-ext-links.mjs` (15 cases)
 npm run check:provenance        # every "how current is this" line goes through `provenanceStamp()` in
-                                # `src/lib/provenance.mjs`: relative inside 30 days, absolute beyond (D322). 43
-                                # source files, 6 built pages @measured 2026-11-16 by `node scripts/check-provenance.mjs`
+                                # `src/lib/provenance.mjs`: an age only for a stamp taken today or yesterday, the
+                                # calendar date beyond (**D322**'s register, **D431**'s `AGE_HONEST = 1`). 46 source
+                                # file(s), 6 built page(s), threshold 1 day(s) @measured 2026-11-19 by `node scripts/check-provenance.mjs`
+                                # — it prints the register beside each date, and `/` now carries one under the hero's
+                                # when-line (**MS38**, **D447**)
 npm run check:line-art          # every `<figure data-line-art>` is a captioned `role="img"` drawing under 1200
                                 # bytes, strokes currentColor, nothing filled: the one original drawing on the site,
                                 # `/chat "undoable-steps"`, 622 bytes, 9 strokes @measured 2026-11-14 by

@@ -1,0 +1,1480 @@
+{
+ "measuredAt": "2026-11-19T07:10:50.502Z",
+ "widths": [
+  1240,
+  390,
+  320
+ ],
+ "notes": [
+  "the boxes are the page's own layout after the ratified faces settle (date-fresh-measure.js); the shot is firefox's at load",
+  "the hero block's OWN box is the quoted delta: the page height repeats across loads of identical bytes (the shipped page came in 3925 and 3985 in one run), so pageHeights prints every sample and pageSpread prints the gap, and a page-height delta of less than that spread is no evidence of anything",
+  "contrasts are token arithmetic against the same oracle the contrast gate uses; BARS.text is the ratified text bar",
+  "the nav’s date chip is NOT hidden above 380: the built sheet ships `@media (width>=380px){.xs\\:inline{display:inline}}` (the breakpoint is --breakpoint-xs, src/styles/global.css:48), so the shipped chip already paints at 390 and 1240 and only the 320 floor is in question — the chip column proves that, it is not a claim",
+  "the stamp line is the sentence /dates prints, verbatim: D322 rules one wording for one provenance fact, and check-content.mjs pairs surfaces WITHIN a page, so this repeat is not a cross-page pair it can see"
+ ],
+ "contrasts": {
+  "ink-3 on paper": 5.44,
+  "ink on paper": 17.15,
+  "ink-3 on tint": 4.61,
+  "ink on tint": 14.53,
+  "tint on paper": 1.18,
+  "bar": {
+   "text": 4.5,
+   "body": 7,
+   "graphic": 3,
+   "layer": 1.35,
+   "displayText": 3
+  }
+ },
+ "baselineCarriesStamp": true,
+ "baseline": {
+  "id": "as-shipped",
+  "name": "A — the date as it stands (the baseline)",
+  "at": {
+   "320": {
+    "pageHeights": [
+     4341,
+     4402
+    ],
+    "pageSpread": 61,
+    "doc": {
+     "height": 4341
+    },
+    "hero": {
+     "w": 276,
+     "h": 225,
+     "y": 472
+    },
+    "stamp": null,
+    "stampLines": 0,
+    "chip": {
+     "w": 0,
+     "h": 0,
+     "display": "none"
+    },
+    "navRow": {
+     "x": 129,
+     "w": 121,
+     "h": 32,
+     "y": 20
+    },
+    "navWrap": "nowrap",
+    "navRight": 250,
+    "navLines": 1,
+    "navRows": [
+     {
+      "wrap": "nowrap",
+      "box": {
+       "x": 129,
+       "y": 20,
+       "w": 121,
+       "h": 32,
+       "display": "flex",
+       "visibility": "visible"
+      },
+      "ink": 250,
+      "lines": 1,
+      "items": 3
+     },
+     {
+      "wrap": "nowrap",
+      "box": {
+       "x": 16,
+       "y": 16,
+       "w": 276,
+       "h": 40,
+       "display": "flex",
+       "visibility": "visible"
+      },
+      "ink": 250,
+      "lines": 1,
+      "items": 2
+     }
+    ],
+    "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-as-shipped-320.png"
+   },
+   "390": {
+    "pageHeights": [
+     3905,
+     3905
+    ],
+    "pageSpread": 0,
+    "doc": {
+     "height": 3905
+    },
+    "hero": {
+     "w": 346,
+     "h": 169,
+     "y": 439
+    },
+    "stamp": null,
+    "stampLines": 0,
+    "chip": {
+     "w": 49,
+     "h": 16,
+     "display": "inline"
+    },
+    "navRow": {
+     "x": 129,
+     "w": 170,
+     "h": 32,
+     "y": 20
+    },
+    "navWrap": "nowrap",
+    "navRight": 299,
+    "navLines": 1,
+    "navRows": [
+     {
+      "wrap": "nowrap",
+      "box": {
+       "x": 129,
+       "y": 20,
+       "w": 170,
+       "h": 32,
+       "display": "flex",
+       "visibility": "visible"
+      },
+      "ink": 299,
+      "lines": 1,
+      "items": 3
+     },
+     {
+      "wrap": "nowrap",
+      "box": {
+       "x": 16,
+       "y": 16,
+       "w": 346,
+       "h": 40,
+       "display": "flex",
+       "visibility": "visible"
+      },
+      "ink": 299,
+      "lines": 1,
+      "items": 2
+     }
+    ],
+    "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-as-shipped-390.png"
+   },
+   "1240": {
+    "pageHeights": [
+     2762,
+     2762
+    ],
+    "pageSpread": 0,
+    "doc": {
+     "height": 2762
+    },
+    "hero": {
+     "w": 512,
+     "h": 145,
+     "y": 373
+    },
+    "stamp": null,
+    "stampLines": 0,
+    "chip": {
+     "w": 49,
+     "h": 16,
+     "display": "inline"
+    },
+    "navRow": {
+     "x": 145,
+     "w": 170,
+     "h": 32,
+     "y": 20
+    },
+    "navWrap": "nowrap",
+    "navRight": 315,
+    "navLines": 1,
+    "navRows": [
+     {
+      "wrap": "nowrap",
+      "box": {
+       "x": 145,
+       "y": 20,
+       "w": 170,
+       "h": 32,
+       "display": "flex",
+       "visibility": "visible"
+      },
+      "ink": 315,
+      "lines": 1,
+      "items": 3
+     },
+     {
+      "wrap": "nowrap",
+      "box": {
+       "x": 32,
+       "y": 16,
+       "w": 1164,
+       "h": 40,
+       "display": "flex",
+       "visibility": "visible"
+      },
+      "ink": 315,
+      "lines": 1,
+      "items": 2
+     }
+    ],
+    "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-as-shipped-1240.png"
+   }
+  }
+ },
+ "shipped": {
+  "id": "register",
+  "at": {
+   "320": null,
+   "390": null,
+   "1240": null
+  }
+ },
+ "options": [
+  {
+   "id": "as-shipped",
+   "name": "A — the date as it stands (the baseline)",
+   "claim": "The incumbent, and the row every other row is a delta from: the hero block carries the when-line, the venue line and the rhythm line, and says nothing about where any of it came from. What the block does NOT have is the reason the operator asked about — nothing here is dated to a source, so the date reads as copy the page typed.",
+   "ruled": null,
+   "stamp": false,
+   "ink": "text-ink-3",
+   "fill": null,
+   "chip": false,
+   "at": {
+    "320": {
+     "pageHeights": [
+      4341,
+      4402
+     ],
+     "pageSpread": 61,
+     "doc": {
+      "height": 4341
+     },
+     "hero": {
+      "w": 276,
+      "h": 225,
+      "y": 472
+     },
+     "stamp": null,
+     "stampLines": 0,
+     "chip": {
+      "w": 0,
+      "h": 0,
+      "display": "none"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 121,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 250,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 121,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 276,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-as-shipped-320.png"
+    },
+    "390": {
+     "pageHeights": [
+      3905,
+      3905
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 3905
+     },
+     "hero": {
+      "w": 346,
+      "h": 169,
+      "y": 439
+     },
+     "stamp": null,
+     "stampLines": 0,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 346,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-as-shipped-390.png"
+    },
+    "1240": {
+     "pageHeights": [
+      2762,
+      2762
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 2762
+     },
+     "hero": {
+      "w": 512,
+      "h": 145,
+      "y": 373
+     },
+     "stamp": null,
+     "stampLines": 0,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 145,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 315,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 145,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 32,
+        "y": 16,
+        "w": 1164,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-as-shipped-1240.png"
+    }
+   }
+  },
+  {
+   "id": "register",
+   "name": "B — the register line, closing the block",
+   "claim": "One line, in the slot DESIGN.md already rules: `text-label text-ink-3 tabular-nums`, the wording from `provenanceStamp()`, the stamp taken from the feed rather than the build (D232). This is the minimum this tree can ground: a visitor now knows which read the date came from, and a subscriber and the page still cannot name different days.",
+   "ruled": "D447 (this round)",
+   "stamp": true,
+   "ink": "text-ink-3",
+   "fill": null,
+   "chip": false,
+   "at": {
+    "320": {
+     "pageHeights": [
+      4377,
+      4377
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 4377
+     },
+     "hero": {
+      "w": 276,
+      "h": 261,
+      "y": 472
+     },
+     "stamp": {
+      "w": 276,
+      "h": 32,
+      "y": 701
+     },
+     "stampLines": 2,
+     "chip": {
+      "w": 0,
+      "h": 0,
+      "display": "none"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 121,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 250,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 121,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 276,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-320.png"
+    },
+    "390": {
+     "pageHeights": [
+      3925,
+      3925
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 3925
+     },
+     "hero": {
+      "w": 346,
+      "h": 189,
+      "y": 439
+     },
+     "stamp": {
+      "w": 346,
+      "h": 16,
+      "y": 611
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 346,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-390.png"
+    },
+    "1240": {
+     "pageHeights": [
+      2783,
+      2782
+     ],
+     "pageSpread": 1,
+     "doc": {
+      "height": 2782
+     },
+     "hero": {
+      "w": 512,
+      "h": 165,
+      "y": 373
+     },
+     "stamp": {
+      "w": 512,
+      "h": 16,
+      "y": 522
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 145,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 315,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 145,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 32,
+        "y": 16,
+        "w": 1164,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-1240.png"
+    }
+   }
+  },
+  {
+   "id": "register-under",
+   "name": "C — B, but the line sits under the date itself",
+   "claim": "The other half of the placement question: the register goes directly under the when-line, above the venue, so the date and the day it was read are one object and the meeting’s own facts read after them. Costs the same pixels as B (one line, same class), and trades D340’s reading — that ruling made the block the meeting’s when and where, and this splits that pair.",
+   "ruled": null,
+   "stamp": true,
+   "ink": "text-ink-3",
+   "fill": null,
+   "chip": false,
+   "at": {
+    "320": {
+     "pageHeights": [
+      4377,
+      4377
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 4377
+     },
+     "hero": {
+      "w": 276,
+      "h": 261,
+      "y": 472
+     },
+     "stamp": {
+      "w": 276,
+      "h": 32,
+      "y": 524
+     },
+     "stampLines": 2,
+     "chip": {
+      "w": 0,
+      "h": 0,
+      "display": "none"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 121,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 250,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 121,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 276,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-under-320.png"
+    },
+    "390": {
+     "pageHeights": [
+      3925,
+      3925
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 3925
+     },
+     "hero": {
+      "w": 346,
+      "h": 189,
+      "y": 439
+     },
+     "stamp": {
+      "w": 346,
+      "h": 16,
+      "y": 491
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 346,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-under-390.png"
+    },
+    "1240": {
+     "pageHeights": [
+      2782,
+      2782
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 2782
+     },
+     "hero": {
+      "w": 512,
+      "h": 165,
+      "y": 373
+     },
+     "stamp": {
+      "w": 512,
+      "h": 16,
+      "y": 401
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 145,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 315,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 145,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 32,
+        "y": 16,
+        "w": 1164,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-under-1240.png"
+    }
+   }
+  },
+  {
+   "id": "register-ink",
+   "name": "D — B, plus the when-line at the answer tier",
+   "claim": "The loudness half: the date stops being meta ink and becomes the page's own answer, so the block reads as the thing a visitor acts on rather than as the small print beside it. Priced as a contrast pair (ink on paper against ink-3 on paper) rather than argued, because `check:contrast` asserts pairs and does not adjudicate which one a date takes.",
+   "ruled": null,
+   "stamp": true,
+   "ink": "text-ink",
+   "fill": null,
+   "chip": false,
+   "at": {
+    "320": {
+     "pageHeights": [
+      4377,
+      4377
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 4377
+     },
+     "hero": {
+      "w": 276,
+      "h": 261,
+      "y": 472
+     },
+     "stamp": {
+      "w": 276,
+      "h": 32,
+      "y": 701
+     },
+     "stampLines": 2,
+     "chip": {
+      "w": 0,
+      "h": 0,
+      "display": "none"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 121,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 250,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 121,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 276,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-ink-320.png"
+    },
+    "390": {
+     "pageHeights": [
+      3925,
+      3925
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 3925
+     },
+     "hero": {
+      "w": 346,
+      "h": 189,
+      "y": 439
+     },
+     "stamp": {
+      "w": 346,
+      "h": 16,
+      "y": 611
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 346,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-ink-390.png"
+    },
+    "1240": {
+     "pageHeights": [
+      2782,
+      2782
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 2782
+     },
+     "hero": {
+      "w": 512,
+      "h": 165,
+      "y": 373
+     },
+     "stamp": {
+      "w": 512,
+      "h": 16,
+      "y": 522
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 145,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 315,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 145,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 32,
+        "y": 16,
+        "w": 1164,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-ink-1240.png"
+    }
+   }
+  },
+  {
+   "id": "register-tint",
+   "name": "E — B, plus the date object’s fill",
+   "claim": "The visual half: the hero's date is drawn as the same object the calendar page's dates are — a `bg-tint` fill, no second keyline (DESIGN.md's leaf rule, D231). The claim this makes is that the home date and the `/dates` rows are one thing, which is what \"maintained data\" looks like in this site's own language. Costs a fill against ink-3, so its contrast is measured, not assumed.",
+   "ruled": null,
+   "stamp": true,
+   "ink": "text-ink-3",
+   "fill": "bg-tint",
+   "chip": false,
+   "at": {
+    "320": {
+     "pageHeights": [
+      4377,
+      4438
+     ],
+     "pageSpread": 61,
+     "doc": {
+      "height": 4377
+     },
+     "hero": {
+      "w": 276,
+      "h": 261,
+      "y": 472
+     },
+     "stamp": {
+      "w": 276,
+      "h": 32,
+      "y": 701
+     },
+     "stampLines": 2,
+     "chip": {
+      "w": 0,
+      "h": 0,
+      "display": "none"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 121,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 250,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 121,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 276,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 250,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-tint-320.png"
+    },
+    "390": {
+     "pageHeights": [
+      3985,
+      3925
+     ],
+     "pageSpread": 60,
+     "doc": {
+      "height": 3925
+     },
+     "hero": {
+      "w": 346,
+      "h": 189,
+      "y": 439
+     },
+     "stamp": {
+      "w": 346,
+      "h": 16,
+      "y": 611
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 346,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-tint-390.png"
+    },
+    "1240": {
+     "pageHeights": [
+      2783,
+      2782
+     ],
+     "pageSpread": 1,
+     "doc": {
+      "height": 2782
+     },
+     "hero": {
+      "w": 512,
+      "h": 165,
+      "y": 373
+     },
+     "stamp": {
+      "w": 512,
+      "h": 16,
+      "y": 522
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 145,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 315,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 145,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 32,
+        "y": 16,
+        "w": 1164,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-tint-1240.png"
+    }
+   }
+  },
+  {
+   "id": "register-chip",
+   "name": "F — B, plus the nav’s date visible at the 320 floor",
+   "claim": "The only treatment here that says the data is live on EVERY page rather than on the home page alone: the nav's subordinate date stops being `hidden` and rides the row. D311's ruling is about this element and its number is history — the runner re-measures the nav row's right edge at 320 and 390 against the box the row has, which is the arithmetic that decides whether the row still holds one line.",
+   "ruled": "D311 (the element), re-measured here",
+   "stamp": true,
+   "ink": "text-ink-3",
+   "fill": null,
+   "chip": true,
+   "at": {
+    "320": {
+     "pageHeights": [
+      4438,
+      4377
+     ],
+     "pageSpread": 61,
+     "doc": {
+      "height": 4377
+     },
+     "hero": {
+      "w": 276,
+      "h": 261,
+      "y": 472
+     },
+     "stamp": {
+      "w": 276,
+      "h": 32,
+      "y": 701
+     },
+     "stampLines": 2,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 276,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-chip-320.png"
+    },
+    "390": {
+     "pageHeights": [
+      3925,
+      3985
+     ],
+     "pageSpread": 60,
+     "doc": {
+      "height": 3925
+     },
+     "hero": {
+      "w": 346,
+      "h": 189,
+      "y": 439
+     },
+     "stamp": {
+      "w": 346,
+      "h": 16,
+      "y": 611
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 129,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 299,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 129,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 16,
+        "y": 16,
+        "w": 346,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 299,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-chip-390.png"
+    },
+    "1240": {
+     "pageHeights": [
+      2782,
+      2782
+     ],
+     "pageSpread": 0,
+     "doc": {
+      "height": 2782
+     },
+     "hero": {
+      "w": 512,
+      "h": 165,
+      "y": 373
+     },
+     "stamp": {
+      "w": 512,
+      "h": 16,
+      "y": 522
+     },
+     "stampLines": 1,
+     "chip": {
+      "w": 49,
+      "h": 16,
+      "display": "inline"
+     },
+     "navRow": {
+      "x": 145,
+      "w": 170,
+      "h": 32,
+      "y": 20
+     },
+     "navWrap": "nowrap",
+     "navRight": 315,
+     "navLines": 1,
+     "navRows": [
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 145,
+        "y": 20,
+        "w": 170,
+        "h": 32,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 3
+      },
+      {
+       "wrap": "nowrap",
+       "box": {
+        "x": 32,
+        "y": 16,
+        "w": 1164,
+        "h": 40,
+        "display": "flex",
+        "visibility": "visible"
+       },
+       "ink": 315,
+       "lines": 1,
+       "items": 2
+      }
+     ],
+     "shot": "/home/chexxor/Git/mathloco/.design/tmp-round19/shot-register-chip-1240.png"
+    }
+   }
+  }
+ ]
+}

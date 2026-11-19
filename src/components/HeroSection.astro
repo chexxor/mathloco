@@ -2,7 +2,7 @@
 import { MARK } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
-import { content, value, answers, upcoming, formatDate, timeSpan } from '../lib/content.ts';
+import { content, value, answers, upcoming, formatDate, timeSpan, copiedOn } from '../lib/content.ts';
 import { todayIn, snapshot } from '../lib/events.mjs';
 import { scheduleWindow } from '../lib/event-window.mjs';
 // The rhythm is generated from the rows this build publishes, by the same module the schedule surfaces use,
@@ -119,6 +119,13 @@ const rhythm = rhythmSentence(snapshot.events);
 // schedule." — is deleted in `Schedule.astro`, not reworded: a page that says where the answer is, instead of
 // what the answer is, has not answered.
 const nextMeeting = scheduleWindow(upcoming(), todayIn()).shown[0] ?? null;
+// MS38 (2026-11-19, D447): the hero's date carries the SAME freshness the page of record carries, so a visitor
+// reads it as data the club re-reads rather than as a sentence this page typed. `copiedOn()` is D232's rule --
+// the stamp is the feed's own `source.fetchedAt`, the value every published `DTSTAMP` in `/events.ics` derives
+// from -- so the day printed under the hero date and the day a subscriber's calendar client holds cannot
+// disagree. It is the one freshness this page can ground: nothing here fetches, so the only honest claim is
+// which read the date came from and when that read happened (D73's topology).
+const copied = copiedOn();
 // Round-6 review (2026-11-16), Home/Revise + "what to do this week" item 3: the primary control sends a
 // visitor who has already decided two clicks from the sign-up. The destination is the one `signUpPaths()`
 // returns for the date the hero prints — the same call every row under it makes — so the hero's button and
@@ -242,6 +249,20 @@ const signUpFor = nextMeeting
               `src/lib/cadence.mjs`, and `check:content` fails a page for a cadence word its source does not
               name (D92, D301). */}
           {rhythm && <p class="mt-1 text-body leading-prose text-ink-2 font-body">{rhythm}</p>}
+          {/* MS38 (2026-11-19, D447, ruling S073): the freshness register, in the slot DESIGN.md rules it --
+              `text-label text-ink-3 tabular-nums`, wording from `provenanceStamp()` via `copiedOn()` -- as the
+              LAST line of the block, so the stamp closes the block the way `/dates` closes its list (D232's
+              "the stamp under a date is the feed's stamp"). The operator's word was that this date does not read
+              as maintained data; what this tree can ground is which read it came from and when that read ran
+              (D73: nothing fetches Mobilizon at request time; every route is prerendered). Motion, a pulse and
+              a "live" chip are refused for that reason -- D115 ruled the infinite pulse out, `check:reduced-motion`
+              (MS35) owns the only two motion tiers, and a live region over static content would announce nothing.
+              The sentence is `/dates`'s verbatim: D322 rules one wording for one provenance fact, so the repeat
+              across two pages a visitor reads one click apart is signed in `design/copy-duplicates.json` under
+              S073 rather than reworded to satisfy a detector (D432's precedent, and the pair already in that file
+              for `/dates`'s own two surfaces). `copied` is null only when no source is wired, in which case there
+              is no read to name and no line -- the empty state belongs to `/dates`, which owns the calendar. */}
+          {copied && <p class="mt-1 text-label text-ink-3 tabular-nums">Copied from the club’s own calendar {copied}</p>}
         </div>
       )}
 
