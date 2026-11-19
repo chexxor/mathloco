@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-19",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-19T20:49:43.244Z",
+ "artifactBuilt": "2026-11-19T22:23:33.566Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -1952,16 +1952,8 @@
    "outsideRoutes": [
     "/past"
    ],
-   "outsideCount": 2,
+   "outsideCount": 1,
    "evidence": [
-    {
-     "route": "/past",
-     "form": "prose",
-     "zone": "body",
-     "section": "No finished date on our calendar",
-     "text": "The dates our own calendar holds that have already passed were announced cancelled.",
-     "shape": 1
-    },
     {
      "route": "/past",
      "form": "prose",
@@ -2850,8 +2842,7 @@
     "/chat": {
      "status": "answered",
      "forms": [
-      "heading",
-      "prose"
+      "heading"
      ],
      "zones": [
       "body"
@@ -2931,14 +2922,6 @@
      "section": "What the club is pulling on",
      "text": "What the club is pulling on",
      "shape": 0
-    },
-    {
-     "route": "/chat",
-     "form": "prose",
-     "zone": "body",
-     "section": "What the club is pulling on",
-     "text": "Any can be dropped mid-sentence; none is a prerequisite for arriving.",
-     "shape": 1
     },
     {
      "route": "/dates",

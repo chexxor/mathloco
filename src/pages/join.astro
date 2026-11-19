@@ -183,9 +183,15 @@ const turnout = value(content.turnout);
                   </a>
                   {/* What the visitor gets. Every clause is the resolver's, and every clause has a source
                       named in `joinChannels()` — the member list (src/content.json), the public Facebook
-                      group (S021/D280), the per-date page (S019/D273), the chat between meetings (the
-                      homepage lede's own sentence). No cadence word, no headcount, no price (D92, D265). */}
-                  <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{c.gives}</p>
+                      group (S021/D280), the per-date page (S019/D273). No cadence word, no headcount, no price
+                      (D92, D265). A row may now carry **no** clause: the operator deleted the Discord row's
+                      "The conversation that runs between meetings." on 2026-11-19 (**S079**, **D453**) — it was
+                      one of the four sentences `npm run check:copy-contract --print-hollow` held on the worklist,
+                      and the author ruled all four go. So the clause is painted only when the resolver carries one,
+                      rather than leaving an empty paragraph in the row. `check:join-page`'s `join-gives-mismatch`
+                      reads the row's last `<p>` and compares it with the resolver byte for byte, so "no `<p>`" and
+                      "an empty clause" are the same record: both ''. */}
+                  {c.gives && <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{c.gives}</p>}
                 </li>
               ))}
             </ul>

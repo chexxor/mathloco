@@ -764,8 +764,9 @@ in. One record holds that address - `design/copy-contract.json`, one row per bod
 beside the `audiences` and `styles` vocabularies it draws on - and one gate reads it: `npm run check:copy-contract`,
 in `verify` after `build`. It fails a section with no row, a row for a section the build no longer makes, a reader
 or a register nobody declared, one page addressing two readers without saying why, and a copy round that makes
-the sentences carrying no reader-usable fact more numerous than the floor the record keeps. That floor is **4**
-sentences on the built pages carrying no place, time, price, person, platform, thing to carry, or action, and **no
+the sentences carrying no reader-usable fact more numerous than the floor the record keeps. That floor is **0**
+sentences as of 2026-11-19, and the class it counts is sentences carrying no place, time, price, person, platform,
+thing to carry, or action, and **no
 stated year** beside no link - the year alternation landed 2026-11-19 in `FACT_RE` with the author's first-year
 sentence, because "The club's first year was 2019." changes what a reader believes and a detector that calls it
 hollow is a detector that refuses a fact the author supplied (**D449**); a stated year is a fact and a frequency
@@ -773,12 +774,27 @@ word is not, which is **D92**'s own distinction - @measured 2026-11-19 by `npm r
 (Linux native, Node 24.22.1) - and it is
 a **floor, not a goal**: rewriting a shipped sentence is an edit to copy, and a re-write that invents a fact is
 D92's defect, so a copy round takes sentences **off** the worklist and the gate fails when the number rises.
+**The floor moved 4 → 0 on 2026-11-19 because the operator deleted the four sentences that were on it** (**S079**,
+**D453**): asked what to do with the worklist, the answer was "(A) drop all four of those." — `/chat`'s "Any can
+be dropped mid-sentence; none is a prerequisite for arriving.", `/chat`'s "The channel is the live thing.", `/join`'s
+Discord clause "The conversation that runs between meetings.", and `/past`'s cancelled-state line. Three have no
+successor. `/past`'s notice still owes exactly one body line (this file's "States" rule: missing content is a state,
+never a blank), so that one line is **generated from the count the page already computes** rather than typed by a
+seat — `src/pages/past.astro`'s own header has always claimed its sentence is generated from the count, and
+2026-11-19 is the day that claim became true. This is deliberately **not** the move the record refused at **D451**,
+where the bar stayed at 4 because the deleted sentence was *exempt* and the worklist had not changed: here the
+worklist itself emptied, and a run printed the zero, which is what "set from a run" means. Consequence, stated where
+the next round will read it: a flagged sentence from here is a regression, and `hollow-count-worse` fires on the
+first one @measured 2026-11-19 by `node scripts/check-copy-contract.mjs` printing `hollow sentences: 0 against a
+recorded bar of 0` and by `--selftest` at **11 of 11**, that case still firing against a recorded 0 (Linux native,
+Node 24.22.1).
 Sentences that are *meant* to be about the surface itself are registered in `hollowRuled`, each with the ruling
 and the reason it stays; an entry whose signature matches no current sentence fails on its own account, because
 round 7's F6 was a needle that never matched its defect and read as a green light that was never a detector —
 which is why the exemption for the deleted `/join` gap sentence was **removed in the same commit** as the
 sentence (**D451**), and why the bar stayed at **4**: the sentence was exempt, so it was never one of the four
-hits, and a bar is a worklist, not a score to improve.
+hits, and a bar is a worklist, not a score to improve. The bar is **0** now for the different reason named above:
+the four hits themselves went (**D453**).
 Read `.agents/skills/copy-vision/SKILL.md` before editing a shipped sentence - it carries the diagnosis and the
 exercises. The ask that settles the reader is the author's, not the delegate's: `docs/the-authors-vision-2026-11-19.md`,
 five questions in the author's own words, whose slots stay bracketed until the author fills them. **The author answered
@@ -797,7 +813,8 @@ values (**D381**) and `turnout` (**D385**) out of the section at the bottom of t
 three doors, each still painted from its `src/content.json` slot, so the operator still corrects the pitch by
 editing a value and the two surfaces that paint them still cannot be edited apart (**D247**'s defect class,
 inverted). A pitch assembled from claims that have a hand behind them is checkable — after the move the worklist
-holds **4 sentences against a bar of 4**, and the page prints no date (**D449**'s year stays on `/`, because
+held **4 sentences against a bar of 4**, which was the state of that morning: all four were deleted the same
+afternoon (**D453**) — and the page prints no date (**D449**'s year stays on `/`, because
 `check:join` refuses a second dated surface) @measured 2026-11-19 by `npm run check:copy-contract` and
 `npm run check:join` (Linux native, Node 24.22.1). A pitch written for the occasion is **D92**'s defect wearing
 a marketing hat, and no seat writes one.

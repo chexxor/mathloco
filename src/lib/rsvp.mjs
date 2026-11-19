@@ -666,8 +666,13 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.discordInvite),
       external: true,
       label: 'Join the chat on Discord',
-      // derived, see below
-      gives: 'The conversation that runs between meetings.',
+      // The clause this row used to print — "The conversation that runs between meetings." — was deleted on the
+      // operator's word 2026-11-19 (**S079**, **D453**): it was one of the four sentences
+      // `npm run check:copy-contract --print-hollow` had on the worklist, and the author ruled all four go. The key
+      // stays with an empty string rather than disappearing: `check:join-page`'s `join-gives-mismatch` compares the
+      // row's last painted `<p>` with `String(w.gives ?? '')`, and `join.astro` paints no `<p>` at all when the
+      // clause is empty, so both sides of that comparison are '' — the same record either way (D453).
+      gives: '',
     },
   ];
   // Canonical order: the kinds in `CHANNEL_KINDS` order, and within a kind the order above. Sorting is

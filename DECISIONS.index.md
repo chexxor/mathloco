@@ -456,5 +456,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D450** — `/join` carries its own pitch: persuasion is promoted from claims that already have a source, never written
 - **D451** — the operator deletes `/join`'s gap sentence: an author may take shipped copy out on their ear, and no seat writes its replacement
 - **D452** (2026-11-19) — 2026-11-19: the corpus is missing **homes**, not a taxonomy — ADRs for the expensive rulings, tracked how-tos for the operating knowledge, and the dated letters measured as record rather than source (`MS40`, `S078`, `.notes/roadmap-docs.md`, 2026-11-19; `costly` — 17 host-local runbooks become tracked, eight ADRs become the home a `D###` citation can point at, two new deploy-set gates; no letter moves, `DESIGN.md` is not re-homed, the visitor site gains nothing new; Linux native, Node 24.22.1)
+- **D453** — the operator empties the hollow worklist by deletion, and the floor moves 4 → 0 because a run printed zero, not because a seat argued for it
 
-Defined: 448 (D1-D452). Unused ids: D315, D400, D401, D402.
+Defined: 449 (D1-D453). Unused ids: D315, D400, D401, D402.

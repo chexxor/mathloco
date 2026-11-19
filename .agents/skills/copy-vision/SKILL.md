@@ -113,18 +113,28 @@ The falsifiable class this item installs, with the count from the command that f
 
 ```
 $ npm run check:copy-contract --print-hollow
-hollow sentences on the built pages: 4 (bar: 4)
+hollow sentences on the built pages: 0 (bar: 0)
+```
+
+The history the record keeps, now as a **specimen set** rather than a worklist. Eight sentences matched the
+class before the four ruled signatures were registered (**@measured 2026-11-19 by
+`npm run check:copy-contract --print-hollow`, Linux native, Node 24.22.1**); four are owned by a ruling and
+carry their `why`, and these four stood as the worklist on 2026-11-19 morning:
+
+```
   /chat / What the club is pulling on  "Any can be dropped mid-sentence; none is a prerequisite for arriving."
   /chat / What the club is pulling on  "The channel is the live thing."
   /join / Talk with us now              "The conversation that runs between meetings."
   /past / No finished date on our calendar  "The dates our own calendar holds that have already passed were announced cancelled."
 ```
 
-Eight sentences matched the class before the four ruled ones were registered (**@measured 2026-11-19 by
-`npm run check:copy-contract --print-hollow`, Linux native, Node 24.22.1**); four of the eight are owned by a
-ruling and carry their `why`; four stand as the worklist. Falsifiable means: delete one of the four from the
-built page and nothing a reader can do or believe changes — which is the test a human applies, and the
-approximation the gate runs (no club fact, no path out).
+**All four were deleted that same afternoon** (**S079**, **D453**): asked what to do with the worklist, the
+operator answered "(A) drop all four of those." The bar is therefore 0 and a new hit is a regression, not a
+slot to spend. Exactly one of the four needed a successor, because a notice owes one body line: on `/past` the
+line is now **generated from a count the page already computes** rather than written by a delegate — which is
+the D92-shaped lesson the whole item is built on. Falsifiable means: delete the sentence from the built page
+and nothing a reader can do or believe changes — which is the test a human applies, and the approximation the
+gate runs (no club fact, no path out).
 
 ## The exercises
 

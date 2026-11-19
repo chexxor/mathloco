@@ -106,7 +106,9 @@
         next H2. A section that promises summaries and delivers none is worse than a page that doesn't
         promise them." The heading over a void becomes a warm static state in the notice grammar DESIGN.md
         fixes (status word, title, one body line, one boundary), in the reviewer's own words - "No summary
-        this week. The channel is the live thing." It is an operator-granted draft (the ledger in
+        this week. The channel is the live thing." **That second half is gone**: the operator deleted it on
+        2026-11-19 (**S079**, **D453**), so the state ships as "No summary this week." plus the bot-voice
+        sentence — see the note on the line itself. It is an operator-granted draft (the ledger in
         `docs/reply-to-the-communication-review-round-6-2026-11-16.md` names it and its correction path):
         the server-rendered state cannot know whether a summary exists, which is why the branch below it
         still says "did not load" only where the browser established that fact.
@@ -132,14 +134,18 @@
       <p class="text-body leading-prose text-ink-2 font-body">
         <!-- Round-8 review (2026-11-18), `/chat`/Revise: "move 'No summary written this week' to the end, as one
             line, no heading: 'No summary this week. The channel is the live thing.'" The heading over the void is
-            gone — this state is one body line, in the reviewer's own words — and the island now sits below the
-            thread list, so the note is the last thing before the band (D409's defect, one step further: the void
-            was the page's #2 heading and its first impression). The box keeps its notice grammar and its live
+            gone — this state is one body line — and the island now sits below the thread list, so the note is the
+            last thing before the band (D409's defect, one step further: the void
+            was the page's #2 heading and its first impression). **The reviewer's wording is no longer verbatim
+            here**: the operator deleted "The channel is the live thing." on 2026-11-19 (**S079**, **D453**) — it was
+            one of the four sentences `npm run check:copy-contract --print-hollow` held on the worklist, and the
+            author ruled all four go. Census row C1b flipped to `want: absent` for exactly that deletion; row C2 keeps
+            the sentence below it byte for byte. The box keeps its notice grammar and its live
             region because DESIGN.md's "A painted notice is announced" and MS35's `check:notice-announcement` read
             that role, and `check:render` styles the box from it: quiet here means no heading and no ring of
             emphasis beyond the one boundary, not an unannounced state. The sentence that says how the section is
             made is the round's Keep row, kept byte for byte. -->
-        No summary this week. The channel is the live thing. Our bot writes this section from recent channel
+        No summary this week. Our bot writes this section from recent channel
         activity, after the noise settles.
       </p>
     </div>

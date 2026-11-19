@@ -107,8 +107,11 @@ const items = threads();
             No count is written here: `check:threads` reads the cap out of `WhyJoinUs.astro`'s `const VISIBLE`,
             and a second cap in this file would be a copy of a rule with two homes (D320). */}
         <p class="text-lede leading-prose text-ink-2 mb-6 font-body">
-          {countWord(items.length)} threads the club is pulling on. Any can be dropped mid-sentence; none is a
-          prerequisite for arriving.
+          {/* "Any can be dropped mid-sentence; none is a prerequisite for arriving." was deleted on the operator's
+              word 2026-11-19 (**S079**, **D453**): it was one of the four sentences `check:copy-contract --print-hollow`
+              held on the worklist, and the author ruled all four go. Nothing replaced it. The count line stays
+              sourced - it is `threads()`'s own length, never a typed number (census row C5). */}
+          {countWord(items.length)} threads the club is pulling on.
         </p>
         <ul class="grid grid-cols-1 gap-x-8 md:grid-cols-2">
           {items.map(({ label, gloss }) => (

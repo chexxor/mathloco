@@ -10,6 +10,7 @@ import { publishableRows, publishedName } from '../lib/event-groups.mjs';
 // rule 10) can compare them against the same rule rather than a copy of it (D238's lesson, applied to the
 // past half by D374).
 import { pastWindow, isPast, dateOf, plainDate } from '../lib/event-window.mjs';
+import { countWord } from '../lib/content.ts';
 import { forbidsIndexing } from '../lib/index-rules.mjs';
 
 /**
@@ -62,10 +63,29 @@ const closedOff = held.filter((r) => {
   const d = dateOf(r);
   return !!d && d < today && String(r.status ?? '').toUpperCase() === 'CANCELLED';
 }).length;
+// The cancelled variant used to be one hand-written string - "The dates our own calendar holds that have
+// already passed were announced cancelled." - and it was on the `check:copy-contract` hollow worklist, which
+// the author cleared by deletion on 2026-11-19 (**S079**, **D453**). A notice still owes one body line
+// (DESIGN.md "States": missing content is a state, never a blank; record 0010; `check:notice-announcement`
+// reads this box's role), so what replaced it is **generated from `closedOff`**, the count this page already
+// computes, rather than typed by a delegate: nothing is invented, and the line cannot go stale on the next
+// harvest the way the fixed string would have. The page header has always claimed this line is generated from
+// the count; that claim became true on 2026-11-19. `countWord` spells the number the way `/chat` spells its
+// thread count, and a spelled number is a fact the hollow detector counts (its lexicon has number words, not
+// bare counts) - which is why the new line is not itself a worklist item. Its wording deliberately does not
+// restate the page's lede: "Every date on our own calendar that has finished and was not called off." already owns
+// that sentence, and `check:content`'s `near-duplicate-surface` rule fails a new repeat the moment it ships - the
+// first draft of this line ("Two dates on our own calendar have finished and were called off.") went red against
+// the lede @measured 2026-11-19 by `npm run check:content`, so the line carries only what the lede does not: the
+// count, and the fact that the list is therefore empty. The **other** variant is worded for the same reason: it is
+// unpainted today (`closedOff` is 2 @measured 2026-11-19 from `data/events.json`), so no gate scores it, but the
+// sentence it used to carry - "Our calendar holds no date that has finished yet." - shares `date`, `finished` and
+// `calendar` with the lede and would fail on the first harvest that leaves nothing cancelled.
+const closedOffText = closedOff === 1
+  ? 'One date was called off, so nothing is listed.'
+  : `${countWord(closedOff)} dates were called off, so nothing is listed.`;
 const emptyBody = win.total === 0
-  ? (closedOff
-      ? 'The dates our own calendar holds that have already passed were announced cancelled.'
-      : 'Our calendar holds no date that has finished yet.')
+  ? (closedOff ? closedOffText : 'No date has finished yet.')
   : null;
 const olderText = win.hiddenCap > 0
   ? `This page lists ${win.shown.length} of them, newest first; ${win.hiddenCap} older date(s) are not listed here.`
