@@ -454,5 +454,6 @@ and a renumber silently re-points every one of them at a different decision.
 - **D448** (2026-11-19) — 2026-11-19: copy gets an **address** — every section of a built page is a function of (reader, what that reader can do or believe after it, register), and the gate fails the sentence that changes none of the three (round-9 copy vision, `design/copy-contract.json`, `scripts/check-copy-contract.mjs`, `.agents/skills/copy-vision/SKILL.md`, `docs/the-authors-vision-2026-11-19.md`, 2026-11-19; `costly` — a new milestone row, a gate wired into `verify`, a hand-kept record over every built page, a tracked skill, one tracked ask; no route cut, no ceiling moved, no shipped sentence rewritten, no id reused; Linux native, Node 24.22.1)
 - **D449** — the author's half-letter: the reader is ruled for every page, three facts move into their slots, and the refusals stay an errand
 - **D450** — `/join` carries its own pitch: persuasion is promoted from claims that already have a source, never written
+- **D451** — the operator deletes `/join`'s gap sentence: an author may take shipped copy out on their ear, and no seat writes its replacement
 
-Defined: 446 (D1-D450). Unused ids: D315, D400, D401, D402.
+Defined: 447 (D1-D451). Unused ids: D315, D400, D401, D402.

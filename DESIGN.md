@@ -736,18 +736,25 @@ a source exists. **In markup text write the character, never an escape:** `club�
 is enforced by a gate that reads rendered text (`npm run check:escapes`), not by a grep for backslashes.
 
 **Name a gap the site cannot fill, in the open** (round-5 communication read A4, D368): the page says so in
-its own words — "There is no syllabus, no reading list to keep up with, and no current focus." on `/`,
-"Whether the room is your kind of room is not something a page can tell you." on `/join` @measured 2026-11-19
-by `grep -rl "not something a page can tell you" dist/client` (which prints `dist/client/join/index.html`
-only — this paragraph used to cite that sentence on `/`, where it has never printed). A gap the reader can see
-and a gap the page does not know it has are **different defects**, and only the second is worth finding;
-`node design/visitor-questions.mjs` keeps them apart as DECLINED vs UNANSWERED — **6 gaps today: 2 DECLINED in
-the open, 3 UNANSWERED, 1 answered only in chrome** @measured 2026-11-19 by that probe (Linux native, Node
-24.22.1). It printed 3 declined and 7 unanswered on 2026-11-16, and the difference is instructive rather than
-arithmetic: the round-6 review took the front-desk sentence off `/join` (D393), and that sentence is the only
-string the probe's `declinedBy` pattern for q13 matches (`no front desk|no phone number|nothing to call|no
-phone line`), so **q13 is UNANSWERED today** — deleting a refusal does not close a question, it only removes the
-page's way of saying it cannot answer. The mailto that would answer it is declined with evidence
+its own words, and today exactly one page does — "There is no syllabus, no reading list to keep up with, and
+no current focus." on `/` @measured 2026-11-19 by `grep -rl "no current focus" dist/client` (one artifact,
+`dist/client/index.html`). The sentence this paragraph used to quote beside it — "Whether the room is your kind
+of room is not something a page can tell you." on `/join` — was **deleted by the operator on 2026-11-19**
+("Just remove … I don't like that sentence", **D451**), and `grep -rl "not something a page can tell you"
+dist/client` now prints nothing at all. The rule is not withdrawn and the deletion is not a fix: a gap the
+reader can see and a gap the page does not know it has are **different defects**, and the probe keeps them
+apart as DECLINED vs UNANSWERED — **6 gaps today: 1 DECLINED in the open, 4 UNANSWERED, 1 answered only in
+chrome** @measured 2026-11-19 by `node design/visitor-questions.mjs` (Linux native, Node 24.22.1); it printed
+3 declined and 7 unanswered on 2026-11-16 and 2 declined / 3 unanswered on 2026-11-19 before the deletion, and
+the trajectory is the lesson rather than the arithmetic. **q07 — "is the room one I can be in, quiet, seated,
+reachable?" — is UNANSWERED today**, declined yesterday by the deleted sentence; its `declinedBy` pattern
+(`/not something a page can tell you/`) stays in the probe so a future refusal is still caught even though it
+currently matches nothing. That is the second fall of its kind on the record: **q13** went the same way on
+2026-11-16 when D393 took the front-desk sentence off `/join` (the only string its `declinedBy` pattern matches
+is `no front desk|no phone number|nothing to call|no phone line`). **Deleting a refusal does not close a
+question; it only removes the page's way of saying it cannot answer** — so a round that deletes a gap sentence
+owes the reader either a source or nothing, and the source for q07 is MS32's photograph, which stays parked with
+the operator's own trigger. The mailto that would answer q13 is declined with evidence
 (D403: no MX record on either zone) and un-parks when the operator provisions Email Routing on the zone (S058). Refusing is
 never a substitute for a source: an ungrounded contact, price or room description would be a claim (D92).
 
@@ -768,7 +775,10 @@ a **floor, not a goal**: rewriting a shipped sentence is an edit to copy, and a 
 D92's defect, so a copy round takes sentences **off** the worklist and the gate fails when the number rises.
 Sentences that are *meant* to be about the surface itself are registered in `hollowRuled`, each with the ruling
 and the reason it stays; an entry whose signature matches no current sentence fails on its own account, because
-round 7's F6 was a needle that never matched its defect and read as a green light that was never a detector.
+round 7's F6 was a needle that never matched its defect and read as a green light that was never a detector —
+which is why the exemption for the deleted `/join` gap sentence was **removed in the same commit** as the
+sentence (**D451**), and why the bar stayed at **4**: the sentence was exempt, so it was never one of the four
+hits, and a bar is a worklist, not a score to improve.
 Read `.agents/skills/copy-vision/SKILL.md` before editing a shipped sentence - it carries the diagnosis and the
 exercises. The ask that settles the reader is the author's, not the delegate's: `docs/the-authors-vision-2026-11-19.md`,
 five questions in the author's own words, whose slots stay bracketed until the author fills them. **The author answered

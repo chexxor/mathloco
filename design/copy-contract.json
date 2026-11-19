@@ -77,7 +77,7 @@
         {
           "section": "What we do",
           "audience": "first-visitor",
-          "goal": "they can tell which room is the one they want, and what a person brings into a study session",
+          "goal": "they can tell which kind of gathering is the one they want, and what a person brings into a study session. The word 'room' is gone from this goal on the operator's ruling of 2026-11-19 - 'The focus is the social group, rather than the room' (**D451**); the section asks a reader to choose a kind of gathering, never a room",
           "style": "club-voice",
           "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
@@ -91,7 +91,7 @@
         {
           "section": "Talk with us now",
           "audience": "first-visitor",
-          "goal": "they can read the conversation before coming to a meeting, and ask in it if the room is not theirs",
+          "goal": "they can read the conversation before coming to a meeting, and ask in it if the group is not theirs - 'group', not 'room', on the operator's ruling of 2026-11-19 (**D451**)",
           "style": "invitation",
           "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         },
@@ -180,17 +180,12 @@
       "signature": "our bot writes this section from recent channel activity",
       "ruled": "the round-8 letter's Keep register (MS37, D446)",
       "why": "the one sentence on /chat naming how the summary gets written, kept by the letter rather than cut. It is about the machinery, and that is the point: it tells a reader which words are machine-written and which are the club's."
-    },
-    {
-      "signature": "whether the room is your kind of room",
-      "ruled": "D368 (name a gap the site cannot fill, in the open)",
-      "why": "the open gap statement this rule exists to require: a gap the reader can see is a different defect from a gap the page does not know it has. DESIGN.md's Copy section quotes this sentence as the rule's own example."
     }
   ],
   "hollow": {
     "count": 4,
-    "note": "set from a run: the gate counts sentences on the built body sections that carry no club fact (place, time, price, person, platform, thing to carry, a number, an action) and no path out, and fails when the count rises above this number. The count is a floor rather than a zero because rewriting a sentence is an edit to shipped copy, and a re-write that invents a fact is D92's defect: the number is the worklist a copy round has to reduce, and it may not grow.",
+    "note": "set from a run: the gate counts sentences on the built body sections that carry no club fact (place, time, price, person, platform, thing to carry, a number, an action) and no path out, and fails when the count rises above this number. The count is a floor rather than a zero because rewriting a sentence is an edit to shipped copy, and a re-write that invents a fact is D92's defect: the number is the worklist a copy round has to reduce, and it may not grow. One exemption was withdrawn 2026-11-19: the signature 'whether the room is your kind of room', which exempted the /join gap sentence the operator deleted that day (D451). It is deleted rather than left, because an exemption whose needle matches no sentence is exactly what `hollow-rule-stale` exists to catch - a green light that was never a detector. The bar stays at 4 and was not lowered to 3: the sentence was exempt, so it was never one of the four hits, and a bar is a worklist, not a score to improve.",
     "measuredAt": "2026-11-19",
-    "probe": "npm run check:copy-contract --print-hollow @measured 2026-11-19 by that command (8 flagged before the four ruled signatures were registered)"
+    "probe": "npm run check:copy-contract --print-hollow @measured 2026-11-19 by that command (8 flagged before the four ruled signatures were registered; the fourth was withdrawn the same day, and the count it left is re-read by the probe line below"
   }
 }

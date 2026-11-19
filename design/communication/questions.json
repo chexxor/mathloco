@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-19",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-19T20:05:27.808Z",
+ "artifactBuilt": "2026-11-19T20:49:43.244Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -711,7 +711,7 @@
     "/",
     "/join"
    ],
-   "verdict": "DECLINED",
+   "verdict": "UNANSWERED",
    "perRoute": {
     "/": {
      "status": "unanswered",
@@ -754,15 +754,7 @@
    "outsideRoutes": [],
    "outsideCount": 0,
    "evidence": [],
-   "declinedEvidence": [
-    {
-     "route": "/join",
-     "form": "prose",
-     "zone": "body",
-     "section": "What we do",
-     "text": "Whether the room is your kind of room is not something a page can tell you."
-    }
-   ]
+   "declinedEvidence": []
   },
   {
    "id": "q08",
@@ -3229,7 +3221,7 @@
    "id": "q07",
    "who": "first-time",
    "ask": "Is the room one I can be in — quiet, seated, reachable?",
-   "verdict": "DECLINED",
+   "verdict": "UNANSWERED",
    "where": [
     "/",
     "/join"
@@ -3291,10 +3283,10 @@
  "counts": {
   "questions": 29,
   "ANSWERED": 22,
-  "DECLINED": 2,
+  "DECLINED": 1,
   "ANSWERED-IN-CHROME": 1,
   "ANSWERED-ELSEWHERE": 0,
-  "UNANSWERED": 3,
+  "UNANSWERED": 4,
   "NOT-ASKED": 1
  }
 }

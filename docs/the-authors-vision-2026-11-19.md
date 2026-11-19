@@ -95,9 +95,17 @@ Answer in the words the club uses, not in the words a page uses about itself.
        shipped line "There is no syllabus, no reading list to keep up with, and **no current focus**" is now in
        tension with the author's word. That tension is a copy decision, not a fact this seat can settle.
      - **a room** — "whether this is the room you want — this should change. The focus is the social group,
-       rather than the room." The shipped gap sentence on `/join` is about the room; the author says the question
-       is about the group. Rewriting it also moves its signature in `hollowRuled`, or `hollow-rule-stale` fires
-       against an exemption that no longer matches anything.
+       rather than the room." **Landed 2026-11-19 as a deletion, not a rewrite** (**D451**): asked how far the
+       reframing reaches, and shown that the word "group" on `/join` already means the Meetup and Facebook
+       groups, the operator took neither candidate sentence and said "Just remove \"Whether the room is your kind
+       of room is not something a page can tell you.\", then. I don't like that sentence." The sentence is off
+       the page; its `hollowRuled` signature was deleted in the same commit (a signature matching no sentence
+       fails `hollow-rule-stale`); and the two `design/copy-contract.json` `goal` strings that spoke of "which
+       room is the one they want" and "if the room is not theirs" now speak of a kind of gathering and of the
+       group. What it costs, on the record: the visitor probe moves q07 ("is the room one I can be in — quiet,
+       seated, reachable?") from DECLINED to UNANSWERED @measured 2026-11-19 by `node design/visitor-questions.mjs`,
+       so the question stands and only the page's way of naming it is gone. A sentence about the group here is the
+       author's to write — no seat will write one (**S076**).
      - **a photograph** — "photographs will come later." That is a record on MS32, not an un-park: the row keeps
        both of its clauses (a real meeting photograph ≥1600px 3:2 natural light, and the `<role>-<mediaUid>`
        name) and nothing ships until both hold.
@@ -139,7 +147,7 @@ parked in PLAN.md §Parked with the trigger "the author's pick from this list".
 | who the club is willing to host, and how many it holds | `hostLine` ships "the one with the laptop open"; a roster is the claim it does not make | a slot that stays nameless (`hostLine`), D432 |
 | what the club is for, in the shape of a benefit | the deleted six-card grid — "Expert Guidance", "Learn from experienced mathematicians", "Access to curated learning materials" — is the class D92 measured as invented, and `check:content`'s RETIRED list already refuses six of its strings | already gated: `retired-fabrication` |
 | that the club is a place to *be* rather than a place to talk | "always a place where you are allowed to talk over a table" is the author's one venue sentence; anything about ambience, hours, or parking is a claim this tree cannot read | D92: a claim with no source in this tree stays a bracket |
-| what the room feels like, or who will be there | the page says the question it cannot answer instead of answering it (D368); a future round that answers it is the defect | the gap sentence stays a gap, and `hollowRuled` keeps its signature current |
+| what the room feels like, or who will be there | the site used to name this question on `/join` and refuse to answer it (D368); the operator deleted that sentence on 2026-11-19 (**D451**), so the question is now simply unanswered — `node design/visitor-questions.mjs` reads q07 UNANSWERED @measured 2026-11-19 — and a future round could still fill the gap with ambience it has never seen | the refusal still holds as a rule: a room description needs a source, and the one the author named is MS32's photograph; D92 keeps an unsourced one a bracket |
 | a member count, and what the members do | `membership` reads 280 members off the club's own page, fetched 2026-11-03; a round that says "a community of 280" turns a fetched number into a claim about activity | the slot's dated source, and `check:provenance` |
 | a schedule, in words | D92's oldest wound: "weekly" survived two years on the live site. The weekday sentence is generated from rows so it cannot go stale; a frequency phrase typed by hand can | `src/lib/cadence.mjs` is the word list the gate reads — the phrase should join it before the word joins a page |
 | that the club has a history it can show | the author has now supplied a year (2019); a round that turns one year into "over seven years of mathematics" is the sibling-invention this class exists to stop | the year in `pastLine`, one sentence, no derived counts |
