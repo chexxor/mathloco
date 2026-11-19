@@ -70,9 +70,9 @@
         {
           "section": "Join the club",
           "audience": "first-visitor",
-          "goal": "the author, 2026-11-19: 'they should have a path from this page to a page that is dedicated towards persuading the visitor that joining is a good choice for them' - no such page is emitted today, so this row names a surface the build does not have (a scope call, priced in PLAN.md MS39's row)",
+          "goal": "the author, 2026-11-19: 'they should have a path from this page to a page that is dedicated towards persuading the visitor that joining is a good choice for them' - ruled the same day (S076, D450): this section carries that persuasion in place, rather than linking to a route the build does not emit. So it opens the page with the author's own granted claims - `cost`, `membershipRule`, `turnout`, each painted from its src/content.json slot - and what a first-visitor can believe before choosing a door is that it costs nothing, that no membership comes first, that an RSVP with a name is all the club asks, and that it is three to seven people at a table",
           "style": "club-voice",
-          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
+          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal ruled by their ruling the same day (S076, D450: the pitch is carried by this page, not by a new route); style still a delegate draft, 2026-11-19"
         },
         {
           "section": "What we do",

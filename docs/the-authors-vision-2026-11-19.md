@@ -58,7 +58,13 @@ Answer in the words the club uses, not in the words a page uses about itself.
      exists today**: `/join` is the page, and its own sections are the persuasion. So this answer names a
      surface, not an edit — a new route, or a section promoted into one — and that is a scope call for the
      operator, priced in MS39's row (a sixth emitted route means the nav, the sitemap, `check:indexable`, the
-     anchor ceiling, and every whole-page read move with it).
+     anchor ceiling, and every whole-page read move with it). **Ruled 2026-11-19: the second of those two, in
+     place** (**S076**, **D450**). `/join` now opens with the author's own granted claims — `cost`,
+     `membershipRule` (`answers()`, the pair `/` paints) and `turnout` ("Usually three to seven people at a
+     table.") — where they sit *before* the three doors instead of two-thirds down the page. No sentence was
+     written for that round: the persuasion is the author's words, moved, because a seat may not invent a
+     promise in order to make a page persuasive. The sixth route stays parked, and what un-parks it is a
+     communication read saying the page cannot carry the pitch, not another copy round.
    - after reading `/chat` — "an understanding of what the group has chatted about recently, so they can be sure
      the group is alive recently and still taking actions and that there are real humans active behind the
      scenes" (the author, 2026-11-19). The shipped page does not give that today: its thread list is
@@ -167,11 +173,12 @@ Each of these runs on this tree and leaves an artifact a human can check. They a
 ## Where the author's words already are, and how far they got
 
 The author has corrected shipped copy before, and the mechanism kept every word: `src/content.json`'s
-`cost.value` is "Free." on the author's grant of 2026-11-16, corrected by their letter of 2026-11-17
-(**D381**, **D421**); `membershipRule` is their words "no membership required except an rsvp with a name",
-also 2026-11-17; `turnout` is their "turnout is 3-7 people historically", re-worded by a reviewer on
-2026-11-18 and kept in a slot rather than in prose so the count stays a grounded claim (**D385**, **D406**);
-`hostLine` and `pastLine` shipped empty or nameless because this tree holds no roster and no first year, and
-the correction path is this letter's ledger (MS37's §4 rows C6, C7, C8). **What none of those words ever
-named is the reader.** That is the one field this letter is, and the one field no gate in `verify` has ever
-had a rule for.
+`cost.value` was "Free." on the author's grant of 2026-11-16, corrected by their letter of 2026-11-17
+(**D381**, **D421**), and is now the two-sentence form the author gave this letter on 2026-11-19 ("Free. It's
+nice to buy a drink or a snack for yourself at the venue."); `membershipRule` is their words "no membership
+required except an rsvp with a name", also 2026-11-17; `turnout` is their "turnout is 3-7 people
+historically", re-worded by a reviewer on 2026-11-18 and kept in a slot rather than in prose so the count
+stays a grounded claim (**D385**, **D406**); `hostLine` ships nameless because this tree holds no roster (row
+C7 is still open), and `pastLine` **no longer ships empty** — the author's year from this letter is in it
+(**D449**), which closes MS37's §4 row C8. **What none of those words ever named is the reader.** That is the
+one field this letter is, and the one field no gate in `verify` has ever had a rule for.

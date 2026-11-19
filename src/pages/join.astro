@@ -35,6 +35,15 @@ const lead = channels[0];   // identity, not href: two channels may one day shar
 // to carry its way back and only a slot can), so the operator corrects the club's own words by editing that
 // value rather than this page. Rendered on `/join` only, beside the format it describes.
 const studyShape = value(content.studySessionShape);
+// The operator's ruling of 2026-11-19 (the vision letter's answer for `/join`, and their ruling the same day
+// that the pitch is carried **in place** rather than by a route the build does not emit — **S076**, **D450**).
+// The letter asks for persuasion; a seat may not invent any, so the pitch is assembled from the claims the
+// author already granted and this page already prints further down: what it costs (`cost`), whether you have
+// to belong first (`membershipRule`), and how many people sit at the table (`turnout`). All three are slots in
+// `src/content.json` with a named grant and a correction path (D381, D385), so the pitch carries no claim this
+// tree cannot source, and the operator corrects any of it by editing a value rather than this page.
+// Nothing new is typed here: the move is the round, not new copy.
+const turnout = value(content.turnout);
 ---
 
 <Layout title="Join the club - Matheapolis, a Minneapolis math club" path="/join">
@@ -53,6 +62,38 @@ const studyShape = value(content.studySessionShape);
     <p class="mt-4 max-w-measure text-lede leading-prose text-ink-2 font-body">
       Three ways in, and you only need one to start: come to a meeting, read the chat, or follow the club's feeds.
     </p>
+
+    {/* The pitch, promoted (2026-11-19, **S076**, **D450**). The vision letter's answer for `/join` asked for a
+        page that persuades the visitor joining is a good choice for them; the operator ruled the same day that
+        this page carries that job instead of a sixth route. The answers below used to sit in "Your first one",
+        which is where a reader who has already decided asks what they still have to do — the reasoning recorded
+        in the note at that section, and it still holds for the room rules. It does not hold for these three
+        claims: cost, who may come, and how many people are at the table are the questions a reader asks BEFORE
+        choosing a door, and on this page they were 2/3 of the way down. They are painted from the same slots `/`
+        paints them from (`answers()` is one call, `content.turnout` one value), so the two surfaces cannot be
+        edited apart (D247's defect class, inverted), and the operator's own words are the wording (D381, D385).
+        No sentence here is new copy.
+
+        C1+C2 · q05 and q10 (round-5 communication read, 2026-11-16, D376/D377): these are the two club-claim gaps,
+        and their history is the reason they are data. The read's own recommendation was the operator's word for
+        each — a price, a membership rule — and both are claims about the club rather than about the page, which is
+        why they are one-way and why the operator's letter of 2026-11-16 ruled instead that the gap is DECLINED
+        here: no seat writes a fee, and no seat writes who may arrive. What shipped was therefore the page naming
+        what it has never been told, and the only place it could say that from is the slot file: the two sentences
+        come from `cost` and `membershipRule` in `src/content.json` through `answers()` (that name replaced
+        `refusals()` on 2026-11-16, D381), which is the same call `/` paints them from, so the pair cannot be
+        edited apart on one surface and left stale on the other (D247's defect class, inverted). Round-6 review,
+        `/join`/Add (week item 1, D381) granted the answers, and both are corrected by editing `src/content.json`.
+        They are NOT inside a channel row: the row's clause is the resolver's (`JOIN_KIND_COPY`, `joinChannels()`),
+        it is text-pinned by `check:join`'s `join-gives-mismatch` rule, and a refusal inside a row would compete
+        with D342's one way out. 0 boxes, no link, no URL, so `check:join`, `check:ext-links` and the sprite's
+        platform set stay as measured. */}
+    {answers().length > 0 && (
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{answers().join(' ')}</p>
+    )}
+    {turnout && (
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{turnout}</p>
+    )}
 
     {/* Round-6 review, `/join`/Revise (D391): "What we do" moved from fourth to first. A visitor cannot choose a
         door into something they have not yet been told the thing is; the reviewer's peak-end point is the same
@@ -180,28 +221,12 @@ const studyShape = value(content.studySessionShape);
         Nothing is expected of you. People work on what they brought, and nobody sets an agenda.
       </p>
 
-      {/* C1+C2 · q05 and q10 (round-5 communication read, 2026-11-16, D376/D377): the two club-claim gaps, in
-          the open. The read's own recommendation was the operator's word for each — a price, a membership rule —
-          and both are claims about the club rather than about the page, which is why they are one-way and why the
-          operator's letter of 2026-11-16 ruled instead that the gap is DECLINED here: no seat writes a fee, and no
-          seat writes who may arrive. What ships is therefore the page naming what it has never been told, and the
-          only place it can say that from is the slot file: the two sentences come from `cost` and `membershipRule`
-          in `src/content.json` through `refusals()`, which is the same call `/` paints them from, so the pair cannot
-          be edited apart on one surface and left stale on the other (D247's defect class, inverted). Placed with the
-          page's other refusals — the phone line and the directions words — because this section is "Your first one",
-          which is where a reader who has already decided to come asks what they still have to do; the read preferred
-          a clause on the "Come to a meeting" rows, but that clause is the resolver's (`JOIN_KIND_COPY` and
-          `joinChannels()`), it is text-pinned by `check:join`'s `join-gives-mismatch` rule, and a refusal inside
-          a row would compete with D342's one way out. 0 boxes, no link, no URL, so `check:join`, `check:ext-links`
-          and the sprite's platform set stay as measured. */}
-      {/* Round-6 review, `/join`/Add (week item 1, D381): the cost line and the membership line, in one
-          paragraph, from the same two slots `/` paints them from, so the answer a stranger gets on the home page
-          and the answer they get here are the same bytes. Both are draft claims granted by the operator on
-          2026-11-16 and both are corrected by editing `src/content.json`. */}
-      {answers().length > 0 && (
-        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{answers().join(' ')}</p>
-      )}
-
+      {/* The cost answer and the membership answer used to close this section, beside the page's other refusals,
+          because this is where a reader who has already decided asks what they still have to do. They moved to the
+          opening block on 2026-11-19 (**S076**, **D450**) when the operator ruled that this page carries the pitch;
+          their provenance travels with them, above the lede. The RSVP instruction still reaches the reader who has
+          decided from the "Come to a meeting" row, whose clause is the resolver's — "Where the club announces
+          dates, and keeps the RSVP list." */}
       {/* Round-6 review, `/join`/Remove (D393): "The club has no front desk and no phone number" comes off the
         page. D368 wrote it because the artifact carried no `tel:` and no address, and the reviewer's verdict is
         that a list of what the club does not have is institutional absence dressed as honesty - the same class

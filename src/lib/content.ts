@@ -135,8 +135,11 @@ export type Content = {
   hostLine: Slot;
   /**
    * How long the club has been meeting (round-8 review, Home/Add "one sentence of past"). Nothing
-   * in this tree records a first meeting, so the slot ships **empty** and paints nothing: the row
-   * is a home for the operator's year, not a fact a seat may fill in (D444).
+   * in this tree recorded a first meeting, so the slot shipped **empty** and painted nothing: the row
+   * was a home for the operator's year, not a fact a seat may fill in (D444). **Filled 2026-11-19** by
+   * the operator's vision letter — "The first year was 2019" — and it paints on `/`, under "What we take
+   * up" (`src/components/WhyJoinUs.astro`). A bare year is not a calendar date to `check:dated-surfaces`
+   * (its DATE_TEXT wants a month name or an ISO date), so it adds no date string to the ruled set (D449).
    */
   pastLine: Slot;
   photos: { placeholders: boolean };

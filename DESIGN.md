@@ -771,6 +771,19 @@ the letter settles now name the letter in `settledBy` while their `goal` and `st
 sentences, question 5's one sentence) and the gate fails a `sent` letter carrying a bracket - `vision-letter-shipped-while-unfilled`
 is what keeps a half-answer from standing in for the site's vision.
 
+**When the brief is "make it persuade", move the claims that already have a source; do not write new ones**
+(**S076**, **D450**). The author asked for a page that persuades a visitor joining is a good choice for them,
+and the operator ruled that `/join` carries that job itself rather than linking to a route the build does not
+emit. The round that did it **typed no new sentence**: it moved the author's granted `cost` and `membershipRule`
+values (**D381**) and `turnout` (**D385**) out of the section at the bottom of the page into the block above the
+three doors, each still painted from its `src/content.json` slot, so the operator still corrects the pitch by
+editing a value and the two surfaces that paint them still cannot be edited apart (**D247**'s defect class,
+inverted). A pitch assembled from claims that have a hand behind them is checkable — after the move the worklist
+holds **4 sentences against a bar of 4**, and the page prints no date (**D449**'s year stays on `/`, because
+`check:join` refuses a second dated surface) @measured 2026-11-19 by `npm run check:copy-contract` and
+`npm run check:join` (Linux native, Node 24.22.1). A pitch written for the occasion is **D92**'s defect wearing
+a marketing hat, and no seat writes one.
+
 ## Motion
 
 | Kind | Duration | Easing |
