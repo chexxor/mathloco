@@ -19,9 +19,16 @@ curl -sS -o /dev/null -D - https://n8n.labradorius.com/ | head -4         # 200 
 curl -sS https://n8n.labradorius.com/healthz                              # 200 (unauthenticated)
 curl -sS -H "X-N8N-API-KEY: $(cat .notes/n8n-public-api-token)" -w ' %{http_code}\n' \
      https://n8n.labradorius.com/api/v1/workflows                         # 401 {"message":"Unauthorized"}
-curl -sS -H "X-N8N-API-KEY: not-a-key" -w ' %{http_code}\n' \
+NOKEY=dummy-not-a-credential                     # the control: a value that is declared not to be a key
+curl -sS -H "X-N8N-API-KEY: $NOKEY" -w ' %{http_code}\n' \
      https://n8n.labradorius.com/api/v1/ping                              # 404 {"message":"not found"}
 ```
+
+The dummy sits in a variable, not in the header, because a tracked page must not carry an assignment whose
+name says *key* or *token* and whose value looks like a value: a header line written that way cannot be told
+apart from a leaked credential by looking, and `npm run check:docs-no-secrets` fails it (**S086**, **D459**). The
+real key is read from where it lives (`.notes/n8n-public-api-token` on this host) rather than typed into the
+snippet.
 
 - **SSO is out of the way now** — the app answers for real (`200`, n8n's own JSON on `/api/*`). The YunoHost
   app permission includes `visitors`; that is also the upstream package's own default

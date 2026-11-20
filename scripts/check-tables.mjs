@@ -41,6 +41,9 @@ const FILES = [
   // is the ADR set table, the one place the eight records are enumerated.
   'docs/howto/README.md',
   'docs/adr/README.md',
+  // MS40 P3 (2026-11-20, D458): docs/README.md is the router - its rows ARE the map of the corpus, and a row
+  // that loses a cell loses the "what it answers" or the "superseded by" that made the page findable.
+  'docs/README.md',
 ];
 
 // Split a row on unescaped pipes only. `split('|')` on a cell containing `\|` invents a column.

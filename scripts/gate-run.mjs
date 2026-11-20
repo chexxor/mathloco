@@ -98,6 +98,21 @@ const DEPLOY = [
   // and both invisible in a diff @measured 2026-11-08.
   { name: 'check:tables', desc: 'every markdown table row in the tracked prose has its header\'s cell count' },
   { name: 'check:tables:selftest', desc: 'the table gate can still fail (3 plantings: an extra cell, a missing cell, a short header; 4 clean forms)' },
+  // MS40 (S085, D458): `docs/` grew a router, an ADR set and 17 tracked how-to pages in three days, and nothing
+  // asked whether a page that lands is reachable. `check:plan` compares milestone status, `check:decisions`
+  // checks ids, and `check:design` resolves path literals - none of them knows that a file with no index row is
+  // invisible to the clone it was written for. Reads tracked text only, so before `build` (D118).
+  // Cost @measured 2026-11-20 by this step: 0.06s gate, 0.07s selftest (5 plantings).
+  { name: 'check:docs-routes', desc: 'every tracked page under docs/ has exactly one row in the index that owns it (router: one row per document; the runbook index: at least one, because one runbook answers several symptoms), and no index row points at a file that is not tracked' },
+  { name: 'check:docs-routes:selftest', desc: 'the docs router can still fail (5 plantings: a routed document with no row, a row whose target does not exist, the same document routed twice, a runbook the index stopped routing, and an index whose tables stopped parsing - the silent-pass case)' },
+  // MS40 (S086, D459): the runbooks became tracked on 2026-11-20, which put 267,130 b of operating knowledge into
+  // git history and in front of the Worker build. The shape scan before the move found 2 assignment-shaped lines
+  // and 0 live secrets; this gate is what keeps the next hand-written runbook from re-importing a shell history.
+  // The test is the shape, not the word - keyword density in these files is 24-48 mentions, which is prose about
+  // tokens. Reads tracked text only, so before `build` (D118). Cost @measured 2026-11-20 by this step: 0.06s gate,
+  // 0.07s selftest (3 plantings, 4 clean forms, the tracked corpus as the control).
+  { name: 'check:docs-no-secrets', desc: 'no tracked page under docs/ carries an assignment-shaped credential (a name saying key/token/secret, then : or =, then a value) - name the secret and where it lives, never the value' },
+  { name: 'check:docs-no-secrets:selftest', desc: 'the no-secrets gate can still fail (3 plantings: an uppercase assignment, a lowercase prose assignment, a value inside a code fence; 4 clean forms that must pass: a bare name, an empty assignment, an angle-bracket placeholder, and a colon naming where a secret lives)' },
   { name: 'check:social', desc: 'the committed share card against its painted report' },
   { name: 'check:social:selftest', desc: 'the card checks can still fail' },
   // The tab glyph is the other committed image artifact, and until 2026-11-14 it had no gate at all: it

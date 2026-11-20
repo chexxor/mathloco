@@ -189,7 +189,9 @@ each of those and requires a named failure. Both are in `verify`.
    dated citation elsewhere that names the old home means the same-named file there.
 6. Resume from `NEXT.md`, and take the priority from `PLAN.md` §Milestones - never from memory or from a
    chat log. The roadmap is host-local (`.notes/` is gitignored); the tracked prose at the root is
-   `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and `DECISIONS.index.md`. Durable plans that are
+   `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and `DECISIONS.index.md`. Inside `docs/`, the entry
+   point is **`docs/README.md`** - the router that says which dated letter still speaks and which is archive,
+   and which of the three indexes owns a new file (**MS40**, **D458**). Durable plans that are
    not milestones live beside the plan: `roadmap-events.md` (surfacing and syncing the meetup schedule),
    `roadmap-brand.md` (the mark's surface identity, the colour expansion, and what either re-measures) and
    `asset-sources.md` (which image sources are legitimately usable, and what their terms are). Before you
