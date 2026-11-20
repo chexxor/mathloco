@@ -2,7 +2,7 @@
  "measuredAt": "2026-11-19",
  "instrument": "design/visitor-questions.mjs",
  "artifact": "dist/client",
- "artifactBuilt": "2026-11-19T22:23:33.566Z",
+ "artifactBuilt": "2026-11-20T02:12:31.756Z",
  "artifactFresh": true,
  "routes": [
   "/",
@@ -2201,14 +2201,6 @@
    ],
    "outsideCount": 2,
    "evidence": [
-    {
-     "route": "/",
-     "form": "prose",
-     "zone": "body",
-     "section": "Matheapolis",
-     "text": "Most of the arguing happens in the chat between meetings.",
-     "shape": 0
-    },
     {
      "route": "/",
      "form": "prose",

@@ -589,10 +589,14 @@ export const JOIN_KIND_COPY = {
  *   - `srOnly` — derived from the label by `newTabQualifier()` (S041), never written by hand: the mode of
  *                opening for a link that leaves the site. Null for an internal route, because a
  *                visitor can go back from it.
- *   - `gives`  — one clause of what the visitor gets. Every one of these is a claim with a source:
- *                Meetup's group is "the club's list of members" (`src/content.json` membership.value),
- *                Facebook's group is public at the URL the operator named (S021/D280), and the chat is where
- *                "most of the arguing happens … between meetings" (the hero's own sourced sentence).
+ *   - `gives`  — one clause of what the visitor gets. Every non-empty one of these is a claim with a source:
+ *                Meetup's group is "the club's list of members" (`src/content.json` membership.value), and
+ *                Facebook's group is public at the URL the operator named (S021/D280). **The Discord row carries
+ *                no clause** (S079/D453, S081/D454): the two sentences that carried one — `/join`'s "The
+ *                conversation that runs between meetings." and the hero's "Most of the arguing happens in the chat
+ *                between meetings." — were both deleted by the operator on 2026-11-19, and neither has a slot
+ *                behind it. An empty `gives` paints no `<p>`; `check:join-page` compares the row's last `<p>`
+ *                against the resolver, so an empty clause is a byte-comparison, not a skip.
  *
  * A platform whose config URL is empty is omitted rather than painted as a dead link — `src/config.json`'s
  * rule is that an empty entry is an unchosen platform, and `SignUpLinks.astro` already treats it that way.

@@ -805,6 +805,17 @@ the letter settles now name the letter in `settledBy` while their `goal` and `st
 sentences, question 5's one sentence) and the gate fails a `sent` letter carrying a bracket - `vision-letter-shipped-while-unfilled`
 is what keeps a half-answer from standing in for the site's vision.
 
+**The site does not frame the club's work as adversarial** (**S081**, **D454**, the operator 2026-11-19: "we don't
+argue or debate, it's more of a collaborate environment of exploration"). The hero's "Most of the arguing happens in
+the chat between meetings." is deleted on that word, and it is worth knowing where those words came from: a seat's
+review letter (`docs/communication-review-round-8-2026-11-18.md`, Home copy line 19), typed into
+`src/components/HeroSection.astro`, with **no row in `src/content.json` behind them** - which is the defect class,
+not the sentence. The census row that had demanded the sentence (**H1b**) is flipped to `want: 'absent'` in the same
+commit, so the instrument now refuses its return rather than enforcing a seat's prose. Two neighbours are named
+rather than swept up: `/`'s remaining lede ("the conversation runs in the club's chat") is the author's own, and
+`/chat`'s thread name "Whatever the field is arguing about" predicates arguing of **the field**, out of the
+operator's 2026-11-03 list of channel topics - a separate question, asked, not decided.
+
 **When the brief is "make it persuade", move the claims that already have a source; do not write new ones**
 (**S076**, **D450**). The author asked for a page that persuades a visitor joining is a good choice for them,
 and the operator ruled that `/join` carries that job itself rather than linking to a route the build does not

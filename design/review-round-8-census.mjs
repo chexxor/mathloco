@@ -64,7 +64,7 @@ for (const p of Object.values(pages)) {
 const CHECKS = [
   // ---- Home ----
   { id: 'H1', route: '/', want: 'absent', needle: 'Dates go up on Meetup; most of the arguing', why: 'copy line 19: delete the first clause, keep "Most of the arguing happens in the chat between meetings." The needle is the seam, so a page that keeps either half of it still has the defect' },
-  { id: 'H1b', route: '/', want: 'present', re: true, needle: 'Most of the arguing happens in the chat between meetings\\.', why: 'the other half of the same line: what the letter asks the sentence to read after the fix' },
+  { id: 'H1b', route: '/', want: 'absent', re: true, needle: 'Most of the arguing happens in the chat between meetings\\.', why: 'SUPERSEDED by the operator, 2026-11-19 (S081, D454): the round-8 fix wrote this sentence, and the operator refused it — "we don\'t argue or debate, it\'s more of a collaborate environment of exploration". It entered from a seat\'s letter with no slot behind it. The row now fires if the framing comes back' },
   { id: 'H2', route: '/', want: 'absent', needle: 'at a table, historically', why: 'copy line: "Three to seven people at a table, historically." → "Usually three to seven people at a table." The old wording is the defect; it lives in the `turnout` slot in src/content.json, not in markup (D265)' },
   { id: 'H2b', route: '/', want: 'present', needle: 'Usually three to seven people at a table', why: 'the letter\'s wording, shipped from the same sourced slot rather than as prose (an attendance claim has no record in this tree: D265)' },
   { id: 'H3', route: '/', want: 'absent', kind: 'heading', needle: 'When we meet', why: 'copy line: delete the H2 "When we meet" (operator\'s answer: delete the heading and its promise, keep `/` date-free in the band). A heading that promises a when and delivers navigation is the defect D350 named' },
@@ -282,7 +282,7 @@ const dbg = CHECKS.find((c) => c.id === process.env.DEBUG_HAYSTACK);
 // reported, not skipped: the instrument says which rows it cannot plant rather than quietly planting nothing.
 // ---------------------------------------------------------------------------
 const OVERRIDE = [
-  { id: 'H1b', plant: 'Dates go up on Meetup.', clean: 'Most of the arguing happens in the chat between meetings.' },
+  { id: 'H1b', plant: 'Most of the arguing happens in the chat between meetings.', clean: "People bring what they are curious about, and the conversation runs in the club's chat." },
   { id: 'H2b', plant: 'Three to seven people at a table, historically.', clean: 'Usually three to seven people at a table.' },
   { id: 'D1', plant: 'Saturdays at noon for a social, Wednesdays at 6 pm for a study session, with nothing to prepare; a study session is an evening working side by side.', clean: 'A social is an afternoon around a table, nothing to prepare. A study session is an evening working side by side.' },
   { id: 'D3', plant: 'headings: Social | Study session | Social | Study session | Social', clean: 'headings: Sat, Nov 21 \u2014 Social | Wed, Nov 25 \u2014 Study session | Sat, Dec 5 \u2014 Social | Wed, Dec 9 \u2014 Study session | Sat, Dec 12 \u2014 Social' },

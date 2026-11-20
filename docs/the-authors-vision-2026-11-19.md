@@ -153,6 +153,20 @@ parked in PLAN.md §Parked with the trigger "the author's pick from this list".
 | that the club has a history it can show | the author has now supplied a year (2019); a round that turns one year into "over seven years of mathematics" is the sibling-invention this class exists to stop | the year in `pastLine`, one sentence, no derived counts |
 | an address, a phone line, a map | `mailto` stays declined until the zone has an address (D403, S058); the venue line names a place the row names | the anchor ceiling and `check:rsvp-links` |
 | what the club did at a past meeting | `/past` lists dates and nothing else; minutes, slides, a recap would each be an unsourced claim about a session this tree did not record | the state-voice section, and record 0010 (a designed state, never a blank) |
+| **the club's work is adversarial** — arguing, debating, contesting a claim **(the author supplied this one, 2026-11-19)** | the operator, unprompted, on the hero sentence: "we don't argue or debate, it's more of a collaborate environment of exploration". The site printed the frame once — "Most of the arguing happens in the chat between meetings." — and it reached the page from a seat's review letter, never from a slot in `src/content.json` (**S081**, **D454**) | nothing yet. Census row **H1b** in `design/review-round-8-census.mjs` now refuses its return; the gate that would catch the class is one of the options the delegate is walking, and is not built
+
+**One refusal arrived unprompted, 2026-11-19, and it is the author's own.** Reading the artifact
+during the walk, the operator struck the hero's "Most of the arguing happens in the chat between
+meetings." and gave the reason as a fact about the club: "we don't argue or debate, it's more of
+a collaborate environment of exploration". It is filed as the row above, marked as
+author-supplied, because the table exists so the author's ear, not the delegate's list, decides
+what the site refuses. What that sentence exposes is a channel problem rather than a taste
+problem: the words were written by a seat in `docs/communication-review-round-8-2026-11-18.md`
+(Home copy line 19) and typed into a component, and the census then **demanded** them, so every
+instrument in the rig was agreeing with a claim nobody in the club had made (**D454**). One near
+neighbour is deliberately **not touched**: `/chat`'s thread name "Whatever the field is arguing
+about" predicates arguing of the *field*, out of the operator's own 2026-11-03 list of channel
+topics, and it is a separate question (**S081**).
 
 ## The exercises (the same five, run against this tree)
 
