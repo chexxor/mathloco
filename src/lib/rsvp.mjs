@@ -592,7 +592,7 @@ export const JOIN_KIND_COPY = {
  *   - `gives`  — one clause of what the visitor gets. Every non-empty one of these is a claim with a source:
  *                Meetup's group is "the club's list of members" (`src/content.json` membership.value), and
  *                Facebook's group is public at the URL the operator named (S021/D280). **The Discord row carries
- *                no clause** (S079/D453, S081/D454): the two sentences that carried one — `/join`'s "The
+ *                no clause** (S079/D453, S082/D454): the two sentences that carried one — `/join`'s "The
  *                conversation that runs between meetings." and the hero's "Most of the arguing happens in the chat
  *                between meetings." — were both deleted by the operator on 2026-11-19, and neither has a slot
  *                behind it. An empty `gives` paints no `<p>`; `check:join-page` compares the row's last `<p>`

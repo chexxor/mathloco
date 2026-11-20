@@ -337,13 +337,19 @@ const signUpFor = nextMeeting
           the band below already names, and the site's own fuller statement of that fact — "Dates and places go
           up on Meetup, and every date we list links to the page the club posts its sign-up on" — is kept in the
             threads band (the letter's Keep row on that sentence, and the defect D350 closed by keeping it).
-          **The sentence that replacement produced is gone (S081, D454, 2026-11-19).** The operator on it: "we
+          **The sentence that replacement produced is gone (S082, D454, 2026-11-19).** The operator on it: "we
           don't argue or debate, it's more of a collaborate environment of exploration" — a paragraph about what
           the club does, framed as a dispute, is copy this tree cannot source: it arrived from a seat's review
           letter (`docs/communication-review-round-8-2026-11-18.md`, Home copy line 19) and never went through a
           slot in `src/content.json`. Census row **H1b** flips to `want: 'absent'` in the same commit, so the
-          instrument that demanded the sentence now refuses its return. The chat fact itself survives in the
-          operator's own sentence below: "the conversation runs in the club's chat." */}
+          instrument that demanded the sentence now refuses its return. **The sentence below is not clean either,
+          and a future round must not assume it is.** "There is no syllabus, no reading list to keep up with, and no
+          current focus." enters at `0f15df8` (2026-11-02) and "Nobody sets an agenda. People bring what they are
+          curious about…" at `9a7c111` (2026-11-18, MS37's close) — seat copy typed into this component, with **no slot
+          in `src/content.json` behind it**: `node design/frame-words.mjs` prints its "curious" as the only frame word
+          in the artifact with no slot at all. It is also the only sentence any artifact uses to decline q06 ("what is
+          the club's current focus?"), so removing it is a reader-facing act, not a cleanup — `git log -S` on this file
+          and `node design/visitor-questions.mjs` are the two probes that price it. */}
       <p
         class='mt-3 text-lede leading-prose text-ink-2 sm:mt-6 font-body'
       >
