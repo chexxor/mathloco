@@ -527,6 +527,12 @@ function review(doc) {
     const where = t.evidence.map((e) => e.channelName).filter(Boolean)[0];
     const whereLabel = where ? ` in "${where}"` : '';
     console.log(`    evidence: ${t.evidence.length} exchange(s), ${kinds.join('/')}${whereLabel} on ${dates.join(', ')}  (id ${t.id}, messages ${t.evidence.map((e) => e.messageIds[0]).join(' ')})`);
+    // `--review --links` puts a jump URL on the terminal for the reviewer only. It never enters the data file and
+    // never reaches a page: the point is that ratification can be *checked* against the conversation instead of
+    // taken on trust, and Discord's own channel/message triple is the only address that reopens it.
+    if (process.argv.includes('--links')) {
+      for (const e of t.evidence) console.log(`      reopen: https://discord.com/channels/${doc.source?.guildId}/${e.channelId}/${e.messageIds[0]}`);
+    }
   }
   console.log(`\nRatify: set "status": "approved", "approvedBy": "operator", "approvedAt": "<YYYY-MM-DD>" on the lines you\napprove (a rejection is status "declined"), then run npm run check:thread-topics. Only approved\nentries with evidence reach the page; the page prints a topic and its id and nothing else.`);
   return 0;
