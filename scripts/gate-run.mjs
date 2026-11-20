@@ -129,6 +129,12 @@ const DEPLOY = [
   // tree sat 2-of-3 for a day with every gate green. Reads source, so it runs before `build` (D118's rule).
   { name: 'check:copy', desc: 'the club descriptor: three slots, one phrase, no superseded form, no date' },
   { name: 'check:copy:selftest', desc: 'the copy gate can still fail (10 plantings, each into a fixture copy)' },
+  // The harvested topic archive (MS41, S088, D461, D463). Source-only: it reads data/discord-threads.json, not
+  // dist/, so it runs in the pre-build wave (D118). It joins the set in the same commit as the file it polices -
+  // a gate that exits 1 on a missing artifact must not enter the deploy set before the artifact is scheduled.
+  // Cost @measured 2026-11-20 by this step (Linux native, Node 24.22.1): gate 0.05s, selftest 0.05s - no build, no browser.
+  { name: 'check:thread-topics', desc: 'the harvested topic archive keeps its contract: every topic that may render has evidence and an operator signature, evidence is a pointer (channelId, channelKind, channelName, date, messageIds) and never prose or an author, no handle / snowflake / link / token shape appears in a printed name or anywhere in the file, no key is unscoped, and the published view leaks nothing private (S088, D461, D463)' },
+  { name: 'check:thread-topics:selftest', desc: 'the topic-archive gate can still fail (24 cases: 17 plantings - no evidence, evidence with no message ids, an undated exchange, prose in evidence, an author field, an evidence channel named after a member, an unsigned approval, two entries for one thread, a handle in a printed name, a link in a topic, an unscoped thread key, a snowflake in a topic, a handle anywhere in the file, a token-shaped string, an unscoped source key, a message id in an alias, the wrong contract version - plus 7 cases that the clean contract holds: near-duplicates collapse, the merge is idempotent but for harvestedAt, publishedThreads leaks no private field, a missing document is named, a document with no threads array is named, and 2 clean controls) @measured 2026-11-20 by `node scripts/check-thread-topics.mjs --selftest`' },
   // `check:ics` reads `dist/client/events.ics` (scripts/check-ics.mjs:31-32), so it belongs in the artifact
   // wave. It was scheduled before `build` @measured 2026-11-12: a fresh clone - CI, or anyone's first checkout -
   // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step

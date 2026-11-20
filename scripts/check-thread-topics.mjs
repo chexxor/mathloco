@@ -162,6 +162,7 @@ if (args.includes('--selftest')) {
   plant('evidence with no date', (d) => { d.threads[0].evidence[0].date = 'last spring'; }, ['evidence-no-date']);
   plant('evidence holding the message text', (d) => { d.threads[0].evidence[0].snippet = 'I think the compactness theorem breaks here'; }, ['evidence-carries-prose']);
   plant('evidence holding who said it', (d) => { d.threads[0].evidence[0].author = 'someone'; }, ['evidence-carries-prose']);
+  plant('a thread named after a member', (d) => { d.threads[0].evidence[0].channelName = '@algebra_fan-asks-about-limits'; }, ['evidence-carries-a-handle', 'username-in-file']);
   plant('approved with no signature', (d) => { delete d.threads[0].approvedBy; }, ['approved-without-signature']);
   plant('two entries for one thread', (d) => { d.threads.push({ id: 'thr-zz0000000000', topic: 'the Nonstandard Analysis', status: 'approved', approvedBy: 'operator', approvedAt: '2026-11-20', evidence: [{ channelId: '1170391234567890123', date: '2025-01-01', messageIds: ['1356789012345678999'] }] }); }, ['duplicate-topic']);
   plant('a handle in a printed name', (d) => { d.threads[0].topic = 'What @algebra_fan said about limits'; }, ['public-field-carries-a-handle', 'username-in-file']);

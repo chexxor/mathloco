@@ -49,8 +49,12 @@ export const THREADS_FILE = `${root}data/discord-threads.json`;
 export const THREADS_SCHEMA = 1;
 
 /** Keys an evidence object may carry. Anything else - `text`, `content`, `author` - is the defect this file
- *  exists to refuse: a pointer, not a quotation (D461). */
-export const EVIDENCE_KEYS = ['channelId', 'channelName', 'date', 'messageIds'];
+ *  exists to refuse: a pointer, not a quotation (D461).
+ *
+ *  `channelKind` is `thread` or `channel`, and it is decision-relevant at ratification: a thread's name is the
+ *  members' own label for the subject (strong evidence the subject is real), while a main-channel cluster's
+ *  boundary is the harvester's silence cut (weaker). A reviewer should see which one they are approving. */
+export const EVIDENCE_KEYS = ['channelId', 'channelName', 'channelKind', 'date', 'messageIds'];
 /** Keys a thread entry may carry. */
 export const THREAD_KEYS = ['id', 'topic', 'aliases', 'status', 'approvedBy', 'approvedAt', 'evidence', '_note'];
 /** Keys the source block may carry. */
@@ -121,7 +125,8 @@ export function mergeEvidence(a, b) {
   const out = new Map();
   for (const e of [...(a ?? []), ...(b ?? [])]) {
     const k = evidenceKey(e);
-    const prev = out.get(k) ?? { channelId: e.channelId ?? null, channelName: e.channelName ?? null, date: e.date ?? null, messageIds: [] };
+    const prev = out.get(k) ?? { channelId: e.channelId ?? null, channelKind: e.channelKind ?? null, channelName: e.channelName ?? null, date: e.date ?? null, messageIds: [] };
+    if (!prev.channelKind && e.channelKind) prev.channelKind = e.channelKind;
     if (!prev.channelName && e.channelName) prev.channelName = e.channelName;
     prev.messageIds = [...new Set([...prev.messageIds, ...(e?.messageIds ?? [])].map(String))].sort(byId);
     out.set(k, prev);
@@ -299,6 +304,11 @@ export function threadFindings(doc) {
           if (!EVIDENCE_KEYS.includes(k)) findings.push({ rule: 'evidence-carries-prose', detail: `${label}.evidence[${i}] has key "${k}" - evidence is a pointer (channelId, channelName, date, messageIds), never a quotation or an author (D461)` });
         }
         if (!e?.channelId) findings.push({ rule: 'evidence-no-channel', detail: `${label}.evidence[${i}] names no channel - "someone said this somewhere" is not evidence` });
+        // A channel or thread name is user-chosen text, and a thread can be named "@someone's question". The
+        // name is never printed, so the harvester scrubs it rather than dropping it - but a handle is still a
+        // member, and the first harvest run earned this finding by copying raw thread names into evidence
+        // (@measured 2026-11-20: the harvester refused to write its own file, 4 strings swept by the rule below).
+        if (HANDLE.test(String(e?.channelName ?? '')) || DISCRIM.test(String(e?.channelName ?? ''))) findings.push({ rule: 'evidence-carries-a-handle', detail: `${label}.evidence[${i}].channelName looks like it names a member - scrub the name or keep the id (the id is enough to reopen the channel)` });
         if (!(e?.messageIds ?? []).length) findings.push({ rule: 'evidence-no-messages', detail: `${label}.evidence[${i}] names no message ids - the review pass reads messages, so it needs ids` });
         if (!/^\d{4}-\d{2}-\d{2}$/.test(String(e?.date ?? ''))) findings.push({ rule: 'evidence-no-date', detail: `${label}.evidence[${i}] has date "${e?.date ?? ''}" - evidence without a date cannot be checked for staleness (the dates stay in the file and never reach the page)` });
       }

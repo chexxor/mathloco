@@ -67,6 +67,8 @@
     "check:alt:selftest": "node scripts/check-alt.mjs --selftest",
     "check:threads": "node scripts/check-threads.mjs",
     "check:threads:selftest": "node scripts/check-threads.mjs --selftest",
+    "check:thread-topics": "node scripts/check-thread-topics.mjs",
+    "check:thread-topics:selftest": "node scripts/check-thread-topics.mjs --selftest",
     "check:row-geometry": "node scripts/check-row-geometry.mjs",
     "check:row-geometry:selftest": "node scripts/check-row-geometry.mjs --selftest",
     "check:sprite-claim": "node scripts/check-sprite-claim.mjs",

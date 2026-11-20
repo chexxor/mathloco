@@ -1,0 +1,1322 @@
+{
+  "_rule": "A dated snapshot of what the club's members have actually discussed, harvested by `node scripts/harvest-threads.mjs` and committed so the build never reaches the network (D73's topology, the one data/events.json and data/discord-events.json follow). Evidence is pointers - a channel id, message ids, a date - and never a quotation or a member's name: check:thread-topics fails an evidence object with any other key, and fails any id, date or handle that reaches a built byte. A topic is published only when a human signed it (approvedBy/approvedAt): publishedThreads() prints signed topics alone, and the dates stay in this file as evidence, off the page, because the section says what the club pulls on now, not what it did (S088, D461).",
+  "schema": 1,
+  "source": {
+    "kind": "discord-api",
+    "guildId": "1170385683379126343",
+    "window": {
+      "from": "2024-11-20",
+      "to": "2026-11-20"
+    },
+    "harvestedAt": "2026-11-20T22:03:54.456Z",
+    "channelsRead": 1,
+    "messagesRead": 628,
+    "reads": [
+      {
+        "url": "https://discord.com/api/v10/guilds/1170385683379126343/channels",
+        "status": 200,
+        "bytes": 653
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1170385683379126346/messages?limit=100",
+        "status": 200,
+        "bytes": 126732
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1170385683379126346/messages?limit=100&before=1502725608382136350",
+        "status": 200,
+        "bytes": 155287
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1170385683379126346/messages?limit=100&before=1394343620802515035",
+        "status": 200,
+        "bytes": 119753
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1170385683379126346/messages?limit=100&before=1347369412721901650",
+        "status": 200,
+        "bytes": 110672
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1170385683379126346/threads/archived/public",
+        "status": 200,
+        "bytes": 11572
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1170385683379126346/threads/archived/private",
+        "status": 403,
+        "bytes": 44
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1549887742048079942/messages?limit=100",
+        "status": 200,
+        "bytes": 3897
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1539788959557881876/messages?limit=100",
+        "status": 200,
+        "bytes": 4590
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1536957185932787752/messages?limit=100",
+        "status": 200,
+        "bytes": 7960
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1528125769643987024/messages?limit=100",
+        "status": 200,
+        "bytes": 7131
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1522619653724045382/messages?limit=100",
+        "status": 200,
+        "bytes": 4787
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1500908719842529300/messages?limit=100",
+        "status": 200,
+        "bytes": 12832
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1487612317087826123/messages?limit=100",
+        "status": 200,
+        "bytes": 22525
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1471973274237014127/messages?limit=100",
+        "status": 200,
+        "bytes": 5535
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1448534180819505192/messages?limit=100",
+        "status": 200,
+        "bytes": 14901
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1445521089064337648/messages?limit=100",
+        "status": 200,
+        "bytes": 6170
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1434941130826453092/messages?limit=100",
+        "status": 200,
+        "bytes": 5760
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1401236506798063626/messages?limit=100",
+        "status": 200,
+        "bytes": 15450
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1419025332463206553/messages?limit=100",
+        "status": 200,
+        "bytes": 3474
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1400947553180188874/messages?limit=100",
+        "status": 200,
+        "bytes": 3912
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1386569338206814259/messages?limit=100",
+        "status": 200,
+        "bytes": 21801
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1363325988296986795/messages?limit=100",
+        "status": 200,
+        "bytes": 67649
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1363542869352251583/messages?limit=100",
+        "status": 200,
+        "bytes": 7129
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1352108074609016936/messages?limit=100",
+        "status": 200,
+        "bytes": 9748
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1347369412721901650/messages?limit=100",
+        "status": 200,
+        "bytes": 12480
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1341129492466503813/messages?limit=100",
+        "status": 200,
+        "bytes": 40948
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1341134927009419374/messages?limit=100",
+        "status": 200,
+        "bytes": 4017
+      },
+      {
+        "url": "https://discord.com/api/v10/guilds/1170385683379126343/threads/active",
+        "status": 200,
+        "bytes": 1663
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1570178266600571034/messages?limit=100",
+        "status": 200,
+        "bytes": 5155
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1570140276142514188/messages?limit=100",
+        "status": 200,
+        "bytes": 10567
+      },
+      {
+        "url": "https://discord.com/api/v10/channels/1563202724261269505/messages?limit=100",
+        "status": 200,
+        "bytes": 26334
+      }
+    ],
+    "_how": "Authenticated GET with `Bot <token>` and the identifiable User-Agent Discord asks bots to send. Message text is read into memory to find a subject and is never written; authors are folded to speaker-N before anything reaches the model.",
+    "model": {
+      "id": "claude-haiku-5-5",
+      "calls": 39,
+      "errors": 0,
+      "inputTokens": 39649,
+      "outputTokens": 9745
+    }
+  },
+  "threads": [
+    {
+      "id": "thr-13551d2080f7",
+      "topic": "Arrow's theorem and voting methods",
+      "aliases": [
+        "Arrow’s Theorem",
+        "Classroom voting demonstrations",
+        "Voting method paradoxes"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1434941130826453092",
+          "channelKind": "thread",
+          "channelName": "Arrow’s Theorem",
+          "date": "2025-11-03",
+          "messageIds": [
+            "1434941137310711829",
+            "1435025751136014446",
+            "1435025873601564745"
+          ]
+        },
+        {
+          "channelId": "1434941130826453092",
+          "channelKind": "thread",
+          "channelName": "Arrow’s Theorem",
+          "date": "2025-11-04",
+          "messageIds": [
+            "1435075525839163493"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-1203d8a6564b",
+      "topic": "Commutative hyperoperations and hyperlogarithms",
+      "aliases": [
+        "Hyperoperation arithmetic",
+        "Shifting hyperoperations"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2024-12-07",
+          "messageIds": [
+            "1314984825068982282",
+            "1314993848379773029",
+            "1314998099109871636",
+            "1314998115899674624",
+            "1314998304358010881",
+            "1314998355616862238",
+            "1315013543606878398",
+            "1315051687525748827",
+            "1315086911223894148",
+            "1315087111837188108"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-059fc5883574",
+      "topic": "Constructive foundations of hyperreal numbers",
+      "aliases": [
+        "Infinitesimals and nonstandard analysis",
+        "Ultrafilters and hyperreal construction"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-12-19",
+          "messageIds": [
+            "1451669276665712806",
+            "1451684536457888062",
+            "1451724674735013890"
+          ]
+        },
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-12-20",
+          "messageIds": [
+            "1451727643623035081",
+            "1451728978724388998",
+            "1451755822387564676"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-3754e340b656",
+      "topic": "Covering points with circle packings",
+      "aliases": [
+        "Density of circle coverings",
+        "Discs covering plane points"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-04-27",
+          "messageIds": [
+            "1498133704982134897",
+            "1498138483988893716",
+            "1498139291505918034",
+            "1498140493534597252"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-e692f714215c",
+      "topic": "Exact covering of planar points by unit disks",
+      "aliases": [
+        "Covering points with unit disks",
+        "Unit disk exact covers"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-05-09",
+          "messageIds": [
+            "1502725608382136350",
+            "1502725712728166621",
+            "1502732345504038913",
+            "1502732536181424148",
+            "1502755143551025223"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-a1bc58e0c4c6",
+      "topic": "Framing a circle without its center",
+      "aliases": [
+        "Arc construction without the center",
+        "Geometry of circular building layout"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-11-11",
+          "messageIds": [
+            "1570134376782631066",
+            "1570140276142514188",
+            "1570178266600571034",
+            "1570179236176724139"
+          ]
+        },
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-11-12",
+          "messageIds": [
+            "1570229740726390816",
+            "1570284674654150820"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-e4bc1b37a097",
+      "topic": "Frobenius theorem on division algebras",
+      "aliases": [
+        "Classification of real division algebras",
+        "Frobenius theorem",
+        "Hurwitz's theorem",
+        "Real normed division algebras"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1347369412721901650",
+          "channelKind": "thread",
+          "channelName": "Frobenius theorem",
+          "date": "2025-03-07",
+          "messageIds": [
+            "1347371943829176350",
+            "1347372346020728962",
+            "1347372541009858621",
+            "1347372614565494844",
+            "1347372633112449136",
+            "1347372833944375317",
+            "1347372979184468009",
+            "1347373628337164298",
+            "1347373855055806514",
+            "1347373985079496768"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-83db61f52c55",
+      "topic": "Gambler's ruin with draws",
+      "aliases": [
+        "Gambler's ruin problem",
+        "Ruin probabilities via linear recurrences"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-04-12",
+          "messageIds": [
+            "1360689951485853786",
+            "1360714490739691756",
+            "1360714634587537569",
+            "1360714740501839955"
+          ]
+        },
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-04-13",
+          "messageIds": [
+            "1360768214648230171",
+            "1360768527249969354",
+            "1360774105976017048",
+            "1360774166734962980"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-4aa103a01a1c",
+      "topic": "Generating function techniques in combinatorics",
+      "aliases": [
+        "Analytic combinatorics books",
+        "Enumerative combinatorics texts"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-06-18",
+          "messageIds": [
+            "1384906218480468138",
+            "1384906442674409543",
+            "1384926793206726758",
+            "1384954803137941574",
+            "1384966885363421388",
+            "1384967020545835150",
+            "1384969399785619581"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-a05b45e85a2e",
+      "topic": "Generating functions and binary representations",
+      "aliases": [
+        "Counting partitions with infinite products",
+        "Generating function intro exercises"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1363325988296986795",
+          "channelKind": "thread",
+          "channelName": "[a handle] here's a part 1 of intro to",
+          "date": "2025-04-21",
+          "messageIds": [
+            "1363709402355470427",
+            "1363709406310567988",
+            "1363709683227033681",
+            "1363711605459914754",
+            "1363711811773399060",
+            "1363711980258594856",
+            "1363712309804925079",
+            "1363712360023592971",
+            "1363712873083310232",
+            "1363712923872002140",
+            "1363713289074507826",
+            "1363713580062609418",
+            "1363714272630276329",
+            "1363714319799292115",
+            "1363714428733882580",
+            "1363714467845636236",
+            "1363714695386759179",
+            "1363714733324369951",
+            "1363714740429394021",
+            "1363714800466788469",
+            "1363714828572819567",
+            "1363714892208799875",
+            "1363714914262188182",
+            "1363716011706155078",
+            "1363716141897355425",
+            "1363717611040407733"
+          ]
+        },
+        {
+          "channelId": "1363325988296986795",
+          "channelKind": "thread",
+          "channelName": "[a handle] here's a part 1 of intro to",
+          "date": "2025-04-22",
+          "messageIds": [
+            "1364097055944998943",
+            "1364097094196920320",
+            "1364097302129676358",
+            "1364293668470784011",
+            "1364293927255150672",
+            "1364294004187074702"
+          ]
+        },
+        {
+          "channelId": "1363325988296986795",
+          "channelKind": "thread",
+          "channelName": "[a handle] here's a part 1 of intro to",
+          "date": "2025-04-24",
+          "messageIds": [
+            "1365111252254326784"
+          ]
+        },
+        {
+          "channelId": "1363325988296986795",
+          "channelKind": "thread",
+          "channelName": "[a handle] here's a part 1 of intro to",
+          "date": "2025-04-25",
+          "messageIds": [
+            "1365143492757684274",
+            "1365143937056243807",
+            "1365154799125008415",
+            "1365164779987271722",
+            "1365165358327005327",
+            "1365165449175629845",
+            "1365165675404066967",
+            "1365167088192454686",
+            "1365167881502851214",
+            "1365168207177973851",
+            "1365168655809249361",
+            "1365168742564233377",
+            "1365168757437370439",
+            "1365169379343466536",
+            "1365169425828810833",
+            "1365170978920992790",
+            "1365171102225006623",
+            "1365171243006955550",
+            "1365171252058259568",
+            "1365171328570626201",
+            "1365171355149926461",
+            "1365171428202381396",
+            "1365171548465533040",
+            "1365171552047595570",
+            "1365171710839623712",
+            "1365171728279408733",
+            "1365171969644953650",
+            "1365172064406999092",
+            "1365172094790275093",
+            "1365172112699949076",
+            "1365172129326305380",
+            "1365172199799132190",
+            "1365172265074954313",
+            "1365172312114204722",
+            "1365172557690437732",
+            "1365172725081178132",
+            "1365173025628098600",
+            "1365173090455126056",
+            "1365173293698777098",
+            "1365173335436169256",
+            "1365173360123707554",
+            "1365173784667095061",
+            "1365173930901508117",
+            "1365174170396131399",
+            "1365174243209252995",
+            "1365174426005540884",
+            "1365174458679033957",
+            "1365174640963616798",
+            "1365174717493022744",
+            "1365174733414596618",
+            "1365174916265283684"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-6468d5ab5708",
+      "topic": "Lambda calculus and interaction nets",
+      "aliases": [
+        "Edge linking in computational graphs",
+        "Lafont's alligator game"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1352108074609016936",
+          "channelKind": "thread",
+          "channelName": "ooh, just came across this again. seems",
+          "date": "2025-03-20",
+          "messageIds": [
+            "1352259031724720229",
+            "1352259035675627603",
+            "1352259213728026626",
+            "1352259587180466178",
+            "1352262469183340586",
+            "1352262728332476540"
+          ]
+        },
+        {
+          "channelId": "1352108074609016936",
+          "channelKind": "thread",
+          "channelName": "ooh, just came across this again. seems",
+          "date": "2025-03-23",
+          "messageIds": [
+            "1353371709230809249",
+            "1353372816355098687",
+            "1353387170232012810"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-a6d6ab80e79b",
+      "topic": "Lambda calculus booleans as power towers",
+      "aliases": [
+        "Boolean logic in lambda calculus",
+        "Church numerals as exponentiation"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1487612317087826123",
+          "channelKind": "thread",
+          "channelName": "I've spent the last week trying to",
+          "date": "2026-03-29",
+          "messageIds": [
+            "1487612933620895790",
+            "1487612936930463804",
+            "1487613262702055484",
+            "1487613965453234378",
+            "1487615690906140813",
+            "1487616837809209476",
+            "1487617981319090278",
+            "1487621013222068224",
+            "1487621056775590091",
+            "1487622087039254788",
+            "1487622548165230602",
+            "1487622773957197865",
+            "1487622870950609017",
+            "1487622918446776550",
+            "1487623046708859082",
+            "1487623155240407140",
+            "1487623387667894403",
+            "1487641213728460801",
+            "1487641260247482428",
+            "1487808704978882691",
+            "1487808923250458735",
+            "1487810021348872323",
+            "1487811238363664594",
+            "1487814772052201544",
+            "1487814893595000872"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-f1ffddadde96",
+      "topic": "Learning OCaml and functional programming",
+      "aliases": [
+        "Functional engineering education",
+        "OCaml learning resources"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-11-22",
+          "messageIds": [
+            "1441815920665296987",
+            "1441832110339002378",
+            "1441856471477522519",
+            "1441860778000126186"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-55ff6dfc466d",
+      "topic": "Linear logic and proof polarity",
+      "aliases": [
+        "Linear Logic Exploration (0.1)",
+        "Linear logic",
+        "Modalities in linear logic",
+        "Polarity in linear logic"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1401236506798063626",
+          "channelKind": "thread",
+          "channelName": "Linear Logic Exploration (0.1)",
+          "date": "2025-08-02",
+          "messageIds": [
+            "1401236511831228517",
+            "1401237577448554516",
+            "1401276097987084359",
+            "1401279516407500820",
+            "1401288863615549574",
+            "1401303243208003674"
+          ]
+        },
+        {
+          "channelId": "1401236506798063626",
+          "channelKind": "thread",
+          "channelName": "Linear Logic Exploration (0.1)",
+          "date": "2025-08-03",
+          "messageIds": [
+            "1401409798079119512",
+            "1401562434120187977",
+            "1401563979679006890"
+          ]
+        },
+        {
+          "channelId": "1401236506798063626",
+          "channelKind": "thread",
+          "channelName": "Linear Logic Exploration (0.1)",
+          "date": "2025-08-04",
+          "messageIds": [
+            "1401992631583510719",
+            "1401992872386891958",
+            "1401993177077911563",
+            "1402030874530418880"
+          ]
+        },
+        {
+          "channelId": "1401236506798063626",
+          "channelKind": "thread",
+          "channelName": "Linear Logic Exploration (0.1)",
+          "date": "2025-09-27",
+          "messageIds": [
+            "1421539237836226572"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-5c11f2d66069",
+      "topic": "Numbers built from repeated digit blocks",
+      "aliases": [
+        "Periodic digit number divisibility",
+        "Repdigit numbers and primality"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-12-03",
+          "messageIds": [
+            "1445822349734711296",
+            "1445824366821638267",
+            "1445841886718988520",
+            "1445844719967011030"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-b19cb3b3cf86",
+      "topic": "Pigeonhole principle in proofs",
+      "aliases": [
+        "Combinatorial pigeonhole problems",
+        "Pigeonhole principle exercises"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-04-26",
+          "messageIds": [
+            "1365769971728384000",
+            "1365770003789381772",
+            "1365772540491993118",
+            "1365773647037337752"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-e104546f378f",
+      "topic": "Polynomials versus power series",
+      "aliases": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-05-24",
+          "messageIds": [
+            "1375853791282466946",
+            "1375877932228280420",
+            "1375891271742390481",
+            "1375911448433397862",
+            "1375937383673106596"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-8a53441cd842",
+      "topic": "Position jitter in airline flight trackers",
+      "aliases": [
+        "Flight path smoothing and interpolation",
+        "Flight tracker location errors",
+        "GPS and map coordinate errors"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-07-03",
+          "messageIds": [
+            "1522619653724045382",
+            "1522620197754765375",
+            "1522620577624363129",
+            "1522620710202114109",
+            "1522620851013419148",
+            "1522621023214633162",
+            "1522621033771696179",
+            "1522621101434343477",
+            "1522621193344254234",
+            "1522621662150000862",
+            "1522622166238232636",
+            "1522623341079298058",
+            "1522624358734889140",
+            "1522624502264103105",
+            "1522625355708366989",
+            "1522627236442669197",
+            "1522628217184321697",
+            "1522629596976250991"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-806c421f5275",
+      "topic": "Professional societies for mathematics and computing",
+      "aliases": [
+        "AMS, MAA, SIAM, IEEE and ACM",
+        "Math and computing societies"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1570140276142514188",
+          "channelKind": "thread",
+          "channelName": "IEEE, ACM, etc.",
+          "date": "2026-11-12",
+          "messageIds": [
+            "1570284674201292961",
+            "1570284678210916476",
+            "1570285146387783761",
+            "1570285389535518901",
+            "1570287192054562886",
+            "1570289646825508964",
+            "1570297206353825823",
+            "1570297231540752498",
+            "1570298141767499816",
+            "1570421978257555507"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-6c0cb232483e",
+      "topic": "Quantum Latin squares and Euler's officers",
+      "aliases": [
+        "Euler's Quantum Officers",
+        "Golden ratio in quantum puzzles",
+        "Quantum Sudoku"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1536957185932787752",
+          "channelKind": "thread",
+          "channelName": "Euler's Quantum Officers",
+          "date": "2026-08-12",
+          "messageIds": [
+            "1536957254186565712",
+            "1536957256325791835",
+            "1536968561015263232",
+            "1536969304921083956"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-24ee96c0982a",
+      "topic": "Ramsey number R(3,3) and monochromatic triangles",
+      "aliases": [
+        "Monochromatic triangles in two-coloured K6",
+        "The party problem"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-04-27",
+          "messageIds": [
+            "1365884864808615990",
+            "1365889868571480114",
+            "1365893627737411624",
+            "1365894479558475927"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-880627ed7cae",
+      "topic": "Repeated digit blocks and geometric series",
+      "aliases": [
+        "Divisibility of repdigit-style numbers",
+        "Numbers formed by repeating digit strings"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1445521089064337648",
+          "channelKind": "thread",
+          "channelName": "A fun problem derived from the Advent of",
+          "date": "2025-12-02",
+          "messageIds": [
+            "1445523562399142113",
+            "1445523565934809109"
+          ]
+        },
+        {
+          "channelId": "1445521089064337648",
+          "channelKind": "thread",
+          "channelName": "A fun problem derived from the Advent of",
+          "date": "2025-12-03",
+          "messageIds": [
+            "1445833286944292937",
+            "1445833898452848711",
+            "1445834507151343738",
+            "1445835175467421827"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-c9cdbb3ee197",
+      "topic": "Roots of unity and complex domains",
+      "aliases": [
+        "Choosing when to use complex numbers",
+        "Complex numbers in polar form",
+        "Roots of Unity"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1341129492466503813",
+          "channelKind": "thread",
+          "channelName": "Roots of Unity",
+          "date": "2025-02-18",
+          "messageIds": [
+            "1341534777571807364",
+            "1341534783150231663",
+            "1341535129964904488",
+            "1341549813962903663",
+            "1341550663150207016",
+            "1341558597628198944"
+          ]
+        },
+        {
+          "channelId": "1341129492466503813",
+          "channelKind": "thread",
+          "channelName": "Roots of Unity",
+          "date": "2025-02-19",
+          "messageIds": [
+            "1341560002996867224",
+            "1341568330179412051",
+            "1341570738401841193",
+            "1341570978853027911",
+            "1341571023534952520",
+            "1341571785438793788",
+            "1341571822038290492",
+            "1341572099139174511",
+            "1341572237966180475",
+            "1341572404752941066",
+            "1341572436423872568",
+            "1341572500005453874",
+            "1341572526072926240",
+            "1341572865476132875",
+            "1341573401617367052",
+            "1341574366881779722",
+            "1341840593063641140",
+            "1341841791221235806",
+            "1341854857358872620",
+            "1341855056282124349",
+            "1341855177686126673",
+            "1341855331461890128",
+            "1341856021903179829"
+          ]
+        },
+        {
+          "channelId": "1341129492466503813",
+          "channelKind": "thread",
+          "channelName": "Roots of Unity",
+          "date": "2025-02-24",
+          "messageIds": [
+            "1343383020761120799",
+            "1343389722306941028"
+          ]
+        },
+        {
+          "channelId": "1341129492466503813",
+          "channelKind": "thread",
+          "channelName": "Roots of Unity",
+          "date": "2025-03-06",
+          "messageIds": [
+            "1347276752916971683",
+            "1347276778627928134",
+            "1347279724598132868"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-3222b061031d",
+      "topic": "Stars and bars counting for ice cream cones",
+      "aliases": [
+        "Generating functions for counting selections",
+        "Multisets and combinations with repetition"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-07-05",
+          "messageIds": [
+            "1391133705384362145",
+            "1391146003494735943",
+            "1391146192498462842",
+            "1391146367388483614",
+            "1391146910139678790",
+            "1391146960030797944",
+            "1391147056529150072",
+            "1391147192101900359",
+            "1391147315967819867",
+            "1391147392581107853",
+            "1391147589046501376",
+            "1391148265038155806",
+            "1391148273657446452",
+            "1391148285716336700",
+            "1391148916610957466",
+            "1391149214188437584",
+            "1391151171149762571",
+            "1391151261218373824"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-9334f67162f2",
+      "topic": "Substitution in probabilistic type theory",
+      "aliases": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-03-26",
+          "messageIds": [
+            "1486840918366617661",
+            "1486850388995866785",
+            "1486850692126736524"
+          ]
+        },
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2026-03-27",
+          "messageIds": [
+            "1486887344442314813",
+            "1486887405540737054",
+            "1486889434669650095"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-e6ba63d9bc53",
+      "topic": "Transcendental numbers and branches of roots",
+      "aliases": [
+        "Complex roots and branch choice",
+        "Multivalued functions and principal values",
+        "Thoughts on transcendentals"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1448534180819505192",
+          "channelKind": "thread",
+          "channelName": "Thoughts on transcendentals",
+          "date": "2025-12-11",
+          "messageIds": [
+            "1448534304115396670",
+            "1448534783654101053",
+            "1448535885258690621",
+            "1448536461115785358",
+            "1448536675696513127",
+            "1448537287280562299",
+            "1448537623600828507"
+          ]
+        },
+        {
+          "channelId": "1448534180819505192",
+          "channelKind": "thread",
+          "channelName": "Thoughts on transcendentals",
+          "date": "2025-12-12",
+          "messageIds": [
+            "1449052802281115748",
+            "1449052923593232426",
+            "1449053280389959902"
+          ]
+        },
+        {
+          "channelId": "1448534180819505192",
+          "channelKind": "thread",
+          "channelName": "Thoughts on transcendentals",
+          "date": "2025-12-13",
+          "messageIds": [
+            "1449485069344571484",
+            "1449485189901189141",
+            "1449485393828249611",
+            "1449485491958190191"
+          ]
+        },
+        {
+          "channelId": "1448534180819505192",
+          "channelKind": "thread",
+          "channelName": "Thoughts on transcendentals",
+          "date": "2025-12-16",
+          "messageIds": [
+            "1450276849694539776",
+            "1450277056091783279",
+            "1450277307079196723",
+            "1450277760667746344",
+            "1450278049571410042"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-dffcfe822dae",
+      "topic": "Type systems for proof assistants",
+      "aliases": [],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-09-27",
+          "messageIds": [
+            "1421567095396896838",
+            "1421567231107666042",
+            "1421567452789211249",
+            "1421577590929363056",
+            "1421583698993610961"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-623da50ceb82",
+      "topic": "Unknown faces on a die using generating functions",
+      "aliases": [
+        "Generating functions for dice sums",
+        "Non-standard dice puzzle"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-06-10",
+          "messageIds": [
+            "1382057584961388545",
+            "1382057914566578270",
+            "1382114323023007805",
+            "1382117329240064061",
+            "1382117442213511299",
+            "1382119296997658767",
+            "1382119422449291344",
+            "1382129188663857213",
+            "1382136770816381079"
+          ]
+        },
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-06-11",
+          "messageIds": [
+            "1382186487608643584",
+            "1382189669373972501",
+            "1382189711346630656",
+            "1382190086174674996",
+            "1382190102163361824",
+            "1382192224124665928",
+            "1382192418144915626",
+            "1382192852553170954",
+            "1382193276865609770",
+            "1382193402883346513",
+            "1382193678168096980",
+            "1382193781905952778",
+            "1382194315610161164",
+            "1382201316096475136",
+            "1382205184457052201",
+            "1382205870498119753",
+            "1382206158730952735"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-7d340610ac6c",
+      "topic": "Verified compilers and the F* proof assistant",
+      "aliases": [
+        "Formal verification of compilers",
+        "Graph-based visualization tools",
+        "Proof assistants"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-02-15",
+          "messageIds": [
+            "1340378565442797731",
+            "1340379884060545176",
+            "1340380334067552306",
+            "1340380674930249769",
+            "1340381754409881782",
+            "1340465115341787136"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-eca9ef6e08e8",
+      "topic": "Visualizing task graphs with few crossings",
+      "aliases": [
+        "Graph drawing and crossing minimisation",
+        "Tree decompositions and graph automata"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1170385683379126346",
+          "channelKind": "channel",
+          "channelName": "general",
+          "date": "2025-02-07",
+          "messageIds": [
+            "1337456700151697441",
+            "1337457805157863507",
+            "1337460961434669097",
+            "1337461224513998919",
+            "1337540392241070180",
+            "1337542182260834406"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thr-056a149859af",
+      "topic": "Voronoi diagrams for graph layout",
+      "aliases": [
+        "Alternatives to force-directed layout",
+        "Voronoi Diagrams",
+        "Voronoi tessellation graph layout"
+      ],
+      "status": "candidate",
+      "evidence": [
+        {
+          "channelId": "1363542869352251583",
+          "channelKind": "thread",
+          "channelName": "Voronoi Diagrams",
+          "date": "2025-04-20",
+          "messageIds": [
+            "1363543596317409482",
+            "1363543672368533675",
+            "1363543789050007905"
+          ]
+        },
+        {
+          "channelId": "1363542869352251583",
+          "channelKind": "thread",
+          "channelName": "Voronoi Diagrams",
+          "date": "2025-04-24",
+          "messageIds": [
+            "1364929754221903872",
+            "1364930031301951610"
+          ]
+        }
+      ]
+    }
+  ]
+}
