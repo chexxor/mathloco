@@ -6,7 +6,12 @@
 #   * Pages cannot run this artifact's server side. On the Pages branch preview it published assets
 #     only ("No functions dir at /functions found. Skipping." / "Success: Assets published!") and
 #     `/api/discord-summary` answered 404, while the same commit on workerd answered 200 JSON.
-# The Pages project still answers the apex today. See README "Deploy target and the two-phase cutover".
+# Pages is GONE, not parked: its production auto-deploy was proven off (`is_skipped: true`,
+# `skip_reason: "production_deployments_disabled"` on a real push), the apex hostname was detached from it, and the
+# project was deleted on 2026-10-30 (README section "Deploy target: Workers - the cutover, and what now owns the
+# apex"; D37, D56; D39's "Pages stays as a rollback" is superseded by that deletion). The route entry below is
+# still load-bearing while the leftover Pages-era DNS record is retired. This choice is recorded as an ADR in
+# `docs/adr/0001-deploy-target-workers.md`, whose apex half is ADR 0004 (not written yet).
 #
 # Wrangler v4 removed the top-level `node_compat` key. Node APIs now come from the `nodejs_compat`
 # compatibility flag, which requires a compatibility_date. The runtime no longer imports the Anthropic
