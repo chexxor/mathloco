@@ -137,7 +137,14 @@ export function mergeEvidence(a, b) {
 const hasEvidence = (t) => (t?.evidence ?? []).some((e) => (e?.messageIds ?? []).length > 0);
 
 /** A thread a human has signed, with the pointers to back it. This is the whole test for "may it be
- *  published", and it is stated once (D264) so the gate, the reader and the review surface agree. */
+ *  published", and it is stated once (D264) so the gate, the reader and the review surface agree.
+ *
+ *  There is deliberately no `--approve` flag on the harvester. A command that could write
+ *  `approvedBy: "operator"` would let any session manufacture the operator's signature, which is the one
+ *  authority this file exists to require (S088): names come from a model, publication comes from a human, and a
+ *  signature is the human's edit, not a flag. `--review --links` brings the evidence to a person; the person
+ *  signs in the file (@measured 2026-11-20: all 31 harvested entries were signed by hand that way, and
+ *  `check:thread-topics` then reported 31 will render). */
 export function isRatified(t) {
   return t?.status === 'approved' && !!t?.approvedBy && !!t?.approvedAt && hasEvidence(t);
 }

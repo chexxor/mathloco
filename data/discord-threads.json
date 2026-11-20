@@ -191,7 +191,7 @@
         "Classroom voting demonstrations",
         "Voting method paradoxes"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1434941130826453092",
@@ -213,7 +213,9 @@
             "1435075525839163493"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-1203d8a6564b",
@@ -222,7 +224,7 @@
         "Hyperoperation arithmetic",
         "Shifting hyperoperations"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -242,7 +244,9 @@
             "1315087111837188108"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-059fc5883574",
@@ -251,7 +255,7 @@
         "Infinitesimals and nonstandard analysis",
         "Ultrafilters and hyperreal construction"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -275,7 +279,9 @@
             "1451755822387564676"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-3754e340b656",
@@ -284,7 +290,7 @@
         "Density of circle coverings",
         "Discs covering plane points"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -298,7 +304,9 @@
             "1498140493534597252"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-e692f714215c",
@@ -307,7 +315,7 @@
         "Covering points with unit disks",
         "Unit disk exact covers"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -322,7 +330,9 @@
             "1502755143551025223"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-a1bc58e0c4c6",
@@ -331,7 +341,7 @@
         "Arc construction without the center",
         "Geometry of circular building layout"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -355,7 +365,9 @@
             "1570284674654150820"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-e4bc1b37a097",
@@ -366,7 +378,7 @@
         "Hurwitz's theorem",
         "Real normed division algebras"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1347369412721901650",
@@ -386,7 +398,9 @@
             "1347373985079496768"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-83db61f52c55",
@@ -395,7 +409,7 @@
         "Gambler's ruin problem",
         "Ruin probabilities via linear recurrences"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -421,7 +435,9 @@
             "1360774166734962980"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-4aa103a01a1c",
@@ -430,7 +446,7 @@
         "Analytic combinatorics books",
         "Enumerative combinatorics texts"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -447,7 +463,9 @@
             "1384969399785619581"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-a05b45e85a2e",
@@ -456,7 +474,7 @@
         "Counting partitions with infinite products",
         "Generating function intro exercises"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1363325988296986795",
@@ -574,7 +592,9 @@
             "1365174916265283684"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-6468d5ab5708",
@@ -583,7 +603,7 @@
         "Edge linking in computational graphs",
         "Lafont's alligator game"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1352108074609016936",
@@ -610,7 +630,9 @@
             "1353387170232012810"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-a6d6ab80e79b",
@@ -619,7 +641,7 @@
         "Boolean logic in lambda calculus",
         "Church numerals as exponentiation"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1487612317087826123",
@@ -654,7 +676,9 @@
             "1487814893595000872"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-f1ffddadde96",
@@ -663,7 +687,7 @@
         "Functional engineering education",
         "OCaml learning resources"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -677,7 +701,9 @@
             "1441860778000126186"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-55ff6dfc466d",
@@ -688,7 +714,7 @@
         "Modalities in linear logic",
         "Polarity in linear logic"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1401236506798063626",
@@ -736,7 +762,9 @@
             "1421539237836226572"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-5c11f2d66069",
@@ -745,7 +773,7 @@
         "Periodic digit number divisibility",
         "Repdigit numbers and primality"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -759,7 +787,9 @@
             "1445844719967011030"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-b19cb3b3cf86",
@@ -768,7 +798,7 @@
         "Combinatorial pigeonhole problems",
         "Pigeonhole principle exercises"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -782,13 +812,15 @@
             "1365773647037337752"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-e104546f378f",
       "topic": "Polynomials versus power series",
       "aliases": [],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -803,7 +835,9 @@
             "1375937383673106596"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-8a53441cd842",
@@ -813,7 +847,7 @@
         "Flight tracker location errors",
         "GPS and map coordinate errors"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -841,7 +875,9 @@
             "1522629596976250991"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-806c421f5275",
@@ -850,7 +886,7 @@
         "AMS, MAA, SIAM, IEEE and ACM",
         "Math and computing societies"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1570140276142514188",
@@ -870,7 +906,9 @@
             "1570421978257555507"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-6c0cb232483e",
@@ -880,7 +918,7 @@
         "Golden ratio in quantum puzzles",
         "Quantum Sudoku"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1536957185932787752",
@@ -894,7 +932,9 @@
             "1536969304921083956"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-24ee96c0982a",
@@ -903,7 +943,7 @@
         "Monochromatic triangles in two-coloured K6",
         "The party problem"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -917,7 +957,9 @@
             "1365894479558475927"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-880627ed7cae",
@@ -926,7 +968,7 @@
         "Divisibility of repdigit-style numbers",
         "Numbers formed by repeating digit strings"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1445521089064337648",
@@ -950,7 +992,9 @@
             "1445835175467421827"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-c9cdbb3ee197",
@@ -960,7 +1004,7 @@
         "Complex numbers in polar form",
         "Roots of Unity"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1341129492466503813",
@@ -1028,7 +1072,9 @@
             "1347279724598132868"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-3222b061031d",
@@ -1037,7 +1083,7 @@
         "Generating functions for counting selections",
         "Multisets and combinations with repetition"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -1065,13 +1111,15 @@
             "1391151261218373824"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-9334f67162f2",
       "topic": "Substitution in probabilistic type theory",
       "aliases": [],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -1095,7 +1143,9 @@
             "1486889434669650095"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-e6ba63d9bc53",
@@ -1105,7 +1155,7 @@
         "Multivalued functions and principal values",
         "Thoughts on transcendentals"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1448534180819505192",
@@ -1158,13 +1208,15 @@
             "1450278049571410042"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-dffcfe822dae",
       "topic": "Type systems for proof assistants",
       "aliases": [],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -1179,7 +1231,9 @@
             "1421583698993610961"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-623da50ceb82",
@@ -1188,7 +1242,7 @@
         "Generating functions for dice sums",
         "Non-standard dice puzzle"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -1232,7 +1286,9 @@
             "1382206158730952735"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-7d340610ac6c",
@@ -1242,7 +1298,7 @@
         "Graph-based visualization tools",
         "Proof assistants"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -1258,7 +1314,9 @@
             "1340465115341787136"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-eca9ef6e08e8",
@@ -1267,7 +1325,7 @@
         "Graph drawing and crossing minimisation",
         "Tree decompositions and graph automata"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1170385683379126346",
@@ -1283,7 +1341,9 @@
             "1337542182260834406"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     },
     {
       "id": "thr-056a149859af",
@@ -1293,7 +1353,7 @@
         "Voronoi Diagrams",
         "Voronoi tessellation graph layout"
       ],
-      "status": "candidate",
+      "status": "approved",
       "evidence": [
         {
           "channelId": "1363542869352251583",
@@ -1316,7 +1376,9 @@
             "1364930031301951610"
           ]
         }
-      ]
+      ],
+      "approvedBy": "operator",
+      "approvedAt": "2026-11-20"
     }
   ]
 }
