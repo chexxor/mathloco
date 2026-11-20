@@ -198,6 +198,16 @@ const DEPLOY = [
   // gate that catches the defect on the branch that introduced it).
   { name: 'check:schedule-window:selftest', desc: 'the schedule-window gate can still fail (18 cases: 9 rule, 9 page plantings, @measured 2026-11-16 by `npm run check:schedule-window:selftest`)' },
   { name: 'audit:gate', desc: 'prod-only npm audit against an explicit allowlist' },
+  // A review-round census row is not a note: a `want: 'present'` row makes a sentence load-bearing for as long as
+  // the row stands, and the round reading it is not the round that wrote it. Two round-8 rows asserted sentences
+  // without ever naming who put them on the page, and it took a visitor noticing one of them to open the question
+  // of whether the site was saying the delegate's words (S082, D454). So each prose row that makes the site SAY a
+  // sentence has to name its home - a `src/content.json` slot, a file that actually holds the string, a file that
+  // composes it, or a ruling id - and a citation that names a file not containing the string fails as a false
+  // citation. Source-only: it reads the census file, never an artifact, so it can go red before anyone builds (D118).
+  // Cost @measured 2026-11-19 by these steps: 0.06s gate, 0.16s selftest.
+  { name: 'check:census-rows', desc: 'every census row that makes a page say a sentence names where that sentence comes from (content slot / source file / generated file / ruling id), and the citation actually holds the string' },
+  { name: 'check:census-rows:selftest', desc: 'the census-provenance gate can still fail (11 cases: an unattributed row, a slot that does not exist, a file that does not exist, a real file that does not hold the sentence, a malformed author, a slot holding the wrong sentence, plus a generated:/ruling/declined row accepted and the clean control)' },
   { name: 'build', desc: 'astro build -> dist/' },
   // dist/ exists only after `build`, and both of these read the artifact rather than the source.
   { name: 'check:deploy', desc: 'the built artifact is deployable on the apex', needs: ['build'] },
