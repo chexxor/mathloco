@@ -47,6 +47,9 @@ const subjects = (scratch ? walk('design').concat(existsSync('.design') ? walk('
 // `docs/` is in the roots because the stage-gate artifacts (G2-G5) live there and code cites them by path.
 // Before MS12 the `docs/` literal in PLAN.md and in src/lib/rsvp.mjs was invisible to this gate: a broken
 // pointer into a wall is exactly what --stale exists to catch (D268).
+// `.notes/runbooks` joins the alternation on 2026-11-20 (MS40 P2, D456): that home MOVED to `docs/howto/`, so a
+// tracked file naming a file inside it is a pointer into a wall. It was invisible before because no root started
+// with `.notes`, which is why 15 tracked files could still cite the old home years after the last write.
 const ROOTS = ['package.json', 'DESIGN.md', 'AGENTS.md', 'README.md', 'docs', 'src', 'scripts', '.agents', '.notes', 'design', '.design', '.github'];
 const textExt = /\.(m?js|ts|tsx|json|md|astro|svelte|sh|css|py|yml|txt)$/;
 // Scratch is not a citable source. `.design/` is scratch by rule (design/README.md), and the harness
@@ -61,10 +64,17 @@ const sources = ROOTS.filter(existsSync)
   .filter(([f, t]) => t && (scratch || !scratchFile(f)));
 
 // every path literal that looks like a repo path, so --stale can resolve it
-const PATHRE = /['"`]((?:design|\.design|docs|src|scripts|public)\/[A-Za-z0-9._/-]*[A-Za-z0-9])['"`]/g;
+const PATHRE = /['"`]((?:design|\.design|docs|src|scripts|public|\.notes\/runbooks)\/[A-Za-z0-9._/-]*[A-Za-z0-9])['"`]/g;
 
 const KNOWN_GONE = {
   'design/decision-audit.mjs': 'DESIGN.md cites it as the probe written in a session that never committed it; the citation IS the lesson',
+  // The runbook home moved to `docs/howto/` on 2026-11-20 (MS40 P2, D456), and every live citation - AGENTS.md, the
+  // astro skill, ci.yml, .gitignore, the two live probes, a design record and ADR 0001 - was moved in that commit.
+  // These two are DATED LETTERS, and a letter is a record: its citation is what someone read on that date, so the
+  // pointer stays and the bridge is the provenance line at the top of the file it means. A NEW tracked file naming
+  // any other `.notes/runbooks/...` path still goes red: that is the class this PATHRE root was added to catch.
+  '.notes/runbooks/domain-cutover-matheapolis.md': 'moved to docs/howto/domain-cutover-matheapolis.md on 2026-11-20 (MS40 P2, D456); cited by the dated letter docs/reply-to-the-design-read-2026-11-14b.md, which is a record of what that read was working from, not a live input',
+  '.notes/runbooks/staging-branch-preview.md': 'moved to docs/howto/staging-branch-preview.md on 2026-11-20 (MS40 P2, D456); cited by the dated letter docs/reply-to-the-communication-review-round-7-2026-11-18.md, same shape as the entry above',
   'design/ratify-tokens': 'a branch name recorded in design/state.json, not a path',
   'src/assets/math-group-image.jpg': 'deleted in apply 4h (D120); scripts/make-social-share.mjs names it as the provenance of the crop geometry',
   'src/consts.ts': 'named in dated evidence (records/0010, token-plan.md); the section flags now live in src/config.json',

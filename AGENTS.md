@@ -98,7 +98,7 @@ each of those and requires a named failure. Both are in `verify`.
    - **A second skill home exists, and it is host-local:** the vendored Cloudflare set from the
      `pi-cloudflare` pi package, at `.pi/npm/node_modules/pi-cloudflare/skills/` (`.pi/` is gitignored, so a
      fresh machine must reinstall the package to have them). 18 skills. They are **vendor** guidance, so this
-     repo's code, `astro/SKILL.md` and `.notes/runbooks/` outrank them on anything repo-specific. Open the one
+     repo's code, `astro/SKILL.md` and `docs/howto/` outrank them on anything repo-specific. Open the one
      for the Cloudflare surface you are touching:
      - product choice / "what should we use here" -> `cloudflare/SKILL.md`; the depth lives in its
        `references/<product>/{README,api,configuration,gotchas,patterns}.md`, e.g. `workers-ai`, `d1`, `kv`,
@@ -182,10 +182,11 @@ each of those and requires a named failure. Both are in `verify`.
    was 2026-11-17 at 5.2 → 4.7/16cpu, and D443 parks the trigger that un-parks a quiet re-freeze.
 5. If this session is an **operating situation a runbook covers** - deploy/bindings/secrets, a   Pages-vs-Worker mix-up, "which database is drizzle opening?", a migration that did not apply, an
    event feed that moved (a stale or duplicated meetup, a row to cancel, event art to mirror), or
-   you need external research - read the matching `.notes/runbooks/<symptom>.md` **before
-   improvising**. The index (symptom -> runbook) is `.notes/runbooks/README.md`; read
-   `.notes/runbooks/research-request.md` before commissioning research. Runbooks live in `.notes/`,
-   which is gitignored - they are host-local, so a fresh clone will not have them.
+   you need external research - read the matching `docs/howto/<symptom>.md` **before
+   improvising**. The index (symptom -> runbook) is `docs/howto/README.md`; read
+   `docs/howto/research-request.md` before commissioning research. The runbooks live in tracked
+   `docs/howto/` as of 2026-11-20 (**MS40 P2**) - before that they were gitignored `.notes/runbooks/`, so a
+   dated citation elsewhere that names the old home means the same-named file there.
 6. Resume from `NEXT.md`, and take the priority from `PLAN.md` §Milestones - never from memory or from a
    chat log. The roadmap is host-local (`.notes/` is gitignored); the tracked prose at the root is
    `AGENTS.md`, `README.md`, `DESIGN.md`, `MILESTONES.md` and `DECISIONS.index.md`. Durable plans that are
@@ -244,7 +245,7 @@ Then execute on that resulting promp.
 10. If the operator has **approved the item** and a `staging` branch exists, merge the item into `staging`,
    push it, and report the preview URL (`npm run preview:deploy` - it runs `verify` first, then deploys a
    Worker Preview). `staging` is a review environment, not the site: it gets the preview D1 and preview KV,
-   and it never touches the apex triggers. Protocol and gotchas: `.notes/runbooks/staging-branch-preview.md`
+   and it never touches the apex triggers. Protocol and gotchas: `docs/howto/staging-branch-preview.md`
    (D124). `staging` -> `main`, and any production deploy, stay the operator's.
 
 ## How we work (practices that earned their place)
@@ -319,7 +320,7 @@ information-gathering in which a guess would cost the project a wrong number or 
   renamed file invalidates every path that cites it - `npm run check:design` (`node design/audit-references.mjs
   --stale`) exits 1 on exactly that, and `node .agents/skills/add-a-gate/scripts/gate-skeleton.mjs --audit`
   reports a runner step with no script behind it (D282). Vendor skills under `.pi/npm/` are guidance; this
-  repo's code, `AGENTS.md` and `.notes/runbooks/` outrank them.
+  repo's code, `AGENTS.md` and `docs/howto/` outrank them.
 - **One home per rule.** If two files can answer the same question, one of them is wrong the next month:
   `src/lib/rsvp.mjs` is the only place the platform list and URL shapes exist, `scripts/gate-run.mjs` is the
   only list of gates, `PLAN.md` §Milestones is the only queue.

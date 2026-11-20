@@ -39,7 +39,7 @@ Preview named after the branch). Rollback is a **Worker version**, not a Pages r
 
 1. **An API route is only testable where a Worker runs.** A static-only preview, or a Pages-shaped mental model,
    produces a 404 that looks like an app bug. The Pages-vs-Worker mix-up is a named runbook symptom
-   (`.notes/runbooks/pages-to-workers-migration.md`, tracked as `docs/howto/` in **MS40 P2**).
+   (`docs/howto/pages-to-workers-migration.md`, moved out of the gitignored runbook home in **MS40 P2**).
 2. **`wrangler deploy` replaces the Worker's trigger set with whatever the config declares.** A Custom Domain added
    in the dashboard without a matching entry is detached by the next routine deploy. `npm run check:deploy` asserts
    the declared triggers and reads the artifact wrangler uploads, not the TOML it came from (**D241**); the apex

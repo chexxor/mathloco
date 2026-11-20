@@ -1,7 +1,7 @@
 # 0012 — A colour measurement counts what the browser paints, on the surface it claims
 
 **Date: 2026-11-02** (round 9, grill). Describes the code as it was then; re-read
-`.notes/runbooks/design-round-specimen-measurement.md` before rebuilding a round's harness.
+`docs/howto/design-round-specimen-measurement.md` before rebuilding a round's harness.
 
 **Situation.** The operator asked for more colour ("it's still such a drab website without color"). Answering
 that needed numbers about colour, and every obvious way to get them was wrong in a way that looked like a

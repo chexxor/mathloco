@@ -36,6 +36,11 @@ const FILES = [
   // rows and 8 ledger rows whose ids `node design/review-round-8-census.mjs --reply` also counts.
   'docs/communication-review-round-8-2026-11-18.md',
   'docs/reply-to-the-communication-review-round-8-2026-11-18.md',
+  // MS40 P2 (2026-11-20): the two indexes that decide what a fresh clone can find. `docs/howto/README.md` is the
+  // symptom -> runbook map - a row that loses a cell stops routing the symptom it names - and `docs/adr/README.md`
+  // is the ADR set table, the one place the eight records are enumerated.
+  'docs/howto/README.md',
+  'docs/adr/README.md',
 ];
 
 // Split a row on unescaped pipes only. `split('|')` on a cell containing `\|` invents a column.

@@ -11,7 +11,7 @@
 // Deliberately NOT a gate: it is not in `verify`, and its exit code is 0 unless you ask with `--strict`.
 // Production lagging behind `staging` is the operator's deploy decision (D42: the production deploy is
 // theirs), and a gate that goes red every time they choose to wait is a gate people learn to ignore.
-// `--strict` is the hook a future watchdog (`.notes/runbooks/deploy-pipeline-workers-builds.md`'s scheduled
+// `--strict` is the hook a future watchdog (`docs/howto/deploy-pipeline-workers-builds.md`'s scheduled
 // probe, option (a)) would use.
 //
 // No secrets, no deploy rights, no write verb: GET only.
@@ -111,7 +111,7 @@ const builtTitle = built?.match(/<title>([^<]*)<\/title>/)?.[1]?.trim() ?? null;
 const results = [];
 for (const t of targets) results.push({ ...t, ...(await probe(t.url, { ics: t.ics })) });
 
-// `--json` exists so the scheduled watchdog in `.notes/runbooks/deploy-pipeline-workers-builds.md` can read this
+// `--json` exists so the scheduled watchdog in `docs/howto/deploy-pipeline-workers-builds.md` can read this
 // probe the same way it reads a `check:*` step: one artifact, no prose to parse, exit code the only verdict.
 if (process.argv.includes('--json')) {
   const strictProblems = [];

@@ -65,7 +65,7 @@ try {
   schema = json.data.__schema;
 } catch (e) {
   console.error(`FAIL  cannot reach ${url}: ${e.message}`);
-  console.error(`This probe is not run under \`check.mjs --offline\`; if you got here, the route is the problem (see\n.notes/runbooks/ for the reachability probe, and D182 on the instance being reachable from outside the LAN).`);
+  console.error(`This probe is not run under \`check.mjs --offline\`; if you got here, the route is the problem (see\ndocs/howto/ for the reachability probe, and D182 on the instance being reachable from outside the LAN).`);
   process.exit(1);
 }
 

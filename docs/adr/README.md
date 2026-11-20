@@ -33,7 +33,8 @@ A decision belongs here when **all three** hold:
   consequences, and the condition that would reopen a decision; that shape is what an ADR adds, so an ADR **cites**
   its `D###`s rather than replacing them.
 - **Operating knowledge** (how to deploy, which database a script opens, how to fix a stale meetup) → `docs/howto/`,
-  which is **MS40 P2**; today those 17 files are gitignored `.notes/runbooks/` and a clone has none of them.
+  16 runbooks and their symptom-to-file index (17 files), moved out of the gitignored `.notes/runbooks/` home on 2026-11-20
+  (**MS40 P2**), so a clone finally has them.
 - **`DESIGN.md`** — reference, cited by **189** files @measured 2026-11-19; it stays where it is.
 
 ## The set, chosen by the test rather than by a cost label

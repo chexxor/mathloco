@@ -202,7 +202,7 @@ single 900 px AVIF here — **no `srcset` ladder** yet.
 This site's deploy target is **Cloudflare Workers** (`npm run deploy` = gates + `wrangler deploy`;
 `npm run preview:deploy` for a branch Preview URL). It is *not* deployed by hand-running
 `wrangler pages deploy`, and Pages cannot run this artifact's server side — see
-"Deploy target" in `README.md` and `.notes/runbooks/pages-to-workers-migration.md`. The delegate never
+"Deploy target" in `README.md` and `docs/howto/pages-to-workers-migration.md`. The delegate never
 **pushes git**; a production `wrangler deploy` is also the operator's, unless they have explicitly
 told you to do it. Two things about deploying that are specific to this repo:
 
@@ -298,7 +298,7 @@ The local steps still apply:
 4. Verify `dist/` exists and is non-empty before proceeding.
 5. Run D1 migrations for the target environment when `migrations/` changed — `npm run db:migrate:preview`
    / `db:migrate:prod` (targets are explicit per environment; see
-   `.notes/runbooks/db-target-and-migrations.md`). `npm run db:check` in CI proves schema and
+   `docs/howto/db-target-and-migrations.md`). `npm run db:check` in CI proves schema and
    migrations agree without any credentials.
 
 ---

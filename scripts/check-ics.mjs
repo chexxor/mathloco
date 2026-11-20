@@ -455,7 +455,7 @@ const RULES = [
       if (status === 'CANCELLED' || day >= today) continue;
       out.push({
         rule: 'stale-live-row',
-        detail: `VEVENT ${propOf(u, 'UID')?.value ?? '(no uid)'} publishes as ${status} with DTSTART ${day.slice(0, 4)}-${day.slice(4, 6)}-${day.slice(6, 8)}, a day already past (${today.slice(0, 4)}-${today.slice(4, 6)}-${today.slice(6, 8)}) — a subscriber who added this feed is being asked to attend an evening that happened. Retire it the only way RFC 5545 gives: STATUS:CANCELLED with a raised SEQUENCE, hand-authored (.notes/runbooks/event-feed-churn.md §3; the source stops announcing old rows rather than cancelling them), or re-fetch first: node scripts/events-harvest.mjs. The row is never deleted (D72), and the feed is never shortened to dodge this rule (D238).`,
+        detail: `VEVENT ${propOf(u, 'UID')?.value ?? '(no uid)'} publishes as ${status} with DTSTART ${day.slice(0, 4)}-${day.slice(4, 6)}-${day.slice(6, 8)}, a day already past (${today.slice(0, 4)}-${today.slice(4, 6)}-${today.slice(6, 8)}) — a subscriber who added this feed is being asked to attend an evening that happened. Retire it the only way RFC 5545 gives: STATUS:CANCELLED with a raised SEQUENCE, hand-authored (docs/howto/event-feed-churn.md §3; the source stops announcing old rows rather than cancelling them), or re-fetch first: node scripts/events-harvest.mjs. The row is never deleted (D72), and the feed is never shortened to dodge this rule (D238).`,
       });
     }
     return out;
