@@ -190,8 +190,8 @@ const DEPLOY = [
   // Outbound links (S041, D317): the read's §5.5 asked for `rel=noopener` + an arrow + an sr-only qualifier. Two
   // of those were already shipped; the defect was a qualifier repeated in the accessible name and four outbound
   // links carrying no qualifier at all. In-memory fixtures, so it can go red before anyone builds (D118).
-  // Cost @measured 2026-11-14 by this step: 0.06s selftest.
-  { name: 'check:ext-links:selftest', desc: 'the external-link gate can still fail (15 cases: 9 plantings — a new tab with no rel, rel without noopener, the qualifier painted in the label, an outbound link with no qualifier, a platform named twice, an internal route opened as a new tab, an outbound link in the same tab, the "new window" wording, all four at once — and 4 clean controls plus the derivation assertion)' },
+  // Cost @measured 2026-11-21 by this step: 0.037s selftest, 0.040s gate (Linux native, Node 24.22.1).
+  { name: 'check:ext-links:selftest', desc: 'the external-link gate can still fail (18 cases: 11 plantings — a new tab with no rel, rel without noopener, the qualifier painted in the label, an outbound link with no qualifier, a platform named twice, the exact doubled string the round-3 read quoted, a doubled word with no platform involved, an internal route opened as a new tab, an outbound link in the same tab, the "new window" wording, all defects at once — 6 clean controls incl. a mailto and a hyphenated name, and the derivation assertion). The count was 15 until 2026-11-21, when its own printout contradicted this description @measured 2026-11-21 by `node scripts/check-ext-links.mjs --selftest`)' },
   { name: 'check:sprite-claim:selftest', desc: 'the sprite-claim gate can still fail (6 plantings: path key, counter key, never-releases, path call site, no claim, sprite in the layout)' },
   // The promise half of the RSVP rule (S024, D287), added because of the completion audit's second objection:
   // MS12 closed while the plan still named a platform `src/config.json` declared no URL for. No gate compared
@@ -305,6 +305,19 @@ const DEPLOY = [
   // sr-only span, no platform is named twice in one accessible name, and the club's own routes never open a new
   // tab. Counts are printed from the artifact so a reviewer sees the census, not just the verdict.
   { name: 'check:ext-links', desc: 'every outbound anchor: rel carries noopener, opens in a new tab, "opens in a new tab" only in an sr-only span, no platform named twice in one accessible name, and no club route painted target=_blank (S041, D317)', needs: ['build'] },
+  // Every call to action on every built page sits in a block the page declared as its context (MS41, S090, D467).
+  // The operator's letter named one button on `/chat`; the census in `docs/research/discord-invite-ux-2026-11-20.md`
+  // found the class: 43 actions on 6 built pages, none with declared context, and a proximity window fails **none**
+  // of them because nav, lede and exit band flatter every control they surround. So the rule is a declared block
+  // (`data-cta-block` + `data-cta`) whose words must name the destination, the ask, and — for a standing exit — the
+  // thing the visitor enrols in. The vocabulary and the walk live in `design/cta-rules.mjs`, shared with the probe
+  // that prices it (`design/cta-inventory.mjs`), so a review letter and a red gate cannot quote different numbers
+  // (D264). The selftest plants whole fixture pages in `.design/tmp-cta-context/` and reads no `dist/`, so it can go
+  // red before anyone builds (D118); the gate reads the artifact, so it waits for `build`. The artifact census is
+  // printed on a green run (pages, actions by kind, blocks) because "green" alone is not a measurement (D144).
+  // Cost @measured 2026-11-21 by this step (Linux native, Node 24.22.1, 6 pages, rig load 10/16cpu): 0.07s gate, 0.06s selftest.
+  { name: 'check:cta-context:selftest', desc: 'the call-to-action context gate can still fail (14 cases: 11 planted pages — an undeclared action, an id with no registry row, an href contradicting its own id, no block, a block declared for another destination, a block that is the label with air around it, a block that swallows the page, a block naming no destination, a block naming no ask, an invite that hides that it enrolls you in a server, and a clean control — plus a vacuous exemption named by id, a platform with no registry row, and the fraction guard)' },
+  { name: 'check:cta-context', desc: 'every call to action on a built page names a registry destination whose row the printed href matches, and sits in an element declaring data-cta-block for that id which says in words where it leads, what the visitor does there, and what it enrols them in; a platform or /join row with no registry id fails, and so does an exclusion that matched nothing on the artifact (S090, D467)', needs: ['build'] },
   // One focus ring for the whole site, asserted in the stylesheet it ships in (S043, D328). The selftest plants
   // on in-memory CSS and HTML, so the rule can go red before anyone builds (D118); the gate reads the shipped
   // stylesheet, so it waits for `build`. Cost @measured 2026-11-15 by this step: 0.06s gate, 0.07s selftest.

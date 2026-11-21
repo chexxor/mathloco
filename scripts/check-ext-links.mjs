@@ -28,6 +28,7 @@
 // The wording itself lives in `src/lib/rsvp.mjs` (`NEW_TAB_QUALIFIER`); this gate only checks the artifact.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { resolve, join } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { PLATFORMS, NEW_TAB_QUALIFIER, newTabQualifier } from '../src/lib/rsvp.mjs';
 
 const args = process.argv.slice(2);
@@ -36,6 +37,13 @@ const DIST = (() => {
   const i = args.indexOf('--dist');
   return resolve(i < 0 ? 'dist/client' : args[i + 1]);
 })();
+
+// Is this file being RUN, or imported for its rules? The scan at the bottom of this file reads every built page
+// and then calls process.exit, so an import used to trigger a deploy gate as a side effect of wanting one
+// function - which is how `design/round20.mjs` found itself printing a `check:ext-links` verdict instead of a
+// specimen row. The rules are exported; the run is not. `npm run check:ext-links`, `:selftest` and the runner all
+// still execute the block, because in each of those `process.argv[1]` IS this file.
+const isMain = import.meta.url === pathToFileURL(process.argv[1] ?? '').href;
 
 const ANCHOR = /<a\b([^>]*)>([\s\S]*?)<\/a>/g;
 const SR_ONLY = /<span class="sr-only">([\s\S]*?)<\/span>/g;
@@ -186,29 +194,31 @@ const htmlFiles = (dir, out = []) => {
   return out;
 };
 
-if (!existsSync(DIST)) {
+if (isMain && !existsSync(DIST)) {
   console.error(`check:ext-links: ${DIST} missing — this gate reads the built artifact, so build first (npm run build).`);
   process.exit(1);
 }
 
-const pages = htmlFiles(DIST);
-let total = 0, external = 0, qualified = 0;
-const fails = [];
-for (const p of pages) {
-  const html = readFileSync(p, 'utf8');
-  const route = p.slice(DIST.length + 1).replace(/\/index\.html$/, '/') || '/';
-  const { fails: f, checked } = extLinkFindings(html, route);
-  total += checked;
-  external += [...html.matchAll(ANCHOR)].filter((m) => isExternal(attr(m[1], 'href') ?? '')).length;
-  qualified += [...html.matchAll(ANCHOR)].filter((m) => isExternal(attr(m[1], 'href') ?? '') && /opens in a new tab/i.test(accessibleName(m[2], m[1]))).length;
-  fails.push(...f);
-}
+if (isMain) {
+  const pages = htmlFiles(DIST);
+  let total = 0, external = 0, qualified = 0;
+  const fails = [];
+  for (const p of pages) {
+    const html = readFileSync(p, 'utf8');
+    const route = p.slice(DIST.length + 1).replace(/\/index\.html$/, '/') || '/';
+    const { fails: f, checked } = extLinkFindings(html, route);
+    total += checked;
+    external += [...html.matchAll(ANCHOR)].filter((m) => isExternal(attr(m[1], 'href') ?? '')).length;
+    qualified += [...html.matchAll(ANCHOR)].filter((m) => isExternal(attr(m[1], 'href') ?? '') && /opens in a new tab/i.test(accessibleName(m[2], m[1]))).length;
+    fails.push(...f);
+  }
 
-console.log(`check:ext-links — ${pages.length} built page(s), ${external} outbound anchor(s), ${qualified} with the sr-only qualifier, ${total} link(s) held to the rules`);
-if (fails.length) {
-  for (const f of fails) console.log(`  FAIL ${f.rule}: ${f.detail}`);
-  console.log(`\n${fails.length} finding(s). Every outbound link must carry rel=noopener, name its platform once, and put "opens in a new tab" in an sr-only span (S041, D317).`);
-  process.exit(1);
+  console.log(`check:ext-links — ${pages.length} built page(s), ${external} outbound anchor(s), ${qualified} with the sr-only qualifier, ${total} link(s) held to the rules`);
+  if (fails.length) {
+    for (const f of fails) console.log(`  FAIL ${f.rule}: ${f.detail}`);
+    console.log(`\n${fails.length} finding(s). Every outbound link must carry rel=noopener, name its platform once, and put "opens in a new tab" in an sr-only span (S041, D317).`);
+    process.exit(1);
+  }
+  console.log('  every outbound link: rel carries noopener, the qualifier is sr-only, no platform named twice.');
+  process.exit(0);
 }
-console.log('  every outbound link: rel carries noopener, the qualifier is sr-only, no platform named twice.');
-process.exit(0);

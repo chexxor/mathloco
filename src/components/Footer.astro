@@ -49,6 +49,18 @@ const year = new Date().getFullYear();
     <!-- Targets are 32px tall (16px line box + py-2), the same accepted shape as the nav links; do not
          shave the pad. `outline-band-text` is the focus ring HERE: accent on ink measures 2.97, which the
          oracle bans, and `ratify-check` fails this file if an accent ring comes back. -->
+    {/* MS41 (S090, D467): the three exits in this nav are the site's standing asks, so the nav and the feed's own
+        sentence together DECLARE themselves the context for those three actions (`data-cta-block`, one element for
+        three destinations because they are one map). Before this the band printed a bare platform name - "Discord" -
+        on all six routes, and the 64 words nearest it were the colophon's trademark boilerplate: nothing said what
+        the click does @measured 2026-11-21 by `node design/cta-inventory.mjs`. The two labels now carry the noun
+        the invite actually implies (a **group**, a **server**), which is the disclosure the research bought from
+        Discord's own Invite Object ("a code that when used, adds a user to a guild" @retrieved 2026-11-20 from
+        https://discord.com/developers/docs/resources/invite), and the words are the site's own existing idiom -
+        `signUpPaths()` already prints "Join the Meetup group", and `check:join-page` already pins "Join the Meetup
+        group" on `/join`. `check:rsvp-page` and `check:page-exit` read the `data-rsvp-platform` handles and the
+        hrefs, not these words, so relabelling moves no gate. */}
+    <div data-cta-block="calendar-feed meetup-group discord-server">
     <nav
       aria-label="Where to next"
       class="flex flex-wrap items-center gap-x-6 gap-y-2"
@@ -64,6 +76,7 @@ const year = new Date().getFullYear();
           asked. The band's identity line (`href="/"`) is not part of this nav, so the page still links home. */}
       <a
         href='/events.ics'
+        data-cta="calendar-feed"
         class='py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
       >
         Add to a calendar
@@ -84,19 +97,21 @@ const year = new Date().getFullYear();
         href={config.URLs.meetupGroup}
         target="_blank"
         rel="noopener noreferrer"
+        data-cta="meetup-group"
         data-rsvp-platform={PLATFORMS.meetup}
         class='py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
         >
-        Join on Meetup<span class="sr-only">{newTabQualifier('Join on Meetup', PLATFORMS.meetup)}</span>
+        Join the Meetup group<span class="sr-only">{newTabQualifier('Join the Meetup group', PLATFORMS.meetup)}</span>
       </a>
       <a
         href={config.URLs.discordInvite}
         target="_blank"
         rel="noopener noreferrer"
+        data-cta="discord-server"
         data-rsvp-platform={PLATFORMS.discord}
         class='py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text'
         >
-        Discord<span class="sr-only">{newTabQualifier('Discord', PLATFORMS.discord)}</span>
+        Join the Discord server<span class="sr-only">{newTabQualifier('Join the Discord server', PLATFORMS.discord)}</span>
       </a>
     </nav>
 
@@ -117,6 +132,7 @@ const year = new Date().getFullYear();
     <p class="mt-2 text-micro max-w-measure">
       Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.
     </p>
+    </div>
 
     {/* Identity, not a locator: 16px serif at every width, the same face and size as the nav mark,
          because the club's name is carried by the face (D95/D100), and the identity is the WORD alone.

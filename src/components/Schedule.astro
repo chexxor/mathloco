@@ -21,7 +21,7 @@ import type { UpcomingItem } from '../lib/content.ts';
 import { rhythmSentence } from '../lib/rhythm.mjs';
 import SignUpLinks from './SignUpLinks.astro';
 import { PLATFORMS } from '../lib/rsvp.mjs';
-import { newTabQualifier } from '../lib/links.mjs';
+import { newTabQualifier, ctaSays } from '../lib/links.mjs';
 
 /**
  * When we meet — the schedule, in two widths of one component.
@@ -380,7 +380,7 @@ const lede = compact
         // measurable — `check:render` holds it to the notice grammar (no fill, 1px ring at the ratified
         // contrast, 48px+) and fails any filled or ringed action that ever moves back inside. Before this
         // change the primary button sat inside the ring: one box, two edges.
-        <div class="max-w-measure">
+        <div class="max-w-measure" data-cta-block="meetup-group chat-page">
           <div role="status" class="inset-shadow-rule rounded-control px-4 py-6">
             <p class="text-label font-medium text-ink-3">{status}</p>
             <h3 class="mt-1 text-lede font-bold text-ink font-body">{emptyTitle}</h3>
@@ -400,19 +400,25 @@ const lede = compact
               section — the gate measures each at 48px, but a band with two primaries has no primary. */}
           {!compact && (
             <div class="mt-4">
+              {/* MS41 (S090): an action the build can paint when the calendar is empty. It carries its registry id,
+                  and the notice it stands in declares itself the context (`data-cta-block` below). Its label now
+                  says what it is a join to - the club's standing **group** - which is the same words `signUpPaths()`
+                  and `check:join-page` already use, and the `/join` form of the group URL is the resolver's own
+                  "this date has no page yet" address (`joinUrl()`), so the id and the href agree (D361's two tiers). */}
               <a
                 href={`${config.URLs.meetupGroup}/join`}
                 target="_blank"
                 rel="noopener noreferrer"
+                data-cta="meetup-group"
                 data-control="primary"
                 class="inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
               >
-                Join on Meetup<span class="sr-only">{newTabQualifier('Join on Meetup', PLATFORMS.meetup)}</span>
+                Join the Meetup group<span class="sr-only">{newTabQualifier('Join the Meetup group', PLATFORMS.meetup)}</span>
               </a>
             </div>
           )}
           <p class="mt-2 text-body leading-prose text-ink-2 font-body">
-            Want to ask before you come? <a href="/chat" class="text-ink underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Ask in the chat</a> —
+            Want to ask before you come? <a href="/chat" data-cta="chat-page" class="text-ink underline hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Ask in the chat</a> —
             someone from the club reads it.
           </p>
         </div>
@@ -468,8 +474,18 @@ const lede = compact
           (3.85) @measured 2026-11-14 by node design/grill/palette-remap.mjs — two grounds, which D149-3c
           forbids whatever the numbers say. The 2.88 design/records/0018 measured was the pre-D316 `rule`; the
           straddle is the half of that record that still applies. */}
-      {compact && (
-        <>
+          {compact && (
+            <>
+          {/* MS41 (S090, D467): the four asks this band makes - the dates page, the calendar file, `/join`, the
+              Discord invite - share one declared context: the card that says what a meeting is, plus the band's own
+              sentences. `data-cta-block` is the mark `scripts/check-cta-context.mjs` reads off the built bytes, and
+              its id list is the registry's, not this file's invention. Before this, "Join the chat" on `/` was one
+              of the controls the operator's complaint named: a labelled box with nothing around it saying that the
+              click enrols you in the club's server (the word appears nowhere in the band) or where it leads.
+              The sentence under the controls is printed from `CALL_TO_ACTION['discord-server'].says` in
+              `src/lib/links.mjs` - one home for one claim, the same mechanism `check:join-page` uses on the `/join`
+              rows - so the words the reader sees and the words the gate counts cannot be edited apart. */}
+          <div data-cta-block="dates-page calendar-feed join-page discord-server">
           <div class="mt-2 bg-panel rounded-card p-6 sm:p-8">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
               <div>
@@ -520,7 +536,7 @@ const lede = compact
           {items.length > 0 && (
             <div class="mt-2 flex flex-wrap items-baseline gap-x-6 gap-y-2">
               {hidden > 0 && (
-                <a href={scheduleHref} class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+                <a href={scheduleHref} data-cta="dates-page" class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                   {/* The label has to match what the target page actually lists: `/dates` shows a window, not the
                       whole future, so promising "all fourteen dates" on a page that prints eight would be a link that
                       lies about its own destination (D238). */}
@@ -538,7 +554,7 @@ const lede = compact
                   reserved hue for the one route it was reserved for (`/events.ics`, global.css:102). On `paper`, on
                   both anchors: this row stands below the tinted card, on the page's own ground, which is also why
                   D149-3c's straddle never applies to it. Hover stays the stated `hover:text-accent`. */}
-              <a href="/events.ics" class="text-label font-medium text-path-calendar underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
+              <a href="/events.ics" data-cta="calendar-feed" class="text-label font-medium text-path-calendar underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
                 Add to a calendar <span aria-hidden="true">→</span>
               </a>
             </div>
@@ -552,6 +568,7 @@ const lede = compact
                 pair that used to live here is one click further in, on /join. */}
             <a
               href="/join"
+              data-cta="join-page"
               data-control="secondary"
               class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
             >
@@ -564,11 +581,14 @@ const lede = compact
               href={config.URLs.discordInvite}
               target="_blank"
               rel="noopener noreferrer"
+              data-cta="discord-server"
               data-control="secondary"
               class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
             >
               Join the chat<span class="sr-only">{newTabQualifier('Join the chat', PLATFORMS.discord)}</span>
             </a>
+          </div>
+          <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{ctaSays('discord-server')}</p>
           </div>
         </>
       )}

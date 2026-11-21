@@ -13,6 +13,7 @@ import { rhythmSentence } from '../lib/rhythm.mjs';
 import meetupSnapshot from '../../data/meetup-events.json';
 import discordSnapshot from '../../data/discord-events.json';
 import { signUpPaths, splitPaths } from '../lib/rsvp.mjs';
+import { newTabQualifier } from '../lib/links.mjs';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
 // 1,756,478 B) with an invented alt text — "Math Study Group Session" — which asserted a session this
@@ -135,6 +136,12 @@ const copied = copiedOn();
 const signUpFor = nextMeeting
   ? splitPaths(signUpPaths(nextMeeting, meetupSnapshot.events, config.URLs, discordSnapshot.events), config.URLs).row[0] ?? null
   : null;
+// The hero's own words for the destination the resolver chose. The accessible-name suffix is derived from THESE
+// words rather than copied off the row: `newTabQualifier` adds the platform only when the label does not already
+// name it (**S041**), and the hero's label names the date, not the platform - so a suffix computed from the row's
+// label ("Sign up on Meetup") would tell a screen reader nothing, which is the D273 defect in a new place. The
+// href still comes from the resolver, so D384's coupling between this button and the row for that date is intact.
+const heroLabel = signUpFor ? `Sign up for ${formatDate(nextMeeting.date, 'short')}` : 'Join the club';
 ---
 
 {/* The hero's own air is **64px top and bottom at every width**, which is a ruling rather than a tidy
@@ -238,6 +245,16 @@ const signUpFor = nextMeeting
           Its position is D350's (round-4 §5, same day): it used to sit after the two lede paragraphs, at y=822
           and y=874 against a 390x844 fold, which is present-but-not-on-the-first-screen; the brief's own sketch
           puts the meeting and its controls at the top of the hero, so the block leads the prose now. */}
+      {/* MS41 (S090, D467): the two controls below are the page's asks, and this element declares itself as their
+        context: the computed next meeting (which date), the venue, the rhythm, the freshness line, and the two
+        sentences answering cost and belonging. That is the block `scripts/check-cta-context.mjs` reads, and its id
+        list follows the resolver - `signUpFor.cta` is `src/lib/links.mjs` naming the destination `signUpPaths()`
+        chose for this date (a date's own Meetup page, or the standing group when the date has no page), falling
+        back to `/join` exactly as the href does. The controls stay hand-written rather than `CallToAction`s:
+        `scripts/check-rsvp-page.mjs` compares this button's painted bytes with the resolver's answer (D384), and
+        the `w-full` step and the `data-rsvp-date` handle are the hero's own. The idiom is the id and the declared
+        block, which the gate reads off the artifact - not the component. */}
+      <div data-cta-block={`${signUpFor?.cta ?? 'join-page'} dates-page`}>
       {nextMeeting && (
         <div data-surface="next-meeting" data-date={nextMeeting.date} class="mt-6 sm:mt-8 max-w-measure">
           <p class="tabular-nums"><time datetime={nextMeeting.date}><span class="text-label text-ink-3">Next meeting: {formatDate(nextMeeting.date, 'wide')} · {timeSpan(nextMeeting)} Central</span></time></p>
@@ -304,10 +321,11 @@ const signUpFor = nextMeeting
               href={signUpFor ? signUpFor.href : '/join'}
               target={signUpFor ? '_blank' : undefined}
               rel={signUpFor ? 'noopener noreferrer' : undefined}
+              data-cta={signUpFor?.cta ?? 'join-page'}
               data-control="primary"
               data-rsvp-date={nextMeeting?.date ?? undefined}
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
-              >{signUpFor ? `Sign up for ${formatDate(nextMeeting.date, 'short')}` : 'Join the club'}{signUpFor && <span class="sr-only">{signUpFor.srOnly}</span>}</a
+              >{heroLabel}{signUpFor && <span class="sr-only">{newTabQualifier(heroLabel, signUpFor.platform)}</span>}</a
             >
           </div>
           {/* The secondary used to be `target=_blank` at Meetup's own events page, which made the site's own
@@ -321,6 +339,7 @@ const signUpFor = nextMeeting
           <div class='mt-3 sm:mt-0 sm:ml-3'>
             <a
               href="/dates"
+              data-cta="dates-page"
               data-control="secondary"
               class='w-full flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition'
             >
@@ -328,6 +347,7 @@ const signUpFor = nextMeeting
             </a>
           </div>
         </div>
+      </div>
       </div>
 
       {/* R9 (D357, 2026-11-16): this paragraph used to open with the sentence now sitting above the meeting

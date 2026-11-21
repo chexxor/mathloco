@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Footer from '../components/Footer.astro';
+import CallToAction from '../components/CallToAction.astro';
 import { URLs } from '../config.json';
 import { PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
@@ -25,37 +26,62 @@ export const prerender = true;
        a printed page sets one. */}
     <p class="mt-2 text-label uppercase tracking-wide text-ink-3 mb-6">404</p>
 
-    <p class="text-lede leading-prose text-ink-2 mb-12 max-w-measure mx-auto">
-      The link may be old, or the address may have a typo. Everything we have sits behind one of these
-      links.
-    </p>
+    {/* MS41 (S090, D467): the two controls and the line above them become one declared context. The lede is what
+        says what the page is offering, so it is inside the block rather than near it. The numbers this choice rests
+        on are the research letter's: **17 of 49** actions had under 6 words inside their own enclosing block
+        @measured 2026-11-20 by `node design/cta-inventory.mjs`; on this tree the same probe reads **6 of 45** on
+        that measure and **0 of 45** on the **declared-block** measure `check:cta-context` enforces
+        @measured 2026-11-21 by the same probe. The secondary keeps its shipped words (D140's 48px ladder record in
+        `design/decisions.json` names this control by them).
 
-    <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a
-        href="/"
-        data-control="primary"
-        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
-      >
-        Back to the home page
-      </a>
-      <a
-        href="/chat"
-        data-control="secondary"
-        class="inline-flex items-center justify-center px-8 py-4 text-label font-medium rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
-      >
-        Recent Discord summaries
-      </a>
+        `gloss={false}` on both, and that is load-bearing, not terseness. The row below is
+        `flex … gap-4 justify-center`: a `block={null}` call that asks for a gloss emits `<a>` + `<p>` as **two**
+        children of that flex row, the row squeezes, and each label wraps to a second line — `check:render:dist` then
+        measures those controls at **68.3px** at 1240 and **80px** at 640 against the ratified 48px step
+        @measured 2026-11-21 by `npm run check:render:dist`. A context sentence belongs in the block, not between two
+        controls. So the lede does the naming, and the gate is what proved it necessary: with the sentence in the
+        control's mouth and not the block's, removing it left `check:cta-context` failing
+        `block-names-no-destination` on this very control ("needs one of: chat, thread, threads, conversation")
+        @measured 2026-11-21 by `npm run check:cta-context`. */}
+    <div data-cta-block="home-page chat-page">
+      <p class="text-lede leading-prose text-ink-2 mb-12 max-w-measure mx-auto">
+        The link may be old, or the address may have a typo. Everything the club publishes sits behind two
+        links: the home page, and the chat page, where you can see what the club has pulled on.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <CallToAction
+          id="home-page"
+          role="primary"
+          href="/"
+          label="Back to the home page"
+          gloss={false}
+          block={null}
+        />
+        <CallToAction
+          id="chat-page"
+          role="secondary"
+          href="/chat"
+          label="Recent Discord summaries"
+          gloss={false}
+          block={null}
+        />
+      </div>
     </div>
 
-    <p class="text-label text-ink-3 mt-16">
+    {/* The two paths for a reader who is looking for one date (MS41, S090): the sentence already names both
+        destinations, so the sentence is declared as their block and the anchors only carry their ids. */}
+    <p class="text-label text-ink-3 mt-16" data-cta-block="dates-page meetup-group">
       Looking for a specific meetup?
       <a
         href="/dates"
+        data-cta="dates-page"
         class="underline text-ink-2 hover:text-accent"
       >Our dates page</a
       > lists every date on the club’s own calendar, and
       <a
         href={URLs.meetupGroup}
+        data-cta="meetup-group"
         target="_blank"
         rel="noopener noreferrer"
         class="underline text-ink-2 hover:text-accent"

@@ -178,6 +178,17 @@ reported **0 context words for every action on the site** — a parser bug weari
 number that looked worst was the number that was wrong, which is why both measures print side by side and
 neither one is trusted alone.
 
+**Corrected in place 2026-11-21, after the fix this letter asked for landed (**S090**, **D467**).** The figures above
+are the **pre-declaration artifact**; they stay because they are the evidence that chose the instrument, and they are
+not what the tree reports now. The same probe over the tree that carries the idiom reads **45 marked links across the
+same 6 built pages = 43 actions + 2 descriptive links the page still declares context for** (nav chrome is exempt
+with a written reason, so 4 anchors left the count), the **enclosing-element** measure still failing **6 of 45**
+under six words, and the **declared-block** measure — the rule `npm run check:cta-context` enforces — failing
+**0 of 45**, with **2** of 45 under twelve words and **28 declared blocks** in total
+@measured 2026-11-21 by `node design/cta-inventory.mjs` (Linux native, Node 24.22.1). The window measure survives in
+the probe's output for the reason stated above: it reports **6 of 45** under six words and **9 of 45** under twenty,
+which is a count of how often adjacency happens to be enough, not a rule about context.
+
 ---
 
 ## 6. What this settles, and what it leaves open

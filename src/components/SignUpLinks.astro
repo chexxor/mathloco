@@ -90,6 +90,7 @@ import config from '../config.json';
 import meetupSnapshot from '../../data/meetup-events.json';
 import discordSnapshot from '../../data/discord-events.json';
 import { signUpPaths, splitPaths, snapshotAgeDays } from '../lib/rsvp.mjs';
+import { ctaSays } from '../lib/links.mjs';
 import SignUpLinksCluster from '../components/SignUpLinksCluster.svelte';
 import PlatformMarks from './PlatformMarks.astro';
 import { spriteFor } from '../lib/platform-marks.mjs';
@@ -124,6 +125,12 @@ const standing = splitPaths(paths, config.URLs).standing;
 // page: `data-rsvp-snapshot` is the stamp, and `check:rsvp` is the gate that fails a build over it.
 const age = snapshotAgeDays(meetupSnapshot);
 const discordAge = snapshotAgeDays(discordSnapshot);
+// MS41 (S090): the sentences this row owes its exits, taken from the registry rather than typed here. A row that
+// paints an off-site exit must say what that exit is, and `CALL_TO_ACTION` in `src/lib/links.mjs` is where those
+// sentences live — the same strings `/join` paints, which `check:join-page` compares byte for byte. Derived from
+// `standing`, so if the band ever stops painting one of these exits and this row picks it up, the sentence arrives
+// with it instead of being remembered by hand (D264).
+const standingSay = standing.map((d: any) => ctaSays(d.cta)).filter(Boolean);
 ---
 
 <!-- Round-4 brief §6 and §4, rulings D-B and D341 (2026-11-15): the standing row. Same island, same resolver,
@@ -143,7 +150,7 @@ const discordAge = snapshotAgeDays(discordSnapshot);
   time in the canonical order — the visitor's remembered platform is applied in the browser, never on the
   server, so a JavaScript-off visitor, a crawler and a screen reader all get the order the gate asserts. -->
 {spriteFor(Astro.locals) && <PlatformMarks />}
-<div class="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+<div class="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-2" data-cta-block={`${standing.map((d: any) => d.cta).filter(Boolean).join(' ')} calendar-feed`}>
   <p class="text-label text-ink-3">{lead}</p>
   <SignUpLinksCluster
     client:visible
@@ -168,8 +175,16 @@ const discordAge = snapshotAgeDays(discordSnapshot);
       stated `hover:text-accent` this anchor already carried — 5.77 on paper, the same pair as the page's other
       quiet links — so the hue carries which path this is at rest, and the hover stays the one motion-colour
       rule the whole page uses. */}
-  <a href="/events.ics" class="text-label font-medium text-path-calendar underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add to a calendar</a>
+  <a href="/events.ics" data-cta="calendar-feed" class="text-label font-medium text-path-calendar underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">Add to a calendar</a>
 </div>
+{/* MS41 (S090, D467): the row's own context. D407 took the calendar file's sentence out of this row on purpose —
+    the exit band carries that one on every emitted page, and printing it twice on `/dates` was the defect — so what
+    the row still owed was a sentence about the exit only it paints. This is that sentence, printed from the
+    registry (`ctaSays`), not written here: the words a visitor reads and the words `scripts/check-cta-context.mjs`
+    counts are one string. It sits inside the marked row, so the block the gate reads is the block the reader sees. */}
+{standingSay.length > 0 && (
+  <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{standingSay.join(' ')}</p>
+)}
 {/* Round-8 review (2026-11-18), `/dates` Remove "delete line 95 (repeated explanation)": this sentence and the
     band's copy beside it are the same explanation on one page twice. `check:page-exit`'s rule D407 keeps the
     band's copy (the band must not repeat what the page's own nav carries, and the band is standing chrome on

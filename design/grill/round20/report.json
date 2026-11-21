@@ -1,0 +1,341 @@
+{
+  "measuredAt": "2026-11-21T11:31:53.085Z",
+  "host": "linux node v24.22.1",
+  "quietClasses": "min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+  "census": {
+    "pages": 6,
+    "actions": 43,
+    "byKind": {
+      "control:primary": 3,
+      "control:secondary": 8,
+      "action-link": 10,
+      "offsite-link": 22
+    },
+    "ok": 43,
+    "minWords": 6,
+    "maxShare": 0.6666666666666666,
+    "widest": {
+      "words": 77,
+      "share": 0.15714285714285714,
+      "route": "/",
+      "ids": "meetup-date dates-page"
+    },
+    "shared": {
+      "actions": 4,
+      "route": "/",
+      "ids": "dates-page calendar-feed join-page discord-server"
+    }
+  },
+  "options": [
+    {
+      "id": "registry-gloss",
+      "name": "A — the control plus the registry sentence (what ships now)",
+      "page": "/chat",
+      "shape": "shipped",
+      "expect": "ok",
+      "claim": "The incumbent of this item, and the row every delta below is read against: the control carries its registry id, and the element around it DECLARES itself the context, printing the sentence the registry owns for that destination (\"The club keeps its own Discord server, and the invite adds you to it.\"). The block is 23 words beside the label, which is the whole of the fix — the reader learns what the button enrols them in before they press it. This shape is what `check:cta-context` reads off the artifact; it is not a layout the page happens to have.",
+      "ruled": "S090, D467 (this item)",
+      "markup": "<div data-cta-block=\"discord-server\" class=\"mt-8\"><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a><p class=\"mt-3 max-w-measure text-body leading-prose text-ink-2 font-body\">The club keeps its own Discord server, and the invite adds you to it.</p></div>",
+      "sample": "<main class=\"mx-auto max-w-4xl px-4 py-8\"><h1 class=\"text-display-1 font-extrabold text-ink mb-4\">The club’s chat</h1><p class=\"text-label uppercase tracking-wide text-ink-3 mb-8\">The live channel, and the threads worth reading</p><div data-cta-block=\"discord-server\" class=\"mt-8\"><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a><p class=\"mt-3 max-w-measure text-body leading-prose text-ink-2 font-body\">The club keeps its own Discord server, and the invite adds you to it.</p></div>",
+      "verdicts": [
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Join the chat →",
+          "accessible": "Join the chat → on Discord, opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": "secondary",
+          "declaredId": "discord-server",
+          "kind": "control:secondary",
+          "zone": "body",
+          "blockIds": [
+            "discord-server"
+          ],
+          "blockWords": 23,
+          "blockShare": 0.071
+        }
+      ],
+      "pageActions": 4,
+      "pageFindings": [],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 3,
+      "extFindingsBefore": 0,
+      "controlsBefore": 1,
+      "controlsAfter": 1,
+      "pageWords": 324
+    },
+    {
+      "id": "bare-invite",
+      "name": "B — the label alone (what shipped on 2026-11-20)",
+      "page": "/chat",
+      "shape": "defect",
+      "expect": "action-undeclared",
+      "claim": "Exactly the shape the operator pointed at: a secondary control under the heading, its id and its sentence removed, nothing around it claiming to be its context. The reading calls it `action-undeclared` before it says anything about words — there are no words to weigh. This was not one call site: the research over the artifact of that date counted 49 marked links on 6 built pages, found the proximity window failing 0 of them and the block measure failing 17 — `/chat`'s own invite among them at 0 words @measured 2026-11-20 by `node design/cta-inventory.mjs`, in docs/research/discord-invite-ux-2026-11-20.md §5. Which is why the fix is an idiom and not a patch to /chat.",
+      "ruled": "the defect this item exists to fix",
+      "markup": "<a href=\"https://discord.com/invite/wx5S7YJSkU\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a>",
+      "sample": "<main class=\"mx-auto max-w-4xl px-4 py-8\"><h1 class=\"text-display-1 font-extrabold text-ink mb-4\">The club’s chat</h1><p class=\"text-label uppercase tracking-wide text-ink-3 mb-8\">The live channel, and the threads worth reading</p><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a>",
+      "verdicts": [
+        {
+          "rule": "action-undeclared",
+          "detail": "control:secondary \"Join the chat →\" -> https://discord.com/invite/wx5S7YJSkU carries no data-cta id, so no element on the page claims to be its context",
+          "label": "Join the chat →",
+          "accessible": "Join the chat → on Discord, opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": "secondary",
+          "declaredId": null,
+          "kind": "control:secondary",
+          "zone": "body",
+          "blockIds": null,
+          "blockWords": -1,
+          "blockShare": null
+        }
+      ],
+      "pageActions": 4,
+      "pageFindings": [
+        "Join the chat →: action-undeclared"
+      ],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 3,
+      "extFindingsBefore": 0,
+      "controlsBefore": 1,
+      "controlsAfter": 1,
+      "pageWords": 310
+    },
+    {
+      "id": "machine-name-only",
+      "name": "C — the accessible name fixed, nothing painted",
+      "page": "/chat",
+      "shape": "defect",
+      "expect": "block-missing",
+      "claim": "The half-fix, and the row that says why an accessible name is not the same thing as context: the anchor still declares its id and still carries the sr-only qualifier (\" on Discord, opens in a new tab\"), so a screen reader reads \"Join the chat on Discord, opens in a new tab\" — and a sighted reader sees two words and an arrow. The reading refuses it as `block-missing`: there is no element around the control claiming to be its context, so nothing painted names the server the invite enrols you in. `check:ext-links` is green on this row (0 findings, printed in the table beside it), which is the point — a green outbound-link gate coexisted with the defect the operator reported.",
+      "ruled": "D317 (the qualifier) is necessary and not sufficient",
+      "markup": "<a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a>",
+      "sample": "<main class=\"mx-auto max-w-4xl px-4 py-8\"><h1 class=\"text-display-1 font-extrabold text-ink mb-4\">The club’s chat</h1><p class=\"text-label uppercase tracking-wide text-ink-3 mb-8\">The live channel, and the threads worth reading</p><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a>",
+      "verdicts": [
+        {
+          "rule": "block-missing",
+          "detail": "control:secondary \"Join the chat →\" -> https://discord.com/invite/wx5S7YJSkU has no element around it declaring data-cta-block=\"discord-server\"",
+          "label": "Join the chat →",
+          "accessible": "Join the chat → on Discord, opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": "secondary",
+          "declaredId": "discord-server",
+          "kind": "control:secondary",
+          "zone": "body",
+          "blockIds": null,
+          "blockWords": -1,
+          "blockShare": null
+        }
+      ],
+      "pageActions": 4,
+      "pageFindings": [
+        "Join the chat →: block-missing"
+      ],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 3,
+      "extFindingsBefore": 0,
+      "controlsBefore": 1,
+      "controlsAfter": 1,
+      "pageWords": 310
+    },
+    {
+      "id": "prose-block",
+      "name": "D — the control inside the page's own prose",
+      "page": "/join",
+      "shape": "shipped",
+      "expect": "ok",
+      "claim": "The same destination in the other shape the idiom allows: here the PAGE owns the block — a `<section>` whose own lead sentence is \"The people, on an ordinary day, in the club’s own Discord server.\" No gloss is printed by the component, because the prose is already there and a component that appended a sentence every time would write boilerplate over the page's own words. It carries more than three times the floor (20 words beside the label against a floor of 6), and the extra words are the club's, not the registry's. This is the shape to choose where the page already has something to say; A is the shape for where it does not — and the same id, the same registry row and the same reading accept both, which is what stops a sweep of 43 actions from becoming 43 copies of one sentence.",
+      "ruled": "S090, D467 (this item)",
+      "markup": "<section class=\"mt-12\" aria-labelledby=\"join-chat\" data-cta-block=\"discord-server\"><h2 id=\"join-chat\" class=\"text-heading font-bold text-ink\">Talk with us now</h2><p class=\"mt-2 max-w-measure text-body leading-prose text-ink-2 font-body\">The people, on an ordinary day, in the club’s own Discord server.</p><ul class=\"mt-6 flex flex-col gap-4\"><li><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" target=\"_blank\" rel=\"noopener noreferrer\" data-control=\"secondary\" data-join-kind=\"chat\" data-join-platform=\"Discord\" class=\"inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\">Join the chat on Discord<span class=\"sr-only\">, opens in a new tab</span></a></li></ul></section>",
+      "sample": "<section class=\"mt-12\" aria-labelledby=\"join-chat\" data-cta-block=\"discord-server\"><h2 id=\"join-chat\" class=\"text-heading font-bold text-ink\">Talk with us now</h2><p class=\"mt-2 max-w-measure text-body leading-prose text-ink-2 font-body\">The people, on an ordinary day, in the club’s own Discord server.</p><ul class=\"mt-6 flex flex-col gap-4\"><li><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" target=\"_blank\" rel=\"noopener noreferrer\" data-control=\"secondary\" data-join-kind=\"chat\" data-join-platform=\"Discord\" class=\"inline-flex items-center justify-center px-8 py-4 rounded-control text-label font-semibold text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\">Join the chat on Discord<span class=\"sr-only\">, opens in a new tab</span></a></li></ul></section>",
+      "verdicts": [
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Join the chat on Discord",
+          "accessible": "Join the chat on Discord , opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": "secondary",
+          "declaredId": "discord-server",
+          "kind": "control:secondary",
+          "zone": "body",
+          "blockIds": [
+            "discord-server"
+          ],
+          "blockWords": 20,
+          "blockShare": 0.068
+        }
+      ],
+      "pageActions": 8,
+      "pageFindings": [],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 6,
+      "extFindingsBefore": 0,
+      "controlsBefore": 4,
+      "controlsAfter": 4,
+      "pageWords": 370
+    },
+    {
+      "id": "band-shared-block",
+      "name": "E — one block, three actions: the exit band",
+      "page": "/chat",
+      "shape": "shipped",
+      "expect": "ok",
+      "claim": "The multi-id shape: one element declaring three ids, so the band's two standing sentences are read as the context for the calendar feed, the Meetup group and the Discord invite at once — and each of the three is weighed against its own row (the feed must name a feed and an ask; the invite must name a server). The price of the shape is visible in the numbers: one block has to carry enough words for the most demanding of its three rows, and it must not swallow the page (over two thirds of the page's words fails as `block-too-wide`, which is what stops a `<main>`-sized wrap from laundering every action on it).",
+      "ruled": "S090 (the multi-id form), D307 (the band is standing chrome)",
+      "markup": "<div data-cta-block=\"calendar-feed meetup-group discord-server\"><nav aria-label=\"Where to next\" class=\"flex flex-wrap items-center gap-x-6 gap-y-2\"><a href=\"/events.ics\" data-cta=\"calendar-feed\" class=\"py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text\">Add to a calendar</a><!-- Round-4 brief §9b (2026-11-15, D346): this href used to be `${config.URLs.meetupGroup}/join` - still\n           readable at `git show 5cd128f:src/components/Footer.astro:81` - so the site addressed one group two ways\n           from the band every page ends with. §9b asks for one survivor and the other deleted; the survivor is the\n           **config-declared root**, because it is the string `URLs.meetupGroup` holds, the shape `MEETUP_GROUP_URL_SHAPE`\n           (src/lib/rsvp.mjs:76) requires of it, and the only Meetup group URL carrying a dated `_verified` stamp\n           (`status: 200, verifiedAt: 2026-11-10` in src/config.json). Measured off this commit's artifact @measured\n           2026-11-15 by `grep -o minneapolis-mathematics-book-club/join dist/client/* | wc -l`: the `/join` form now\n           paints **0 times on all five built pages**, and the root paints 2 on `/`, 1 on `/chat`, 2 on `/join`, 1 on\n           `/schedule` (besides 5 per-event pages), 2 on `/404`. The `/join` form survives only inside `joinUrl()`\n           (src/lib/rsvp.mjs:127, called at :416) - the resolver's named \"no page yet for this date\" state, which is a\n           per-date action with its own stamp that `check:rsvp` reads - so nothing here is dead code, and no unprobed\n           URL is a primary control. --><a href=\"https://www.meetup.com/minneapolis-mathematics-book-club\" target=\"_blank\" rel=\"noopener noreferrer\" data-cta=\"meetup-group\" data-rsvp-platform=\"Meetup\" class=\"py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text\">Join the Meetup group<span class=\"sr-only\">, opens in a new tab</span></a><a href=\"https://discord.com/invite/wx5S7YJSkU\" target=\"_blank\" rel=\"noopener noreferrer\" data-cta=\"discord-server\" data-rsvp-platform=\"Discord\" class=\"py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text\">Join the Discord server<span class=\"sr-only\">, opens in a new tab</span></a></nav><!-- The feed's own sentence, in the band beside the path it describes (round-5 communication read A5,\n        2026-11-16, D369). q21 — \"am I told when a date moves?\" — was answered on `/schedule` and nowhere else,\n        because the clause lived once in `src/components/SignUpLinks.astro`, under that page's own calendar\n        link. The band paints the same offer (`Add to a calendar`, `href='/events.ics'`) on all five emitted\n        pages, so every other page handed the reader the feed link with nothing to qualify it — they subscribe\n        to a file and are never told it moves with the club. Echoed here, **not linked**: the band's existing\n        path is the way in, so no second `/events.ics` anchor and no new URL (R1: do not add URLs to a page\n        for a gate). The band stays one string on all five routes — `node design/communication-price.mjs`\n        before this clause: 6,983 raw octets a page, deleting the whole band 2,269 · 2,332 · 2,342 · 2,303 ·\n        2,296 gzip on /, /404, /chat, /join, /schedule = 11,542 across five pages. Against this commit's\n        artifact the same probe prints the grown band; `node design/communication-census.mjs` clusters the\n        echo with `/schedule`'s standing sentence, and `design/copy-duplicates.json` keeps that pair as\n        `status: deliberate` — the echo is the point, since the fact has to travel with every place the file\n        is offered. --><p class=\"mt-2 text-micro max-w-measure\">Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.</p></div>",
+      "sample": "<footer class=\"bg-ink text-band-text\"><div class=\"max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-12\"><!-- Targets are 32px tall (16px line box + py-2), the same accepted shape as the nav links; do not\n         shave the pad. `outline-band-text` is the focus ring HERE: accent on ink measures 2.97, which the\n         oracle bans, and `ratify-check` fails this file if an accent ring comes back. --><div data-cta-block=\"calendar-feed meetup-group discord-server\"><nav aria-label=\"Where to next\" class=\"flex flex-wrap items-center gap-x-6 gap-y-2\"><a href=\"/events.ics\" data-cta=\"calendar-feed\" class=\"py-2 text-label font-medium hover:text-accent-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text\">Add to a calendar</a><!-- Round-4 brief §9b (2026-11-15, D346): this href used to be `${config.URLs.meetupGroup}/join` - still\n           readable at `git show 5cd128f:src/components/Footer.astro:81` - so the site addressed one group two ways\n           from the band every page ends with. §9b asks for one survivor and the other deleted; the survivor is the\n           **config-declared root**, because it is the string `URLs.meetupGroup` holds, the shape `MEETUP_GROUP_URL_SHAPE`\n           (src/lib/rsvp.mjs:76) requires of it, and the only Meetup group URL carrying a dated `_verified` stamp\n           (`status: 200, verifiedAt: 2026-11-10` in src/config.json). Measured off this commit's artifact @measured\n           2026-11-15 by `grep -o minneapolis-mathematics-book-club/join dist/client/* | wc -l`: the `/join` form now\n           paints **0 times on all five built pages**, and the root paints 2 on `/`, 1 on `/chat`, 2 on `/join`, 1 on\n           `/schedule` (besides 5 per-event pages), 2 on `/404`. The `/join` form survives only inside `joinUrl()`\n           (src/lib/rsvp.mjs:127, called at :416) - the resolver's named \"no page yet for this date\" state, which is a\n           per-date action with its own stamp that `check:rsvp` reads - so nothing here is dead code, and no unprobed\n           URL is a primary control. --><a href=\"https://www.meetup.com/minneapolis-mathematics-book-club\" target=\"_blank\" rel=\"noopener noreferrer\" data-cta=\"meetup-group\" data-rsvp-platform=\"Meetup\" class=\"py-2 text-label font-medium text-path-meetup-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text\">Join the Meetup group<span class=\"sr-only\">, opens in a new tab</span></a><a href=\"https://discord.com/invite/wx5S7YJSkU\" target=\"_blank\" rel=\"noopener noreferrer\" data-cta=\"discord-server\" data-rsvp-platform=\"Discord\" class=\"py-2 text-label font-medium text-path-discord-on-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-band-text\">Join the Discord server<span class=\"sr-only\">, opens in a new tab</span></a></nav><!-- The feed's own sentence, in the band beside the path it describes (round-5 communication read A5,\n        2026-11-16, D369). q21 — \"am I told when a date moves?\" — was answered on `/schedule` and nowhere else,\n        because the clause lived once in `src/components/SignUpLinks.astro`, under that page's own calendar\n        link. The band paints the same offer (`Add to a calendar`, `href='/events.ics'`) on all five emitted\n        pages, so every other page handed the reader the feed link with nothing to qualify it — they subscribe\n        to a file and are never told it moves with the club. Echoed here, **not linked**: the band's existing\n        path is the way in, so no second `/events.ics` anchor and no new URL (R1: do not add URLs to a page\n        for a gate). The band stays one string on all five routes — `node design/communication-price.mjs`\n        before this clause: 6,983 raw octets a page, deleting the whole band 2,269 · 2,332 · 2,342 · 2,303 ·\n        2,296 gzip on /, /404, /chat, /join, /schedule = 11,542 across five pages. Against this commit's\n        artifact the same probe prints the grown band; `node design/communication-census.mjs` clusters the\n        echo with `/schedule`'s standing sentence, and `design/copy-duplicates.json` keeps that pair as\n        `status: deliberate` — the echo is the point, since the fact has to travel with every place the file\n        is offered. --><p class=\"mt-2 text-micro max-w-measure\">Add to a calendar: Google, Apple and Outlook can all follow it, and it changes when the club changes a date.</p></div>",
+      "verdicts": [
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Add to a calendar",
+          "accessible": "Add to a calendar",
+          "href": "/events.ics",
+          "control": null,
+          "declaredId": "calendar-feed",
+          "kind": "action-link",
+          "zone": "exit-band",
+          "blockIds": [
+            "calendar-feed",
+            "meetup-group",
+            "discord-server"
+          ],
+          "blockWords": 32,
+          "blockShare": 0.117
+        },
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Join the Meetup group",
+          "accessible": "Join the Meetup group , opens in a new tab",
+          "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+          "control": null,
+          "declaredId": "meetup-group",
+          "kind": "offsite-link",
+          "zone": "exit-band",
+          "blockIds": [
+            "calendar-feed",
+            "meetup-group",
+            "discord-server"
+          ],
+          "blockWords": 34,
+          "blockShare": 0.117
+        },
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Join the Discord server",
+          "accessible": "Join the Discord server , opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": null,
+          "declaredId": "discord-server",
+          "kind": "offsite-link",
+          "zone": "exit-band",
+          "blockIds": [
+            "calendar-feed",
+            "meetup-group",
+            "discord-server"
+          ],
+          "blockWords": 34,
+          "blockShare": 0.117
+        }
+      ],
+      "pageActions": 4,
+      "pageFindings": [],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 3,
+      "extFindingsBefore": 0,
+      "controlsBefore": 1,
+      "controlsAfter": 1,
+      "pageWords": 324
+    },
+    {
+      "id": "quiet-label",
+      "name": "F — the exit demoted to a quiet underlined label",
+      "page": "/chat",
+      "shape": "demotion",
+      "expect": "ok",
+      "claim": "The operator's second question — \"it feels incorrect for us to use a button there for something that takes you off the page. Shouldn't it be an anchor link\" — answered as a weight question, not a meaning question. The site already ships a third step below primary and secondary: the quiet underlined label, byte-for-byte the classes the `/dates` rows use for a per-date sign-up (read out of the built page, not retyped here). This row pays the context rule the same way A does — the block and the id are untouched — and its cost is elsewhere: the anchor stops carrying `data-control`, so it leaves the control census that `check:render` measures and `check:primary-action` counts. What this round does NOT price is the fold: D367 holds the invite in the first screen, and whether a quiet label still sits there is a pixel question for `check:render` and `design/fold-answers.mjs`, not a number this row can honestly print.",
+      "ruled": "open — the operator's question, priced for meaning only",
+      "markup": "<div data-cta-block=\"discord-server\" class=\"mt-8\"><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" class=\"min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a><p class=\"mt-3 max-w-measure text-body leading-prose text-ink-2 font-body\">The club keeps its own Discord server, and the invite adds you to it.</p></div>",
+      "sample": "<main class=\"mx-auto max-w-4xl px-4 py-8\"><h1 class=\"text-display-1 font-extrabold text-ink mb-4\">The club’s chat</h1><p class=\"text-label uppercase tracking-wide text-ink-3 mb-8\">The live channel, and the threads worth reading</p><div data-cta-block=\"discord-server\" class=\"mt-8\"><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" class=\"min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span><span aria-hidden=\"true\">→</span></a><p class=\"mt-3 max-w-measure text-body leading-prose text-ink-2 font-body\">The club keeps its own Discord server, and the invite adds you to it.</p></div>",
+      "verdicts": [
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Join the chat →",
+          "accessible": "Join the chat → on Discord, opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": null,
+          "declaredId": "discord-server",
+          "kind": "offsite-link",
+          "zone": "body",
+          "blockIds": [
+            "discord-server"
+          ],
+          "blockWords": 23,
+          "blockShare": 0.071
+        }
+      ],
+      "pageActions": 4,
+      "pageFindings": [],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 3,
+      "extFindingsBefore": 0,
+      "controlsBefore": 1,
+      "controlsAfter": 0,
+      "pageWords": 324
+    },
+    {
+      "id": "no-arrow",
+      "name": "G — the glyph removed from an exit that keeps its qualifier",
+      "page": "/chat",
+      "shape": "demotion",
+      "expect": "ok",
+      "claim": "The operator's third question — \"Shouldn't it be an anchor link with an external icon?\" — as a measurement rather than an opinion. `check:ext-links` (S041, D317) demands `rel`, `target`, the sr-only qualifier and one name per platform; it does NOT demand the glyph, and this row proves it: with the arrow deleted the page is still green under that gate and still `ok` under the context rule. So the arrow is a design choice, and the choice this tree made is documented rather than implied — an `aria-hidden` glyph after an off-site control, and never after a same-site route (`ctaPlatform` is the only authority on \"off-site\", and D264 is why `check:cta-context` is written to fail a control that fakes the mark).",
+      "ruled": "the arrow is not gated — this row is the evidence",
+      "markup": "<div data-cta-block=\"discord-server\" class=\"mt-8\"><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span></a><p class=\"mt-3 max-w-measure text-body leading-prose text-ink-2 font-body\">The club keeps its own Discord server, and the invite adds you to it.</p></div>",
+      "sample": "<main class=\"mx-auto max-w-4xl px-4 py-8\"><h1 class=\"text-display-1 font-extrabold text-ink mb-4\">The club’s chat</h1><p class=\"text-label uppercase tracking-wide text-ink-3 mb-8\">The live channel, and the threads worth reading</p><div data-cta-block=\"discord-server\" class=\"mt-8\"><a href=\"https://discord.com/invite/wx5S7YJSkU\" data-cta=\"discord-server\" data-control=\"secondary\" class=\"inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition\" target=\"_blank\" rel=\"noopener noreferrer\">Join the chat<span class=\"sr-only\"> on Discord, opens in a new tab</span></a><p class=\"mt-3 max-w-measure text-body leading-prose text-ink-2 font-body\">The club keeps its own Discord server, and the invite adds you to it.</p></div>",
+      "verdicts": [
+        {
+          "rule": "ok",
+          "detail": "",
+          "label": "Join the chat",
+          "accessible": "Join the chat on Discord, opens in a new tab",
+          "href": "https://discord.com/invite/wx5S7YJSkU",
+          "control": "secondary",
+          "declaredId": "discord-server",
+          "kind": "control:secondary",
+          "zone": "body",
+          "blockIds": [
+            "discord-server"
+          ],
+          "blockWords": 20,
+          "blockShare": 0.071
+        }
+      ],
+      "pageActions": 4,
+      "pageFindings": [],
+      "findingsBefore": 0,
+      "extFindings": 0,
+      "extChecked": 3,
+      "extFindingsBefore": 0,
+      "controlsBefore": 1,
+      "controlsAfter": 1,
+      "pageWords": 324
+    }
+  ],
+  "notes": [
+    "Every row is a byte delta on the built page in dist/client, applied to a copy under .design/tmp-round20/ and re-read by design/cta-rules.mjs — the same reading scripts/check-cta-context.mjs enforces, so a specimen number and a gate finding cannot come from different memories of the page (D264).",
+    "No pixel is measured in this round. Nothing here claims a height, a box, or a position relative to a fold; check:render and design/fold-answers.mjs price painted geometry when a variant graduates, and a specimen that printed a geometry number it never measured would be the defect D269 exists to stop.",
+    "The context rule at the time of this run: a block must hold at least 6 words besides the action's own label, and may account for at most 67% of its page's words (src/lib/links.mjs, CTA_BLOCK_MIN_WORDS / CTA_BLOCK_MAX_FRACTION).",
+    "The specimen is generated from this file. Edit round20-options.mjs or re-run this runner; never edit round-20-cta.html."
+  ]
+}

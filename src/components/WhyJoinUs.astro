@@ -149,9 +149,16 @@ const rest = items.length - shown.length;
         // Six here, the rest on /chat (S042, read §5.4). The arrow is aria-hidden because the words
         // already say where the link goes. (A // in an expression is code; only a // inside a fragment is
         // painted - that is the D325 class check:escapes now catches.)
-        <p class="mt-4">
+        // MS41 (S090, D467): the pointer is an ask, so the sentence that says what is on the other side of it is
+        // declared as its context (`data-cta-block`), and it sits in the same element the reader reads. The claim is
+        // grounded by the artifact, not by a seat: every name in the archive on /chat is an entry the harvester read
+        // out of the club's channels and the operator signed one at a time (D461, D464). The link's own words and the
+        // `the rest of the list` coupling `scripts/check-threads.mjs` pins are unchanged.
+        <p class="mt-4 max-w-measure text-body leading-prose text-ink-2 font-body" data-cta-block="chat-page">
+          The whole list is on the chat page, and every name there is one the club has actually talked about.{' '}
           <a
             href="/chat#threads"
+            data-cta="chat-page"
             class="text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >
             the rest of the list <span aria-hidden="true">→</span>
@@ -219,14 +226,19 @@ const rest = items.length - shown.length;
         while the chip above it said `Dates`; the sentence now drops the name rather than coining a fifth one,
         because the thing it states is about the dates the page prints, not about the page's label. `check:naming`'s
         alias census over the built artifact prints 0 prose aliases for `/dates` after this (see the reply doc). */}
-    <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">
+    {/* MS41 (S090): this inline path out is an action, so its sentence is declared as its block, and the label now
+        says what it is a path to - the club's standing **group**, the same words `signUpPaths()` prints in the
+        standing row and `check:join-page` pins on `/join`. The bare platform name was one of the controls the
+        research counted: the sentence around it never named the kind of thing a visitor joins (D467). */}
+    <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body" data-cta-block="meetup-group">
       Dates and places go up on{' '}
       <a
         class="underline hover:text-accent"
         href={config.URLs.meetupGroup}
+        data-cta="meetup-group"
         target="_blank"
         rel="noopener noreferrer"
-      >Meetup<span class="sr-only">{newTabQualifier('Meetup', PLATFORMS.meetup)}</span></a>, and every date we list links to the page the club posts its sign-up on.
+      >the club’s Meetup group<span class="sr-only">{newTabQualifier('the club’s Meetup group', PLATFORMS.meetup)}</span></a>, and every date we list links to the page the club posts its sign-up on.
     </p>
   </div>
 </section>

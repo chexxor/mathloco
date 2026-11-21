@@ -31,7 +31,7 @@
  * same thing from the other end, on the painted bytes.
  */
 import { dateOf } from './event-window.mjs';
-import { newTabQualifier } from './links.mjs';
+import { newTabQualifier, ctaIdFor } from './links.mjs';
 // The wording of the outbound-link qualifier lives in `src/lib/links.mjs` (S041); it is re-exported here so
 // the gates that already read this module read the same string the components paint.
 export { NEW_TAB_QUALIFIER, newTabQualifier } from './links.mjs';
@@ -456,28 +456,31 @@ export const signUpPaths = (item, meetupEvents = [], urls = {}, discordEvents = 
     // not asked to trust a guess about which of the two is the meeting.
     for (const e of matching) {
       const label = matching.length === 1 ? 'Sign up on Meetup' : e.title || 'Sign up on Meetup';
-      destinations.push({ platform: PLATFORMS.meetup, href: e.url, label, srOnly: sr(label, PLATFORMS.meetup) });
+      // `cta` names which destination this is in the registry (S090), on the same object that carries the label
+      // and the qualifier — so the row, the hero and the island all paint the id from one call rather than each
+      // keeping a mapping (D264), and a per-date page never gets labelled as the standing group.
+      destinations.push({ platform: PLATFORMS.meetup, href: e.url, label, srOnly: sr(label, PLATFORMS.meetup), cta: ctaIdFor(PLATFORMS.meetup, true) });
     }
   } else if (urls?.meetupGroup) {
     // The hole is a named state, not a blank (DESIGN.md "States"): the date has no page yet, so the path is
     // the group's join page, and the row says plainly which one it is.
     const label = 'Join the Meetup group';
-    destinations.push({ platform: PLATFORMS.meetup, href: joinUrl(urls), label, srOnly: sr(label, PLATFORMS.meetup) });
+    destinations.push({ platform: PLATFORMS.meetup, href: joinUrl(urls), label, srOnly: sr(label, PLATFORMS.meetup), cta: ctaIdFor(PLATFORMS.meetup) });
   }
 
   if (discordMatching.length) {
     for (const e of discordMatching) {
       const label = discordMatching.length === 1 ? 'Sign up on Discord' : e.title || 'Sign up on Discord';
-      destinations.push({ platform: PLATFORMS.discord, href: e.url, label, srOnly: sr(label, PLATFORMS.discord) });
+      destinations.push({ platform: PLATFORMS.discord, href: e.url, label, srOnly: sr(label, PLATFORMS.discord), cta: ctaIdFor(PLATFORMS.discord, true) });
     }
   } else if (urls?.discordInvite) {
     const label = 'Join the Discord chat';
-    destinations.push({ platform: PLATFORMS.discord, href: urls.discordInvite, label, srOnly: sr(label, PLATFORMS.discord) });
+    destinations.push({ platform: PLATFORMS.discord, href: urls.discordInvite, label, srOnly: sr(label, PLATFORMS.discord), cta: ctaIdFor(PLATFORMS.discord) });
   }
 
   if (urls?.facebookGroup) {
     const label = 'Join the Facebook group';
-    destinations.push({ platform: PLATFORMS.facebook, href: urls.facebookGroup, label, srOnly: sr(label, PLATFORMS.facebook) });
+    destinations.push({ platform: PLATFORMS.facebook, href: urls.facebookGroup, label, srOnly: sr(label, PLATFORMS.facebook), cta: ctaIdFor(PLATFORMS.facebook) });
   }
 
   return {
@@ -571,7 +574,15 @@ export const JOIN_KIND_COPY = {
   },
   chat: {
     heading: 'Talk with us now',
-    line: 'The people, on an ordinary day.',
+    // MS41 (S090, D467): the clause this row used to print was deleted by the operator on 2026-11-19 (**S079**,
+    // **D453**), which left the kind's own line as the only prose around the invite - and "The people, on an ordinary
+    // day." never says what the click is for. The added clause is not a new claim: `src/lib/rsvp.mjs:276` already
+    // calls the invite "the club’s server", the URL in `src/config.json` is a `discord.com/invite/...` code, and
+    // Discord's own Invite Object is "a code that when used, adds a user to a guild" @retrieved 2026-11-20 from
+    // https://discord.com/developers/docs/resources/invite. Naming the **server** is the half the research bought,
+    // and this line is the block `scripts/check-cta-context.mjs` reads for the row that has no clause of its own.
+    // Wording is a delegate draft and is on the operator's ToDo (`.notes/NEXT.md`) with the specimen.
+    line: 'The people, on an ordinary day, in the club’s own Discord server.',
   },
 };
 
@@ -610,6 +621,7 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.meetupGroup),
       external: true,
       label: 'Join the Meetup group',
+      cta: ctaIdFor(PLATFORMS.meetup),
       // srOnly is derived below, not written here: one derivation, so no row can carry a hand-typed suffix
       // Round-8 review (2026-11-18), `/join`/Revise line 48: "The club's member list, and where a date gets
       // announced." → "Where the club announces dates, and keeps the RSVP list." The old clause led on the
@@ -626,6 +638,7 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.facebookGroup),
       external: true,
       label: 'Join the Facebook group',
+      cta: ctaIdFor(PLATFORMS.facebook),
       // derived, see below
       // "group", not "page": FACEBOOK_GROUP_URL_SHAPE rejects a page URL, so the noun must not promise one. The
       // clause states only what S021/D280 records - the operator named this group and it is public - because the
@@ -639,6 +652,7 @@ export const joinChannels = (urls = {}) => {
       href: '/dates',
       external: false,
       label: 'See the dates',
+      cta: 'dates-page',
       // internal route: no suffix (derived below from `external`)
       // The platform is named in the visible clause, not just in `data-join-platform`: the row's destination is
       // the club's own /dates (the route moved from `/schedule` under D373), so the label must not promise a new site - but the visitor is still choosing a
@@ -670,6 +684,7 @@ export const joinChannels = (urls = {}) => {
       href: external(urls.discordInvite),
       external: true,
       label: 'Join the chat on Discord',
+      cta: ctaIdFor(PLATFORMS.discord),
       // The clause this row used to print — "The conversation that runs between meetings." — was deleted on the
       // operator's word 2026-11-19 (**S079**, **D453**): it was one of the four sentences
       // `npm run check:copy-contract --print-hollow` had on the worklist, and the author ruled all four go. The key

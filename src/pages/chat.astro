@@ -3,9 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import DiscordSummary from '../components/DiscordSummary.svelte';
 import Footer from '../components/Footer.astro';
 import ThreadArchive from '../components/ThreadArchive.astro';
+import CallToAction from '../components/CallToAction.astro';
 import config from '../config.json';
-import { PLATFORMS } from '../lib/rsvp.mjs';
-import { newTabQualifier } from '../lib/links.mjs';
 
 // Nothing here is per-request: the island fetches /api/discord-summary in the browser, and the rest
 // of the page is static markup. Prerendering turns /chat into a static asset (no Worker CPU, no cold
@@ -65,17 +64,22 @@ const DISCORD_URL = config.URLs.discordInvite;
         and `check:ext-links` still sees a qualifier on it. The CTA below keeps its words and its role: this is
         the same path met earlier, which is why it is a secondary and not a second primary — "a band with two
         primaries has no primary" (Schedule.astro's own note). */}
-    <div class="mt-8">
-      <a
-        href={DISCORD_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        data-control="secondary"
-        class="inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition"
-      >
-        Join the chat<span class="sr-only">{newTabQualifier('Join the chat', PLATFORMS.discord)}</span>
-      </a>
-    </div>
+    {/* MS41 (S090, D467): the control is the same one D367 moved up, with the same words, the same secondary
+        construction and the same sr-only qualifier — and now it carries the sentence the operator's complaint
+        said was missing. "Join the chat" alone hides what the click does: Discord's own Invite Object is "a code
+        that when used, adds a user to a guild" @retrieved 2026-11-20 from
+        https://discord.com/developers/docs/resources/invite, so the ask is joining a **server**, and the sentence
+        under the control says so. It is printed from `CALL_TO_ACTION['discord-server'].says` in
+        `src/lib/links.mjs`, not typed here, and `data-cta-block="discord-server"` is what
+        `scripts/check-cta-context.mjs` reads — so the page and the gate cannot be edited apart. */}
+    <CallToAction
+      id="discord-server"
+      role="secondary"
+      href={DISCORD_URL}
+      label="Join the chat"
+      gloss
+      wrap="mt-8"
+    />
 
     {/* `visible`, not `load`: the summary block is below the fold on phones, and this island
          drags in ~34 KB of Svelte runtime plus its own 3.8 KB. Hydrating on visibility leaves the

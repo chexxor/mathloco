@@ -1263,8 +1263,28 @@ npm run check:outline           # one h1 per built page and no skipped level: 6 
                                 # @measured 2026-11-16 by `node scripts/check-outline.mjs` (12-case selftest)
 npm run check:ext-links         # every anchor that leaves the site: rel carries noopener, it opens a new tab, the
                                 # "opens in a new tab" words are sr-only, no platform is named twice in one
-                                # accessible name, and no club route is painted target=_blank — 28 outbound anchors,
-                                # 28 qualified @measured 2026-11-16 by `node scripts/check-ext-links.mjs` (15 cases)
+                                # accessible name, no word repeats side by side in one link's name, and no club
+                                # route is painted target=_blank — 28 outbound anchors, 28 qualified
+                                # @measured 2026-11-21 by `node scripts/check-ext-links.mjs` (its selftest is
+                                # **18 cases, 0 wrong**: 11 plantings, 6 clean controls and the derivation
+                                # assertion @measured 2026-11-21 by `node scripts/check-ext-links.mjs --selftest`)
+npm run check:cta-context     # every call to action on a built page sits in a declared block that names where it
+                                # leads, what the visitor does there, and what an exit enrols them in (S090, D467):
+                                # the id is `data-cta`, the block is `data-cta-block`, and the vocabulary is the row
+                                # in src/lib/links.mjs, so the sentence a reader reads and the sentence the gate
+                                # expects cannot be edited apart. Fails action-undeclared, cta-unknown-id,
+                                # cta-href-mismatch (a control labelled Discord pointing at Meetup), block-missing,
+                                # block-id-mismatch, block-thin (under 6 words beside the label), block-too-wide
+                                # (over 2/3 of the page's words, the shape that would make the mark meaningless),
+                                # block-names-no-destination, block-names-no-ask, block-hides-what-it-asks,
+                                # cta-platform-unmapped (a join row or platform with no registry id), and
+                                # exemption-stale - an exemption whose needle matches no anchor on the artifact,
+                                # which is round 7's F6 as a rule. Reads the built bytes through the same page
+                                # reading as design/cta-rules.mjs (D264). 6 built page(s), 45 marked link(s) = 43
+                                # action(s) + 2 declared link(s) the verb classifier does not call an action, 28
+                                # declared block(s), 0 finding(s) @measured 2026-11-21 by
+                                # `node scripts/check-cta-context.mjs`; the 14-case selftest plants whole fixture
+                                # PAGES so the nav and band zones exist (0.07s gate, 0.06s selftest, no browser)
 npm run check:provenance        # every "how current is this" line goes through `provenanceStamp()` in
                                 # `src/lib/provenance.mjs`: an age only for a stamp taken today or yesterday, the
                                 # calendar date beyond (**D322**'s register, **D431**'s `AGE_HONEST = 1`). 46 source
@@ -1386,6 +1406,40 @@ accepted, each with the gate that keeps it true.
   (the 33 this bullet carried on 2026-11-14 counted the four standing platforms each schedule row used to repeat;
   D342 moved them out of the row, and a count that only ever grows by repetition is the reason the count is printed
   rather than ruled).
+- **A call to action is an id plus a declared block** (MS41, **S090**, **D467**). Every action a built page paints
+  carries `data-cta="<id>"` from the registry in `src/lib/links.mjs`, and an element around it declares
+  `data-cta-block="<id…>"`; the gate reads that element's words and requires them to say **where the control leads**,
+  **what the visitor does there**, and — for an exit — **what kind of thing it enrols them in**. Proximity is not one
+  of those things and never will be: a ±200-character window failed **0 of 49** marked links on the artifact of
+  2026-11-20 (docs/research/discord-invite-ux-2026-11-20.md §5) and fails **6 of 45** @measured 2026-11-21 by
+  `node design/cta-inventory.mjs` — it weighs what the build happened to print near a label, so a footer colophon's
+  trademark boilerplate counts as context, and it has no way to name *which* destination a control's context must
+  state. The id is what makes it decidable: the registry row carries `names`, `asks`, `noun`, and the href shape the
+  destination must have.
+  The basis is retrieved, not invented. WCAG 2.2 SC 2.4.4: "The purpose of each link can be determined from the link
+  text alone or from the link text together with its programmatically determined link context" @retrieved 2026-11-20
+  from https://www.w3.org/TR/WCAG22/ — the link text **plus its context**, which is the declared block. And Discord's
+  Invite Object: an invite is "a code that when used, adds a user to a guild" @retrieved 2026-11-20 from
+  https://discord.com/developers/docs/resources/invite — which is why "Join the chat" is not adequate context for a
+  control that enrols the reader in a **server**: the label names an activity, the destination is a membership.
+  The floor and the ceiling both come off the artifact, not off a round number: a block must hold at least **6** words
+  besides the action's own label (the enclosing-wrapper measure put 6 of 45 marked links under it @measured 2026-11-21
+  by `node design/cta-inventory.mjs`, and 0 fall under it once every action declares a block), and it may not exceed
+  **two thirds** of its page's words — the widest block this tree declares holds 77 words, **16%** of its page, while
+  the six built pages run **142–490** words, so a wrap around `<main>` lands at 100% and fails as `block-too-wide`
+  @measured 2026-11-21 by the same probe. Context that is most of a page is the page.
+  Shipped: **6 built pages, 43 actions (3 primary, 8 secondary, 10 action-labelled in-page links, 22 off-site), plus
+  2 descriptive links a page still declares context for = 45 marked links; 45 of 45 in context** @measured 2026-11-21
+  by `node design/cta-inventory.mjs`. `npm run check:cta-context` enforces it off the built bytes and its selftest
+  plants the class 14 ways (`npm run check:cta-context:selftest`). The three shapes the idiom accepts — the
+  component's own wrapper with the registry's sentence (`/chat`'s invite), the page's own prose as the block
+  (`/join`'s "Talk with us now" section), and one band element declaring three ids (`Footer.astro`) — are the rows
+  A, D and E of `design/grill/round-20-cta.html`, built by `npm run round20 && npm run round20:specimen`; the same
+  specimen prices the incumbent defect (row B, `action-undeclared`) and the half-fix that only a screen reader hears
+  (row C, `block-missing`). **Two of the operator's questions stay open** and are on that page as rows F and G, not
+  decided here: whether an exit should be a control or the quiet underlined label, and whether the arrow glyph
+  belongs in the label (measured answer: `check:ext-links` demands the sr-only qualifier, never the glyph, and is
+  green with the glyph deleted @measured 2026-11-21 by `node design/round20.mjs`).
 - **An internal route is a route the build emits** (MS35, S068). Every `<a href="/…">` a built page paints names
   a path the build emits — a page (`<p>/index.html` or `<p>.html`) or an emitted **file** (`/events.ics`, which
   is not an `.html` page and would read as dead if routes came only from `emittedRoutes`) — and a `#fragment`

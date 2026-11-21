@@ -1,0 +1,205 @@
+---
+/**
+ * src/components/CallToAction.astro — one call to action, in the context that makes it readable.
+ * (S090, D467; MS41. The rule and its measured basis are in `design/cta-rules.mjs` and DESIGN.md; the census
+ * that shows what it fixes is `node design/cta-inventory.mjs`.)
+ *
+ * WHY A COMPONENT AND NOT A CONVENTION. `docs/research/discord-invite-ux-2026-11-20.md` measured the artifact and
+ * found the defect was not a bad label at one call site: every call to action on every built page sat in prose
+ * that never named where it led or what it asked. A convention is what produced that - four components each
+ * wrote their own outbound link, and `check:ext-links` had to be invented to catch the drift. So the three
+ * things that make a control legible live in this file:
+ *   1. a **registry id** (`id`), from `CALL_TO_ACTION` in `src/lib/links.mjs`. The id fixes the destination, the
+ *      href shape that destination must have, the words that say what it is, and the kind of thing an off-site
+ *      exit enrolls the visitor in. An id that is not in the registry THROWS at build: an unnameable action is
+ *      the defect, and a component that quietly rendered one would move the finding from build time to a page.
+ *   2. a **declared block** (`block`): the surrounding text that names the destination and the ask, marked with
+ *      `data-cta-block`. Proximity is not context - a footer colophon's trademark boilerplate put 64 words
+ *      "within reach" of a bare `Discord` link @measured 2026-11-21 by `node design/cta-inventory.mjs`, and not
+ *      one of them said what clicking it does. So context is declared by the page, and
+ *      `scripts/check-cta-context.mjs` reads the mark off the artifact instead of trusting a layout.
+ *   3. the **off-site disclosure** the site already owes (`check:ext-links`, S041, D317): the arrow and the
+ *      sr-only qualifier, decided from the registry row (`ctaPlatform`) rather than from what the caller felt
+ *      like typing. An id that resolves to a same-site page gets neither, and cannot be given one.
+ *
+ * THE ROLE LADDER IS NOT NEW DESIGN. `primary` / `secondary` / `quiet` copy their classes verbatim from what is
+ * already shipped and already ratified: the ink fill + `text-band-text` that `check:contrast` and `check:render`
+ * depend on (DESIGN.md "Buttons"), the paper + inset-rule step, and the plain underlined link. `primary` is
+ * pinned to at most one per page by `check:primary-action`; this component keeps its word out of that count by
+ * throwing when a caller asks for a role that is not on the ladder.
+ */
+import { CALL_TO_ACTION, ctaPlatform, ctaSays, newTabQualifier } from '../lib/links.mjs';
+
+/** The three steps the design system already ships, copied byte for byte out of the built artifact
+ *  (`node design/cta-inventory.mjs` prints them from `dist/client`): the hero's ink fill, `/chat`'s and `/join`'s
+ *  paper secondary held by the inset hairline, and the quiet underlined label the schedule rows use. They are
+ *  copied, not invented, because DESIGN.md's tokens (`rounded-control`, `inset-shadow-rule`, `text-label`) and
+ *  `check:render`'s painted measurements are what these classes already satisfy - a component that re-drew the
+ *  ladder would move pixels no ruling asked to move, and `check:token-usage` would rightly call the new strings
+ *  off-token. `primary` is pinned to one per page by `check:primary-action` (D140, S068). */
+const ROLE: Record<string, string> = {
+  primary:
+    'inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-band-text bg-ink hover:bg-accent-strong focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition',
+  secondary:
+    'inline-flex items-center justify-center px-8 py-4 text-label font-semibold rounded-control text-ink bg-paper inset-shadow-rule hover:bg-tint focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition',
+  // DESIGN.md's "quiet label, not a control": what `check:rsvp-page` demands of a per-date sign-up link, so a
+  // quiet step never gets a `data-control` (see the emission below).
+  quiet:
+    'min-h-8 inline-flex items-center gap-1 text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+};
+
+/** The shape of a `CALL_TO_ACTION` row, written out because `astro check` narrows the registry to its literal keys
+ *  and then refuses a lookup by an id that arrives as a prop (ts(7053)) - the same wall `src/pages/join.astro`
+ *  documents at its `copy` annotation, and the same honest answer: the annotation is the widest type still true.
+ *  The optional fields are exactly the ones `src/lib/links.mjs` declares on some rows and not others: `href` for a
+ *  same-origin route, `host`/`configKey` for a standing exit, `pathContains`/`pathNot` for a destination that has
+ *  dated siblings under the same path, `noun` for the exits that enrol the visitor in a standing thing (D361).
+ *  TypeScript cannot check a dynamic key, so this file checks it at build time and throws (guards below). */
+type CtaRow = {
+  where: string;
+  names: string[];
+  asks: string[];
+  noun?: string;
+  host?: string;
+  configKey?: string;
+  href?: string;
+  pathContains?: string | string[];
+  pathNot?: string[];
+  says: string;
+};
+const REGISTRY = CALL_TO_ACTION as unknown as Record<string, CtaRow>;
+
+const PROPS_FORBIDDEN_ON_ANCHOR = new Set(['target', 'rel', 'href', 'data-cta', 'data-control', 'class']);
+
+const {
+  id,
+  role = 'primary',
+  href,
+  label,
+  srOnly = '',
+  gloss = undefined,
+  block = undefined,
+  wrap = 'mt-3 flex flex-col',
+  arrow,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+if (typeof id !== 'string' || !REGISTRY[id]) {
+  throw new Error(
+    `CallToAction: id ${JSON.stringify(id)} is not in CALL_TO_ACTION (src/lib/links.mjs). ` +
+      'An action with no registry row cannot be checked, so it cannot ship: add a sourced row for the destination first.',
+  );
+}
+if (!(role in ROLE)) {
+  throw new Error(`CallToAction: role ${JSON.stringify(role)} is not one of ${Object.keys(ROLE).join(' / ')} - the design system has no other step.`);
+}
+if (typeof label !== 'string' || label.trim() === '') {
+  throw new Error(`CallToAction: the ${id} control has no visible label.`);
+}
+
+const row = REGISTRY[id];
+const platform = ctaPlatform(id);
+
+if (typeof href !== 'string' || href === '') {
+  throw new Error(`CallToAction: ${id} needs an href, and the value must come from src/config.json or an emitted route.`);
+}
+// The row's `pathNot` outranks its `pathContains`: the club's standing group and one Saturday's page are
+// different destinations (D361), so a control may not claim one while pointing at the other.
+const shapeOk =
+  (row.host ? href.includes(row.host) : true) &&
+  (row.pathContains ? (Array.isArray(row.pathContains) ? row.pathContains : [row.pathContains]).some((p: string) => href.includes(p)) : true) &&
+  !(row.pathNot ?? []).some((p: string) => href.includes(p));
+if (!shapeOk) {
+  throw new Error(
+    `CallToAction: ${id} was given href "${href}", which is not the shape the registry says that destination has` +
+      ` (host ${row.host ?? 'same-origin'}, path ${JSON.stringify(row.pathContains ?? '*')}, not ${JSON.stringify(row.pathNot ?? [])}).`,
+  );
+}
+
+const blockIds = block === null ? [] : Array.isArray(block) ? block : [block ?? id];
+// With `block={null}` the component builds no wrapper, which is correct when the PAGE declares the block around
+// it (an `<p>` or a `<section>` carrying `data-cta-block`, as `/404` does). A gloss still renders in that case:
+// the walker in `design/cta-rules.mjs` resolves a control's context from the nearest enclosing marked element,
+// ancestor or not, so a sentence printed by the component inside a page-declared block is context the gate sees.
+for (const b of blockIds) {
+  if (!REGISTRY[b]) {
+    throw new Error(`CallToAction: block id ${JSON.stringify(b)} is not in CALL_TO_ACTION either.`);
+  }
+}
+
+/** A control that leaves the site carries the arrow; one that does not, must not fake it (the arrow is the
+ *  disclosure the research asked to keep consistent, and `ctaPlatform` is the only authority on "off-site"). */
+const external = Boolean(platform);
+const showArrow = external;
+/** The new-tab qualifier is for SCREEN READERS, never for the eye. `check:ext-links` has a `qualifier-visible`
+ *  finding precisely because a sentence like "on Discord, opens in a new tab" painted next to a two-word label
+ *  reads as boilerplate and steals the label's prominence (S041, D317) - and the first draft of this component
+ *  painted it, which the inventory probe showed by reading the /chat label as "Join the chat on Discord, opens in
+ *  a new" @measured 2026-11-21 by `node design/cta-inventory.mjs`. So it is always wrapped here. */
+const qualifier = external ? newTabQualifier(label, platform) : '';
+
+/** `gloss` true prints the registry's own sentence for this destination; a string prints the page's sentence;
+ *  false/undefined prints nothing, because the page's own prose is already the block. The default is deliberately
+ *  silent: a component that printed a sentence every time would put the registry's words on every page whether or
+ *  not the reader needed them, which is how boilerplate gets written. */
+const sentence = gloss === true ? ctaSays(id) : gloss === false || gloss === undefined ? '' : String(gloss);
+const showGloss = String(sentence).trim() !== '';
+
+const attrs: Record<string, any> = {};
+for (const [k, v] of Object.entries(rest)) {
+  if (PROPS_FORBIDDEN_ON_ANCHOR.has(k)) {
+    throw new Error(`CallToAction: "${k}" is the component's to set, not the caller's - pass it as a named prop.`);
+  }
+  attrs[k] = v;
+}
+---
+
+{
+  block === null ? (
+    <>
+      <a
+        href={href}
+        data-cta={id}
+        data-control={role === 'quiet' ? undefined : role}
+        class={`${ROLE[role]} ${className}`.trim()}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        {...attrs}
+      >
+        {label}
+        {srOnly ? <span class="sr-only">{srOnly}</span> : null}
+        {qualifier ? <span class="sr-only">{qualifier}</span> : null}
+        {showArrow ? <span aria-hidden="true">→</span> : null}
+      </a>
+      {/* `block={null}` means the PAGE declared the block around this control (an ancestor carrying
+          `data-cta-block`, as `/404` does) - it does not mean the control has no context. A gloss asked for in that
+          case still prints, because the walker in `design/cta-rules.mjs` resolves context from the nearest marked
+          ancestor: the sentence the reader gets and the sentence the gate counts are the same element. Silently
+          dropping it here is the defect `/404`'s chat control showed the gate on 2026-11-21. */}
+      {showGloss ? (
+        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{sentence}</p>
+      ) : null}
+    </>
+  ) : (
+    <div data-cta-block={blockIds.join(' ')} class={wrap}>
+      <a
+        href={href}
+        data-cta={id}
+        data-control={role === 'quiet' ? undefined : role}
+        class={`${ROLE[role]} ${className}`.trim()}
+        target={external ? '_blank' : undefined}
+        rel={external ? 'noopener noreferrer' : undefined}
+        {...attrs}
+      >
+        {label}
+        {srOnly ? <span class="sr-only">{srOnly}</span> : null}
+        {qualifier ? <span class="sr-only">{qualifier}</span> : null}
+        {showArrow ? <span aria-hidden="true">→</span> : null}
+      </a>
+      {showGloss ? (
+        <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">{sentence}</p>
+      ) : null}
+    </div>
+  )
+}

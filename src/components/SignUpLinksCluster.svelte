@@ -26,7 +26,7 @@
    */
   import { PLATFORMS, PREF_KEY, orderByPreference } from '../lib/rsvp.mjs';
 
-  type Destination = { platform: string; href: string; label: string; srOnly: string };
+  type Destination = { platform: string; href: string; label: string; srOnly: string; cta?: string };
 
   // Props come from SignUpLinks.astro, which is the only place `signUpPaths()` is called for a row. They
   // are primitives and plain arrays on purpose: everything in here is serialised into the island tag.
@@ -122,10 +122,16 @@
       accessible name. And the arrow span that used to close every anchor is DELETED, not styled away: the brief
       calls fifteen arrows on one page "decoration pretending to be affordance", and the affordance is the
       underline plus the qualifier (S041, D317). -->
+    <!-- MS41 (S090): `data-cta` is the registry id for this destination, attached by `signUpPaths()` in
+      `src/lib/rsvp.mjs` through `ctaIdFor()` — the same object already carries the label and the qualifier, so the
+      island keeps no mapping of its own. `scripts/check-cta-context.mjs` reads the id off the built bytes and then
+      demands an element around the link declaring its context (`data-cta-block`, on `SignUpLinks.astro`'s row). The
+      attribute is inert in the browser: it is for the gate, and for whoever next asks what this link is for. -->
     <a
       href={d.href}
       target="_blank"
       rel="noopener noreferrer"
+      data-cta={d.cta}
       onclick={() => remember(d.platform)}
       data-rsvp-platform={d.platform}
       data-rsvp-date={date}

@@ -156,7 +156,7 @@ const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS
       decides where the zone word belongs from the same grouping this component was handed, rather than from
       a flag that can be dropped without the page noticing. It is the venue's own name — the text before the
       first comma in `UpcomingItem.venue`, which `src/lib/content.ts` documents as "name, street, city". */}
-<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date} data-venue-key={String(item.venue ?? '').split(',')[0].trim() || undefined}>
+<li class="rounded-card inset-shadow-rule px-4 py-4 sm:px-6 flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-6" data-surface="row" data-date={item.date} data-cta-block={primary?.cta ?? undefined} data-venue-key={String(item.venue ?? '').split(',')[0].trim() || undefined}>
   {/* The date rail (2026-11-14, D313, from the MS04 read). Before this the row stacked seven separate things:
      leaf, title, date sentence, series line, venue line, three links. Below `lg` the visitor met the date twice
      with the title in between - leaf above, sentence under the title - so the two drawings of one fact were three
@@ -223,7 +223,7 @@ const srOnly = primary.srOnly ?? newTabQualifier(primary?.label ?? '', PLATFORMS
         whose clean form is the one /join and /chat already carried).
         Still a quiet label, not a control: D139 reserves `data-control` for the band's one primary, and a
         row of 48px buttons would out-shout every date in the band. */}
-    {primary && <a href={primary.href} target="_blank" rel="noopener noreferrer" data-rsvp-platform={primary.platform} data-rsvp-date={item.date} class="min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{primary.label}<span class="sr-only">{srOnly}</span></a>}
+    {primary && <a href={primary.href} target="_blank" rel="noopener noreferrer" data-cta={primary.cta} data-rsvp-platform={primary.platform} data-rsvp-date={item.date} class="min-h-8 inline-flex items-center text-label font-medium text-ink underline decoration-rule underline-offset-2 hover:text-accent hover:decoration-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">{primary.label}<span class="sr-only">{srOnly}</span></a>}
   </div>
   {/* Round-4 brief §7.1, ruling D-D (2026-11-15): the per-row plate is GONE, and the rows are typographic.
       The brief's rationale survives the "declared decorative" defence: `event-2026-11-07-club-social.webp` was painted

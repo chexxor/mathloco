@@ -100,7 +100,14 @@ const turnout = value(content.turnout);
         one this repo already pays for in its nav (D309's one-name rule). The kinds below now run in ascending
         commitment - a date, a chat, a feed - which is `src/lib/rsvp.mjs`'s `CHANNEL_KINDS` order, and
         `scripts/check-join-page.mjs`'s `join-order` rule reads that same list rather than a remembered one. */}
-    <section class="mt-12" aria-labelledby="join-what-we-do">
+    {/* MS41 (S090, D467): this section is the declared context block (`data-cta-block`) for the one pointer it ends
+        with, and `data-cta` on the anchor names which registry row it answers (`scripts/check-cta-context.mjs` reads
+        both off the built artifact). The section is the honest unit: "the next one" is meaningless without the two
+        shapes of meeting this section spends three sentences describing, and a block around the eleven-word pointer
+        alone measures 5 words beside the label - under `CTA_BLOCK_MIN_WORDS` (6), which is the rule doing its work:
+        a pointer that names nothing is the defect this milestone deletes, not a smaller version of the fix. No copy
+        changes, so `check:content`'s near-duplicate rule and `check:join-page`'s byte comparisons stay as measured. */}
+    <section class="mt-12" aria-labelledby="join-what-we-do" data-cta-block="dates-page">
       <h2 id="join-what-we-do" class="text-heading font-bold text-ink">What we do</h2>
       {/* The two things the club actually runs, in the organizer's own terms from the calendar feed, and
           without a frequency word: "we gather … to work in parallel" and "study independently, side by
@@ -147,6 +154,7 @@ const turnout = value(content.turnout);
       <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
         The <a
           href="/dates"
+          data-cta="dates-page"
           class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
           >dates page</a
         > names the next one.
@@ -157,17 +165,40 @@ const turnout = value(content.turnout);
       kinds.map((kind) => {
         const rows = channels.filter((c) => c.kind === kind);
         const id = `join-${kind}`;
+        // MS41 (S090, D467): the kind section declares itself the context block for every destination its rows lead
+        // to, because the section is the unit that explains what the row is a way into - the heading names the kind
+        // of relationship, the line under it names what the club runs, and each row's clause names what the visitor
+        // gets. A row with a clause (`gives`) narrows the block to itself below; a row with NO clause (the Discord
+        // invite, whose clause the operator deleted on 2026-11-19, S079/D453) falls through to this section, which is
+        // why `JOIN_KIND_COPY.chat.line` now says "server": `CALL_TO_ACTION['discord-server'].noun` requires the
+        // block to name what the invite enrols you in, and an invite that never says so hides the half-disc
+        // (Discord's own Invite Object, @retrieved 2026-11-20 from
+        // https://discord.com/developers/docs/resources/invite).
+        // A JSX `{/* */}` comment cannot go where this one wanted to live: inside `return (` it parses as a block
+        // statement, and the build dies on the next attribute with "Expected `,` or `)` but found `class`".
         return (
-          <section class="mt-12" aria-labelledby={id}>
+          <section
+            class="mt-12"
+            aria-labelledby={id}
+            data-cta-block={rows.map((c) => c.cta).filter(Boolean).join(' ')}
+          >
             <h2 id={id} class="text-heading font-bold text-ink">
               {copy[kind].heading}
             </h2>
             <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{copy[kind].line}</p>
             <ul class="mt-6 flex flex-col gap-4">
-              {rows.map((c) => (
-                <li>
+              {rows.map((c) => {
+                // The row declares its own block when it carries a clause of its own - the tightest honest unit of
+                // context, and the one `check:join-page` already byte-pins to the resolver. When `gives` is empty the
+                // `<li>` declares nothing at all, so the walker in `design/cta-rules.mjs` resolves the row's context
+                // from the section above; a label-plus-new-tab-boilerplate block is exactly the air-around-a-label
+                // this milestone deletes, so it must not be declared into existence. (Line comment, for the same
+                // reason as the one above: `(c) => (` is expression position, and a JSX comment there is a syntax error.)
+                return (
+                  <li data-cta-block={c.gives ? c.cta : undefined}>
                   <a
                     href={c.href}
+                    data-cta={c.cta}
                     target={c.external ? '_blank' : undefined}
                     rel={c.external ? 'noopener noreferrer' : undefined}
                     data-control={c === lead ? 'primary' : 'secondary'}
@@ -192,8 +223,9 @@ const turnout = value(content.turnout);
                       reads the row's last `<p>` and compares it with the resolver byte for byte, so "no `<p>`" and
                       "an empty clause" are the same record: both ''. */}
                   {c.gives && <p class="mt-2 max-w-measure text-body leading-prose text-ink-2 font-body">{c.gives}</p>}
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         );
@@ -249,7 +281,15 @@ const turnout = value(content.turnout);
         Routing on the apex zone. The sentence below still carries that path in words, so D393's half of the
         deletion (the negation) survives; only the door it lands on moved, in round 7 - see the note there.
       */}
-      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body">
+      {/* MS41 (S090, D467): the sentence already promised "a place to ask", so it is the block this control's
+          context lives in, and the mark makes that promise checkable instead of a claim about the prose. The label
+          gains "server" for one reason: `CALL_TO_ACTION['discord-server'].noun` is `server`, and the research
+          (`docs/research/discord-invite-ux-2026-11-20.md`) bought that word from Discord's own docs - an invite is
+          "a code that when used, adds a user to a guild" @retrieved 2026-11-20 from
+          https://discord.com/developers/docs/resources/invite. "the club's Discord" names the platform; "server +
+          invite + joins" names what the click does to the visitor. That clause is a delegate draft and sits on the
+          operator's ToDo with the rest of the round's copy. */}
+      <p class="mt-3 max-w-measure text-body leading-prose text-ink-2 font-body" data-cta-block="discord-server">
         Want to ask something before you turn up? Somebody from the club reads the channel, and the place to
         ask is{' '}
         {/* Round-7 review (2026-11-18), `/join`/Revise, the "broken door" (D432). The letter's read is exact:
@@ -263,11 +303,12 @@ const turnout = value(content.turnout);
             per route and this is prose, not a band exit. */}
         <a
           href={config.URLs.discordInvite}
+          data-cta="discord-server"
           target="_blank"
           rel="noopener noreferrer"
           class="text-ink underline decoration-rule underline-offset-2 hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >the club&#x2019;s Discord<span class="sr-only">{newTabQualifier('the club\u2019s Discord', PLATFORMS.discord)}</span></a
-        >.
+          >the club&#x2019;s Discord server<span class="sr-only">{newTabQualifier('the club\u2019s Discord server', PLATFORMS.discord)}</span></a
+        > — the invite joins you to it.
       </p>
       {/* Round-6 review, `/join`/Remove (D393): the directions paragraph leaves the page. q25's answer is the
         street address the row itself prints, and `/dates` carries that sentence (D372); on `/join` the sentence
