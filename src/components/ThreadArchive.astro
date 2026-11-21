@@ -1,0 +1,90 @@
+---
+/*
+ * ThreadArchive.astro — `/chat`'s list of what the club has actually pulled on (**S089**, **D465**, MS41).
+ *
+ * WHAT THIS IS. The section the home page's "the rest of the list →" lands on, rebuilt on a different source of
+ * truth. Before MS41 the list was nine subjects an agent wrote down from memory of the club's chat
+ * (`src/content.json` `threads.items`); its own `_rule` said the items were an author's summary, not a record.
+ * The list now reads `data/discord-threads.json`: topics harvested off two years of the club's own channels by
+ * `scripts/harvest-threads.mjs`, deduplicated by `mergeThreads()`, and signed one at a time by the operator on
+ * 2026-11-20 — 31 entries, each traceable to a channel and message ids (**D461**, **D464**).
+ *
+ * WHY A COMPONENT AND NOT THE PAGE. The list is now a data-backed artifact with its own reader (a visitor
+ * deciding whether this club has real substance), its own source, and its own gate — the page is the place it is
+ * placed. Keeping the source read inside the component is also what keeps the privacy rule unfakeable: the only
+ * view the component can take is `publishedThreads()`, which hands out `{ id, topic }` and nothing else, so a
+ * date, a channel id, a message id, a handle or an alias cannot be printed by accident — there is nothing in
+ * scope to print (the rule **D461** states, made structural the way `check:thread-topics`'s evidence whitelist
+ * makes the file side structural).
+ *
+ * UNDATED, ON PURPOSE (**S088**). Every entry's evidence carries a date, and none of it reaches this page: the
+ * section answers "what does this club pull on", not "what did it do in November". A date here would also make
+ * `/chat` a fourth dated surface, which `check:dated-surfaces` refuses outside the pages `data/events.json` is
+ * the record for (**D218**, **D374**, **D340**). The trade is stated rather than hidden: the operator's
+ * round-8 goal for this section wanted a reader to believe the club is *alive recently*, and an undated
+ * two-year archive answers *depth*, not *recency*. That gap is on the operator's ToDo in `.notes/NEXT.md`
+ * rather than closed here by inventing a freshness claim the file cannot support.
+ *
+ * ORDERED BY TOPIC, NOT BY TIME OR WEIGHT. `publishedThreads()` sorts by topic, so the order is a property of
+ * the data (an archive reads alphabetically) and not a ranking this component invents. A list sorted by recency
+ * would need the dates this ruling keeps off the page; a list sorted by "most discussed" would need a message
+ * count this gate deliberately does not publish.
+ *
+ * THE COUPLING HOLDS. `id="threads"` is the anchor the home page's "the rest of the list →" points at, and
+ * `scripts/check-threads.mjs` fails the build when the promise exists and the anchor does not (`dead-anchor`) or
+ * when the anchor promises a page with no list at all. So the anchor and the list still ship together. What
+ * changed underneath the anchor: home's teaser is an **authored** pick of six subjects out of `content.json`,
+ * and this page is the **evidence-backed** archive — two artifacts, two homes, one link. That split is
+ * `S088`'s `/chat`-only supersession, not an accident of migration, and `check:threads` keeps the promise honest
+ * while it stands.
+ *
+ * THE EMPTY CASE IS A REAL CASE. If the archive holds nothing signed, this renders nothing, and `/chat` loses
+ * `#threads` — which turns `check:threads` red rather than shipping a page that promises a list and shows a
+ * heading. An unsigned harvest is a review queue, not content (**D461**).
+ *
+ * ONE DRAWING UNDER THE LIST. `ThreadFigure` stays: it is the one picture the site owns (**S042** §6.6), and
+ * `check:line-art` holds its bytes, its hairlines and its caption (census row C6 reads the component, not the
+ * built page).
+ *
+ * HOW IT READS THE FILE — and why the page reaches no filesystem. `data/discord-threads.json` is imported the way
+ * `src/lib/events.mjs` imports `data/events.json`: a static import, bundled at build, so a prerendered page
+ * reaches no network and no filesystem at request time (**D73**'s topology). `readThreads()` exists for the
+ * harvester and the gate, which run on a disk; a page should not carry a path assumption into a Worker bundle
+ * it never needs.
+ *
+ * NO CLIENT JAVASCRIPT, AND NOTHING NEW IN THE CLIENT BUDGET. The whole list is server-rendered into
+ * `dist/client/chat/index.html`; the only island on `/chat` is still `DiscordSummary.svelte`.
+ */
+import archive from '../../data/discord-threads.json';
+import { publishedThreads } from '../lib/threads-view.mjs';
+import ThreadFigure from './ThreadFigure.astro';
+import { countWord } from '../lib/content.ts';
+
+/** The only view the pages are allowed to take: signed topics, `{ id, topic }`, sorted, frozen (**D461**). */
+const topics = publishedThreads(archive);
+---
+
+{topics.length > 0 && (
+  <section class="mt-16 max-w-measure" id="threads" aria-labelledby="threads-heading">
+    <h2 id="threads-heading" class="text-heading font-bold text-ink mb-4">What the club is pulling on</h2>
+    {/* The count line is the list's own length, never a typed number (census row C5, `generated:` — the artifact
+        composes the sentence, so no copy slot can be edited to disagree with the data under it). The sentence
+        keeps its exact shape from the round-8 review; what changed is what it counts (**S089**, **D465**).
+        `countWord` spells it: 31 renders as "Thirty-one", which is the voice `/chat` already wrote in and the
+        voice `src/pages/past.astro` describes this helper as having. */}
+    <p class="text-lede leading-prose text-ink-2 mb-6 font-body">
+      {countWord(topics.length)} threads the club is pulling on.
+    </p>
+    {/* The rhythm is the ruled one (8px row padding, 32px between columns), unchanged from the section this
+        replaces, and the two columns still start at `md` (768px) because no gate here measures 900 (D269's
+        reasoning, applied to a media query). One tone now, not two: the authored list had a label and the
+        author's gloss after it, and an archive entry has no gloss — a topic is the club's own title, and adding
+        an agent-written gloss to it would put an unreviewed sentence next to a reviewed one. */}
+    <ul class="grid grid-cols-1 gap-x-8 md:grid-cols-2">
+      {topics.map((t) => (
+        <li class="py-2 text-body leading-prose font-body text-ink">{t.topic}</li>
+      ))}
+    </ul>
+    <ThreadFigure />
+  </section>
+)}

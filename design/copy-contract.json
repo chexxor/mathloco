@@ -125,9 +125,9 @@
         {
           "section": "What the club is pulling on",
           "audience": "first-visitor",
-          "goal": "the author, 2026-11-19: 'an understanding of what the group has chatted about recently, so they can be sure the group is alive recently and still taking actions and that there are real humans active behind the scenes' - what the shipped page gives today is an undated list, so this goal is stated and not yet met",
+          "goal": "the author, 2026-11-19: 'an understanding of what the group has chatted about recently, so they can be sure the group is alive recently and still taking actions and that there are real humans active behind the scenes'. Since 2026-11-21 this section ships a ratified archive: 31 topics harvested off two years of the club’s own channels, each traceable to messages and signed by the operator, rendered undated (S088). That answers the *substance* half of the goal - a visitor sees what the club actually pulls on, in the club’s own topic names - and it does NOT answer the *recently* half, which an undated two-year archive cannot answer. That half stays on the operator's ToDo (D465) rather than being closed with a freshness claim the file cannot support",
           "style": "club-voice",
-          "settledBy": "reader and goal ruled by the operator's letter of 2026-11-19; style still a delegate draft"
+          "settledBy": "reader and goal ruled by the operator's letter of 2026-11-19; style still a delegate draft. The section's source and count were superseded on 2026-11-21 by the ratified archive (S089, D465); the heading, the anchor and the home teaser's promise are unchanged, so this row still names a section the build makes"
         }
       ]
     },

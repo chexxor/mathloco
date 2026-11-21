@@ -3,6 +3,8 @@
 //
 //   node scripts/check-thread-topics.mjs                      verdict on data/discord-threads.json
 //   node scripts/check-thread-topics.mjs --file <path>        the same verdict on another document
+//   node scripts/check-thread-topics.mjs --dist <dir>       the built half: no id, date, channel name, alias or
+//                                                           mention in a built byte; the ratified set whole on the page
 //   node scripts/check-thread-topics.mjs --selftest           plant each defect, require each to be NAMED
 //
 // Why this gate exists (MS41, S088, D461, 2026-11-20). The operator asked for an archive of what the club has
@@ -25,6 +27,13 @@
 //   FAIL username-in-file               an @handle anywhere in the document - the file stores pointers
 //   FAIL token-shaped-string            a bot token in a committed file (the D459 rule, applied here)
 //
+// And on the built half (`--dist`, run after `build`):
+//   FAIL built-carries-an-id              a channel or message id in any built text byte
+//   FAIL built-carries-a-private-string   an evidence date, channel name, alias or note on the archive's own page
+//   FAIL built-carries-a-handle           a mention-shaped @name in what a visitor reads, on any built page
+//   FAIL built-topic-missing              a signed topic that the archive page does not paint
+//   FAIL built-list-count-wrong           rows painted under #threads that do not equal the ratified count
+//
 // What is deliberately NOT a failure: an unsigned candidate. The harvest lands candidates, and `verify` cannot
 // go red while the operator's review pass is pending. The protection is that a candidate cannot render -
 // `publishedThreads()` in src/lib/threads.mjs prints signed topics only - and the dist half of this gate
@@ -32,7 +41,8 @@
 //
 // The verdict is `threadFindings()` in src/lib/threads.mjs, shared with the harvester's own `--check` mode
 // (D264): two paraphrases of one rule is how a file passes the tool that wrote it and fails the gate.
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { THREADS_FILE, THREADS_SCHEMA, readThreads, threadFindings, mergeThreads, publishedThreads, isRatified } from '../src/lib/threads.mjs';
 
 const args = process.argv.slice(2);
@@ -81,6 +91,133 @@ const NEAR_DUPES = () => [
   { topic: 'the prime ideal story', aliases: ['Prime Ideals'], evidence: [{ channelId: '1170399999999999999', channelName: 'online', date: '2026-02-03', messageIds: ['1489012345678901234'] }] },
   { topic: 'Categorical dualities', aliases: [], evidence: [{ channelId: '1170391234567890123', channelName: 'math-chat', date: '2026-05-19', messageIds: ['1501234567890123456'] }] },
 ];
+
+// ------------------------------------------------------------------------------ the built half
+//
+// The file-side verdict says an entry may not *store* a member's words or name. This half says what the build
+// must not *print*. `publishedThreads()` is the primary defence (a component cannot render a field it was not
+// handed, D461); this is the backstop for the component that hands itself something else - a date pulled out of
+// `evidence`, an alias printed because it read better, a message id pasted into a `data-` attribute "for
+// debugging". It runs after `build`, on the artifact, because a source-only check cannot see what the
+// prerenderer emitted (**D118**: a check that reads no artifact cannot catch what the artifact does).
+//
+// THREE SCAN SCOPES, and the measurements that chose them (@measured 2026-11-21 against `dist/client` of this
+// tree, Linux native, Node 24.22.1):
+//
+//   - **every built text byte, raw** — the ids. A channel id or message id is unique to this archive, so it can
+//     be hunted everywhere: 0 of 436 evidence ids in 30 built files today. Global scope, zero false positives.
+//   - **the pages that render the archive** (a built HTML page carrying `id="threads"`) — every other private
+//     string, after the ratified topics are subtracted from the page. Scoped to that surface because a global
+//     date rule is not usable here: the evidence date `2026-11-11` is also a real club date, so a global rule
+//     fails `/dates` for a coincidence (that is the measurement, not a hypothesis). On the archive's own page a
+//     private string has no innocent source, which is what makes the rule strict rather than noisy. Subtracting
+//     the topics first is what keeps a channel name that is a substring of its own ratified topic — `Frobenius
+//     theorem` inside `Frobenius theorem on division algebras` — from reading as a leak.
+//   - **the visible text of every built HTML page** — a mention-shaped `@handle`. Raw bytes cannot be the
+//     scope: an author's note in a built comment reads `@measured 2026-11-13 by npm run build` (5 such strings
+//     on `/chat` alone), and a minified island bundle carries `@__PURE__`; both are shapes, not people. The
+//     visible-text scan reports 0 mention-shaped tokens across the built pages today, so a non-zero count is a
+//     finding rather than a tuning problem.
+
+/** The surface the archive paints. `id="threads"` is also the anchor `scripts/check-threads.mjs` holds the home
+ *  page's "the rest of the list →" promise to, so one handle serves the coupling and the privacy scan. */
+const ARCHIVE_SURFACE = 'id="threads"';
+const ARCHIVE_SECTION = /<section\b[^>]*id="threads"[\s\S]*?<\/section>/;
+
+/** A mention, and only a mention: `@` plus 2-32 word characters, bounded on both sides. `@font-face`, `@media`,
+ *  `@layer` and `;@layer` are CSS at-rules; `@__PURE__` is a bundler annotation; a Discord name is letters,
+ *  digits and `_`. Measured: 0 matches in built visible text, 1 in built CSS under this shape (`;@layer`). */
+const MENTION = /(?:^|[\s(,;:'"\[\]])@[\p{L}\p{N}_]{2,32}(?=$|[\s.,;:!?')"\[\]])/gu;
+
+/** Strip what a visitor does not read, the way `check:content` and `check:dated-surfaces` do: comments (this
+ *  repo's source notes ride into the artifact), scripts, styles, and tags. Then decode the entities a topic
+ *  turns into (`Arrow's theorem` is emitted as `Arrow&#39;s theorem`), or the positive rule misses its own page. */
+export const builtVisible = (html) =>
+  html
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&#x27;|&#39;|&apos;/g, "'")
+    .replace(/&quot;|&#34;/g, '"')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ');
+
+/** Every string the archive knows that is not a ratified topic. `what` names the kind so a finding can say what
+ *  leaked, and `id` marks the ones with the global (raw-byte) scope. */
+export function privateStrings(doc) {
+  const out = [];
+  const add = (needle, what, id = false) => {
+    if (typeof needle === 'string' && needle.length > 0) out.push({ needle, what, id });
+  };
+  add(doc?.source?.guildId, 'source.guildId', true);
+  for (const t of doc?.threads ?? []) {
+    for (const e of t.evidence ?? []) {
+      add(e.channelId, 'evidence.channelId', true);
+      add(e.date, 'evidence.date');
+      add(e.channelName, 'evidence.channelName');
+      for (const m of e.messageIds ?? []) add(m, 'evidence.messageIds[]', true);
+    }
+    for (const a of t.aliases ?? []) add(a, 'aliases[]');
+    add(t._note, '_note');
+  }
+  return out;
+}
+
+/**
+ * The built half, pure over `[{ file, text }]` so the selftest plants defects without a build (the house shape,
+ * `add-a-gate`). `pages` is every text file under `dist/client`; binary files are skipped by the caller.
+ */
+export function builtFindings({ doc, pages }) {
+  const findings = [];
+  const push = (rule, file, detail) => findings.push({ rule, file, detail });
+  const pub = publishedThreads(doc);
+  const topics = pub.map((t) => t.topic);
+  const priv = privateStrings(doc);
+  const surfaces = pages.filter((p) => p.text.includes(ARCHIVE_SURFACE));
+
+  // 1. ids: unique to this archive, so hunted through every built byte that is text.
+  for (const { file, text } of pages) {
+    for (const p of priv.filter((x) => x.id)) {
+      if (text.includes(p.needle))
+        push('built-carries-an-id', file, `${p.what} "${p.needle}" is in a built byte. Evidence is a pointer, and it stays in data/discord-threads.json (D461).`);
+    }
+  }
+
+  // 2. on the archive's own surface: nothing the file knows except the ratified topics.
+  for (const { file, text } of surfaces) {
+    const residual = topics.reduce((s, t) => s.split(t).join(' '), text);
+    for (const p of priv) {
+      if (residual.includes(p.needle))
+        push('built-carries-a-private-string', file, `${p.what} "${p.needle}" is on the page the archive renders. A topic is what publishes; the date it came from, the channel it came from and the names it was also called are not (S088).`);
+    }
+  }
+
+  // 3. a mention in visible text, on any built page.
+  for (const { file, text } of pages) {
+    if (!file.endsWith('.html')) continue;
+    const visible = builtVisible(text);
+    for (const m of visible.matchAll(MENTION)) {
+      push('built-carries-a-handle', file, `"${m[0].trim()}" is in what a visitor reads. This site names the club, never a member (D461).`);
+    }
+  }
+
+  // 4. the positive half: the surface must carry the ratified set, whole. A gate that only forbids things lets a
+  //    component quietly print nine of thirty-one.
+  for (const { file, text } of surfaces) {
+    const visible = builtVisible(text);
+    for (const t of topics) {
+      if (!visible.includes(t)) push('built-topic-missing', file, `"${t}" is signed and publishable but is not on ${file}. The page lists the archive, not a sample of it.`);
+    }
+    const section = ARCHIVE_SECTION.exec(text);
+    const painted = section ? [...section[0].matchAll(/<li\b/g)].length : 0;
+    if (painted !== pub.length)
+      push('built-list-count-wrong', file, `${painted} row(s) painted under ${ARCHIVE_SURFACE} against ${pub.length} ratified topic(s). A sliced archive is a second, quieter cap (D320's one-home rule).`);
+  }
+
+  return { findings, surfaces: surfaces.length, publishable: pub.length, privateStrings: priv.length };
+}
 
 if (args.includes('--selftest')) {
   const cases = [];
@@ -185,7 +322,63 @@ if (args.includes('--selftest')) {
     return findings.some((f) => f.rule === 'no-threads') ? [] : ['no-threads not reported'];
   });
 
-  // 5. the clean control: a gate that always fails is as undecidable as one that always passes.
+  // 5. the built half: what may not reach an artifact, planted one at a time.
+  const BUILT_PAGE = (extra = '', drop = null) => {
+    const rows = ['Nonstandard analysis', 'Prime ideals']
+      .filter((t) => t !== drop)
+      .map((t) => `<li class="py-2 text-body leading-prose font-body text-ink">${t}</li>`)
+      .join('');
+    return [
+      {
+        file: 'dist/client/chat/index.html',
+        text:
+          `<main><section class="mt-16 max-w-measure" id="threads" aria-labelledby="threads-heading">` +
+          `<h2 id="threads-heading">What the club is pulling on</h2>` +
+          `<p>Two threads the club is pulling on.</p><ul class="grid grid-cols-1 gap-x-8 md:grid-cols-2">${rows}</ul>` +
+          `</section>${extra}</main>`,
+      },
+      { file: 'dist/client/_astro/DiscordSummary.js', text: 'export const summaryRoute = 1;' },
+    ];
+  };
+  const built = (pages, mutate = () => {}) => {
+    const doc = FIXTURE();
+    mutate(doc);
+    return builtFindings({ doc, pages }).findings.map((f) => f.rule);
+  };
+  const plantBuilt = (name, pages, want, mutate) => run(name, () => {
+    const got = built(pages, mutate);
+    return want.every((w) => got.includes(w)) ? [] : [`planted "${name}" and got: ${got.join(', ') || 'nothing'}`];
+  });
+  plantBuilt('a message id pasted into a data attribute on the archive page', BUILT_PAGE('<p data-debug="1356789012345678901">for debugging</p>'), ['built-carries-an-id', 'built-carries-a-private-string']);
+  plantBuilt('an evidence date printed beside a topic', BUILT_PAGE('<p class="text-micro">2025-04-11</p>'), ['built-carries-a-private-string']);
+  plantBuilt('an alias printed in place of the signed topic', BUILT_PAGE().map((p) => ({ ...p, text: p.text.split('Nonstandard analysis').join('infinitesimals') })), ['built-carries-a-private-string', 'built-topic-missing']);
+  plantBuilt('a member mention in what a visitor reads', BUILT_PAGE('<p>ask @number_theorist in the channel</p>'), ['built-carries-a-handle']);
+  plantBuilt('a signed row quietly dropped from the list', BUILT_PAGE('', 'Prime ideals'), ['built-list-count-wrong', 'built-topic-missing']);
+  plantBuilt('a message id in a built JS chunk rather than the page', [
+    BUILT_PAGE()[0],
+    { file: 'dist/client/_astro/DiscordSummary.js', text: 'const debug = "1170391234567890123";' },
+  ], ['built-carries-an-id']);
+  run('clean control: the built shape this tree ships', () => {
+    const got = built(BUILT_PAGE());
+    return got.length ? [`unexpected findings on a clean artifact: ${got.join(', ')}`] : [];
+  });
+  run('clean control: an author comment is not a handle, and a channel name inside its own topic is not a leak', () => {
+    const doc = FIXTURE();
+    doc.threads[0].topic = 'Nonstandard analysis and infinitesimals';
+    doc.threads[0].evidence[0].channelName = 'Nonstandard analysis';
+    const page = [
+      {
+        file: 'dist/client/chat/index.html',
+        text:
+          '<section id="threads"><ul><li>Nonstandard analysis and infinitesimals</li><li>Prime ideals</li></ul>' +
+          '<!-- written 2026-11-21 @measured by npm run build, ping @number_theorist if it breaks --></section>',
+      },
+    ];
+    const got = builtFindings({ doc, pages: page }).findings;
+    return got.length ? [`a comment or a substring of a topic read as a leak: ${got.map((f) => `${f.rule} (${f.detail})`).join(' | ')}`] : [];
+  });
+
+  // 6. the clean control: a gate that always fails is as undecidable as one that always passes.
   run('clean control: the fixture passes', () => threadFindings(FIXTURE()).findings.map((f) => `unexpected ${f.rule}: ${f.detail}`));
   run('clean control: notes name what is pending, not what is broken', () => {
     const d = FIXTURE();
@@ -211,7 +404,55 @@ if (args.includes('--selftest')) {
 
 // ------------------------------------------------------------------------------ verdict
 const file = argOne('--file', THREADS_FILE);
+const DIST = args.includes('--dist') ? argOne('--dist', 'dist/client') : null;
 const doc = args.includes('--file') ? (() => { try { return JSON.parse(readFileSync(file, 'utf8')); } catch (e) { return { _unreadable: e.message }; } })() : readThreads(file);
+
+/** Every text file under the built directory. A file containing a NUL byte is an image or a font and has no
+ *  strings a prose rule can speak about; skipping it is stated rather than assumed. */
+function builtPages(dir) {
+  const out = [];
+  const walk = (d) => {
+    for (const entry of readdirSync(d)) {
+      const p = join(d, entry);
+      const st = statSync(p);
+      if (st.isDirectory()) walk(p);
+      else {
+        let buf;
+        try {
+          buf = readFileSync(p);
+        } catch {
+          continue;
+        }
+        if (buf.includes(0)) continue;
+        out.push({ file: p, text: buf.toString('utf8') });
+      }
+    }
+  };
+  walk(dir);
+  return out;
+}
+
+if (DIST) {
+  if (!doc || doc._unreadable) {
+    console.log(`check:thread-topics:dist FAIL - cannot read ${file}, so there is no archive to compare the build against.`);
+    process.exit(1);
+  }
+  if (!existsSync(DIST)) {
+    console.log(`check:thread-topics:dist FAIL - ${DIST} does not exist. Run \`npm run build\` first; this half reads the artifact (D118).`);
+    process.exit(1);
+  }
+  const pages = builtPages(DIST);
+  const { findings, surfaces, publishable, privateStrings } = builtFindings({ doc, pages });
+  console.log(`check:thread-topics:dist - ${pages.length} built text file(s), ${surfaces} archive surface(s), ${publishable} publishable topic(s), ${privateStrings} private string(s) @measured ${new Date().toISOString().slice(0, 10)} by this gate`);
+  for (const f of findings) console.log(`  FAIL     ${f.rule}: ${f.file}: ${f.detail}`);
+  if (findings.length) {
+    console.log(`\n${findings.length} finding(s). The archive's evidence stays in data/discord-threads.json; what publishes is a signed topic (D461, S088).`);
+    process.exit(1);
+  }
+  console.log('\nNo channel id, message id, evidence date, channel name, alias or member mention reaches a built byte; the archive surface paints the whole ratified set.');
+  console.log('Run `node scripts/check-thread-topics.mjs --selftest` to see that these checks can still fail.');
+  process.exit(0);
+}
 
 if (!doc) {
   console.log(`check:thread-topics FAIL - ${file} does not exist.`);

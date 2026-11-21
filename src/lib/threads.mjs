@@ -40,6 +40,11 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+// The publishing rule lives in threads-view.mjs so a rendered page can import it without this module's
+// `node:fs` and its `import.meta.url` path arithmetic (D465). Re-exported here so the gate and the harvester
+// keep one import surface, and so `isRatified` has exactly one definition in the tree (D264).
+import { hasEvidence, isRatified, publishedThreads } from './threads-view.mjs';
+export { isRatified, publishedThreads };
 
 const root = fileURLToPath(new URL('../..', import.meta.url)); // src/lib -> repo root
 
@@ -134,20 +139,9 @@ export function mergeEvidence(a, b) {
   return [...out.values()].sort((x, y) => String(x.date).localeCompare(String(y.date)) || String(x.channelId).localeCompare(String(y.channelId)));
 }
 
-const hasEvidence = (t) => (t?.evidence ?? []).some((e) => (e?.messageIds ?? []).length > 0);
-
-/** A thread a human has signed, with the pointers to back it. This is the whole test for "may it be
- *  published", and it is stated once (D264) so the gate, the reader and the review surface agree.
- *
- *  There is deliberately no `--approve` flag on the harvester. A command that could write
- *  `approvedBy: "operator"` would let any session manufacture the operator's signature, which is the one
- *  authority this file exists to require (S088): names come from a model, publication comes from a human, and a
- *  signature is the human's edit, not a flag. `--review --links` brings the evidence to a person; the person
- *  signs in the file (@measured 2026-11-20: all 31 harvested entries were signed by hand that way, and
- *  `check:thread-topics` then reported 31 will render). */
-export function isRatified(t) {
-  return t?.status === 'approved' && !!t?.approvedBy && !!t?.approvedAt && hasEvidence(t);
-}
+// `hasEvidence` and `isRatified` are in src/lib/threads-view.mjs, and re-exported above: the page that renders
+// the archive and the gate that checks the file must agree on one definition, and the page must not import
+// `node:fs` to get it (D465).
 
 // -------------------------------------------------------------------------------- merge
 
@@ -224,20 +218,10 @@ function earliestDate(t) {
 
 // ---------------------------------------------------------------------------- the reader
 
-/**
- * The only view the pages are allowed to take: approved topics, as `{ id, topic }`, frozen. No aliases, no
- * dates, no channel or message ids - a component cannot print what it was not handed, and an alias is model
- * output that may contain a handle, so it stays out of built bytes (D461).
- *
- * Sorted by topic, and undated by decision: the page shows what the club pulls on *now*, not a timeline of
- * what it did (S088).
- */
-export function publishedThreads(doc) {
-  return (doc?.threads ?? [])
-    .filter(isRatified)
-    .map((t) => Object.freeze({ id: t.id, topic: t.topic }))
-    .sort((a, b) => String(a.topic).localeCompare(String(b.topic)));
-}
+// `publishedThreads()` - the only view a page may take - lives in src/lib/threads-view.mjs and is re-exported
+// above. It is out of this module precisely so that `src/components/ThreadArchive.astro` can reach the rule
+// without reaching `node:fs` or a path built off `import.meta.url`, which the prerender bundle cannot evaluate
+// (D465).
 
 /** Read the committed file. Returns `null` when it does not exist yet, so a caller can distinguish "no
  *  archive" from "an empty archive" - the first is a harvester not run, the second is a harvest that found

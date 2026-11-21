@@ -199,12 +199,34 @@ export const threads = (): { label: string; gloss: string | null }[] =>
     .map((t) => ({ label: t.value, gloss: typeof t.gloss === 'string' && t.gloss !== '' ? t.gloss : null }));
 
 /** A list counted in words, capitalised to open a sentence — the round-8 review's "Nine threads the club is
- *  pulling on." The count is read out of `threads()` at the call site rather than typed into markup, so the
- *  sentence cannot disagree with the list under it (D320's one home per rule; `check:threads` fails a `/chat`
+ *  pulling on." The count is read out of the list's own length at the call site rather than typed into markup, so
+ *  the sentence cannot disagree with the list under it (D320's one home per rule; `check:threads` fails a `/chat`
  *  that does not carry the list home promises). A spelled count is also the form `check:rsvp-page`'s tally rule
- *  reads, and the noun here is `threads`, not a headcount noun, so nothing painted is a headcount. */
-export const countWord = (n: number): string =>
-  (['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'])[n] ?? String(n);
+ *  reads, and the noun here is `threads`, not a headcount noun, so nothing painted is a headcount.
+ *
+ *  Spelled to 99, not to 12 (**S089**, **D465**): the table stopped at Twelve, and the `/chat` archive the
+ *  operator ratified on 2026-11-20 carries 31 topics, so the fallback (`String(n)`) became the common case on the
+ *  page this helper exists for. A digit in that sentence is not a lie — it is just a different voice, and
+ *  `src/pages/past.astro:73` already describes this helper as spelling "the number the way `/chat` spells its
+ *  count". So the spelling rule is stated here and extended, rather than left to a table that quietly expires.
+ *  Above 99 it falls back to digits on purpose: this counts a list a person reads, not a population, and "One
+ *  hundred twenty-eight threads" overstates precision the list does not have. */
+const ONES = [
+  'Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine',
+  'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen',
+];
+const TENS = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+
+export const countWord = (n: number): string => {
+  if (!Number.isInteger(n) || n < 0 || n >= 100) return String(n);
+  if (n < 20) return ONES[n];
+  const ten = Math.floor(n / 10);
+  const one = n % 10;
+  // The ones word is lower-cased in a compound: the count opens the sentence, so "Thirty-one" is the form, and
+  // `ONES` holds sentence-initial capitals. `check:figures` reads this sentence as a number, so the shape of it
+  // is worth getting right rather than eyeballing in markup.
+  return one === 0 ? TENS[ten] : `${TENS[ten]}-${ONES[one].toLowerCase()}`;
+};
 
 /**
  * The answers, in reading order, to the two questions a stranger asks before they decide whether to come:
