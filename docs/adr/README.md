@@ -56,10 +56,16 @@ chosen by **which artifact a session could undo**, measured over `DECISIONS.inde
 | 0006 | Three gate sets, and the cost guard compares work seconds | `scripts/gate-run.mjs`, `design/gate-cost.json` | **D291** **D290** **D269** **D443** **D144** |
 | 0007 | Secrets are per-environment; a public snowflake is not a secret | `wrangler.toml` `[vars]`, secret scope | **D58** |
 | 0008 | One name per page at every surface, and the retired URL answers 301 | `astro.config.mjs` `redirects`, `NOINDEX_ROUTES`, sitemap `filter` | **D373** **D408** **D309** **D404** |
+| 0009 | The `/chat` archive is harvested offline, signed by hand, and rendered through one narrow view | `data/discord-threads.json`, `scripts/harvest-threads.mjs`, `src/lib/threads-view.mjs`, the `check:thread-topics` steps | **D461** **D464** **D465** **D73** |
 
-Only **0001** is written so far. The others are listed with their decision ids so the next session does not have to
-re-derive the set; each lands as its own commit, with `DECISIONS.index.md` regenerated in the same commit if it
-mints a `D###`.
+Only **0001** and **0009** are written so far. The others are listed with their decision ids so the next session does
+not have to re-derive the set; each lands as its own commit, with `DECISIONS.index.md` regenerated in the same commit
+if it mints a `D###`.
+
+**0009 is not from the 2026-11-19 candidate probe above.** It was added 2026-11-21 because **MS41**'s exit gate names
+`docs/adr/0009-*.md`, and it passes the admission test on its own terms: the artifacts a session could undo are
+named in its row, and the reason a later harvest may add entries but never rename a signed one (**D464**) is not
+recoverable from the JSON. Its id is the next free one — ids **0002**–**0008** are untouched and never renumbered.
 
 ## Rules for writing one
 
