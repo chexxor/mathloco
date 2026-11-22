@@ -13,7 +13,7 @@
 // shapes this gate is for, and holds the clean forms the repo already contains, so the gate cannot be satisfied
 // by never having a table.
 
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 
 // D416: the round's two docs are tracked prose carrying tables that ARE the contract — an inventory row
 // that loses a cell loses the line item it was mapping, and the claims ledger is how the operator finds
@@ -45,6 +45,22 @@ const FILES = [
   // that loses a cell loses the "what it answers" or the "superseded by" that made the page findable.
   'docs/README.md',
 ];
+
+// A hardcoded list is honest exactly as long as someone remembers to edit it - and the day it is forgotten,
+// the auditor quietly narrows to last year's corpus (the same defect class as a gate with no script behind
+// it). So the two homes that GROW on their own are covered by pattern instead of by memory: every fresh-reader
+// round report and every design record is audited the round it lands, and the persona and the grading rule -
+// whose vocabulary and pile tables ARE the enforcement contract - with them. D469, S091, 2026-11-22.
+const PATTERNS = [
+  ['design/fresh-reader', /^round-\d+-questions-.*\.md$/],
+  ['design/fresh-reader', /^(persona|grading-rule)\.md$/],
+  ['design/records', /^\d{4}-.*\.md$/],
+];
+for (const [dir, re] of PATTERNS) {
+  let names;
+  try { names = readdirSync(dir); } catch { continue; } // a directory absent from this clone audits nothing
+  for (const f of names) if (re.test(f)) FILES.push(`${dir}/${f}`);
+}
 
 // Split a row on unescaped pipes only. `split('|')` on a cell containing `\|` invents a column.
 function cells(line) {
