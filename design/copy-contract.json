@@ -141,13 +141,6 @@
           "goal": "they can tell what this page holds and where the club's finished sessions are written down",
           "style": "state-voice",
           "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
-        },
-        {
-          "section": "No finished date on our calendar",
-          "audience": "first-visitor",
-          "goal": "they leave the page with a path to the record rather than an empty list",
-          "style": "state-voice",
-          "settledBy": "reader ruled by the operator's letter of 2026-11-19 ('All pages are written for visitors who have never attended an event'); goal and style still a delegate draft, 2026-11-19"
         }
       ]
     },

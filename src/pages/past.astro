@@ -35,11 +35,23 @@ import { forbidsIndexing } from '../lib/index-rules.mjs';
  *     paints at the foot of this page (R1/D358's ceiling: an exit the band owns is not painted twice as
  *     an affordance, and the band's URL is the one source).
  *
- * Today the honest state is an empty one: @measured 2026-11-16, `data/events.json` holds 8 rows, two of
- * them dated before today, and both carry `status: CANCELLED` — so `isPast` returns false for all of them
- * and this page lists nothing. That is a designed state (DESIGN.md "States": missing content is a state,
+ * The state this page opened in was an empty one: @measured 2026-11-16, `data/events.json` holds 8 rows, two
+ * of them dated before today, and both carry `status: CANCELLED` — so `isPast` returns false for all of them
+ * and this page listed nothing. That was a designed state (DESIGN.md "States": missing content is a state,
  * never a blank), and the sentence under it is generated from the count rather than written, because a
  * hand-written "the club met twice before" is a claim that expires with the next harvest.
+ *
+ * It stopped being the painted state on 2026-11-22. @measured 2026-11-22 (Linux native, Node 24.22.1) the
+ * built page lists **one** finished date — `grep -oE '(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) [0-9]{1,2}, 20[0-9]{2}' dist/client/past/index.html` → `Nov 21, 2026` — because the 2026-11-21 Social finished
+ * without being called off. `pastWindow().total` is `closed.length` with **no horizon backwards**
+ * (`src/lib/event-window.mjs:148`) and D72 never deletes a row, so that count only grows and the
+ * `win.total === 0` branch below is unreachable in practice. The branch stays: a superseded row or a
+ * withdrawn harvest can still reach it, and a ruled empty state is cheaper to keep than to re-derive. What
+ * moved with the state is the record — `design/copy-contract.json` lost its row for that heading the same
+ * day, because the record's own `ruleOfExit` treats a row for a section the build no longer makes as
+ * `contract-stale`; if the branch ever paints again, `section-uncontracted` fires and a row is written then.
+ * D404's "three completed meetings" trigger now counts **1**, not 0, and changing that ruling is the
+ * operator's act, not a seat's.
  *
  * Deliberate, and named where a future session will look:
  *   - a past row carries `data-surface="past-row"`, not `data-surface="row"`. `scripts/check-row-geometry.mjs`
