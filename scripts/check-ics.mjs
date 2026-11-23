@@ -19,6 +19,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { renderCalendar, escapeText, contentLine, CRLF } from '../src/lib/ics.mjs';
 import { publishableRows, meetingKind, venueKey, publishedNameOrNull, publishedSeriesNames } from '../src/lib/event-groups.mjs';
 import { feedDescription, DESCRIPTIONS, windowSentence } from '../src/lib/event-description.mjs';
@@ -27,6 +28,11 @@ import { EVENT_PAGES, feedUrl } from '../src/lib/rsvp.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
+// This file is a library as well as a gate: `scripts/check-handoff.mjs` imports the rule set and runs the two
+// vendored vendor fixtures through it, so the far side's standard and this repo's gate cannot drift quietly
+// (MS42, docs/spec/event-data-handoff.md §"The two vendor fixtures"). Importing must not run the CLI body, and
+// must not run the selftest body either — the importing process may itself be running `--selftest`.
+const IS_MAIN = process.argv[1] ? resolve(process.argv[1]) === fileURLToPath(import.meta.url) : false;
 const argOne = (flag, dflt) => {
   const i = args.indexOf(flag);
   return i < 0 ? dflt : args[i + 1];
@@ -45,6 +51,16 @@ const BUILD_DATE = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 // Textual helpers shared by several rules: unfolding joins a folded line back together, so an assertion sees
 // one property per line no matter how the renderer wrapped it.
 const unfold = (text) => text.replace(/\r\n[ \t]/g, '');
+/** Render, but as a verdict rather than an exception: a snapshot whose envelope is broken is a finding that
+ *  names the missing field, not a stack trace a reader has to decode (the misshapen vendor fixture proves
+ *  the case — `renderCalendar` refuses a file with no `calendar.prodid`). */
+const renderSafe = (data) => {
+  try {
+    return { text: renderCalendar(data), error: null };
+  } catch (err) {
+    return { text: '', error: err.message };
+  }
+};
 const eventsOf = (text) => unfold(text).match(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g) ?? [];
 const propOf = (block, name) => {
   const m = new RegExp(`^${name}([^:]*):([^\r]*)`, 'm').exec(block);
@@ -114,6 +130,17 @@ const SNAPSHOT_KEYS = ['calendar', 'source', 'events', 'stalenessOkUntil', 'supe
 // calendar, so a rule may audit the snapshot, the bytes, or both.
 
 const RULES = [
+  // MS42: the file now arrives from another repository, so the first thing worth saying about it is whether this
+  // repo can publish it at all. `renderCalendar` throws on a missing envelope field; a rule that names the throw
+  // is what turns the vendor's misshapen fixture into a finding instead of a crash, and it is the headline when a
+  // handoff commit lands with a key the renderer does not accept.
+  (data) => {
+    const { error } = renderSafe(data);
+    return error
+      ? [{ rule: 'renderable', detail: `this snapshot cannot be rendered at all: ${error} — the file is not publishable, so every rule below that reads the bytes is running on nothing` }]
+      : [];
+  },
+
   // RFC 5545 3.6: a VCALENDAR MUST carry PRODID and VERSION. METHOD:PUBLISH says this is a feed being
   // published rather than an invitation a client should answer.
   (data, text) => {
@@ -165,7 +192,14 @@ const RULES = [
       // punctuation-stripped string too. The four shipped UUIDv4s stripped of `[-:]` hold runs of at most 6 digits
       // (longest: `198943`, `213498`), so this does not flag a real UUID - and the selftest now plants both shapes.
       const TIME_SHAPE = /\d{14}|\d{8}T\d{6}Z?/;
-      if (TIME_SHAPE.test(u) || TIME_SHAPE.test(u.replace(/[-:]/g, '')))
+      // A canonical UUID is not a clock, whatever its digit runs. The vendor's own fixture (MS42,
+      // `data/fixtures/mathloco-snapshot.json`) carries zero-padded UUIDs — `00000000-0000-4000-8000-000000000006`
+      // — and stripping punctuation leaves a 32-digit run this rule read as time-derived. The differential fixture
+      // gate found that false positive on the day it landed (@measured 2026-11-23). The defect here is a UID copied
+      // from a build or harvest instant, and none of those three shapes is 8-4-4-4-12 hex, so the exemption is
+      // narrow: a UUID-shaped string is exempt, every other string is still tested both ways.
+      const UUID_SHAPE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!UUID_SHAPE.test(u) && (TIME_SHAPE.test(u) || TIME_SHAPE.test(u.replace(/[-:]/g, ''))))
         out.push({ rule: 'uid-shape', detail: `UID ${u} looks time-derived — every redeploy would duplicate it` });
       if (u.includes(BUILD_DATE)) out.push({ rule: 'uid-shape', detail: 'a UID contains this build date' });
       // D318: a row the grouping supersedes is *meant* to be absent, so the presence test runs only on rows
@@ -180,9 +214,10 @@ const RULES = [
   // The point of D70's "moving the writer must not change any subscriber's calendar": two builds of one
   // snapshot are the same bytes. Anything that reads a clock in the renderer breaks this.
   (data) => {
-    const a = renderCalendar(data);
-    const b = renderCalendar(JSON.parse(JSON.stringify(data)));
-    return a === b ? [] : [{ rule: 'byte-identity', detail: 'one snapshot rendered twice to two different byte strings' }];
+    const a = renderSafe(data);
+    if (a.error) return []; // `renderable` already named it; this rule measures a render that happened
+    const b = renderSafe(JSON.parse(JSON.stringify(data)));
+    return a.text === b.text ? [] : [{ rule: 'byte-identity', detail: 'one snapshot rendered twice to two different byte strings' }];
   },
 
   // DTSTAMP is required (3.8.7) but must come from the harvest, not the build: a build-time stamp makes every
@@ -714,7 +749,7 @@ const report = (data) => {
 
 const run = (data, text) => RULES.flatMap((rule) => rule(data, text));
 
-if (selftest) {
+if (IS_MAIN && selftest) {
   const clone = () => JSON.parse(JSON.stringify(snapshot));
   // A row put back into the unconfirmed state: what the snapshot looks like whenever the club adds a date and
   // nobody has settled the hour yet (D172).
@@ -933,12 +968,21 @@ if (selftest) {
   process.exit(missed ? 1 : 0);
 }
 
-const text = renderCalendar(snapshot);
-const findings = run(snapshot, text);
-for (const line of report(snapshot)) console.log(`note  ${line}`);
-for (const f of findings) console.log(`FAIL  ${f.rule}: ${f.detail}`);
-console.log(
-  `check:ics — ${(snapshot.events ?? []).length} row(s), ${text.split('\r\n').length} content lines, ` +
-    `${new TextEncoder().encode(text).length} octets, ${findings.length} finding(s) from ${RULES.length} rules`,
-);
-process.exit(findings.length ? 1 : 0);
+// ------------------------------------------------------------------ library surface (MS42)
+// `check-handoff.mjs` imports these and nothing else. `run` is the whole rule set; the fixture gate filters the
+// `artifact` findings out the same way this file's own selftest does (line ~929), because a fixture has no
+// shipped bytes to compare against.
+export { RULES, run, renderSafe, SNAPSHOT_KEYS, RUNWAY_DAYS };
+
+if (IS_MAIN) {
+  const { text, error } = renderSafe(snapshot);
+  const findings = run(snapshot, text);
+  for (const line of report(snapshot)) console.log(`note  ${line}`);
+  for (const f of findings) console.log(`FAIL  ${f.rule}: ${f.detail}`);
+  console.log(
+    `check:ics — ${(snapshot.events ?? []).length} row(s), ${text.split('\r\n').length} content lines, ` +
+      `${new TextEncoder().encode(text).length} octets, ${findings.length} finding(s) from ${RULES.length} rules` +
+      (error ? ` — the snapshot did not render: ${error}` : ''),
+  );
+  process.exit(findings.length ? 1 : 0);
+}

@@ -143,6 +143,16 @@ const DEPLOY = [
   // `stalenessOkUntil` hatch — the reader's half of a freshness rule whose writer half left this repo.
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, the reach the file states about itself (D371), and the age of its one harvest stamp (D188, D471)', needs: ['build'] },
   { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (50 plantings, each named @measured 2026-11-23 by `node scripts/check-ics.mjs --selftest` — 45 before MS42 retired the live-row rule and replanted the stamp rule four ways)' },
+  // The two fixtures `social-event-publisher` ships with its own suite are run here through **this** repo's rules
+  // (MS42, ADR-0010, docs/spec/event-data-handoff.md §"The two vendor fixtures are a test in this tree, not a
+  // sample"). The standard's file must pass, the deliberately broken one must fail with each planted defect named,
+  // and both blob ids are pinned, so a fixture edited in this tree stops being the far side's test file. This is
+  // the only step that can see the two repositories disagree about the contract: every other gate reads
+  // `data/events.json`, which is one side's output. It imports `check-ics.mjs` as a library, so no rule is copied.
+  // Source-only, so before `build` (D118). Cost @measured 2026-11-23 by this step (Linux native, Node 24.22.1):
+  // gate 0.10s, selftest 0.35s — no build, no browser, no network.
+  { name: 'check:handoff', desc: 'the vendored fixtures through this repo\u2019s own calendar rules: the standard\u2019s shape passes, the broken one fails with all 6 planted defects named, and both blob ids still match what was vendored 2026-11-17 (MS42, ADR-0010)' },
+  { name: 'check:handoff:selftest', desc: 'the differential can still fail (10 cases: 4 plantings that repair one defect in the broken fixture, 1 that swaps it for a clean file, 1 that breaks the standard\u2019s fixture, 1 that breaks the published file, the blob-pin planting, the skip-list assertion, the clean control @measured 2026-11-23 by `node scripts/check-handoff.mjs --selftest`)' },
   // The sign-up link map: a dated stamp on every URL the config prints, and the shape of each link. The two
   // scraped event snapshots it used to date-check are deleted with their fetchers (MS42, ADR-0010); the one
   // dated calendar file is `data/events.json`, and its age is ruled by `check:ics` above, not twice.

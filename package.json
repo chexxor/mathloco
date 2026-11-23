@@ -34,6 +34,8 @@
     "check:escapes:selftest": "node scripts/check-escapes.mjs --selftest",
     "check:ics": "node scripts/check-ics.mjs",
     "check:ics:selftest": "node scripts/check-ics.mjs --selftest",
+    "check:handoff": "node scripts/check-handoff.mjs",
+    "check:handoff:selftest": "node scripts/check-handoff.mjs --selftest",
     "check:rsvp": "node scripts/check-rsvp.mjs",
     "check:rsvp:selftest": "node scripts/check-rsvp.mjs --selftest",
     "check:rsvp:links": "node scripts/check-rsvp.mjs --links",

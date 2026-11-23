@@ -104,6 +104,32 @@ agreeing, a build goes red in both repositories rather than one team discovering
 `@measured` blob ids the far side records for the two copies are `bc52bf4b3feea80896ea88b206c5d118a393aaf8` and
 `442abd71b8ba6396773e967a0a5edbdfadb60e64`.
 
+**The differential runs on every build.** `npm run check:handoff` (`scripts/check-handoff.mjs`, in the deploy set)
+imports the rule set from `scripts/check-ics.mjs` — it does not copy it — and runs it over three files: the real
+`data/events.json`, the standard's fixture, and the broken one. The standard's fixture must produce **0** findings,
+the broken one must produce a finding naming **each** of its planted defects, and both blob ids are pinned in the
+gate, so a fixture edited in this tree stops being the far side's test file and starts being a failure. Three of
+`check:ics`'s rules are not run on the fixtures: `artifact` (a fixture has no shipped bytes) and `runway` plus
+`stale-snapshot` (they read the wall clock, and a fixture's dates are frozen at vendoring time — its hatch expires
+2026-12-01 — so running them would turn the gate red over a file nobody touched, which is the date-rot class
+`D192` names). `check:handoff:selftest` plants the ways the **differential itself** goes quiet: repair one defect
+in the broken file, swap it for a clean one, break the standard's file, break the published file, edit a fixture's
+bytes.
+
+@measured 2026-11-23 by `node scripts/check-handoff.mjs` (Linux native, Node 24.22.1): `data/events.json` **0**
+findings, `mathloco-snapshot.json` **0** findings, `mathloco-snapshot-misshapen.json` **19** findings with all
+**6** planted defects named (`renderable`, `sourced-rows` ×2, `raw-upstream-instant` ×2, `superseded-log`); the
+selftest is **10 cases, 0 wrong**; the step costs **0.19s** and its selftest **0.43s**.
+
+**What the differential caught on its first run, in this repository.** `check:ics`'s `uid-shape` rule read the
+vendor fixture's zero-padded UUIDs (`00000000-0000-4000-8000-000000000006`) as time-derived, because stripping
+punctuation leaves a 32-digit run and the rule tests for a 14-digit one. The fixture is the standard's canonical
+shape, so the fixture was right and this repo's rule was wrong: a false positive that would have failed every
+future fixture and every handoff row the publisher keys that way. Fixed the same day by exempting the 8-4-4-4-12
+hex form from the digit-run test only — the three shapes the rule exists to catch (`20261105002000`,
+`20261105T002000Z`, `2026-11-06T05:00:28Z`) are not UUID-shaped, and `check:ics:selftest` still reports **50
+plantings, 0 undetected** after the change.
+
 ## What a built page renders today, and what the standard carries
 
 The claim "nothing a visitor sees today is lost" cannot be made by reading `src/`: a field can be imported and
