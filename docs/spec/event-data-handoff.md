@@ -234,7 +234,7 @@ exact inversion **D236** and **D319** refuse.
 
 | Finding | What it means under the handoff | What to do |
 |---|---|---|
-| `runway` | the file's stamp is older than its hatch, so nobody has refreshed it | the publisher's run is the act; renewing `stalenessOkUntil` is this repo's grant, and it must say why in the commit |
+| `runway`, `stale-snapshot` | the file's stamp is older than its hatch, so nobody has refreshed it | the publisher's run is the act; renewing `stalenessOkUntil` is this repo's grant, and it must say why in the commit. The dated ask for that run is `docs/ask-to-social-event-publisher-2026-11-23.md` (**D475**) |
 | `snapshot-keys`, `sourced-rows` | the file carries a key this repo's build does not know — the two whitelists have drifted apart | the differential fixture test says which side moved; a new field is a change to both repositories, agreed, never one side alone |
 | `superseded-log` | the file's record of dropped rows disagrees with what the renderer is dropping right now | this repo's grouping decision is the one that changed, or the log was hand-edited; open both and read them |
 | `dtstamp` | rows disagree about when they were harvested | a publisher defect (`MH-FR-023`); do not hand-edit a stamp to silence a gate |
