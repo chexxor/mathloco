@@ -138,9 +138,18 @@ never painted, and a link can be painted from a file nobody thinks of as an even
 `/events.ics`) and answers, per field and per link, where the bytes came from. Its machine-readable output is
 `design/event-field-parity.json`.
 
-@measured 2026-11-23 by `node design/event-field-parity.mjs` over a fresh `npm run build` (Linux native, Node
-24.22.1): **6** built pages, **8** snapshot rows, **7** published VEVENTs, **12** distinct external hrefs,
-**4** of them per-date platform pages, and **6 of 7** VEVENTs whose `URL` property is a per-date platform page.
+**Before** the fetchers were deleted, @measured 2026-11-23 by `node design/event-field-parity.mjs` over a fresh
+`npm run build` at `260b461` (Linux native, Node 24.22.1): **6** built pages, **8** snapshot rows, **7** published
+VEVENTs, **12** distinct external hrefs, **4** of them per-date platform pages, and **6 of 7** VEVENTs whose `URL`
+property is a per-date platform page.
+
+**After**, same probe, same command, at the tip of this item's deletion commit: **6** built pages, **8** rows,
+**7** VEVENTs, **9** distinct external hrefs, **0** per-date platform pages, and **0 of 7** VEVENTs whose `URL` is a
+per-date platform page — all **7** now publish the row's own Mobilizon page. Of the **5** dates painted on a page,
+**0** carry a per-date platform link; every one carries the standing group links instead. That is the whole cost of
+this item, stated as a number rather than argued: the site still answers "when, where, is it cancelled, what does
+it cost, how do I get in", and it no longer answers "this exact date's Meetup page". The probe tolerates the two
+deleted inputs, so the same command re-measures this on any branch.
 
 | Fact a surface shows | Where it appears today | What supplies it today | The standard's field | Verdict |
 |---|---|---|---|---|
@@ -156,14 +165,16 @@ never painted, and a link can be painted from a file nobody thinks of as an even
 | "Cancelled" | the feed's `STATUS` only | `status` | `status` | carried |
 | the row heading | `/dates`, `/past`, `SUMMARY` | `summary` through `publishedName` | `summary` | carried |
 | `uid`, `sequence`, `source` | the feed (`UID`, `SEQUENCE`) | same fields | carried | carried |
-| **a link to the event on each platform it is published on** | **4 links across `/dates` and `/`, and 6 of 7 feed `URL` properties** | **`data/meetup-events.json`** (and `data/discord-events.json`, whose one row is expired) | **there is no such field** — the row carries one `url`, and it is the Mobilizon page | **missing on both sides** |
+| **a link to the event on each platform it is published on** | **before: 4 links across `/dates` and `/`, and 6 of 7 feed `URL` properties. after: 0 and 0** | **before: `data/meetup-events.json` (and `data/discord-events.json`, whose one row is expired) — both deleted by this item. after: nothing; `EVENT_PAGES` in `src/lib/rsvp.mjs` is empty** | **there is no such field** — the row carries one `url`, and it is the Mobilizon page | **missing on both sides — the ask below** |
 
 Two things that table settles, and neither is a guess:
 
-1. **The row's own `url` reaches no page.** It appears in the feed for exactly **1 of 7** VEVENTs — the other
-   **6** publish the per-date Meetup page, because `src/lib/ics.mjs:203` publishes `own ?? row.url` and `own` is
-   `feedUrl(row, MEETUP_EVENTS)`. So the feed carries the same dependency the page does; this is not only a
-   link-in-the-UI question.
+1. **The row's own `url` reaches no page, and the feed only started saying it when the fetchers went.** Before:
+   the row's own `url` appeared in the feed for exactly **1 of 7** VEVENTs — the other **6** published the per-date
+   Meetup page, because `src/lib/ics.mjs:203` publishes `own ?? row.url` and `own` is `feedUrl(row, MEETUP_EVENTS)`.
+   After: **7 of 7** publish `row.url`, because `EVENT_PAGES` is empty and `own` is never found (@measured 2026-11-23,
+   same probe). So the feed carried the same dependency the page did — a subscriber's calendar was pointing at a
+   Meetup page this repository scraped, which is the clearest statement of why the standard has to carry the link set.
 2. **The per-date links come from a file this item deletes.** `signUpPaths()` in `src/lib/rsvp.mjs:440` matches a
    date+hour against `data/meetup-events.json` and `data/discord-events.json`; when nothing matches it falls back
    to the standing group URLs in `src/config.json` (`meetupGroup`, `discordInvite`, `facebookGroup`). Retiring
@@ -171,9 +182,12 @@ Two things that table settles, and neither is a guess:
    date with the standing group link instead. That fallback is already written and already ruled on
    (`docs/spec/source-contract.md` §1: a date only on Meetup is printed as booked, not confirmed).
 
-The same two files are read by `scripts/check-rsvp-page.mjs`, `scripts/check-rsvp-preference.mjs` and
-`scripts/check-ics.mjs` (`:41`, `feedUrl`), so retiring them re-rules three gates, not one. That is named here so
-the gate work is scheduled rather than discovered.
+The same two files were read by `scripts/check-rsvp-page.mjs`, `scripts/check-rsvp-preference.mjs` and
+`scripts/check-ics.mjs` (`feedUrl`), so retiring them re-ruled three gates, not one. That is done: `check:ics`
+replaced `stale-live-row` with `stale-snapshot` (**D471**), `check:rsvp` lost its two snapshot-freshness rules and
+`SNAPSHOT_FRESH_DAYS` with them, and `check:rsvp-page` now checks the page's stamp pair against `data/events.json`
+and fails a page that claims a Discord snapshot this build has no source for. No second freshness number survives
+in this repository (D272: one rule, one number).
 
 ## The change request: a per-platform link set
 
