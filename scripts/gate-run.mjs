@@ -89,7 +89,7 @@ const DEPLOY = [
   // files claiming "what is next" drift, and the drift is invisible in a table cell (S015). Reads prose, so
   // it runs before build; the selftest plants each defect class and requires a named failure.
   { name: 'check:plan', desc: 'the plan, its tracked projection and NEXT.md agree; every milestone has an exit gate' },
-  { name: 'check:plan:selftest', desc: 'the plan gate can still fail (19 plantings, incl. the CI clone case)' },
+  { name: 'check:plan:selftest', desc: 'the plan gate can still fail (21 plantings @measured 2026-11-23, 11 of them runnable in a CI clone with no .notes/)' },
   { name: 'check:decisions', desc: 'the tracked decision index matches the log, and no D-id citation dangles' },
   { name: 'check:figures', desc: 'a measured number in DESIGN.md carries a date, and that date is not stale' },
   // Tracked prose is a contract, and a markdown table row with the wrong cell count still renders: the extra or

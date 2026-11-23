@@ -49,6 +49,15 @@ function runnerSteps() {
   return steps;
 }
 
+// The DEPLOY set only, sliced out of the runner by its own declaration. `runnerSteps()` reads the whole
+// file and therefore counts rig and browser steps too, and the cost baseline is frozen per set - comparing
+// 109 whole-file steps against a frozen 83 deploy steps would report a drift that does not exist.
+function deploySteps(src) {
+  const m = /\bconst DEPLOY = \[[\s\S]*?\n\];/.exec(src);
+  if (!m) return null;
+  return [...m[0].matchAll(/\{\s*name:\s*(['"])([^'"]+)\1[^}]*\}/g)].map((x) => x[2]);
+}
+
 function audit() {
   const scripts = packageScripts();
   const steps = runnerSteps();
@@ -84,11 +93,30 @@ function audit() {
     }
   }
   if (withoutSelftest.length) {
-    console.log('  gates with no selftest (a gate nobody has seen fail):');
-    for (const s of withoutSelftest) console.log('    ' + s);
+    // A step named `check:render:dist` is a **variant** of `check:render`, and `check:render:selftest` is the
+    // detector for that rule body. Counting a variant as an undetected gate inflates the class by three and
+    // invites somebody to "fix" the number by deleting a step (the gate destroying what it checks).
+    const base = (s) => s.replace(/:(dist|live|prod|ci)$/, '');
+    const variant = withoutSelftest.filter((s) => base(s) !== s && scripts[`${base(s)}:selftest`]);
+    const bare = withoutSelftest.filter((s) => !variant.includes(s));
+    console.log(`  gates with no selftest (a gate nobody has seen fail): ${bare.length}`);
+    for (const s of bare) console.log('    ' + s);
+    if (variant.length) {
+      console.log(`  not counted above - variants whose base gate ships a selftest (${variant.length}):`);
+      for (const s of variant) console.log(`    ${s}   <- ${base(s)}:selftest exists`);
+    }
   }
   if (baseline) {
-    console.log(`  cost baseline: ${baseline.steps} steps, measured ${baseline.deploy}. If your gate moves the wall clock, run npm run cost:save in the same commit and say why.`);
+    // Two numbers, each labelled with the scope and the day it was true. Printing the frozen count alone made
+    // the audit say "cost baseline: 83 steps" while `gate-run.mjs --list` printed 97 - a reader took the
+    // frozen figure for the live one, which is the aging-count defect the trap row about gate lists names
+    // (D269, D290). Like-for-like: the frozen count is the DEPLOY set, so the live count is the DEPLOY set.
+    const dep = deploySteps(runnerSrc);
+    const live = dep === null
+      ? 'the live DEPLOY count is unreadable (no `const DEPLOY = [` block found in gate-run.mjs)'
+      : `the DEPLOY set lists ${dep.length} today`;
+    const drift = dep === null ? '' : (dep.length === baseline.steps ? '' : ` (${dep.length - baseline.steps > 0 ? '+' : ''}${dep.length - baseline.steps} steps with no frozen cost)`);
+    console.log(`  cost baseline: design/gate-cost.json freezes ${baseline.steps} deploy steps as of ${baseline.deploy}; ${live}${drift}. If your gate moves the wall clock, run npm run cost:save from a run that starts and ends at or below 6/16cpu and say why.`);
   }
   console.log(`  exit: ${hard.length ? 1 : 0} (only the broken wiring is a failure; the rest is a report)`);
   return hard.length ? 1 : 0;

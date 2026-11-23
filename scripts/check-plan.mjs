@@ -96,6 +96,19 @@ const duplicateSections = (text) => {
 };
 
 const definedRulings = (plan) => new Set([...sectionText(plan, 'Rulings').matchAll(/\*\*S(\d{3})\b/g)].map((m) => Number(m[1])));
+// The register's own entries, keyed strictly: a ruling line starts "- **S095 (". `definedRulings` above is
+// deliberately loose (it also matches an inline `**S092**` citation inside the register), which is fine for
+// "does this cited id exist" and fatal for "is this id defined once" - a Set collapses a collision, so two
+// rulings wearing one number read as one and every citation of that number silently re-points.
+const rulingEntries = (plan) => sectionText(plan, 'Rulings').split('\n')
+  .filter((l) => /^- \*\*S(\d{3})\b/.test(l))
+  .map((l) => Number(/^- \*\*S(\d{3})\b/.exec(l)[1]));
+const duplicateRulings = (plan) => {
+  const count = new Map();
+  for (const id of rulingEntries(plan)) count.set(id, (count.get(id) ?? 0) + 1);
+  return [...count].filter(([, n]) => n > 1).sort((a, b) => a[0] - b[0])
+    .map(([id, n]) => `S${String(id).padStart(3, '0')} is defined ${n === 2 ? 'twice' : n + ' times'} in ${PLAN} §Rulings - ids are append-only and never renumbered, so a second entry wearing a taken number is two rulings a reader cannot tell apart, and the Set that checks citations hides the collision`);
+};
 const openQuestions = (plan) => sectionText(plan, 'Open questions').split('\n').filter((l) => /^\d+\.\s/.test(l));
 
 // The rules every milestone row must satisfy, whoever is reading it - the plan or the projection.
@@ -165,6 +178,7 @@ function audit(plan, proj, next, citations) {
   // 2-5, 7, 12. the plan's own rows, and the plan's own shape
   problems.push(...duplicateSections(plan));
   problems.push(...rowProblems(planRows, PLAN, 5));
+  problems.push(...duplicateRulings(plan));
 
   // 6. the tracked projection must match, and must be complete
   problems.push(...rowProblems(projRows, PROJ, 4));
@@ -271,6 +285,16 @@ function selftest(base) {
       cells.splice(3, 0, 'delegate');
       return { proj: proj.split('\n').map((l) => (isRow(l) && l.includes(live.id) ? '| ' + cells.join(' | ') + ' |' : l)).join('\n') };
     }, ['columns'], true],
+    ['ruling id defined twice', () => {
+      // The register is edited by hand, so the planting copies a live entry line rather than inventing one:
+      // a made-up id pasted into the section would also have to satisfy the citation check, and the class
+      // under test is the collision, not the number (D268's dead-exemption rule).
+      const lines = plan.split('\n');
+      const at = lines.findIndex((l) => /^- \*\*S(\d{3})\b/.test(l));
+      if (at < 0) throw new Error('the Rulings register has no entry line - nothing to plant into');
+      lines.splice(at + 1, 0, lines[at]);
+      return { plan: lines.join('\n') };
+    }, ['is defined twice'], false],
     ['ruling id with no entry', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.S.set(777, ['AGENTS.md']); return { cites: c }; }, ['no ruling register'], false],
     ['milestone id cited with no row', () => { const c = { S: new Map(cites.S), MS: new Map(cites.MS) }; c.MS.set(99, ['AGENTS.md']); return { cites: c }; }, ['no such milestone'], true],
     // CI mode: the clone has no plan, so the projection alone is audited - and it must still catch a bad row.
@@ -342,5 +366,5 @@ const rows = milestoneRows(plan || proj);
 if (clone) {
   console.log(`check:plan ok (clone mode - ${PLAN} is host-local, so the tracked projection is the roadmap) - ${rows.length} milestones (${rows.map((r) => statusOf(r)).join(', ')}), every row has an exit gate and an owner.`);
 } else {
-  console.log(`check:plan ok - ${rows.length} milestones (${rows.map((r) => statusOf(r)).join(', ')}), every row has an exit gate and an owner, open questions ${openQuestions(plan).length}/3, ${definedRulings(plan).size} rulings, ${parkedRows(plan).length} parked items each with a trigger, projection matches, ${NEXT} carries no queue.`);
+  console.log(`check:plan ok - ${rows.length} milestones (${rows.map((r) => statusOf(r)).join(', ')}), every row has an exit gate and an owner, open questions ${openQuestions(plan).length}/3, ${rulingEntries(plan).length} rulings, ${parkedRows(plan).length} parked items each with a trigger, projection matches, ${NEXT} carries no queue.`);
 }
