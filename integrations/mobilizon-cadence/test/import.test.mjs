@@ -20,17 +20,24 @@ import { readFileSync } from "node:fs";
 import { verifyDocument, CADENCE, PROBE, readGate, fingerprint } from "../verify-import.mjs";
 import { checkProbe, buildProbe } from "../build-probe.mjs";
 import { runCodeChain } from "../lib/sandbox.mjs";
+import { runAtOf } from "./clock.mjs";
 
 const clone = () => structuredClone(CADENCE);
 const blocked = (r) => r.findings.filter((f) => f.sev === "fatal" || f.sev === "drift");
 const hits = (r, needle, sev = "fatal") =>
   r.findings.filter((f) => f.sev === sev && `${f.where} ${f.what} ${f.means}`.includes(needle));
 const node = (wf, name) => wf.nodes.find((n) => n.name === name);
+const FIXTURE = JSON.parse(readFileSync(new URL("../fixtures/group-history-2026-11-04.json", import.meta.url), "utf8"));
+// The run day for every date asserted in this file - the instant the snapshot was taken. See `test/clock.mjs`.
+const RUN_AT = runAtOf(FIXTURE);
 
 // ---------------------------------------------------------------- the honest baseline
 
 test("the committed artifact verifies against itself", () => {
-  const r = verifyDocument(clone(), CADENCE);
+  // Pinned clock: this case names the two dates the checker's own execution must produce, and an unpinned
+  // rehearsal makes that a claim about the day it ran on (D192, D226). `verify-import.mjs`'s CLI passes no
+  // `runAt`, so a live verify still answers "what would the installed copy do today".
+  const r = verifyDocument(clone(), CADENCE, { runAt: RUN_AT });
   assert.equal(r.identical, true, "fingerprints differ - the artifact on disk is not what the checker loaded?");
   assert.deepEqual(blocked(r), [], blocked(r).map((f) => `${f.sev} ${f.where}: ${f.what}`));
   assert.equal(r.wouldWrite, false, "dryRun=true as shipped must read back as writes-off");
@@ -340,7 +347,6 @@ test("a node renamed inside n8n breaks the copy's own run, and that is reported 
 
 // ------------------------------------------------------------- the export, executed rather than compared
 
-const FIXTURE = JSON.parse(readFileSync(new URL("../fixtures/group-history-2026-11-04.json", import.meta.url), "utf8"));
 /** The two HTTP reads a run would have received. `accessToken`, not `sessionToken` — the login envelope
  *  measured on 5.2.4 on 2026-11-04. */
 const seed = () => ({
@@ -353,7 +359,7 @@ const withExportNoise = (wf) => {
 };
 
 test("the export is not only identical, it still runs: the club's rows in, the two planned dates out", () => {
-  const run = runCodeChain(withExportNoise(clone()), seed());
+  const run = runCodeChain(withExportNoise(clone()), seed(), { runAt: RUN_AT });
   assert.deepEqual(run.skipped, ["21 Report error path"],
     "only the error reporter sits outside the main chain; if a node moved there, the dry run would stop exercising it");
   assert.deepEqual(
@@ -386,7 +392,7 @@ test("flip dryRun in the export and execute it: the plan node emits `create`, so
   const wf = withExportNoise(clone());
   const cfg = wf.nodes.find((n) => n.name === "01 Config");
   cfg.parameters.jsCode = cfg.parameters.jsCode.replace("dryRun: true", "dryRun: false");
-  const run = runCodeChain(wf, seed());
+  const run = runCodeChain(wf, seed(), { runAt: RUN_AT });
   assert.deepEqual(run.emitted["04 Plan & decide"].map((i) => i.json.action), ["create", "create"],
     "this is the moment verify-import.mjs calls fatal: the edge into 06 becomes live");
   assert.match(run.emitted["08 Report"][0].json.summary, /created 2026-11-21/);

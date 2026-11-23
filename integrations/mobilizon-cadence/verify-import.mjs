@@ -191,6 +191,11 @@ const mask = (s) => {
 /**
  * The check itself. Returns findings (severity, where, what, means) plus the two fingerprints and what the
  * exported copy would do.
+ *
+ * `ctx.runAt` pins the rehearsal clock for both executions (see `lib/sandbox.mjs`). The CLI never passes it -
+ * a live verify answers "what would the installed copy do today" - but a test that asserts a date has to say
+ * which day it is reasoning about, and pinning both copies is also the only way the "the two copies plan
+ * differently" finding below stays a finding about the two copies rather than about midnight.
  */
 export function verifyDocument(got, expected = CADENCE, ctx = {}) {
   const F = [];
@@ -473,8 +478,8 @@ export function verifyDocument(got, expected = CADENCE, ctx = {}) {
   // Only the cadence has a reasoning chain to execute: the probe's HTTP nodes are its whole payload, and
   // running nothing would report a warning that means "this is a probe" (D183).
   const runsAChain = expected.name === CADENCE.name;
-  const runExp = runsAChain ? planOf(expected) : { plan: [], skipped: [], report: null };
-  const runGot = runsAChain ? planOf(got) : { plan: [], skipped: [], report: null };
+  const runExp = runsAChain ? planOf(expected, ctx.runAt) : { plan: [], skipped: [], report: null };
+  const runGot = runsAChain ? planOf(got, ctx.runAt) : { plan: [], skipped: [], report: null };
   if (!runsAChain) {
     add("note", "execution", "this workflow has no reasoning chain to execute here",
       "its read-only argument is checked by build-probe.mjs' checkProbe, not by a rehearsal");
@@ -510,7 +515,7 @@ export function verifyDocument(got, expected = CADENCE, ctx = {}) {
  * credential and no possibility of a write.
  */
 let fixtureCache = null;
-function planOf(wf) {
+function planOf(wf, runAt) {
   try {
     fixtureCache ??= JSON.parse(readFileSync(`${here}fixtures/group-history-2026-11-04.json`, "utf8"));
     const seed = {
@@ -519,7 +524,7 @@ function planOf(wf) {
       // under `user.actors` - the plan node refuses to guess an organizer, so it has to be shaped right
       [N.signIn]: [{ json: { data: { login: { accessToken: "not-a-real-token", user: { id: "1", actors: [{ id: "3", preferredUsername: "chexxor", domain: null }] } } } } }],
     };
-    const { emitted, ran, skipped } = runCodeChain(wf, seed);
+    const { emitted, ran, skipped } = runCodeChain(wf, seed, { runAt });
     return {
       error: null, ran, skipped,
       plan: (emitted[N.plan] ?? []).map((i) => ({

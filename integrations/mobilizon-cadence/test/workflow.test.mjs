@@ -16,6 +16,7 @@ import { test, before } from "node:test";
 import assert from "node:assert/strict";
 import { runCodeNode } from "../lib/sandbox.mjs";
 import { LOUD_THROW } from "../lib/core.mjs";
+import { runAtOf } from "./clock.mjs";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -48,13 +49,25 @@ const codeOf = (name) => {
 const runCode = (name, itemsByName) => runCodeNode(codeOf(name), itemsByName);
 
 const FIXTURE = JSON.parse(readFileSync(root + "fixtures/group-history-2026-11-04.json", "utf8"));
+// The run day every date assertion below is about. `01 Config` stamps `runAt` from the wall clock and
+// `04 Plan & decide` plans against it, so an unpinned suite asserts about the day it ran on - which is how
+// these cases went red on their own (D192, D226; `test/clock.mjs` states the day once, and
+// `test/watchers.test.mjs` pins the heartbeat's the same way).
+const RUN_AT = runAtOf(FIXTURE);
 const historyItem = () => [{ json: { data: { group: FIXTURE.data.group } } }];
 // The shape node 03 really emits: Mobilizon's own response envelope. `accessToken`, not `sessionToken` -
 // measured against 5.2.4 on 2026-11-04 (`login(email,password) -> { accessToken refreshToken user }`).
 const signInItem = () => [{
   json: { data: { login: { accessToken: "session-token-not-a-real-one", user: { id: "1", actors: [{ id: "3", preferredUsername: "chexxor", domain: null }] } } } },
 }];
-const configItems = () => { const out = runCode("01 Config"); return Array.isArray(out) ? out : [out] };
+const configItems = () => {
+  const out = runCode("01 Config");
+  const items = Array.isArray(out) ? out : [out];
+  // Pin the clock the chain will reason with - the field `04 Plan & decide` reads (`nowIso: cfg.runAt`), not a
+  // `Date` override. The config node still runs its real text; only the emitted instant is stated.
+  for (const it of items) it.json.runAt = RUN_AT;
+  return items;
+};
 const plansFrom = () => runCode("04 Plan & decide", {
   "01 Config": configItems(),
   "02 Read the series history": historyItem(),

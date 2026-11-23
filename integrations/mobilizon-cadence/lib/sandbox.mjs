@@ -16,6 +16,11 @@
  *   `$env`, `$vars`, `$now`, `$item`, `$input`, `$nodeVersion`, paired-item matching, item streaming,
  *   and per-item mode. `build-probe.mjs` writes the one node that touches `$env`, and it can only be
  *   exercised inside n8n - which is why the probe exists.
+ *
+ * `runCodeChain` also takes an optional `runAt` - a rehearsal clock, for a caller that has to state which day
+ * it is reasoning about. See its docblock: it replaces the `runAt` field the chain reads, it does not touch
+ * `Date`, and `verify-import.mjs` never passes it, so a live verify still answers "what would the installed
+ * copy do today".
  */
 
 /**
@@ -84,15 +89,23 @@ export function mainChain(workflow) {
  * @param {{nodes: Array<object>}} workflow
  * @param {Record<string, Array<{json: unknown}>}} seed  items for nodes that are *not* Code nodes (the HTTP
  *        responses a run would have received)
+ * @param {{runAt?: string}} opts  `runAt` pins the clock the chain reasons with. `01 Config` stamps
+ *        `runAt: new Date().toISOString()`, and `04 Plan & decide` plans against `cfg.runAt` - so a test that
+ *        asserts a *date* is otherwise asserting about the day it happened to run on (D192 names the class,
+ *        D226 the day it fired; `test/watchers.test.mjs` pins the same field for the same reason). The pin
+ *        replaces that one emitted field rather than overriding `Date` for the process: the config node still
+ *        runs its real text, and nothing else in the sandbox sees the difference.
  */
-export function runCodeChain(workflow, seed) {
+export function runCodeChain(workflow, seed, { runAt } = {}) {
   const inChain = new Set(mainChain(workflow));
   const emitted = { ...seed };
   const ran = [], skipped = [];
   for (const n of workflow.nodes) {
     if (!/^n8n-nodes-base\.code/.test(n.type)) continue;
     if (!inChain.has(n.name)) { skipped.push(n.name); continue; }
-    emitted[n.name] = asItems(runCodeNode(n.parameters.jsCode, emitted));
+    const items = asItems(runCodeNode(n.parameters.jsCode, emitted));
+    if (runAt) for (const it of items) if (it && typeof it.json?.runAt === "string") it.json.runAt = runAt;
+    emitted[n.name] = items;
     ran.push(n.name);
   }
   return { emitted, ran, skipped };
