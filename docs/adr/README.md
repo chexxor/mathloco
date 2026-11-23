@@ -57,15 +57,20 @@ chosen by **which artifact a session could undo**, measured over `DECISIONS.inde
 | 0007 | Secrets are per-environment; a public snowflake is not a secret | `wrangler.toml` `[vars]`, secret scope | **D58** |
 | 0008 | One name per page at every surface, and the retired URL answers 301 | `astro.config.mjs` `redirects`, `NOINDEX_ROUTES`, sitemap `filter` | **D373** **D408** **D309** **D404** |
 | 0009 | The `/chat` archive is harvested offline, signed by hand, and rendered through one narrow view | `data/discord-threads.json`, `scripts/harvest-threads.mjs`, `src/lib/threads-view.mjs`, the `check:thread-topics` steps | **D461** **D464** **D465** **D73** |
+| 0010 | Event data arrives as a handoff commit; this repo reads `data/events.json` and never fetches | the four deleted fetchers and their `package.json` entries, `scripts/gate-run.mjs`, `check-ics.mjs`'s rule array | **D471** **D70** **D73** **D72** **D236** |
 
-Only **0001** and **0009** are written so far. The others are listed with their decision ids so the next session does
+Only **0001**, **0009** and **0010** are written so far. The others are listed with their decision ids so the next session does
 not have to re-derive the set; each lands as its own commit, with `DECISIONS.index.md` regenerated in the same commit
 if it mints a `D###`.
 
-**0009 is not from the 2026-11-19 candidate probe above.** It was added 2026-11-21 because **MS41**'s exit gate names
-`docs/adr/0009-*.md`, and it passes the admission test on its own terms: the artifacts a session could undo are
-named in its row, and the reason a later harvest may add entries but never rename a signed one (**D464**) is not
-recoverable from the JSON. Its id is the next free one — ids **0002**–**0008** are untouched and never renumbered.
+**0009 and 0010 are not from the 2026-11-19 candidate probe above.** 0009 was added 2026-11-21 because **MS41**'s
+exit gate names `docs/adr/0009-*.md`, and it passes the admission test on its own terms: the artifacts a session
+could undo are named in its row, and the reason a later harvest may add entries but never rename a signed one
+(**D464**) is not recoverable from the JSON. 0010 was added 2026-11-23 with **MS42**, and it is admitted by the
+third condition rather than by the probe: the undo is the most natural refactor in the repo — a date on the site
+looks wrong, a session greps for what writes `data/events.json`, finds no harvester, and writes one, creating a
+second writer to a path another repository commits to. Its id is the next free one — ids **0002**–**0008** are
+untouched and never renumbered.
 
 ## Rules for writing one
 

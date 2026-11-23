@@ -8,6 +8,13 @@ every session has already measured.
 Every claim below is either a command run in this repo or a citation to a decision id. Where a source is not
 yet wired, the contract says so in the same breath as the rule that will govern it.
 
+> **Who writes the snapshot is changing, and that half moved out of this file.** As of 2026-11-23 the writer of
+> `data/events.json` is a handoff commit from `chexxor/social-event-publisher`, not a harvester run inside this
+> repository. **`docs/spec/event-data-handoff.md`** owns the path, the branch and the shape rules, and
+> **ADR-0010** owns the why. This file keeps owning what a *page may say* about a source — the disagreement rule,
+> the time semantics, the silence rule — which does not move when the writer does. Where a sentence below still
+> names a harvester as the writer, it is describing the fetch era and is corrected as the fetchers are removed.
+
 Three questions a source must answer before any surface may read it:
 
 1. **Which fields do we read** — and which do we deliberately not read?
@@ -19,9 +26,10 @@ Three questions a source must answer before any surface may read it:
 ## 1. The disagreement rule (one rule, every surface)
 
 The site carries two calendars: Mobilizon's group feed, harvested into `data/events.json`, and Meetup's
-public event pages, read into `data/meetup-events.json`. Measured on 2026-11-09: the Mobilizon snapshot holds
-**4 rows** (3 open, 1 cancelled), the Meetup page lists **26 events, 16 still open**. Counting is not
-comparing; the rule that decides what a page prints is this:
+public event pages, read into `data/meetup-events.json`. (Both writers are being replaced by the handoff —
+`docs/spec/event-data-handoff.md` — and the counting figures below are dated reads from the fetch era.) Measured
+on 2026-11-09: the Mobilizon snapshot holds **4 rows** (3 open, 1 cancelled), the Meetup page lists **26 events,
+16 still open**. Counting is not comparing; the rule that decides what a page prints is this:
 
 - **Mobilizon is the record.** Date, hour, venue, status — what a visitor is *told* comes from the record
   (D70: the URL and the row shape are the durable part, the writer is separable; D73: the public site never
@@ -43,7 +51,9 @@ comparing; the rule that decides what a page prints is this:
   can bypass and a page check that does not trust the projection.
 - **What a source is silent about stays silent.** The harvest never deletes a row and never invents copy
   (`scripts/events-harvest.mjs` header, D236); a page prints "time not set" rather than an hour nobody
-  confirmed (D169, D172).
+  confirmed (D169, D172). That rule is **D236**'s, not the script's: it travels with the data whoever writes it,
+  and the publisher states the same two refusals on its side (`MH-FR-012`, and **D236**'s own words in
+  `docs/spec/event-data-handoff.md`).
 
 ## 2. Time semantics
 

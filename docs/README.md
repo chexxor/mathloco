@@ -49,13 +49,15 @@ expensive to undo, which is why it is here rather than in a chat log.
 | File | Dated | What it answers | Superseded by | Cited by (tracked, outside `docs/`) |
 |---|---|---|---|---|
 | `docs/spec/source-contract.md` | 2026-11-11 | Gate **G2**: what each source (Mobilizon, Meetup, Discord, the calendar feed) promises, what the site may say about it, and what it may never derive. Stage S2 exists because this file exists | — | 6 — incl. `scripts/events-harvest.mjs`, `scripts/discord-events.mjs`, `src/lib/rsvp.mjs`, `AGENTS.md` |
+| `docs/spec/event-data-handoff.md` | 2026-11-23 | Who writes `data/events.json` now, and what this repo may and may not do about it: the one path, the branch policy (`staging` while it is being tested, `main` once it works), the shape and stamp rules this repo's gate holds, and what to do when a check goes red without a harvester to run | — | 0 — new 2026-11-23; nothing outside `docs/` cites it yet |
 | `docs/adr/README.md` | 2026-11-19 | Which rulings are **ADRs** rather than log lines: the three-part admission test, and the eight numbered records with the `D###`/`S###` they project | — | 4 — `DECISIONS.index.md`, `MILESTONES.md`, `design/README.md`, `scripts/check-tables.mjs` |
 | `docs/adr/0001-deploy-target-workers.md` | 2026-11-19 | Why the deploy target is a Worker and not Pages, what the apex cutover retired, and what would reopen it. This file is what satisfies **G4**'s named `docs/adr/0001-*` | — | 2 — `MILESTONES.md`, `wrangler.toml` |
 
 Seven further ADRs are numbered in that index and **not yet written**; they are the debts, and `AGENTS.md` §Gates
 lists the two whose absence is load-bearing for a stage. The older roadmap assumed this directory would hold
-two `docs/spec/` files: it holds **one** today, because **G3**'s threat model is still unwritten — so a row
-count here is not a count of the plan's debts.
+two `docs/spec/` files: it holds **two** as of 2026-11-23 — `source-contract.md` and the new
+`event-data-handoff.md` — and **G3**'s threat model is still unwritten, so a row count here is not a count of the
+plan's debts.
 
 ---
 
