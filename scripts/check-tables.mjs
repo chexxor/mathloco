@@ -44,6 +44,12 @@ const FILES = [
   // MS40 P3 (2026-11-20, D458): docs/README.md is the router - its rows ARE the map of the corpus, and a row
   // that loses a cell loses the "what it answers" or the "superseded by" that made the page findable.
   'docs/README.md',
+  // MS42 (2026-11-23): the two `docs/spec/` contracts. Their tables are not illustration - the handoff doc's
+  // parity table is the evidence that no rendered event fact is lost, and a row that loses a cell loses the
+  // verdict for one field. The pitfall register already records the class: a backticked command containing a
+  // pipe invented a sixth cell in an MS40 row and two gates reported it as two different crimes.
+  'docs/spec/source-contract.md',
+  'docs/spec/event-data-handoff.md',
 ];
 
 // A hardcoded list is honest exactly as long as someone remembers to edit it - and the day it is forgotten,

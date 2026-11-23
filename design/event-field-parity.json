@@ -1,0 +1,433 @@
+{
+ "summary": {
+  "generatedAt": "2026-11-23",
+  "dist": "dist/client",
+  "rows": 8,
+  "icsEvents": 7,
+  "htmlPages": 6,
+  "fieldsCarried": 4,
+  "fieldsFeedOnly": 7,
+  "fieldsUnused": 4,
+  "externalLinks": 12,
+  "perDateEventLinks": 4,
+  "feedUrlEvents": 7,
+  "feedUrlPerDate": 6,
+  "feedUrlFromSnapshot": 1,
+  "datesOnPages": 5,
+  "datesWithPerDateLink": 4,
+  "rowUrlsOnHtml": 0
+ },
+ "fields": [
+  {
+   "field": "uid",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 7,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "slug",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 0,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "unused"
+  },
+  {
+   "field": "summary",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 2,
+   "onIcs": 2,
+   "htmlPages": [
+    "dates/index.html",
+    "past/index.html"
+   ],
+   "inStandard": true,
+   "verdict": "carried"
+  },
+  {
+   "field": "series",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 0,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "unused"
+  },
+  {
+   "field": "seriesNote",
+   "rowsCarrying": 0,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 0,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "absent"
+  },
+  {
+   "field": "start",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 7,
+   "onIcs": 7,
+   "htmlPages": [
+    "dates/index.html"
+   ],
+   "inStandard": true,
+   "verdict": "carried"
+  },
+  {
+   "field": "end",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 7,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "timeConfirmed",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 2,
+   "onIcs": 0,
+   "htmlPages": [
+    "dates/index.html"
+   ],
+   "inStandard": true,
+   "verdict": "carried"
+  },
+  {
+   "field": "venue",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 1,
+   "onIcs": 2,
+   "htmlPages": [
+    "dates/index.html"
+   ],
+   "inStandard": true,
+   "verdict": "carried"
+  },
+  {
+   "field": "geo",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 2,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "blurb",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 0,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "unused"
+  },
+  {
+   "field": "url",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 1,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "image",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 2,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "sequence",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 3,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "status",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 2,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "feed-only"
+  },
+  {
+   "field": "source",
+   "rowsCarrying": 8,
+   "rowsTotal": 8,
+   "onHtml": 0,
+   "onIcs": 0,
+   "htmlPages": [],
+   "inStandard": true,
+   "verdict": "unused"
+  }
+ ],
+ "links": [
+  {
+   "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+   "count": 2,
+   "pages": [
+    "dates/index.html",
+    "index.html"
+   ],
+   "platforms": [
+    "Meetup"
+   ],
+   "suppliedBy": [
+    "data/meetup-events.json"
+   ],
+   "perDateEventPage": true,
+   "survivesHandoff": false
+  },
+  {
+   "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+   "count": 1,
+   "pages": [
+    "dates/index.html"
+   ],
+   "platforms": [
+    "Meetup"
+   ],
+   "suppliedBy": [
+    "data/meetup-events.json"
+   ],
+   "perDateEventPage": true,
+   "survivesHandoff": false
+  },
+  {
+   "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+   "count": 1,
+   "pages": [
+    "dates/index.html"
+   ],
+   "platforms": [
+    "Meetup"
+   ],
+   "suppliedBy": [
+    "data/meetup-events.json"
+   ],
+   "perDateEventPage": true,
+   "survivesHandoff": false
+  },
+  {
+   "href": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+   "count": 1,
+   "pages": [
+    "dates/index.html"
+   ],
+   "platforms": [
+    "Meetup"
+   ],
+   "suppliedBy": [
+    "data/meetup-events.json"
+   ],
+   "perDateEventPage": true,
+   "survivesHandoff": false
+  },
+  {
+   "href": "https://discord.com/invite/wx5S7YJSkU",
+   "count": 10,
+   "pages": [
+    "404.html",
+    "chat/index.html",
+    "dates/index.html",
+    "index.html",
+    "join/index.html",
+    "past/index.html"
+   ],
+   "platforms": [
+    "Discord"
+   ],
+   "suppliedBy": [
+    "src/config.json"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://matheapolis.com",
+   "count": 2,
+   "pages": [
+    "404.html",
+    "index.html"
+   ],
+   "platforms": [],
+   "suppliedBy": [
+    "not attributable to a tracked input"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://matheapolis.com/chat",
+   "count": 1,
+   "pages": [
+    "chat/index.html"
+   ],
+   "platforms": [],
+   "suppliedBy": [
+    "not attributable to a tracked input"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://matheapolis.com/dates",
+   "count": 1,
+   "pages": [
+    "dates/index.html"
+   ],
+   "platforms": [],
+   "suppliedBy": [
+    "not attributable to a tracked input"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://matheapolis.com/join",
+   "count": 1,
+   "pages": [
+    "join/index.html"
+   ],
+   "platforms": [],
+   "suppliedBy": [
+    "not attributable to a tracked input"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://matheapolis.com/past",
+   "count": 1,
+   "pages": [
+    "past/index.html"
+   ],
+   "platforms": [],
+   "suppliedBy": [
+    "not attributable to a tracked input"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://www.facebook.com/groups/matheapolis",
+   "count": 2,
+   "pages": [
+    "dates/index.html",
+    "join/index.html"
+   ],
+   "platforms": [
+    "Facebook"
+   ],
+   "suppliedBy": [
+    "src/config.json"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  },
+  {
+   "href": "https://www.meetup.com/minneapolis-mathematics-book-club",
+   "count": 10,
+   "pages": [
+    "404.html",
+    "chat/index.html",
+    "dates/index.html",
+    "index.html",
+    "join/index.html",
+    "past/index.html"
+   ],
+   "platforms": [
+    "Meetup"
+   ],
+   "suppliedBy": [
+    "src/config.json"
+   ],
+   "perDateEventPage": false,
+   "survivesHandoff": true
+  }
+ ],
+ "feedUrls": [
+  {
+   "uid": "76a29f38-e8f3-46a3-ab36-3009d69afe65",
+   "url": "https://mobilizon.labradorius.com/events/76a29f38-e8f3-46a3-ab36-3009d69afe65",
+   "suppliedBy": "data/events.json (the row's own url)",
+   "perDateEventPage": false
+  },
+  {
+   "uid": "1605e0e6-aff0-46df-b342-a2e2a19af6e0",
+   "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/",
+   "suppliedBy": "data/meetup-events.json",
+   "perDateEventPage": true
+  },
+  {
+   "uid": "649bf59a-1989-43c2-b336-46f79ce403b1",
+   "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317242488/",
+   "suppliedBy": "data/meetup-events.json",
+   "perDateEventPage": true
+  },
+  {
+   "uid": "bccd6c33-c3c1-487f-b52d-887374e79134",
+   "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/",
+   "suppliedBy": "data/meetup-events.json",
+   "perDateEventPage": true
+  },
+  {
+   "uid": "ad58ce62-65e3-47c1-9806-74166b7c6808",
+   "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbhb/",
+   "suppliedBy": "data/meetup-events.json",
+   "perDateEventPage": true
+  },
+  {
+   "uid": "97b75e15-af79-4aa5-a87b-d8938baf1464",
+   "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/tqswbvyjcqbmb/",
+   "suppliedBy": "data/meetup-events.json",
+   "perDateEventPage": true
+  },
+  {
+   "uid": "e69a8833-0c07-41cd-a235-329b369239b7",
+   "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/lpswbvyjcqbzb/",
+   "suppliedBy": "data/meetup-events.json",
+   "perDateEventPage": true
+  }
+ ],
+ "datesOnPages": [
+  "2026-11-21",
+  "2026-11-25",
+  "2026-12-05",
+  "2026-12-09",
+  "2026-12-19"
+ ],
+ "datesWithPerDateLink": [
+  "2026-11-25",
+  "2026-12-05",
+  "2026-12-09",
+  "2026-12-19"
+ ]
+}

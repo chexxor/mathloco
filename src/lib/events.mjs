@@ -14,11 +14,18 @@ import tracked from '../../data/events.json';
 // The date/eligibility/window rules live in a JSON-free module so `scripts/` can check the built page against
 // them instead of against a copy of them (the same split `ics-data.mjs` makes for the feed). Re-exported here so
 // every existing importer keeps importing one module.
-import { isUpcoming, startDate, todayInZone } from './event-window.mjs';
+import { isUpcoming, todayInZone } from './event-window.mjs';
 export { addDays, HORIZON_WEEKS, MAX_ROWS, scheduleWindow } from './event-window.mjs';
 // The published-name vocabulary lives with the grouping rules, so one module decides both which rows are
-// one meeting and what that meeting is called on the page (D339, round-4 read §3 D-C).
-import { publishedName } from './event-groups.mjs';
+// one meeting and what that meeting is called on the page (D339, round-4 read §3 D-C). It reaches the page
+// through `event-item.mjs`, which imports it directly.
+// The row -> item projection lives in a JSON-free module for the same reason the window rules do: a script
+// that checks the built page has to recompute what the page should paint from the code the page runs, and a
+// plain `node` process cannot import `data/events.json` (MS42, D264). Re-exported here so every existing
+// importer keeps importing one module, and the default argument stays here because it is the one thing in
+// the signature that needs the snapshot.
+import { asUpcomingItems as itemsFromRows } from './event-item.mjs';
+export { hasConfirmedTime, displayTime, displayEndTime, venueLine } from './event-item.mjs';
 
 // A review-only overlay, the same trick src/lib/content.ts uses for its slots (D120's render-harness note):
 // files in gitignored `src/content.local/` merge over the tracked snapshot in filename order, so a session can
@@ -54,45 +61,8 @@ export const events = () =>
 
 export const upcomingEvents = (today = todayIn()) => events().filter((e) => isUpcoming(e, today));
 
-/** Whether the organizer has settled the hour. Until then the feed publishes a DATE, not an instant (D169). */
-export const hasConfirmedTime = (row) => row.timeConfirmed === true;
-
-/** The hour for a page, or null — an unconfirmed hour is stated as unknown, never defaulted (DESIGN.md). */
-export const displayTime = (row) => (hasConfirmedTime(row) ? String(row.start).slice(11, 16) : null);
-
-/** The other end of the span, or null. Same rule as `displayTime`: never a defaulted hour (DESIGN.md). */
-export const displayEndTime = (row) => (hasConfirmedTime(row) && row.end ? String(row.end).slice(11, 16) : null);
-
-/** The one-line venue a visitor can navigate to. `raw` is the organizer's string, kept verbatim in the feed. */
-export const venueLine = (row) => {
-  const v = row.venue;
-  if (!v) return null;
-  return [v.name, v.street, v.city].filter(Boolean).join(', ');
-};
-
 /**
- * `content.ts`'s `upcoming()` shape, so the hero label and the schedule section read events exactly as they
- * read any other club fact: a missing piece is a named hole, and `time: null` renders "time not set".
+ * The row -> item shape a page is handed. The arithmetic lives in `event-item.mjs`; this wrapper only
+ * supplies the default rows, which is the part that needs the snapshot.
  */
-export const asUpcomingItems = (rows = upcomingEvents()) =>
-  rows.map((row) => ({
-    date: startDate(row),
-    time: displayTime(row),
-    endTime: displayEndTime(row),
-    // The row heading is the site's own word for the format, not the organizer's spelling (D339, round-4 read
-    // §3 D-C): `publishedName` maps every name the snapshot carries onto the two formats `/join` already
-    // defines, and throws naming the string for a name the site does not define, which fails the build. D92's
-    // rule still holds in the other direction — a frequency word stays off the page, and `seriesNote` is still
-    // the only second line a row may print. The organizer's spelling survives in `data/events.json` and in
-    // `/events.ics` as the organizer's quotation (D189).
-    title: publishedName(row),
-    // The row's key, not a fact for the page: it used to name a file (`event-<slug>.png`, PS-4, D190), which put the
-    // row's date inside the asset's name; R7's rule of 2026-11-16 (D359) names an asset by role + media identity
-    // instead, so an attachment still follows the meeting rather than its position in the list, and a filename no
-    // longer asserts a date.
-    slug: row.slug ?? null,
-    series: row.seriesNote ?? null,
-    status: String(row.status ?? '').toUpperCase() === 'CANCELLED' ? 'Cancelled' : null,
-    venue: venueLine(row),
-    url: row.url ?? null,
-  }));
+export const asUpcomingItems = (rows = upcomingEvents()) => itemsFromRows(rows);

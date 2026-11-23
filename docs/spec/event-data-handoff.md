@@ -104,6 +104,92 @@ agreeing, a build goes red in both repositories rather than one team discovering
 `@measured` blob ids the far side records for the two copies are `bc52bf4b3feea80896ea88b206c5d118a393aaf8` and
 `442abd71b8ba6396773e967a0a5edbdfadb60e64`.
 
+## What a built page renders today, and what the standard carries
+
+The claim "nothing a visitor sees today is lost" cannot be made by reading `src/`: a field can be imported and
+never painted, and a link can be painted from a file nobody thinks of as an event input. So the probe is
+`design/event-field-parity.mjs` — it reads the **artifact** (`dist/client`, the built pages and the built
+`/events.ics`) and answers, per field and per link, where the bytes came from. Its machine-readable output is
+`design/event-field-parity.json`.
+
+@measured 2026-11-23 by `node design/event-field-parity.mjs` over a fresh `npm run build` (Linux native, Node
+24.22.1): **6** built pages, **8** snapshot rows, **7** published VEVENTs, **12** distinct external hrefs,
+**4** of them per-date platform pages, and **6 of 7** VEVENTs whose `URL` property is a per-date platform page.
+
+| Fact a surface shows | Where it appears today | What supplies it today | The standard's field | Verdict |
+|---|---|---|---|---|
+| the date | `/dates`, `/past`, the home row | `events.json` `start` | `start` | carried |
+| the hour, and "time not set" | `/dates` | `start` + `timeConfirmed` (`displayTime` in `src/lib/event-item.mjs`) | `start`, `timeConfirmed` | carried |
+| the end of the span | the feed only | `end` | `end` | carried |
+| the venue line | `/dates` (page) and `LOCATION` (feed) | `venue.name/street/city`, `venue.raw` | `venue` | carried |
+| the coordinates | `GEO` in the feed only | `geo` | `geo` | carried |
+| the row art | `ATTACH` in the feed only | `image` | `image` | carried |
+| the organizer's own description | nowhere — deliberately | `blurb` is **not** published (**D319**: the feed's body is authored in `src/lib/event-description.mjs`) | `blurb` | carried, and refused on purpose |
+| the format word under the title | `/dates` | `seriesNote` (0 of 8 rows carry one today, so the slot is empty, not missing) | `seriesNote` | carried |
+| the organizer's series name | nowhere | `series` — the page prints the club's own word via `publishedName` (**D339**) | `series` | carried, not painted |
+| "Cancelled" | the feed's `STATUS` only | `status` | `status` | carried |
+| the row heading | `/dates`, `/past`, `SUMMARY` | `summary` through `publishedName` | `summary` | carried |
+| `uid`, `sequence`, `source` | the feed (`UID`, `SEQUENCE`) | same fields | carried | carried |
+| **a link to the event on each platform it is published on** | **4 links across `/dates` and `/`, and 6 of 7 feed `URL` properties** | **`data/meetup-events.json`** (and `data/discord-events.json`, whose one row is expired) | **there is no such field** — the row carries one `url`, and it is the Mobilizon page | **missing on both sides** |
+
+Two things that table settles, and neither is a guess:
+
+1. **The row's own `url` reaches no page.** It appears in the feed for exactly **1 of 7** VEVENTs — the other
+   **6** publish the per-date Meetup page, because `src/lib/ics.mjs:203` publishes `own ?? row.url` and `own` is
+   `feedUrl(row, MEETUP_EVENTS)`. So the feed carries the same dependency the page does; this is not only a
+   link-in-the-UI question.
+2. **The per-date links come from a file this item deletes.** `signUpPaths()` in `src/lib/rsvp.mjs:440` matches a
+   date+hour against `data/meetup-events.json` and `data/discord-events.json`; when nothing matches it falls back
+   to the standing group URLs in `src/config.json` (`meetupGroup`, `discordInvite`, `facebookGroup`). Retiring
+   those two files therefore costs **4 of the 5 dates painted on a page** their per-date link, and leaves every
+   date with the standing group link instead. That fallback is already written and already ruled on
+   (`docs/spec/source-contract.md` §1: a date only on Meetup is printed as booked, not confirmed).
+
+The same two files are read by `scripts/check-rsvp-page.mjs`, `scripts/check-rsvp-preference.mjs` and
+`scripts/check-ics.mjs` (`:41`, `feedUrl`), so retiring them re-rules three gates, not one. That is named here so
+the gate work is scheduled rather than discovered.
+
+## The change request: a per-platform link set
+
+This is a request to `social-event-publisher`, written here rather than invented in this repository's copy of the
+schema. The operator's words when the item was ruled: "in the ideal state, we have a link to the event for each
+platform that the event is published on." Today the standard cannot express that, and neither can this repo's
+gate — the row whitelist is sixteen fields and `url` is one string.
+
+**What is asked for.** One added row field, an array, ordered, with a closed platform vocabulary:
+
+```json
+"links": [
+  { "platform": "mobilizon", "url": "https://mobilizon.labradorius.com/events/bccd6c33-…" },
+  { "platform": "meetup",    "url": "https://www.meetup.com/minneapolis-mathematics-book-club/events/317306783/", "seenAt": "2026-11-09T06:42:38Z", "open": true }
+]
+```
+
+**The rules the field has to obey, and why each one is there.**
+
+| Rule | Why |
+|---|---|
+| `platform` is a closed vocabulary this repo names (`meetup`, `discord`, `facebook`, `mobilizon`) | an open vocabulary means a fifth platform appears as a link with no label, no shape check and no `sr-only` qualifier (`newTabQualifier`, **D273**) |
+| each `url` matches the shape its platform can have | this repo already refuses a wrong-shaped URL: `LINK_SHAPES` in `src/lib/rsvp.mjs`, enforced by `check:rsvp` |
+| `open` (or an equivalent) says whether the platform's page is still accepting a response | a completed event page painted as a standing exit is a defect this repo already plants for — `check-rsvp-page.mjs`'s `a completed guild event painted as a standing link` |
+| `seenAt` is one instant per read, in the same shape as `source.fetchedAt` | a link with no stamp is a claim nobody can age out; the 60-day stamp rule (`src/config.json`'s `URLs._rule`, **S019**, **D272**) exists because an off-site URL is a promise about a site this club does not control |
+| no headcount, no attendee list, no member-derived string | **D258** (a headcount is a count of people read at an instant on a platform the club does not control) and **D265**/**D272** (the projection omits `going` and the page check fails a count that reaches a byte) |
+| the row's existing `url` stays, and is the canonical page | `MH-FR-025` (the publisher names the feed and composes nothing) and **D398** (the feed and the page must not disagree about where the sign-up page is) |
+| at most one entry per `platform` per row | two Meetup pages on one hour is a real state today (`matchPages` returns several and the row then labels each with the event's own title); a set that can repeat a platform makes "the Meetup link" ambiguous |
+
+**What this repo will do with it, the day it lands.** `signUpPaths()` gets its destinations from the row instead
+of from a second file, `data/meetup-events.json` and `data/discord-events.json` stop being inputs to anything,
+`feedUrl()` collapses to the row's own entry, and `check:rsvp-page` compares the painted cluster against the row
+rather than against a snapshot of someone's scrape. No new gate is needed: the cluster rule, the link-shape rule
+and the `sr-only` rule already exist and simply change what they read.
+
+**What happens if it is refused.** The per-date links leave the site and the standing group links stay — that
+fallback is already the code path for a date with no platform page, so the failure is a smaller site, not a
+broken one. The fact does **not** come back through a scraper, and it is not smuggled in as a `_`-prefixed key:
+`MH-FR-006` carries those byte-for-byte, which would make this repo's prose an input to a rendering rule — the
+exact inversion **D236** and **D319** refuse.
+
+
 ## When a check goes red now
 
 | Finding | What it means under the handoff | What to do |
