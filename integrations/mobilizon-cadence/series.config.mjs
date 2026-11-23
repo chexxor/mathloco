@@ -225,8 +225,10 @@ export const SERIES = [
     // Quoted from the organizer's row, verbatim. This string is the dedupe key as well as the new row's
     // title, so an edit here must match the Mobilizon title or the series stops being recognised (the run
     // will alert rather than silently create a second series).
-    // The word "Bimonthly" is the organizer's, not ours: D92 keeps frequency words off the *site*, and the
-    // harvester already quotes this title rather than rewriting it.
+    // The word "Bimonthly" is the organizer's, not ours: D92 keeps frequency words off the *site*. This title is
+    // quoted verbatim rather than rewritten, because it is the dedupe key against the organizer's row. The word
+    // stays off the page because the site prints the handoff row's own `series` field ("MPLS Math Club Social",
+    // the ruled name, D189), never this title.
     title: "MPLS Math Club - Bimonthly Social",
     aliases: ["MPLS Math Club Social", "Bimonthly Social"], // earlier titles, so a rename does not orphan the history
     groupActor: "minneapolis_math_book_group",

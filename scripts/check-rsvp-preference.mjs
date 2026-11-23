@@ -52,7 +52,7 @@
 import { existsSync, readFileSync, cpSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-import { PLATFORMS, PREF_KEY, signUpPaths, splitPaths, preferredFirst } from '../src/lib/rsvp.mjs';
+import { EVENT_PAGES, PLATFORMS, PREF_KEY, signUpPaths, splitPaths, preferredFirst } from '../src/lib/rsvp.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -442,8 +442,6 @@ const plantings = (home, pageFile, chunkName, chunk) => {
 };
 
 const inputs = {
-  meetup: readJson(resolve('data/meetup-events.json')),
-  discord: readJson(resolve('data/discord-events.json')),
   config: readJson(resolve('src/config.json')),
 };
 for (const r of Object.values(inputs)) {
@@ -460,8 +458,11 @@ if (!existsSync(SERVE) || !existsSync(PROBE)) {
 rmSync(SCRATCH, { recursive: true, force: true });
 mkdirSync(SCRATCH, { recursive: true });
 
-const meetupEvents = inputs.meetup.data.events ?? [];
-const discordEvents = inputs.discord.data.events ?? [];
+// MS42 (S092, D471): the per-date page lists are the resolver's own `EVENT_PAGES`, not two snapshots this repo
+// scraped for itself. The probe therefore re-derives the order from exactly the list the build had, and the day
+// the handoff carries a per-platform link set this line follows it without a second read of a data file.
+const meetupEvents = EVENT_PAGES.meetup;
+const discordEvents = EVENT_PAGES.discord;
 const urls = inputs.config.data.URLs ?? {};
 
 if (!selftest) {

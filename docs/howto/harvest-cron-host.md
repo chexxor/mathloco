@@ -1,12 +1,21 @@
-# Where the harvest cron runs, and what it is allowed to touch
+# Where a fetch cron runs, and what it is allowed to touch
 
 > Moved on 2026-11-20 (**MS40 P2**, **S083**, **D456**) from the host-local runbook home (the gitignored
 > `.notes/runbooks/`) to `docs/howto/harvest-cron-host.md`, where a path literal in this file has to resolve. A dated citation elsewhere
 > in this repo that names the old home means the file here with the same name.
 
-Symptoms: "install the harvest cron", "where should the harvest run", "can n8n do it", "does the harvest need a
-token", "the snapshot is stale and nothing said so", "Gitea/Forgejo Actions?", "can it live in a container on
-Unraid?"
+> **Superseded as an instruction, kept as a measurement (2026-11-23, MS42, S092, ADR-0010).** The job this file
+> evaluated — `npm run events:harvest` → `node scripts/events-harvest.mjs` — **is deleted from this repository**.
+> Event data now arrives as one commit from `social-event-publisher` (`docs/spec/event-data-handoff.md`), so the
+> question "where does the fetch cron run?" is answered in **that** repository, not here. What still transfers is
+> the measurement: a fetch of a public feed needs **no credential**, needs **no dependencies**, is one anonymous
+> GET, and the scheduling options rank the same way wherever the job lives. **Every command below that names
+> `scripts/events-harvest.mjs` is void in this tree** — read them as the shape of the job, not as something to
+> paste here. This repo's own freshness backstop is `check:ics`: the `runway` rule and the `stale-snapshot` rule
+> (**D471**) fail a build when the file's single stamp ages past 21 days.
+
+Symptoms: "where should a fetch cron run", "can n8n do it", "does a harvest need a token", "the snapshot is stale
+and nothing said so", "Gitea/Forgejo Actions?", "can it live in a container on Unraid?"
 
 Ruling so far: **3(a), 2026-11-07** — the harvest runs from the home server, **daily**, and the **push stays the
 operator's**: a harvest lands something to review, never a publish. It has **no `D###` id** — it exists only as
@@ -24,14 +33,15 @@ that kind; the install half is a hand-off, marked as such in the index row.
 
 ## What the job actually is (measured 2026-11-07, Fedora 45 native, Node 22.23.4 from `.nvmrc`)
 
-`npm run events:harvest` → `node scripts/events-harvest.mjs`. Read the file; it is 240 lines and imports only
-`node:fs` and `node:path`.
+The job measured here was `npm run events:harvest` → `node scripts/events-harvest.mjs` (240 lines, importing only
+`node:fs` and `node:path`). Deleted 2026-11-23; the table is what was measured about it, and it is the closest
+thing this tree now has to a spec for the publisher's run.
 
 | need | answer | how it was measured |
 |---|---|---|
 | runtime | Node ≥ 18 (top-level `await`, global `fetch`). Repo pins **22.23.4** (`.nvmrc`, D31) | `node -v` + reading the imports |
 | dependencies | **none** — no `node_modules`, no `npm ci`, no lockfile, no build step | the import list |
-| secrets | **none.** The script reads no `process.env` at all | `grep -n "process.env" scripts/events-harvest.mjs` → nothing |
+| secrets | **none.** The script read no `process.env` at all | `grep -n "process.env"` over the file, 2026-11-07 (the file is deleted; the answer is kept) |
 | network | one unauthenticated HTTPS GET of `source.url` from `data/events.json` | `curl -sS https://mobilizon.labradorius.com/@minneapolis_math_book_group/feed/ics` → **200**, `text/calendar; charset=utf-8`, **4184** bytes, 39ms (LAN view; that name resolves to **192.168.1.120** from inside the LAN, `getent hosts`) |
 | filesystem | reads and rewrites **`data/events.json`**, relative to the **current directory** (`resolve(argOne('--out','data/events.json'))`) → a runner that does not `cd` into the checkout just fails, or worse, writes a file somewhere unexpected | reading the file + running a dry run |
 | exit status | `0` ok, `1` feed HTTP failure, `2` no feed url → cron-level alerting is a shell `if` | reading the file |
@@ -67,7 +77,9 @@ operator") already assumes. Anything below is written to be pasted by the operat
 
 ## The options
 
-Ranked. "Access it gains" is the part that decides it, not the scheduling syntax.
+Ranked. "Access it gains" is the part that decides it, not the scheduling syntax. **Void in this tree since
+MS42** — the unit files and cron lines below name a script that no longer exists here. They are kept because the
+ranking and the syntax transfer to whichever host runs the publisher's fetch, and re-deriving them cost a session.
 
 ### 1. A `systemd` timer (or plain cron) on the Yunohost host, in a **dedicated** checkout — recommended
 
@@ -85,6 +97,11 @@ Ranked. "Access it gains" is the part that decides it, not the scheduling syntax
   editing the same file is that pitfall, scheduled.
 
 Install (operator, on the box). Read the two verification lines first; the rest assumes their answers.
+
+**Void in this tree since MS42 (2026-11-23).** The blocks below were written against
+`scripts/events-harvest.mjs`, which is deleted from this repository. They are kept because the unit syntax, the
+`WorkingDirectory=` trap (the fetcher resolved `data/events.json` from cwd) and the journald/`Persistent=`
+reasoning transfer to whichever host runs the publisher's fetch. Do not go looking for that path in this tree.
 
 ```bash
 # 1. Verify the runtime the cron will see — NOT the shell's. cron's PATH is /usr/sbin:/bin:/usr/bin.
@@ -210,9 +227,11 @@ fire on the **default branch only**.
   there); an Unraid box is normally always on; it is the option that does not touch the app host at all.
 - **Cons:** Unraid does not schedule a container command natively, so you add a supervisor running cron inside
   the container (or a community template) — that is a scheduler, a container, an image and a mount, all
-  scaffolding around `node scripts/events-harvest.mjs --write`; the job needs no dependencies, so the
+  scaffolding around one `node` call (the fetcher it wrapped, `node scripts/events-harvest.mjs --write`, is
+  deleted here — MS42); the job needs no dependencies, so the
   isolation buys nearly nothing; and the checkout now lives in a third place (Unraid share, container, dev box),
-  which makes the review step the hard part instead of the easy part.
+  which makes the review step the hard part instead of the easy part. (The "scaffolding around one `node` call"
+  line below names the deleted fetcher — same void as the install blocks above.)
 
 ## What to measure if the ranking is contested (cheapest first)
 
@@ -220,8 +239,10 @@ fire on the **default branch only**.
    instance — `integrations/mobilizon-cadence/n8n/env-probe.json` is the repo's own probe for this class of
    question (`docs/howto/n8n-cadence-preconditions.md`); the answer is 4 minutes and it settles option 2's
    cost without arguing from docs.
-2. `node scripts/events-harvest.mjs` (no `--write`) **on the host that would run it** — settles the reachability
-   question the roadmap note left open, for whichever host is in question.
+2. The fetch command (dry, no write) **on the host that would run it** — settles the reachability question the
+   roadmap note left open, for whichever host is in question. Before MS42 that command was this repo's own
+   `node scripts/events-harvest.mjs`; it is deleted, so today the measurement belongs to
+   `social-event-publisher`.
 3. `yunohost app list` and `yunohost app info n8n` on the box — what the app's own cron does (an app that owns a
    cron entry is a place a job can live *inside* the app's upgrade lifecycle, which is a different tradeoff from
    a hand-written unit file).

@@ -10,9 +10,10 @@ import { scheduleWindow } from '../lib/event-window.mjs';
 import { rhythmSentence } from '../lib/rhythm.mjs';
 // The primary control's destination is the resolver's answer for the date the hero prints, so the hero cannot
 // point at a page the row under it disagrees with (D384). One call to the same `signUpPaths()` the rows use.
-import meetupSnapshot from '../../data/meetup-events.json';
-import discordSnapshot from '../../data/discord-events.json';
-import { signUpPaths, splitPaths } from '../lib/rsvp.mjs';
+// MS42 (S092, D471): the per-date page lists come from `EVENT_PAGES` in the resolver, and it is empty until the
+// handoff carries a per-platform link set — so today this control falls back to the group's join page, and the
+// label below says what it is.
+import { EVENT_PAGES, signUpPaths, splitPaths } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
 
 // This column used to hold a stock crowd photograph (`src/assets/math-group-image.jpg`, 6000x4000,
@@ -134,14 +135,23 @@ const copied = copiedOn();
 // sign-up page exists for it, the control falls back to `/join`, the club's own route, and the label says
 // what it is: a way in, not a sign-up for a date that does not exist.
 const signUpFor = nextMeeting
-  ? splitPaths(signUpPaths(nextMeeting, meetupSnapshot.events, config.URLs, discordSnapshot.events), config.URLs).row[0] ?? null
+  ? splitPaths(signUpPaths(nextMeeting, EVENT_PAGES.meetup, config.URLs, EVENT_PAGES.discord), config.URLs).row[0] ?? null
   : null;
 // The hero's own words for the destination the resolver chose. The accessible-name suffix is derived from THESE
 // words rather than copied off the row: `newTabQualifier` adds the platform only when the label does not already
 // name it (**S041**), and the hero's label names the date, not the platform - so a suffix computed from the row's
 // label ("Sign up on Meetup") would tell a screen reader nothing, which is the D273 defect in a new place. The
 // href still comes from the resolver, so D384's coupling between this button and the row for that date is intact.
-const heroLabel = signUpFor ? `Sign up for ${formatDate(nextMeeting.date, 'short')}` : 'Join the club';
+// The label has to name the destination the resolver actually has. A page for this date is a sign-up *for that
+// date*, so the label names the date (round-6 item 3: one click to conversion, D384). A standing club-wide link
+// is a different ask — it enrols the visitor in a group — so the label is the resolver's own words for it, and
+// `perDate` is what tells the two apart: the same boolean `ctaIdFor()` names the destination with, carried on the
+// object so no surface can label a group join as a date's sign-up. `scripts/check-cta-context.mjs` (S090, D467)
+// is the gate that fails the build when that happens. Since MS42 the standing branch is the branch every printed
+// date takes, until the handoff carries a per-platform link set (docs/spec/event-data-handoff.md).
+const heroLabel = signUpFor
+  ? (signUpFor.perDate ? `Sign up for ${formatDate(nextMeeting.date, 'short')}` : signUpFor.label)
+  : 'Join the club';
 ---
 
 {/* The hero's own air is **64px top and bottom at every width**, which is a ruling rather than a tidy

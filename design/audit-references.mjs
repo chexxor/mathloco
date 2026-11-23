@@ -90,6 +90,19 @@ const KNOWN_GONE = {
   'src/components/icons/Medium.astro': 'deleted 2026-11-14 (D316 round) — same as Instagram.astro: never imported, shipped nothing',
   'src/components/icons/Twitter.astro': 'deleted 2026-11-14 (D316 round) — same as Instagram.astro: never imported, shipped nothing',
   'src/components/JoinCommunity.astro': 'deleted 2026-11-07 (D228) — its content did not die, it moved: its heading ("Come once" until the same day\u2019s copy pass retired the theme, D239 — the band is headed "When We Meet" now), "How it works", the PS-3 join media and the two paths out are now the bottom of the compact schedule band in src/components/Schedule.astro, because a date and how you come to it are one question and the landing page was answering them in two bands with two headings. Cited by dated evidence (design/drift.json, the phase-1 measurement) and one-shot history (design/apply-batch2.mjs, design/apply-batch3.mjs), which are records, not live tooling',
+  // The four event fetchers, deleted 2026-11-23 under **MS42**/**S092**/**ADR-0010**. Every remaining citation of
+  // them is a record of the deletion, not a pointer to run: `docs/adr/0010-*` is the ADR whose whole subject is
+  // that these files are gone; `docs/spec/source-contract.md` and `docs/howto/harvest-cron-host.md` name them in
+  // the past tense and mark the install snippets void; `docs/reply-to-...round-6...` is a dated letter; and the
+  // comments in `src/lib/rsvp.mjs`, `src/lib/event-groups.mjs`, `src/lib/cadence.mjs` and
+  // `src/components/SignUpLinks.astro` say what used to supply a fact so a reader knows why the fact is missing
+  // now. Deleting those sentences would be the gate destroying the thing it checks. The rule they used to enforce
+  // survives in the reader: `MEETUP_URL_SHAPE`/`DISCORD_EVENT_URL_SHAPE` in `src/lib/rsvp.mjs`, and `check:ics`
+  // auditing the file that arrives.
+  'scripts/events-harvest.mjs': 'deleted 2026-11-23 (**MS42**, **S092**, **ADR-0010**, **D471**) — the fetch moved to `social-event-publisher`, which writes `data/events.json` as one commit (`docs/spec/event-data-handoff.md`). Cited only as the record of that move: the ADR that orders it, the G2 contract\u2019s past-tense sentences, `docs/howto/harvest-cron-host.md` (whose install snippets are marked void in this tree), and provenance comments naming what used to supply a fact',
+  'scripts/events-harvest-selftest.mjs': 'deleted 2026-11-23 with the fetcher it planted defects against (**MS42**, **ADR-0010**). The rules it proved (the cancelled-UID guard, byte-identical venue reuse, a TZID declaring the hour, rows never deleted) moved to the writer; this repo keeps the reader\u2019s half, `check:ics:selftest`. Cited by `docs/adr/0010-*` and by the `scripts/gate-run.mjs` comment that records why the step left the set',
+  'scripts/meetup-events.mjs': 'deleted 2026-11-23 (**MS42**, **ADR-0010**) — it wrote `data/meetup-events.json`, the per-date Meetup page this site used to paint. The standard carries no per-platform link set, so that fact is a **written change request** (`docs/spec/event-data-handoff.md` §"The change request") rather than a re-scrape. Its shape rule survives as `MEETUP_URL_SHAPE` in `src/lib/rsvp.mjs`, still applied by `openMeetupEvents()` and both rsvp gates',
+  'scripts/discord-events.mjs': 'deleted 2026-11-23 (**MS42**, **ADR-0010**) — it wrote `data/discord-events.json` (one row, expired). `DISCORD_EVENT_URL_SHAPE` and the `discord-date` CTA registry row stay, because the code path is live and the club has posted guild events before; the page set it read is now `EVENT_PAGES.discord`, empty until the handoff carries the link set. Cited by a dated letter (2026-11-16) and by `docs/adr/0010-*`',
 };
 
 // Paths a run does not need yet, and shapes a skill names before it writes: exempt with a reason.

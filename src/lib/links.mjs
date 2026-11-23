@@ -143,8 +143,11 @@ export const CALL_TO_ACTION = {
     pathContains: '/events/',
     says: '',
   },
-  // The same tier, on the other platform: `signUpPaths()` returns a Discord guild scheduled event when
-  // `data/discord-events.json` carries an open one on the date (`DISCORD_EVENT_URL_SHAPE`). It paints **0 times**
+  // The same tier, on the other platform: `signUpPaths()` returns a Discord guild scheduled event when the page set
+  // it is given carries an open one on the date (`DISCORD_EVENT_URL_SHAPE`). Since **MS42** that set is
+  // `EVENT_PAGES.discord` in `src/lib/rsvp.mjs`, which is **empty** — the file it used to read,
+  // `data/discord-events.json`, is deleted and the standard carries no per-platform link set yet
+  // (`docs/spec/event-data-handoff.md`). It paints **0 times**
   // on the current artifact @measured 2026-11-21 by `node design/cta-inventory.mjs --all` (6 built pages, 43
   // actions, none of them a Discord event page) — the row is here because the code path is live and the club has
   // posted guild events before, and a registry that cannot name the destination would turn the day it posts one

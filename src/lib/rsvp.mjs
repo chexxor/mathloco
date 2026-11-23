@@ -9,17 +9,25 @@
  *
  * The same split `event-window.mjs` and `ics-data.mjs` make (D238): a rule implemented in two places is a
  * rule that drifts. This file is imported by `src/components/SignUpLinks.astro` (used by `EventRow.astro`
- * and the homepage's compact card), by `scripts/meetup-events.mjs --check`, by `scripts/discord-events.mjs
- * --check`, by `scripts/check-rsvp.mjs` and by `scripts/check-rsvp-page.mjs`. A component that stops calling
+ * and `HeroSection.astro`), by `src/lib/ics.mjs`, by `scripts/check-rsvp.mjs`, by `scripts/check-rsvp-page.mjs`
+ * and by `scripts/check-rsvp-preference.mjs`. A component that stops calling
  * it, or a gate that hard-codes its own regex, is caught by the page gate comparing the built bytes against
  * this code.
  *
+ * **MS42 (S092, D471, ADR-0010): this module used to be fed by two fetchers in this repo.** `scripts/meetup-events.mjs`
+ * scraped the group's Meetup pages and `scripts/discord-events.mjs` read the guild's scheduled events, and both
+ * wrote a committed snapshot this module validated. Both are deleted: the calendar now arrives as one commit from
+ * `social-event-publisher` (docs/spec/event-data-handoff.md), and that standard carries no per-platform link set
+ * yet. What survives is the *rule*, and the rule takes its pages as an argument — see `EVENT_PAGES` below, which
+ * is where the list enters now.
+ *
  * Three facts this module owns and nobody else may re-derive:
- *   1. **`MEETUP_URL_SHAPE`** — the only place the Meetup event URL pattern is written. The reader
- *      (`scripts/meetup-events.mjs`) and both gates import it (D264: two copies of a shape check is how a
- *      bad URL reaches a page with every gate green).
- *   2. **`DISCORD_EVENT_URL_SHAPE`** — the same argument for the guild scheduled-event URL, so the harvester
- *      and the page gate cannot disagree about what a Discord event page looks like (D274).
+ *   1. **`MEETUP_URL_SHAPE`** — the only place the Meetup event URL pattern is written. The fetcher that used to
+ *      read those pages (`scripts/meetup-events.mjs`, deleted under MS42) and both gates imported it, and
+ *      `openMeetupEvents()` still applies it to whatever page set it is handed (D264: two copies of a shape check
+ *      is how a bad URL reaches a page with every gate green).
+ *   2. **`DISCORD_EVENT_URL_SHAPE`** — the same argument for the guild scheduled-event URL, so the reader of a
+ *      page set and the page gate cannot disagree about what a Discord event page looks like (D274).
  *   3. **the match key** — date + wall-clock `HH:MM` (docs/spec/source-contract.md §2). Meetup and Mobilizon
  *      are two calendars (measured 2026-11-09: 4 Mobilizon rows, 26 Meetup records); attaching a sign-up link
  *      to a date whose hour the organizer has not settled would attach it to a meeting that may not be the
@@ -36,8 +44,9 @@ import { newTabQualifier, ctaIdFor } from './links.mjs';
 // the gates that already read this module read the same string the components paint.
 export { NEW_TAB_QUALIFIER, newTabQualifier } from './links.mjs';
 
-/** A Meetup event URL this build is willing to print. Measured 2026-11-09 (`scripts/meetup-events.mjs`):
- *  both the numeric id form and the series-occurrence token form answer 200. Written once, here. */
+/** A Meetup event URL this build is willing to print. Measured 2026-11-09 by the fetcher since deleted
+ *  (`scripts/meetup-events.mjs`): both the numeric id form and the series-occurrence token form answer 200.
+ *  Written once, here, and still enforced by `openMeetupEvents()`. */
 export const MEETUP_URL_SHAPE = /^https:\/\/www\.meetup\.com\/[a-z0-9-]+\/events\/[0-9a-z]+\/$/;
 
 /** Meetup's own status word for a date that is still happening (`ACTIVE`); `PAST` rows are in the snapshot
@@ -96,13 +105,27 @@ export const LINK_SHAPES = {
  */
 export const PROBE_BLIND_KEYS = new Set(['facebookGroup']);
 
-/** The age `data/meetup-events.json` may be before the gate calls it stale, in days.
- *  There is one threshold and one failure, because there is one fix: `node scripts/meetup-events.mjs --write`.
- *  The 28-day "expired" tier this module used to carry is deleted (D272): two numbers that both stop the
- *  build are one rule wearing two names, and a build that fails twice for the same reason teaches the next
- *  session to read the gate as flaky. Shorter than `check:ics`'s 21-day runway (D188) because a sign-up
- *  page is created and retired far faster than a date is. */
-export const SNAPSHOT_FRESH_DAYS = 14;
+/** The per-date platform pages this build knows about, in the shape `openMeetupEvents()` and
+ *  `openDiscordEvents()` already project: `{ id, url, title, date, time, status }`.
+ *
+ *  **It is empty as of MS42, and that is a fact about the pipeline, not a bug.** This repo used to fill it by
+ *  scraping Meetup and by reading the guild's scheduled events; both fetchers are deleted (S092, D471,
+ *  ADR-0010), and the handoff standard that replaced them carries no per-platform link set yet. The ask for one
+ *  is written up as a change request in docs/spec/event-data-handoff.md §"The change request: a per-platform link
+ *  set"; the day it lands, this constant stops being a literal and becomes a projection of `data/events.json`.
+ *  Nothing else has to change, because `signUpPaths()` already takes the two lists as arguments: the resolver,
+ *  the island, the feed and every gate keep working through this one seam (D264).
+ *
+ *  Why an empty list rather than a frozen copy of the last scrapes: a scrape nobody can refresh is a promise
+ *  with nobody to keep it. The Meetup snapshot stood at 13.99 days against a 14-day freshness window the day the
+ *  fetchers went (@measured 2026-11-23 by `node -e` over `data/meetup-events.json`'s `source.fetchedAt` and
+ *  `SNAPSHOT_FRESH_DAYS`), so a frozen file would have failed its own gate the next day with no command left to
+ *  run — D471's class exactly: a gate whose remedy nobody can perform.
+ *
+ *  What a visitor gets instead, per date: `signUpPaths()` falls back to the club's standing links — *Join the
+ *  Meetup group*, *Join the Discord chat* — which are hand-declared in `src/config.json`, shape-checked, and
+ *  re-measurable with `npm run check:rsvp:links`. The hole is a named state, not a blank (DESIGN.md "States"). */
+export const EVENT_PAGES = { meetup: [], discord: [] };
 
 /** A platform name, spelled one way, so the markup and the gate cannot disagree about it. The KEY (`meetup`) is
  *  what `LINK_KEYS` and this module index by; the VALUE (`Meetup`) is what a person reads, and it is what
@@ -206,8 +229,11 @@ export const linkFindings = (config = {}, nowMs = Date.now()) => {
   return problems;
 };
 
-/** Age of a snapshot in days, from the instant it says it was read. Returns null when there is no stamp —
- *  an unstamped snapshot is not "fresh", it is unknown, and the gate fails it. */
+/** Age in days of a committed file's **harvest stamp** (`source.fetchedAt`), from the instant it says it was
+ *  read. Returns null when there is no stamp — an unstamped file is not "fresh", it is unknown, and the gate
+ *  fails it. Since MS42 the file this is called on is `data/events.json`, the handoff commit (its stamp rule is
+ *  MH-FR-022 in docs/spec/event-data-handoff.md); how old is too old is ruled once, by `check:ics` (the runway,
+ *  D188, and the hatch, D471), not here. */
 export const snapshotAgeDays = (snap, nowMs = Date.now()) => {
   const fetchedAt = snap?.source?.fetchedAt;
   if (!fetchedAt) return null;
@@ -257,60 +283,14 @@ export const openMeetupEvents = (events = []) =>
     .sort((a, b) => `${a.date} ${a.time ?? ''} ${a.id}`.localeCompare(`${b.date} ${b.time ?? ''} ${b.id}`));
 
 /**
- * Every way the Discord snapshot can be unfit to build from, as sentences that name the fix.
- *
- * Same shape as `snapshotFindings()` for the same reason (D264): the harvester's own `--check` and the gate
- * `check:rsvp` call this one function, so a defect cannot be described one way by the writer and another way
- * by the reader.
+ * The two snapshot-shape rules this module used to own - `snapshotFindings()` and `discordSnapshotFindings()` -
+ * are **deleted** (MS42, S092, D471, 2026-11-23). They described the files `scripts/meetup-events.mjs` and
+ * `scripts/discord-events.mjs` wrote, and those fetchers are gone: the calendar arrives as one commit now
+ * (docs/spec/event-data-handoff.md), so the rules that guard *that* file are `check:ics` (its shape, its one
+ * harvest stamp, and D471's hatch) and the far side's own validator. What still guards a per-date page is the
+ * projection above - `openMeetupEvents()` / `openDiscordEvents()` reject a bad URL, an undated row and a
+ * finished one - and `scripts/check-rsvp-page.mjs`, which reads the painted bytes.
  */
-export const discordSnapshotFindings = (snap, nowMs = Date.now()) => {
-  const problems = [];
-  const age = snapshotAgeDays(snap, nowMs);
-  if (!snap?.source?.fetchedAt) {
-    problems.push('no fetchedAt — the Discord snapshot does not say when it was read (run npm run events:discord)');
-  } else if (age === null) {
-    problems.push(`fetchedAt is not a readable instant: ${snap.source.fetchedAt}`);
-  } else if (age > SNAPSHOT_FRESH_DAYS) {
-    problems.push(`Discord snapshot is ${age.toFixed(1)} days old; the limit is ${SNAPSHOT_FRESH_DAYS} days (npm run events:discord re-reads the guild)`);
-  }
-  if (!snap?.source?.guildId) problems.push('the Discord snapshot names no guild, so its events cannot be attributed to the club\u2019s server');
-  if (!Array.isArray(snap?.events)) problems.push('no events array in the Discord snapshot');
-  for (const e of snap?.events ?? []) {
-    if (!e.id) problems.push('a Discord event has no id');
-    if (!e.url || !DISCORD_EVENT_URL_SHAPE.test(String(e.url))) problems.push(`Discord event ${e.id} has a url this build cannot trust: ${e.url}`);
-    if (!e.date) problems.push(`Discord event ${e.id} has no local date`);
-    if (typeof e.user_count === 'number') problems.push(`Discord event ${e.id} carries an RSVP headcount (${e.user_count}) in the snapshot — the projection drops it, so the harvester must not store it (D265)`);
-  }
-  return problems;
-};
-
-/**
- * Every way the Meetup snapshot can be unfit to build from, as sentences that name the fix.
- *
- * This is the whole `check:rsvp` rule, in the library, so `scripts/meetup-events.mjs --check` (the harvester's
- * own sanity pass) and `scripts/check-rsvp.mjs` (the gate) are the same code path rather than two
- * paraphrases of it. Pure: it takes the parsed snapshot and the clock, touches no file, so the gate's
- * selftest can plant each defect in memory.
- */
-export const snapshotFindings = (snap, nowMs = Date.now()) => {
-  const problems = [];
-  const age = snapshotAgeDays(snap, nowMs);
-  if (!snap?.source?.fetchedAt) {
-    problems.push('no fetchedAt — the snapshot does not say when it was read, so nothing printed from it can be dated (run node scripts/meetup-events.mjs --write)');
-  } else if (age === null) {
-    problems.push(`fetchedAt is not a readable instant: ${snap.source.fetchedAt}`);
-  } else if (age > SNAPSHOT_FRESH_DAYS) {
-    problems.push(`snapshot is ${age.toFixed(1)} days old; the limit is ${SNAPSHOT_FRESH_DAYS} days (a sign-up page is created and retired faster than a date)`);
-  }
-  if (!Array.isArray(snap?.events) || !snap.events.length) problems.push('no events in the snapshot');
-  for (const e of snap?.events ?? []) {
-    if (!e.id) problems.push('an event has no id');
-    if (!e.url || !MEETUP_URL_SHAPE.test(String(e.url))) problems.push(`event ${e.id} has a url this build cannot trust: ${e.url}`);
-    if (!e.date) problems.push(`event ${e.id} has no local date`);
-    if (e.going !== null && typeof e.going !== 'number') problems.push(`event ${e.id} has a going count that is not a number: ${e.going}`);
-  }
-  return problems;
-};
 
 /** Round-4 brief §6, ruling D-B (2026-11-15): a schedule row carries ONE action — the per-date sign-up —
  *  and the club's standing resources (the chat, the group, the calendar file) are a property of the club,
@@ -434,8 +414,12 @@ const noteFor = (matching, onDate, discordMatching) => {
  *                      differs, so the row's wording stays true ("no page for this date" only when there
  *                      really is none, not when there is one at a different clock).
  *   destinations: ordered, primary first — Meetup, then Discord, then Facebook. Each is { platform, href,
- *                 label, srOnly } — the exact four strings the component paints, so the gate compares painted
- *                 bytes with this list.
+ *                 label, srOnly, cta, perDate } — the strings the component paints plus the two facts it needs
+ *                 to be honest about them. `perDate` is whether this destination is a page *for this date*
+ *                 (`…/events/317097578/`) or a standing club-wide link (`…/join`, the invite, the group): it is
+ *                 the same boolean `ctaIdFor()` is called with, carried on the object so a surface cannot label a
+ *                 standing link as a date's sign-up — which is what `scripts/check-cta-context.mjs` fails
+ *                 (S090, D467), and since MS42 it is the branch every printed date takes.
  */
 export const signUpPaths = (item, meetupEvents = [], urls = {}, discordEvents = []) => {
   const date = dateOf(item);
@@ -459,28 +443,28 @@ export const signUpPaths = (item, meetupEvents = [], urls = {}, discordEvents = 
       // `cta` names which destination this is in the registry (S090), on the same object that carries the label
       // and the qualifier — so the row, the hero and the island all paint the id from one call rather than each
       // keeping a mapping (D264), and a per-date page never gets labelled as the standing group.
-      destinations.push({ platform: PLATFORMS.meetup, href: e.url, label, srOnly: sr(label, PLATFORMS.meetup), cta: ctaIdFor(PLATFORMS.meetup, true) });
+      destinations.push({ platform: PLATFORMS.meetup, href: e.url, label, srOnly: sr(label, PLATFORMS.meetup), cta: ctaIdFor(PLATFORMS.meetup, true), perDate: true });
     }
   } else if (urls?.meetupGroup) {
     // The hole is a named state, not a blank (DESIGN.md "States"): the date has no page yet, so the path is
     // the group's join page, and the row says plainly which one it is.
     const label = 'Join the Meetup group';
-    destinations.push({ platform: PLATFORMS.meetup, href: joinUrl(urls), label, srOnly: sr(label, PLATFORMS.meetup), cta: ctaIdFor(PLATFORMS.meetup) });
+    destinations.push({ platform: PLATFORMS.meetup, href: joinUrl(urls), label, srOnly: sr(label, PLATFORMS.meetup), cta: ctaIdFor(PLATFORMS.meetup), perDate: false });
   }
 
   if (discordMatching.length) {
     for (const e of discordMatching) {
       const label = discordMatching.length === 1 ? 'Sign up on Discord' : e.title || 'Sign up on Discord';
-      destinations.push({ platform: PLATFORMS.discord, href: e.url, label, srOnly: sr(label, PLATFORMS.discord), cta: ctaIdFor(PLATFORMS.discord, true) });
+      destinations.push({ platform: PLATFORMS.discord, href: e.url, label, srOnly: sr(label, PLATFORMS.discord), cta: ctaIdFor(PLATFORMS.discord, true), perDate: true });
     }
   } else if (urls?.discordInvite) {
     const label = 'Join the Discord chat';
-    destinations.push({ platform: PLATFORMS.discord, href: urls.discordInvite, label, srOnly: sr(label, PLATFORMS.discord), cta: ctaIdFor(PLATFORMS.discord) });
+    destinations.push({ platform: PLATFORMS.discord, href: urls.discordInvite, label, srOnly: sr(label, PLATFORMS.discord), cta: ctaIdFor(PLATFORMS.discord), perDate: false });
   }
 
   if (urls?.facebookGroup) {
     const label = 'Join the Facebook group';
-    destinations.push({ platform: PLATFORMS.facebook, href: urls.facebookGroup, label, srOnly: sr(label, PLATFORMS.facebook), cta: ctaIdFor(PLATFORMS.facebook) });
+    destinations.push({ platform: PLATFORMS.facebook, href: urls.facebookGroup, label, srOnly: sr(label, PLATFORMS.facebook), cta: ctaIdFor(PLATFORMS.facebook), perDate: false });
   }
 
   return {

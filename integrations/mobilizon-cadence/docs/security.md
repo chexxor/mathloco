@@ -152,7 +152,7 @@ attributing the club's event to the wrong identity.
 | n8n execution data | the sign-in body (password, unredacted unless `settings.redactionPolicy` is set — D204), the GraphQL bodies, the report ledger | prune it; treat screenshots as secrets |
 | n8n / server logs | request URLs (one host, `/api/v1`) — assume bodies may appear | another reason the endpoint is HTTPS and the host is one |
 | the Mobilizon instance | the events it creates, which are public | the club's own description/address/venue text is copied verbatim |
-| the mathloco site | nothing | the site reads `data/events.json` from `events-harvest` (D73) |
+| the mathloco site | nothing | the site reads `data/events.json` as a handoff commit from `social-event-publisher` (**MS42**, **ADR-0010**, `docs/spec/event-data-handoff.md`); it read it from this repo's own fetcher until 2026-11-23 (D73) |
 
 Note the last row is a real privacy consideration: the description text copied into a new event is
 Mobilizon's own HTML for the club's meeting, and it will be published on the club's public calendar. Nothing

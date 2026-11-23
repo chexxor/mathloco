@@ -83,7 +83,7 @@
     ]
   },
   "schedule": {
-    "source": "the club's own calendar: Mobilizon (self-hosted), harvested by npm run events:harvest into data/events.json and published as /events.ics (D70, D73)",
+    "source": "the club's own calendar: Mobilizon (self-hosted), read by social-event-publisher and handed to this repo as a commit at data/events.json, which is published as /events.ics (D70, D73; the fetch moved out of this repo on 2026-11-23, MS42, ADR-0010)",
     "_source": "Corrected 2026-11-04: the earlier line here said the operator still had to provision a calendar and so 'no date on this page is knowable'. That stopped being true the day the group feed was harvested (D169) — the rows now live in data/events.json, which `src/lib/events.mjs` reads, and `upcoming` below is retired in favour of it. `src/content.json` keeps the words around the dates (the empty state), not the dates.",
     "upcoming": [],
     "_upcoming": "Retired: the rows moved to data/events.json so the page and /events.ics cannot disagree about a date. This stays an empty array on purpose — if anything ever reads it again, the gate would then be auditing a second source of truth.",

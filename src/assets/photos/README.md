@@ -135,9 +135,13 @@ snapshot did not have (`picture: null` then), so art is a property of the row th
 That is why the `SLOT_ART` map lives in `src/lib/event-art.ts` (it left `Schedule.astro` when the schedule grew a
 second surface - two files holding the same table is two calendars), and why adding art is an entry, not a template
 edit. **That map is empty as of 2026-11-16**, and an entry now names the file it fills by role + media identity rather
-than inheriting a name from the row; the live reuse count that decides whether such an asset is `standing` is printed
-by the harvest rather than remembered here — @measured 2026-11-16 by `npm run events:harvest` (Linux native, Node 24.22.1):
-media `1f54c2` serves 5 rows, media `0e26aa` serves 3, so both are `standing: true`.
+than inheriting a name from the row. **Corrected 2026-11-23 (MS42):** the line used to say the live reuse count that
+decides whether such an asset is `standing` "is printed by the harvest rather than remembered here". The count was
+printed to **stdout** and never stored — `grep -c 'reuseCount\|standing' data/events.json` → **0** @measured
+2026-11-23 — and the command that printed it, `npm run events:harvest`, is deleted, so nothing here computes it any
+more (@measured 2026-11-16 by that run: media `1f54c2` serves 5 rows, media `0e26aa` serves 3; the same two uids
+still serve all 8 rows' `image` URLs @measured 2026-11-23 by `node -e` over `data/events.json`). `standing: true` was
+a label a human chose, and if the site ever wants it as data it is a field request to `social-event-publisher`.
 - **A `?name=` in a media URL is a label, not identity.** The same `1f54c290…` media was served as
   `?name=bimonthly_social.png` on two dates; a URL-only diff would call that a new image. Compare hashes, and note
   that `curl`'s cache here keys on the URL, so a changed `?name=` silently re-downloads identical bytes.

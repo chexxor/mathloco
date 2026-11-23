@@ -23,7 +23,7 @@ import { renderCalendar, escapeText, contentLine, CRLF } from '../src/lib/ics.mj
 import { publishableRows, meetingKind, venueKey, publishedNameOrNull, publishedSeriesNames } from '../src/lib/event-groups.mjs';
 import { feedDescription, DESCRIPTIONS, windowSentence } from '../src/lib/event-description.mjs';
 import { feedWindow, plainDate } from '../src/lib/event-window.mjs';
-import { feedUrl } from '../src/lib/rsvp.mjs';
+import { EVENT_PAGES, feedUrl } from '../src/lib/rsvp.mjs';
 
 const args = process.argv.slice(2);
 const selftest = args.includes('--selftest');
@@ -36,9 +36,10 @@ const DIST_DIR = resolve(argOne('--dist', 'dist/client'));
 const ARTIFACT = resolve(DIST_DIR, 'events.ics');
 
 const snapshot = JSON.parse(readFileSync(DATA_PATH, 'utf8'));
-// D398: the same snapshot the pages resolve their sign-up links from, so `feed-url-shape` compares the feed's
-// URL against the lookup `src/lib/ics.mjs` performed rather than against a remembered URL.
-const MEETUP_EVENTS = JSON.parse(readFileSync(resolve('data/meetup-events.json'), 'utf8')).events;
+// D398, re-ruled MS42 (S092, D471): `feed-url-shape` compares the feed's URL against the lookup `src/lib/ics.mjs`
+// performed, and the lookup's page list is `EVENT_PAGES` in that module — the same constant the components read —
+// rather than a snapshot this repo scraped for itself. So the gate and the renderer cannot drift apart, and
+// neither one can be re-pointed without the other noticing.
 const BUILD_DATE = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
 // Textual helpers shared by several rules: unfolding joins a folded line back together, so an assertion sees
@@ -381,13 +382,17 @@ const RULES = [
       if (String(hatch) >= today) return out; // granted, and `report()` prints it so a green run still says so
       out.push({
         rule: 'runway',
-        detail: `${stale}, and the hatch expired on ${hatch} — a hatch that lives forever is exactly the silence this rule exists to end. Fetch first: \`node scripts/events-harvest.mjs\` (dry run) then \`--write\`; if the club genuinely has no date yet, replace stalenessOkUntil with a new date and say why in the commit`,
+        // MS42 (S092, D471, ADR-0010): the text used to order the reader to run `node scripts/events-harvest.mjs`.
+        // That script is deleted, and a finding text that names an act the reader cannot perform is a bug in the
+        // finding text (D471(e)). The act that exists is named instead: a run on the publisher's side, a dated
+        // grant on this one.
+        detail: `${stale}, and the hatch expired on ${hatch} — a hatch that lives forever is exactly the silence this rule exists to end. Nothing here fetches: the file arrives as one commit from \`social-event-publisher\` (docs/spec/event-data-handoff.md), so the refresh is that project's run and the rebuild is this repo's. If the club genuinely has no date yet, replace stalenessOkUntil with a new date and say why in the commit — the publisher refuses to invent a hatch (MH-FR-011)`,
       });
       return out;
     }
     out.push({
       rule: 'runway',
-      detail: `${stale}. Fix it by fetching: \`node scripts/events-harvest.mjs\` (prints the diff) then \`node scripts/events-harvest.mjs --write\`, then rebuild — the snapshot is a copy, and a copy nobody re-fetches is a claim about last week. For a real gap between series, set a dated \`stalenessOkUntil\` in data/events.json and say why in the commit`,
+      detail: `${stale}. There is no harvester in this repository (MS42, ADR-0010): the file arrives as one commit from \`social-event-publisher\` at \`data/events.json\` (docs/spec/event-data-handoff.md), so the fix is a handoff commit on the branch this repo builds from, then a rebuild and a deploy — not a fetch. For a real gap between series, set a dated \`stalenessOkUntil\` in data/events.json and say why in the commit (MH-FR-011)`,
     });
     return out;
   },
@@ -430,34 +435,39 @@ const RULES = [
     return out;
   },
 
-  // Round-5 communication read B1 (q17, D370): a row the source stopped announcing stays in the snapshot,
-  // keeps `STATUS:CONFIRMED`, and reads to every subscriber as upcoming long after the evening passed — two
-  // of them on the artifact this round measured. The class becomes a gate because the rule is what makes it
-  // unmissable forever: a future harvest that publishes a passed row fails `verify` instead of shipping two
-  // live-looking dates to every calendar (D313's class — a rule the reader cannot see is worse than a number,
-  // which is why the planting below anchors on the shape, not on today's data). The feed stays **uncapped**
-  // (D238: shrinking a calendar feed to a page limit is how a subscriber loses a date they were told about),
-  // so this fires on a row that is *stale*, never on a feed that is *short*. A `STATUS:CANCELLED` row is
-  // exempt, because retiring a date is the RFC's own mechanism — UID plus a raised SEQUENCE (lines 6267-6272)
-  // — which is what keeps D225's and D318's hand-authored cancellations green. `stalenessOkUntil` is
-  // deliberately **not** consulted here: the hatch grants silence about *no upcoming row*, not about announcing
-  // an evening that already happened as live; the honest states are retire-it or re-fetch, both named below.
-  (data, text) => {
+  // **`stale-live-row` is retired by name (D471, MS42, S092 — 2026-11-23).** Round-5's communication read (q17,
+  // D370) made it a gate because a row the source stopped announced kept `STATUS:CONFIRMED` and read to every
+  // subscriber as upcoming long after the evening passed. Under the handoff that rule fires on a **correct**
+  // file: `MH-FR-012` carries a finished row rather than deleting it, because deleting un-announces a date to
+  // every subscriber that already holds it — which is what **D72** and **D223** say from this side, about our own
+  // feed. And its remedy was a fetch this repo no longer performs. A rule that fires on a legal file and offers
+  // an act the reader has no power to take is a red build, not a rule (D471(a), with the three refused
+  // alternatives at D471(b)).
+  //
+  // What survives is the same protection, measured on the **file** instead of on a row: a snapshot nobody has
+  // refreshed is a claim about last quarter, republished forever. So this rule reads the file's single harvest
+  // instant — `source.fetchedAt`, one per file by `MH-FR-023`, and the `dtstamp` rule above already demands every
+  // published `DTSTAMP` equal it — and fails when its age passes the same 21-day window the runway uses,
+  // unless `stalenessOkUntil` grants the gap and has not itself expired.
+  //
+  // Not a duplicate of `runway`: `runway` measures today → the next upcoming row; this measures the **age of the
+  // stamp**. A fresh read of a sparse calendar passes here and fails there; a stale read that happens to hold a
+  // near date passes there and fails here (D471(c)). Both may fire on one build.
+  (data) => {
     const out = [];
-    const today = clubToday(data).replace(/-/g, '');
-    for (const block of eventsOf(text)) {
-      const u = unfold(block);
-      const start = propOf(u, 'DTSTART');
-      if (!start) continue;
-      const day = String(start.value).slice(0, 8);
-      if (!/^\d{8}$/.test(day)) continue;
-      const status = String(propOf(u, 'STATUS')?.value ?? 'CONFIRMED').toUpperCase();
-      if (status === 'CANCELLED' || day >= today) continue;
-      out.push({
-        rule: 'stale-live-row',
-        detail: `VEVENT ${propOf(u, 'UID')?.value ?? '(no uid)'} publishes as ${status} with DTSTART ${day.slice(0, 4)}-${day.slice(4, 6)}-${day.slice(6, 8)}, a day already past (${today.slice(0, 4)}-${today.slice(4, 6)}-${today.slice(6, 8)}) — a subscriber who added this feed is being asked to attend an evening that happened. Retire it the only way RFC 5545 gives: STATUS:CANCELLED with a raised SEQUENCE, hand-authored (docs/howto/event-feed-churn.md §3; the source stops announcing old rows rather than cancelling them), or re-fetch first: node scripts/events-harvest.mjs. The row is never deleted (D72), and the feed is never shortened to dodge this rule (D238).`,
-      });
-    }
+    const stamp = String(data.source?.fetchedAt ?? '');
+    // Absent or malformed: `sourced-rows` and `dtstamp` already name that, and a second finding about the same
+    // missing byte is noise that buries the finding a reader acts on.
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(stamp)) return out;
+    const today = clubToday(data);
+    const age = daysBetween(stamp.slice(0, 10), today);
+    if (age <= RUNWAY_DAYS) return out;
+    const hatch = data.stalenessOkUntil;
+    if (hatch != null && DATE_SHAPE.test(String(hatch)) && String(hatch) >= today) return out; // granted; report() prints it
+    out.push({
+      rule: 'stale-snapshot',
+      detail: `the file's single harvest stamp is ${stamp} — ${age} days old as of ${today}, past the ${RUNWAY_DAYS}-day window — so this is a copy nobody has refreshed, and every subscriber keeps republishing it (D471). Nothing here fetches: the refresh is a run of \`social-event-publisher\`, which writes this file as one commit on the branch this repo builds from (docs/spec/event-data-handoff.md). If the club has no date yet, set a dated \`stalenessOkUntil\` and say why in the commit (MH-FR-011). Do not hand-edit the stamp to silence this gate: it is the value every subscriber's client diffs (D225), and the row is never deleted to shorten the window (D72, D238)`,
+    });
     return out;
   },
 
@@ -549,9 +559,13 @@ const RULES = [
     return out;
   },
 
-  // D398 (round-6 review, feed/Revise): the feed's URL field and `/dates` used to promise "the sign-up page"
-  // and disagree about where it is. The rule re-runs the resolver's own lookup, so it cannot drift from the
-  // renderer any more than the renderer can drift from the page.
+  // D398 (round-6 review, feed/Revise), re-ruled for the handoff era (MS42, S092, D471): the feed's URL field
+  // and the site used to promise "the sign-up page" and disagree about where it is. The rule re-runs the
+  // resolver's own lookup, so it cannot drift from the renderer any more than the renderer can drift from the
+  // page. `EVENT_PAGES` is empty until the handoff carries a per-platform link set, so the page this build holds
+  // for a date is the row's own `url` — the club's own page, which the contract requires on every row
+  // (docs/spec/event-data-handoff.md). A URL that is neither is a subscriber's click-through to a page this
+  // repo cannot name.
   (data, text) => {
     const out = [];
     const rowsByUid = new Map((data.events ?? []).map((r) => [String(r.uid ?? ''), r]));
@@ -560,17 +574,17 @@ const RULES = [
       const uid = String(propOf(u, 'UID')?.value ?? '');
       const row = rowsByUid.get(uid);
       if (!row) continue;
-      const own = feedUrl(row, MEETUP_EVENTS);
+      const want = feedUrl(row, EVENT_PAGES.meetup) ?? row.url ?? null;
       const url = propOf(u, 'URL');
-      if (own && !url) {
+      if (want && !url) {
         out.push({
           rule: 'feed-url-shape',
-          detail: `${uid}: the club has its own page for this date (${own}) and the VEVENT carries no URL, so a subscriber's calendar has nothing to click through to (D398)`,
+          detail: `${uid}: the page this build holds for this date is ${want} and the VEVENT carries no URL, so a subscriber's calendar has nothing to click through to (D398)`,
         });
-      } else if (own && url.value !== own) {
+      } else if (want && url.value !== want) {
         out.push({
           rule: 'feed-url-shape',
-          detail: `${uid}: URL is ${url.value} while the club's own page for this date is ${own} — the feed and the Dates page both promise "the sign-up page" and disagree about where it is, so a subscriber reaches a platform the site never mentions (D398; feedUrl() is the resolver's lookup, and a Meetup URL this snapshot does not carry is a URL this repo cannot claim)`,
+          detail: `${uid}: URL is ${url.value} while the page this build holds for this date is ${want} — the feed sends a subscriber to a page this repo cannot name and no surface of this site links (D398, re-ruled MS42: feedUrl() is the resolver's lookup, and the row's own url is the page the handoff contract requires)`,
         });
       }
     }
@@ -678,6 +692,12 @@ const report = (data) => {
     lines.push(`${dropped.length} row(s) superseded by the grouping (D318): ${dropped.map((d) => `${d.uid} (${d.reason})`).join('; ')} — they stay in data/events.json and are never published`);
   }
   const daysTo = (row) => daysBetween(today, String(row.start).slice(0, 10));
+  // D471: the stamp age is what `stale-snapshot` fails, so the number it fails on is printed on a green run too —
+  // the same reason the runway line is here (D118: a reader should not have to open the gate to find the margin).
+  const stamp = String(data.source?.fetchedAt ?? '');
+  if (/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/.test(stamp)) {
+    lines.push(`harvest stamp: source.fetchedAt ${stamp} is ${daysBetween(stamp.slice(0, 10), today)} day(s) old — stale-snapshot fails above ${RUNWAY_DAYS} days (D471)`);
+  }
   if (!upcoming.length) {
     lines.push(`no upcoming row on or after ${today} (${data.calendar?.timezone ?? 'zone unknown'}) — the page renders its empty state (M6 names a silently stale schedule as the failure mode)`);
     if (hatch != null) lines.push(`hatch: stalenessOkUntil ${hatch}${String(hatch) >= today ? ' is live — the runway rule is staying silent by your explicit grant' : ' has EXPIRED'}`);
@@ -761,12 +781,17 @@ if (selftest) {
       'END:VCALENDAR',
     ].join('\r\n')), rule: 'grouping' },
     { name: 'the-organizer-s-boilerplate-back-in-the-feed', text: (t) => t.replace(/DESCRIPTION:[^\r]*(?:\r\n [^\r]*)*/, 'DESCRIPTION:We are interested in discussing algorithms of most any kind.'), rule: 'feed-copy' },
-    // Round-5 B1 (q17): the class `stale-live-row` exists for. Anchored on the row's **status**, not on a uid or
-    // a date — the harvest re-dates rows and this snapshot now carries three cancellations, so a uid-keyed or
-    // date-keyed planting stops measuring the day the data moves (D173's rule, the one `zero-length-instant-span`
-    // follows). The first live row is moved four days into the past and kept CONFIRMED, which is what a harvest
-    // that reads a stale copy leaves behind.
-    { name: 'a-past-row-published-as-live', data: (d) => { moveRow(d.events.find((e) => String(e.status ?? 'CONFIRMED').toUpperCase() !== 'CANCELLED'), dayShift(-4)); return d; }, rule: 'stale-live-row' },
+    // D471 (MS42, S092) **replaces** round-5's `a-past-row-published-as-live`. Its class was real — a stale copy
+    // really does leave a past row published as live — but the rule that owns it changed: `MH-FR-012` carries a
+    // finished row on purpose, so a past-dated `CONFIRMED` row is now legal and what fails is the **age of the
+    // file's stamp**. Both directions are planted, because the clean control is the only evidence that the re-rule
+    // landed rather than the rule merely going quiet (D471(d)). The stamp is moved on the file and on every row
+    // together, because `MH-FR-023` demands one instant per file and a planting that breaks two rules at once
+    // measures neither.
+    { name: 'a-harvest-stamp-older-than-the-runway', data: (d) => { const old = `${dayShift(-(RUNWAY_DAYS + 3))}T00:00:00Z`; d.source.fetchedAt = old; for (const e of d.events) e.source.fetchedAt = old; return d; }, rule: 'stale-snapshot' },
+    { name: 'an-old-stamp-with-an-expired-hatch', data: (d) => { const old = `${dayShift(-(RUNWAY_DAYS + 3))}T00:00:00Z`; d.source.fetchedAt = old; for (const e of d.events) e.source.fetchedAt = old; d.stalenessOkUntil = dayShift(-1); return d; }, rule: 'stale-snapshot' },
+    { name: 'a-carried-finished-row-is-legal', clean: true, data: (d) => { moveRow(d.events.find((e) => String(e.status ?? 'CONFIRMED').toUpperCase() !== 'CANCELLED'), dayShift(-4)); return d; }, rule: 'stale-snapshot' },
+    { name: 'an-old-stamp-with-a-live-hatch', clean: true, data: (d) => { const old = `${dayShift(-(RUNWAY_DAYS + 3))}T00:00:00Z`; d.source.fetchedAt = old; for (const e of d.events) e.source.fetchedAt = old; d.stalenessOkUntil = dayShift(7); return d; }, rule: 'stale-snapshot' },
     // D371. The class is a reach sentence that does not match the rows — what a hand-written window looks like
     // the first harvest after it moves a date. The swap is done on the **unfolded logical line** and the line is
     // re-folded through the renderer's own `contentLine`, so the planting plants the window defect and nothing
@@ -822,22 +847,23 @@ if (selftest) {
     // selftest proves both directions of the escape hatch.
     { name: 'live-hatch-on-a-stale-snapshot', clean: true, data: (d) => { for (const e of d.events) moveRow(e, dayShift(-30)); d.stalenessOkUntil = dayShift(7); return d; }, rule: 'runway' },
     // D398 and D399 (round-6 review, feed): the two new rules. `feed-url-shape` plants the defect the review
-    // found — the feed pointing at a page the club never mentions — by rewriting the URL line back to the
-    // source platform's, folded through the renderer's own contentLine so the planting is a legal line and
-    // only the URL changed. The second planting is the half the review did not name: a row whose club page
-    // exists but whose URL was dropped, which leaves a subscriber with nothing to click through to. Both
-    // directions get a control, because a rule that fires on the shipped snapshot is not a detector.
+    // found — the feed pointing at a page the club never mentions — by rewriting the URL line to a page this
+    // build holds no record of, folded through the renderer's own contentLine so the planting is a legal line
+    // and only the URL changed. (Before MS42 this planting wrote the row's own `url`, because the rule's answer
+    // came from a scraped Meetup page; since MS42 the row's own url **is** the answer, so the planting had to
+    // move or it would have been a control wearing a planting.) The second planting is the half the review did
+    // not name: a row whose page exists but whose URL was dropped, which leaves a subscriber with nothing to
+    // click through to. Both directions get a control, because a rule that fires on the shipped snapshot is not
+    // a detector.
     {
-      name: 'the-feed-url-reverts-to-the-source-s-page',
+      name: 'the-feed-url-points-at-a-page-this-build-does-not-hold',
       text: (t) => {
         const rowsByUid = new Map((snapshot.events ?? []).map((r) => [String(r.uid ?? ''), r]));
         return String(t).replace(/BEGIN:VEVENT[\s\S]*?END:VEVENT/g, (block) => {
           const uid = String(propOf(unfold(block), 'UID')?.value ?? '');
           const row = rowsByUid.get(uid);
-          if (!row) return block;
-          const own = feedUrl(row, MEETUP_EVENTS);
-          if (!own || !row.url || row.url === own) return block;
-          return block.replace(/^URL:[^\r]*(?:\r\n [^\r]*)*/m, contentLine('URL', null, row.url));
+          if (!row?.url) return block;
+          return block.replace(/^URL:[^\r]*(?:\r\n [^\r]*)*/m, contentLine('URL', null, 'https://www.meetup.com/minneapolis-mathematics-book-club/events/900000001/'));
         });
       },
       rule: 'feed-url-shape',

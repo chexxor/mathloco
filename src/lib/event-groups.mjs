@@ -8,12 +8,14 @@
  * who added the feed saw a struck-through meeting on the same day as the real one, which is the defect the
  * 2026-11-14 design read named as D1.
  *
- * This is **not** the collision guard in `scripts/events-harvest.mjs` (rule 4, D299). That guard protects a
+ * This is **not** the collision guard the deleted fetcher carried (`scripts/events-harvest.mjs` rule 4, **D299**;
+ * the job moved to `social-event-publisher` with the fetch — **MS42**, **ADR-0010**). That guard protected a
  * *snapshot row the site has already published as CANCELLED* from being silently rewritten by a feed that
- * re-announces the same UID with a new date. Different problem, different mechanism: the guard refuses a
- * merge on one UID; grouping decides which of several UIDs the *publisher* emits. Both stay in place: the
- * harvest never deletes a row (D72 — a cancelled meeting has to be announced, not vanish), and grouping
- * never un-cancels anything in the data. It only decides what the calendar file and the page show.
+ * re-announces the same UID with a new date. Different problem, different mechanism: the guard refused a
+ * merge on one UID; grouping decides which of several UIDs the *publisher* emits. Both still hold, whoever
+ * writes the file: a row is never deleted (D72 — a cancelled meeting has to be announced, not vanish, and
+ * `MH-FR-012` says the same from the publisher's side), and grouping never un-cancels anything in the data. It
+ * only decides what the calendar file and the page show.
  *
  * What "the same meeting" means here, in the order the ruling was written (D318):
  *   1. **the same calendar date** — the DATE part of `start`, not the instant. A re-issue that moves the
@@ -31,11 +33,13 @@
  *     (lines 6267-6272) makes UID+SEQUENCE the only way a client learns which copy is the current one, so
  *     publishing two cancellations of one meeting is two announcements of one fact.
  *
- * Every dropped row is *reported*, never removed from the data: `scripts/events-harvest.mjs` prints each
- * dropped UID and writes the list into the snapshot under `superseded`, and `scripts/check-ics.mjs` asserts
- * that nothing the grouping supersedes reaches the published bytes. A group whose rows differ only in hour
- * and are both live is left alone — the club has never had two distinct meetings of the same series at the
- * same venue on the same day, and if it ever does, the drop log is where a human sees the decision being
+ * Every dropped row is *reported*, never removed from the data. Before **MS42** the fetcher printed each dropped UID
+ * and wrote the list into the snapshot under `superseded`; since **ADR-0010** the publisher computes that list over
+ * the rows it writes (`MH-FR-009`), and `scripts/check-ics.mjs`'s `superseded-log` rule asserts that the list in the
+ * file equals the drop list this module produces on this build — a log that disagrees is a claim about a row nobody
+ * dropped. The rule also asserts that nothing the grouping supersedes reaches the published bytes. A group whose rows
+ * differ only in hour and are both live is left alone — the club has never had two distinct meetings of the same
+ * series at the same venue on the same day, and if it ever does, the drop log is where a human sees the decision being
  * made.
  */
 import { cadenceWords } from './cadence.mjs';

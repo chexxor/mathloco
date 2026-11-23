@@ -59,8 +59,10 @@ earn one is named there — a dependency the site does not use, or a schedule ru
 rather than in n8n.
 
 Nothing in this directory is imported by `src/`, `worker/`, `astro.config.*` or any step in `npm run verify`.
-The site keeps reading `data/events.json` from the `events-harvest` integration; Mobilizon stays the
-authoring system, this only writes into Mobilizon.
+The site keeps reading `data/events.json`, but since **MS42** (**ADR-0010**, **D471**) that file arrives as one
+commit from `social-event-publisher` (`docs/spec/event-data-handoff.md`) — the `events-harvest` fetcher this
+repo used to run is deleted. Mobilizon stays the authoring system, and this integration only writes into
+Mobilizon; the snapshot the site reads is the publisher's read of its sources, handed over as a commit.
 
 ## Files
 
@@ -155,7 +157,9 @@ until a probe proves it is.
 ## What this does not do
 
 - It does not create a recurring event, a series object, or an RRULE. Mobilizon has none (probed).
-- It does not touch the site. The website's events come from `data/events.json`, harvested from the ICS feed.
+- It does not touch the site. The website's events come from `data/events.json`, which since **MS42** (**ADR-0010**)
+  arrives as one commit from `social-event-publisher` (`docs/spec/event-data-handoff.md`) — this repo no longer
+  reads any feed itself.
 - It reads **one group per run**. Both series are in `@minneapolis_math_book_group`; a series in a second
   group is a deliberate refusal at build time, with the extension path named in the message.
 - It writes **at most one event per series per run**, and never two series' events on the same date.

@@ -10,7 +10,10 @@
  *
  * Three inputs, four surfaces:
  *   inputs   data/events.json (the handoff file) · data/meetup-events.json · data/discord-events.json
- *            (the two fetcher outputs this item retires) · src/config.json `URLS` (hand-authored)
+ *            (the two fetcher outputs this item retires — **deleted on 2026-11-23**, so the probe reads them
+ *            only when they exist: run it on the commit before the deletion and it reports the before-state,
+ *            run it here and it reports that no input in this tree supplies a per-date page any more)
+ *            · src/config.json `URLs` (hand-authored)
  *   surfaces the built HTML pages · the built /events.ics · (nothing) a field that reaches neither
  *
  * Verdicts, and the rule that assigns them:
@@ -46,8 +49,11 @@ const read = (p) => {
   }
 };
 const snapshot = read('data/events.json');
-const meetup = read('data/meetup-events.json');
-const discord = read('data/discord-events.json');
+// Optional by design (MS42): these two are deleted with the fetchers. A probe that hard-fails on a missing
+// input cannot measure the state on either side of the deletion, and this probe exists to compare them.
+const readIf = (p) => { try { const f = resolve(ROOT, p); return existsSync(f) ? JSON.parse(readFileSync(f, 'utf8')) : { events: [] }; } catch { return { events: [] }; } };
+const meetup = readIf('data/meetup-events.json');
+const discord = readIf('data/discord-events.json');
 const config = read('src/config.json');
 const urls = config.URLs ?? {};
 
@@ -207,9 +213,9 @@ const links = [...hrefOf.values()].map((rec) => {
 const perDateLinks = links.filter((l) => l.perDateEventPage);
 
 // --- what the feed's own URL property promises, per VEVENT ------------------------------------
-// `src/lib/ics.mjs:203` publishes `own ?? row.url`, where `own` is `feedUrl(row, MEETUP_EVENTS)` — the
-// per-date Meetup page. So the subscriber's calendar app follows the same input the page does, and the
-// handoff moves the feed's URL too, not only the page's link.
+// `src/lib/ics.mjs` publishes `own ?? row.url`, where `own` is `feedUrl(row, EVENT_PAGES.meetup)` — the
+// per-date Meetup page this repo used to scrape. So the subscriber's calendar app follows the same input the
+// page does, and the handoff moves the feed's URL too, not only the page's link.
 const feedUrls = [];
 for (const block of ics.split('BEGIN:VEVENT').slice(1)) {
   const uid = /UID:(.+)/.exec(block)?.[1]?.trim() ?? null;

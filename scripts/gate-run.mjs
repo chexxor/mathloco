@@ -138,14 +138,18 @@ const DEPLOY = [
   // `check:ics` reads `dist/client/events.ics` (scripts/check-ics.mjs:31-32), so it belongs in the artifact
   // wave. It was scheduled before `build` @measured 2026-11-12: a fresh clone - CI, or anyone's first checkout -
   // has no dist/, and the gate reported "FAIL artifact: ... is missing - build first" while every other step
-  // in the wave passed. The selftest plants in-memory clones of the committed snapshot, so it needs nothing.
-  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, and the reach the file states about itself (D371)', needs: ['build'] },
-  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (45 plantings, each named @measured 2026-11-17 by `node scripts/check-ics.mjs --selftest`)' },
-  // The sign-up link map: both event snapshots' dates and ages, and a dated stamp on every URL the config prints.
+  // in the wave passed. The selftest plants in-memory clones of the committed `data/events.json`, so it needs
+  // nothing. Since MS42 (D471) its rules include the file's one harvest stamp: the runway (D188) and the
+  // `stalenessOkUntil` hatch — the reader's half of a freshness rule whose writer half left this repo.
+  { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, the reach the file states about itself (D371), and the age of its one harvest stamp (D188, D471)', needs: ['build'] },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (50 plantings, each named @measured 2026-11-23 by `node scripts/check-ics.mjs --selftest` — 45 before MS42 retired the live-row rule and replanted the stamp rule four ways)' },
+  // The sign-up link map: a dated stamp on every URL the config prints, and the shape of each link. The two
+  // scraped event snapshots it used to date-check are deleted with their fetchers (MS42, ADR-0010); the one
+  // dated calendar file is `data/events.json`, and its age is ruled by `check:ics` above, not twice.
   // Reads committed JSON only, so it runs before `build` (D118). `check:rsvp:links` — the probe that produces
   // the stamps — is NOT here: it reaches the network, the same exclusion class as check:discord and check:ai.
-  { name: 'check:rsvp', desc: 'the Meetup snapshot and the Discord guild snapshot are both dated and inside the window, and every printed platform URL carries a stamp under 60 days that answered 2xx/3xx' },
-  { name: 'check:rsvp:selftest', desc: 'the link-map gate can still fail (50 cases: snapshot, config and resolver plantings)' },
+  { name: 'check:rsvp', desc: 'every printed platform URL carries a stamp under 60 days that answered 2xx/3xx (or a named human\u2019s dated confirmation, D280), every link matches its platform\u2019s shape, and every platform the resolver knows is declared (D272, MS42)' },
+  { name: 'check:rsvp:selftest', desc: 'the link-map gate can still fail (48 cases: 19 link-map cases — 14 plantings, 5 clean controls — plus 14 resolver match-rule cases, 10 preference-reorder cases and 5 join-channel cases @measured 2026-11-23 by `node scripts/check-rsvp.mjs --selftest`; the snapshot plantings left with the fetchers)' },
   // The page gate's own defect catalog runs on in-memory fixture pages, not on dist/, so it can fire on a
   // branch nobody has built yet (D118). 43 cases = 42 plantings plus one clean control page: missing cluster,
   // wrong date, invented hour, an unsettled hour painted as settled, missing note, a note claiming an absence
@@ -205,15 +209,15 @@ const DEPLOY = [
   { name: 'check:escapes:selftest', desc: 'the escape gate can still fail (37 fixtures: 19 plantings, 17 clean forms, 1 severity case @measured 2026-11-14 by `node scripts/check-escapes.mjs --selftest`)' },
   { name: 'check:cache', desc: 'summary-cache rules against a fake KV namespace' },
   // The n8n integration builds an importable artifact from sources in this repo, and its rules are the same
-  // date rules `data/events.json` is harvested against. It runs `--offline`: no route to the LAN instance is
+  // date rules `data/events.json` is checked against. It runs `--offline`: no route to the LAN instance is
   // assumed (that is what the live form of the same command is for), and it costs 1.4s @measured 2026-11-05.
   { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: generators, invariants, 71 tests, the import checker' },
-  // `data/events.json` is written by one tool, and its four rules (never un-cancel a published CANCELLED UID,
-  // reuse a venue split only on a byte-identical raw string, a TZID on both ends declares the hour, never delete
-  // a row that dropped out of the feed) are invisible in a diff. 15 offline fixtures, no network, no live feed
-  // touched @measured 2026-11-13 by this step: 0.45s. Planting each rule in a copy of the harvester names the
-  // failure (D290's reasoning, applied to a tool rather than a gate).
-  { name: 'harvest:selftest', desc: "the harvester's five rules on 19 offline fixtures: the cancelled-UID guard, the (date, venue, series) grouping and the superseded rows it logs, byte-identical venue reuse, TZID hour confirmation, rows never deleted", },
+  // `harvest:selftest` is deleted with the harvester (MS42, S092, D471, 2026-11-23): `data/events.json` is no
+  // longer written by a tool in this repo, so the four rules that step planted (never un-cancel a published
+  // CANCELLED UID, venue reuse only on a byte-identical raw string, a TZID on both ends declares the hour, never
+  // delete a row that dropped out of the feed) moved to the writer, which is `social-event-publisher`. What this
+  // repo keeps is the reader's half: `check:ics` audits the file that arrives, and `check:ics:selftest` plants
+  // each of its rules. The step count in design/gate-cost.json moves with it.
   // Which dates `/schedule` is allowed to print, checked against the rule module rather than a copy of it. Runs
   // before `build` because it opens no artifact (D118 again: a gate that can go red before anyone builds is a
   // gate that catches the defect on the branch that introduced it).

@@ -376,7 +376,7 @@ After the first run with `dryRun: false`:
 | `07 Audit the date` saw it | n8n | the window contains the new uuid and **no other row for that series on that date** |
 | `08 Report` | n8n | `created 2026-11-21 … audit: ok (1 row(s) on the date)` |
 | the event looks right | Mobilizon UI | title, **start hour in the club's zone**, venue and map pin, the club's event picture, description, and that visitors can join it |
-| the site sees it | mathloco | run the harvest (`npm run events:harvest`) and confirm the new row lands in `data/events.json` with the right local time |
+| the site sees it | mathloco | nothing to run here since **MS42** (2026-11-23, **ADR-0010**): the row reaches the site when `social-event-publisher` writes a handoff commit at `data/events.json` on the branch this repo builds from, and this repo rebuilds and deploys. Confirm the new row landed with the right local time: `git log -1 -- data/events.json` then `npm run check:ics` |
 
 The UI check matters more than it seems: the API can be perfectly consistent and the wall clock still wrong,
 because Mobilizon renders in the event's own `options.timezone`. If the UI shows the hour you expected, the

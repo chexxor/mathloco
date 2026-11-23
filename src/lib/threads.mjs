@@ -29,7 +29,9 @@
  * What this deliberately is NOT:
  *   - not a network reader. The harvest is `scripts/harvest-threads.mjs`, run by hand on the operator's rig;
  *      the file it writes is committed, so the build never reaches the network (D73's topology, the one
- *      `data/events.json`, `data/meetup-events.json` and `data/discord-events.json` already follow).
+ *      `data/events.json` still follows — since **MS42** that file arrives as a handoff commit from
+ *      `social-event-publisher` rather than a fetch from here, and the two platform snapshots that used to be
+ *      listed beside it are deleted).
  *   - not a place where message text or a member's name may be written. Evidence is *pointers* - a channel,
  *      a message id, a date - never what the message said. `threadFindings` rejects an evidence object with
  *      any key outside its whitelist, so a future harvester that "just stores the snippet to make review
@@ -325,4 +327,4 @@ export function threadFindings(doc) {
 
 /** The `_rule` text the harvester writes into the committed file, kept here so the file's own explanation
  *  cannot drift from the module that reads it. */
-export const THREADS_RULE = "A dated snapshot of what the club's members have actually discussed, harvested by `node scripts/harvest-threads.mjs` and committed so the build never reaches the network (D73's topology, the one data/events.json and data/discord-events.json follow). Evidence is pointers - a channel id, message ids, a date - and never a quotation or a member's name: check:thread-topics fails an evidence object with any other key, and fails any id, date or handle that reaches a built byte. A topic is published only when a human signed it (approvedBy/approvedAt): publishedThreads() prints signed topics alone, and the dates stay in this file as evidence, off the page, because the section says what the club pulls on now, not what it did (S088, D461).";
+export const THREADS_RULE = "A dated snapshot of what the club's members have actually discussed, harvested by `node scripts/harvest-threads.mjs` and committed so the build never reaches the network (D73's topology, the one data/events.json still follows - since MS42 2026-11-23 that file arrives as a handoff commit from social-event-publisher rather than a fetch from this repo). Evidence is pointers - a channel id, message ids, a date - and never a quotation or a member's name: check:thread-topics fails an evidence object with any other key, and fails any id, date or handle that reaches a built byte. A topic is published only when a human signed it (approvedBy/approvedAt): publishedThreads() prints signed topics alone, and the dates stay in this file as evidence, off the page, because the section says what the club pulls on now, not what it did (S088, D461).";

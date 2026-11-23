@@ -5,7 +5,8 @@
 // like a dynamically updated element", and that it should be styled in language that communicates the liveness to a
 // visitor. Three rulings make the word they used unfalsifiable here rather than merely unanswered:
 //   - D73's topology: `data/events.json` is a DERIVED snapshot and nothing fetches Mobilizon at request time, so no
-//     request can be newer than the harvest (`npm run events:harvest`, a step a human runs).
+//     request can be newer than the read that produced the snapshot (in 2026-11-19 that was `npm run events:harvest`,
+//     a step a human ran; since MS42 it is a handoff commit from `social-event-publisher`).
 //   - every route is prerendered (design/README.md), so the artifact a visitor gets is the one this tree built.
 //   - D115 ruled the infinite pulse out, and MS35's `check:reduced-motion` owns the only two motion tiers
 //     (150ms colour, 250ms movement); `design/refs/GAP-ANALYSIS.md` §2 rank 5 marks motion-inside-a-control

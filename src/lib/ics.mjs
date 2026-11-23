@@ -36,12 +36,18 @@
 import { publishableRows, publishedName } from './event-groups.mjs';
 import { feedDescription } from './event-description.mjs';
 import { feedWindow } from './event-window.mjs';
-// D398: the `URL` a subscriber clicks through to is the club's own page for the date, which the resolver in
-// `src/lib/rsvp.mjs` already decides per date from `data/meetup-events.json`. The gate that reads the shipped
-// bytes (`scripts/check-ics.mjs`) re-runs the same lookup, so a feed whose URL field and the page disagree go
-// red rather than shipping two surfaces that promise "the sign-up page" and point at different platforms.
-import { feedUrl } from './rsvp.mjs';
-import meetupSnapshot from '../../data/meetup-events.json' with { type: 'json' };
+// D398: the `URL` a subscriber clicks through to is the page for this date. The resolver in `src/lib/rsvp.mjs`
+// decides it per date (`feedUrl()`), and the gate that reads the shipped bytes (`scripts/check-ics.mjs`) re-runs
+// the same lookup, so a feed whose URL field and the lookup disagree go red rather than shipping two surfaces
+// that promise "the page for this date" and point at different platforms.
+// MS42 (S092, D471, ADR-0010): the lookup's page list is `EVENT_PAGES`, and it is empty until the handoff carries
+// a per-platform link set (docs/spec/event-data-handoff.md, §the change request). So today `feedUrl()` returns
+// null for every row and the `URL` is the row's **own** `url` — the club's own page for the date, which is the
+// one per-date page the handoff is required to carry (docs/spec/event-data-handoff.md, the row-field table).
+// That is a change in what a subscriber lands on, and it is written down rather than left quiet: the site's
+// pages name no Mobilizon link today, so the feed points at a page the page does not. The change request is what
+// closes the gap on both surfaces at once.
+import { EVENT_PAGES, feedUrl } from './rsvp.mjs';
 
 export const CRLF = '\r\n';
 
@@ -195,11 +201,12 @@ export const vevent = (row, calendar) => {
   // from `calendar.window`, which `renderCalendar` derives from the rows it emitted, so the sentence a subscriber
   // reads is derived from the same rows the subscriber reads.
   lines.push(contentLine('DESCRIPTION', null, escapeText(feedDescription(row, calendar.window))));
-  // D398 (round-6 review, feed/Revise): the URL a subscriber follows has to be the page the site points at,
-  // not the page the harvester read. `feedUrl()` returns one only when the club's own snapshot holds exactly
-  // one open page for this row's date and hour; when it does not, the source's page stays, because a Meetup
-  // URL this repo cannot look up is a URL the repo cannot claim.
-  const own = feedUrl(row, meetupSnapshot.events);
+  // D398 (round-6 review, feed/Revise): the URL a subscriber follows has to be the page this site means by
+  // "the page for this date", not whichever page a scraper happened to read. `feedUrl()` returns one only when
+  // this build holds exactly one open page for the row's date and hour; when it does not, the row's own `url`
+  // stays, because that is the page the publisher says the date has (MS42: the lookup's list is empty until the
+  // change request lands, so this is the branch every published row takes today).
+  const own = feedUrl(row, EVENT_PAGES.meetup);
   if (own || row.url) lines.push(contentLine('URL', null, own ?? row.url));
   if (row.image) lines.push(contentLine('ATTACH', 'FMTTYPE=image/png', row.image));
   lines.push('END:VEVENT');

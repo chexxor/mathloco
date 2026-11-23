@@ -21,9 +21,10 @@
 // **D431 (2026-11-18) deletes this gate's `date-inside-window` rule.** That rule asserted D322's second half —
 // inside 30 days a date-bearing surface must print an age — and the round-7 review of `/dates` found the half of
 // it that was never true here: the only stamp this site prints is `data/events.json`'s `source.fetchedAt`, set by
-// a step a human runs (`npm run events:harvest`; the 2026-11-13 stamp was still in the file the day the review
-// was written), so an age is never corrected against a newer read and grows into a self-pitying number rather
-// than a stale one. The date form is therefore legal at any age, which is the form every date-bearing surface
+// whoever writes that file — then a step a human ran (`npm run events:harvest`, deleted with the fetchers under
+// MS42; since 2026-11-23 a handoff commit from `social-event-publisher`, and the 2026-11-13 stamp was still in
+// the file the day the review was written), so an age is never corrected against a newer read and grows into a
+// self-pitying number rather than a stale one. The date form is therefore legal at any age, which is the form every date-bearing surface
 // prints; the age form is legal for a stamp taken today or yesterday, and on a surface ruled date-free
 // (`allowDate: false`, D306), where an age is the only freshness there is to carry. The rule was not left firing
 // at 30 days under its old name: a gate that still green-lights the defect a review just paid for is a gate that

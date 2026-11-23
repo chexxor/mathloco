@@ -2,29 +2,35 @@
 /**
  * check:rsvp — the sign-up link map is current, and every link it prints has been checked.
  *
- *   npm run check:rsvp                 # the committed Meetup + Discord snapshots and the configured platform URLs
+ *   npm run check:rsvp                 # the configured platform URLs and their dated stamps
  *   npm run check:rsvp:selftest        # plant each defect, require each to FAIL (D118)
  *   npm run check:rsvp:links           # GET each configured URL and write its dated stamp (network)
- *   node scripts/check-rsvp.mjs --snap <file> --discord <file> --config <file> [--today YYYY-MM-DD]
+ *   node scripts/check-rsvp.mjs --config <file> [--today YYYY-MM-DD]
  *
- * Why this gate and not a comment in the data file (S019, D272). Two facts about the sign-up links are true
- * only for a while: which Meetup pages exist, and whether a platform URL still answers. A page that prints
- * "Details and sign-up" pointing at a page that was retired last month is the same failure class D223 names
- * — a fact kept published after its source stopped supporting it — and it is invisible to every other gate
- * here, because the link is a string in a committed file and the string is not wrong, only old.
+ * Why this gate and not a comment in the data file (S019, D272). A fact about a sign-up link is true only for a
+ * while: whether a platform URL still answers. A page that prints "Join the Meetup group" pointing at a group
+ * that was closed last month is the same failure class D223 names — a fact kept published after its source
+ * stopped supporting it — and it is invisible to every other gate here, because the link is a string in a
+ * config file and the string is not wrong, only old.
  *
- * Two windows, both dated, both one-number-simple:
- *   - `data/meetup-events.json` and `data/discord-events.json` may be `SNAPSHOT_FRESH_DAYS` (14) days old.
- *     One threshold, one failure, one fix each: `node scripts/meetup-events.mjs --write` and
- *     `node scripts/discord-events.mjs --write`. The 28-day "expired" tier this used to carry is deleted
- *     (D272) — two numbers that both stop the build are one rule wearing two names.
- *   - a configured URL's stamp may be `LINK_STAMP_DAYS` (60) days old, and the status it recorded must not be
- *     a 4xx/5xx. `check:links` is what produces the stamp, so the rule is cheap to keep.
+ * What it rules, since MS42 (S092, D471, ADR-0010):
+ *   - a configured URL's stamp may be `LINK_STAMP_DAYS` (60) days old, and the status it recorded must not be a
+ *     4xx/5xx — except for a probe-blind key, where the evidence is a named human's, dated in the same window
+ *     (D280). `npm run check:rsvp:links` is what produces the stamp, so the rule is cheap to keep.
+ *   - the **shape** of every configured link, and that every platform the resolver knows is declared, empty or
+ *     not (an unchosen platform is not a closed one).
+ *   - the resolver's own match rule (`signUpPaths`) and the preference reorder (`orderByPreference`), planted in
+ *     the selftest — because a link attached to a date it should not be attached to is a painted defect no
+ *     page gate can catch on its own.
  *
- * The rule lives in `src/lib/rsvp.mjs` as `snapshotFindings()`, `discordSnapshotFindings()` and
- * `linkFindings()` — the same functions `scripts/meetup-events.mjs --check` and
- * `scripts/discord-events.mjs --check` call (D264). This file is the gate around them: it reads the files,
- * prints the numbers, and exits.
+ * What it no longer rules: the freshness of a scraped Meetup or Discord snapshot. `SNAPSHOT_FRESH_DAYS` and the
+ * two `*SnapshotFindings()` functions are deleted with the fetchers that wrote those files. The one dated
+ * calendar file this repo has is `data/events.json`, and its freshness is ruled once, by `check:ics` — the
+ * runway (D188) and, since D471, the `stalenessOkUntil` hatch. A second freshness number in a second gate is
+ * the "one rule wearing two names" defect this file's own header used to warn about (D272).
+ *
+ * The rule lives in `src/lib/rsvp.mjs` as `linkFindings()` (D264). This file is the gate around it: it reads the
+ * config, prints the numbers, and exits.
  *
  * `--links` is deliberately NOT in `npm run verify`: it reaches the network, the same exclusion class as
  * `check:discord` (needs a token) and `check:ai` (needs credentials and spends a call). The build never
@@ -34,9 +40,9 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   CHANNEL_KINDS, LINK_KEYS, LINK_SHAPES, LINK_STAMP_DAYS, PLATFORMS, PREF_KEY, PROBE_BLIND_KEYS,
-  SNAPSHOT_FRESH_DAYS, joinChannels,
-  joinUrl, hourOf, linkFindings, openDiscordEvents, openMeetupEvents, discordSnapshotFindings,
-  orderByPreference, preferredFirst, snapshotAgeDays, snapshotFindings,
+  EVENT_PAGES, joinChannels,
+  joinUrl, hourOf, linkFindings, openDiscordEvents, openMeetupEvents,
+  orderByPreference, preferredFirst,
 } from '../src/lib/rsvp.mjs';
 import { scheduleWindow, todayInZone, dateOf } from '../src/lib/event-window.mjs';
 
@@ -48,8 +54,6 @@ const argOne = (flag, dflt) => {
   return i < 0 ? dflt : args[i + 1];
 };
 
-const SNAP = resolve(argOne('--snap', 'data/meetup-events.json'));
-const DISCORD_SNAP = resolve(argOne('--discord', 'data/discord-events.json'));
 const CONFIG = resolve(argOne('--config', 'src/config.json'));
 const UA = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36';
 
@@ -106,45 +110,38 @@ async function stampLinks(config) {
 }
 
 if (selftest) {
-  // Each planting is a whole (snapshot, config) pair, because the two rules read two files and a gate that
-  // tests them one at a time proves nothing about the pair. `now` is fixed so "old" means the same thing
-  // every run: a freshness gate whose selftest depends on the wall clock cannot be re-run next month and
-  // mean the same thing.
+  // Each planting is a whole config, and `now` is fixed so "old" means the same thing every run: a freshness
+  // gate whose selftest depends on the wall clock cannot be re-run next month and mean the same thing. The
+  // snapshot plantings this array used to carry (a Meetup file past its window, a Discord file with no guild, a
+  // stored headcount) are deleted with the fetchers and the `*SnapshotFindings()` rules they tested (MS42). The
+  // per-date page rules they protected did not go unprotected: they moved to `ruleCases` below, which plants
+  // them on `signUpPaths()` directly, and to `check:rsvp-page`, which reads the painted bytes.
   const NOW = Date.parse('2026-11-10T12:00:00Z');
   const day = (n) => new Date(NOW - n * 86400000).toISOString();
-  const goodSnap = { source: { fetchedAt: day(1) }, events: [{ id: '1', url: 'https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/', date: '2026-11-11', time: '18:00', status: 'ACTIVE', going: 5 }] };
-  const goodDiscord = { source: { fetchedAt: day(1), guildId: '1170385683379126343' }, events: [{ id: '1569601080235532400', url: 'https://discord.com/events/1170385683379126343/1569601080235532400/', date: '2026-11-11', time: '18:00', status: 1, title: 'Study Session' }] };
   // The shipped state: the Facebook group is declared, and its stamp carries the human confirmation the gate
   // requires for a probe-blind key (D280). The empty-entry control below is the same shape with the URL removed.
   const goodConfig = { URLs: { meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club', discordInvite: 'https://discord.com/invite/wx5S7YJSkU', facebookGroup: 'https://www.facebook.com/groups/matheapolis' }, _verified: { meetupGroup: { status: 200, verifiedAt: day(1) }, discordInvite: { status: 200, verifiedAt: day(1) }, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(1) } } };
 
   const cases = [
-    { name: 'both files fit: no finding', snap: goodSnap, config: goodConfig, want: [] },
-    { name: 'snapshot one day past the window', snap: { ...goodSnap, source: { fetchedAt: day(15) } }, config: goodConfig, want: ['days old', '14'] },
-    { name: 'snapshot with no fetchedAt at all', snap: { ...goodSnap, source: {} }, config: goodConfig, want: ['no fetchedAt'] },
-    { name: 'snapshot with an unreadable fetchedAt', snap: { ...goodSnap, source: { fetchedAt: 'last Tuesday' } }, config: goodConfig, want: ['readable instant'] },
-    { name: 'an event whose URL is not a Meetup event page', snap: { ...goodSnap, events: [{ ...goodSnap.events[0], url: 'https://www.meetup.com/minneapolis-mathematics-book-club/events/' }] }, config: goodConfig, want: ['cannot trust'] },
-    { name: 'a configured link with no stamp', snap: goodSnap, config: { URLs: goodConfig.URLs, _verified: { discordInvite: goodConfig._verified.discordInvite } }, want: ['has ever checked it'] },
-    { name: 'a stamp 61 days old', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 200, verifiedAt: day(61) } } }, want: ['61 days ago', '60'] },
-    { name: 'a stamp that last answered 404', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 404, verifiedAt: day(1) } } }, want: ['answered 404'] },
-    { name: 'a platform the resolver knows that config never declared', snap: goodSnap, config: { URLs: { meetupGroup: goodConfig.URLs.meetupGroup, discordInvite: goodConfig.URLs.discordInvite }, _verified: goodConfig._verified }, want: ['no facebookGroup entry'] },
-    { name: 'a link in config that no rule knows about', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, meetupSeries: 'https://www.meetup.com/g/events/' } }, want: ['no rule knows about: meetupSeries'] },
-    { name: 'a stamp stamped in the future', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 200, verifiedAt: day(-3) } } }, want: ['stamped in the future'] },
-    { name: 'an empty entry with a 400 stamp: the documented closed platform', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: '' } }, want: [] },
-    { name: "a declared Facebook group whose stamp carries the operator's confirmation", snap: goodSnap, config: goodConfig, want: [] },
-    { name: 'a Facebook page painted as a group URL: the shape gate refuses it', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: 'https://www.facebook.com/matheapolis' } }, want: ['not the shape a Facebook link can have'] },
-    { name: 'a group URL ending in a per-event page is not a group URL', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: 'https://www.facebook.com/groups/matheapolis/events/123' } }, want: ['not the shape a Facebook link can have'] },
-    { name: 'a probe-blind link with no human behind it', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1) } } }, want: ['the only evidence a gate can use is a human', 'confirmedBy'] },
-    { name: 'a named confirmer with no date', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator' } } }, want: ['confirmedAt is not a date'] },
-    { name: 'a confirmation 61 days old', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(61) } } }, want: ['confirmed by operator 61 days ago', '60'] },
-    { name: 'a confirmation dated in the future', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(-3) } } }, want: ['confirmedAt is in the future'] },
-    { name: 'a probe-blind key whose probe eventually answered 200 needs no confirmation', snap: goodSnap, config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 200, verifiedAt: day(1) } } }, want: [] },
-    { name: 'a Meetup link that is an event page rather than the group page', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/' } }, want: ['not the shape a Meetup link can have'] },
-    { name: 'a Discord link that is not an invite', snap: goodSnap, config: { ...goodConfig, URLs: { ...goodConfig.URLs, discordInvite: 'https://discord.com/server/wx5S7YJSkU' } }, want: ['not the shape a Discord link can have'] },
-    { name: 'the Discord snapshot 15 days old', snap: goodSnap, discord: { ...goodDiscord, source: { ...goodDiscord.source, fetchedAt: day(15) } }, config: goodConfig, want: ['Discord snapshot is 15.0 days old', '14'] },
-    { name: 'the Discord snapshot with no guild named', snap: goodSnap, discord: { ...goodDiscord, source: { fetchedAt: day(1) } }, config: goodConfig, want: ['names no guild'] },
-    { name: 'a Discord event whose URL is not an event page', snap: goodSnap, discord: { ...goodDiscord, events: [{ ...goodDiscord.events[0], url: 'https://discord.com/invite/wx5S7YJSkU' }] }, config: goodConfig, want: ['url this build cannot trust'] },
-    { name: 'a Discord snapshot that stored an RSVP headcount', snap: goodSnap, discord: { ...goodDiscord, events: [{ ...goodDiscord.events[0], user_count: 14 }] }, config: goodConfig, want: ['headcount (14) in the snapshot'] },
+    { name: 'the shipped link map: no finding', config: goodConfig, want: [] },
+    { name: 'a configured link with no stamp', config: { URLs: goodConfig.URLs, _verified: { discordInvite: goodConfig._verified.discordInvite } }, want: ['has ever checked it'] },
+    { name: 'a stamp 61 days old', config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 200, verifiedAt: day(61) } } }, want: ['61 days ago', '60'] },
+    { name: 'a stamp that last answered 404', config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 404, verifiedAt: day(1) } } }, want: ['answered 404'] },
+    { name: 'a platform the resolver knows that config never declared', config: { URLs: { meetupGroup: goodConfig.URLs.meetupGroup, discordInvite: goodConfig.URLs.discordInvite }, _verified: goodConfig._verified }, want: ['no facebookGroup entry'] },
+    { name: 'a link in config that no rule knows about', config: { ...goodConfig, URLs: { ...goodConfig.URLs, meetupSeries: 'https://www.meetup.com/g/events/' } }, want: ['no rule knows about: meetupSeries'] },
+    { name: 'a stamp stamped in the future', config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 200, verifiedAt: day(-3) } } }, want: ['stamped in the future'] },
+    { name: 'an empty entry with a 400 stamp: the documented closed platform', config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: '' } }, want: [] },
+    { name: "a declared Facebook group whose stamp carries the operator's confirmation", config: goodConfig, want: [] },
+    { name: 'a Facebook page painted as a group URL: the shape gate refuses it', config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: 'https://www.facebook.com/matheapolis' } }, want: ['not the shape a Facebook link can have'] },
+    { name: 'a group URL ending in a per-event page is not a group URL', config: { ...goodConfig, URLs: { ...goodConfig.URLs, facebookGroup: 'https://www.facebook.com/groups/matheapolis/events/123' } }, want: ['not the shape a Facebook link can have'] },
+    { name: 'a probe-blind link with no human behind it', config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1) } } }, want: ['the only evidence a gate can use is a human', 'confirmedBy'] },
+    { name: 'a named confirmer with no date', config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator' } } }, want: ['confirmedAt is not a date'] },
+    { name: 'a confirmation 61 days old', config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(61) } } }, want: ['confirmed by operator 61 days ago', '60'] },
+    { name: 'a confirmation dated in the future', config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 400, verifiedAt: day(1), confirmedBy: 'operator', confirmedAt: day(-3) } } }, want: ['confirmedAt is in the future'] },
+    { name: 'a probe-blind key whose probe eventually answered 200 needs no confirmation', config: { ...goodConfig, _verified: { ...goodConfig._verified, facebookGroup: { status: 200, verifiedAt: day(1) } } }, want: [] },
+    { name: 'a Meetup link that is an event page rather than the group page', config: { ...goodConfig, URLs: { ...goodConfig.URLs, meetupGroup: 'https://www.meetup.com/minneapolis-mathematics-book-club/events/317097578/' } }, want: ['not the shape a Meetup link can have'] },
+    { name: 'a Discord link that is not an invite', config: { ...goodConfig, URLs: { ...goodConfig.URLs, discordInvite: 'https://discord.com/server/wx5S7YJSkU' } }, want: ['not the shape a Discord link can have'] },
+    { name: 'a link that answered a 3xx redirect is still a live link', config: { ...goodConfig, _verified: { ...goodConfig._verified, discordInvite: { status: 301, verifiedAt: day(1) } } }, want: [] },
   ];
 
   // The match rule itself, planted here because `signUpPaths()` is the thing the page gate compares against:
@@ -181,7 +178,7 @@ if (selftest) {
 
   let bad = 0;
   for (const c of cases) {
-    const got = [...snapshotFindings(c.snap, NOW), ...discordSnapshotFindings(c.discord ?? goodDiscord, NOW), ...linkFindings(c.config, NOW)];
+    const got = linkFindings(c.config, NOW);
     const hit = got.find((f) => c.want.every((w) => f.includes(w)));
     if (c.want.length === 0) {
       if (got.length) { bad++; console.log(`FAIL  "${c.name}" should pass but reported: ${got[0]}`); }
@@ -303,12 +300,8 @@ if (links) {
   process.exit(await stampLinks(config));
 }
 
-const snap = readJson(SNAP, 'run node scripts/meetup-events.mjs --write');
-// The Discord snapshot is not optional: a committed file the resolver reads must exist, and if it is empty
-// because nobody ran the harvester, the site paints fewer links than the guild actually offers.
-const discordSnap = readJson(DISCORD_SNAP, 'run node scripts/discord-events.mjs --write (needs DISCORD_TOKEN in .dev.vars)');
 const config = readJson(CONFIG, 'src/config.json is the link map');
-const problems = [...snapshotFindings(snap), ...discordSnapshotFindings(discordSnap), ...linkFindings(config)];
+const problems = linkFindings(config);
 
 if (problems.length) {
   for (const p of problems) console.log(`FAIL  ${p}`);
@@ -316,10 +309,8 @@ if (problems.length) {
   process.exit(1);
 }
 
-const open = openMeetupEvents(snap.events);
-const openDiscord = openDiscordEvents(discordSnap.events);
-const age = snapshotAgeDays(snap);
-const discordAge = snapshotAgeDays(discordSnap);
+const open = openMeetupEvents(EVENT_PAGES.meetup);
+const openDiscord = openDiscordEvents(EVENT_PAGES.discord);
 const entries = Object.entries(LINK_KEYS).map(([platform, key]) => ({ platform, key, url: config.URLs?.[key] }));
 const configured = entries.filter((e) => e.url);
 const closed = entries.filter((e) => !e.url);
@@ -328,7 +319,7 @@ const oldest = configured.map((e) => ({ k: e.key, at: stamps[e.key].verifiedAt, 
   .sort((a, b) => a.at.localeCompare(b.at))[0];
 
 // How many of the dates the schedule actually prints have a sign-up page, as a sentence a human can act on.
-let printNote = 'no events snapshot for the schedule to draw on';
+let printNote = 'no data/events.json for the schedule to draw on';
 if (existsSync(resolve('data/events.json'))) {
   let events;
   try {
@@ -352,13 +343,11 @@ if (existsSync(resolve('data/events.json'))) {
   printNote = `${withPage.length} of the ${window.shown.length} dates the schedule prints have their own Meetup page, ${withDiscord.length} their own Discord event page`;
 }
 
-console.log(
-  `ok    Meetup snapshot: ${snap.events.length} records read ${snap.source.fetchedAt.slice(0, 10)}, ` +
-  `${age.toFixed(1)} days old (limit ${SNAPSHOT_FRESH_DAYS})`,
-);
-console.log(`ok    Discord snapshot: ${(discordSnap.events ?? []).length} scheduled event(s) read ${discordSnap.source.fetchedAt.slice(0, 10)}, ${discordAge.toFixed(1)} days old (limit ${SNAPSHOT_FRESH_DAYS}), guild ${discordSnap.source.guildId}`);
-console.log(`ok    ${open.length} open Meetup sign-up page(s), every URL matching MEETUP_URL_SHAPE; ${open.filter((e) => e.time).length} with a settled clock`);
-console.log(`ok    ${openDiscord.length} open Discord event page(s), every URL matching DISCORD_EVENT_URL_SHAPE; no user_count stored (D265)`);
+console.log(`ok    ${open.length} open Meetup sign-up page(s) in EVENT_PAGES, every URL matching MEETUP_URL_SHAPE; ${open.filter((e) => e.time).length} with a settled clock`);
+console.log(`ok    ${openDiscord.length} open Discord event page(s) in EVENT_PAGES, every URL matching DISCORD_EVENT_URL_SHAPE; no user_count reaches a page (D265)`);
+if (!open.length && !openDiscord.length) {
+  console.log('ok    EVENT_PAGES is empty (src/lib/rsvp.mjs): this repo no longer fetches per-date platform pages, and the handoff standard does not carry a link set yet — the ask is the change request in docs/spec/event-data-handoff.md (MS42, S092, D471)');
+}
 console.log(`ok    ${configured.length} platform link(s) stamped (oldest: ${oldest.k} ${oldest.at}, answered ${oldest.status}; limit ${LINK_STAMP_DAYS} days)`);
 const human = configured.filter((e) => PROBE_BLIND_KEYS.has(e.key));
 if (human.length) {
@@ -367,4 +356,4 @@ if (human.length) {
 }
 if (closed.length) console.log(`ok    ${closed.length} platform(s) closed and painted nowhere: ${closed.map((e) => PLATFORMS[e.platform]).join(', ')}`);
 console.log(`ok    ${printNote}`);
-console.log('ok    headcounts stay in the snapshots: meetupView() and discordView() drop `going` and `user_count`, and check:rsvp-page reads the painted bytes (D272)');
+console.log('ok    headcounts stay off the page: meetupView() and discordView() are whitelist projections, and check:rsvp-page reads the painted bytes (D272)');

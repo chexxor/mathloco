@@ -17,9 +17,20 @@
  *     <role>-<mediaUid>.<ext>          e.g. social-1f54c2.png, study-0e26aa.png
  *     role ∈ { social, study }         the two roles the club's own series vocabulary uses
  *
- * and the manifest in `data/events.json` records, per media, `reuseCount > 1` ⇒ `standing: true`. A standing asset is
- *  an illustration OF A FORMAT, not a photograph of a meeting, and may be described as such; the harvest step (`npm
- *  run events:harvest`) computes both from the live feed rather than remembering either here. The map is still keyed by
+ * **Corrected 2026-11-23 (MS42).** The sentence below claims "the manifest in `data/events.json` records, per media,
+ *  `reuseCount > 1` ⇒ `standing: true`". **It does not, and it never did** @measured 2026-11-23 by `grep -c
+ *  'reuseCount\|standing' data/events.json` → **0**, and the same grep over `src/` and `scripts/` finds the words only
+ *  in this comment. What the fetcher printed was a reuse count on **stdout** (DESIGN.md still quotes it that way), and
+ *  the file's `image` field is a plain URL string — one of the sixteen row fields the handoff contract carries
+ *  (`docs/spec/event-data-handoff.md`). So `standing: true` was a rule with a writer that never wrote it, and MS42
+ *  deleted the writer: nothing in this repository computes a reuse count any more, and the handoff shape has no field
+ *  for one. What still ships, and is checkable, is the naming half: `<role>-<mediaUid>.<ext>`, and no filename names a
+ *  row. If `standing` is ever wanted, it is a field request to the publisher, not a number to re-derive here.
+ *
+ *  The repeat itself is still readable off the data: all 8 rows' `image` URLs resolve to two media uids
+ *  (`1f54c290…`, `0e26aa48…`) @measured 2026-11-23 by `node -e` over `data/events.json`, which is what makes a
+ *  standing asset an illustration OF A FORMAT rather than a photograph of one meeting — a claim a human makes, not one
+ *  a build computes. The map is still keyed by
  *  the row, because a row has to find its art and the slug is the only handle a row has; what is gone is the file NAME
  *  derived from that key. Under D190 the slug and the filename were the same string, so a row's date was an asset's
  *  date; now an entry names the file it fills (`asset`, the role + media-uid stem the rule produces), and nothing in
@@ -59,8 +70,11 @@
  *  sweep this table held seven entries covering five printed rows for two upstream files — byte-identical art under
  *  seven names (sha256 `1f54c290…` and `0e26aa4894…`, verified by hashing the fetch rather than by comparing filenames),
  *  which is why the build hashed each group to one asset URL and a visitor downloaded two images however many rows
- *  printed. Under R7 that is `reuseCount` and `standing: true` per media, printed by `npm run events:harvest` from the
- *  live feed @measured 2026-11-16 by that run (5 rows serve `1f54c2…`, 3 serve `0e26aa…`). The product call that used
+ *  printed. Under R7 that is `reuseCount` and `standing: true` per media — printed to stdout by the fetch run then in
+ *  charge (`npm run events:harvest`, deleted with the fetchers under **MS42**) and **never written into the file**, as
+ *  the correction above records
+ *  (@measured 2026-11-16 by that run: 5 rows serve `1f54c2…`, 3 serve `0e26aa…`; the same two uids still serve all 8
+ *  rows @measured 2026-11-23). The product call that used
  *  to live here — whether one poster should be *shown* on several rows, ruling 2a / D228 — is unchanged in kind and
  *  still the operator's; what changed is that the row of dates beside it can no longer contradict the asset's name.
  */

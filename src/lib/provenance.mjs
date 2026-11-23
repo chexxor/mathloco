@@ -17,9 +17,11 @@
  * the 30-day threshold `WINDOW` of D322, which is kept as a decision rather than renumbered).
  *
  * D322's reason for 30 was register: one site, one register, so a reader can compare two stamps. It left a second
- * fact unexamined - the only stamp this site prints is `data/events.json`'s `source.fetchedAt`, and that is set by a
- * step a human runs (`npm run events:harvest`; the 2026-11-13 stamp is still in the file on 2026-11-18 because no
- * harvest has run since). So an age is never corrected against a newer read, and it grows into a self-pitying number:
+ * fact unexamined - the only stamp this site prints is `data/events.json`'s `source.fetchedAt`, and that is set by
+ * whoever writes the file (then a step a human ran, `npm run events:harvest`, deleted with the fetchers under MS42;
+ * since 2026-11-23 a handoff commit from `social-event-publisher` - and the 2026-11-13 stamp is still in the file on
+ * 2026-11-18 because no read had run since). So an age is never corrected against a newer read, and it grows
+ * into a self-pitying number:
  * "5 days ago" reads as *apologetic* rather than as *stale*, and it spends the reader's arithmetic on an epoch the
  * page never states. Round-7 review put that in words the reviewer used - "an absolute date ('checked Nov 17') ages
  * honestly; '4 days ago' ages into an apology" - and the page agreed with it. Past this constant the form is the

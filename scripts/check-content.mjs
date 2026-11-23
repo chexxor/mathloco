@@ -154,11 +154,13 @@ const contentWords = (t) => new Set(t.toLowerCase().replace(/[.,;:!?\u2013\u2014
 // a different pair that happens to share three words.
 //
 // The date stamp is stripped before anything else, because a signature that carries a stamp's date is an
-// exemption with an expiry. `npm run events:harvest` rewrites "Copied from the club's own calendar on <date>"
-// every time the feed is read, and a harvest that changes nobody's copy can retire every exemption built on it:
-// @measured 2026-11-13 by this gate — one harvest moved the stamp from Nov 6 to Nov 13 and made all 3 baseline
-// rows stale, each of them a FAIL for a sentence nobody touched. The pair is the pair whatever today is; the
-// date is data the page prints, not the shape of the sentence.
+// exemption with an expiry. Every read of the feed rewrites "Copied from the club's own calendar on <date>", and
+// a read that changes nobody's copy can retire every exemption built on it: @measured 2026-11-13 by this gate —
+// one harvest (the fetcher since deleted, MS42) moved the stamp from Nov 6 to Nov 13 and made all 3 baseline rows
+// stale, each of them a FAIL for a sentence nobody touched. The rule is writer-agnostic on purpose: the stamp now
+// moves when `social-event-publisher` writes a handoff commit, and a signature keyed to a date would break the
+// same way. The pair is the pair whatever today is; the date is data the page prints, not the shape of the
+// sentence.
 // Since D322 the same line can read "yesterday" or "11 days ago" instead of a date, so the relative forms are
 // stripped too — otherwise every run of the build ages an exemption out of existence, which is the same defect
 // with a different clock.

@@ -4,11 +4,11 @@
  *
  *   npm run check:rsvp-page                  # dist/client/index.html and dist/client/schedule/index.html
  *   npm run check:rsvp-page:selftest         # plant each defect, require each to FAIL (D118)
- *   node scripts/check-rsvp-page.mjs --dist <dir> [--snap <file>] [--discord <file>] [--events <file>] [--today YYYY-MM-DD]
+ *   node scripts/check-rsvp-page.mjs --dist <dir> [--events <file>] [--today YYYY-MM-DD]
  *
- * Why a page gate on top of `check:rsvp` (S019, D272). `check:rsvp` proves the *inputs* are fit: the Meetup
- * snapshot is dated and inside the window, every configured URL has been checked and answered. It cannot
- * prove what the page did with them. A component could stop calling `signUpPaths()` and print a hard-coded
+ * Why a page gate on top of `check:rsvp` (S019, D272). `check:rsvp` proves the *inputs* are fit: every
+ * configured URL has been checked, answered and dated, and `check:ics` rules the calendar file's one harvest
+ * stamp. It cannot prove what the page did with them. A component could stop calling `signUpPaths()` and print a hard-coded
  * group link under every row; a row could gain a Facebook link the config never declared; the cluster could
  * land on a date the schedule does not print. Those are painted-byte defects, and this repo's rule for a
  * painted fact is that a gate reads the bytes (D238: `check:schedule-window` reads `data-date` off the built
@@ -20,7 +20,8 @@
       hour back out of the row's prose ("time not set") is exactly what D173 forbids, so the check goes to the
       snapshot instead of to the sentence.
    2. **the links.** Recomputed with `signUpPaths()` from `src/lib/rsvp.mjs` — the same function the
-      components call — from both event snapshots, the Meetup pages and the guild's own scheduled events, and
+      components call — from the per-date page lists the resolver publishes (`EVENT_PAGES`: the Meetup pages and
+      the guild's own scheduled events, empty as of MS42 until the handoff carries a link set), and
       then **split** the way the components split it (D-B, round-4 §6, `splitPaths` in that module): a printed
       row carries the per-date half (`splitPaths(p, urls).row`, one anchor) and the page carries the standing half
       (`splitPaths(p, urls).standing`) exactly once, after the last row — that standing half is **deduped** against
@@ -40,6 +41,12 @@
       same class `check:ext-links` already draws (S041).
    3. **the counts.** No headcount may reach the page (D265). `meetupView()` in the resolver is the projection
       that drops `going`; this gate is the other end of the rule and reads the bytes a visitor sees.
+   5. **the stamp the page states about its own calendar.** `data-rsvp-snapshot` must equal `data/events.json`'s
+      `source.fetchedAt` byte for byte, and `data-rsvp-age` must be the age that stamp implies. This gate does
+      **not** rule how old is too old — that is `check:ics` (the runway, D188, and since D471 the
+      `stalenessOkUntil` hatch), and a second freshness number in a second gate is the one-rule-two-names defect
+      D272 names. What is checked here is that the page is not inventing a date, an age, or a source it does
+      not have.
  *
  * What it does NOT do: reach the network. The freshness and liveness of the URLs is `check:rsvp`'s job
  * (`check:rsvp:links` is the network probe, deliberately outside `verify`). This gate is pure artifact
@@ -52,7 +59,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve, join } from 'node:path';
 import {
-  LINK_KEYS, PLATFORMS, PREF_KEY, SNAPSHOT_FRESH_DAYS, hourOf, signUpPaths, newTabQualifier,
+  LINK_KEYS, PLATFORMS, PREF_KEY, EVENT_PAGES, hourOf, signUpPaths, newTabQualifier,
   ROW_PRIMARY_PLATFORM, splitPaths, EXIT_BAND_PLATFORMS, exitBandUrls,
 } from '../src/lib/rsvp.mjs';
 import { MARKS, MARK_COUNT, markId } from '../src/lib/platform-marks.mjs';
@@ -66,8 +73,6 @@ const argOne = (flag, dflt) => {
 };
 
 const DIST = resolve(argOne('--dist', 'dist/client'));
-const MEETUP_SNAP = resolve(argOne('--snap', 'data/meetup-events.json'));
-const DISCORD_SNAP = resolve(argOne('--discord', 'data/discord-events.json'));
 const EVENTS_SNAP = resolve(argOne('--events', 'data/events.json'));
 const CONFIG = resolve(argOne('--config', 'src/config.json'));
 const CONTENT = resolve(argOne('--content', 'src/content.json'));
@@ -185,8 +190,9 @@ function spriteFindings(html, pageName) {
  *  build and a gate hours apart cannot agree to one decimal (measured 2026-11-11, Linux: a `dist/client` built
  *  2.4h before `node scripts/check-rsvp-page.mjs` painted 2.1 against the snapshot's 2.2, which is a clock
  *  gap, not a defect). 0.15 days is the slack between those two readings — it is not a licence for a stale
- *  snapshot, because `data-rsvp-snapshot` must equal the committed file's `fetchedAt` **exactly**, and
- *  `check:rsvp` fails the build over the 14-day limit before this gate ever sees the page. */
+ *  calendar, because `data-rsvp-snapshot` must equal `data/events.json`'s `source.fetchedAt` **exactly**, and
+ *  `check:ics` rules how old that stamp may be (the runway, D188, and since D471 the `stalenessOkUntil` hatch)
+ *  before this gate ever sees the page. */
 const AGE_SLACK_DAYS = 0.15;
 const withinAge = (painted, actual) => {
   const n = Number(painted);
@@ -378,24 +384,34 @@ const pageFindings = (html, { meetupEvents, discordEvents, eventRows, urls, fetc
       fails.push(`${pageName} cluster on ${date} claims hour ${paintedHour || '(missing data-rsvp-hour)'}; the feed confirms ${hoursOnDate.join(' / ')}`);
     }
 
-    // 3c. Freshness, stated on the page and checked against the snapshot the build read.
+    // 3c. The stamp the page states about its own calendar, checked against the file the dates came from.
+    //     Since MS42 (S092, D471) that file is `data/events.json` and it carries exactly one harvest stamp
+    //     (MH-FR-022 in docs/spec/event-data-handoff.md). How old that stamp may be is ruled once, by
+    //     `check:ics` — the runway (D188) and D471's hatch — so this gate states no second freshness number
+    //     (D272: two numbers that both stop the build are one rule wearing two names). What it does rule is
+    //     that the page is not inventing a date, an age, or a source it does not have.
     if (at['data-rsvp-snapshot'] !== fetchedAt) {
-      fails.push(`${pageName} cluster on ${date} says the snapshot is ${at['data-rsvp-snapshot'] || '(unstamped)'}; data/meetup-events.json says ${fetchedAt}`);
+      fails.push(`${pageName} cluster on ${date} says the snapshot is ${at['data-rsvp-snapshot'] || '(unstamped)'}; data/events.json says ${fetchedAt}`);
     }
     if (age !== null && !withinAge(at['data-rsvp-age'], age)) {
       fails.push(`${pageName} cluster on ${date} says the snapshot is ${at['data-rsvp-age']} days old; the stamp says ${age.toFixed(1)}`);
     }
-    if (age === null || age > SNAPSHOT_FRESH_DAYS) {
-      fails.push(`${pageName} paints sign-up links from a snapshot ${age === null ? 'with no date' : `${age.toFixed(1)} days old`} (limit ${SNAPSHOT_FRESH_DAYS})`);
+    if (age === null) {
+      fails.push(`${pageName} paints sign-up links from a calendar that carries no harvest stamp at all (data/events.json has no source.fetchedAt), so nothing on this page can be dated`);
     }
+    // 3c-2. The Discord pair. `data/discord-events.json` and the fetcher that wrote it are deleted (MS42), so
+    //       this build has no Discord snapshot and the honest stamp is `none` / `unknown`. A page that starts
+    //       naming one again is either a component that grew a second source or a page that kept an old stamp
+    //       after its source went — both are the D223 class, and both fail here rather than shipping a dated
+    //       claim with nothing behind it.
     if (at['data-rsvp-discord-snapshot'] !== discordFetchedAt) {
-      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-snapshot'] || '(unstamped)'}; data/discord-events.json says ${discordFetchedAt}`);
+      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-snapshot'] || '(unstamped)'}; this build has no Discord snapshot source (EVENT_PAGES.discord is empty and scripts/discord-events.mjs is deleted, MS42)`);
     }
     if (discordAge !== null && !withinAge(at['data-rsvp-discord-age'], discordAge)) {
-      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-age']} days old; the stamp says ${discordAge.toFixed(1)}`);
+      fails.push(`${pageName} cluster says the Discord snapshot is ${at['data-rsvp-discord-age']} days old; the stamp says ${discordAge === null ? 'no age' : discordAge.toFixed(1)}`);
     }
-    if (discordAge === null || discordAge > SNAPSHOT_FRESH_DAYS) {
-      fails.push(`${pageName} paints sign-up links from a Discord snapshot ${discordAge === null ? 'with no date' : `${discordAge.toFixed(1)} days old`} (limit ${SNAPSHOT_FRESH_DAYS})`);
+    if (discordAge === null && at['data-rsvp-discord-age'] !== 'unknown') {
+      fails.push(`${pageName} cluster says its Discord snapshot is ${at['data-rsvp-discord-age']} days old; this build has no Discord snapshot to be that old (MS42)`);
     }
 
     // 3d. The destinations, recomputed from the resolver — the STANDING half (D-B). Meetup is not in this
@@ -663,8 +679,10 @@ if (selftest) {
   const turnoutSlot = JSON.parse(readFileSync(CONTENT, 'utf8')).turnout;
   if (typeof turnoutSlot?.value !== 'string') throw new Error('selftest needs src/content.json\'s turnout slot to carry a value string to build D406\'s clean control');
   const turnoutWords = turnoutSlot.value;
-  const DISFETCHED = '2026-11-10T12:00:00.000Z';
-  const DISAGE = 0.2;
+  // MS42: the fixture's Discord stamp pair is what the component emits when it has no Discord source — the
+  // island's own defaults. The per-date page fixtures (`meetup`, `discord`) stay populated, because the
+  // resolver's per-date rules are still rules: they run against `EVENT_PAGES`, and the day the handoff carries a
+  // link set those lists are what the page gate will be checking.
   const TODAY = '2026-11-10';
   const urls = { meetupGroup: 'https://www.meetup.com/g', discordInvite: 'https://discord.com/invite/x', facebookGroup: 'https://www.facebook.com/groups/planted' };
   // The other half of the rule: a platform the club has closed is painted nowhere (rule 6), so the selftest
@@ -714,8 +732,8 @@ if (selftest) {
       'data-rsvp-hour': mut.hour ?? (p.hour ?? 'unsettled'),
       'data-rsvp-snapshot': mut.snapshot ?? FETCHED,
       'data-rsvp-age': mut.age ?? AGE.toFixed(1),
-      'data-rsvp-discord-snapshot': mut.discordSnapshot ?? DISFETCHED,
-      'data-rsvp-discord-age': mut.discordAge ?? DISAGE.toFixed(1),
+      'data-rsvp-discord-snapshot': mut.discordSnapshot ?? 'none',
+      'data-rsvp-discord-age': mut.discordAge ?? 'unknown',
     };
     const attrs = Object.entries(a).map(([k, v]) => `${k}="${v}"`).join(' ');
     // D-B (round-4 §6): the cluster that exists now is the **standing** one, so the fixture's default links
@@ -766,7 +784,7 @@ if (selftest) {
     `<main><ul class="space-y-4">${dates.map((d) => `<li data-surface="past-row" data-date="${d}"><time class="tabular-nums" datetime="${d}">${d}</time> — Study session</li>`).join('')}</ul></main>${bandHtml()}`;
 
   const clean = page([['2026-11-11', '18:00'], ['2026-11-21', '12:00']]);
-  const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: DISFETCHED, discordAge: DISAGE, today: TODAY, pageName: 'planted page', chunks: { [ISLAND_CHUNK]: shippedChunk } };
+  const ctx = { meetupEvents: meetup, discordEvents: discord, eventRows: rows, urls, fetchedAt: FETCHED, age: AGE, discordFetchedAt: 'none', discordAge: null, today: TODAY, pageName: 'planted page', chunks: { [ISLAND_CHUNK]: shippedChunk } };
   // The entry the live run passes for `/past` (D374): `dates: false` is the row contract's, `past: true` is
   // rule 10's, and the pair is what a fixture has to carry — a fixture that leaves `dates` at its default
   // asks a page of finished dates to print an upcoming row and a standing cluster (the defect D374 fixed
@@ -785,7 +803,7 @@ if (selftest) {
     { name: 'a cluster whose hour the feed never confirmed', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { hour: '20:00' })), ctx, want: ['claims hour 20:00'] },
     { name: 'an unsettled hour painted as a settled one', html: page([['2026-11-25', '18:00']]), ctx, want: ['no row on that date has a confirmed time'] },
     { name: 'the note a missing page must state, stated nowhere', html: page([['2026-11-28', '18:00']]).replace(`<p class="text-label text-ink-3">${signUpPaths({ date: '2026-11-28', time: '18:00' }, meetup, urls, discord).note}</p>`, ''), ctx, want: ['never says']},
-    { name: 'a note claiming a missing page where the resolver found one', html: page([['2026-11-21', '12:00']]).replace('data-rsvp-discord-age="0.2">', 'data-rsvp-discord-age="0.2"><p class="text-label text-ink-3">No sign-up page for this date yet — ask in the chat.</p>'), ctx, want: ['says the Meetup page is missing while the resolver found one']},
+    { name: 'a note claiming a missing page where the resolver found one', html: page([['2026-11-21', '12:00']]).replace('data-rsvp-discord-age="unknown">', 'data-rsvp-discord-age="0.2"><p class="text-label text-ink-3">No sign-up page for this date yet — ask in the chat.</p>'), ctx, want: ['says the Meetup page is missing while the resolver found one']},
     { name: 'a state stamp that disagrees with the resolver', html: clean.replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { state: 'none' })), ctx, want: ['state "none" but signUpPaths'] },
     { name: 'two Meetup pages on one hour printed as a single row link', html: page([['2026-11-11', '18:00']]).replace(rowAnchor({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return rowAnchor({ date: '2026-11-11', time: '18:00' }, { links: splitPaths(p, urls).row.slice(0, 1) }); })()), ctx, want: ['paints 1 primary link(s)', 'the resolver returns 2 (Meetup, Meetup)']},
     { name: 'the Facebook link quietly dropped from the standing row', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), (() => { const p = signUpPaths({ date: '2026-11-11', time: '18:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-11', time: '18:00' }, { links: splitPaths(p, urls).standing.filter((d) => d.platform !== PLATFORMS.facebook) }); })()), ctx, want: ['prints no Facebook link although config.URLs.facebookGroup declares one']},
@@ -803,12 +821,17 @@ if (selftest) {
     { name: 'a cross-site link without rel="noopener noreferrer"', html: page([['2026-11-11', '18:00']]).replace('rel="noopener noreferrer"', 'rel="noopener"'), ctx, want: ['rel="noopener"'] },
     { name: 'a cluster stamped with a snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-snapshot="2026-11-09T06:42:38.507Z" data-rsvp-age="1.7"', 'data-rsvp-snapshot="2026-10-01T00:00:00.000Z" data-rsvp-age="40.1"'), ctx, want: ['says the snapshot is 2026-10-01T00:00:00.000Z'] },
     { name: 'an age painted 3.7 days off while the snapshot stamp is correct', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-age="1.7"', 'data-rsvp-age="5.4"'), ctx, want: ['says the snapshot is 5.4 days old; the stamp says 1.7']},
-    { name: 'links painted from a snapshot past the freshness window', html: `<main><ul><li class="rounded-card" data-surface="row" data-date="2026-11-11">${island(clusterHtml({ date: '2026-11-11', time: '18:00' }, { snapshot: '2026-10-01T00:00:00.000Z', age: '40.1' }))}</li></ul></main>`, ctx: { ...ctx, fetchedAt: '2026-10-01T00:00:00.000Z', age: 40.1 }, want: ['snapshot 40.1 days old (limit 14'] },
+    // MS42 (S092, D471): the two "past the freshness window" plantings that used to sit here are retired with
+    // `SNAPSHOT_FRESH_DAYS` — this gate no longer owns a freshness number, because `check:ics` owns the runway
+    // (D188) and D471's hatch, and a second number that also stops the build is D272's one-rule-two-names
+    // defect. What it still owns is that the page states a stamp that exists and an age that follows from it, so
+    // the planting below is the replacement: a page painting sign-up links from a calendar with no stamp at all.
+    { name: 'a page whose calendar carries no harvest stamp at all', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { snapshot: '', age: 'unknown' })), ctx: { ...ctx, fetchedAt: null, age: null }, want: ['carries no harvest stamp at all'] },
     // The anchor here is the arrow glyph, not a label word. This planting used to be `replace('Proofs <span class="sr-only">', ...)` -
     // a label - and it went dead on 2026-11-14 when the cluster's copy changed, producing 0 failures and a
     // selftest that looked green for a rule that had stopped being exercised (D265, S041). Markup the
     // cluster emits on every link is the stable anchor.
-    { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-age="0.2">', 'data-rsvp-discord-age="0.2"><p>12 going</p>'), ctx, want: ['paints a headcount']},
+    { name: 'a headcount painted in the cluster', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-age="unknown">', 'data-rsvp-discord-age="0.2"><p>12 going</p>'), ctx, want: ['paints a headcount']},
     { name: 'the roster tally the join band used to print, painted again', html: `${clean}<section class="mt-8"><p>280 on the Meetup list — counted Nov 3, 2026, and that is the list, not the room.</p></section>`, ctx, want: ['paints a headcount', '280 on the Meetup list']},
     { name: 'a member count painted as prose', html: `${clean}<section class="mt-8"><p>The club has 142 members.</p></section>`, ctx, want: ['paints a headcount', '142 members']},
     { name: 'an RSVP tally painted where a Discord link is', html: page([['2026-11-11', '18:00']]).replace('Sign up on Discord', 'Sign up on Discord (14 RSVPs)'), ctx, want: ['paints a headcount', '14 RSVPs']},
@@ -834,8 +857,10 @@ if (selftest) {
     { name: 'the band Meetup path drifting from the URL the config declares', html: clean.replace('href="https://www.meetup.com/g" target="_blank" rel="noopener noreferrer" data-rsvp-platform="Meetup"', 'href="https://www.meetup.com/g/join" target="_blank" rel="noopener noreferrer" data-rsvp-platform="Meetup"'), ctx, want: ["band path goes to https://www.meetup.com/g/join; config.URLs.meetupGroup says https://www.meetup.com/g"] },
     { name: 'the standing row repeating an exit the band already paints', html: page([['2026-11-21', '12:00']]).replace(clusterHtml({ date: '2026-11-21', time: '12:00' }), (() => { const p = signUpPaths({ date: '2026-11-21', time: '12:00' }, meetup, urls, discord); return clusterHtml({ date: '2026-11-21', time: '12:00' }, { links: [...splitPaths(p, urls).standing, { platform: 'Discord', href: urls.discordInvite, label: 'Join the Discord chat', srOnly: ', opens in a new tab' }] }); })()), ctx, want: ['an exit the band already paints at the foot of the same page'] },
     { name: 'a page with seven outbound exits outside the band', html: `${clean.replace('</main>', '<a href="https://example.com/a">One more</a><a href="https://example.com/b">Two more</a><a href="https://example.com/c">Three more</a><a href="https://example.com/d">Four more</a></main>')}`, ctx, want: ['9 outbound link(s) outside the exit band'] },
-    { name: 'a cluster stamped with a Discord snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot="2026-11-10T12:00:00.000Z"', 'data-rsvp-discord-snapshot="2026-10-01T00:00:00.000Z"'), ctx, want: ['Discord snapshot is 2026-10-01T00:00:00.000Z']},
-    { name: 'Discord links painted from a guild snapshot past the freshness window', html: page([['2026-11-11', '18:00']]).replace(clusterHtml({ date: '2026-11-11', time: '18:00' }), clusterHtml({ date: '2026-11-11', time: '18:00' }, { discordSnapshot: '2026-10-01T00:00:00.000Z', discordAge: '40.1' })), ctx: { ...ctx, discordFetchedAt: '2026-10-01T00:00:00.000Z', discordAge: 40.1 }, want: ['Discord snapshot 40.1 days old (limit 14']},
+    { name: 'a cluster stamped with a Discord snapshot the build did not read', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-snapshot="none"', 'data-rsvp-discord-snapshot="2026-10-01T00:00:00.000Z"'), ctx, want: ['Discord snapshot is 2026-10-01T00:00:00.000Z']},
+    { name: 'a Discord age painted for a snapshot this build has no source for', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-discord-age="unknown"', 'data-rsvp-discord-age="0.2"'), ctx, want: ['no Discord snapshot to be that old']},
+    // (retired with MS42: the Discord freshness planting; its replacement is
+    //  'a Discord age painted for a snapshot this build has no source for' above.)
     { name: 'the cluster promoted to a control', html: page([['2026-11-11', '18:00']]).replace('data-rsvp-platform="Meetup"', 'data-rsvp-platform="Meetup" data-control="signup"'), ctx, want: ['quiet label, not a control'] },
     // Rule 5c / 9b: the platform mark (F3(b), D294).
     { name: 'a standing link painted without its platform mark', html: page([['2026-11-11', '18:00']]).replace('<svg class="w-4 h-4 shrink-0 fill-current" viewBox="0 0 24 24" aria-hidden="true"><use href="#pm-discord"></use></svg>', ''), ctx, want: ['paints 0 platform mark(s)'] },
@@ -888,16 +913,17 @@ const readJson = (p, hint) => {
   }
 };
 
-const meetupSnap = readJson(MEETUP_SNAP, 'run node scripts/meetup-events.mjs --write');
-const discordSnap = readJson(DISCORD_SNAP, 'run npm run events:discord (writes data/discord-events.json)');
-const events = readJson(EVENTS_SNAP, 'run npm run events:harvest');
+const events = readJson(EVENTS_SNAP, 'the calendar arrives as a commit from social-event-publisher (docs/spec/event-data-handoff.md) — there is no harvest command in this repo any more (MS42)');
 const config = readJson(CONFIG, 'src/config.json is the link map');
 
 const urls = config.URLs ?? {};
-const fetchedAt = meetupSnap.source?.fetchedAt ?? null;
+const fetchedAt = events.source?.fetchedAt ?? null;
 const age = fetchedAt ? (Date.now() - Date.parse(fetchedAt)) / 86400000 : null;
-const discordFetchedAt = discordSnap.source?.fetchedAt ?? null;
-const discordAge = discordFetchedAt ? (Date.now() - Date.parse(discordFetchedAt)) / 86400000 : null;
+// No Discord snapshot source exists in this tree since MS42, so the pair the page must paint is the island's
+// own "no source" pair. If a future change gives the site a per-date Discord page, it arrives through
+// EVENT_PAGES and this pair changes with it — a page cannot get a stamp before its source exists.
+const discordFetchedAt = 'none';
+const discordAge = null;
 const today = argOne('--today', todayInZone(events.calendar?.timezone ?? 'America/Chicago'));
 
 let total = 0;
@@ -916,7 +942,7 @@ for (const page of PAGES) {
     chunks[url] = existsSync(file) ? readFileSync(file, 'utf8') : undefined;
   }
   const { surfaces, clusters, fails, outsideBand } = pageFindings(html, {
-    meetupEvents: meetupSnap.events ?? [], discordEvents: discordSnap.events ?? [], eventRows: events.events ?? [], urls,
+    meetupEvents: EVENT_PAGES.meetup, discordEvents: EVENT_PAGES.discord, eventRows: events.events ?? [], urls,
     fetchedAt, age, discordFetchedAt, discordAge, today, pageName: page.name, dates: page.dates, past: page.past, chunks,
   });
   if (fails.length) {

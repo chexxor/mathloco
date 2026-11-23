@@ -2,10 +2,11 @@
  * cadence.mjs — D92's frequency words, in one home, because two programs have to agree about them.
  *
  * `scripts/check-content.mjs` forbids a frequency word on a page unless `src/content.json` names where the
- * claim came from, and `scripts/events-harvest.mjs` must say when it is about to create a row whose title
- * carries one (a harvest cannot author a series name, so it copies the organizer's `SUMMARY`; on 2026-11-13
+ * claim came from, and whatever writes the snapshot has to say when it is about to create a row whose title
+ * carries one (a fetch cannot author a series name, so it copies the organizer's `SUMMARY`; on 2026-11-13
  * that placeholder put "Bimonthly" on `/schedule` twice while the gate printed the hit and passed — D301).
- * The list lived in the gate; a copy of it in the harvester would be two opinions about one rule, and the
+ * The list lived in the gate; a copy of it in the fetcher (`scripts/events-harvest.mjs`, deleted 2026-11-23 under
+ * MS42 — the job is `social-event-publisher`'s now) would be two opinions about one rule, and the
  * second opinion is the one that goes stale (D118's "one table" rule, applied to a word list).
  *
  * A word is allowed only when the source **names that word**: naming a different cadence is not a source

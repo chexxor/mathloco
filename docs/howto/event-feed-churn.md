@@ -5,8 +5,16 @@
 > in this repo that names the old home means the file here with the same name.
 
 **Symptom:** "is this meetup still real", "the card has no image", "the schedule looks wrong",
-"`check:ics` is green but the date is off", "the same event appeared twice", "the harvester wants to
-delete a row", "a `.ics` subscriber will keep a cancelled meetup".
+"`check:ics` is green but the date is off", "the same event appeared twice", "a row left the feed",
+"a carried row is dated in the past", "a `.ics` subscriber will keep a cancelled meetup".
+
+> **Re-read on 2026-11-23 for the handoff era (**MS42**, **S092**, **D471**, **ADR-0010**).** This repository no
+> longer fetches anything: `data/events.json` arrives as one commit from `social-event-publisher`
+> (`docs/spec/event-data-handoff.md`), and the four fetchers this file told you to run are deleted. What still
+> works is the diagnosis — the feed's churn, the UID-not-summary signature, the hand-authored cancellation, the
+> art identity rule. What changed is **who performs the refresh**: the fetch is the publisher's act, and this
+> repo's act is to read the handoff commit, rebuild, and deploy. A runbook that orders a fetch after MS42 is a
+> bug in the runbook.
 
 Written the day it happened, 2026-11-06 (Linux), from three live reads of the same URL inside one
 session. D222/D223/D225 are the records; this file is the procedure.
@@ -33,17 +41,24 @@ the instance UI adds no confirmation. The feed is the contract (D73/D74).
 
 ## 1. Which claims are visible to a gate? None of the content ones.
 
-`check:ics` (15 rules) enforces zone-on-instants, `DTSTAMP == source.fetchedAt`, UID shape, line
-folding, the **runway** (fails only when **no** row sits within `RUNWAY_DAYS` = 21) and the
-`stalenessOkUntil` hatch. It never asks *is this row still true*. A snapshot can publish a meetup the
-source dropped and stay green — that is what happened for 34 hours. So the ritual is the gate:
+`check:ics` (23 rules @measured 2026-11-23 by `npm run check:ics`, which prints the rule count) enforces
+zone-on-instants, `DTSTAMP == source.fetchedAt`, UID shape, line folding, the **runway** (fails only when **no**
+row sits within `RUNWAY_DAYS` = 21), the **stamp age** (`stale-snapshot`, **D471**: the file's single harvest
+instant older than the same 21 days) and the `stalenessOkUntil` hatch. It never asks *is this row still true*. A
+snapshot can publish a meetup the source dropped and stay green — that is what happened for 34 hours.
+
+Before MS42 the ritual was the harvester's own read-only diff. There is no harvester here any more, so the ritual
+is reading the handoff commit against the file it replaced:
 
 ```bash
-node scripts/events-harvest.mjs            # read-only diff: new / changed / in-snapshot-not-in-feed
+git log --oneline -5 -- data/events.json     # the handoff commits, newest first
+git show --stat HEAD -- data/events.json     # what the last one changed
+node scripts/check-ics.mjs                   # what this repo's gate says about what arrived
 ```
 
-The `NOT removed` note it prints for a missing row is deliberate: the harvester cannot model a row
-leaving. That half is a hand edit (§3).
+A row that left the upstream feed is **not** deleted here (**D72**): the publisher carries it, and retiring it is
+a hand-authored cancellation (§3) — which stays this repo's act, because the publisher refuses to invent a
+retirement nobody authored (**MH-FR-011**, **D470**).
 
 ## 2. The signature to look for: a stable summary over a **changed UID**
 
@@ -54,10 +69,12 @@ were identical while the UID changed (`649bf59a…` -> `76a29f38…`). Consequen
 - a cancellation is **ours to author**, because the source will never send one;
 - subscriber clients key on UID, so deleting a row leaves the old event in the calendar forever.
 
-## 3. Authoring a cancellation (what the harvester cannot do)
+## 3. Authoring a cancellation (what no fetcher ever could do)
 
-1. `npm run events:harvest -- --write` **only after the operator rules** (it rewrites tracked content
-   and moves every `fetchedAt`).
+1. There is no `--write` to run any more (MS42). A cancellation is a **hand edit** to `data/events.json`, on the
+   branch the publisher writes to, and it must survive the publisher's next run: the far side carries the rows it
+   reads, so a cancellation this repo authors can be overwritten by a fresh read of a source that stopped
+   announcing the row. Say so in the commit and check the next handoff commit for it.
 2. Hand-edit `data/events.json` for the retired row: keep the old `uid`, set `"status": "CANCELLED"`,
    raise `"sequence": 1`, and re-stamp **both** `source.fetchedAt` and `source.dtstamp` on the *row*
    to the new top-level `fetchedAt`. `check:ics`'s `dtstamp` rule compares the row stamp to the
@@ -69,7 +86,7 @@ were identical while the UID changed (`649bf59a…` -> `76a29f38…`). Consequen
    the suffix (`2026-11-07-club-social-cancelled`). `upcomingEvents()` in `src/lib/events.mjs` drops
    `CANCELLED`, so the page shows one card while `/events.ics` still announces the retirement.
 5. Add the provenance notes (`_status`, `_slug`, `_dtstamp`) so the next session can tell a hand edit
-   from a harvested field.
+   from a field that arrived in a handoff commit.
 
 Then:
 
@@ -142,8 +159,9 @@ real defect and not a member-facing incident — keep those separate in reports 
 
 ## 8. Cadence consequence for the operator
 
-Every harvest moves the top-level `fetchedAt`, and `dtstamp` forces every published `DTSTAMP` to equal
-it, so **one harvest reads to every subscriber as an edit to every row**. Harvest cadence is therefore
-a product decision (host options in MILESTONES' A8 row; a Worker cron is not the answer — 10 ms CPU,
-D150). The runway gate only fires inside 21 days **and only at deploy time**, so it is the backstop,
-not the schedule.
+Every run of the publisher moves the top-level `fetchedAt`, and `dtstamp` forces every published `DTSTAMP` to
+equal it, so **one handoff commit reads to every subscriber as an edit to every row** (**D225**). Cadence is
+therefore still a product decision — it just belongs to the repository that fetches now. `harvest-cron-host.md`
+keeps the measured option costs for hosting such a job; the job does not live here (MS42). A Worker cron is not
+the answer for this repo — 10 ms CPU, **D150**. The runway and stamp-age gates only fire at build time, so they
+are the backstop, not the schedule.

@@ -109,9 +109,7 @@
 import { filled, formatDate, timeSpan } from '../lib/content.ts';
 import type { UpcomingItem } from '../lib/content.ts';
 import config from '../config.json';
-import meetupSnapshot from '../../data/meetup-events.json';
-import discordSnapshot from '../../data/discord-events.json';
-import { signUpPaths, splitPaths, PLATFORMS } from '../lib/rsvp.mjs';
+import { EVENT_PAGES, signUpPaths, splitPaths, PLATFORMS } from '../lib/rsvp.mjs';
 import { newTabQualifier } from '../lib/links.mjs';
 import EventLeaf from './EventLeaf.astro';
 
@@ -133,7 +131,7 @@ const { item, zone = false } = Astro.props;
 // word costs nothing the address did not already cost. `check:row-geometry` re-derives the groups from a
 // `data-venue-key` handle rather than trusting this flag, because a component that stopped passing it
 // would otherwise keep every gate green while the page lost the fact (D301's class). The word is not a
-// guess either way: every row in `data/events.json` carries `DTSTART;TZID=America/Chicago`, the harvester
+// guess either way: every row in `data/events.json` carries `DTSTART;TZID=America/Chicago`, the publisher
 // confirms that hour before writing a row, and `check:ics`'s tzid rule (D188) keeps it true in the feed.
 // Round-4 brief §6, ruling D-B (2026-11-15): a row carries ONE action. The per-date sign-up page belongs to
 // the date, so it belongs to the row; the chat, the group and the calendar file belong to the club, so they
@@ -142,7 +140,7 @@ const { item, zone = false } = Astro.props;
 // that picked its own way out would be a second link rule, and the gate that compares painted bytes against
 // `signUpPaths()` would then be comparing the wrong thing (D264).
 const zoneWord = zone ? ' Central' : '';
-const paths = signUpPaths(item, meetupSnapshot.events, config.URLs, discordSnapshot.events);
+const paths = signUpPaths(item, EVENT_PAGES.meetup, config.URLs, EVENT_PAGES.discord);
 const primary = splitPaths(paths, config.URLs).row[0] ?? null;
 // The label already names the platform, so the suffix is the mode of opening only — and it is glued to the
 // label with no whitespace between the two. The round-4 brief §4 quoted the built page as

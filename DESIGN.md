@@ -603,7 +603,7 @@ Rules that are not decoration:
   q18, D371). `/dates`'s lede names the window the published `/events.ics` carries — first `DTSTART`, last
   `DTSTART`, how many rows — and every row's `DESCRIPTION` carries the **identical** sentence, both from
   `windowSentence(feedWindow(…))`. It is never hand-written, because a date in prose is a claim that expires with
-  the next harvest; `check:ics`'s `calendar-window` rule derives the window from the file's own `DTSTART`s and
+  the next handoff commit (**MS42**: the file arrives from `social-event-publisher`, it is no longer harvested here); `check:ics`'s `calendar-window` rule derives the window from the file's own `DTSTART`s and
   `check:schedule-window` compares the page's sentence against the same generator, so a sentence the rows do not
   support goes red rather than shipping. One sentence in two places rather than two sentences is deliberate: the
   page and the file naming one window twice in different words is a near-duplicate `check:content` would have to be
@@ -1117,9 +1117,13 @@ and the screen can disagree.
   having no filenames that bear dates, so it decided nothing and could not be failed. What ships today satisfies the
   half that matters in the stronger way — seven mirrored `src/assets/photos/event-*.png` were deleted in D359's
   sweep, so `src/assets/photos/` carries four PNGs and **no event asset at all** — and it decides the future half:
-  an asset a re-mirror would name is `<role>-<mediaUid>.<ext>` (`social`, `study`), and `npm run events:harvest` prints
-  the reuse count that sets `standing: true` rather than leaving it to a comment (media `1f54c2` serves 5 rows,
-  media `0e26aa` serves 3 @measured 2026-11-16 by `npm run events:harvest`). It is checkable with a `find` for digits
+  an asset a re-mirror would name is `<role>-<mediaUid>.<ext>` (`social`, `study`), and the reuse count that would set
+  `standing: true` used to be **printed** (not stored) by `npm run events:harvest` rather than left to a comment (media
+  `1f54c2` serves 5 rows, media `0e26aa` serves 3 @measured 2026-11-16 by that run). **That command is deleted (MS42,
+  2026-11-23)** and the manifest it implied was never written: `grep -c 'reuseCount\|standing' data/events.json` → **0**
+  @measured 2026-11-23, and the same two media uids still serve all 8 rows' `image` URLs. So the enforceable half of
+  this rule is the naming half, and `standing` is a field request to `social-event-publisher`, not a number to re-derive
+  here. It is checkable with a `find` for digits
   in a filename — but that census **over-reports here**: `find src/assets/photos -name '*[0-9]*'` prints 3 of the
   4 PNGs @measured 2026-11-16, and every digit run in them is a book year (Euclid 1903, Euler 1910, the 1922 radio
   text) under D167's provenance keys, not a meeting date, so what decides is that **no filename names a row** a date
