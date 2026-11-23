@@ -221,7 +221,7 @@ const DEPLOY = [
   // The n8n integration builds an importable artifact from sources in this repo, and its rules are the same
   // date rules `data/events.json` is checked against. It runs `--offline`: no route to the LAN instance is
   // assumed (that is what the live form of the same command is for), and it costs 1.4s @measured 2026-11-05.
-  { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: generators, invariants, 71 tests, the import checker' },
+  { name: 'check:cadence', desc: 'the Mobilizon cadence workflow: four generators, invariants, 114 tests @measured 2026-11-23 by `npm run check:cadence`, the import checker' },
   // `harvest:selftest` is deleted with the harvester (MS42, S092, D471, 2026-11-23): `data/events.json` is no
   // longer written by a tool in this repo, so the four rules that step planted (never un-cancel a published
   // CANCELLED UID, venue reuse only on a byte-identical raw string, a TZID on both ends declares the hour, never
