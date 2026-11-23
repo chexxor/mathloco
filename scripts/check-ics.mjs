@@ -827,6 +827,13 @@ if (IS_MAIN && selftest) {
     { name: 'an-old-stamp-with-an-expired-hatch', data: (d) => { const old = `${dayShift(-(RUNWAY_DAYS + 3))}T00:00:00Z`; d.source.fetchedAt = old; for (const e of d.events) e.source.fetchedAt = old; d.stalenessOkUntil = dayShift(-1); return d; }, rule: 'stale-snapshot' },
     { name: 'a-carried-finished-row-is-legal', clean: true, data: (d) => { moveRow(d.events.find((e) => String(e.status ?? 'CONFIRMED').toUpperCase() !== 'CANCELLED'), dayShift(-4)); return d; }, rule: 'stale-snapshot' },
     { name: 'an-old-stamp-with-a-live-hatch', clean: true, data: (d) => { const old = `${dayShift(-(RUNWAY_DAYS + 3))}T00:00:00Z`; d.source.fetchedAt = old; for (const e of d.events) e.source.fetchedAt = old; d.stalenessOkUntil = dayShift(7); return d; }, rule: 'stale-snapshot' },
+    // The window's edge, pinned from both sides. Found by experiment, not by reading: inverting `age <= RUNWAY_DAYS`
+    // to `age < RUNWAY_DAYS` left all 50 plantings green @measured 2026-11-23 by mutating the rule and re-running
+    // `--selftest` — a one-day drift in the only freshness number this repository has was invisible. So the pair:
+    // a stamp at exactly the window stays silent, and one day past it fires by name. With the pair in place the
+    // same mutation fails as `a-stamp-at-exactly-the-window` and the selftest prints 1 undetected.
+    { name: 'a-stamp-at-exactly-the-window', clean: true, data: (d) => { const at = `${dayShift(-RUNWAY_DAYS)}T00:00:00Z`; d.source.fetchedAt = at; for (const e of d.events) e.source.fetchedAt = at; return d; }, rule: 'stale-snapshot' },
+    { name: 'a-stamp-one-day-past-the-window', data: (d) => { const at = `${dayShift(-(RUNWAY_DAYS + 1))}T00:00:00Z`; d.source.fetchedAt = at; for (const e of d.events) e.source.fetchedAt = at; return d; }, rule: 'stale-snapshot' },
     // D371. The class is a reach sentence that does not match the rows — what a hand-written window looks like
     // the first harvest after it moves a date. The swap is done on the **unfolded logical line** and the line is
     // re-folded through the renderer's own `contentLine`, so the planting plants the window defect and nothing
@@ -868,7 +875,7 @@ if (IS_MAIN && selftest) {
     // harvest re-dates rows (D174's confirmed instants), so a date-keyed planting stops measuring the day the
     // feed moves - which is exactly how this one went silent on 2026-11-13. The planting copies whichever
     // DTSTART the renderer emits first into that row's own DTEND, so the span is zero whatever the row is.
-    { name: 'zero-length-instant-span', text: (t) => t.replace(/DTSTART;TZID=America\/Chicago:(\d{8}T\d{6})\r\nDTEND;TZID=America\/Chicago:\d{8}T\d{6}/, (m, start) => 'DTSTART;TZID=America/Chicago:' + start + '\r\nDTEND;TZID=America/Chicago:' + start), rule: 'date-span' },
+    { name: 'zero-length-instant-span', text: (t) => t.replace(/DTSTART;TZID=America\/Chicago:(\d{8}T\d{6})\r\nDTEND;TZID=America\/Chicago:\d{8}T\d{6}/, (_m, start) => 'DTSTART;TZID=America/Chicago:' + start + '\r\nDTEND;TZID=America/Chicago:' + start), rule: 'date-span' },
     { name: 'artifact-drift', text: (t) => `${t}BEGIN:VEVENT\r\nUID:ghost\r\nEND:VEVENT\r\n`, rule: 'envelope' },
     // The runway gate (A8, D188). Each of these is a way a published calendar goes quietly stale; the last is
     // an assertion of SILENCE, because a hatch that never works is as wrong as a gate that never fires.

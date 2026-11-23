@@ -142,7 +142,7 @@ const DEPLOY = [
   // nothing. Since MS42 (D471) its rules include the file's one harvest stamp: the runway (D188) and the
   // `stalenessOkUntil` hatch — the reader's half of a freshness rule whose writer half left this repo.
   { name: 'check:ics', desc: 'the published calendar: RFC 5545 traps, UID stability, the built /events.ics bytes, the reach the file states about itself (D371), and the age of its one harvest stamp (D188, D471)', needs: ['build'] },
-  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (50 plantings, each named @measured 2026-11-23 by `node scripts/check-ics.mjs --selftest` — 45 before MS42 retired the live-row rule and replanted the stamp rule four ways)' },
+  { name: 'check:ics:selftest', desc: 'the calendar gate can still fail (52 plantings, each named @measured 2026-11-23 by `node scripts/check-ics.mjs --selftest` — 45 before MS42 retired the live-row rule and replanted the stamp rule four ways, plus the pair that pins the 21-day window at its edge from both sides)' },
   // The two fixtures `social-event-publisher` ships with its own suite are run here through **this** repo's rules
   // (MS42, ADR-0010, docs/spec/event-data-handoff.md §"The two vendor fixtures are a test in this tree, not a
   // sample"). The standard's file must pass, the deliberately broken one must fail with each planted defect named,
