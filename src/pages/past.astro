@@ -111,7 +111,7 @@ const olderText = win.hiddenCap > 0
     read the built routes); only the crawler is told not to index an empty shelf. `404.astro` is the precedent
     for this attribute in this repo. */}
 <Layout title="Past meetings - Matheapolis, a Minneapolis math club" noindex={forbidsIndexing('/past')} path="/past">
-  <main class="mx-auto max-w-4xl px-4 py-16 text-center">
+  <main id="main" class="mx-auto max-w-4xl px-4 py-16 text-center">
     <h1 class="text-display-1 font-extrabold text-ink">Past meetings</h1>
     <p class="mt-2 text-lede leading-prose text-ink-2 mb-8 max-w-measure mx-auto">
       Every date on our own calendar that has finished and was not called off.

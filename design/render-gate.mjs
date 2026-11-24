@@ -23,7 +23,9 @@
 //     D140). Both roles are **48px** and differ by FILL (D139): a 16px label line box + `py-4` 16/16. Having one
 //     height to assert is also what stops a keylined control arriving at 42 by border arithmetic — the ratified
 //     keyline is a 1px INSET ring, so padding decides the box and the box is 48. A control-shaped element that
-//     declares no role is a finding.
+//     declares no role is a finding — unless it measures 1×1px at rest, which is a box the ladder has nothing to
+//     read (the skip link, `sr-only` until focused; see `hiddenAtRest` below and the painted case in
+//     `design/render-gate-selftest.mjs`).
 //   - the contrast the oracle promised is the contrast that painted, on the page a visitor gets
 //   - one dark band per screen (a footer + a dark CTA is two bands, which is what the old book-theme
 //     ribbon produced), and that band must contain paths a visitor can press (D115)
@@ -253,6 +255,17 @@ for (const route of routes) {
     for (const c of j.controls) {
       const cls = c.cls || '';
       const shaped = /\bbg-ink\b(?!-2)|inset-shadow-rule/.test(cls);   // it is painted like a button
+      // Painted-like-a-button is a CLASS fact; this is the MEASURED fact that decides whether there is a box to
+      // hold to the ladder. An element clipped to 1×1px at rest ships no ink and no tap target, so a height rule
+      // has nothing to assert on it. The one element this matches is the skip link (src/layouts/Layout.astro,
+      // landed 2026-11-23): **1 x 1px, transparent fill** at rest on all 6 pages at all 4 widths @measured
+      // 2026-11-23 by `node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 1240 1400`.
+      // Its `focus:bg-ink` is what makes the class test call it control-shaped; focused it is 32px (`min-h-8`),
+      // a figure the 48px ladder would reject on a control that paints no box at rest.
+      // The exemption is measured, not classed: `sr-only` in the class list buys nothing unless the box is 1px,
+      // and `design/render-gate-selftest.mjs`'s "skip link painted at rest" case is the counterfactual — strip
+      // `sr-only` from the built page and the same element fails the same rule.
+      const hiddenAtRest = /\bsr-only\b/.test(cls) && num(c.h) <= 1 && num(c.w) <= 1;
       if (c.role) {
         const want = CONTROL_ROLES[c.role];
         if (want === undefined) {
@@ -261,7 +274,7 @@ for (const route of routes) {
           fails.push(`${at}: ${c.role} control "${c.t}" is ${c.h}px tall, not ${want} (${cls.slice(0, 48)})`);
         }
         if (w === 390 && num(c.h) < 44) fails.push(`${at}: tap target "${c.t}" is ${c.h}px tall, under 44`);
-      } else if (shaped) {
+      } else if (shaped && !hiddenAtRest) {
         fails.push(`${at}: control-shaped element "${c.t}" declares no data-control role — the height rules match the name the source publishes (D140): ${cls.slice(0, 60)}`);
       }
       if (c.contrast !== null && c.contrast < 4.5) fails.push(`${at}: control "${c.t}" contrast ${c.contrast} < 4.5 (${c.fg} on ${c.bg})`);

@@ -196,11 +196,11 @@ const DEPLOY = [
   // "Schedule", homepage button "View Schedule". Every one is fine alone; together they are an alias map the
   // reader has to hold. The verdict here runs on in-memory fixtures, so the rule can go red on a branch nobody
   // has built yet (D118). Cost @measured 2026-11-14 by this step: 0.13s.
-  { name: 'check:naming:selftest', desc: 'the naming gate can still fail (19 cases: 10 plantings — nav/title drift, band drift, a page that never names itself, the name only in a comment, a nav label with no page, a title with no site name, two pages labelling one route differently, a date glued to a nav label, an eyebrow above the h1, a section h2 that is another page’s h1 — and 9 clean controls, incl. a subordinate date chip, prose that describes without naming, and a subtitle under the heading)' },
+  { name: 'check:naming:selftest', desc: 'the naming gate can still fail (20 cases: 10 plantings — nav/title drift, band drift, a page that never names itself, the name only in a comment, a nav label with no page, a title with no site name, two pages labelling one route differently, a date glued to a nav label, an eyebrow above the h1, a section h2 that is another page’s h1 — and 10 clean controls, incl. a subordinate date chip, prose that describes without naming, a subtitle under the heading, and a comment quoting a tag name)' },
   // The heading ladder (S040, 2026-11-14, the second design read §7 D8): `/schedule` printed an h1 and then
   // jumped straight to h3 row titles, and no gate looked at levels at all. In-memory fixtures, so the rule can
   // go red before anyone builds (D118). Cost @measured 2026-11-14 by this step: 0.05s selftest, 0.04s gate.
-  { name: 'check:outline:selftest', desc: 'the outline gate can still fail (12 cases: 7 plantings — h1 to h3, h1 to h4, two h1s, no h1, no headings, an empty heading, an image-only heading — and 5 clean controls)' },
+  { name: 'check:outline:selftest', desc: 'the outline gate can still fail (19 cases: 13 plantings — h1 to h3, h1 to h4, two h1s, no h1, no headings, an empty heading, an image-only heading, a repeat h1 after going back up, no skip link, a late skip link, a skip link aimed off the main landmark, a main with no id, a skip link that exists only in a comment — and 6 clean controls; the step prints its own counts)' },
   // Outbound links (S041, D317): the read's §5.5 asked for `rel=noopener` + an arrow + an sr-only qualifier. Two
   // of those were already shipped; the defect was a qualifier repeated in the accessible name and four outbound
   // links carrying no qualifier at all. In-memory fixtures, so it can go red before anyone builds (D118).
@@ -314,7 +314,7 @@ const DEPLOY = [
   { name: 'check:naming', desc: 'one name per page in the four surfaces a visitor navigates by: nav, title, exit band and the page’s own opening block; a nav label with no page behind it fails; nothing sits above a page’s first heading and no page wears another page’s h1 as its own h2 (S040)', needs: ['build'] },
   // Every emitted page: exactly one h1, and a ladder that never skips a level (S040). Routes are read off
   // `dist/`, never remembered (D117), and the ladder itself is printed so a reviewer sees the shape.
-  { name: 'check:outline', desc: 'one h1 per built page and no skipped heading level: an h1 -> h3 jump, a second h1, a page starting at h2, or an empty heading fails', needs: ['build'] },
+  { name: 'check:outline', desc: 'one h1 per built page and no skipped heading level (an h1 -> h3 jump, a second h1, a page starting at h2, an empty heading), and every page carries a skip link as its first anchor aimed at its own <main id> (WCAG 2.4.1, 2026-11-23)', needs: ['build'] },
   // Every link that leaves the site (S041, D317): rel carries noopener, "opens in a new tab" lives only in the
   // sr-only span, no platform is named twice in one accessible name, and the club's own routes never open a new
   // tab. Counts are printed from the artifact so a reviewer sees the census, not just the verdict.
@@ -468,7 +468,7 @@ const BROWSER = [
   // read-only probes, a mark or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'twenty-four mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
+  { name: 'check:render:selftest', desc: 'twenty-five mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
 ];
 
 const args = process.argv.slice(2);

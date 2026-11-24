@@ -66,6 +66,34 @@ import Navigation from '../components/Navigation.astro';
          `node design/mark-cost.mjs` - 41.3% of /chat's 5,327 gzip bytes - for drawings that page never
          paints. src/components/PlatformMarks.astro holds the arithmetic that decides sprite vs inline, and
          scripts/check-sprite-claim.mjs is the gate that keeps the sprite out of this shell (D297). -->
+    <!-- The skip link. A keyboard reader lands on the header on every page and has to cross the mark, three
+         labels and the date chip before reaching the page's own words — WCAG 2.4.1 (Bypass Blocks) asks for one
+         control that jumps past repeated chrome, and this tree had none: **0 of 76 anchors** on the 6 built pages
+         carried a `#` fragment at all @measured 2026-11-21 by `npm run check:cta-context`, which is also why the
+         `skip-link` entry in `design/cta-rules.mjs`'s EXEMPTIONS died of `exemption-stale` — an exemption for a
+         link that does not exist is a green light for a hole. It is `sr-only` until focused, so it ships no ink:
+         Tailwind's `sr-only` clips it to a **1 x 1px box with a transparent fill** at rest @measured 2026-11-23 by
+         `node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 1240 1400` — which is why
+         it costs no geometry: the nav row on `/` needs **283 of 1164 / 580 / 346**, and **234 of 276** at the 320
+         floor, identically with and without the anchor in the built page @measured 2026-11-23 by
+         `node design/render-gate.mjs / --no-build` run twice over one build with the 322-byte anchor deleted from
+         `dist/client/index.html` between the runs. That measured 1px box is also what `design/render-gate.mjs`'
+         `hiddenAtRest` carve-out keys on: the anchor carries `focus:bg-ink`, so the class test calls it
+         control-shaped, and the 48px ladder excuses it only because there is no box at rest to hold to the ladder.
+         The counterfactual is `check:render:selftest`'s "skip link painted at rest, no role" case — strip `sr-only`
+         from the built page and the same element fails the same rule, so the exemption cannot be claimed by a class
+         name.
+         On focus it becomes a real control at the top-left, painted with the same ink/paper pair and the same focus
+         ring every other control on the site takes (`outline-2 offset-2 outline-accent`), and `min-h-8` (32px) so it
+         clears the 24px pointer floor while it is visible. The focused box is the one control geometry on this site
+         no browser gate reads: the render gate measures each page at rest.
+         `scripts/check-outline.mjs`'s `skip-link`, `skip-link-late` and `skip-link-target` rules are what stop it
+         vanishing, arriving after the chrome it skips, or pointing at an id that is not the page's own main
+         landmark. Write no angle-bracket tag name inside this shell's comments: the gates read the built page, and
+         a `<` in a comment is a byte in the artifact — `check:naming`'s `eyebrow-above-heading` and
+         `check:outline`'s `skip-link-target` both went red on 2026-11-23 because a note in this file quoted the
+         main landmark's tag name, and the scan found the quote before it found the element. -->
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:inline-flex focus:min-h-8 focus:items-center focus:px-4 focus:py-2 focus:rounded-control focus:bg-ink focus:text-paper focus:text-label focus:outline-2 focus:outline-offset-2 focus:outline-accent">Skip to content</a>
     <Navigation />
     <slot />
     <style lang="scss" is:global>

@@ -130,6 +130,12 @@ const cases = [
   // 6b. a button-shaped element that stopped naming its role: the height rules have nothing to match it to,
   //     so the omission is the finding (this is the case that makes D140 enforceable rather than a convention).
   ['control-shaped element with no role', (h) => h.replace(/(<a[^>]*?) data-control="primary"/, '$1'), /declares no data-control role/],
+  // 6b-2. the counterfactual for the skip link's exemption (2026-11-23). The skip link carries `focus:bg-ink`, so
+  //       the class test calls it control-shaped, and render-gate.mjs excuses it only because it MEASURES 1×1px
+  //       at rest (`sr-only` clips it out of the flow). Strip `sr-only` from the built page — the same element,
+  //       now painted, now in the flow — and the exemption must stop applying and the rule must fire. Without
+  //       this case the exemption is a class-name waiver, which is the defect class D140 exists to refuse.
+  ['skip link painted at rest, no role', (h) => h.replace(/<a href="#main" class="sr-only /, '<a href="#main" class="'), /declares no data-control role/],
   // 6c. the truncation case itself: a 40px secondary wearing a 200-character class list. The filler classes are
   //     inert (Tailwind generated no CSS for them) — the point is that LENGTH can no longer hide a control from
   //     its height rule.

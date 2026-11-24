@@ -19,7 +19,7 @@ export const prerender = true;
   {/* `py-16` (64px) rather than `py-24` (96px): DESIGN.md puts 64px at a page's own top and bottom edges,
      and 96 is not on the eight-step ladder. `check:scale` (S042, D321) is what found it — the page has no
      band air to measure against, so a spacing value nobody ruled survived here. */}
-  <main class="mx-auto max-w-4xl px-4 py-16 text-center">
+  <main id="main" class="mx-auto max-w-4xl px-4 py-16 text-center">
     <h1 class="text-display-1 font-extrabold text-ink">We could not find that page</h1>
     {/* The status code is the subtitle, not a label above the heading (S040, 2026-11-14): `check:naming`
        now fails any text between `<main>` and the first heading, and a code under the sentence reads the way

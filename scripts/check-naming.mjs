@@ -64,8 +64,15 @@ const hasWord = (text, name) => {
 };
 
 /** Pure verdict over `[{route, html}]` so the selftest can plant pages with no build and no disk. */
-export const namingFindings = (pages) => {
+export const namingFindings = (input) => {
   const fails = [];
+  // Comments are bytes in the artifact and structure to nobody, so they are stripped ONCE, before any scan.
+  // The position matters: a strip that runs on a slice cannot match, because the opening `<!--` is already cut
+  // off. On 2026-11-23 a note in `src/layouts/Layout.astro` quoted the main landmark's tag name, `indexOf('<main')`
+  // found the quote before it found the element, and `eyebrow-above-heading` reported the skip link and the whole
+  // nav as an eyebrow on all six pages — six findings about a sentence. Same class as D181 (a comment that ships
+  // as text) with the mechanism reversed: here the comment never renders, and the gate read it anyway.
+  const pages = input.map((p) => ({ ...p, html: p.html.replace(/<!--[\s\S]*?-->/g, ' ') }));
   const routes = pages.map((p) => p.route);
   const byRoute = new Map(pages.map((p) => [p.route, p.html]));
 
@@ -147,7 +154,7 @@ export const namingFindings = (pages) => {
     if (mainStart < 0) continue;
     const firstH1 = /<h1\b/.exec(p.html.slice(mainStart));
     if (!firstH1) continue;
-    const above = visible(p.html.slice(mainStart, mainStart + firstH1.index).replace(/<!--[\s\S]*?-->/g, ' '));
+    const above = visible(p.html.slice(mainStart, mainStart + firstH1.index));
     if (above) {
       fails.push({ rule: 'eyebrow-above-heading', detail: `${p.route} prints "${above.slice(0, 80)}" between <main> and its h1. A heading is the first thing a page says; anything above it is an eyebrow, and the site's rule (S040) is that the meaning it carried goes under the heading instead.` });
     }
@@ -238,6 +245,9 @@ const runSelftest = () => {
     // S040, the two rules the second design read added: no eyebrow above a heading, and no borrowed heading.
     { name: 'an eyebrow above the h1', pages: mutate((h) => h.replace('<h1>When We Meet</h1>', '<p class="text-label">The calendar</p><h1>When We Meet</h1>')), want: ['eyebrow-above-heading'] },
     { name: 'clean control: the line under the h1 is a subtitle, not an eyebrow', pages: mutate((h) => h.replace('<h1>When We Meet</h1>', '<h1>When We Meet</h1><p class="text-label">Dates, where, and where to sign up</p>')), want: [] },
+    // The comment strip is a scan-order fact, so it needs its own control: a note that QUOTES the main landmark
+    // and a heading sits before the real ones, and the gate must find the elements, not the quote (2026-11-23).
+    { name: 'clean control: a comment quoting a tag name is not that element', pages: mutate((h) => h.replace('<main>', '<!-- put the <main id="cal"> and its <h1> here -->\n<main>')), want: [] },
     { name: 'a section h2 that is another page\u2019s h1', pages: mutate((h) => h.replace('</main>', '<section><h2>Matheapolis</h2><p>the club</p></section></main>')), want: ['heading-alias'] },
     { name: 'clean control: a section heading no other page owns', pages: mutate((h) => h.replace('</main>', '<section><h2>The next three dates</h2><p>the club</p></section></main>')), want: [] },
   ];
