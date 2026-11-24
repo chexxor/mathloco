@@ -5,7 +5,7 @@
   "700 16px \"PT Serif\"": true,
   "600 16px \"Public Sans Variable\"": true
  },
- "ground": "oklch(0.32 0.045 152)",
+ "ground": "oklch(0.1892 0.0149 81.4)",
  "canvas": {
   "w": 1200,
   "h": 630,
@@ -23,7 +23,7 @@
    "face": "Public Sans Variable",
    "size": "13.3px",
    "weight": "500",
-   "color": "oklch(0.93 0.008 152)"
+   "color": "oklch(0.96 0.012 88)"
   },
   {
    "band": "title",
@@ -36,7 +36,7 @@
    "face": "Public Sans Variable",
    "size": "62.9px",
    "weight": "800",
-   "color": "oklch(0.93 0.008 152)"
+   "color": "oklch(0.96 0.012 88)"
   },
   {
    "band": "lede",
@@ -49,7 +49,7 @@
    "face": "PT Serif",
    "size": "30.4px",
    "weight": "400",
-   "color": "oklch(0.93 0.008 152)"
+   "color": "oklch(0.96 0.012 88)"
   },
   {
    "band": "invite",
@@ -62,7 +62,7 @@
    "face": "Public Sans Variable",
    "size": "11.1px",
    "weight": "500",
-   "color": "oklch(0.93 0.008 152)"
+   "color": "oklch(0.96 0.012 88)"
   },
   {
    "band": "paths",
@@ -75,7 +75,7 @@
    "face": "Public Sans Variable",
    "size": "21.1px",
    "weight": "400",
-   "color": "oklch(0.93 0.008 152)"
+   "color": "oklch(0.96 0.012 88)"
   },
   {
    "band": "path-meetup",
@@ -88,7 +88,7 @@
    "face": "Public Sans Variable",
    "size": "21.1px",
    "weight": "400",
-   "color": "oklch(0.72 0.15 315)"
+   "color": "oklch(0.64 0.15 315)"
   },
   {
    "band": "path-discord",
@@ -101,7 +101,7 @@
    "face": "Public Sans Variable",
    "size": "21.1px",
    "weight": "400",
-   "color": "oklch(0.71 0.14 35)"
+   "color": "oklch(0.64 0.15 262)"
   },
   {
    "band": "path-domain",
@@ -114,7 +114,7 @@
    "face": "Public Sans Variable",
    "size": "21.1px",
    "weight": "400",
-   "color": "oklch(0.76 0.06 84)"
+   "color": "oklch(0.66 0.1 35.7)"
   },
   {
    "band": "fallback-probe",
@@ -127,59 +127,59 @@
    "face": "NoSuchFace At All",
    "size": "62.9px",
    "weight": "800",
-   "color": "oklch(0.93 0.008 152)"
+   "color": "oklch(0.96 0.012 88)"
   }
  ],
  "painted": {
   "ground": [
-   32,
-   57,
-   39
+   23,
+   19,
+   12
   ],
   "kicker": [
-   228,
-   233,
-   229
+   245,
+   241,
+   233
   ],
   "title": [
-   228,
-   233,
-   229
+   245,
+   241,
+   233
   ],
   "lede": [
-   228,
-   233,
-   229
+   245,
+   241,
+   233
   ],
   "invite": [
-   228,
-   233,
-   229
+   245,
+   241,
+   233
   ],
   "paths": [
-   228,
-   233,
-   229
+   245,
+   241,
+   233
   ],
   "path-meetup": [
-   200,
-   133,
-   229
+   174,
+   109,
+   202
   ],
   "path-discord": [
-   235,
-   126,
-   99
+   88,
+   137,
+   230
   ],
   "path-domain": [
-   195,
-   174,
-   134
+   199,
+   123,
+   103
   ],
   "fallback-probe": [
-   228,
-   233,
-   229
+   245,
+   241,
+   233
   ]
  },
  "mark": {
@@ -201,98 +201,98 @@
   "shapes": [
    {
     "tag": "circle",
-    "stroke": "oklch(0.93 0.008 152)",
+    "stroke": "oklch(0.96 0.012 88)",
     "fill": "none",
     "strokeWidth": 1.3,
     "paintedStroke": [
-     228,
-     233,
-     229
+     245,
+     241,
+     233
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.93 0.008 152)",
+    "stroke": "oklch(0.96 0.012 88)",
     "fill": "none",
     "strokeWidth": 1.3,
     "paintedStroke": [
-     228,
-     233,
-     229
+     245,
+     241,
+     233
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.93 0.008 152)",
+    "stroke": "oklch(0.96 0.012 88)",
     "fill": "none",
     "strokeWidth": 1.3,
     "paintedStroke": [
-     228,
-     233,
-     229
+     245,
+     241,
+     233
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.93 0.008 152)",
+    "stroke": "oklch(0.96 0.012 88)",
     "fill": "none",
     "strokeWidth": 1.4,
     "paintedStroke": [
-     228,
-     233,
-     229
+     245,
+     241,
+     233
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.93 0.008 152)",
+    "stroke": "oklch(0.96 0.012 88)",
     "fill": "none",
     "strokeWidth": 1.4,
     "paintedStroke": [
-     228,
-     233,
-     229
+     245,
+     241,
+     233
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.76 0.06 84)",
+    "stroke": "oklch(0.66 0.1 35.7)",
     "fill": "none",
     "strokeWidth": 1.4,
     "paintedStroke": [
-     195,
-     174,
-     134
+     199,
+     123,
+     103
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.76 0.06 84)",
+    "stroke": "oklch(0.66 0.1 35.7)",
     "fill": "none",
     "strokeWidth": 1.4,
     "paintedStroke": [
-     195,
-     174,
-     134
+     199,
+     123,
+     103
     ],
     "paintedFill": null
    },
    {
     "tag": "circle",
     "stroke": "none",
-    "fill": "oklch(0.76 0.06 84)",
+    "fill": "oklch(0.66 0.1 35.7)",
     "strokeWidth": 1,
     "paintedStroke": null,
     "paintedFill": [
-     195,
-     174,
-     134
+     199,
+     123,
+     103
     ]
    }
   ]

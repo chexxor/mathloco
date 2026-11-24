@@ -42,6 +42,18 @@ const hueOf = ([r, g, b]) => {
 const chromaOf = (c) => (Math.max(...c) - Math.min(...c)) / 255;
 // shortest way round the hue circle — a raw difference mod 360 reports 167 for a 13 degree gap
 const hueGap = (a, b) => Math.abs(((a - b + 540) % 360) - 180);
+// rotate a colour's hue at the same chroma and value, in the same space hueOf reads. The selftest plants a
+// wrong hue with this, so the planted colour is always wrong BY THE SAME AMOUNT whatever the palette happens
+// to be right now — see case 5.
+const rotHue = (c, deg) => {
+  const mx = Math.max(...c), mn = Math.min(...c), d = mx - mn;
+  if (d < 6) return [...c];                                   // no hue to rotate: it is already grey
+  const h0 = (mx === c[0] ? ((c[1] - c[2]) / d) % 6 : mx === c[1] ? (c[2] - c[0]) / d + 2 : (c[0] - c[1]) / d + 4) * 60;
+  const h = (((h0 + deg) % 360) + 360) % 360;
+  const x = d * (1 - Math.abs((h / 60) % 2 - 1));
+  const [r, g, b] = h < 60 ? [d, x, 0] : h < 120 ? [x, d, 0] : h < 180 ? [0, d, x] : h < 240 ? [0, x, d] : h < 300 ? [x, 0, d] : [d, 0, x];
+  return [Math.round(r + mn), Math.round(g + mn), Math.round(b + mn)];
+};
 
 // The retired amber (`--color-book-theme`, #f59e0b): delta-OKLab 0.019 from Amazon orange, 2.06 as text on
 // paper, asserted absent from @theme — and the published card used to paint it. Any appearance fails.
@@ -276,6 +288,35 @@ export async function checkCard(file, { page = null } = {}) {
     }
   }
 
+  // ---- palette currency: does this artifact still describe the palette THIS tree declares?
+  // A committed JPEG and the report that came out of the same render go stale TOGETHER, and every check above
+  // compares one against the other — so a stale pair is self-consistent, and green. That is not hypothetical:
+  // the card committed at HEAD put its most chromatic ink in the path-discord box at 246,123,92 (hue 12) and its
+  // report recorded that run's colour as oklch(0.71 0.14 35), while src/styles/global.css has carried
+  // --color-path-discord-on-ink: oklch(64% 0.15 262) since the palette round, and a fresh render paints
+  // 84,139,239 (hue 219). The shipped og:image predated the path-hue grammar (D106) and `npm run check:social`
+  // passed it throughout (@measured 2026-11-24: the jpg's ink in that box, the report's recorded colour and
+  // global.css read in one command). `check:social:live` renders a temp card and never looks at the committed
+  // file, so nothing in the set was asking the question that matters for an og:image: is the artifact the site
+  // actually serves current? This cannot say WHICH way it is stale, only that it is — and the fix is one
+  // command, `npm run assets:social`, which is what closed it on 2026-11-24.
+  if (page?.runs?.length) {
+    const css = fs.readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');   // comments first: half of @theme's lines carry a hex in prose (D478)
+    const tokens = [...css.matchAll(/--color-([a-z0-9-]+)\s*:\s*oklch\(\s*([\d.]+)(%)?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*\)/g)]
+      .map((m) => ({ name: m[1], L: m[3] ? Number(m[2]) / 100 : Number(m[2]), C: Number(m[4]), H: Number(m[5]) }));
+    if (!tokens.length) fail('no oklch() --color-* token parsed out of src/styles/global.css — palette currency cannot be checked, so this gate is blind');
+    for (const r of page.runs) {
+      const m = String(r.color ?? '').match(/oklch\(\s*([\d.]+)(%)?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*\)/);
+      if (!m) { fail(`${r.band}: the report records this run's colour as "${r.color}", not an oklch() triple — every @theme colour is oklch, so a run that does not name one cannot be checked against the palette`); continue; }
+      const L = m[2] ? Number(m[1]) / 100 : Number(m[1]), C = Number(m[3]), H = Number(m[4]);
+      const hit = tokens.find((t) => Math.abs(t.L - L) <= 0.004 && Math.abs(t.C - C) <= 0.004 && hueGap(t.H, H) <= 1.5);
+      if (!hit) {
+        const near = tokens.map((t) => ({ t, d: Math.abs(t.L - L) + Math.abs(t.C - C) + hueGap(t.H, H) / 40 })).sort((a, b) => a.d - b.d)[0];
+        fail(`${r.band}: the report says this run is ${r.color}, which is not a colour this tree declares — the nearest token is --color-${near.t.name} at oklch(${near.t.L} ${near.t.C} ${near.t.H}). The committed card was rendered against an older palette: run \`npm run assets:social\` and commit the artifact with the change.`);
+      } else pass(`${r.band}: ${r.color} is --color-${hit.name}, which @theme still declares (palette current)`);
+    }
+  }
+
   // ---- the drawn mark (D120): two failures live here and only a per-shape check tells them apart.
   //   missing shape   - an <svg> drops children it treats as foreign content, silently; measured on this
   //                     card (D118 lesson 1). The band-level ink measure would still pass, because one
@@ -335,7 +376,7 @@ export async function selfTest() {
   made.push(blankFile);
   const blankPage = {
     painted: { ground: [32, 57, 39], title: [228, 233, 229] },
-    runs: [{ band: 'title', x0: 70, x1: 846, width: 776, sizeInt: 57.3, face: 'Public Sans Variable', size: '57.3px', weight: '800', color: 'oklch(0.93 0.008 152)' }],
+    runs: [{ band: 'title', x0: 70, x1: 846, width: 776, sizeInt: 57.3, face: 'Public Sans Variable', size: '57.3px', weight: '800', color: 'oklch(0.96 0.012 88)' }],
   };
   cases.push(['title box with no ink in it', blankFile, blankPage, /only 0 ink pixels|no ink pixels in its box/]);
 
@@ -343,8 +384,8 @@ export async function selfTest() {
   const twoRamp = {
     painted: { ground: [32, 57, 39], title: [228, 233, 229], kicker: [228, 233, 229] },
     runs: [
-      { band: 'kicker', x0: 70, x1: 203, width: 133, sizeInt: 57.3, face: 'Public Sans Variable', size: '57.3px', weight: '800', color: 'oklch(0.93 0.008 152)' },
-      { band: 'title', x0: 70, x1: 846, width: 776, sizeInt: 57.3, face: 'Public Sans Variable', size: '57.3px', weight: '800', color: 'oklch(0.93 0.008 152)' },
+      { band: 'kicker', x0: 70, x1: 203, width: 133, sizeInt: 57.3, face: 'Public Sans Variable', size: '57.3px', weight: '800', color: 'oklch(0.96 0.012 88)' },
+      { band: 'title', x0: 70, x1: 846, width: 776, sizeInt: 57.3, face: 'Public Sans Variable', size: '57.3px', weight: '800', color: 'oklch(0.96 0.012 88)' },
     ],
   };
   cases.push(['two runs at display size', blankFile, twoRamp, /display step|display size on the card/]);
@@ -360,7 +401,14 @@ export async function selfTest() {
   } else {
     const real = JSON.parse(fs.readFileSync(reportFile, 'utf8'));
     const wrongHue = JSON.parse(JSON.stringify(real));
-    const word = (wrongHue.painted['path-discord'] = [70, 95, 205]);   // blurple, not the token's red-orange
+    // The planted colour is the token's OWN painted bytes rotated 180deg in hue at the same chroma and value.
+    // It used to be a hard-coded "blurple" [70,95,205] chosen when the Discord word was red-orange; the
+    // path-hue grammar (D106) and the palette round moved that word to oklch(64% .15 262), and the planted
+    // blurple landed 9deg from the token's own hue — under the 25deg hue bar, so the case still failed but on
+    // the contrast branch, not the hue branch it exists to exercise (@measured 2026-11-24 by
+    // `npm run check:social:selftest`: "gap 9 … pair 3.35"). A fixture that has to be re-chosen every palette
+    // round is a fixture that quietly stops testing its own reason.
+    const word = (wrongHue.painted['path-discord'] = rotHue(real.painted['path-discord'], 180));
     cases.push(['path word in the wrong hue', 'public/matheapolis-social-share.jpg', wrongHue, /different hue than the path grammar/]);
     void word;
 
@@ -379,6 +427,14 @@ export async function selfTest() {
       const faint = JSON.parse(JSON.stringify(real));
       faint.mark.shapes[0].paintedStroke = [46, 62, 50];      // ~1.1 against the card's ink ground
       cases.push(['mark shape under the graphic bar', 'public/matheapolis-social-share.jpg', faint, /under the 3.0 graphic bar/]);
+
+      // 8. a stale artifact: the JPEG and its report agree with each other, so every pixel check above is
+      // green, but the colour the report records for one run is not a token this tree declares any more.
+      // The triple planted here is the one HEAD's card actually carried (oklch(0.71 0.14 35) in the
+      // path-discord box, @measured 2026-11-24), so the case plants the defect that really happened.
+      const stale = JSON.parse(JSON.stringify(real));
+      stale.runs.find((r) => r.band === 'path-discord').color = 'oklch(0.71 0.14 35)';
+      cases.push(['card painted from a stale palette', 'public/matheapolis-social-share.jpg', stale, /not a colour this tree declares/]);
     }
   }
 

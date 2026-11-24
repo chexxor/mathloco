@@ -986,6 +986,14 @@ figure): two lines leave a sphere's equator **parallel** — the right-angle mar
 says so — and **cross** at the pole, because the surface they are drawn on is curved. That is the club's
 metaphor: mathematicians who start out parallel meet because of the surface they are on. It is not a circle
 with a chord across it, and a mark that reads that way is a defect, not a style choice.
+Two rulings since, both on 2026-11-24 (**D480**), both measured rather than drawn: the **fifth** moves the
+meeting point from the south pole to the **north** one (the feet stay on the near arc; the source's "S pole"
+caption is no longer where the mark meets), and the **sixth** says each line IS the sphere's own projected
+meridian rather than a curve with a straight bit in it. The sixth is what moved the pole off the ring: a
+sphere whose equator is drawn with semi-minor 21 against a 58-unit radius stands with its axis 21.23° out of
+the screen plane, so its pole projects **inside** the silhouette, 54.06 units from the centre — not on the
+rim at 58. `node design/mark-meridian-fit.mjs --exact` solves that projection off the table's own numbers and
+reports the drawn path 0.009 units off it.
 
 Rules for drawing it:
 
@@ -1027,9 +1035,10 @@ Rules for drawing it:
   pair (D119). The gate holds both: the pair >= 3.0, and the device stroke >= 1px.
 
 Measured consequence, kept in view rather than tuned away: at 320 the sphere's 1.3-unit stroke lands at
-**1.49px** and its pixels top out near 2-3 against the ring's ground where the token pair is 3.66, while the routes
-(1.61px, pair 17.15) and the accent (1.84px, pair 5.77) stay fully covered. So at phone width the mark reads
-as routes arriving at a point without its context ring. `node design/mark-pixels.mjs <shot> <report>`
+**1.56px** and its pixels reach **3.52** against the page ground where the token pair is 3.66 (96% of it — the
+ring is no longer the weak shape it was before D316 darkened `rule`), while the routes (1.68px, pair 17.15)
+and the accent marks (1.68px, pair 5.77) stay fully covered. @measured 2026-11-24 by `npm run check:mark`
+(`design/mark-pixels.mjs` @320: box 288x180 at scale 1.2). `node design/mark-pixels.mjs <shot> <report>`
 re-measures this; changing `MARK.shapes[*].sw` re-runs the card pipeline, not just the render gate.
 
 **Meaning is measured from two sides** (2026-11-02): `npm run check:mark` asks two probes about the built
@@ -1038,17 +1047,29 @@ and the screen can disagree.
 
 - `design/mark-geometry.mjs` reads the table *and* the painted pixels and asserts the semantics: a surface
   circle, exactly two lines, a curved equator, one dashed half and one solid half with the **broken one
-  being the far one**, both starting stretches parallel in the table (52 units) **and** in the pixels (51.3),
-  a real crossing, the pole dot on the painted ring (measured against the ring's own top rim, so the dot
-  cannot certify its own position), and the right angles marked.
-- `design/mark-pixels.mjs` counts how much of the box's ink clears the bar: at the corrected geometry,
-  **718 px** at/over 3.0 in the 276px box and **1,538** in the 372px box (the M-B figures in D125 — 1,070 /
-  2,038 — were measured against the *wrong* drawing and are not comparable; a re-ruling of line weight is
-  cheap now that the geometry is right).
-- The probe calibrates its own colour roles from the per-shape contrast numbers the page report carries
-  (line pair 3.66, route pair 17.15, accent pair 5.77; neutral roles split at the geometric mean, warm roles by
-  R−B ≥ 25). Guessing them from luminance classified the sphere ring as route ink and produced confident
-  nonsense ("0 crossings", "0 accent pixels near the pole").
+  being the far one**, both lines **leaving that equator in the same direction** (departure tangents within
+  2°; the pair separate 52.00 units at the foot and hold it within 1.5 units for 13 units before the surface
+  takes them — painted 50.8-51.7 across the same rows @measured 2026-11-24 by `npm run check:mark`), each
+  drawn path **being the projected meridian** (within 0.5 units of the analytic curve the ring and equator
+  imply), a real crossing **at the pole this sphere projects** (|d − sqrt(r²−b²)| ≤ 1, not |d − r| ≤ 1), the
+  pole dot there, and the right angles marked. The dot's position is measured against the rim it is **not**
+  on — the bottom one, since the fifth ruling moved the dot to the top — so it cannot certify itself.
+- `design/mark-pixels.mjs` counts how much of the box's ink clears the bar: at the sixth-ruling geometry,
+  **1,036 px** at/over 3.0 in the phone box (288px wide at 320, 48.8% of the ink in it) and **1,850** in the
+  desktop box (376px at 1240, 55.5%) @measured 2026-11-24 by `npm run check:mark`. The figures this bullet
+  carried (**718 / 1,538**) were measured against the south-pole drawing, and the M-B figures in D125
+  (1,070 / 2,038) against the *wrong* drawing before that — none are comparable to these, which is why the
+  number is quoted with its date and its probe.
+- The probe decides **which shape a painted pixel belongs to by geometry**, not by colour: the table says where
+  each shape is drawn and a pixel belongs to the nearest declared shape inside its own stroke band. Colour
+  decides only whether the pixel is ink. The old colour rule ("under the geometric mean of the line and route
+  pairs, so it is the surface line; warm by hue") broke the day the routes became curves: a 1.4-unit route
+  stroke is 1.68 device px at 320, so most of its pixels are half-covered blends, and a half-covered route
+  pixel (137,133,124) is 24 RGB units from the surface line's own bytes (139,127,101) and 207 from the route's
+  — the meridians were read as equator ink and three painted checks failed on a correct mark (@measured
+  2026-11-24). What keeps colour load-bearing is a separate check: each shape's own ink must sit within 30° of
+  the hue the page report declares for it (median painted hue lands within 3.4° of the declared bytes at all
+  three widths, and the two roles are 50.4° apart).
 
 ### The horizon band: PS-5, and why it is three plates rather than one wide one (ruled 2026-11-04, shipped)
 - The operator's ruling on the round-14 specimen was **1c** — not the Byrne band, not the single 1910 horizon, but

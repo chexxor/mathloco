@@ -37,6 +37,46 @@
 // shading would need a filled shape whose contrast bar is a LAYER's (1.35, D101) rather than a graphic line's
 // (3.0), a gradient in the share card's own SVG document, and a new colour role — so it stays an open question
 // for the operator with numbers attached, not a decision taken here.
+// FOURTH RULING: THE LINES START ON THE NEAR SIDE OF THE EQUATOR (operator, 2026-11-23). "the lines form the
+// equator to the south pole start from the bottom/close side of the equator line." Until then the two meridians
+// left the FAR (dashed) arc and ran toward the viewer, crossing the near arc on the way down — so the pair that
+// carries the metaphor was drawn on the hemisphere the sphere hides. They now leave the NEAR arc, at (94,97) and
+// (146,97), and run down the visible face to the pole. The price is stated rather than hidden: the parallel run
+// shortens from 25 units to 13, because the near arc sits 19 units lower and the pole does not move. See the
+// `route` entries in MARK below for the measurements.
+// FIFTH RULING: THEY MEET AT THE NORTH POLE (operator, 2026-11-24). "let's change it so they meet at the north
+// pole instead of the south pole please." The pair keep the two feet the fourth ruling put on the near arc —
+// (94,97) and (146,97) — and run UP the visible face to the pole. What the flip buys is room: the north pole sits
+// 77 units from the near arc where the south pole sat 39.
+// SIXTH RULING: THE CURVES ARE THE SPHERE'S OWN (operator, 2026-11-24). "the curves from the equator to the north
+// pole are not perfectly curved as they would when on a sphere. Can you fix that?" The first answer to the fifth
+// ruling drew each meridian as a straight vertical run and then one cubic into the pole, because the mark's claims
+// compete and a point was picked off a measured trade-off table (25 units of straight run for rms 2.24 units off a
+// true meridian). The operator rejected the compromise, so the compromise is gone: each route is now the
+// orthographic projection of that meridian of this sphere, and the meeting point moved with it, because a tilted
+// sphere's pole does not project onto the top of its silhouette. That table stays in this file's history and in
+// `mark-meridian-fit.mjs` because it is still the measurement of what the true curve costs — it is no longer the
+// thing that picks the curve.
+// The projection is read out of the drawing rather than assumed (`node design/mark-meridian-fit.mjs --exact`):
+// the equator's own semi-minor is 21 = 0.3621 r, so the axis stands 21.23° out of the screen plane; the projected
+// meridian is a quarter of an ellipse centred on the sphere with conjugate semi-diameters (-26, 18.999) — the
+// foot's offset — and (0, -54.06) — the projected axis — and one cubic with the standard 4(√2-1)/3 control offset
+// draws it to 0.009 units of geometric error over a 79.7-unit arc. Three consequences, all measured:
+//   - the pole is 54.06 units from the centre, at y 23.94, NOT on the ring at y 20. That is sqrt(r² - b²) for the
+//     equator's own semi-minor b = 21: the same ellipse that draws the equator predicts where the pole must be.
+//     The old figure put the dot on the ring (136 = cy + r in the south version), 3.94 units outside its own true
+//     projection, and the gate that held it there (|d - r| <= 1) is replaced by one that holds the pair to the pole
+//     the drawing itself implies;
+//   - each meridian leaves the near arc with a VERTICAL tangent (the projection's own departure angle, 90.00° off
+//     horizontal, against the arc's 9.35° — which is why the right-angle marks are drawn along the two tangents and
+//     read an 80.65° wedge, not a false 90°), so the pair are parallel where they start, which is the mark's claim;
+//   - what is given up is a long constant separation. The mirrored pair hold 98.4% of their 52-unit separation 10
+//     units up, 93.8% at 20, 86.2% at 30: the surface curves them together from the first unit, which is the whole
+//     point of the figure, and the straight run that used to carry "parallel" is gone. They cross at 72° (2 × the
+//     36.16° arrival), a wider opening than the compromise's 43°.
+// `design/mark-geometry.mjs` now measures all three on the built page: the departure tangents, the separation
+// profile against the table's own, and the drawn path against the analytic meridian.
+//
 // WHY THE DASH SURVIVES AT PHONE SIZE (the earlier reason for solid was wrong): `dash: '5 4'` is in viewBox
 // units, and the smallest shipped box is the hero on a 320px viewport — box 276px, scale 1.15 — where a dash is
 // 5.75 device px long with a 4.6px gap: four times the 1.5px floor that D119 sets for a stroke to have a
@@ -104,29 +144,57 @@ export const MARK = {
     // and the sphere's centre. Same token, same weight — the two halves differ in continuity, not in colour, so
     // both keep clearing the 3.0 graphic bar (D101) and neither can drift into a tint.
     { role: 'sphere', tag: 'path', d: 'M62 78 C62 106, 178 106, 178 78', sw: 1.3, face: 'front' },
-    // The two lines. Straight and vertical for the first 25 units — an equal separation of 52 units held the
-    // whole way, which is all "parallel" means measurably — then one cubic each into the pole. Each starts exactly
-    // on the far arc (at x 94 and 146 the arc is at y 59.0), and the arc there is only ~7° off horizontal, so the
-    // right angles at the junctions are real rather than claimed. Each cubic leaves its straight segment with a
-    // vertical tangent (first control point directly below the join), so there is no kink at (94,84) / (146,84),
-    // and each arrives at the pole ~32° off horizontal, mirrored, so the two lines CROSS at ~64° rather than
-    // kissing tangentially. On the way they cross the near arc, which is what a meridian does on a globe.
-    { role: 'route', tag: 'path', d: 'M94 59 L94 84 C94 108, 104 126, 120 136', sw: 1.4 },
-    { role: 'route', tag: 'path', d: 'M146 59 L146 84 C146 108, 136 126, 120 136', sw: 1.4 },
+    // The two lines. FOURTH RULING ON THIS MARK (operator, 2026-11-23): "the lines from the equator to the south
+    // pole [must] start from the bottom/close side of the equator line." They used to start on the FAR arc — the
+    // dashed one, at (94,59) and (146,59) — and ran toward the viewer, crossing the near arc on the way to the
+    // pole. That drew the pair on the hemisphere the sphere hides from the reader. They now start ON THE NEAR ARC,
+    // at (94,97) and (146,97), and run the visible face: the whole figure is on the side a reader can see.
+    // FIFTH RULING (operator, 2026-11-24) sends them UP that face to the NORTH pole, so the feet stay and the
+    // pole moves: the source's "S pole — meet here" caption is no longer where the meeting point is.
+    // SIXTH RULING (operator, 2026-11-24): each one is the sphere's own projected meridian, not an approximation
+    // with a straight bit in it. One cubic per route — the quarter-ellipse fit of the orthographic projection of
+    // the meridian through that foot. It leaves the near arc vertically (the projection's own departure angle),
+    // bends continuously as the surface curves away, and arrives at the projected pole 36.16° off horizontal,
+    // mirrored, so the pair CROSS at 72° rather than kissing. Every figure in that sentence is the probe's, not the
+    // author's: `node design/mark-meridian-fit.mjs --exact` solves the projection off this file's own ring and
+    // equator (semi-minor 21 -> axis 21.23° out of the screen plane), reports 0.009 units of geometric error for
+    // the path below against the analytic curve, and prints the separation profile (52.00u at the foot, 51.17u 10
+    // units up, 48.76u at 20, 44.84u at 30) — the pair hold 98.4% of their separation over the first 10 units, which
+    // is how much "parallel" survives here. `npm run check:mark` re-measures the departure, the separation and the
+    // arrival in painted pixels, and now measures the drawn path against the analytic meridian too, so "it looks
+    // curved" is not a passing condition.
+    // Each foot sits exactly on the near arc's ink: at x 94 and 146 the drawn arc cubic paints y = 97.0 (solved off
+    // the path, not off the ellipse it approximates — the cubic's apex is 0.75 of its control offset, so reading the
+    // ellipse's 96.8 would have left the join 0.2 units off the ink). The arc there is 9.35° off horizontal, so the
+    // junction reads as a right angle (the far arc gave 9.3° the same way); the square marks below are drawn along
+    // the two tangents rather than axis-aligned, so the notation does not claim an angle the drawing does not have.
+    { role: 'route', tag: 'path', d: 'M94 97 C94 67.14, 105.64 34.43, 120 23.94', sw: 1.4 },
+    { role: 'route', tag: 'path', d: 'M146 97 C146 67.14, 134.36 34.43, 120 23.94', sw: 1.4 },
     // The right-angle marks: the notation for "each of these leaves the equator at a right angle", which is the
     // construction that makes them parallel. In the source this is text (measured as two small text blobs where
     // the lines meet the equator); a mark that renders at 24×15px cannot carry text, and inventing a word would
     // break D92 (state only sourceable facts), so the smallest faithful encoding is the square-corner glyph. It
     // sits in the quadrant between the two arms, 6 units to a side. Gold because it is the reason the figure
     // means anything, not because it is decoration.
-    { role: 'accent', tag: 'path', d: 'M100 59 L100 65 L94 65', sw: 1.4 },
-    { role: 'accent', tag: 'path', d: 'M140 59 L140 65 L146 65', sw: 1.4 },
+    // Moved with the lines (2026-11-23), and drawn along the two tangents instead of axis-aligned: the near arc's
+    // tangent at x 94 is (0.987, 0.163), so an axis-aligned square would have sat in a 80.6° wedge claiming a 90°
+    // one. These two arms follow the arc and the route, so the glyph says "the angle marked is this one" and the
+    // projection's foreshortening stays visible rather than being papered over. Mirrored about x 120. Flipped with
+    // the fifth ruling (2026-11-24): the wedge the square sits in is now between the route going UP and the arc
+    // going right, which is the supplement — 99.4° rather than 80.6° — of the angle the south figure marked. Both
+    // are foreshortings of the same right angle, and the glyph still marks the one actually drawn.
+    { role: 'accent', tag: 'path', d: 'M99.9 98 L99.9 92 L94 91', sw: 1.4 },
+    { role: 'accent', tag: 'path', d: 'M140.1 98 L140.1 92 L146 91', sw: 1.4 },
   ],
   // The filled point the two lines cross at — the mark's whole point, so the gates put a measurement band here
-  // rather than trusting that the paths still converge. It sits ON the surface: (120,136) is the circle's bottom
-  // edge (cy + r = 136), the pole, as in the source. The first correction's point sat 8 units inside the sphere.
-  dot: { role: 'accent', tag: 'circle', cx: 120, cy: 136, r: 4 },
-  meet: { x: 120, y: 136 },
+  // rather than trusting that the paths still converge. Since the sixth ruling (2026-11-24) it sits at the
+  // PROJECTED pole, (120, 23.94): 54.06 units above the sphere's centre, which is sqrt(r² - b²) for the drawn
+  // equator's own semi-minor b = 21 — the tilted axis stands 21.23° out of the screen plane, so the pole projects
+  // inside the ring's silhouette rather than on top of it. The south figure put it on the ring (cy + r = 136,
+  // 3.94 units outside its own true projection of 132.06); that convention goes with the approximation it came
+  // from, and `check:mark` now derives the expected pole from the ellipse the mark itself draws.
+  dot: { role: 'accent', tag: 'circle', cx: 120, cy: 23.94, r: 4 },
+  meet: { x: 120, y: 23.94 },
 };
 
 // Shapes a correctly-rendered mark contains. `check:render` compares this against the DOM it measures:

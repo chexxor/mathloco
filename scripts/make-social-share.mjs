@@ -160,8 +160,11 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
       : `<path d="${s.d}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`)).join('\n    ')}
     <circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${markStroke(MARK.dot.role)}"/>
     <!-- the source figure's own label, kept because the figure is the club's and the label is what the club
-         writes on it ("S pole — meet here"). It sits below the pole dot, clear of it by 3 units. -->
-    <text x="${MARK.meet.x}" y="149" text-anchor="middle" font-size="8.5" fill="currentColor">meet here</text>
+         writes on it ("S pole — meet here"). Since the fifth ruling (2026-11-24) the mark meets at the NORTH
+         pole, so the label sits ABOVE the dot: baseline y 17, and with font-size 8.5 the cap top lands at y 10.9
+         and the baseline 2.94 units clear of the dot's top edge (23.94 - 4 = 19.94) — the same 3-unit clearance
+         the south version had between the dot's bottom edge (140) and its cap top (142.9). Mirrored, not moved. -->
+    <text x="${MARK.meet.x}" y="17" text-anchor="middle" font-size="8.5" fill="currentColor">meet here</text>
   </svg>
 
   <!-- The paths, in the footer's order and grammar (D115: the band is the site's exit, and paths are named

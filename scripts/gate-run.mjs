@@ -113,8 +113,8 @@ const DEPLOY = [
   // 0.07s selftest (3 plantings, 4 clean forms, the tracked corpus as the control).
   { name: 'check:docs-no-secrets', desc: 'no tracked page under docs/ carries an assignment-shaped credential (a name saying key/token/secret, then : or =, then a value) - name the secret and where it lives, never the value' },
   { name: 'check:docs-no-secrets:selftest', desc: 'the no-secrets gate can still fail (3 plantings: an uppercase assignment, a lowercase prose assignment, a value inside a code fence; 4 clean forms that must pass: a bare name, an empty assignment, an angle-bracket placeholder, and a colon naming where a secret lives)' },
-  { name: 'check:social', desc: 'the committed share card against its painted report' },
-  { name: 'check:social:selftest', desc: 'the card checks can still fail' },
+  { name: 'check:social', desc: 'the committed share card against its painted report, and that report against the palette this tree declares now' },
+  { name: 'check:social:selftest', desc: 'the card checks can still fail (8 plantings: painted amber, a light ground, a run with no ink in its box, two display steps, a path word in the wrong hue, a missing mark shape, a mark stroke under the graphic bar, and a committed card whose palette went stale — the last two added 2026-11-24) @measured 2026-11-24 by `node scripts/check-social-card.mjs --selftest`' },
   // The tab glyph is the other committed image artifact, and until 2026-11-14 it had no gate at all: it
   // shipped Tailwind's default #3b82f6 with a `white` glyph (3.68, under the 4.5 text bar) from the Init
   // commit through the whole design pass, because check:classes scans src/ utility writes, check:design
