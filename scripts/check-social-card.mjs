@@ -16,6 +16,11 @@
 import fs from 'node:fs';
 import sharp from 'sharp';
 import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+// The one reading of the palette this tree declares (design/palette-tokens.mjs). This gate and the round-21
+// colour pricing (`npm run round21`) must not hold two parses of global.css: if they disagreed about which
+// colours exist, this gate would pass a specimen that the other refuses, and the disagreement would only
+// surface as a green run. Same regex, same comment-stripping, one home.
+import { paletteTokens, parseOklch } from '../design/palette-tokens.mjs';
 
 export const W = 1200;
 export const H = 630;
@@ -301,17 +306,15 @@ export async function checkCard(file, { page = null } = {}) {
   // actually serves current? This cannot say WHICH way it is stale, only that it is — and the fix is one
   // command, `npm run assets:social`, which is what closed it on 2026-11-24.
   if (page?.runs?.length) {
-    const css = fs.readFileSync(new URL('../src/styles/global.css', import.meta.url), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');   // comments first: half of @theme's lines carry a hex in prose (D478)
-    const tokens = [...css.matchAll(/--color-([a-z0-9-]+)\s*:\s*oklch\(\s*([\d.]+)(%)?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*\)/g)]
-      .map((m) => ({ name: m[1], L: m[3] ? Number(m[2]) / 100 : Number(m[2]), C: Number(m[4]), H: Number(m[5]) }));
+    const tokens = Object.values(paletteTokens());   // comments stripped inside the module: half of @theme's lines carry a hex in prose (D478)
     if (!tokens.length) fail('no oklch() --color-* token parsed out of src/styles/global.css — palette currency cannot be checked, so this gate is blind');
     for (const r of page.runs) {
-      const m = String(r.color ?? '').match(/oklch\(\s*([\d.]+)(%)?\s+([\d.]+)\s+([\d.]+)(?:deg)?\s*\)/);
-      if (!m) { fail(`${r.band}: the report records this run's colour as "${r.color}", not an oklch() triple — every @theme colour is oklch, so a run that does not name one cannot be checked against the palette`); continue; }
-      const L = m[2] ? Number(m[1]) / 100 : Number(m[1]), C = Number(m[3]), H = Number(m[4]);
-      const hit = tokens.find((t) => Math.abs(t.L - L) <= 0.004 && Math.abs(t.C - C) <= 0.004 && hueGap(t.H, H) <= 1.5);
+      const t = parseOklch(r.color);
+      if (!t) { fail(`${r.band}: the report records this run's colour as "${r.color}", not an oklch() triple — every @theme colour is oklch, so a run that does not name one cannot be checked against the palette`); continue; }
+      const { L, C, H } = t;
+      const hit = tokens.find((x) => Math.abs(x.L - L) <= 0.004 && Math.abs(x.C - C) <= 0.004 && hueGap(x.H, H) <= 1.5);
       if (!hit) {
-        const near = tokens.map((t) => ({ t, d: Math.abs(t.L - L) + Math.abs(t.C - C) + hueGap(t.H, H) / 40 })).sort((a, b) => a.d - b.d)[0];
+        const near = tokens.map((x) => ({ t: x, d: Math.abs(x.L - L) + Math.abs(x.C - C) + hueGap(x.H, H) / 40 })).sort((a, b) => a.d - b.d)[0];
         fail(`${r.band}: the report says this run is ${r.color}, which is not a colour this tree declares — the nearest token is --color-${near.t.name} at oklch(${near.t.L} ${near.t.C} ${near.t.H}). The committed card was rendered against an older palette: run \`npm run assets:social\` and commit the artifact with the change.`);
       } else pass(`${r.band}: ${r.color} is --color-${hit.name}, which @theme still declares (palette current)`);
     }

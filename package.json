@@ -134,6 +134,8 @@
     "round19:specimen": "node design/grill/round19-build.mjs",
     "round20": "node design/round20.mjs",
     "round20:specimen": "node design/grill/round20-build.mjs",
+    "round21": "node design/round21.mjs",
+    "round21:specimen": "node design/grill/round21-build.mjs",
     "round17:specimen": "node design/grill/round17-build.mjs",
     "plates": "node scripts/plate-asset.mjs",
     "check:space": "node design/whitespace-survey.mjs",

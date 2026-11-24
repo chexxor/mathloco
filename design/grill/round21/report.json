@@ -1,0 +1,2909 @@
+{
+ "measuredAt": "2026-11-24 09:47",
+ "widths": [
+  320,
+  640,
+  1240
+ ],
+ "grounds": [
+  "paper (the hero)",
+  "ink (the share card)"
+ ],
+ "bars": {
+  "graphic": 3,
+  "layer": 1.35,
+  "text": 4.5
+ },
+ "source": "Oliver Byrne, \"The First Six Books of the Elements of Euclid, in Which Coloured Diagrams and Symbols Are Used Instead of Letters for the Greater Ease of Learners\", London 1847 (printed by Charles Whittingham, Chiswick Press)",
+ "palette": {
+  "paper": "oklch(97.35% 0.0139 88.7)",
+  "panel": "oklch(99.09% 0.0123 91.5)",
+  "tint": "oklch(91.92% 0.0285 74.3)",
+  "ink": "oklch(18.92% 0.0149 81.4)",
+  "accent-strong": "oklch(42.22% 0.109 35.35)",
+  "ink-2": "oklch(45.17% 0.0252 85.9)",
+  "ink-3": "oklch(50.5% 0.03 86)",
+  "rule": "oklch(60% 0.04 86.6)",
+  "accent": "oklch(50.57% 0.1321 35.7)",
+  "accent-on-ink": "oklch(66% 0.10 35.7)",
+  "band-text": "oklch(96% 0.012 88)",
+  "path-calendar": "oklch(51% 0.11 205)",
+  "path-meetup": "oklch(49% 0.15 315)",
+  "path-discord": "oklch(52% 0.15 262)",
+  "path-mobilizon": "oklch(51% 0.11 145)",
+  "path-calendar-tint": "oklch(93% 0.03 205)",
+  "path-meetup-tint": "oklch(93% 0.03 315)",
+  "path-discord-tint": "oklch(93% 0.03 262)",
+  "path-mobilizon-tint": "oklch(93% 0.03 145)",
+  "path-calendar-on-ink": "oklch(64% 0.11 205)",
+  "path-meetup-on-ink": "oklch(64% 0.15 315)",
+  "path-discord-on-ink": "oklch(64% 0.15 262)",
+  "path-mobilizon-on-ink": "oklch(64% 0.11 145)"
+ },
+ "options": [
+  {
+   "id": "A",
+   "label": "incumbent (the control)",
+   "byrne": "not Byrne — the ratified colouring, kept in the round so every other row is a delta from a measured line, not from memory",
+   "reading": "one line-colour for the sphere, one for the pair, gold for the notation. Colour carries ROLE only.",
+   "paper": {
+    "ring": "rule",
+    "rear": "rule",
+    "front": "rule",
+    "left": "ink",
+    "right": "ink",
+    "angleL": "accent",
+    "angleR": "accent",
+    "dot": "accent"
+   },
+   "ink": {
+    "ring": "band-text",
+    "rear": "band-text",
+    "front": "band-text",
+    "left": "band-text",
+    "right": "band-text",
+    "angleL": "accent-on-ink",
+    "angleR": "accent-on-ink",
+    "dot": "accent-on-ink"
+   },
+   "fill": null
+  },
+  {
+   "id": "B",
+   "label": "Byrne: the given figure in black, the lines in the club red",
+   "byrne": "Byrne draws what the proposition gives in black and what it constructs or seeks in a primary; the notation (the right angles) takes the second primary so the reader can follow which statement is about which line",
+   "reading": "the pair keep ONE colour, so \"same kind of line\" survives; the sphere recedes because it is the given; blue carries only the construction mark.",
+   "paper": {
+    "ring": "ink",
+    "rear": "ink",
+    "front": "ink",
+    "left": "accent",
+    "right": "accent",
+    "angleL": "path-calendar",
+    "angleR": "path-calendar",
+    "dot": "accent"
+   },
+   "ink": {
+    "ring": "band-text",
+    "rear": "band-text",
+    "front": "band-text",
+    "left": "accent-on-ink",
+    "right": "accent-on-ink",
+    "angleL": "path-calendar-on-ink",
+    "angleR": "path-calendar-on-ink",
+    "dot": "accent-on-ink"
+   },
+   "fill": null
+  },
+  {
+   "id": "C",
+   "label": "Byrne literally: colour instead of letters, one per line",
+   "byrne": "the title page's own device — a line is named by its colour, so the two meridians are \"the red line\" and \"the blue line\" and the prose can say so",
+   "reading": "the most Byrne row on the table, and the one that costs the mark its claim: two colours name two DIFFERENT lines, and \"parallel\" is a statement about a pair. Priced, not recommended.",
+   "paper": {
+    "ring": "ink",
+    "rear": "ink",
+    "front": "ink",
+    "left": "accent",
+    "right": "path-calendar",
+    "angleL": "accent-strong",
+    "angleR": "accent-strong",
+    "dot": "path-mobilizon"
+   },
+   "ink": {
+    "ring": "band-text",
+    "rear": "band-text",
+    "front": "band-text",
+    "left": "accent-on-ink",
+    "right": "path-calendar-on-ink",
+    "angleL": "accent-on-ink",
+    "angleR": "accent-on-ink",
+    "dot": "path-mobilizon-on-ink"
+   },
+   "fill": null
+  },
+  {
+   "id": "D",
+   "label": "three primaries, one per role (green standing in for yellow)",
+   "byrne": "Byrne's ink is red, yellow, blue plus black. There is no legal yellow here (see the round's yellow solve), so the third primary is taken by the palette's green, path-mobilizon at hue 145",
+   "reading": "black sphere, red pair, green notation, blue point: three primaries plus black, and the pair still one colour.",
+   "paper": {
+    "ring": "ink",
+    "rear": "ink",
+    "front": "ink",
+    "left": "accent",
+    "right": "accent",
+    "angleL": "path-mobilizon",
+    "angleR": "path-mobilizon",
+    "dot": "path-calendar"
+   },
+   "ink": {
+    "ring": "band-text",
+    "rear": "band-text",
+    "front": "band-text",
+    "left": "accent-on-ink",
+    "right": "accent-on-ink",
+    "angleL": "path-mobilizon-on-ink",
+    "angleR": "path-mobilizon-on-ink",
+    "dot": "path-calendar-on-ink"
+   },
+   "fill": null
+  },
+  {
+   "id": "E",
+   "label": "D with Byrne's flat wash inside the lune",
+   "byrne": "Byrne fills regions, not only lines — a proposition's area is a block of red, blue or yellow. The lune between the two meridians is the mark's \"area\"",
+   "reading": "the wash is the one Byrne move that changes what KIND of contrast the mark is held to: a filled region is a LAYER (1.35, D101), not a graphic line (3.0) — but it also adds a nine-th shape to a mark whose gates count eight.",
+   "paper": {
+    "ring": "ink",
+    "rear": "ink",
+    "front": "ink",
+    "left": "accent",
+    "right": "accent",
+    "angleL": "path-mobilizon",
+    "angleR": "path-mobilizon",
+    "dot": "path-calendar"
+   },
+   "ink": {
+    "ring": "band-text",
+    "rear": "band-text",
+    "front": "band-text",
+    "left": "accent-on-ink",
+    "right": "accent-on-ink",
+    "angleL": "path-mobilizon-on-ink",
+    "angleR": "path-mobilizon-on-ink",
+    "dot": "path-calendar-on-ink"
+   },
+   "fill": {
+    "token": "path-calendar-tint",
+    "ground": "paper"
+   }
+  }
+ ],
+ "pairs": [
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "ring",
+   "token": "rule",
+   "spec": "oklch(60% 0.04 86.6)",
+   "ratio": 3.66,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "rear",
+   "token": "rule",
+   "spec": "oklch(60% 0.04 86.6)",
+   "ratio": 3.66,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "front",
+   "token": "rule",
+   "spec": "oklch(60% 0.04 86.6)",
+   "ratio": 3.66,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "left",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "right",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "angleL",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "angleR",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "paper",
+   "slot": "dot",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "ring",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "rear",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "front",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "left",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "right",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "angleL",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "angleR",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "slot": "dot",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "ring",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "rear",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "front",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "left",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "right",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "angleL",
+   "token": "path-calendar",
+   "spec": "oklch(51% 0.11 205)",
+   "ratio": 4.9,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "angleR",
+   "token": "path-calendar",
+   "spec": "oklch(51% 0.11 205)",
+   "ratio": 4.9,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "slot": "dot",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "ring",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "rear",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "front",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "left",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "right",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "angleL",
+   "token": "path-calendar-on-ink",
+   "spec": "oklch(64% 0.11 205)",
+   "ratio": 5.78,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "angleR",
+   "token": "path-calendar-on-ink",
+   "spec": "oklch(64% 0.11 205)",
+   "ratio": 5.78,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "slot": "dot",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "ring",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "rear",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "front",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "left",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "right",
+   "token": "path-calendar",
+   "spec": "oklch(51% 0.11 205)",
+   "ratio": 4.9,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "angleL",
+   "token": "accent-strong",
+   "spec": "oklch(42.22% 0.109 35.35)",
+   "ratio": 8.17,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "angleR",
+   "token": "accent-strong",
+   "spec": "oklch(42.22% 0.109 35.35)",
+   "ratio": 8.17,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "slot": "dot",
+   "token": "path-mobilizon",
+   "spec": "oklch(51% 0.11 145)",
+   "ratio": 5.09,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "ring",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "rear",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "front",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "left",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "right",
+   "token": "path-calendar-on-ink",
+   "spec": "oklch(64% 0.11 205)",
+   "ratio": 5.78,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "angleL",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "angleR",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "slot": "dot",
+   "token": "path-mobilizon-on-ink",
+   "spec": "oklch(64% 0.11 145)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "ring",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "rear",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "front",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "left",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "right",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "angleL",
+   "token": "path-mobilizon",
+   "spec": "oklch(51% 0.11 145)",
+   "ratio": 5.09,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "angleR",
+   "token": "path-mobilizon",
+   "spec": "oklch(51% 0.11 145)",
+   "ratio": 5.09,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "slot": "dot",
+   "token": "path-calendar",
+   "spec": "oklch(51% 0.11 205)",
+   "ratio": 4.9,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "ring",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "rear",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "front",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "left",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "right",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "angleL",
+   "token": "path-mobilizon-on-ink",
+   "spec": "oklch(64% 0.11 145)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "angleR",
+   "token": "path-mobilizon-on-ink",
+   "spec": "oklch(64% 0.11 145)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "slot": "dot",
+   "token": "path-calendar-on-ink",
+   "spec": "oklch(64% 0.11 205)",
+   "ratio": 5.78,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "ring",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "rear",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "front",
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "ratio": 17.15,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "left",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "right",
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "angleL",
+   "token": "path-mobilizon",
+   "spec": "oklch(51% 0.11 145)",
+   "ratio": 5.09,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "angleR",
+   "token": "path-mobilizon",
+   "spec": "oklch(51% 0.11 145)",
+   "ratio": 5.09,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "slot": "dot",
+   "token": "path-calendar",
+   "spec": "oklch(51% 0.11 205)",
+   "ratio": 4.9,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "ring",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "rear",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "front",
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "ratio": 16.43,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "left",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "right",
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "ratio": 5.69,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "angleL",
+   "token": "path-mobilizon-on-ink",
+   "spec": "oklch(64% 0.11 145)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "angleR",
+   "token": "path-mobilizon-on-ink",
+   "spec": "oklch(64% 0.11 145)",
+   "ratio": 5.77,
+   "bar": 3,
+   "pass": true
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "slot": "dot",
+   "token": "path-calendar-on-ink",
+   "spec": "oklch(64% 0.11 205)",
+   "ratio": 5.78,
+   "bar": 3,
+   "pass": true
+  }
+ ],
+ "hues": [
+  {
+   "id": "A",
+   "ground": "paper",
+   "colours": 3,
+   "tokens": "rule ink accent",
+   "minGap": 5,
+   "tightest": "rule/ink"
+  },
+  {
+   "id": "A",
+   "ground": "ink",
+   "colours": 2,
+   "tokens": "band-text accent-on-ink",
+   "minGap": 52,
+   "tightest": "band-text/accent-on-ink"
+  },
+  {
+   "id": "B",
+   "ground": "paper",
+   "colours": 3,
+   "tokens": "ink accent path-calendar",
+   "minGap": 46,
+   "tightest": "ink/accent"
+  },
+  {
+   "id": "B",
+   "ground": "ink",
+   "colours": 3,
+   "tokens": "band-text accent-on-ink path-calendar-on-ink",
+   "minGap": 52,
+   "tightest": "band-text/accent-on-ink"
+  },
+  {
+   "id": "C",
+   "ground": "paper",
+   "colours": 5,
+   "tokens": "ink accent path-calendar accent-strong path-mobilizon",
+   "minGap": 0,
+   "tightest": "accent/accent-strong"
+  },
+  {
+   "id": "C",
+   "ground": "ink",
+   "colours": 4,
+   "tokens": "band-text accent-on-ink path-calendar-on-ink path-mobilizon-on-ink",
+   "minGap": 52,
+   "tightest": "band-text/accent-on-ink"
+  },
+  {
+   "id": "D",
+   "ground": "paper",
+   "colours": 4,
+   "tokens": "ink accent path-mobilizon path-calendar",
+   "minGap": 46,
+   "tightest": "ink/accent"
+  },
+  {
+   "id": "D",
+   "ground": "ink",
+   "colours": 4,
+   "tokens": "band-text accent-on-ink path-mobilizon-on-ink path-calendar-on-ink",
+   "minGap": 52,
+   "tightest": "band-text/accent-on-ink"
+  },
+  {
+   "id": "E",
+   "ground": "paper",
+   "colours": 4,
+   "tokens": "ink accent path-mobilizon path-calendar",
+   "minGap": 46,
+   "tightest": "ink/accent"
+  },
+  {
+   "id": "E",
+   "ground": "ink",
+   "colours": 4,
+   "tokens": "band-text accent-on-ink path-mobilizon-on-ink path-calendar-on-ink",
+   "minGap": 52,
+   "tightest": "band-text/accent-on-ink"
+  }
+ ],
+ "yellow": [
+  {
+   "H": 60,
+   "C": 0.1,
+   "window": "5..65.5",
+   "top": 65.5,
+   "spec": "oklch(65.5% 0.1 60)",
+   "ratio": 3.03,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.071,
+   "sameColour": false
+  },
+  {
+   "H": 60,
+   "C": 0.14,
+   "window": "5..66",
+   "top": 66,
+   "spec": "oklch(66% 0.14 60)",
+   "ratio": 3.01,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.036,
+   "sameColour": true
+  },
+  {
+   "H": 60,
+   "C": 0.18,
+   "window": "5..66",
+   "top": 66,
+   "spec": "oklch(66% 0.18 60)",
+   "ratio": 3.03,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.032,
+   "sameColour": true
+  },
+  {
+   "H": 75,
+   "C": 0.1,
+   "window": "5..65.5",
+   "top": 65.5,
+   "spec": "oklch(65.5% 0.1 75)",
+   "ratio": 3,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.083,
+   "sameColour": false
+  },
+  {
+   "H": 75,
+   "C": 0.14,
+   "window": "5..65.5",
+   "top": 65.5,
+   "spec": "oklch(65.5% 0.14 75)",
+   "ratio": 3,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.064,
+   "sameColour": false
+  },
+  {
+   "H": 75,
+   "C": 0.18,
+   "window": "5..65.5",
+   "top": 65.5,
+   "spec": "oklch(65.5% 0.18 75)",
+   "ratio": 3.01,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.067,
+   "sameColour": false
+  },
+  {
+   "H": 85,
+   "C": 0.1,
+   "window": "5..65",
+   "top": 65,
+   "spec": "oklch(65% 0.1 85)",
+   "ratio": 3.02,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.098,
+   "sameColour": false
+  },
+  {
+   "H": 85,
+   "C": 0.14,
+   "window": "5..65",
+   "top": 65,
+   "spec": "oklch(65% 0.14 85)",
+   "ratio": 3.01,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.088,
+   "sameColour": false
+  },
+  {
+   "H": 85,
+   "C": 0.18,
+   "window": "5..65",
+   "top": 65,
+   "spec": "oklch(65% 0.18 85)",
+   "ratio": 3.01,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.096,
+   "sameColour": false
+  },
+  {
+   "H": 95,
+   "C": 0.1,
+   "window": "5..65",
+   "top": 65,
+   "spec": "oklch(65% 0.1 95)",
+   "ratio": 3,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.113,
+   "sameColour": false
+  },
+  {
+   "H": 95,
+   "C": 0.14,
+   "window": "5..64.5",
+   "top": 64.5,
+   "spec": "oklch(64.5% 0.14 95)",
+   "ratio": 3.05,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.113,
+   "sameColour": false
+  },
+  {
+   "H": 95,
+   "C": 0.18,
+   "window": "5..64.5",
+   "top": 64.5,
+   "spec": "oklch(64.5% 0.18 95)",
+   "ratio": 3.03,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.124,
+   "sameColour": false
+  },
+  {
+   "H": 105,
+   "C": 0.1,
+   "window": "5..64.5",
+   "top": 64.5,
+   "spec": "oklch(64.5% 0.1 105)",
+   "ratio": 3.02,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.131,
+   "sameColour": false
+  },
+  {
+   "H": 105,
+   "C": 0.14,
+   "window": "5..64.5",
+   "top": 64.5,
+   "spec": "oklch(64.5% 0.14 105)",
+   "ratio": 3.02,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.135,
+   "sameColour": false
+  },
+  {
+   "H": 105,
+   "C": 0.18,
+   "window": "5..64",
+   "top": 64,
+   "spec": "oklch(64% 0.18 105)",
+   "ratio": 3.05,
+   "readsAsYellow": true,
+   "nearestBrand": "Amazon deep orange #E47911",
+   "brandDist": 0.152,
+   "sameColour": false
+  }
+ ],
+ "yellowFloor": 60,
+ "legalYellow": {
+  "H": 75,
+  "C": 0.18,
+  "window": "5..65.5",
+  "top": 65.5,
+  "spec": "oklch(65.5% 0.18 75)",
+  "ratio": 3.01,
+  "readsAsYellow": true,
+  "nearestBrand": "Amazon deep orange #E47911",
+  "brandDist": 0.067,
+  "sameColour": false
+ },
+ "washes": [
+  {
+   "token": "tint",
+   "why": "the palette's only warm wash (adopted accent-wash #F0E2D0)",
+   "vsPaper": 1.18,
+   "bar": 1.35,
+   "readsAsRegion": false,
+   "vsRouteInk": 14.53,
+   "note": "under 1.35: it reads as nothing, or as the ground itself"
+  },
+  {
+   "token": "path-calendar-tint",
+   "why": "a path tint, deliberately flat (93% 0.03 205)",
+   "vsPaper": 1.13,
+   "bar": 1.35,
+   "readsAsRegion": false,
+   "vsRouteInk": 15.19,
+   "note": "under 1.35: it reads as nothing, or as the ground itself"
+  },
+  {
+   "token": "path-mobilizon-tint",
+   "why": "the green path tint",
+   "vsPaper": 1.12,
+   "bar": 1.35,
+   "readsAsRegion": false,
+   "vsRouteInk": 15.25,
+   "note": "under 1.35: it reads as nothing, or as the ground itself"
+  },
+  {
+   "token": "panel",
+   "why": "the raised-surface token — flat by rule against paper",
+   "vsPaper": 1.05,
+   "bar": 1.35,
+   "readsAsRegion": false,
+   "vsRouteInk": 18.04,
+   "note": "under 1.35: it reads as nothing, or as the ground itself"
+  }
+ ],
+ "washSolve": [
+  {
+   "family": "accent",
+   "H": 35.7,
+   "C": 0.1321,
+   "top": 94,
+   "spec": "oklch(94% 0.1321 35.7)",
+   "tokenL": 0.5057,
+   "ratio": 1.35,
+   "nearestBrand": "Walmart yellow #FFC220",
+   "brandDist": 0.159,
+   "sameColour": false
+  },
+  {
+   "family": "path-mobilizon",
+   "H": 145,
+   "C": 0.11,
+   "top": 86,
+   "spec": "oklch(86% 0.11 145)",
+   "tokenL": 0.51,
+   "ratio": 1.37,
+   "nearestBrand": "IKEA yellow #FFD100",
+   "brandDist": 0.143,
+   "sameColour": false
+  },
+  {
+   "family": "path-calendar",
+   "H": 205,
+   "C": 0.11,
+   "top": 86,
+   "spec": "oklch(86% 0.11 205)",
+   "tokenL": 0.51,
+   "ratio": 1.37,
+   "nearestBrand": "Walmart yellow #FFC220",
+   "brandDist": 0.243,
+   "sameColour": false
+  },
+  {
+   "family": "rule",
+   "H": 86.6,
+   "C": 0.04,
+   "top": 87.5,
+   "spec": "oklch(87.5% 0.04 86.6)",
+   "tokenL": 0.6,
+   "ratio": 1.35,
+   "nearestBrand": "Walmart yellow #FFC220",
+   "brandDist": 0.131,
+   "sameColour": false
+  },
+  {
+   "family": "ink",
+   "H": 81.4,
+   "C": 0.0149,
+   "top": 87.5,
+   "spec": "oklch(87.5% 0.0149 81.4)",
+   "tokenL": 0.1892,
+   "ratio": 1.35,
+   "nearestBrand": "Walmart yellow #FFC220",
+   "brandDist": 0.156,
+   "sameColour": false
+  }
+ ],
+ "painted": [
+  {
+   "id": "A",
+   "label": "incumbent (the control)",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round21/hero-A-320.png",
+     "rep": ".design/tmp-round21/hero-A-320.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 3.66,
+       "swDevice": 1.56,
+       "hue": 86.6
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 3.66,
+       "swDevice": 1.56,
+       "hue": 86.6
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 3.66,
+       "swDevice": 1.56,
+       "hue": 86.6
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.68,
+       "hue": 81.4
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.68,
+       "hue": 81.4
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.77,
+       "swDevice": 1.2,
+       "hue": 35.7
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 2123,
+     "at30": 1036,
+     "at30Pct": 48.8,
+     "strongest": {
+      "c": [
+       28,
+       24,
+       17
+      ],
+      "contrast": 16.43
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round21/hero-A-640.png",
+     "rep": ".design/tmp-round21/hero-A-640.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 3.66,
+       "swDevice": 2.77,
+       "hue": 86.6
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 3.66,
+       "swDevice": 2.77,
+       "hue": 86.6
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 3.66,
+       "swDevice": 2.77,
+       "hue": 86.6
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.99,
+       "hue": 81.4
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.99,
+       "hue": 81.4
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.77,
+       "swDevice": 2.13,
+       "hue": 35.7
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5783,
+     "at30": 3741,
+     "at30Pct": 64.7,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       13
+      ],
+      "contrast": 16.92
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round21/hero-A-1240.png",
+     "rep": ".design/tmp-round21/hero-A-1240.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 3.66,
+       "swDevice": 2.04,
+       "hue": 86.6
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 3.66,
+       "swDevice": 2.04,
+       "hue": 86.6
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 3.66,
+       "swDevice": 2.04,
+       "hue": 86.6
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.19,
+       "hue": 81.4
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.19,
+       "hue": 81.4
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.77,
+       "swDevice": 1.57,
+       "hue": 35.7
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 3336,
+     "at30": 1850,
+     "at30Pct": 55.5,
+     "strongest": {
+      "c": [
+       26,
+       22,
+       15
+      ],
+      "contrast": 16.67
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round21/card-A.png",
+     "rep": ".design/tmp-round21/card-A.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 16.43,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 16.43,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.69,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5559,
+     "at30": 4505,
+     "at30Pct": 81,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.95
+     }
+    }
+   ]
+  },
+  {
+   "id": "B",
+   "label": "Byrne: the given figure in black, the lines in the club red",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round21/hero-B-320.png",
+     "rep": ".design/tmp-round21/hero-B-320.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.77,
+       "swDevice": 1.2,
+       "hue": 35.7
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 2221,
+     "at30": 1440,
+     "at30Pct": 64.8,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round21/hero-B-640.png",
+     "rep": ".design/tmp-round21/hero-B-640.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.77,
+       "swDevice": 2.13,
+       "hue": 35.7
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5940,
+     "at30": 4527,
+     "at30Pct": 76.2,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round21/hero-B-1240.png",
+     "rep": ".design/tmp-round21/hero-B-1240.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.77,
+       "swDevice": 1.57,
+       "hue": 35.7
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 3456,
+     "at30": 2432,
+     "at30Pct": 70.4,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.04
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round21/card-B.png",
+     "rep": ".design/tmp-round21/card-B.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.69,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5536,
+     "at30": 4359,
+     "at30Pct": 78.7,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.95
+     }
+    }
+   ]
+  },
+  {
+   "id": "C",
+   "label": "Byrne literally: colour instead of letters, one per line",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round21/hero-C-320.png",
+     "rep": ".design/tmp-round21/hero-C-320.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 2223,
+     "at30": 1435,
+     "at30Pct": 64.6,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round21/hero-C-640.png",
+     "rep": ".design/tmp-round21/hero-C-640.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5944,
+     "at30": 4541,
+     "at30Pct": 76.4,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round21/hero-C-1240.png",
+     "rep": ".design/tmp-round21/hero-C-1240.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 3460,
+     "at30": 2451,
+     "at30Pct": 70.8,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.03
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round21/card-C.png",
+     "rep": ".design/tmp-round21/card-C.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5534,
+     "at30": 4359,
+     "at30Pct": 78.8,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "D",
+   "label": "three primaries, one per role (green standing in for yellow)",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round21/hero-D-320.png",
+     "rep": ".design/tmp-round21/hero-D-320.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 1.68,
+       "hue": 145
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 1.68,
+       "hue": 145
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 4.9,
+       "swDevice": 1.2,
+       "hue": 205
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 2221,
+     "at30": 1426,
+     "at30Pct": 64.2,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round21/hero-D-640.png",
+     "rep": ".design/tmp-round21/hero-D-640.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.99,
+       "hue": 145
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.99,
+       "hue": 145
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 4.9,
+       "swDevice": 2.13,
+       "hue": 205
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5940,
+     "at30": 4528,
+     "at30Pct": 76.2,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round21/hero-D-1240.png",
+     "rep": ".design/tmp-round21/hero-D-1240.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.19,
+       "hue": 145
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.19,
+       "hue": 145
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 4.9,
+       "swDevice": 1.57,
+       "hue": 205
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 3456,
+     "at30": 2431,
+     "at30Pct": 70.3,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.04
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round21/card-D.png",
+     "rep": ".design/tmp-round21/card-D.json",
+     "shapeCount": 8,
+     "strokes": [
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.77,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.77,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.78,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "inkPixels": 5536,
+     "at30": 4359,
+     "at30Pct": 78.7,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "E",
+   "label": "D with Byrne's flat wash inside the lune",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round21/hero-E-320.png",
+     "rep": ".design/tmp-round21/hero-E-320.json",
+     "shapeCount": 9,
+     "strokes": [
+      {
+       "role": "wash",
+       "tag": "path",
+       "contrast": 1.13,
+       "swDevice": 1.2,
+       "hue": 205
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 1.68,
+       "hue": 145
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 1.68,
+       "hue": 145
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 4.9,
+       "swDevice": 1.2,
+       "hue": 205
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round21/hero-E-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "inkPixels": 5705,
+     "at30": 1442,
+     "at30Pct": 25.3,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round21/hero-E-640.png",
+     "rep": ".design/tmp-round21/hero-E-640.json",
+     "shapeCount": 9,
+     "strokes": [
+      {
+       "role": "wash",
+       "tag": "path",
+       "contrast": 1.13,
+       "swDevice": 2.13,
+       "hue": 205
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.99,
+       "hue": 145
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.99,
+       "hue": 145
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 4.9,
+       "swDevice": 2.13,
+       "hue": 205
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round21/hero-E-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "inkPixels": 17236,
+     "at30": 4545,
+     "at30Pct": 26.4,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round21/hero-E-1240.png",
+     "rep": ".design/tmp-round21/hero-E-1240.json",
+     "shapeCount": 9,
+     "strokes": [
+      {
+       "role": "wash",
+       "tag": "path",
+       "contrast": 1.13,
+       "swDevice": 1.57,
+       "hue": 205
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.19,
+       "hue": 145
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 5.09,
+       "swDevice": 2.19,
+       "hue": 145
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 4.9,
+       "swDevice": 1.57,
+       "hue": 205
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round21/hero-E-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "inkPixels": 9483,
+     "at30": 2443,
+     "at30Pct": 25.8,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.03
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round21/card-E.png",
+     "rep": ".design/tmp-round21/card-E.json",
+     "shapeCount": 9,
+     "strokes": [
+      {
+       "role": "wash",
+       "contrast": 15.19,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.77,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.77,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.78,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round21/card-E.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "inkPixels": 13111,
+     "at30": 12133,
+     "at30Pct": 92.5,
+     "strongest": {
+      "c": [
+       217,
+       238,
+       238
+      ],
+      "contrast": 15.34
+     }
+    }
+   ]
+  }
+ ]
+}
