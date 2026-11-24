@@ -37,8 +37,10 @@
 // shading would need a filled shape whose contrast bar is a LAYER's (1.35, D101) rather than a graphic line's
 // (3.0), a gradient in the share card's own SVG document, and a new colour role — so it stays an open question
 // for the operator with numbers attached, not a decision taken here.
-// FOURTH RULING: THE LINES START ON THE NEAR SIDE OF THE EQUATOR (operator, 2026-11-23). "the lines form the
-// equator to the south pole start from the bottom/close side of the equator line." Until then the two meridians
+// FOURTH RULING (D482): THE LINES START ON THE NEAR SIDE OF THE EQUATOR (operator, 2026-11-23). "the lines form the
+// equator to the south pole start from the bottom/close side of the equator line." (D482 records it LATE: the ask sat
+// from 2026-11-23 and its bytes landed in the same commit as the fifth and sixth rulings, which got D480 - a commit
+// carrying three rulings owes each of them a line, because this header points at rulings by number.) Until then the two meridians
 // left the FAR (dashed) arc and ran toward the viewer, crossing the near arc on the way down — so the pair that
 // carries the metaphor was drawn on the hemisphere the sphere hides. They now leave the NEAR arc, at (94,97) and
 // (146,97), and run down the visible face to the pole. The price is stated rather than hidden: the parallel run
