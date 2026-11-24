@@ -191,10 +191,17 @@ in this repository (D272: one rule, one number).
 
 ## The change request: a per-platform link set
 
+> **Asked 2026-11-23 · to the author of `chexxor/social-event-publisher` · status: open, unanswered.**
+> It is a request, not a schema edit: this repository holds no credential on that project, asks for none, and will
+> never write a file in it (**D42**, **D124**, **D236**). Unlike the freshness ask
+> (`docs/ask-to-social-event-publisher-2026-11-23.md`, which carries a real date, 2026-12-05), this one has no
+> deadline: the site is smaller rather than broken while it stays open, and the clock on it is the publisher's.
+
 This is a request to `social-event-publisher`, written here rather than invented in this repository's copy of the
-schema. The operator's words when the item was ruled: "in the ideal state, we have a link to the event for each
-platform that the event is published on." Today the standard cannot express that, and neither can this repo's
-gate — the row whitelist is sixteen fields and `url` is one string.
+schema. The operator's words when the item was ruled (2026-11-23): "in the ideal state, we have a link to the event
+for each platform that the event is published on." Today the standard cannot express that, and neither can this
+repo's gate — the row whitelist is sixteen fields and `url` is one string (`scripts/check-ics.mjs:388`, the
+`sourced-rows` rule).
 
 **What is asked for.** One added row field, an array, ordered, with a closed platform vocabulary:
 
@@ -217,11 +224,32 @@ gate — the row whitelist is sixteen fields and `url` is one string.
 | the row's existing `url` stays, and is the canonical page | `MH-FR-025` (the publisher names the feed and composes nothing) and **D398** (the feed and the page must not disagree about where the sign-up page is) |
 | at most one entry per `platform` per row | two Meetup pages on one hour is a real state today (`matchPages` returns several and the row then labels each with the event's own title); a set that can repeat a platform makes "the Meetup link" ambiguous |
 
-**What this repo will do with it, the day it lands.** `signUpPaths()` gets its destinations from the row instead
-of from a second file, `data/meetup-events.json` and `data/discord-events.json` stop being inputs to anything,
-`feedUrl()` collapses to the row's own entry, and `check:rsvp-page` compares the painted cluster against the row
-rather than against a snapshot of someone's scrape. No new gate is needed: the cluster rule, the link-shape rule
-and the `sr-only` rule already exist and simply change what they read.
+**What this repo will do with it, the day it lands.** `signUpPaths()` in `src/lib/rsvp.mjs` takes its per-date
+destinations from the row instead of falling back to the standing group URLs in `src/config.json` (`meetupGroup`,
+`discordInvite`, `facebookGroup`) — and that fallback **is** the shipped path today, because the two snapshot files
+this item deleted (`data/meetup-events.json`, `data/discord-events.json`) are gone: `ls data/` answers three
+entries @measured 2026-11-23. `feedUrl()` collapses to the row's own entry, and `check:rsvp-page` compares the
+painted cluster against the row rather than against a snapshot of someone's scrape. No new gate is needed: the
+cluster rule, the link-shape rule and the `sr-only` rule already exist and simply change what they read.
+
+**What does not happen meanwhile, and what happens first if it arrives.** This repository adds no `links` key to
+`data/events.json`, and the row whitelist stays at sixteen fields. A row carrying a key the gate does not know
+fails `sourced-rows` with `field "links" is not in the D70 row shape — add it to the gate's list deliberately, or
+remove it` @measured 2026-11-23 by reading `scripts/check-ics.mjs:387-391`. So the first commit that carries the
+field goes **red** here, and the fix is a deliberate whitelist edit in the same commit that starts reading it —
+never a silent pass, and never an edit to the far side's file to make a gate quiet.
+
+**Where the answer arrives, and what each answer costs here.**
+
+| Answer | Where it lands | What this repo does, in one commit |
+|---|---|---|
+| **yes** | a publisher commit adding `links` to rows on **`staging`** — the sink's one path (`MH-FR-003`), the branch the operator set for the testing period | `check:ics` goes red on `sourced-rows` first; the whitelist and `signUpPaths()` move together; `node design/event-field-parity.mjs --no-build` re-runs and the table's `after: 0 and 0` cell moves; `check:rsvp-page` re-points at the row |
+| **not yet** | a sentence in the publisher's own `mathloco-sink.md`, or a word back through the operator | this section's status line gains a date and that sentence; no code moves, and the fallback stays the shipped answer |
+| **no** | the operator's ruling, recorded here as a **D###** and in the row above | the standing group links become the permanent shape: platform links live only in `src/config.json`'s hand-authored `URLs`, and no page ever links a specific meeting's platform page |
+
+Anything the author writes travels the operator's channel — the same route
+`docs/ask-to-social-event-publisher-2026-11-23.md` is drafted for, whose §6 names this request and says it is not
+urgent in the way the freshness ask is. Sending either letter is the operator's act (**D42**, **D124**).
 
 **What happens if it is refused.** The per-date links leave the site and the standing group links stay — that
 fallback is already the code path for a date with no platform page, so the failure is a smaller site, not a
