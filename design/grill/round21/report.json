@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-24 20:36",
+ "measuredAt": "2026-11-24 22:21",
  "widths": [
   320,
   640,
@@ -2648,7 +2648,7 @@
      "shapeCount": 9,
      "strokes": [
       {
-       "role": "wash",
+       "role": "face",
        "tag": "path",
        "contrast": 1.13,
        "swDevice": 1.2,
@@ -2734,7 +2734,7 @@
      "shapeCount": 9,
      "strokes": [
       {
-       "role": "wash",
+       "role": "face",
        "tag": "path",
        "contrast": 1.13,
        "swDevice": 2.13,
@@ -2820,7 +2820,7 @@
      "shapeCount": 9,
      "strokes": [
       {
-       "role": "wash",
+       "role": "face",
        "tag": "path",
        "contrast": 1.13,
        "swDevice": 1.57,
@@ -2907,7 +2907,7 @@
      "shapeCount": 9,
      "strokes": [
       {
-       "role": "wash",
+       "role": "face",
        "contrast": 15.19,
        "swDevice": 1.75
       },

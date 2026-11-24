@@ -37,6 +37,8 @@ import { paletteTokens } from './palette-tokens.mjs';
 import { contrastTriple, BARS, hueGap, nearestBrand, SAME_COLOUR_BAR } from './grill/okcolor.mjs';
 import { OPTIONS, WASHES, YELLOW_HUES, YELLOW_CHROMAS } from './grill/round21-options.mjs';
 import { distState, staleLine } from './dist-fresh.mjs';
+import { lunePath } from './mark-faces.mjs';
+import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-mark.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 
 const argv = process.argv.slice(2);
@@ -197,96 +199,19 @@ const txt = (args) => {
 // equator arcs and both meridians came back as black-filled blobs, the dash disappeared under the fill, and the
 // control option A failed every painted check (@caught 2026-11-24 by the first run — the control failing is the
 // proof the mutation was broken, not the colouring).
-const COLOUR_TOKEN = new Set(Object.keys(TOKENS));
-const isColourClass = (k) => /^(stroke|fill)-/.test(k) && COLOUR_TOKEN.has(k.replace(/^(stroke|fill)-/, ''));
-
-function recolour(html, map, fill) {
-  const open = html.indexOf('<svg data-mark="hero"');
-  if (open < 0) throw new Error('the built page carries no svg[data-mark="hero"] — the specimen cannot be planted');
-  const close = html.indexOf('</svg>', open);
-  const block = html.slice(open, close);
-  const tags = [...block.matchAll(/<(circle|path)\b[^>]*>/g)];
-  if (tags.length !== MARK_SLOTS.length) throw new Error(`the hero mark reports ${tags.length} shape tags, the table declares ${MARK_SLOTS.length} (MARK_SHAPE_COUNT = ${MARK_SHAPE_COUNT})`);
-  let out = block;
-  tags.forEach((m, i) => {
-    const slot = MARK_SLOTS[i];
-    const t = tok(map[slot]);
-    let tag = m[0].replace(/\sclass="([^"]*)"/, (_a, c) => ` class="${c.split(/\s+/).filter((k) => !isColourClass(k)).join(' ')}"`);
-    tag = tag.replace(/>$/, ` style="stroke:var(--color-${t.name})">`);
-    out = out.replace(m[0], tag);
-  });
-  // the meeting point is a FILLED disc: it takes `fill`, not `stroke`
-  out = out.replace(/(<circle[^>]*cy="23\.94"[^>]*?)style="stroke:var\(--color-[a-z0-9-]+\)"(>)/,
-    (_a, pre, post) => `${pre}style="fill:var(--color-${tok(map.dot).name})" stroke="none"${post}`);
-  if (fill) {
-    // Byrne fills regions. The lune is bounded by the left meridian, the right meridian reversed, and the near
-    // arc's own sub-cubic between the two feet — subdivided by de Casteljau, not approximated, so the wash ends
-    // where the ink ends.
-    out = out.replace(/(<svg data-mark="hero"[^>]*>)/, `$1\n<path d="${lunePath()}" style="fill:var(--color-${tok(fill.token).name});stroke:none"/>`);
-  }
-  return html.slice(0, open) + out + html.slice(close);
-}
-
-// The wash boundary, built out of the table's OWN curves rather than typed in: the left route forward
-// (foot -> pole), the right route REVERSED (pole -> foot), and the near arc's sub-cubic between the two feet,
-// found by bisection on x(t) plus a de Casteljau split. Reversing a cubic means swapping its ENDPOINTS and its
-// two CONTROL points in the same move — the first version sliced the coordinate list and emitted a three-number
-// `C` and a path with x and y transposed, which firefox painted as a shapeless blob next to the mark.
-// So the endpoints are CHECKED after the fact: the sub-arc must start and end at the route feet, and the two
-// routes must share the pole. A wash that stops 2 units short of the ink is a visible seam, and a report line
-// that says "painted" about a seam would be a lie — so this throws instead.
-const cubicPoints = (d) => {
-  const n = d.match(/-?\d+(\.\d+)?/g).map(Number);
-  if (n.length !== 8) throw new Error(`expected one M..C.. cubic (8 numbers), got ${n.length} in: ${d}`);
-  return [[n[0], n[1]], [n[2], n[3]], [n[4], n[5]], [n[6], n[7]]];
-};
-const fmt = (p) => `${+p[0].toFixed(2)} ${+p[1].toFixed(2)}`;
-const cubic = (p) => `C${fmt(p[1])} ${fmt(p[2])} ${fmt(p[3])}`;
-const reverseCubic = (p) => [p[3], p[2], p[1], p[0]];
-
-function lunePath() {
-  const routes = MARK.shapes.filter((s) => s.role === 'route').map((s) => cubicPoints(s.d));
-  if (routes.length !== 2) throw new Error(`the table declares ${routes.length} route cubics; the lune needs exactly 2`);
-  const [left, right] = routes;
-  if (left[3][0] !== right[3][0] || left[3][1] !== right[3][1]) {
-    throw new Error(`the two routes end at ${left[3]} and ${right[3]} — no shared pole, so the lune cannot close`);
-  }
-  const arcShape = MARK.shapes.find((s) => s.role === 'sphere' && s.tag === 'path' && s.face === 'front');
-  if (!arcShape) throw new Error('the table declares no front (near) equator arc — the lune would have no lower edge');
-  const P = cubicPoints(arcShape.d);
-
-  const xAt = (pts, t) => { const u = 1 - t; return u ** 3 * pts[0][0] + 3 * u * u * t * pts[1][0] + 3 * u * t * t * pts[2][0] + t ** 3 * pts[3][0]; };
-  const solve = (target) => { let lo = 0, hi = 1; for (let i = 0; i < 60; i++) { const mid = (lo + hi) / 2; if (xAt(P, mid) < target) lo = mid; else hi = mid; } return (lo + hi) / 2; };
-  const split = (pts, t) => {                                  // -> [sub 0..t, sub t..1]
-    const left = [pts[0]], right = [pts[3]];
-    let cur = pts;
-    for (let r = 1; r < 4; r++) {
-      const nx = [];
-      for (let i = 0; i < cur.length - 1; i++) {
-        nx.push([cur[i][0] + (cur[i + 1][0] - cur[i][0]) * t, cur[i][1] + (cur[i + 1][1] - cur[i][1]) * t]);
-      }
-      left.push(nx[0]); right.unshift(nx.at(-1));
-      cur = nx;
-    }
-    return [left, right];
-  };
-  const t1 = solve(left[0][0]), t2 = solve(right[0][0]);       // the arc's parameters at the two route FEET
-  const mid = split(P, Math.min(t1, t2))[1];
-  const sub = split(mid, (Math.max(t1, t2) - Math.min(t1, t2)) / (1 - Math.min(t1, t2)))[0];
-  const near = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
-  const [a, , , d] = sub;
-  const [lo, hi] = near(a, left[0]) <= near(a, right[0]) ? [a, d] : [d, a];
-  if (near(lo, left[0]) > 0.5 || near(hi, right[0]) > 0.5) {
-    throw new Error(`the near arc's sub-cubic runs ${fmt(lo)} -> ${fmt(hi)} but the route feet are at ${fmt(left[0])} and ${fmt(right[0])} — the wash would not meet the ink`);
-  }
-  // forward: left foot -> pole -> right foot -> (arc reversed) right foot -> left foot
-  return `M${fmt(left[0])} ${cubic(left)} ${cubic(reverseCubic(right))} ${cubic(reverseCubic([sub[3], sub[2], sub[1], sub[0]]))} Z`;
-}
-
+// The mutation itself lives in design/grill/paint-mark.mjs — the ONE machinery every colour round plants with
+// (recolourPage / recolourCard / labelsFor / hueOfPaint), imported here since 2026-11-24. The two traps it is
+// written around are recorded there: a class counts as a colour only if its suffix is a DECLARED token, and
+// dropping fill-none black-fills the mark — round 21 control row failed every painted check for exactly that
+// reason (@caught 2026-11-24), which is proof the MUTATION was broken, not the colouring.
+// The wash boundary now lives in ONE home: design/mark-faces.mjs, which is also where the mark's faces are
+// defined and priced (grill round 22). Round 21's inline copy was deleted here on 2026-11-24 after the two
+// functions were compared byte-for-byte on the same table (the paths are identical), so a face boundary is no
+// longer typed out twice next to a third copy of the shape table.
 // Paint order for a washed option puts the wash FIRST (it is inserted straight after <svg>), so a 9-shape report
 // must be labelled ['wash', ring, rear, ...]. Labelling it with the 8-slot table instead would print the wash's
 // 1.13 contrast under the name `ring` and shift every other role onto its neighbour's numbers.
-const labelsFor = (o, n) => (o.fill && n === MARK_SLOTS.length + 1 ? ['wash', ...MARK_SLOTS] : MARK_SLOTS);
+// labelsFor (the paint order of a washed row) is imported from design/grill/paint-mark.mjs.
 
 const painted = [];
 for (const o of OPTIONS) {
@@ -294,7 +219,7 @@ for (const o of OPTIONS) {
   const row = { id: o.id, label: o.label, paper: [], ink: [] };
   for (const w of WIDTHS) {
     const src = readFileSync(resolve('dist/client/index.html'), 'utf8');
-    writeFileSync(resolve(DIST, 'index.html'), recolour(src, o.paper, o.fill));
+    writeFileSync(resolve(DIST, 'index.html'), recolourPage(src, o.paper, o.fill ? [{ d: lunePath(), token: o.fill.token }] : [], TOKENS));
     const h0 = txt(['design/grill/dist-measure.mjs', DIST, '/', 'design/grill/render-measure.js', String(w), '1200']);
     if (h0.__fail) { row.paper.push({ width: w, error: 'height probe failed' }); continue; }
     const docH = JSON.parse(h0)?.doc?.scrollHeight;
@@ -313,7 +238,7 @@ for (const o of OPTIONS) {
       width: w, shot, rep,
       shapeCount: m?.count ?? null,
       strokes: (m?.shapes ?? []).map((s, i) => ({
-        role: labelsFor(o, m?.shapes?.length ?? 0)[i] ?? s.tag, tag: s.tag,
+        role: labelsFor(o.fill ? 1 : 0, m?.shapes?.length ?? 0)[i] ?? s.tag, tag: s.tag,
         contrast: s.strokeContrast ?? s.fillContrast, swDevice: s.swDevice,
         hue: hueOfPaint(s.stroke && s.stroke !== 'none' ? s.stroke : s.fill),
       })),
@@ -336,7 +261,7 @@ for (const o of OPTIONS) {
 // the same form mark-geometry's paintBytes() reads. Its HUE is the third number. (The first run ran an `rgb(...)`
 // regex over it, got [0,0,0] back, and printed "H 0" for every shape.) This is the colour the browser RESOLVED
 // for the token; mark-geometry's own line reports the median of the PIXELS, which is the painted fact.
-function hueOfPaint(css) { const n = String(css ?? '').match(/-?\d+(\.\d+)?/g); return n && n.length >= 3 ? Number(n[2]) : null; }
+// hueOfPaint is imported from design/grill/paint-mark.mjs.
 
 // ---------- 5. PAINT, ink ground: the share card's own document, recoloured ----------
 // Measured with the SAME probes as the hero, which means measured with the same REPORT: mark-geometry and
@@ -352,7 +277,7 @@ if (!readFileSyncExists(CARD_HTML)) {
   const base = readFileSync(CARD_HTML, 'utf8');
   for (const row of painted) {
     const o = OPTIONS.find((x) => x.id === row.id);
-    const html = recolourCard(base, o.ink, o.fill);
+    const html = recolourCard(base, o.ink, o.fill ? [{ d: lunePath(), token: o.fill.token }] : [], TOKENS);
     const f = `${TMP}/card-${o.id}.html`;
     writeFileSync(f, html);
     const png = `${TMP}/card-${o.id}.png`;
@@ -368,7 +293,7 @@ if (!readFileSyncExists(CARD_HTML)) {
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.ink.push({
       shot: png, rep, shapeCount: m?.count ?? null,
-      strokes: (m?.shapes ?? []).map((s, i) => ({ role: labelsFor(o, m?.shapes?.length ?? 0)[i] ?? s.tag, contrast: s.strokeContrast ?? s.fillContrast, swDevice: s.swDevice })),
+      strokes: (m?.shapes ?? []).map((s, i) => ({ role: labelsFor(o.fill ? 1 : 0, m?.shapes?.length ?? 0)[i] ?? s.tag, contrast: s.strokeContrast ?? s.fillContrast, swDevice: s.swDevice })),
       geometry: geo.__fail ? { fail: true, out: (geo.stdout + geo.stderr).trim().split('\n').slice(0, 6).join(' | ') } : { ok: true },
       inkPixels: pxRec?.inkPixels ?? null, at30: pxRec?.at30 ?? null,
       at30Pct: pxRec?.inkPixels ? +((100 * pxRec.at30) / pxRec.inkPixels).toFixed(1) : null,
@@ -389,25 +314,7 @@ function readFileSyncExists(p) { try { readFileSync(p); return true; } catch { r
 // untouched file it finds nothing and reports strokeContrast null for all eight shapes, which leaves
 // mark-geometry unable to split the figure into roles. Declaring the same token on <body> changes no painted
 // pixel (the div covers the frame exactly) and makes the per-shape contrast computable.
-function recolourCard(html, map, fill) {
-  let out = html.replace(/(<style[^>]*>)/, `$1\nbody{background:var(--color-ink)}`);
-  if (out === html) out = out.replace('</head>', '<style>body{background:var(--color-ink)}</style></head>');
-  const open = out.indexOf('<svg');
-  const start = html.indexOf('viewBox', open);
-  const close = out.indexOf('</svg>', start);
-  const block = out.slice(open, close);
-  const tags = [...block.matchAll(/<(circle|path)\b[^>]*>/g)];
-  if (tags.length !== MARK_SLOTS.length) throw new Error(`the card mark reports ${tags.length} shape tags, the table declares ${MARK_SLOTS.length}`);
-  let body = block;
-  tags.forEach((m, i) => {
-    const t = tok(map[MARK_SLOTS[i]]);
-    let tag = m[0].replace(/stroke="var\(--color-[a-z0-9-]+\)"/, `stroke="var(--color-${t.name})"`);
-    tag = tag.replace(/fill="var\(--color-[a-z0-9-]+\)"/, `fill="var(--color-${t.name})"`);
-    body = body.replace(m[0], tag);
-  });
-  if (fill) body = body.replace(/(<svg[^>]*>)/, `$1\n    <path d="${lunePath()}" fill="var(--color-${tok(fill.token).name})" stroke="none"/>`);
-  return out.slice(0, open) + body + out.slice(close);
-}
+// recolourCard is imported from design/grill/paint-mark.mjs, where the card's ground mutation is documented.
 
 // ---------- 6. the record ----------
 const report = {

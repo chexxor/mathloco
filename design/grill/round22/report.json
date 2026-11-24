@@ -1,0 +1,3818 @@
+{
+ "measuredAt": "2026-11-24 22:27",
+ "widths": [
+  320,
+  640,
+  1240
+ ],
+ "grounds": [
+  "paper (the hero)",
+  "ink (the share card)"
+ ],
+ "bars": {
+  "graphic": 3,
+  "layer": 1.35
+ },
+ "source": "Oliver Byrne, \"The First Six Books of the Elements of Euclid, in Which Coloured Diagrams and Symbols Are Used Instead of Letters for the Greater Ease of Learners\", London 1847",
+ "ask": "the second half of the seventh ruling on this mark (D483): \"but also show me options for coloring faces of the shape also in the Byrne style\"",
+ "faceGeometry": {
+  "r": 58,
+  "cx": 120,
+  "cy": 78,
+  "equatorSemiMinor": 21,
+  "axisOutOfScreenPlaneDeg": 21.23,
+  "axisFromViewingDirectionDeg": 68.77,
+  "footLongitudesDeg": [
+   116.63,
+   63.37
+  ],
+  "poleAngleDeg": 53.27,
+  "feet": [
+   [
+    94,
+    97
+   ],
+   [
+    146,
+    97
+   ]
+  ],
+  "samplesPerCubic": 240,
+  "arcFitConstant": 0.552285
+ },
+ "areas": [
+  {
+   "name": "lune",
+   "term": "spherical triangle (two meridians + the equator arc between their feet)",
+   "where": "between the two meridians, on the visible face — the mark's own \"area\"",
+   "areaUnits": 2694.7,
+   "pctOfDisc": 25.5,
+   "pctOfRingCubic": 80.1,
+   "sphericalFracPct": 7.4,
+   "spherical": {
+    "kind": "Girard excess",
+    "excessDeg": 53.27,
+    "areaR2": 0.9297,
+    "note": "both foot angles are 90deg, which is what the two right-angle marks in the drawing state, so the excess is the pole angle alone"
+   },
+   "sphereAreaUnits": 3127.5,
+   "foreshorten": 0.8616
+  },
+  {
+   "name": "north",
+   "term": "spherical lune (near equator semicircle + the limb's upper semicircle)",
+   "where": "everything above the near arc: the pole, both meridians, the right-angle marks",
+   "areaUnits": 7234.2,
+   "pctOfDisc": 68.45,
+   "pctOfRingCubic": 215.05,
+   "sphericalFracPct": 30.9,
+   "spherical": {
+    "kind": "lune",
+    "angleDeg": 111.23,
+    "areaR2": 3.8826,
+    "note": "bounded by two great semicircles meeting where the equator crosses the limb, (62,78) and (178,78)"
+   },
+   "sphereAreaUnits": 13061.1,
+   "foreshorten": 0.5539
+  },
+  {
+   "name": "south",
+   "term": "spherical lune (near equator semicircle + the limb's lower semicircle)",
+   "where": "between the near arc and the bottom of the silhouette",
+   "areaUnits": 3336.7,
+   "pctOfDisc": 31.57,
+   "pctOfRingCubic": 99.19,
+   "sphericalFracPct": 19.1,
+   "spherical": {
+    "kind": "lune",
+    "angleDeg": 68.77,
+    "areaR2": 2.4006,
+    "note": "the north and south lunes tile the visible hemisphere exactly: their angles sum to 180deg"
+   },
+   "sphereAreaUnits": 8075.6,
+   "foreshorten": 0.4132
+  },
+  {
+   "name": "disc",
+   "term": "the near hemisphere (what an orthographic view of a sphere shows)",
+   "where": "the whole ring interior",
+   "areaUnits": 10570.9,
+   "pctOfDisc": 100.02,
+   "pctOfRingCubic": 314.24,
+   "sphericalFracPct": 50,
+   "spherical": {
+    "kind": "hemisphere",
+    "angleDeg": 180,
+    "areaR2": 6.2832,
+    "note": "a projection shows exactly one hemisphere, so colouring the near hemisphere means colouring the disc"
+   },
+   "sphereAreaUnits": 21136.7,
+   "foreshorten": 0.5001
+  }
+ ],
+ "coverage": {
+  "lune": {
+   "ring": {
+    "frac": 0.006,
+    "inside": 0.006,
+    "onEdge": 0
+   },
+   "rear": {
+    "frac": 0.255,
+    "inside": 0.23,
+    "onEdge": 0.025
+   },
+   "front": {
+    "frac": 0.193,
+    "inside": 0.118,
+    "onEdge": 0.075
+   },
+   "left": {
+    "frac": 1,
+    "inside": 0.491,
+    "onEdge": 0.509
+   },
+   "right": {
+    "frac": 1,
+    "inside": 0.149,
+    "onEdge": 0.851
+   },
+   "angleL": {
+    "frac": 1,
+    "inside": 0.333,
+    "onEdge": 0.667
+   },
+   "angleR": {
+    "frac": 1,
+    "inside": 0.333,
+    "onEdge": 0.667
+   },
+   "dot": {
+    "frac": 0.373,
+    "inside": 0.28,
+    "onEdge": 0.093
+   }
+  },
+  "north": {
+   "ring": {
+    "frac": 0.534,
+    "inside": 0.435,
+    "onEdge": 0.099
+   },
+   "rear": {
+    "frac": 1,
+    "inside": 0.994,
+    "onEdge": 0.006
+   },
+   "front": {
+    "frac": 1,
+    "inside": 0.28,
+    "onEdge": 0.72
+   },
+   "left": {
+    "frac": 1,
+    "inside": 0.994,
+    "onEdge": 0.006
+   },
+   "right": {
+    "frac": 1,
+    "inside": 0.994,
+    "onEdge": 0.006
+   },
+   "angleL": {
+    "frac": 1,
+    "inside": 0.667,
+    "onEdge": 0.333
+   },
+   "angleR": {
+    "frac": 1,
+    "inside": 0.667,
+    "onEdge": 0.333
+   },
+   "dot": {
+    "frac": 1,
+    "inside": 0.944,
+    "onEdge": 0.056
+   }
+  },
+  "south": {
+   "ring": {
+    "frac": 0.503,
+    "inside": 0.422,
+    "onEdge": 0.081
+   },
+   "rear": {
+    "frac": 0.037,
+    "inside": 0,
+    "onEdge": 0.037
+   },
+   "front": {
+    "frac": 1,
+    "inside": 0.745,
+    "onEdge": 0.255
+   },
+   "left": {
+    "frac": 0.019,
+    "inside": 0.006,
+    "onEdge": 0.012
+   },
+   "right": {
+    "frac": 0.019,
+    "inside": 0.006,
+    "onEdge": 0.012
+   },
+   "angleL": {
+    "frac": 0.333,
+    "inside": 0.333,
+    "onEdge": 0
+   },
+   "angleR": {
+    "frac": 0.333,
+    "inside": 0.333,
+    "onEdge": 0
+   },
+   "dot": {
+    "frac": 0,
+    "inside": 0,
+    "onEdge": 0
+   }
+  },
+  "disc": {
+   "ring": {
+    "frac": 1,
+    "inside": 0.857,
+    "onEdge": 0.143
+   },
+   "rear": {
+    "frac": 1,
+    "inside": 0.994,
+    "onEdge": 0.006
+   },
+   "front": {
+    "frac": 1,
+    "inside": 0.994,
+    "onEdge": 0.006
+   },
+   "left": {
+    "frac": 1,
+    "inside": 1,
+    "onEdge": 0
+   },
+   "right": {
+    "frac": 1,
+    "inside": 1,
+    "onEdge": 0
+   },
+   "angleL": {
+    "frac": 1,
+    "inside": 1,
+    "onEdge": 0
+   },
+   "angleR": {
+    "frac": 1,
+    "inside": 1,
+    "onEdge": 0
+   },
+   "dot": {
+    "frac": 1,
+    "inside": 0.944,
+    "onEdge": 0.056
+   }
+  }
+ },
+ "faceSolve": {
+  "lune": {
+   "paper": {
+    "over": [
+     "rear",
+     "left",
+     "right",
+     "angleL",
+     "angleR",
+     "dot"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 86,
+       "hi": 94,
+       "mid": 90,
+       "n": 17
+      },
+      "spec": "oklch(90% 0.1321 35.7)",
+      "vsGround": 1.48,
+      "minLineOver": 3.31,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.139,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 80.5,
+       "hi": 86,
+       "mid": 83,
+       "n": 12
+      },
+      "spec": "oklch(83% 0.11 205)",
+      "vsGround": 1.51,
+      "minLineOver": 3.25,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.243,
+      "sameAsBrand": false,
+      "nearestToken": "path-calendar-tint",
+      "nearestTokenDist": 0.128,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 82,
+       "hi": 87.5,
+       "mid": 84.5,
+       "n": 12
+      },
+      "spec": "oklch(84.5% 0.04 86.6)",
+      "vsGround": 1.49,
+      "minLineOver": 3.29,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.128,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.075,
+      "reuses": null
+     }
+    }
+   },
+   "ink": {
+    "over": [
+     "rear",
+     "left",
+     "right",
+     "angleL",
+     "angleR",
+     "dot"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 31.5,
+       "hi": 40,
+       "mid": 35.5,
+       "n": 18
+      },
+      "spec": "oklch(35.5% 0.1321 35.7)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.092,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.071,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 27,
+       "hi": 36,
+       "mid": 31.5,
+       "n": 19
+      },
+      "spec": "oklch(31.5% 0.11 205)",
+      "vsGround": 1.6,
+      "minLineOver": 3.56,
+      "nearestBrand": "Berkeley blue #003262",
+      "brandDist": 0.085,
+      "sameAsBrand": false,
+      "nearestToken": "ink",
+      "nearestTokenDist": 0.173,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 30,
+       "hi": 38.5,
+       "mid": 34,
+       "n": 18
+      },
+      "spec": "oklch(34% 0.04 86.6)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "Amazon navy #232F3E",
+      "brandDist": 0.081,
+      "sameAsBrand": false,
+      "nearestToken": "ink-2",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     }
+    }
+   }
+  },
+  "north": {
+   "paper": {
+    "over": [
+     "ring",
+     "rear",
+     "front",
+     "left",
+     "right",
+     "angleL",
+     "angleR",
+     "dot"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 86,
+       "hi": 94,
+       "mid": 90,
+       "n": 17
+      },
+      "spec": "oklch(90% 0.1321 35.7)",
+      "vsGround": 1.48,
+      "minLineOver": 3.31,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.139,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 80.5,
+       "hi": 86,
+       "mid": 83,
+       "n": 12
+      },
+      "spec": "oklch(83% 0.11 205)",
+      "vsGround": 1.51,
+      "minLineOver": 3.25,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.243,
+      "sameAsBrand": false,
+      "nearestToken": "path-calendar-tint",
+      "nearestTokenDist": 0.128,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 82,
+       "hi": 87.5,
+       "mid": 84.5,
+       "n": 12
+      },
+      "spec": "oklch(84.5% 0.04 86.6)",
+      "vsGround": 1.49,
+      "minLineOver": 3.29,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.128,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.075,
+      "reuses": null
+     }
+    }
+   },
+   "ink": {
+    "over": [
+     "ring",
+     "rear",
+     "front",
+     "left",
+     "right",
+     "angleL",
+     "angleR",
+     "dot"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 31.5,
+       "hi": 40,
+       "mid": 35.5,
+       "n": 18
+      },
+      "spec": "oklch(35.5% 0.1321 35.7)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.092,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.071,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 27,
+       "hi": 36,
+       "mid": 31.5,
+       "n": 19
+      },
+      "spec": "oklch(31.5% 0.11 205)",
+      "vsGround": 1.6,
+      "minLineOver": 3.56,
+      "nearestBrand": "Berkeley blue #003262",
+      "brandDist": 0.085,
+      "sameAsBrand": false,
+      "nearestToken": "ink",
+      "nearestTokenDist": 0.173,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 30,
+       "hi": 38.5,
+       "mid": 34,
+       "n": 18
+      },
+      "spec": "oklch(34% 0.04 86.6)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "Amazon navy #232F3E",
+      "brandDist": 0.081,
+      "sameAsBrand": false,
+      "nearestToken": "ink-2",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     }
+    }
+   }
+  },
+  "south": {
+   "paper": {
+    "over": [
+     "ring",
+     "front",
+     "angleL",
+     "angleR"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 69,
+       "hi": 94,
+       "mid": 81.5,
+       "n": 51
+      },
+      "spec": "oklch(81.5% 0.1321 35.7)",
+      "vsGround": 1.81,
+      "minLineOver": 4.52,
+      "nearestBrand": "Amazon orange #FF9900",
+      "brandDist": 0.096,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.152,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 66.5,
+       "hi": 86,
+       "mid": 76,
+       "n": 40
+      },
+      "spec": "oklch(76% 0.11 205)",
+      "vsGround": 1.91,
+      "minLineOver": 4.28,
+      "nearestBrand": "Walmart blue #0071CE",
+      "brandDist": 0.245,
+      "sameAsBrand": false,
+      "nearestToken": "path-calendar-on-ink",
+      "nearestTokenDist": 0.12,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 67.5,
+       "hi": 87.5,
+       "mid": 77.5,
+       "n": 41
+      },
+      "spec": "oklch(77.5% 0.04 86.6)",
+      "vsGround": 1.88,
+      "minLineOver": 4.34,
+      "nearestBrand": "Amazon orange #FF9900",
+      "brandDist": 0.138,
+      "sameAsBrand": false,
+      "nearestToken": "accent-on-ink",
+      "nearestTokenDist": 0.141,
+      "reuses": null
+     }
+    }
+   },
+   "ink": {
+    "over": [
+     "ring",
+     "front",
+     "angleL",
+     "angleR"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 31.5,
+       "hi": 40,
+       "mid": 35.5,
+       "n": 18
+      },
+      "spec": "oklch(35.5% 0.1321 35.7)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.092,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.071,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 27,
+       "hi": 36,
+       "mid": 31.5,
+       "n": 19
+      },
+      "spec": "oklch(31.5% 0.11 205)",
+      "vsGround": 1.6,
+      "minLineOver": 3.56,
+      "nearestBrand": "Berkeley blue #003262",
+      "brandDist": 0.085,
+      "sameAsBrand": false,
+      "nearestToken": "ink",
+      "nearestTokenDist": 0.173,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 30,
+       "hi": 38.5,
+       "mid": 34,
+       "n": 18
+      },
+      "spec": "oklch(34% 0.04 86.6)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "Amazon navy #232F3E",
+      "brandDist": 0.081,
+      "sameAsBrand": false,
+      "nearestToken": "ink-2",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     }
+    }
+   }
+  },
+  "disc": {
+   "paper": {
+    "over": [
+     "ring",
+     "rear",
+     "front",
+     "left",
+     "right",
+     "angleL",
+     "angleR",
+     "dot"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 86,
+       "hi": 94,
+       "mid": 90,
+       "n": 17
+      },
+      "spec": "oklch(90% 0.1321 35.7)",
+      "vsGround": 1.48,
+      "minLineOver": 3.31,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.139,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 80.5,
+       "hi": 86,
+       "mid": 83,
+       "n": 12
+      },
+      "spec": "oklch(83% 0.11 205)",
+      "vsGround": 1.51,
+      "minLineOver": 3.25,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.243,
+      "sameAsBrand": false,
+      "nearestToken": "path-calendar-tint",
+      "nearestTokenDist": 0.128,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 82,
+       "hi": 87.5,
+       "mid": 84.5,
+       "n": 12
+      },
+      "spec": "oklch(84.5% 0.04 86.6)",
+      "vsGround": 1.49,
+      "minLineOver": 3.29,
+      "nearestBrand": "Walmart yellow #FFC220",
+      "brandDist": 0.128,
+      "sameAsBrand": false,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.075,
+      "reuses": null
+     }
+    }
+   },
+   "ink": {
+    "over": [
+     "ring",
+     "rear",
+     "front",
+     "left",
+     "right",
+     "angleL",
+     "angleR",
+     "dot"
+    ],
+    "rows": {
+     "accent": {
+      "family": "accent",
+      "H": 35.7,
+      "C": 0.1321,
+      "tokenL": 0.5057,
+      "band": {
+       "lo": 31.5,
+       "hi": 40,
+       "mid": 35.5,
+       "n": 18
+      },
+      "spec": "oklch(35.5% 0.1321 35.7)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.092,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.071,
+      "reuses": null
+     },
+     "path-calendar": {
+      "family": "path-calendar",
+      "H": 205,
+      "C": 0.11,
+      "tokenL": 0.51,
+      "band": {
+       "lo": 27,
+       "hi": 36,
+       "mid": 31.5,
+       "n": 19
+      },
+      "spec": "oklch(31.5% 0.11 205)",
+      "vsGround": 1.6,
+      "minLineOver": 3.56,
+      "nearestBrand": "Berkeley blue #003262",
+      "brandDist": 0.085,
+      "sameAsBrand": false,
+      "nearestToken": "ink",
+      "nearestTokenDist": 0.173,
+      "reuses": null
+     },
+     "rule": {
+      "family": "rule",
+      "H": 86.6,
+      "C": 0.04,
+      "tokenL": 0.6,
+      "band": {
+       "lo": 30,
+       "hi": 38.5,
+       "mid": 34,
+       "n": 18
+      },
+      "spec": "oklch(34% 0.04 86.6)",
+      "vsGround": 1.58,
+      "minLineOver": 3.61,
+      "nearestBrand": "Amazon navy #232F3E",
+      "brandDist": 0.081,
+      "sameAsBrand": false,
+      "nearestToken": "ink-2",
+      "nearestTokenDist": 0.113,
+      "reuses": null
+     }
+    }
+   }
+  }
+ },
+ "census": [
+  {
+   "token": "paper",
+   "spec": "oklch(97.35% 0.0139 88.7)",
+   "H": 88.7,
+   "C": 0.0139,
+   "L": 0.9734999999999999,
+   "paper": {
+    "vsGround": 1,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 17.15,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "panel",
+   "spec": "oklch(99.09% 0.0123 91.5)",
+   "H": 91.5,
+   "C": 0.0123,
+   "L": 0.9909,
+   "paper": {
+    "vsGround": 1.05,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 18.04,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "tint",
+   "spec": "oklch(91.92% 0.0285 74.3)",
+   "H": 74.3,
+   "C": 0.0285,
+   "L": 0.9192,
+   "paper": {
+    "vsGround": 1.18,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 14.53,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "ink",
+   "spec": "oklch(18.92% 0.0149 81.4)",
+   "H": 81.4,
+   "C": 0.0149,
+   "L": 0.1892,
+   "paper": {
+    "vsGround": 17.15,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 1,
+    "readsAsRegion": false
+   }
+  },
+  {
+   "token": "accent-strong",
+   "spec": "oklch(42.22% 0.109 35.35)",
+   "H": 35.35,
+   "C": 0.109,
+   "L": 0.42219999999999996,
+   "paper": {
+    "vsGround": 8.17,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 2.1,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "ink-2",
+   "spec": "oklch(45.17% 0.0252 85.9)",
+   "H": 85.9,
+   "C": 0.0252,
+   "L": 0.4517,
+   "paper": {
+    "vsGround": 6.84,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 2.51,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "ink-3",
+   "spec": "oklch(50.5% 0.03 86)",
+   "H": 86,
+   "C": 0.03,
+   "L": 0.505,
+   "paper": {
+    "vsGround": 5.44,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 3.15,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "rule",
+   "spec": "oklch(60% 0.04 86.6)",
+   "H": 86.6,
+   "C": 0.04,
+   "L": 0.6,
+   "paper": {
+    "vsGround": 3.66,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 4.69,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "accent",
+   "spec": "oklch(50.57% 0.1321 35.7)",
+   "H": 35.7,
+   "C": 0.1321,
+   "L": 0.5057,
+   "paper": {
+    "vsGround": 5.77,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 2.97,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "accent-on-ink",
+   "spec": "oklch(66% 0.10 35.7)",
+   "H": 35.7,
+   "C": 0.1,
+   "L": 0.66,
+   "paper": {
+    "vsGround": 3.01,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 5.69,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "band-text",
+   "spec": "oklch(96% 0.012 88)",
+   "H": 88,
+   "C": 0.012,
+   "L": 0.96,
+   "paper": {
+    "vsGround": 1.04,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 16.43,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-calendar",
+   "spec": "oklch(51% 0.11 205)",
+   "H": 205,
+   "C": 0.11,
+   "L": 0.51,
+   "paper": {
+    "vsGround": 4.9,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 3.5,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-meetup",
+   "spec": "oklch(49% 0.15 315)",
+   "H": 315,
+   "C": 0.15,
+   "L": 0.49,
+   "paper": {
+    "vsGround": 6.27,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 2.73,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-discord",
+   "spec": "oklch(52% 0.15 262)",
+   "H": 262,
+   "C": 0.15,
+   "L": 0.52,
+   "paper": {
+    "vsGround": 5.23,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 3.28,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-mobilizon",
+   "spec": "oklch(51% 0.11 145)",
+   "H": 145,
+   "C": 0.11,
+   "L": 0.51,
+   "paper": {
+    "vsGround": 5.09,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 3.37,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-calendar-tint",
+   "spec": "oklch(93% 0.03 205)",
+   "H": 205,
+   "C": 0.03,
+   "L": 0.93,
+   "paper": {
+    "vsGround": 1.13,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 15.19,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-meetup-tint",
+   "spec": "oklch(93% 0.03 315)",
+   "H": 315,
+   "C": 0.03,
+   "L": 0.93,
+   "paper": {
+    "vsGround": 1.15,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 14.9,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-discord-tint",
+   "spec": "oklch(93% 0.03 262)",
+   "H": 262,
+   "C": 0.03,
+   "L": 0.93,
+   "paper": {
+    "vsGround": 1.14,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 15.01,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-mobilizon-tint",
+   "spec": "oklch(93% 0.03 145)",
+   "H": 145,
+   "C": 0.03,
+   "L": 0.93,
+   "paper": {
+    "vsGround": 1.12,
+    "readsAsRegion": false
+   },
+   "ink": {
+    "vsGround": 15.25,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-calendar-on-ink",
+   "spec": "oklch(64% 0.11 205)",
+   "H": 205,
+   "C": 0.11,
+   "L": 0.64,
+   "paper": {
+    "vsGround": 2.97,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 5.78,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-meetup-on-ink",
+   "spec": "oklch(64% 0.15 315)",
+   "H": 315,
+   "C": 0.15,
+   "L": 0.64,
+   "paper": {
+    "vsGround": 3.33,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 5.15,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-discord-on-ink",
+   "spec": "oklch(64% 0.15 262)",
+   "H": 262,
+   "C": 0.15,
+   "L": 0.64,
+   "paper": {
+    "vsGround": 3.17,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 5.41,
+    "readsAsRegion": true
+   }
+  },
+  {
+   "token": "path-mobilizon-on-ink",
+   "spec": "oklch(64% 0.11 145)",
+   "H": 145,
+   "C": 0.11,
+   "L": 0.64,
+   "paper": {
+    "vsGround": 2.97,
+    "readsAsRegion": true
+   },
+   "ink": {
+    "vsGround": 5.77,
+    "readsAsRegion": true
+   }
+  }
+ ],
+ "censusTally": {
+  "paper": 15,
+  "ink": 22,
+  "total": 23,
+  "paperFails": [
+   "paper 1",
+   "panel 1.05",
+   "tint 1.18",
+   "band-text 1.04",
+   "path-calendar-tint 1.13",
+   "path-meetup-tint 1.15",
+   "path-discord-tint 1.14",
+   "path-mobilizon-tint 1.12"
+  ]
+ },
+ "shapeCountPrice": {
+  "tableShapes": 7,
+  "MARK_SHAPE_COUNT": 8,
+  "acceptedReportLength": 8,
+  "note": "design/mark-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both mark probes refuse: the refusal text is recorded per row in painted[]."
+ },
+ "control": {
+  "id": "C0",
+  "derivedFrom": "MARK_COLOURS in src/lib/brand-mark.mjs"
+ },
+ "lines": {
+  "paper": {
+   "ring": "ink",
+   "rear": "ink",
+   "front": "ink",
+   "left": "accent",
+   "right": "path-calendar",
+   "angleL": "accent-strong",
+   "angleR": "accent-strong",
+   "dot": "path-mobilizon"
+  },
+  "ink": {
+   "ring": "band-text",
+   "rear": "band-text",
+   "front": "band-text",
+   "left": "accent-on-ink",
+   "right": "path-calendar-on-ink",
+   "angleL": "accent-on-ink",
+   "angleR": "accent-on-ink",
+   "dot": "path-mobilizon-on-ink"
+  }
+ },
+ "rows": [
+  {
+   "id": "C0",
+   "label": "row C alone — the colouring the site ships today (nothing filled)",
+   "byrne": "the control: Byrne line colouring with no region. A face round without this row cannot say what a face costs.",
+   "reading": "the shipped mark: a colour names a line, and the figure has no area. Everything below is a delta from this measured line.",
+   "faces": [],
+   "control": true,
+   "tokenCost": {
+    "paper": 5,
+    "ink": 4,
+    "newOnPaper": 0,
+    "newOnInk": 0
+   },
+   "grounds": {
+    "paper": {
+     "fills": [],
+     "newTokens": 0,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [],
+     "newTokens": 0,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F1",
+   "label": "the lune filled — the mark's own area, in the club red",
+   "byrne": "Byrne fills the region a proposition is about. Here that region is the spherical triangle between the two meridians and the near equator arc, and its area is fixed by the two right angles the mark already draws.",
+   "reading": "one area, one colour: \"the red figure\" is the strip of surface between the two lines, which is where the metaphor lives. The pair keep their two colours (row C), so the area names the BETWEEN, not a line.",
+   "faces": [
+    "lune"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "accent",
+       "spec": "oklch(90% 0.1321 35.7)",
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 86,
+        "hi": 94,
+        "mid": 90,
+        "n": 17
+       },
+       "vsGround": 1.48,
+       "minLineOver": 3.31,
+       "nearestBrand": "Walmart yellow #FFC220",
+       "brandDist": 0.139,
+       "sameAsBrand": false,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.113,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "accent",
+       "spec": "oklch(35.5% 0.1321 35.7)",
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 31.5,
+        "hi": 40,
+        "mid": 35.5,
+        "n": 18
+       },
+       "vsGround": 1.58,
+       "minLineOver": 3.61,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.092,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.071,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F2",
+   "label": "the south lune filled — the region below the near arc, in the club red",
+   "byrne": "the other reading of the same ink: colour the half the lines leave, so the equator becomes the boundary of a region rather than a line across a disc",
+   "reading": "the fill sits under the equator, so the sphere gains a near side and a far side: the dashed arc stays uncoloured and the solid arc reads as an edge of an area. The meridians run THROUGH the fill on their way up, so they are the lines the fill must not swallow.",
+   "faces": [
+    "south"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "south",
+       "family": "accent",
+       "spec": "oklch(81.5% 0.1321 35.7)",
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 69,
+        "hi": 94,
+        "mid": 81.5,
+        "n": 51
+       },
+       "vsGround": 1.81,
+       "minLineOver": 4.52,
+       "nearestBrand": "Amazon orange #FF9900",
+       "brandDist": 0.096,
+       "sameAsBrand": false,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.152,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "south",
+       "family": "accent",
+       "spec": "oklch(35.5% 0.1321 35.7)",
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 31.5,
+        "hi": 40,
+        "mid": 35.5,
+        "n": 18
+       },
+       "vsGround": 1.58,
+       "minLineOver": 3.61,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.092,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.071,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F3",
+   "label": "the north lune filled — the face the claim lives on, in the club blue",
+   "byrne": "Byrne colours the area a construction moves through; here the construction is the pair climbing to the pole, and the area they bound is everything above the equator",
+   "reading": "the biggest single region the drawing has (68.45% of the visible face) and the one that carries the pole, both meridians and the notation. It also puts the most line-ink over a fill, so it is where the two-bar squeeze bites hardest.",
+   "faces": [
+    "north"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "north",
+       "family": "path-calendar",
+       "spec": "oklch(83% 0.11 205)",
+       "token": "NEW path-calendar-wash",
+       "H": 205,
+       "C": 0.11,
+       "tokenL": 0.51,
+       "band": {
+        "lo": 80.5,
+        "hi": 86,
+        "mid": 83,
+        "n": 12
+       },
+       "vsGround": 1.51,
+       "minLineOver": 3.25,
+       "nearestBrand": "Walmart yellow #FFC220",
+       "brandDist": 0.243,
+       "sameAsBrand": false,
+       "nearestToken": "path-calendar-tint",
+       "nearestTokenDist": 0.128,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "north",
+       "family": "path-calendar",
+       "spec": "oklch(31.5% 0.11 205)",
+       "token": "NEW path-calendar-wash",
+       "H": 205,
+       "C": 0.11,
+       "tokenL": 0.51,
+       "band": {
+        "lo": 27,
+        "hi": 36,
+        "mid": 31.5,
+        "n": 19
+       },
+       "vsGround": 1.6,
+       "minLineOver": 3.56,
+       "nearestBrand": "Berkeley blue #003262",
+       "brandDist": 0.085,
+       "sameAsBrand": false,
+       "nearestToken": "ink",
+       "nearestTokenDist": 0.173,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F4",
+   "label": "two areas, two colours — lune red, south lune blue",
+   "byrne": "the literal Byrne sentence — \"the squares of the blue and red lines\" — where two regions are named by two colours so the prose can point at either without a letter",
+   "reading": "the two faces this drawing really does tile the figure with are the north and south lunes; this row takes the triangle inside the north face plus the south face, so the two fills are DISJOINT and meet only at the near arc. What it costs is a third name in a mark whose claim is about a pair of lines.",
+   "faces": [
+    "lune",
+    "south"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 7,
+    "ink": 6,
+    "newOnPaper": 2,
+    "newOnInk": 2
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "accent",
+       "spec": "oklch(90% 0.1321 35.7)",
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 86,
+        "hi": 94,
+        "mid": 90,
+        "n": 17
+       },
+       "vsGround": 1.48,
+       "minLineOver": 3.31,
+       "nearestBrand": "Walmart yellow #FFC220",
+       "brandDist": 0.139,
+       "sameAsBrand": false,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.113,
+       "reuses": null
+      },
+      {
+       "face": "south",
+       "family": "path-calendar",
+       "spec": "oklch(76% 0.11 205)",
+       "token": "NEW path-calendar-wash",
+       "H": 205,
+       "C": 0.11,
+       "tokenL": 0.51,
+       "band": {
+        "lo": 66.5,
+        "hi": 86,
+        "mid": 76,
+        "n": 40
+       },
+       "vsGround": 1.91,
+       "minLineOver": 4.28,
+       "nearestBrand": "Walmart blue #0071CE",
+       "brandDist": 0.245,
+       "sameAsBrand": false,
+       "nearestToken": "path-calendar-on-ink",
+       "nearestTokenDist": 0.12,
+       "reuses": null
+      }
+     ],
+     "newTokens": 2,
+     "faceGap": {
+      "pair": "lune/south",
+      "gap": 169,
+      "labDist": 0.279,
+      "distinctName": true
+     }
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "accent",
+       "spec": "oklch(35.5% 0.1321 35.7)",
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 31.5,
+        "hi": 40,
+        "mid": 35.5,
+        "n": 18
+       },
+       "vsGround": 1.58,
+       "minLineOver": 3.61,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.092,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.071,
+       "reuses": null
+      },
+      {
+       "face": "south",
+       "family": "path-calendar",
+       "spec": "oklch(31.5% 0.11 205)",
+       "token": "NEW path-calendar-wash",
+       "H": 205,
+       "C": 0.11,
+       "tokenL": 0.51,
+       "band": {
+        "lo": 27,
+        "hi": 36,
+        "mid": 31.5,
+        "n": 19
+       },
+       "vsGround": 1.6,
+       "minLineOver": 3.56,
+       "nearestBrand": "Berkeley blue #003262",
+       "brandDist": 0.085,
+       "sameAsBrand": false,
+       "nearestToken": "ink",
+       "nearestTokenDist": 0.173,
+       "reuses": null
+      }
+     ],
+     "newTokens": 2,
+     "faceGap": {
+      "pair": "lune/south",
+      "gap": 169,
+      "labDist": 0.244,
+      "distinctName": true
+     }
+    }
+   }
+  },
+  {
+   "id": "F5",
+   "label": "the near hemisphere filled — the sphere as a body, in the palette's own grey",
+   "byrne": "Byrne's circles are regions as often as they are outlines; a filled limb is how 1847 printing says \"this is a body, not a disc\"",
+   "reading": "colouring the near hemisphere IS colouring the disc, so every one of the eight lines is drawn over the fill and the whole mark becomes lines-on-surface. This is the row that shows what the layer bar and the graphic bar cost at the same time.",
+   "faces": [
+    "disc"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "disc",
+       "family": "rule",
+       "spec": "oklch(84.5% 0.04 86.6)",
+       "token": "NEW rule-wash",
+       "H": 86.6,
+       "C": 0.04,
+       "tokenL": 0.6,
+       "band": {
+        "lo": 82,
+        "hi": 87.5,
+        "mid": 84.5,
+        "n": 12
+       },
+       "vsGround": 1.49,
+       "minLineOver": 3.29,
+       "nearestBrand": "Walmart yellow #FFC220",
+       "brandDist": 0.128,
+       "sameAsBrand": false,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.075,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "disc",
+       "family": "rule",
+       "spec": "oklch(34% 0.04 86.6)",
+       "token": "NEW rule-wash",
+       "H": 86.6,
+       "C": 0.04,
+       "tokenL": 0.6,
+       "band": {
+        "lo": 30,
+        "hi": 38.5,
+        "mid": 34,
+        "n": 18
+       },
+       "vsGround": 1.58,
+       "minLineOver": 3.61,
+       "nearestBrand": "Amazon navy #232F3E",
+       "brandDist": 0.081,
+       "sameAsBrand": false,
+       "nearestToken": "ink-2",
+       "nearestTokenDist": 0.113,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  }
+ ],
+ "painted": [
+  {
+   "id": "C0",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-C0-320.png",
+     "rep": ".design/tmp-round22/hero-C0-320.json",
+     "shapeCount": 8,
+     "shapes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 2223,
+     "at30": 1435,
+     "at30Pct": 64.6,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-C0-640.png",
+     "rep": ".design/tmp-round22/hero-C0-640.json",
+     "shapeCount": 8,
+     "shapes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 5944,
+     "at30": 4541,
+     "at30Pct": 76.4,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-C0-1240.png",
+     "rep": ".design/tmp-round22/hero-C0-1240.json",
+     "shapeCount": 8,
+     "shapes": [
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 3460,
+     "at30": 2451,
+     "at30Pct": 70.8,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.03
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-C0.png",
+     "rep": ".design/tmp-round22/card-C0.json",
+     "shapeCount": 8,
+     "shapes": [
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "ok": true
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 5534,
+     "at30": 4359,
+     "at30Pct": 78.8,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "F1",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F1-320.png",
+     "rep": ".design/tmp-round22/hero-F1-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.48,
+       "swDevice": 1.2,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F1-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 5747,
+     "at30": 1473,
+     "at30Pct": 25.6,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F1-640.png",
+     "rep": ".design/tmp-round22/hero-F1-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.48,
+       "swDevice": 2.13,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F1-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 17236,
+     "at30": 4596,
+     "at30Pct": 26.7,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F1-1240.png",
+     "rep": ".design/tmp-round22/hero-F1-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.48,
+       "swDevice": 1.57,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F1-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 9486,
+     "at30": 2502,
+     "at30Pct": 26.4,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.04
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F1.png",
+     "rep": ".design/tmp-round22/card-F1.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.58,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F1.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 13109,
+     "at30": 4388,
+     "at30Pct": 33.5,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "F2",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F2-320.png",
+     "rep": ".design/tmp-round22/hero-F2-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.81,
+       "swDevice": 1.2,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F2-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 6604,
+     "at30": 1503,
+     "at30Pct": 22.8,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F2-640.png",
+     "rep": ".design/tmp-round22/hero-F2-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.81,
+       "swDevice": 2.13,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F2-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 19954,
+     "at30": 4673,
+     "at30Pct": 23.4,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.86
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F2-1240.png",
+     "rep": ".design/tmp-round22/hero-F2-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.81,
+       "swDevice": 1.57,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F2-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 10981,
+     "at30": 2532,
+     "at30Pct": 23.1,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.03
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F2.png",
+     "rep": ".design/tmp-round22/card-F2.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.58,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F2.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 14886,
+     "at30": 4407,
+     "at30Pct": 29.6,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "F3",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F3-320.png",
+     "rep": ".design/tmp-round22/hero-F3-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.51,
+       "swDevice": 1.2,
+       "hue": 205
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F3-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 11393,
+     "at30": 1557,
+     "at30Pct": 13.7,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F3-640.png",
+     "rep": ".design/tmp-round22/hero-F3-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.51,
+       "swDevice": 2.13,
+       "hue": 205
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F3-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 35489,
+     "at30": 4756,
+     "at30Pct": 13.4,
+     "strongest": {
+      "c": [
+       24,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F3-1240.png",
+     "rep": ".design/tmp-round22/hero-F3-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.51,
+       "swDevice": 1.57,
+       "hue": 205
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F3-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 19226,
+     "at30": 2613,
+     "at30Pct": 13.6,
+     "strongest": {
+      "c": [
+       25,
+       22,
+       15
+      ],
+      "contrast": 16.68
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F3.png",
+     "rep": ".design/tmp-round22/card-F3.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.6,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F3.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 25345,
+     "at30": 4529,
+     "at30Pct": 17.9,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.95
+     }
+    }
+   ]
+  },
+  {
+   "id": "F4",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F4-320.png",
+     "rep": ".design/tmp-round22/hero-F4-320.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "tag": "path",
+       "contrast": 1.91,
+       "swDevice": 1.2,
+       "hue": 205
+      },
+      {
+       "role": "face2",
+       "tag": "path",
+       "contrast": 1.48,
+       "swDevice": 1.2,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F4-320.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 10128,
+     "at30": 1551,
+     "at30Pct": 15.3,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F4-640.png",
+     "rep": ".design/tmp-round22/hero-F4-640.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "tag": "path",
+       "contrast": 1.91,
+       "swDevice": 2.13,
+       "hue": 205
+      },
+      {
+       "role": "face2",
+       "tag": "path",
+       "contrast": 1.48,
+       "swDevice": 2.13,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F4-640.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 31246,
+     "at30": 4744,
+     "at30Pct": 15.2,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.85
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F4-1240.png",
+     "rep": ".design/tmp-round22/hero-F4-1240.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "tag": "path",
+       "contrast": 1.91,
+       "swDevice": 1.57,
+       "hue": 205
+      },
+      {
+       "role": "face2",
+       "tag": "path",
+       "contrast": 1.48,
+       "swDevice": 1.57,
+       "hue": 35.7
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F4-1240.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 17007,
+     "at30": 2593,
+     "at30Pct": 15.2,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.04
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F4.png",
+     "rep": ".design/tmp-round22/card-F4.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "contrast": 1.6,
+       "swDevice": 1.75
+      },
+      {
+       "role": "face2",
+       "contrast": 1.58,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F4.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 22461,
+     "at30": 4452,
+     "at30Pct": 19.8,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "F5",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F5-320.png",
+     "rep": ".design/tmp-round22/hero-F5-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.49,
+       "swDevice": 1.2,
+       "hue": 86.6
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F5-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 15774,
+     "at30": 1592,
+     "at30Pct": 10.1,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F5-640.png",
+     "rep": ".design/tmp-round22/hero-F5-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.49,
+       "swDevice": 2.13,
+       "hue": 86.6
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F5-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 49499,
+     "at30": 4816,
+     "at30Pct": 9.7,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.84
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F5-1240.png",
+     "rep": ".design/tmp-round22/hero-F5-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.49,
+       "swDevice": 1.57,
+       "hue": 86.6
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F5-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 26747,
+     "at30": 2647,
+     "at30Pct": 9.9,
+     "strongest": {
+      "c": [
+       23,
+       20,
+       12
+      ],
+      "contrast": 17.07
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F5.png",
+     "rep": ".design/tmp-round22/card-F5.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.58,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F5.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 34697,
+     "at30": 4612,
+     "at30Pct": 13.3,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.95
+     }
+    }
+   ]
+  }
+ ]
+}
