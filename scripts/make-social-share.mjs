@@ -60,11 +60,19 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import sharp from 'sharp';
 import { BANDS, MOTIF, checkCard } from './check-social-card.mjs';
-import { MARK, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
+import { MARK, MARK_COLOURS, MARK_SLOTS } from '../src/lib/brand-mark.mjs';
 // The mark's geometry is the site's geometry (`src/lib/brand-mark.mjs`, the same table
 // `src/components/HeroSection.astro` draws and `check:render` measures), so the card and the hero cannot
-// become two different clubs. Colour is per ground: on the card's ink ground that is MARK_COLOURS.ink.
-const markStroke = (role) => `var(--color-${MARK_COLOURS.ink[role]})`;
+// become two different clubs. Colour is per ground: on the card's ink ground that is MARK_COLOURS.ink, keyed by
+// SLOT since the seventh ruling (D483) — Byrne's colour *is* a line's name, so it addresses one drawn shape, and
+// this document has no Tailwind to resolve a class, so a token becomes `var(--color-…)` straight from @theme.
+const markStroke = (slot) => {
+  const tok = MARK_COLOURS.ink[slot];
+  if (!tok) throw new Error(`brand-mark slot "${slot}" has no token on the ink ground (MARK_COLOURS.ink) — the card would paint a shape with no colour`);
+  return `var(--color-${tok})`;
+};
+for (const s of [...MARK.shapes, MARK.dot])
+  if (!MARK_SLOTS.includes(s.slot)) throw new Error(`brand-mark slot "${s.slot}" is not in MARK_SLOTS — the card and the hero are reading different shape tables`);
 // The domain is read out of src/config.json rather than typed here, so the card cannot claim an address the
 // site does not own. Parsed with fs because node's JSON modules expose only a default export, while astro
 // imports the same file with named bindings - the parse is the portable half.
@@ -152,13 +160,15 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
   <!-- the club's mark: two lines that leave a sphere's equator at right angles - so parallel - and cross at the
        pole. Geometry from src/lib/brand-mark.mjs, corrected on 2026-11-02 against the club's own source figure
        (the operator ruled the previous drawing an incorrect reading of it; the correction and how the source was
-       measured are recorded in that file). The right-angle marks and the pole carry accent-on-ink, the only accent
-       the band grammar allows on ink (DESIGN.md: accent on ink is 2.97 and banned, D316). -->
+       measured are recorded in that file). Colour is row C of grill round 21 (D483): the surface is band-text,
+       the left meridian accent-on-ink, the right path-calendar-on-ink, the right-angle marks accent-on-ink and
+       the pole path-mobilizon-on-ink — every one an -on-ink lightness, because accent on ink measures 2.97 and is
+       banned (DESIGN.md: Colour, D316) and no single colour serves both grounds. -->
   <svg class="motif" data-mark="card" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" role="img" aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole, drawn like the club's sphere diagram">
     ${MARK.shapes.map((s) => (s.tag === 'circle'
-      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`
-      : `<path d="${s.d}" fill="none" stroke="${markStroke(s.role)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`)).join('\n    ')}
-    <circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${markStroke(MARK.dot.role)}"/>
+      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.slot)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`
+      : `<path d="${s.d}" fill="none" stroke="${markStroke(s.slot)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`)).join('\n    ')}
+    <circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${markStroke(MARK.dot.slot)}"/>
     <!-- the source figure's own label, kept because the figure is the club's and the label is what the club
          writes on it ("S pole — meet here"). Since the fifth ruling (2026-11-24) the mark meets at the NORTH
          pole, so the label sits ABOVE the dot: baseline y 17, and with font-size 8.5 the cap top lands at y 10.9

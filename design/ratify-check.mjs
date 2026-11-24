@@ -21,7 +21,7 @@ import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve, join } from 'node:path';
 import { __unstable__loadDesignSystem } from '@tailwindcss/node';
-import { MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { MARK, MARK_SLOTS, MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..'); // this file lives in design/
 const CSS_PATH = resolve(ROOT, 'src/styles/global.css');
@@ -168,19 +168,32 @@ else ok(`${bandRings} band focus rings, no accent ring on the band`);
 // ---------------- 1e. the drawn mark (D120): the coupling that can rot silently ----------------
 // The mark is geometry in src/lib/brand-mark.mjs, drawn by HeroSection.astro and by the share-card
 // composer, measured by check:render and check:social. The one joint no renderer can fail loudly is the
-// role -> class map written in HeroSection.astro: Tailwind's scanner reads RAW source text, so a computed
+// slot -> class map written in HeroSection.astro: Tailwind's scanner reads RAW source text, so a computed
 // class name (`stroke-${token}`) generates no CSS, and check:classes / gen-token-map scan .astro but not
 // .mjs — so a class cannot live next to the colour map it comes from. Assert the two agree, here, where a
 // token retune shows up as a red line instead of an invisible hero.
+// Derived per SLOT since the seventh ruling (D483), over the shape table plus the meeting point, not over
+// the colour map's keys: a map keyed by role asked for one class per kind (3 strokes + 1 fill) and a Byrne
+// colouring spends a different colour on each of the eight drawn shapes. Enumerating the map's own keys was
+// never the rule — the SHAPES are — and it would now under-check: two `accent-strong` slots collapse to one
+// demanded class, so a hero that painted only one of the two right-angle marks in gold would pass.
 const heroFile = readFileSync(join(ROOT, 'src/components/HeroSection.astro'), 'utf8');
 const heroStripped = stripComments(heroFile);
 const cardComposer = stripComments(readFileSync(join(ROOT, 'scripts/make-social-share.mjs'), 'utf8'));
-const markClasses = Object.entries(MARK_COLOURS.paper)
-  .map(([role, tok]) => [`stroke-${tok}`, role])
-  .concat([[`fill-${MARK_COLOURS.paper.accent}`, `${MARK_COLOURS.paper.accent} fill on the meeting point`]]);
+const drawnSlots = [...MARK.shapes.map((s) => s.slot), MARK.dot.slot];
+if (drawnSlots.length !== MARK_SLOTS.length || drawnSlots.some((s, i) => s !== MARK_SLOTS[i]))
+  fail(`src/lib/brand-mark.mjs declares ${drawnSlots.length} drawn shapes (${drawnSlots.join(', ')}) but MARK_SLOTS names ${MARK_SLOTS.length} (${MARK_SLOTS.join(', ')}) in that order — every painted-shape-to-declaration check in design/mark-geometry.mjs and scripts/check-social-card.mjs zips the two, so a mismatch pairs each painted shape with the wrong colour declaration`);
+const markClasses = [...MARK.shapes.map((s) => [`stroke-${MARK_COLOURS.paper[s.slot]}`, s.slot]),
+  [`fill-${MARK_COLOURS.paper[MARK.dot.slot]}`, `${MARK.dot.slot} fill on the meeting point`]];
 const missingMarkClasses = markClasses.filter(([cls]) => !new RegExp(`['"\`]${cls}['"\`]`).test(heroStripped));
-if (missingMarkClasses.length) fail(`HeroSection.astro does not write the class for ${missingMarkClasses.map(([cls, role]) => `${role} -> ${cls}`).join(', ')} — the role map in that file and MARK_COLOURS.paper in src/lib/brand-mark.mjs have drifted (Tailwind cannot see a computed class name, so a computed name here means the shape paints nothing)`);
-else ok(`${markClasses.length} mark classes in HeroSection.astro match MARK_COLOURS.paper (${markClasses.map(([c]) => c).join(', ')})`);
+if (missingMarkClasses.length) fail(`HeroSection.astro does not write the class for ${missingMarkClasses.map(([cls, slot]) => `${slot} -> ${cls}`).join(', ')} — the slot map in that file and MARK_COLOURS.paper in src/lib/brand-mark.mjs have drifted (Tailwind cannot see a computed class name, so a computed name here means the shape paints nothing)`);
+else ok(`${markClasses.length} mark classes in HeroSection.astro match MARK_COLOURS.paper for the ${drawnSlots.length} drawn slots (${markClasses.map(([c]) => c).join(', ')})`);
+// The card half of the same joint: it has no Tailwind, so its coupling is that the composer asks for the
+// colour BY SLOT. A leftover `markStroke(s.role)` would silently paint both meridians the same colour —
+// exactly the claim row C gives up (D481) — and no pixel gate would call it wrong.
+if (!/markStroke\(s\.slot\)/.test(cardComposer) || !/markStroke\(MARK\.dot\.slot\)/.test(cardComposer))
+  fail('scripts/make-social-share.mjs asks for the mark colour by something other than SLOT (markStroke(s.slot) / markStroke(MARK.dot.slot)) — on a slot-keyed table a role-keyed call hands every shape of one role the same colour and no gate sees it');
+else ok('the card composer reads MARK_COLOURS.ink by slot, the same keying the hero uses');
 if (!/data-mark=["']hero["']/.test(heroStripped)) fail('HeroSection.astro draws no data-mark="hero" — check:render\'s mark probe would then measure nothing and the hero could go blank silently');
 else if (!/data-mark=["']card["']/.test(cardComposer)) fail('the share-card composer draws no data-mark="card" — check:social\'s shape-count check would have nothing to read');
 else ok('both surfaces opt in to the mark probe (data-mark="hero" / "card"), so both pixel gates read the same shape');

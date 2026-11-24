@@ -32,14 +32,16 @@
 // Slots are the eight drawn shapes in paint order, named for what they are:
 //   ring (the silhouette circle), rear (the far, dashed half of the equator), front (the near half),
 //   left / right (the two meridians), angleL / angleR (the right-angle marks), dot (the meeting point).
-
-export const SLOTS = ['ring', 'rear', 'front', 'left', 'right', 'angleL', 'angleR', 'dot'];
+// Re-exported from src/lib/brand-mark.mjs (MARK_SLOTS) rather than declared here. This file prices colourings for
+// eight named shapes and `design/round21.mjs` zips them against the painted <svg> in the same order; a second
+// declaration of that list here is a copy that goes stale silently the day a shape is added or renamed.
+export { MARK_SLOTS as SLOTS } from '../../src/lib/brand-mark.mjs';
 
 export const OPTIONS = [
   {
     id: 'A',
-    label: 'incumbent (the control)',
-    byrne: 'not Byrne — the ratified colouring, kept in the round so every other row is a delta from a measured line, not from memory',
+    label: 'the colouring this site shipped until 2026-11-24 (retired)',
+    byrne: 'not Byrne — the colouring the mark wore from apply 4h until the seventh ruling, kept in the round so every row is a delta from a measured line rather than from memory',
     paper: { ring: 'rule', rear: 'rule', front: 'rule', left: 'ink', right: 'ink', angleL: 'accent', angleR: 'accent', dot: 'accent' },
     ink: { ring: 'band-text', rear: 'band-text', front: 'band-text', left: 'band-text', right: 'band-text', angleL: 'accent-on-ink', angleR: 'accent-on-ink', dot: 'accent-on-ink' },
     reading: 'one line-colour for the sphere, one for the pair, gold for the notation. Colour carries ROLE only.',
@@ -59,6 +61,10 @@ export const OPTIONS = [
     paper: { ring: 'ink', rear: 'ink', front: 'ink', left: 'accent', right: 'path-calendar', angleL: 'accent-strong', angleR: 'accent-strong', dot: 'path-mobilizon' },
     ink: { ring: 'band-text', rear: 'band-text', front: 'band-text', left: 'accent-on-ink', right: 'path-calendar-on-ink', angleL: 'accent-on-ink', angleR: 'accent-on-ink', dot: 'path-mobilizon-on-ink' },
     reading: 'the most Byrne row on the table, and the one that costs the mark its claim: two colours name two DIFFERENT lines, and "parallel" is a statement about a pair. Priced, not recommended.',
+    // The operator took it (2026-11-24): "(3. C), but also show me options for coloring faces of the shape also in
+    // the Byrne style." `design/round21.mjs` finds the CONTROL row by matching these two maps against
+    // MARK_COLOURS, so this line is provenance, not the mechanism that marks the row as the control.
+    ruling: 'RATIFIED 2026-11-24 as the seventh ruling on this mark (D483); applied in src/lib/brand-mark.mjs.',
   },
   {
     id: 'D',

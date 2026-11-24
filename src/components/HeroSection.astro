@@ -1,5 +1,5 @@
 ---
-import { MARK } from '../lib/brand-mark.mjs';
+import { MARK, MARK_COLOURS, MARK_SLOTS } from '../lib/brand-mark.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
 import { content, value, answers, upcoming, formatDate, timeSpan, copiedOn } from '../lib/content.ts';
@@ -30,27 +30,43 @@ import { newTabQualifier } from '../lib/links.mjs';
 // comes from `src/lib/brand-mark.mjs` — the same table the share card composer and both pixel gates
 // read, so the two renderings of the club's mark cannot drift.
 //
-// role -> class, and the class names are LITERAL strings here because that is what makes them exist:
+// slot -> class, and the class names are LITERAL strings here because that is what makes them exist:
 // Tailwind's scanner reads raw source text, so a computed name (`stroke-${token}`) generates nothing,
 // and `scripts/check-classes.ts` / `design/gen-token-map.mjs` scan `.astro`/`.svelte`/`.html` but not
 // `.mjs`, so a class written in the geometry module would be invisible to all three. The keys are
-// MARK's roles, and the coupling between these literals and `MARK_COLOURS.paper` is asserted in
-// `design/ratify-check.mjs`, which imports the module and greps this file. Getting it wrong is
-// measured rather than trusted: an unmapped role paints no stroke, and `check:render`'s `marks` probe
-// fails the run instead of shipping a mark with a hole in it.
+// MARK's SLOTS since the seventh ruling (D483): Byrne's colour *is* a line's name, so a colour has to
+// address one drawn shape, and both meridians — one role, `route` — now take two different colours.
+// The coupling between these literals and `MARK_COLOURS.paper` is asserted twice: here, at build time,
+// by recomputing each class from the table, and in `design/ratify-check.mjs`, which greps this file for
+// each literal. Getting it wrong is measured rather than trusted: an unmapped slot paints no stroke, and
+// `check:render`'s `marks` probe fails the run instead of shipping a mark with a hole in it.
 // Type-annotated rather than JSDoc-typed: `astro check` treats frontmatter as TypeScript, and a JSDoc
 // `@type` there is reported as a hint and then ignored, so the map would have to be keyed by a literal
-// role union instead of by role name — which is the drift this comment is about, and the throw below is
+// role union instead of by slot name — which is the drift this comment is about, and the throw below is
 // what actually catches it at build time.
-const STROKE_CLASS: Record<string, string> = { sphere: 'stroke-rule', route: 'stroke-ink', accent: 'stroke-accent' };
-const FILL_CLASS: Record<string, string> = { accent: 'fill-accent' };
-// A role with no class paints no stroke, and an invisible shape inside a healthy-looking box is the one
+const STROKE_CLASS: Record<string, string> = {
+  ring: 'stroke-ink', rear: 'stroke-ink', front: 'stroke-ink',
+  left: 'stroke-accent', right: 'stroke-path-calendar',
+  angleL: 'stroke-accent-strong', angleR: 'stroke-accent-strong',
+};
+const FILL_CLASS: Record<string, string> = { dot: 'fill-path-mobilizon' };
+// A slot with no class paints no stroke, and an invisible shape inside a healthy-looking box is the one
 // failure mode a screenshot review misses. check:render catches it with numbers; the build catching it
-// first is cheaper, so this throws rather than shipping the hole.
+// first is cheaper, so this throws rather than shipping the hole. The second half of each check is the
+// ratification itself: the class written here must be the class `MARK_COLOURS.paper` names for that slot,
+// so a hero that paints a plausible-but-unchosen colouring is a build failure, not a design review find.
 for (const s of MARK.shapes) {
-  if (!STROKE_CLASS[s.role]) throw new Error(`brand-mark role "${s.role}" has no stroke class in HeroSection.astro — add it to STROKE_CLASS`);
+  if (!MARK_SLOTS.includes(s.slot)) throw new Error(`brand-mark slot "${s.slot}" is not in MARK_SLOTS (src/lib/brand-mark.mjs) — the slot table and the shape table have diverged`);
+  if (!STROKE_CLASS[s.slot]) throw new Error(`brand-mark slot "${s.slot}" has no stroke class in HeroSection.astro — add it to STROKE_CLASS`);
+  const want = `stroke-${MARK_COLOURS.paper[s.slot]}`;
+  if (STROKE_CLASS[s.slot] !== want) throw new Error(`HeroSection.astro paints slot "${s.slot}" with ${STROKE_CLASS[s.slot]} but the ratified colour table (MARK_COLOURS.paper) names ${want} — the hero drifted from the operator's row (D483)`);
 }
-if (!FILL_CLASS[MARK.dot.role]) throw new Error(`brand-mark dot role "${MARK.dot.role}" has no fill class in HeroSection.astro — add it to FILL_CLASS`);
+{
+  const want = `fill-${MARK_COLOURS.paper[MARK.dot.slot]}`;
+  if (FILL_CLASS[MARK.dot.slot] !== want) throw new Error(`HeroSection.astro paints the meeting point with ${FILL_CLASS[MARK.dot.slot] ?? '(nothing)'} but MARK_COLOURS.paper names ${want}`);
+  for (const slot of Object.keys(STROKE_CLASS))
+    if (!MARK_SLOTS.includes(slot)) throw new Error(`HeroSection.astro carries a stroke class for "${slot}", which is no longer a mark slot — a stale class writes a Tailwind utility for a shape that no longer exists`);
+}
 
 // The label lane used to open the hero with the club's next date — "Next: Saturday, Nov 7 · 12:00 pm" — which
 // put a *date* in the one place on the site whose job is to say what the group is (operator, 2026-11-07: the hero
@@ -444,9 +460,9 @@ const heroLabel = signUpFor
         aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole"
       >
         {MARK.shapes.map((s) => (s.tag === 'circle'
-          ? <circle cx={s.cx} cy={s.cy} r={s.r} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.role]}`} />
-          : <path d={s.d} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.role]}`} />))}
-        <circle cx={MARK.dot.cx} cy={MARK.dot.cy} r={MARK.dot.r} class={`stroke-none ${FILL_CLASS[MARK.dot.role]}`} />
+          ? <circle cx={s.cx} cy={s.cy} r={s.r} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.slot]}`} />
+          : <path d={s.d} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.slot]}`} />))}
+        <circle cx={MARK.dot.cx} cy={MARK.dot.cy} r={MARK.dot.r} class={`stroke-none ${FILL_CLASS[MARK.dot.slot]}`} />
       </svg>
     </div>
   </div>

@@ -107,11 +107,42 @@
 // source. So composer and verifier read one table (D118's rule, applied to geometry instead of colour). One table
 // is also why this correction moved the hero, the card and both gates together.
 //
-// WHAT IS NOT HERE: colour. Which token a role takes depends on the ground it sits on — `accent` on paper (5.77)
-// vs `accent-on-ink` on the band (5.69), because `accent` on ink is 2.97 and banned (DESIGN.md "Colour", D316);
-// every number here is the token pair, @measured 2026-11-14 by node design/grill/palette-remap.mjs. The role->
-// token maps are `MARK_COLOURS` below; each surface turns a token into whatever its renderer understands (a
-// Tailwind class on the page, `var(--color-…)` in the card document, which has no Tailwind).
+// SEVENTH RULING: A LINE'S COLOUR IS ITS NAME (operator, 2026-11-24; D483). "Make the favicon of the website be
+// that svg we created, which I'd like to call the logo. Before that, be sure the coloring is similar to John
+// Byrne's 1847 Euclid styling, where it uses colors to indicate matching angles, lines, curves, or whatever
+// patterns/styles he was using." The ask was PRICED, not applied (D316: colour is operator-ratified): grill round 21
+// (`npm run round21`, `design/grill/round21/report.json`, five colourings x two grounds x three hero widths plus the
+// share card's own document) and the operator chose row C — "(3. C), but also show me options for coloring faces of
+// the shape also in the Byrne style." Byrne's 1847 device is that colour replaces LETTERS: the prose says "the
+// squares of the blue and red lines", so a line's colour is its name, and Byrne names the colours as a
+// non-ornamental teaching instrument ("we do not introduce colours for the purpose of entertainment… but to assist
+// the mind", Byrne 1847, preface).
+//
+// What row C does to this file, and what it costs, stated rather than hidden:
+//   - `MARK_COLOURS` stops being keyed by ROLE and is keyed by SLOT (the eight drawn shapes, in paint order).
+//     A role-keyed map CANNOT express row C: both meridians are the role `route`, and row C names them two
+//     different colours. Round 9 priced the same wall and left it unpunched (design/grill/round9-palette.mjs:
+//     "`route` -> a per-shape pair (a new role, or an array)").
+//   - It gives the notation two colours that are ONE HUE AT TWO WEIGHTS. Round 21 measured the tightest gap
+//     between the colours row C spends on paper as 0.00 deg (`accent` hue 35.7 against `accent-strong` hue 35.35)
+//     @measured 2026-11-24 by npm run round21, `hues` in design/grill/round21/report.json), so the right-angle
+//     marks say "same line, heavier" — which is Byrne's own terms read back at this palette. The incumbent row A
+//     spent 3 colours 5.0 deg apart, so colour carried almost no information either way.
+//   - It costs the mark its "these are the same kind of line" claim: the left meridian is the club's red and the
+//     right is the calendar blue, and "parallel" is a statement about a PAIR. Round 21 printed the tension
+//     (row C's own `reading` line) and the operator chose the row anyway.
+//   - Every pair still clears the 3.0 graphic bar (D101), on both grounds, @measured 2026-11-24 by npm run
+//     round21: paper ink 17.15, accent 5.77, path-calendar 4.90, accent-strong 8.17, path-mobilizon 5.09; on ink
+//     band-text 16.43, accent-on-ink 5.69, path-calendar-on-ink 5.78, path-mobilizon-on-ink 5.77.
+//
+// COLOUR IS HERE NOW. It used to not be: which token a shape took depended on the ground it sat on and the role
+// it meant — `accent` on paper (5.77) vs `accent-on-ink` on the band (5.69), because `accent` on ink is 2.97 and
+// banned (DESIGN.md "Colour", D316); those token pairs are @measured 2026-11-14 by node design/grill/palette-remap.mjs.
+// `role` is still what a shape MEANS (a ground could supply its own map for it, and `design/mark-geometry.mjs`
+// still splits the figure into line / route / accent by it); `slot` is WHICH shape it is, and colour is now keyed
+// by slot because Byrne names lines, not kinds. Each surface turns a token into whatever its renderer understands
+// (a literal Tailwind class on the page — Tailwind's scanner reads raw source text, so a computed class name
+// generates nothing — or `var(--color-…)` in the card document, which has no Tailwind).
 //
 // Every drawn mark clears the **3.0 graphic bar** (D101). `check:render` measures that on painted bytes, per
 // shape, on the built page (D116) — see the `marks` probe in `design/grill/render-measure.js`.
@@ -121,6 +152,8 @@ export const MARK = {
   vbH: 150,
   // Order is paint order: the surface and its reference line sit under the routes, the routes under the marks
   // that explain them. `role` is not a colour, it is what the shape means, so a ground can supply its own map.
+  // `slot` is WHICH shape it is, in that same paint order, and it is what `MARK_COLOURS` is keyed by since the
+  // seventh ruling (D483): Byrne names a line, so a colour has to address one shape rather than a kind.
   shapes: [
     // The curved surface. cx/cy/r unchanged from the ratified round-4 specimen.
     // sw 1.3, not 0.9 (round 8, operator ruling M-B, 2026-11-02), and that ruling survives the geometry fix —
@@ -131,7 +164,7 @@ export const MARK = {
     // box 4.09% -> 4.53%. Evidence: design/grill/round8/report.json; the candidates are in
     // design/grill/round8-ramps.mjs. (Those numbers are the OLD figure; the corrected figure's numbers are in
     // .notes/DECISIONS.md and are re-measured with the same probe.)
-    { role: 'sphere', tag: 'circle', cx: 120, cy: 78, r: 58, sw: 1.3 },
+    { slot: 'ring', role: 'sphere', tag: 'circle', cx: 120, cy: 78, r: 58, sw: 1.3 },
     // The equator's REAR half — the far side of the tilted great circle, drawn in dashes because the sphere
     // hides it from the viewer (operator ruling, third on this mark). `face` is the author's claim; the probe
     // checks it against the pixels, which is what catches the dash landing on the wrong arc (that would draw a
@@ -141,11 +174,11 @@ export const MARK = {
     // semi-minor 21 = 0.36r vertically, so it bows 21 units above and below the centre. A half-ellipse as one
     // cubic: controls at ±(4/3)b off the endpoints' height put the apex at exactly cy ∓ b (at t = 0.5 the cubic
     // sits 0.75 of the way from the endpoint height to the control height, and 0.75 × 28 = 21).
-    { role: 'sphere', tag: 'path', d: 'M62 78 C62 50, 178 50, 178 78', sw: 1.3, face: 'rear', dash: '5 4' },
+    { slot: 'rear', role: 'sphere', tag: 'path', d: 'M62 78 C62 50, 178 50, 178 78', sw: 1.3, face: 'rear', dash: '5 4' },
     // The NEAR half of the same ellipse: solid, because it is the part of the great circle between the viewer
     // and the sphere's centre. Same token, same weight — the two halves differ in continuity, not in colour, so
     // both keep clearing the 3.0 graphic bar (D101) and neither can drift into a tint.
-    { role: 'sphere', tag: 'path', d: 'M62 78 C62 106, 178 106, 178 78', sw: 1.3, face: 'front' },
+    { slot: 'front', role: 'sphere', tag: 'path', d: 'M62 78 C62 106, 178 106, 178 78', sw: 1.3, face: 'front' },
     // The two lines. FOURTH RULING ON THIS MARK (operator, 2026-11-23): "the lines from the equator to the south
     // pole [must] start from the bottom/close side of the equator line." They used to start on the FAR arc — the
     // dashed one, at (94,59) and (146,59) — and ran toward the viewer, crossing the near arc on the way to the
@@ -170,8 +203,10 @@ export const MARK = {
     // ellipse's 96.8 would have left the join 0.2 units off the ink). The arc there is 9.35° off horizontal, so the
     // junction reads as a right angle (the far arc gave 9.3° the same way); the square marks below are drawn along
     // the two tangents rather than axis-aligned, so the notation does not claim an angle the drawing does not have.
-    { role: 'route', tag: 'path', d: 'M94 97 C94 67.14, 105.64 34.43, 120 23.94', sw: 1.4 },
-    { role: 'route', tag: 'path', d: 'M146 97 C146 67.14, 134.36 34.43, 120 23.94', sw: 1.4 },
+    // `left` and `right` are two slots on purpose: since the seventh ruling (D483) they are two different
+    // colours, which is exactly what a role-keyed colour map could not express.
+    { slot: 'left', role: 'route', tag: 'path', d: 'M94 97 C94 67.14, 105.64 34.43, 120 23.94', sw: 1.4 },
+    { slot: 'right', role: 'route', tag: 'path', d: 'M146 97 C146 67.14, 134.36 34.43, 120 23.94', sw: 1.4 },
     // The right-angle marks: the notation for "each of these leaves the equator at a right angle", which is the
     // construction that makes them parallel. In the source this is text (measured as two small text blobs where
     // the lines meet the equator); a mark that renders at 24×15px cannot carry text, and inventing a word would
@@ -185,8 +220,8 @@ export const MARK = {
     // the fifth ruling (2026-11-24): the wedge the square sits in is now between the route going UP and the arc
     // going right, which is the supplement — 99.4° rather than 80.6° — of the angle the south figure marked. Both
     // are foreshortings of the same right angle, and the glyph still marks the one actually drawn.
-    { role: 'accent', tag: 'path', d: 'M99.9 98 L99.9 92 L94 91', sw: 1.4 },
-    { role: 'accent', tag: 'path', d: 'M140.1 98 L140.1 92 L146 91', sw: 1.4 },
+    { slot: 'angleL', role: 'accent', tag: 'path', d: 'M99.9 98 L99.9 92 L94 91', sw: 1.4 },
+    { slot: 'angleR', role: 'accent', tag: 'path', d: 'M140.1 98 L140.1 92 L146 91', sw: 1.4 },
   ],
   // The filled point the two lines cross at — the mark's whole point, so the gates put a measurement band here
   // rather than trusting that the paths still converge. Since the sixth ruling (2026-11-24) it sits at the
@@ -195,9 +230,18 @@ export const MARK = {
   // inside the ring's silhouette rather than on top of it. The south figure put it on the ring (cy + r = 136,
   // 3.94 units outside its own true projection of 132.06); that convention goes with the approximation it came
   // from, and `check:mark` now derives the expected pole from the ellipse the mark itself draws.
-  dot: { role: 'accent', tag: 'circle', cx: 120, cy: 23.94, r: 4 },
+  dot: { slot: 'dot', role: 'accent', tag: 'circle', cx: 120, cy: 23.94, r: 4 },
   meet: { x: 120, y: 23.94 },
 };
+
+// The eight drawn things, in paint order, named for what they are — the ONE home for this vocabulary. Round 21
+// declared it twice (`SLOTS` in design/grill/round21-options.mjs and `SLOT_OF` in design/round21.mjs), which is how
+// a table gets a stale copy: the round that prices a colouring and the gate that measures one must be reading the
+// same names. Both import this now.
+//   ring   the silhouette circle          rear   the far, dashed half of the equator
+//   front  the near half                  left / right   the two meridians
+//   angleL / angleR  the right-angle marks        dot    the meeting point at the pole
+export const MARK_SLOTS = ['ring', 'rear', 'front', 'left', 'right', 'angleL', 'angleR', 'dot'];
 
 // Shapes a correctly-rendered mark contains. `check:render` compares this against the DOM it measures:
 // an <svg> can lose children silently — measured on the share card, firefox painted the rule and the
@@ -205,11 +249,58 @@ export const MARK = {
 // subtree as foreign content (D118 lesson 1). A count is the cheapest check that catches it.
 export const MARK_SHAPE_COUNT = MARK.shapes.length + 1;   // + the filled meeting point
 
-// role -> token name (the `--color-<name>` in @theme) per ground. `rule` is the lightest line the
-// system has and clears the graphic bar on paper (3.66 token pair @measured 2026-11-14 by
-// design/grill/palette-remap.mjs, D316 — it was 3.01 before the palette round): a `rule` retune that
-// goes lighter than 3.0 on paper is supposed to break the hero mark, and `check:render` says so.
+// The slot table and the shape table are one fact in two shapes, and both probes zip them against the painted
+// <svg> in paint order. If a shape is added, renamed or dropped without its slot, that zip silently pairs each
+// painted shape with the wrong declaration — which reads as "the mark is fine, the probe is loud", and is the
+// class of defect D480 was about. So the table asserts itself here, where the build fails rather than the gate.
+{
+  const declared = [...MARK.shapes.map((s) => s.slot), MARK.dot.slot];
+  if (declared.length !== MARK_SLOTS.length)
+    throw new Error(`brand-mark: MARK declares ${declared.length} drawn shapes but MARK_SLOTS names ${MARK_SLOTS.length} — a slot with no shape (or a shape with no slot) mis-zips every painted-shape-to-declaration check in design/mark-geometry.mjs, scripts/check-social-card.mjs and design/render-gate.mjs`);
+  for (const [i, slot] of declared.entries())
+    if (slot !== MARK_SLOTS[i])
+      throw new Error(`brand-mark: shape #${i} carries slot "${slot}" but MARK_SLOTS[${i}] is "${MARK_SLOTS[i]}" — slots are declared in PAINT ORDER, and a slot out of order paints every later shape in the previous shape's colour`);
+}
+
+// slot -> token name (the `--color-<name>` in @theme) per ground. This is the ONLY place the mark's colour is
+// decided: the hero reads it into literal Tailwind classes, `scripts/make-social-share.mjs` into `var(--color-…)`,
+// `design/ratify-check.mjs` asserts the two agree, and grill round 21 prices a candidate against it.
+//
+// Row C of round 21, the operator's pick (seventh ruling, D483). Byrne's ink is red, yellow, blue and black on
+// white; there is no legal yellow in this palette (round 21 solved the window: at hue 60-105 the palest colour
+// clearing 3.0 on paper is ochre-brown, and at hue 60 with C >= 0.14 it falls inside the 0.05 same-colour bar
+// against Amazon orange), so the primaries here are the club's red `accent`, the calendar blue `path-calendar`
+// and the mobilizon green `path-mobilizon` on black `ink`.
+//   paper: ring/rear/front ink (17.15) · left accent (5.77) · right path-calendar (4.90)
+//          angleL/angleR accent-strong (8.17) · dot path-mobilizon (5.09)
+//   ink:   ring/rear/front band-text (16.43) · left accent-on-ink (5.69) · right path-calendar-on-ink (5.78)
+//          angleL/angleR accent-on-ink (5.69) · dot path-mobilizon-on-ink (5.77)
+//          — every pair @measured 2026-11-24 by npm run round21 (design/grill/round21/report.json, `pairs`).
+// The `-on-ink` twins are not decoration: `accent` on ink is 2.97 and banned (DESIGN.md "Colour", D316), and no
+// colour between the two grounds can serve both (paper x ink ~= 13.5 demanded against the ground pair), which is
+// why the map is keyed per ground at all.
+//
+// What is NOT used here any more, and why that is a fact worth naming: the surface stopped painting `rule` (3.66
+// on paper, the lightest line the system has). Row C draws what Byrne draws — the GIVEN figure in black — so the
+// sphere is `ink`. `rule` still travels elsewhere in the artifact (`inset-shadow-rule`, `decoration-rule`), so it
+// is not an orphan token; `check:token-usage` is what would say so if it were.
+// Typed as `Record<string, string>` per ground rather than as eight literal keys: every reader that paints from
+// it (`HeroSection.astro`, `scripts/make-social-share.mjs`) looks a slot up from `MARK.shapes[].slot`, which is a
+// `string` in a `.mjs`, and a concrete eight-key object refuses that lookup with ts(7053). The looseness is a
+// typing convenience only - the assertion below is what actually holds the table to the eight slots, and it runs
+// at import, so the build fails before any gate sees a slot with no token.
+/** @type {Record<'paper' | 'ink', Record<string, string>>} */
 export const MARK_COLOURS = {
-  paper: { sphere: 'rule', route: 'ink', accent: 'accent' },
-  ink: { sphere: 'band-text', route: 'band-text', accent: 'accent-on-ink' },
+  paper: { ring: 'ink', rear: 'ink', front: 'ink', left: 'accent', right: 'path-calendar', angleL: 'accent-strong', angleR: 'accent-strong', dot: 'path-mobilizon' },
+  ink: { ring: 'band-text', rear: 'band-text', front: 'band-text', left: 'accent-on-ink', right: 'path-calendar-on-ink', angleL: 'accent-on-ink', angleR: 'accent-on-ink', dot: 'path-mobilizon-on-ink' },
 };
+
+// The colour map and the slot table are the same eight names. A slot with no token paints nothing, and a token for
+// a slot that does not exist is a colour waiting for a shape that never arrives — either one shows up as a mark
+// with a hole in it, so it is refused here, at import, rather than in a browser run.
+for (const [ground, map] of Object.entries(MARK_COLOURS)) {
+  const missing = MARK_SLOTS.filter((s) => !map[s]);
+  const extra = Object.keys(map).filter((s) => !MARK_SLOTS.includes(s));
+  if (missing.length || extra.length)
+    throw new Error(`brand-mark: MARK_COLOURS.${ground} is not keyed by MARK_SLOTS — missing ${missing.join(',') || '(none)'}, not a slot ${extra.join(',') || '(none)'}. Slots: ${MARK_SLOTS.join(', ')}`);
+}

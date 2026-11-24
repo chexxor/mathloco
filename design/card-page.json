@@ -237,25 +237,25 @@
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.96 0.012 88)",
+    "stroke": "oklch(0.66 0.1 35.7)",
     "fill": "none",
     "strokeWidth": 1.4,
     "paintedStroke": [
-     245,
-     241,
-     233
+     199,
+     123,
+     103
     ],
     "paintedFill": null
    },
    {
     "tag": "path",
-    "stroke": "oklch(0.96 0.012 88)",
+    "stroke": "oklch(0.64 0.11 205)",
     "fill": "none",
     "strokeWidth": 1.4,
     "paintedStroke": [
-     245,
-     241,
-     233
+     0,
+     159,
+     172
     ],
     "paintedFill": null
    },
@@ -286,13 +286,13 @@
    {
     "tag": "circle",
     "stroke": "none",
-    "fill": "oklch(0.66 0.1 35.7)",
+    "fill": "oklch(0.64 0.11 145)",
     "strokeWidth": 1,
     "paintedStroke": null,
     "paintedFill": [
-     199,
-     123,
-     103
+     95,
+     158,
+     97
     ]
    }
   ]

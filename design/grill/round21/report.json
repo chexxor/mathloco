@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-24 09:47",
+ "measuredAt": "2026-11-24 20:36",
  "widths": [
   320,
   640,
@@ -40,11 +40,71 @@
   "path-discord-on-ink": "oklch(64% 0.15 262)",
   "path-mobilizon-on-ink": "oklch(64% 0.11 145)"
  },
+ "slots": [
+  "ring",
+  "rear",
+  "front",
+  "left",
+  "right",
+  "angleL",
+  "angleR",
+  "dot"
+ ],
+ "shipped": {
+  "slots": [
+   [
+    "ring",
+    "ink",
+    "band-text"
+   ],
+   [
+    "rear",
+    "ink",
+    "band-text"
+   ],
+   [
+    "front",
+    "ink",
+    "band-text"
+   ],
+   [
+    "left",
+    "accent",
+    "accent-on-ink"
+   ],
+   [
+    "right",
+    "path-calendar",
+    "path-calendar-on-ink"
+   ],
+   [
+    "angleL",
+    "accent-strong",
+    "accent-on-ink"
+   ],
+   [
+    "angleR",
+    "accent-strong",
+    "accent-on-ink"
+   ],
+   [
+    "dot",
+    "path-mobilizon",
+    "path-mobilizon-on-ink"
+   ]
+  ]
+ },
+ "control": {
+  "id": "C",
+  "label": "Byrne literally: colour instead of letters, one per line",
+  "derivedFrom": "MARK_COLOURS in src/lib/brand-mark.mjs",
+  "ruling": "RATIFIED 2026-11-24 as the seventh ruling on this mark (D483); applied in src/lib/brand-mark.mjs."
+ },
  "options": [
   {
    "id": "A",
-   "label": "incumbent (the control)",
-   "byrne": "not Byrne — the ratified colouring, kept in the round so every other row is a delta from a measured line, not from memory",
+   "label": "the colouring this site shipped until 2026-11-24 (retired)",
+   "byrne": "not Byrne — the colouring the mark wore from apply 4h until the seventh ruling, kept in the round so every row is a delta from a measured line rather than from memory",
    "reading": "one line-colour for the sphere, one for the pair, gold for the notation. Colour carries ROLE only.",
    "paper": {
     "ring": "rule",
@@ -66,7 +126,8 @@
     "angleR": "accent-on-ink",
     "dot": "accent-on-ink"
    },
-   "fill": null
+   "fill": null,
+   "control": false
   },
   {
    "id": "B",
@@ -93,7 +154,8 @@
     "angleR": "path-calendar-on-ink",
     "dot": "accent-on-ink"
    },
-   "fill": null
+   "fill": null,
+   "control": false
   },
   {
    "id": "C",
@@ -120,7 +182,8 @@
     "angleR": "accent-on-ink",
     "dot": "path-mobilizon-on-ink"
    },
-   "fill": null
+   "fill": null,
+   "control": true
   },
   {
    "id": "D",
@@ -147,7 +210,8 @@
     "angleR": "path-mobilizon-on-ink",
     "dot": "path-calendar-on-ink"
    },
-   "fill": null
+   "fill": null,
+   "control": false
   },
   {
    "id": "E",
@@ -177,7 +241,8 @@
    "fill": {
     "token": "path-calendar-tint",
     "ground": "paper"
-   }
+   },
+   "control": false
   }
  ],
  "pairs": [
@@ -1362,7 +1427,7 @@
  "painted": [
   {
    "id": "A",
-   "label": "incumbent (the control)",
+   "label": "the colouring this site shipped until 2026-11-24 (retired)",
    "paper": [
     {
      "width": 320,

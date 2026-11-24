@@ -32,7 +32,7 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
-import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { MARK, MARK_SLOTS, MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
 import { paletteTokens } from './palette-tokens.mjs';
 import { contrastTriple, BARS, hueGap, nearestBrand, SAME_COLOUR_BAR } from './grill/okcolor.mjs';
 import { OPTIONS, WASHES, YELLOW_HUES, YELLOW_CHROMAS } from './grill/round21-options.mjs';
@@ -59,17 +59,34 @@ const tok = (name) => {
 };
 const GROUNDS = { paper: tok('paper'), ink: tok('ink') };
 
-// The eight drawn shapes, in paint order, named by slot (the same order the built <svg> carries them).
-const shapeSlots = [...MARK.shapes.map((s) => s.role), 'dot'];
-const SLOT_OF = ['ring', 'rear', 'front', 'left', 'right', 'angleL', 'angleR', 'dot'];
-if (shapeSlots.length !== MARK_SHAPE_COUNT) throw new Error(`the slot table expects ${SLOT_OF.length} shapes, MARK declares ${shapeSlots.length}`);
+// The eight drawn shapes, in paint order, by SLOT — imported from src/lib/brand-mark.mjs (MARK_SLOTS), which is
+// their ONE home. This file used to declare them twice (`SLOT_OF` here, `SLOTS` in design/grill/round21-options.mjs)
+// next to a third copy in the shape table, and this is the round that prices the shipped colouring against the
+// shipped table: a private copy is how a round measures a mark that no longer exists.
+const shapeSlots = [...MARK.shapes.map((s) => s.slot), MARK.dot.slot];
+if (shapeSlots.length !== MARK_SHAPE_COUNT) throw new Error(`the mark declares ${shapeSlots.length} drawn shapes, MARK_SHAPE_COUNT says ${MARK_SHAPE_COUNT}`);
+if (shapeSlots.some((s, i) => s !== MARK_SLOTS[i]))
+  throw new Error(`the drawn shapes carry slots ${shapeSlots.join(', ')} but MARK_SLOTS names ${MARK_SLOTS.join(', ')} — every zip below pairs a painted shape with the wrong colour declaration`);
+
+// ---------- 0b. the CONTROL is whatever the site SHIPS today (D481 §c) ----------
+// A colour round is a mutation test: every row is measured against the colouring the artifact actually wears, so a
+// row that cannot reproduce it means the mutation is broken and no number in the round means anything. This used to
+// be a hard-coded letter (`PAINTED[0]`, "option A, the incumbent"), which is a claim about the artifact written in
+// the round that prices it — the same class of defect as a fixture that names the thing it is supposed to discover.
+// Now the control row is FOUND, by asking which option reproduces `MARK_COLOURS` on both grounds, so the round
+// cannot quietly price a mark the site no longer has, and it cannot pass a round in which the shipped colouring is
+// absent from the table at all.
+const sameColouring = (o) => MARK_SLOTS.every((s) => o.paper[s] === MARK_COLOURS.paper[s] && o.ink[s] === MARK_COLOURS.ink[s]);
+const shipped = OPTIONS.filter(sameColouring);
+if (shipped.length !== 1) throw new Error(`round21: ${shipped.length ? `options ${shipped.map((o) => o.id).join(', ')} all reproduce` : 'NO option reproduces'} the shipped colouring in src/lib/brand-mark.mjs MARK_COLOURS (${MARK_SLOTS.map((s) => `${s}:${MARK_COLOURS.paper[s]}/${MARK_COLOURS.ink[s]}`).join(' ')}). There is no CONTROL row, so every painted number in this round is unanchored — add the shipped row to design/grill/round21-options.mjs or fix the table.`);
+const CONTROL = { id: shipped[0].id, label: shipped[0].label, derivedFrom: 'MARK_COLOURS in src/lib/brand-mark.mjs', ruling: shipped[0].ruling ?? null };
 
 // ---------- 1. PAIRS: every option, every shape, both grounds, off the token ----------
 const pairs = [];
 for (const o of OPTIONS) {
   for (const [ground, map] of [['paper', o.paper], ['ink', o.ink]]) {
     const g = GROUNDS[ground];
-    for (const slot of SLOT_OF) {
+    for (const slot of MARK_SLOTS) {
       const t = tok(map[slot]);
       const ratio = +contrastTriple(t.spec, g.spec).toFixed(2);
       pairs.push({ id: o.id, ground, slot, token: t.name, spec: t.spec, ratio, bar: BARS.graphic, pass: ratio >= BARS.graphic });
@@ -82,7 +99,7 @@ for (const o of OPTIONS) {
 const hueRows = [];
 for (const o of OPTIONS) {
   for (const [ground, map] of [['paper', o.paper], ['ink', o.ink]]) {
-    const used = [...new Set(SLOT_OF.map((s) => map[s]))];
+    const used = [...new Set(MARK_SLOTS.map((s) => map[s]))];
     let minGap = Infinity, pair = '';
     for (let i = 0; i < used.length; i++) for (let j = i + 1; j < used.length; j++) {
       // hueGap takes COLOURS, not hue numbers: it runs polar() on each argument. Passing `.H` here would hand it
@@ -189,10 +206,10 @@ function recolour(html, map, fill) {
   const close = html.indexOf('</svg>', open);
   const block = html.slice(open, close);
   const tags = [...block.matchAll(/<(circle|path)\b[^>]*>/g)];
-  if (tags.length !== SLOT_OF.length) throw new Error(`the hero mark reports ${tags.length} shape tags, the table declares ${SLOT_OF.length} (MARK_SHAPE_COUNT = ${MARK_SHAPE_COUNT})`);
+  if (tags.length !== MARK_SLOTS.length) throw new Error(`the hero mark reports ${tags.length} shape tags, the table declares ${MARK_SLOTS.length} (MARK_SHAPE_COUNT = ${MARK_SHAPE_COUNT})`);
   let out = block;
   tags.forEach((m, i) => {
-    const slot = SLOT_OF[i];
+    const slot = MARK_SLOTS[i];
     const t = tok(map[slot]);
     let tag = m[0].replace(/\sclass="([^"]*)"/, (_a, c) => ` class="${c.split(/\s+/).filter((k) => !isColourClass(k)).join(' ')}"`);
     tag = tag.replace(/>$/, ` style="stroke:var(--color-${t.name})">`);
@@ -269,7 +286,7 @@ function lunePath() {
 // Paint order for a washed option puts the wash FIRST (it is inserted straight after <svg>), so a 9-shape report
 // must be labelled ['wash', ring, rear, ...]. Labelling it with the 8-slot table instead would print the wash's
 // 1.13 contrast under the name `ring` and shift every other role onto its neighbour's numbers.
-const labelsFor = (o, n) => (o.fill && n === SLOT_OF.length + 1 ? ['wash', ...SLOT_OF] : SLOT_OF);
+const labelsFor = (o, n) => (o.fill && n === MARK_SLOTS.length + 1 ? ['wash', ...MARK_SLOTS] : MARK_SLOTS);
 
 const painted = [];
 for (const o of OPTIONS) {
@@ -380,10 +397,10 @@ function recolourCard(html, map, fill) {
   const close = out.indexOf('</svg>', start);
   const block = out.slice(open, close);
   const tags = [...block.matchAll(/<(circle|path)\b[^>]*>/g)];
-  if (tags.length !== SLOT_OF.length) throw new Error(`the card mark reports ${tags.length} shape tags, the table declares ${SLOT_OF.length}`);
+  if (tags.length !== MARK_SLOTS.length) throw new Error(`the card mark reports ${tags.length} shape tags, the table declares ${MARK_SLOTS.length}`);
   let body = block;
   tags.forEach((m, i) => {
-    const t = tok(map[SLOT_OF[i]]);
+    const t = tok(map[MARK_SLOTS[i]]);
     let tag = m[0].replace(/stroke="var\(--color-[a-z0-9-]+\)"/, `stroke="var(--color-${t.name})"`);
     tag = tag.replace(/fill="var\(--color-[a-z0-9-]+\)"/, `fill="var(--color-${t.name})"`);
     body = body.replace(m[0], tag);
@@ -399,7 +416,10 @@ const report = {
   bars: { graphic: BARS.graphic, layer: BARS.layer, text: BARS.text },
   source: 'Oliver Byrne, "The First Six Books of the Elements of Euclid, in Which Coloured Diagrams and Symbols Are Used Instead of Letters for the Greater Ease of Learners", London 1847 (printed by Charles Whittingham, Chiswick Press)',
   palette: Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, v.spec])),
-  options: OPTIONS.map((o) => ({ id: o.id, label: o.label, byrne: o.byrne, reading: o.reading, paper: o.paper, ink: o.ink, fill: o.fill ?? null })),
+  slots: MARK_SLOTS,
+  shipped: { slots: MARK_SLOTS.map((s) => [s, MARK_COLOURS.paper[s], MARK_COLOURS.ink[s]]) },
+  control: CONTROL,
+  options: OPTIONS.map((o) => ({ id: o.id, label: o.label, byrne: o.byrne, reading: o.reading, paper: o.paper, ink: o.ink, fill: o.fill ?? null, control: o.id === CONTROL.id })),
   pairs, hues: hueRows, yellow, yellowFloor: YELLOW_L_FLOOR, legalYellow, washes, washSolve, painted,
 };
 mkdirSync('design/grill/round21', { recursive: true });
@@ -426,8 +446,16 @@ for (const w of washes) console.log(`${w.readsAsRegion ? 'ok  ' : 'no  '} ${w.to
 console.log('what a wash would COST — the palest fill in each hue family that still reads as a region:');
 for (const w of washSolve) console.log(`  ${w.family.padEnd(15)} hue ${String(w.H).padStart(6)} C ${w.C}  needs L <= ${w.top ?? '-'} (token is L ${w.tokenL})  ${w.spec ?? w.note}${w.top ? `  nearest brand ${w.nearestBrand} d=${w.brandDist}${w.sameColour ? ' SAME COLOUR' : ''}` : ''}`);
 console.log('\n=== PAINT: the built page, recoloured in a copy, measured by the mark probes ===');
+const ctrlRow = painted.find((r) => r.id === CONTROL.id);
+const ctrlFail = !ctrlRow
+  ? 'was never painted (its probe rows are missing)'
+  : [...ctrlRow.paper.filter((p) => p.error).map((p) => `paper ${p.width}: ${p.error}`),
+     ...ctrlRow.paper.filter((p) => !p.error && !p.geometry.ok).map((p) => `paper ${p.width}: mark-geometry FAIL`),
+     ...ctrlRow.ink.filter((c) => c.error).map((c) => `card: ${c.error}`),
+     ...ctrlRow.ink.filter((c) => !c.error && c.geometry && !c.geometry.ok).map(() => 'card: mark-geometry FAIL')];
+console.log(`CONTROL row ${CONTROL.id} — the colouring src/lib/brand-mark.mjs ships (${CONTROL.derivedFrom}${CONTROL.ruling ? `, ${CONTROL.ruling}` : ''}): ${ctrlFail.length ? ctrlFail.join('; ') : 'passes mark-geometry at every width and on the card'}. ${ctrlFail.length ? 'THE MUTATION IS BROKEN: the shipped colouring does not reproduce itself, so no painted row in this round is trustworthy.' : 'Every other row is a delta from this measured line, not from memory.'}`);
 for (const row of painted) {
-  console.log(`\n${row.id} ${row.label}`);
+  console.log(`\n${row.id}${row.id === CONTROL.id ? ' (CONTROL — the shipped colouring)' : ''} ${row.label}`);
   for (const p of row.paper) {
     if (p.error) { console.log(`  paper ${p.width}: ${p.error}`); continue; }
     console.log(`  paper ${String(p.width).padStart(4)}  shapes ${p.shapeCount}  ink ${p.inkPixels} px  at/3.0 ${p.at30} (${p.at30Pct}% of its ink)  ${p.geometry.ok ? 'mark-geometry PASS' : 'mark-geometry FAIL'}`);
@@ -441,6 +469,6 @@ for (const row of painted) {
     if (c.geometry && !c.geometry.ok) console.log(`          ${c.geometry.out}`);
   }
 }
-const broke = painted.some((r) => r.paper.some((p) => p.error) || r.ink.some((c) => c.error));
+const broke = painted.some((r) => r.paper.some((p) => p.error) || r.ink.some((c) => c.error)) || ctrlFail.length > 0;
 console.log(`\nwrote design/grill/round21/report.json; crops in ${TMP}/crop-<id>-<ground>-<w>.png`);
-if (broke) { console.error('MACHINERY: at least one row failed to measure — the numbers above are incomplete'); process.exit(1); }
+if (broke) { console.error('MACHINERY: at least one row failed to measure, or the CONTROL row (the shipped colouring) did not pass its own probes — the numbers above are incomplete'); process.exit(1); }
