@@ -34,7 +34,22 @@
 // and exits 1 if either fails — this is a diagnostic, deliberately not in `npm run verify`.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+// The probes live beside THIS file. Naming them bare ('logo-geometry.mjs') resolves against the process cwd,
+// which is the repo root for every runner that calls this gate (npm, gate-run.mjs, CI) - so a rename that
+// changes a probe's name without its directory silently turns a gate into an ENOENT, and a gate that errors
+// reports a finding about the page rather than about itself. Resolve from the script's own home instead.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const PROBES = ['logo-geometry.mjs', 'logo-pixels.mjs'].map((p) => resolve(HERE, p));
+for (const p of PROBES) {
+  if (!existsSync(p)) {
+    console.error(`check:logo: probe missing — ${p} does not exist. Every reader of this gate spawns it from `
+      + 'the repo root, so the path must be design/<name>.mjs (D489).');
+    process.exit(1);
+  }
+}
 
 if (!existsSync(resolve('dist/client/index.html'))) {
   console.error('dist/client/index.html missing — run npm run build first (this probe reads the artifact, not the source)');
@@ -73,7 +88,7 @@ for (const w of WIDTHS) {
   JSON.parse(json);                                   // fail loudly rather than feeding a probe a truncated report
   writeFileSync(rep, json);
 
-  for (const probe of ['logo-geometry.mjs', 'logo-pixels.mjs']) {
+  for (const probe of PROBES) {
     console.log(`\n=== ${probe} @ ${w} (${shot}, ${rep})`);
     try {
       process.stdout.write(execFileSync(process.execPath, [probe, shot, rep], { encoding: 'utf8' }));
