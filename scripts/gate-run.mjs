@@ -79,6 +79,17 @@ const DEPLOY = [
   { name: 'check:scale', desc: 'every margin/padding/gap step written in src/ is one of DESIGN.md\u2019s eight (4 8 12 16 24 32 48 64); no half steps, no bracket px' },
   { name: 'check:scale:selftest', desc: 'the spacing-scale gate can still fail (12 cases: 6 plantings — gap-5, mt-23, py-10, mt-7, gap-3.5, p-[13px], plus a responsive-prefix case — and 6 clean controls, incl. a comment quoting the defect, which must NOT fire, and a sizing utility, which is not a spacing one)' },
   { name: 'check:design', desc: 'every design path a doc or script cites resolves' },
+  // A path a script *cites* is audited by check:design; a path a script *executes* was not. On 2026-11-24
+  // D487 renamed design/mark-*.mjs to design/logo-*.mjs and the rename swept the `design/` prefix out of the
+  // spawn literals in the rounds that ran them, so `npm run round21` failed with "Cannot find module
+  // /home/chexxor/Git/mathloco/logo-geometry.mjs" @measured 2026-11-25 by `npm run round21` at tip 0c96cad
+  // (.design/tmp-round-runs/r21-turn6.txt) - a bare name resolves against the process cwd, which is the repo
+  // root for npm, for gate-run and for CI. A round outside `verify` is where this hides: the defect is only
+  // visible when someone runs the round, and the failing run silently overwrote the tracked record it never
+  // produced (D496). Source-only, so before `build` (D118). Cost @measured 2026-11-25 by this step
+  // (Linux native, Node 24.22.1): 0.04s gate (271 tracked source files), 0.02s selftest (10 cases, 0 wrong).
+  { name: 'check:probe-paths', desc: 'every script a tracked file spawns by path resolves to a file that exists - a bare name is resolved against the process cwd, which is not the spawner\u2019s directory' },
+  { name: 'check:probe-paths:selftest', desc: 'the spawn-path gate can still fail (10 cases: 4 plantings - a bare probe name whose file lives in design/, a bare name with no such file anywhere, argv assembled into a variable first, a qualified path into a directory that no longer holds it - and 6 clean controls: a qualified path that exists, resolve(HERE,\u2026), a fixture list of strings, prose naming a probe in a comment, a file that spawns nothing, a bare name that really is at the repo root) @measured 2026-11-25 by `node scripts/check-probe-paths.mjs --selftest` (10 cases, 0 wrong)' },
   // The palette round of 2026-11-14 (D316) moved 23 colour tokens in one commit, and nothing between design
   // rounds re-checks the bars DESIGN.md states. `check:classes` proves a class resolves, not that its colour
   // clears anything — the pitfall register's `gap-5` story. Source-only, so before `build` (D118).

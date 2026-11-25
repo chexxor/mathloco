@@ -118,6 +118,13 @@ const PENDING = [
   // They exist now, so an exemption would be a dead exemption: an entry that can never fire is how this
   // list rots (D268).
   [/^scripts\/check-cache\.mjs$/, 'the dead pointer the round-7 communication review found and fixed in place (D282, and this very --stale run is what found it): the live script is scripts/check-summary-cache.ts, run as `npm run check:cache`. A doc that names the dead one is recording the defect it corrected, so the citation IS the lesson - same shape as the design/decision-audit.mjs entry below'],
+  // D496: scripts/check-probe-paths.mjs proves its detector by planting a spawn literal in a string, and a
+  // planting that resolves is not a planting. Its verdict is a pure function - (file, text, exists, candidates) -
+  // so the fixture never touches disk: design/roundX.mjs is the synthetic spawner and design/old/... the probe a
+  // rename left behind. Narrowed to the two names the file actually uses; a new fixture name here has to be added
+  // here, which is the friction that keeps the list from becoming a shrug.
+  [/^design\/roundX\.mjs$/, 'in-memory selftest fixture in scripts/check-probe-paths.mjs (D496): the synthetic spawner the detector is planted in; the verdict is pure, so the fixture never lands on disk'],
+  [/^design\/old\/[A-Za-z0-9._-]+\.mjs$/, 'in-memory selftest fixture in scripts/check-probe-paths.mjs (D496): the qualified-but-wrong-directory planting - a planting that resolves would prove nothing'],
 ];
 const pending = (p) => PENDING.find(([re]) => re.test(p));
 

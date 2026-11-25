@@ -51,6 +51,12 @@ import { ROWS, LINES, FAMILIES, GOLD_FAMILY, GOLD_HUES, GOLD_CHROMAS } from './g
 import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-logo.mjs';
 import { distState, staleLine } from './dist-fresh.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
+import { probePath } from './probe-path.mjs';
+
+// Same defect, same fix (D496): the D487 rename left these two probes named bare, and a bare name in a spawn
+// array resolves against the process cwd (the repo root), not against design/ (@caught 2026-11-25).
+const PROBE_GEOMETRY = probePath(import.meta.url, 'logo-geometry.mjs');
+const PROBE_PIXELS = probePath(import.meta.url, 'logo-pixels.mjs');
 
 const argv = process.argv.slice(2);
 const flag = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] ?? d : d; };
@@ -329,8 +335,8 @@ for (const r of priced) {
     if (json.__fail) { row.paper.push({ width: w, error: 'measure failed' }); continue; }
     writeFileSync(rep, json);
     const j = JSON.parse(json), m = j.marks?.[0];
-    const geo = txt(['logo-geometry.mjs', shot, rep]);
-    const px = txt(['logo-pixels.mjs', shot, rep, '0', '--json']);
+    const geo = txt([PROBE_GEOMETRY, shot, rep]);
+    const px = txt([PROBE_PIXELS, shot, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.paper.push({
       width: w, shot, rep, shapeCount: m?.count ?? null,
@@ -368,8 +374,8 @@ else {
     const rep = `${TMP}/card-${r.id}.json`;
     writeFileSync(rep, raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
     const j = JSON.parse(readFileSync(rep, 'utf8')), m = j.marks?.[0];
-    const geo = txt(['logo-geometry.mjs', png, rep]);
-    const px = txt(['logo-pixels.mjs', png, rep, '0', '--json']);
+    const geo = txt([PROBE_GEOMETRY, png, rep]);
+    const px = txt([PROBE_PIXELS, png, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.ink.push({
       shot: png, rep, shapeCount: m?.count ?? null,

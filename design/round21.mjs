@@ -40,6 +40,15 @@ import { distState, staleLine } from './dist-fresh.mjs';
 import { lunePath } from './logo-faces.mjs';
 import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-logo.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
+import { probePath } from './probe-path.mjs';
+
+// The two logo probes are spawned by every painted row, twice (hero and card). Naming them bare would resolve
+// against the process cwd - the repo root - so the D487 rename that moved them from design/mark-*.mjs to
+// design/logo-*.mjs left this round spawning a file that does not exist (@caught 2026-11-25, exit 1, "Cannot
+// find module '/home/chexxor/Git/mathloco/logo-geometry.mjs'"). Resolve them from this script's own home, the
+// way check:logo does (D489, D496), and refuse up front rather than discovering it mid-row.
+const PROBE_GEOMETRY = probePath(import.meta.url, 'logo-geometry.mjs');
+const PROBE_PIXELS = probePath(import.meta.url, 'logo-pixels.mjs');
 
 const argv = process.argv.slice(2);
 const flag = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] ?? d : d; };
@@ -231,8 +240,8 @@ for (const o of OPTIONS) {
     const j = JSON.parse(json);
     const m = j.marks?.[0];
     // the two logo probes, run exactly as check:logo runs them
-    const geo = txt(['logo-geometry.mjs', shot, rep]);
-    const px = txt(['logo-pixels.mjs', shot, rep, '0', '--json']);
+    const geo = txt([PROBE_GEOMETRY, shot, rep]);
+    const px = txt([PROBE_PIXELS, shot, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.paper.push({
       width: w, shot, rep,
@@ -288,8 +297,8 @@ if (!readFileSyncExists(CARD_HTML)) {
     writeFileSync(rep, raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
     const j = JSON.parse(readFileSync(rep, 'utf8'));
     const m = j.marks?.[0];
-    const geo = txt(['logo-geometry.mjs', png, rep]);
-    const px = txt(['logo-pixels.mjs', png, rep, '0', '--json']);
+    const geo = txt([PROBE_GEOMETRY, png, rep]);
+    const px = txt([PROBE_PIXELS, png, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.ink.push({
       shot: png, rep, shapeCount: m?.count ?? null,

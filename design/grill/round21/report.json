@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-24 22:21",
+ "measuredAt": "2026-11-25 17:50",
  "widths": [
   320,
   640,
@@ -98,13 +98,13 @@
   "id": "C",
   "label": "Byrne literally: colour instead of letters, one per line",
   "derivedFrom": "LOGO_COLOURS in src/lib/logo.mjs",
-  "ruling": "RATIFIED 2026-11-24 as the seventh ruling on this mark (D483); applied in src/lib/logo.mjs."
+  "ruling": "RATIFIED 2026-11-24 as the seventh ruling on this logo (D483); applied in src/lib/logo.mjs."
  },
  "options": [
   {
    "id": "A",
    "label": "the colouring this site shipped until 2026-11-24 (retired)",
-   "byrne": "not Byrne — the colouring the mark wore from apply 4h until the seventh ruling, kept in the round so every row is a delta from a measured line rather than from memory",
+   "byrne": "not Byrne — the colouring the logo wore from apply 4h until the seventh ruling, kept in the round so every row is a delta from a measured line rather than from memory",
    "reading": "one line-colour for the sphere, one for the pair, gold for the notation. Colour carries ROLE only.",
    "paper": {
     "ring": "rule",
@@ -161,7 +161,7 @@
    "id": "C",
    "label": "Byrne literally: colour instead of letters, one per line",
    "byrne": "the title page's own device — a line is named by its colour, so the two meridians are \"the red line\" and \"the blue line\" and the prose can say so",
-   "reading": "the most Byrne row on the table, and the one that costs the mark its claim: two colours name two DIFFERENT lines, and \"parallel\" is a statement about a pair. Priced, not recommended.",
+   "reading": "the most Byrne row on the table, and the one that costs the logo its claim: two colours name two DIFFERENT lines, and \"parallel\" is a statement about a pair. Priced, not recommended.",
    "paper": {
     "ring": "ink",
     "rear": "ink",
@@ -216,8 +216,8 @@
   {
    "id": "E",
    "label": "D with Byrne's flat wash inside the lune",
-   "byrne": "Byrne fills regions, not only lines — a proposition's area is a block of red, blue or yellow. The lune between the two meridians is the mark's \"area\"",
-   "reading": "the wash is the one Byrne move that changes what KIND of contrast the mark is held to: a filled region is a LAYER (1.35, D101), not a graphic line (3.0) — but it also adds a nine-th shape to a mark whose gates count eight.",
+   "byrne": "Byrne fills regions, not only lines — a proposition's area is a block of red, blue or yellow. The lune between the two meridians is the logo's \"area\"",
+   "reading": "the wash is the one Byrne move that changes what KIND of contrast the logo is held to: a filled region is a LAYER (1.35, D101), not a graphic line (3.0) — but it also adds a nine-th shape to a logo whose gates count eight.",
    "paper": {
     "ring": "ink",
     "rear": "ink",

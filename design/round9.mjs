@@ -28,6 +28,10 @@ import {
   contrastBytes, oklchFromRgb, tripleToBytes, rgbTripleFromBytes, dist, BARS, SAME_COLOUR_BAR,
 } from './grill/okcolor.mjs';
 import { ROLES, WARM, THEME, CANDIDATES, themeSpec, paletteOptions, accentExtras, accentCandidates } from './grill/round9-palette.mjs';
+import { probePath } from './probe-path.mjs';
+
+// D496: the pixel probe sits beside this round, not at the repo root.
+const PROBE_PIXELS = probePath(import.meta.url, 'logo-pixels.mjs');
 
 const argv = process.argv.slice(2);
 const flagAt = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] ?? d : d; };
@@ -205,7 +209,7 @@ writeFileSync(pxJson, JSON.stringify({
 const markReport = [];
 for (let i = 0; i < marks.marks.length; i += 1) {
   const m = marks.marks[i];
-  const o = txt(['logo-pixels.mjs', `${TMP}/mark.png`, pxJson, String(i), '--json'], `logo-pixels ${m.name}`);
+  const o = txt([PROBE_PIXELS, `${TMP}/mark.png`, pxJson, String(i), '--json'], `logo-pixels ${m.name}`);
   const rec = JSON.parse(o.split('\n').filter((l) => l.startsWith('{')).pop());
   const g = /ground sampled beside it:\s*([\d,]+)/.exec(o);
   markReport.push({

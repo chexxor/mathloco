@@ -20,7 +20,12 @@
 //
 // Report: design/grill/round8/report.json (tracked — a ruling cites it). Crops and screenshots are scratch.
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, writeFileSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync } from 'node:fs';
+import { probePath } from './probe-path.mjs';
+
+// D496: this round lives in design/, so its probes live beside it. Naming them bare resolves against the
+// process cwd (the repo root), which is how the D487 rename turned this line into an ENOENT.
+const PROBE_PIXELS = probePath(import.meta.url, 'logo-pixels.mjs');
 
 const CROP = process.argv.includes('--crop');
 const jrun = (args) => {
@@ -91,7 +96,7 @@ const coverage = [];
 console.log('\n  what those strokes PAINTED (logo-pixels.mjs on the specimen screenshot):');
 for (let i = 0; i < mark.marks.length; i++) {
   const m = mark.marks[i];
-  const args = ['logo-pixels.mjs', '.design/tmp-round8-mark.png', idx, String(i), '--json'];
+  const args = [PROBE_PIXELS, '.design/tmp-round8-mark.png', idx, String(i), '--json'];
   if (CROP) args.push('--crop', `.design/tmp-mark-${m.set}.png`);
   try {
     const out = execFileSync(process.execPath, args, { encoding: 'utf8', timeout: 120000 });

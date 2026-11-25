@@ -93,6 +93,8 @@
     "check:token-usage:selftest": "node scripts/check-token-usage.mjs --selftest",
     "check:classes": "tsx scripts/check-classes.ts",
     "check:design": "node design/audit-references.mjs --stale",
+    "check:probe-paths": "node scripts/check-probe-paths.mjs",
+    "check:probe-paths:selftest": "node scripts/check-probe-paths.mjs --selftest",
     "check:contrast": "node scripts/check-contrast.mjs",
     "check:contrast:selftest": "node scripts/check-contrast.mjs --selftest",
     "check:lsp": "node scripts/check-lsp-config.mjs",

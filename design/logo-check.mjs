@@ -34,21 +34,30 @@
 // and exits 1 if either fails — this is a diagnostic, deliberately not in `npm run verify`.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
-import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { resolve } from 'node:path';
 
 // The probes live beside THIS file. Naming them bare ('logo-geometry.mjs') resolves against the process cwd,
 // which is the repo root for every runner that calls this gate (npm, gate-run.mjs, CI) - so a rename that
 // changes a probe's name without its directory silently turns a gate into an ENOENT, and a gate that errors
-// reports a finding about the page rather than about itself. Resolve from the script's own home instead.
-const HERE = dirname(fileURLToPath(import.meta.url));
-const PROBES = ['logo-geometry.mjs', 'logo-pixels.mjs'].map((p) => resolve(HERE, p));
-for (const p of PROBES) {
-  if (!existsSync(p)) {
-    console.error(`check:logo: probe missing — ${p} does not exist. Every reader of this gate spawns it from `
-      + 'the repo root, so the path must be design/<name>.mjs (D489).');
-    process.exit(1);
+// reports a finding about the page rather than about itself (D489). The resolution rule is one helper now
+// (D496): design/probe-path.mjs, which tries the spawner's home, then the repo root, and throws naming both
+// paths it tried.
+import { probePath } from './probe-path.mjs';
+// Resolving here rather than inside the loop so a broken wiring is reported as a broken wiring. If the
+// mapping were lazy, the ENOENT would surface as an uncaught stack at module load, and the selftest's
+// D489 case ("the gate cannot spawn ${probe}") would have nothing to read — a gate whose failure mode is
+// a stack trace is a crash, not a finding (D489, D118).
+const PROBES = [];
+for (const p of ['logo-geometry.mjs', 'logo-pixels.mjs']) {
+  try {
+    PROBES.push(probePath(import.meta.url, p));
+  } catch (e) {
+    console.error(`check:logo: probe missing — ${e.message}`);
   }
+}
+if (PROBES.length !== 2) {
+  console.error('\nLOGO CHECK: FAIL — the gate cannot spawn its own probes (fix the spawn paths, not the page)');
+  process.exit(1);
 }
 
 if (!existsSync(resolve('dist/client/index.html'))) {

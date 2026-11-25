@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-25 03:11",
+ "measuredAt": "2026-11-25 17:51",
  "widths": [
   320,
   640,
@@ -14,7 +14,7 @@
   "layer": 1.35
  },
  "source": "Oliver Byrne, \"The First Six Books of the Elements of Euclid, in Which Coloured Diagrams and Symbols Are Used Instead of Letters for the Greater Ease of Learners\", London 1847",
- "ask": "the second half of the seventh ruling on this mark (D483): \"but also show me options for coloring faces of the shape also in the Byrne style\"",
+ "ask": "the second half of the seventh ruling on this logo (D483): \"but also show me options for coloring faces of the shape also in the Byrne style\"",
  "faceGeometry": {
   "r": 58,
   "cx": 120,
@@ -44,7 +44,7 @@
   {
    "name": "lune",
    "term": "spherical triangle (two meridians + the equator arc between their feet)",
-   "where": "between the two meridians, on the visible face — the mark's own \"area\"",
+   "where": "between the two meridians, on the visible face — the logo's own \"area\"",
    "areaUnits": 2694.7,
    "pctOfDisc": 25.5,
    "pctOfRingCubic": 80.1,
@@ -1716,7 +1716,7 @@
   "tableShapes": 7,
   "LOGO_SHAPE_COUNT": 8,
   "acceptedReportLength": 8,
-  "note": "logo-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both mark probes refuse: the refusal text is recorded per row in painted[]."
+  "note": "logo-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both logo probes refuse: the refusal text is recorded per row in painted[]."
  },
  "control": {
   "id": "C0",
@@ -2683,7 +2683,7 @@
    "id": "C0",
    "label": "row C alone — the colouring the site ships today (nothing filled)",
    "byrne": "the control: Byrne line colouring with no region. A face round without this row cannot say what a face costs.",
-   "reading": "the shipped mark: a colour names a line, and the figure has no area. Everything below is a delta from this measured line.",
+   "reading": "the shipped logo: a colour names a line, and the figure has no area. Everything below is a delta from this measured line.",
    "faces": [],
    "control": true,
    "tokenCost": {
@@ -2707,8 +2707,8 @@
   },
   {
    "id": "F1",
-   "label": "the lune filled — the mark's own area, in the club red",
-   "byrne": "Byrne fills the region a proposition is about. Here that region is the spherical triangle between the two meridians and the near equator arc, and its area is fixed by the two right angles the mark already draws.",
+   "label": "the lune filled — the logo's own area, in the club red",
+   "byrne": "Byrne fills the region a proposition is about. Here that region is the spherical triangle between the two meridians and the near equator arc, and its area is fixed by the two right angles the logo already draws.",
    "reading": "one area, one colour: \"the red figure\" is the strip of surface between the two lines, which is where the metaphor lives. The pair keep their two colours (row C), so the area names the BETWEEN, not a line.",
    "faces": [
     "lune"
@@ -2985,7 +2985,7 @@
    "id": "F4",
    "label": "two areas, two colours — lune red, south lune blue",
    "byrne": "the literal Byrne sentence — \"the squares of the blue and red lines\" — where two regions are named by two colours so the prose can point at either without a letter",
-   "reading": "the two faces this drawing really does tile the figure with are the north and south lunes; this row takes the triangle inside the north face plus the south face, so the two fills are DISJOINT and meet only at the near arc. What it costs is a third name in a mark whose claim is about a pair of lines.",
+   "reading": "the two faces this drawing really does tile the figure with are the north and south lunes; this row takes the triangle inside the north face plus the south face, so the two fills are DISJOINT and meet only at the near arc. What it costs is a third name in a logo whose claim is about a pair of lines.",
    "faces": [
     "lune",
     "south"
@@ -3150,7 +3150,7 @@
    "id": "F5",
    "label": "the near hemisphere filled — the sphere as a body, in the palette's own grey",
    "byrne": "Byrne's circles are regions as often as they are outlines; a filled limb is how 1847 printing says \"this is a body, not a disc\"",
-   "reading": "colouring the near hemisphere IS colouring the disc, so every one of the eight lines is drawn over the fill and the whole mark becomes lines-on-surface. This is the row that shows what the layer bar and the graphic bar cost at the same time.",
+   "reading": "colouring the near hemisphere IS colouring the disc, so every one of the eight lines is drawn over the fill and the whole logo becomes lines-on-surface. This is the row that shows what the layer bar and the graphic bar cost at the same time.",
    "faces": [
     "disc"
    ],
@@ -3240,7 +3240,7 @@
   },
   {
    "id": "F6",
-   "label": "the lune filled in gold — the mark's own area, in Byrne's yellow",
+   "label": "the lune filled in gold — the logo's own area, in Byrne's yellow",
    "byrne": "the yellow of Byrne's three-colour printing, on the region a proposition is about: the spherical triangle between the two meridians and the near equator arc",
    "reading": "the steer read as literally as F1: the same region F1 fills in the club red, filled instead in the gold the operator asked to see more of. Compared against F1 on the same photographs, it is the question \"which colour names the BETWEEN\" asked with everything else held still.",
    "faces": [
@@ -3442,7 +3442,7 @@
    "id": "F8",
    "label": "two areas, gold and red — lune gold, south lune in the club red",
    "byrne": "the literal Byrne sentence with the yellow present: two regions named by two colours so the prose can point at either without a letter",
-   "reading": "F4's two disjoint regions, with the gold taking the triangle the metaphor lives in and the club red taking the region below the equator. What it costs is a third name in a mark whose claim is about a pair of lines — and the measured hue gap between the gold and the red is what says whether they read as two names or as one warm wash.",
+   "reading": "F4's two disjoint regions, with the gold taking the triangle the metaphor lives in and the club red taking the region below the equator. What it costs is a third name in a logo whose claim is about a pair of lines — and the measured hue gap between the gold and the red is what says whether they read as two names or as one warm wash.",
    "faces": [
     "lune",
     "south"
