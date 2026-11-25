@@ -186,6 +186,10 @@
     "check:social:live": "node scripts/make-social-share.mjs .design/tmp-card-live.jpg",
     "check:favicon": "node scripts/check-favicon.mjs",
     "check:favicon:selftest": "node scripts/check-favicon.mjs --selftest",
+    "tab:emit": "node design/logo-tab.mjs --emit",
+    "tab:verify": "node design/logo-tab.mjs --verify",
+    "tab:measure": "node design/logo-tab.mjs --measure",
+    "check:tab:selftest": "node design/logo-tab.mjs --selftest",
     "palette:selftest": "node design/palette-tokens.mjs --selftest",
     "round16:base": "node design/grill/copy-shipped.mjs"
   },

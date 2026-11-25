@@ -125,6 +125,17 @@ const DEPLOY = [
   { name: 'check:favicon', desc: 'the tab logo is a document a renderer loads, paints only @theme tokens, at most two of them, none a reserved join-path hue, and the pair clears 4.5 (five rules, D485)' },
   { name: 'palette:selftest', desc: 'the one @theme reader resolves every declared token to bytes a painted pixel is compared against, and its round-trip guard catches the unit slip (L is 0..1 here; tripleToBytes wants a percentage) that made all 23 tokens resolve toward #000000 and collapsed paper/ink to a contrast of 1.00 (D485)' },
   { name: 'check:favicon:selftest', desc: 'the favicon gate can still fail (11 cases: 7 plantings — a named colour, a Tailwind hex, a 3.01 pair, three hues, a channel hue, an empty logo, and a comment carrying a token name so a parser refuses the whole document (D485) — plus 3 clean controls and a missing file)'},
+  // The tab glyph now has a GENERATOR (`design/logo-tab.mjs`, the one home for the drawing at tab size), and a
+  // generator without a detector is a machine that can be wrong silently: D485 is exactly what a hand-assembled
+  // tab looked like — four colour rules green on a document a renderer refuses. The ship gate (`tab:verify
+  // public/favicon.svg`) cannot join the set yet, because the tab that ships today predates the instrument: the
+  // incumbent summand glyph has no provenance line, so demanding regeneration now would red the set for a defect
+  // that is not in the shipped bytes. It joins at the operator's framing pick (Operator ToDo 36), which is the
+  // moment the artifact becomes a generated one. What the set CAN police today is that the instrument's own
+  // verdict can go red — 22 cases, controls clean, plantings named — so the gate that arrives later is already
+  // proven to be a detector and not an assertion. Source-only, no build, no browser (D118). Cost @measured
+  // 2026-11-25 by `time node design/logo-tab.mjs --selftest` (Linux native, Node 24.22.1): 0.16s wall.
+  { name: 'check:tab:selftest', desc: "the tab generator's verdict can still fail (8 controls including the gold rows read from the round record, 6 planted defects — a hand-edited stroke, a lying weight, a stripped provenance, a row id that does not exist, a comment with a double hyphen, a deleted meeting point — 3 legibility refusals (N0 0.18px, T2 1.00px, T4 0.75px at the 16px slot, against D119's 1.5 device px floor), the incumbent glyph's missing provenance, the ship guard refusing public/favicon.svg without a ruling while leaving its bytes untouched, and the row guard refusing an unknown id and the incumbent id by name) @measured 2026-11-25 by `node design/logo-tab.mjs --selftest` (22 cases, 0 wrong)" },
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
   // The descriptor is one phrase in three files (`const locator`, `seo.title`, the page `<Layout title>`), and the

@@ -23,13 +23,16 @@
 // round would measure nothing. The bytes are therefore taken from `design/palette-tokens.mjs` — the same reader
 // `check:social` uses to ask "is this colour one @theme declares" — so the fixture paints the token's bytes, not
 // a second colour. The ARTIFACT also carries those bytes, which is what `check:favicon` rules on today.
-import { writeFileSync, mkdtempSync, rmSync } from 'node:fs';
-import { spawn } from 'node:child_process';
+import { writeFileSync, readFileSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
+import { pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { LOGO, LOGO_SLOTS, LOGO_COLOURS } from '../src/lib/logo.mjs';
-import { colourEntry } from './palette-tokens.mjs';
+import { colourEntry, declareCandidate } from './palette-tokens.mjs';
+import { ROWS as TAB_ROWS } from './grill/round23-options.mjs';   // imports only src/lib/logo.mjs, so this adds no cycle
 import { contrastBytes } from './grill/okcolor.mjs';   // the ONE contrast implementation in this repo
 
 // Colour names resolve through `palette-tokens.colourEntry`: a shipped @theme token first, then a candidate the
@@ -488,3 +491,358 @@ export async function browserFixture(svg, want) {
     rmSync(prof, { recursive: true, force: true });
   }
 }
+
+// ---------- 7. the CLI: the artifact's ONE generator, and the check that it still regenerates ----------
+// WHY THE EMITTER LIVES IN THE INSTRUMENT rather than in a script of its own: the tab glyph is the same drawing
+// the hero paints, and the only thing that makes a 16px tab trustworthy is that it came out of the same table the
+// hero does. A second file that hand-copies the geometry is the D190 class (a table typed by hand drifting from
+// the table the code solves), and D485 is what happens when a document is assembled by copying: the shipped tab
+// carried a comment its own parser refuses. So the artifact is generated here, from LOGO + LOGO_COLOURS, and the
+// check is "run the generator again and compare bytes" — a defect in either the drawing or the document reds it.
+//
+//   npm run tab:emit T1 --ground paper --out .design/tmp-tab/favicon.svg
+//   npm run tab:verify public/favicon.svg
+//   npm run tab:measure public/favicon.svg --widths 16,32,48,64
+//   npm run check:tab:selftest
+//
+// THE SHIP GUARD. Nothing tab-shaped ships before the operator's framing pick (Operator ToDo 36) and the face
+// pick (ToDo 35): D316 makes colour the operator's act, and a framing is the same kind of decision (round 23's
+// header says so out loud). Writing public/favicon.svg therefore requires BOTH --pick <the option letter the
+// operator chose> and --ruling <the D### that records it>. A scratch path needs neither, because a specimen is
+// not a ship. The guard is a function so the selftest can plant the refusal without touching the shipped file.
+export const SHIPPED_TAB = 'public/favicon.svg';
+export function shipGuard(outPath, pick, ruling) {
+  if (path.resolve(outPath) !== path.resolve(SHIPPED_TAB)) return null;
+  if (!pick || !ruling) {
+    return `refusing to write ${SHIPPED_TAB}: the tab glyph is the operator's pick (ToDo 36) and a ship needs the ruling that records it. Pass --pick <the option the operator chose> --ruling <D###>. The specimen goes to .design/ instead (D316: colour is the operator's act; D42/D124: nothing ships on a delegate's say-so).`;
+  }
+  return null;
+}
+
+// Rows G3/G4 declare their colour as `null` in the options file because the gold is the SOLVE's output. The solve
+// is committed in the round record, so the emitter reads the record rather than re-deriving a gold in a second
+// place: the record reproduces its own colour, and the candidate goes through `declareCandidate`, which is the
+// same token->bytes path a shipped token uses and refuses a name that shadows one (D485's unit trap, D316's rule
+// that inventing a token is the operator's act).
+const GOLD_RECORD = 'design/grill/round23/report.json';
+export function withSolvedGold(row) {
+  if (row.colours !== 'goldLine' && row.colours !== 'goldPlate') return row;
+  if (row.candidate || row.ground) return row;
+  let rec;
+  try { rec = JSON.parse(readFileSync(GOLD_RECORD, 'utf8')); }
+  catch (e) { throw new Error(`logo-tab: row ${row.id} prices a gold the round solves, and ${GOLD_RECORD} is not readable (${e.message})`); }
+  const cands = rec?.gold?.candidates;
+  if (!cands) throw new Error(`logo-tab: ${GOLD_RECORD} has no gold.candidates, so row ${row.id} has no colour to paint. Run npm run round23 to re-solve it.`);
+  const role = row.colours === 'goldLine' ? 'line' : 'plate';
+  const names = {};
+  for (const g of ['paper', 'ink']) {
+    const c = cands[`${role}-${g}`];
+    if (!c?.spec) throw new Error(`logo-tab: ${GOLD_RECORD} carries no gold solve for role ${role} on the ${g} ground, which row ${row.id} needs.`);
+    const name = c.name ?? `gold-${role}-${g}`;
+    declareCandidate(name, c.spec, 'design/logo-tab.mjs (the gold solve carried from the round 23 record)');
+    names[g] = name;
+  }
+  return row.colours === 'goldLine' ? { ...row, candidate: names } : { ...row, ground: names };
+}
+
+export function tabRow(id) {
+  const r = TAB_ROWS.find((x) => x.id === id);
+  if (!r) throw new Error(`logo-tab: no tab row "${id}". The framings this instrument knows: ${TAB_ROWS.map((x) => x.id).join(', ')}.`);
+  if (r.incumbent) throw new Error(`logo-tab: row ${id} is the tab as it ships (the summand glyph), not a framing to emit — it is read off public/favicon.svg at run time, never generated (D481 §c).`);
+  return r;
+}
+
+// The provenance line is part of the artifact. XML 1.0 §7.4 forbids `--` inside a comment and the shipped tab
+// broke it (D485), so the emitter asserts its own comment rather than trusting a hand-written one — the class of
+// defect this instrument exists to prevent is the one it caused once.
+export function provenanceComment(row, ground, w, pick, ruling) {
+  const s = `logo-tab artifact: row ${row.id} (${row.frame} framing, ${row.colours} colour plan), ground ${ground}, weight k=${w.k} (thinnest stroke ${w.swMin} device px at ${w.at}px), drawn from src/lib/logo.mjs by design/logo-tab.mjs${pick && ruling ? `, operator pick ${pick} under ruling ${ruling}` : ', specimen only: no operator pick yet'}${row.colours.startsWith('gold') ? ', gold from design/grill/round23/report.json' : ''}`;
+  if (s.includes('--')) throw new Error(`logo-tab: the provenance comment would contain a double hyphen, which XML 1.0 §7.4 forbids inside a comment (the defect D485 found in the shipped tab): "${s}"`);
+  return `<!-- ${s} -->`;
+}
+
+export function parseProvenance(svg) {
+  const m = svg.match(/<!--\s*logo-tab artifact:[\s\S]*?-->/);
+  if (!m) return null;
+  const s = m[0];
+  return {
+    raw: s,
+    row: (s.match(/row ([A-Za-z0-9]+) \(/) || [])[1] ?? null,
+    ground: (s.match(/ground (paper|ink),/) || [])[1] ?? null,
+    k: (s.match(/weight k=([0-9.]+)/) || [])[1] ?? null,
+    pick: (s.match(/operator pick ([A-Za-z0-9.]+) under/) || [])[1] ?? null,
+    ruling: (s.match(/ruling (D[0-9]+)/) || [])[1] ?? null,
+  };
+}
+
+// A hand-copied tab can carry any comment it likes; it cannot carry the table. The artifact must paint exactly
+// the shapes the shipped logo declares: LOGO.shapes.length stroked shapes and one filled pole dot. Derived from
+// the table, never typed.
+export const EXPECTED_STROKED = LOGO.shapes.length;
+export const EXPECTED_FILLED = 1;
+export function shapeCountFindings(svg, label = 'the artifact') {
+  const stroked = [...svg.matchAll(/<(?:circle|path)\b[^>]*\bfill="none"[^>]*\bstroke="#[0-9a-f]{6}"/g)].length;
+  const filled = [...svg.matchAll(/<(?:circle|path)\b[^>]*\bfill="#[0-9a-f]{6}"[^>]*\bstroke="none"/g)].length;
+  const out = [];
+  if (stroked !== EXPECTED_STROKED) out.push(`${label} paints ${stroked} stroked shape(s); src/lib/logo.mjs declares ${EXPECTED_STROKED} — the artifact's geometry disagrees with the table the hero draws from`);
+  if (filled !== EXPECTED_FILLED) out.push(`${label} paints ${filled} filled shape(s); the logo has exactly one (the pole dot) — a tab missing the meeting point is a different figure`);
+  return out;
+}
+
+// A tab glyph is drawn on a plate and the 16x16 slot scales the plate to FIT, so the effective scale is
+// 16 / (the plate's longer side). This is the same scaleAt the round measures with, applied to the artifact's
+// own viewBox rather than to a row spec, so it works on a document the instrument did not generate.
+export function artifactFrame(svg) {
+  const vb = (svg.match(/viewBox="([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"/) || []).slice(1).map(Number);
+  return { x: vb[0], y: vb[1], w: vb[2] || 0, h: vb[3] || 0, scale16: vb[2] && vb[3] ? scaleAt({ w: vb[2], h: vb[3] }, 16) : 0 };
+}
+
+// D119: a stroke under ~1.5 device px contains no fully covered pixel, so it has no byte identity at all — its
+// painted contrast is always below the token pair it declares. A tab is the smallest place the logo is ever
+// drawn, so the floor is not a style preference here: it is the difference between a glyph and a smudge.
+export const TAB_LINE_FLOOR_PX = 1.5;
+export function lineFloorFindings(svg, label = 'the artifact') {
+  const f = artifactFrame(svg);
+  const sws = [...svg.matchAll(/stroke-width="([\d.]+)"/g)].map((m) => +m[1]);
+  if (!f.scale16 || !sws.length) return [];
+  const px = Math.min(...sws) * f.scale16;
+  if (px >= TAB_LINE_FLOOR_PX - 0.001) return [];
+  return [`${label}'s thinnest line is ${px.toFixed(2)} device px in the 16x16 tab slot (${Math.min(...sws)}u drawn on a ${f.w}x${f.h}u plate); D119 measures ${TAB_LINE_FLOOR_PX} device px as the floor a line can be read at, so this tab paints a line with no byte identity — tighten the frame or raise the weight (${label.replace(/\s+/g, ' ')})`];
+}
+
+// Where two documents differ, said in a way a reader can act on. A line the generator does not write is not the
+// same defect as a line it writes differently, and the naive index reports "line 0 differs — undefined vs
+// undefined" for the first, which is the bug this helper exists to remove.
+export function byteDiff(expected, actual) {
+  const a = expected.split('\n'), b = actual.split('\n');
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    if (a[i] === b[i]) continue;
+    if (a[i] === undefined) return `line ${i + 1} is a line the instrument does not generate: "${b[i].trim()}"`;
+    if (b[i] === undefined) return `line ${i + 1} is missing from the artifact; the instrument writes "${a[i].trim()}"`;
+    return `line ${i + 1} differs — generated "${a[i].trim()}", artifact "${b[i].trim()}"`;
+  }
+  return 'the octets differ somewhere a line comparison cannot see';
+}
+
+// The verdict function (add-a-gate anatomy 1): pure over the document's bytes, so the selftest can plant defects
+// without touching the shipped file.
+export async function tabFindings(svgPath) {
+  let svg;
+  try { svg = readFileSync(svgPath, 'utf8'); }
+  catch { return [`${svgPath} does not exist — the tab has no generated artifact`]; }
+  const findings = [];
+
+  // 1. a renderer must accept it (D485: four colour rules printed PASS on a document librsvg refuses).
+  try { await sharp(Buffer.from(svg)).metadata(); }
+  catch (e) { findings.push(`${svgPath} is not a document a renderer will load: ${e.message}`); }
+
+  // 2. no comment a parser refuses, and no comment at all other than the provenance one.
+  const faults = xmlCommentFaults(svg);
+  if (faults.length) findings.push(`${svgPath} carries ${faults.length} comment(s) containing a double hyphen, which XML 1.0 §7.4 forbids: ${faults.map((f) => `"${f.snippet}"`).join(', ')} (D485)`);
+
+  // 3. the document says what it is.
+  const prov = parseProvenance(svg);
+  if (!prov) {
+    findings.push(`${svgPath} carries no provenance line naming the logo-tab row, ground and weight it was generated from — a tab glyph nobody can regenerate is a tab glyph nobody can check (the hand-copy class D485 found)`);
+  } else if (!prov.row || !prov.ground || prov.k == null) {
+    findings.push(`${svgPath}'s provenance line is unparseable: it must name row, ground and weight. Found: ${prov.raw.replace(/\s+/g, ' ').trim()}`);
+  } else {
+    let row;
+    try { row = tabRow(prov.row); } catch (e) { findings.push(e.message); }
+    if (row) {
+      if (!['paper', 'ink'].includes(prov.ground)) findings.push(`${svgPath} names ground "${prov.ground}", which is not one of the two grounds this instrument paints (paper, ink)`);
+      else {
+        const w = weightFor(row, frameOf(row), row.floorPx ?? null);
+        if (Math.abs(w.k - Number(prov.k)) > 1e-9) {
+          findings.push(`${svgPath} declares weight ${prov.k} but row ${prov.row} solves to ${w.k}: the artifact was hand-edited, not generated (row ${prov.row} weights to reach ${row.floorPx ?? 'no'} device px at ${row.weightAt}px)`);
+        }
+        // 4. regenerate and compare bytes. This is the rule that survives any pick: whatever row the operator
+        //    chooses, the shipped tab must be the bytes the instrument produces for that row.
+        const expected = provenanceComment(withSolvedGold(row), prov.ground, w, prov.pick, prov.ruling) + '\n' + artifactSvg(withSolvedGold(row), prov.ground, Number(prov.k));
+        if (expected !== svg) {
+          findings.push(`${svgPath} does not regenerate from design/logo-tab.mjs for row ${prov.row} on ${prov.ground}: ${byteDiff(expected, svg)} (the artifact is not the drawing the table declares)`);
+        }
+        // 5. the geometry the document carries, independent of the comment.
+        findings.push(...shapeCountFindings(svg, svgPath));
+        // 6. the drawing is legible in the slot it is drawn for (D119).
+        findings.push(...lineFloorFindings(svg, svgPath));
+      }
+    }
+  }
+  return findings;
+}
+
+// Read the artifact as a browser sees it: rasterized at the tab sizes, with the line widths the document's own
+// stroke literals land at, and the ink counted in device pixels.
+export async function measureArtifact(svgPath, widths = [16, 32, 48, 64]) {
+  const svg = stripComments(readFileSync(svgPath, 'utf8'));
+  const vb = (svg.match(/viewBox="([-\d.]+) ([-\d.]+) ([-\d.]+) ([-\d.]+)"/) || []).slice(1).map(Number);
+  const frame = { w: vb[2] || 1, h: vb[3] || 1 };
+  const sws = [...svg.matchAll(/stroke-width="([\d.]+)"/g)].map((m) => +m[1]);
+  const paints = [...new Set([...svg.matchAll(/\b(?:fill|stroke)="(#[0-9a-f]{6})"/g)].map((m) => m[1]))];
+  const ground = (svg.match(/<rect[^>]*\bfill="(#[0-9a-f]{6})"/) || [])[1] ?? paints[0];
+  const inks = paints.filter((p) => p !== ground);
+  const rows = [];
+  for (const n of widths) {
+    const img = await raster(svg, n, ground);
+    const st = stats(img, ground, inks);
+    const scale = scaleAt(frame, n);
+    rows.push({
+      width: n, scale: +scale.toFixed(4),
+      strokeMinPx: sws.length ? +(Math.min(...sws) * scale).toFixed(2) : null,
+      strokeMaxPx: sws.length ? +(Math.max(...sws) * scale).toFixed(2) : null,
+      ...st,
+    });
+  }
+  return {
+    path: svgPath, frame, paints, ground,
+    pairContrast: inks.length ? inks.map((i) => ({ ink: i, vsGround: +contrastRGB(hex2rgb(i), hex2rgb(ground)).toFixed(2) })) : [],
+    rows,
+  };
+}
+
+const sha = (p) => createHash('sha256').update(readFileSync(p)).digest('hex').slice(0, 12);
+
+export async function main(argv = process.argv.slice(2)) {
+  // flag values are read by their bare name: opt('ground') answers `--ground paper`.
+  const opt = (name, dflt = null) => { const i = argv.indexOf(`--${name}`); return i >= 0 && argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[i + 1] : dflt; };
+  if (argv.includes('--selftest')) return selftest();
+  if (argv.includes('--rows')) {
+    for (const r of TAB_ROWS) console.log(`${r.id}  ${r.frame ?? '(incumbent)'}  ${r.colours ?? '(as shipped)'}  k=${r.floorPx == null ? 1 : weightFor(r, frameOf(r), r.floorPx).k}  ${r.label}`);
+    return 0;
+  }
+  if (argv.includes('--emit')) {
+    const id = opt('emit');
+    if (!id) throw new Error(`logo-tab: --emit needs a row id. The framings this instrument knows: ${TAB_ROWS.map((x) => x.id).join(', ')} (I0 is the tab as it ships and is never generated). Run --rows to see them.`);
+    const row = tabRow(id);
+    const ground = opt('ground', 'paper');
+    if (!['paper', 'ink'].includes(ground)) throw new Error(`logo-tab: --ground must be paper or ink, got "${ground}"`);
+    const pick = opt('pick'), ruling = opt('ruling');
+    const out = opt('out', path.join('.design', 'tmp-tab', `favicon-${row.id}-${ground}.svg`));
+    const guard = shipGuard(out, pick, ruling);
+    if (guard) { console.error(`logo-tab: ${guard}`); return 1; }
+    const w = weightFor(row, frameOf(row), row.floorPx ?? null);
+    const svg = provenanceComment(withSolvedGold(row), ground, w, pick, ruling) + '\n' + artifactSvg(withSolvedGold(row), ground, w.k);
+    mkdirSync(path.dirname(out), { recursive: true });
+    writeFileSync(out, svg);
+    const paints = [...new Set([...svg.matchAll(/\b(?:fill|stroke)="(#[0-9a-f]{6})"/g)].map((m) => m[1]))];
+    console.log(`wrote ${out}  row ${row.id} on ${ground}  k=${w.k}  plate ${frameOf(row).w}x${frameOf(row).h}u  paints ${paints.join(' / ')}`);
+    const gate = spawnSync(process.execPath, ['scripts/check-favicon.mjs', out], { encoding: 'utf8' });
+    const outText = `${gate.stdout ?? ''}${gate.stderr ?? ''}`.trim();
+    console.log(`check:favicon on it (exit ${gate.status}): ${outText.split('\n').join('\n  ')}`);
+    return 0;
+  }
+  if (argv.includes('--verify')) {
+    const p = opt('verify', SHIPPED_TAB);
+    const f = await tabFindings(p);
+    if (!f.length) { console.log(`PASS: ${p} regenerates from design/logo-tab.mjs byte for byte, parses, and paints the shapes the logo table declares`); return 0; }
+    f.forEach((x) => console.log(`FAIL: ${x}`));
+    return 1;
+  }
+  if (argv.includes('--measure')) {
+    const p = opt('measure', SHIPPED_TAB);
+    const widths = (opt('widths', '16,32,48,64') || '').split(',').map(Number);
+    const m = await measureArtifact(p, widths);
+    console.log(`${m.path}: plate ${m.frame.w}x${m.frame.h}u, paints ${m.paints.join(' / ')}, ground ${m.ground}`);
+    console.log(`  pair contrast: ${m.pairContrast.map((c) => `${c.ink} vs ground = ${c.vsGround}`).join(', ') || 'single colour'}`);
+    for (const r of m.rows) {
+      console.log(`  @${r.width}px  scale ${r.scale}u/px  stroke ${r.strokeMinPx}-${r.strokeMaxPx} device px  any ${r.anyPx} px  at3 ${r.at3Px} px  coverage ${r.coveragePct}%  max contrast ${r.maxContrast}`);
+      if (r.strokeMinPx < 1.5) console.log(`    under D119's 1.5 device px line floor: the thinnest line has no fully covered pixel at this size`);
+    }
+    return 0;
+  }
+  console.log('logo-tab: nothing to do. Use --emit <row> [--ground paper|ink] [--out path] [--pick X --ruling D###], --verify <path>, --measure <path> [--widths 16,32,48,64], --rows or --selftest.');
+  return 1;
+}
+
+// THE SELFTEST (add-a-gate anatomy 3): every case is a mutation of a document the instrument itself generated,
+// and each one must be NAMED by the verdict. The control is a clean emission, so a green run means the detector
+// is not merely always green. Scratch lives in .design/ (gitignored); the shipped tab is read but never written.
+async function selftest() {
+  const dir = path.join('.design', 'tmp-tab-selftest');
+  mkdirSync(dir, { recursive: true });
+  const emit = (id, ground) => {
+    const row = tabRow(id);
+    const w = weightFor(row, frameOf(row), row.floorPx ?? null);
+    const body = provenanceComment(withSolvedGold(row), ground, w, null, null) + '\n' + artifactSvg(withSolvedGold(row), ground, w.k);
+    const p = path.join(dir, `tab-${id}-${ground}.svg`);
+    writeFileSync(p, body);
+    return { p, body };
+  };
+  const cases = [];
+  const add = (name, p, expect) => cases.push([name, p, expect]);
+  const add2 = (name, body, expect) => { const p = path.join(dir, name.replace(/[^A-Za-z0-9._-]/g, '_')); writeFileSync(p, body); cases.push([name, p, expect]); };
+
+  // controls: the instrument's own output must be clean on every framing that clears the line floor, on both
+  // grounds, in both colour plans, and with the gold candidates read from the committed solve.
+  const cPaper = emit('T1', 'paper'), cInk = emit('T1', 'ink');
+  add('control: T1 (1.5 device px at 16) on paper', cPaper.p, []);
+  add('control: T1 on ink', cInk.p, []);
+  add2('control: T3 (the heavy end, 2.5 device px)', emit('T3', 'paper').body, []);
+  add2('control: T5 (whole plate letterboxed, 240x150)', emit('T5', 'paper').body, []);
+  add2('control: T8 (every line one colour)', emit('T8', 'ink').body, []);
+  add2('control: G1 (the site\'s warm accent, no new token)', emit('G1', 'paper').body, []);
+  add2('control: G3 (gold line, candidate from the round record)', emit('G3', 'paper').body, []);
+  add2('control: G4 (gold plate, candidate from the round record)', emit('G4', 'ink').body, []);
+
+  // the shipped tab: the instrument reads it and refuses it, because it is a glyph no generator can reproduce.
+  add('the shipped summand glyph has no provenance to verify', SHIPPED_TAB, ['no provenance']);
+
+  // plantings, each one the defect class the rule exists to catch.
+  add2('a hand-edited stroke width', cPaper.body.replace(/stroke-width="[\d.]+"/, 'stroke-width="2.4"'), ['does not regenerate']);
+  add2('a provenance line whose weight is a lie', cPaper.body.replace(/weight k=[\d.]+/, 'weight k=2.000'), ['solves to']);
+  add2('the provenance comment stripped', stripComments(cPaper.body), ['no provenance']);
+  add2('a provenance naming a row that does not exist', cPaper.body.replace('row T1 (', 'row ZZ ('), ['no tab row']);
+  // The D485 planting is the exact string the shipped tab carried: a token name written with its `--` prefix.
+  add2('a comment carrying a token name (D485)', cPaper.body + '\n<!-- rx 6 is --radius-control -->\n', ['double hyphen']);
+  add2('the meeting point deleted by hand', cPaper.body.replace(/<circle cx="[\d.]+" cy="[\d.]+" r="[\d.]+" fill="#[0-9a-f]{6}" stroke="none"\/>/, ''), ['filled shape', 'does not regenerate']);
+  // The legibility plantings are not mutations: they are the instrument's own output for rows that cannot be
+  // read at 16 device px. Naming them as cases is what turns "T2 is lighter" into a gate finding, and it is
+  // the price the operator is choosing between (ToDo 36): a lighter glyph is a glyph with no bytes.
+  add2('legibility: N0, the hero weights with no tab tuning', emit('N0', 'ink').body, ['thinnest line is', 'D119']);
+  add2('legibility: T2, weighted to 1.0 device px', emit('T2', 'paper').body, ['thinnest line is', 'D119']);
+  add2('legibility: T4, weighted for 32px and read at 16', emit('T4', 'paper').body, ['thinnest line is', 'D119']);
+
+  // the ship guard, planted both ways without ever writing the shipped file.
+  const before = sha(SHIPPED_TAB);
+  const refused = shipGuard(SHIPPED_TAB, null, null);
+  const allowed = shipGuard(SHIPPED_TAB, '36a', 'D491');
+  const unchanged = sha(SHIPPED_TAB) === before;
+  console.log(`ship guard: without a pick -> ${refused ? 'refused' : 'ALLOWED (WRONG)'}; with pick 36a under D491 -> ${allowed ? 'refused (WRONG)' : 'allowed'}; ${SHIPPED_TAB} bytes ${unchanged ? 'untouched' : 'MODIFIED (WRONG)'}`);
+  const guardOk = !!refused && allowed === null && unchanged;
+
+  // an emit aimed at the shipped path without a ruling must refuse, and must not touch the file.
+  const emitExit = await main(['--emit', 'T1', '--ground', 'paper', '--out', SHIPPED_TAB]);
+  const stillSame = sha(SHIPPED_TAB) === before;
+
+  // the measure instrument: it must print real numbers for the artifact it generated, and name the line floor.
+  const mLegit = await measureArtifact(cPaper.p, [16]);
+  const mUntuned = await measureArtifact(emit('N0', 'ink').p, [16]);
+
+  let wrong = 0;
+  for (const [name, p, expect] of cases) {
+    const got = await tabFindings(p);
+    // a planting must be named; every phrase the case expects must appear somewhere in the findings (one
+    // defect can be reported by two rules, and requiring both in one sentence would be a typo waiting to fail).
+    const ok = expect.length === 0 ? got.length === 0 : expect.every((e) => got.some((f) => f.includes(e)));
+    if (!ok) wrong++;
+    console.log(`${ok ? 'ok   ' : 'WRONG'} ${name.padEnd(50)} ${got.join(' | ') || 'PASS'}`);
+  }
+  console.log(`measure @16px: T1/paper ${mLegit.rows[0].strokeMinPx}-${mLegit.rows[0].strokeMaxPx} device px, ${mLegit.rows[0].coveragePct}% coverage; N0/ink ${mUntuned.rows[0].strokeMinPx}-${mUntuned.rows[0].strokeMaxPx} device px, ${mUntuned.rows[0].coveragePct}% coverage`);
+  if (mLegit.rows[0].at3Px < 1) { wrong++; console.log('WRONG measure: the instrument reports no ink in a document it painted'); }
+  if (mLegit.rows[0].strokeMinPx < 1.5 || mUntuned.rows[0].strokeMinPx >= 1.5) { wrong++; console.log('WRONG measure: the legibility numbers do not match the verdicts'); }
+  if (!guardOk) wrong++;
+  if (emitExit !== 1 || !stillSame) { wrong++; console.log('WRONG ship guard: the CLI wrote or accepted ' + SHIPPED_TAB + ' without a ruling'); }
+  let badThrow = 0;
+  try { tabRow('ZZ'); } catch (e) { badThrow = /no tab row "ZZ"/.test(e.message) ? 1 : 0; }
+  try { tabRow('I0'); } catch (e) { badThrow += /is the tab as it ships/.test(e.message) ? 1 : 0; }
+  if (badThrow !== 2) { wrong++; console.log('WRONG row guard: an unknown id or the incumbent row did not name itself'); }
+  else console.log('ok   row guard: "ZZ" and the incumbent row I0 both refused by name');
+
+  rmSync(dir, { recursive: true, force: true });
+  console.log(`\n${cases.length + 4} tab-artifact cases, ${wrong} wrong`);
+  return wrong ? 1 : 0;
+}
+
+const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isMain) main().then((code) => process.exit(code)).catch((e) => { console.error(`logo-tab: ${e.message}`); process.exit(1); });
