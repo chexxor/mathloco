@@ -4,8 +4,9 @@
 // WHY A SEPARATE INSTRUMENT EXISTS. Every logo probe in this repo measures the logo at HERO widths (320/640/1240
 // device px, `logo-geometry.mjs`, `logo-pixels.mjs`) or on the share card (1200x630). The tab is a
 // 16x16 slot (MDN's glossary on favicons: "Usually, a favicon is 16 x 16 pixels"), and at 16px a 1.4-unit stroke
-// in a 240-unit plate is 0.09 device px — two orders of magnitude below the logo's own line-weight floor (D119:
-// a stroke thinner than ~1.5px never contains a fully-covered pixel). So "check:logo PASS at 320" says nothing
+// in a 240-unit plate is 0.09 device px — an order of magnitude under the 1 device px line floor the render gate
+// states (D119's ~1.5px "no fully covered pixel" figure is a description of thin coverage, not an enforceable
+// floor — S112). So "check:logo PASS at 320" says nothing
 // about the tab, and `check:favicon` only reads colour literals — it has never looked at a pixel. This file is the
 // instrument that does: it builds an SVG document out of `LOGO` + `LOGO_COLOURS` at a stated FRAMING, rasterizes
 // it at 16/32/48/64 device px, and asks which of the eight shapes actually lands.
@@ -195,14 +196,29 @@ export function artifactSvg(spec, ground, k) {
 // browser applies, the box the drawing lands in, where that box sits in the canvas, and (for the clip probe) how
 // much extra canvas the frame needs. Anything that maps a viewBox point to a fixture pixel must use this, or the
 // two readers disagree by the padding.
+//
+// THE ORIGIN, AND THE DEFECT IT CLOSED (found 2026-11-25 while reconciling the artifact raster with the fixture
+// raster). The shapes in `LOGO` live in the logo's own coordinate space (x 61.3-178.7 for the sphere's ink box),
+// while a `sphere`/`spherePad` frame starts at that box's corner, not at 0. The first version of this layout
+// centred the FRAME but translated by only `dx`/`dy`, so for every frame with a non-zero origin the drawing was
+// shifted by the origin and most of it fell outside the canvas. @measured 2026-11-25 (Linux native, Node 24.22.1,
+// node reading both rasters of row T1/paper at the 16px slot): artifact 186 pixels differ from the ground, fixture
+// 90 — the fixture was counting half a sphere, and every round-23 pixel figure for a sphere-framed row was a
+// measurement of a clipped drawing. Rows whose frame starts at 0 (plate, plateSquare) matched exactly, which is why
+// the defect hid. `origin` here is the canvas coordinate of the frame's own corner, and `transform` is the one
+// string both the emitter and the path-walker use, so a point can no longer be mapped two ways.
 export function fixtureLayout(spec, n, padPx = 0) {
   const f = frameOf(spec);
   const scale = scaleAt(f, n);
   const drawW = f.w * scale, drawH = f.h * scale;
   const canvas = n + 2 * padPx;
   const ox = padPx + (n - drawW) / 2, oy = padPx + (n - drawH) / 2;
+  // A logo-space point p lands at ox + scale * (p + dx - f.x): the frame's corner maps to the canvas box, and the
+  // frame's own dx/dy (used by `plateSquare` to centre the plate) rides inside it.
+  const tx = (f.dx ?? 0) - f.x, ty = (f.dy ?? 0) - f.y;
   return {
-    frame: f, scale, drawW, drawH, canvas, ox, oy,
+    frame: f, scale, drawW, drawH, canvas, ox, oy, tx, ty,
+    transform: `translate(${ox.toFixed(3)} ${oy.toFixed(3)}) scale(${scale.toFixed(6)})${tx || ty ? ` translate(${tx.toFixed(3)} ${ty.toFixed(3)})` : ''}`,
     rect: { left: Math.floor(ox), top: Math.floor(oy), width: Math.round(drawW), height: Math.round(drawH) },
     // The tab area the logo does NOT cover — the band a non-square plate leaves to the browser's own chrome.
     blankPx: Math.max(0, n * n - Math.round(drawW * drawH)),
@@ -239,8 +255,7 @@ export const stripComments = (svg) => svg.replace(/<!--[\s\S]*?-->/g, '');
 export function fixtureSvg(spec, ground, n, k, onlySlots, padPx = 0) {
   const L = fixtureLayout(spec, n, padPx);
   const body = shapeList(spec, ground, k, onlySlots).map((t) => `    ${t}`).join('\n');
-  const tf = `translate(${L.ox.toFixed(3)} ${L.oy.toFixed(3)}) scale(${L.scale.toFixed(6)})${L.frame.dx || L.frame.dy ? ` translate(${L.frame.dx} ${L.frame.dy})` : ''}`;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${L.canvas}" height="${L.canvas}" viewBox="0 0 ${L.canvas} ${L.canvas}">\n  <rect x="0" y="0" width="${L.canvas}" height="${L.canvas}" fill="${groundHex(spec, ground)}"/>\n  <g transform="${tf}">\n${body}\n  </g>\n</svg>\n`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${L.canvas}" height="${L.canvas}" viewBox="0 0 ${L.canvas} ${L.canvas}">\n  <rect x="0" y="0" width="${L.canvas}" height="${L.canvas}" fill="${groundHex(spec, ground)}"/>\n  <g transform="${L.transform}">\n${body}\n  </g>\n</svg>\n`;
 }
 
 // ---------- 5. rasterize and count ----------
@@ -248,6 +263,16 @@ export function fixtureSvg(spec, ground, n, k, onlySlots, padPx = 0) {
 // un-premultiplied triple of a pixel with no coverage at all (see the probe cited above). Flattening onto the
 // fixture's own ground makes "a pixel that differs from the ground" mean what it says. The fixture already paints
 // the whole canvas, so this is belt-and-braces for any caller that hands in a document that does not.
+// Raster an ARTIFACT at the slot it is drawn in. An artifact carries width/height equal to its plate (e.g. the
+// T1 sphere's 117.44 x 117.46u), so handing it straight to sharp makes librsvg paint a 117px document which sharp
+// then downsamples to 16 - and downsampling a line that was already fully covered at 117px keeps bytes a browser
+// painting the same document directly at 16 would never produce. @measured 2026-11-25 (Linux native, Node 24.22.1,
+// node -e comparing the two paths for row T1/paper): artifact-as-carried 54 fully covered pixels vs the fixture
+// round 23 measures, and a browser, paint 19 @ 16px. So the slot dimensions are written into the document BEFORE
+// the raster, exactly as a tab does, and the viewBox stays untouched so the geometry is the same drawing.
+export const slotSized = (svg, n) =>
+  svg.replace(/\bwidth="([\d.]+)"\s+height="([\d.]+)"/, `width="${n}" height="${n}"`);
+export const rasterArtifactAt = async (svg, n, flattenGround) => raster(slotSized(svg, n), n, flattenGround);
 export const raster = async (svg, n, flattenGround) => {
   let img = sharp(Buffer.from(svg)).resize(n, n);
   if (flattenGround) img = img.flatten({ background: flattenGround });
@@ -320,10 +345,11 @@ export function samplePath(d, samples = 200) {
 // contiguous run and the number of runs. This is the dash question measured in device px — a rear arc whose run
 // equals the front arc's has fused into a line, and the logo's only depth cue is gone at that size.
 export async function runProfile(spec, ground, n, k, slot) {
-  const f = frameOf(spec); const s = scaleAt(f, n);
+  // The pixel mapping is the layout's transform, not a re-derivation of it: this walker and the emitter must land
+  // on the same pixel, and the first version of this line mapped a logo-space point without the frame origin, so
+  // for every sphere-framed row it walked a point the fixture never painted (see fixtureLayout above).
   const L = fixtureLayout(spec, n);
-  const ox = L.ox, oy = L.oy;
-  const dx = f.dx ?? 0, dy = f.dy ?? 0;
+  const s = L.scale, ox = L.ox, oy = L.oy, tx = L.tx, ty = L.ty;
   const one = LOGO.shapes.find((x) => x.slot === slot);
   if (!one || one.tag !== 'path') return null;
   const gh = groundHex(spec, ground);
@@ -332,7 +358,7 @@ export async function runProfile(spec, ground, n, k, slot) {
   const ink = hex2rgb(hexOf(colourPlan(spec, ground)[slot]));
   let runs = 0, longest = 0, cur = 0, on = 0, full = 0;
   for (const [x, y] of samplePath(one.d, 400)) {
-    const px = Math.round((x + dx) * s + ox), py = Math.round((y + dy) * s + oy);
+    const px = Math.round((x + tx) * s + ox), py = Math.round((y + ty) * s + oy);
     if (px < 0 || py < 0 || px >= img.width || py >= img.height) continue;
     const c = img.data[(py * img.width + px) * img.channels];
     const p = [c, img.data[(py * img.width + px) * img.channels + 1], img.data[(py * img.width + px) * img.channels + 2]];
@@ -597,17 +623,52 @@ export function artifactFrame(svg) {
   return { x: vb[0], y: vb[1], w: vb[2] || 0, h: vb[3] || 0, scale16: vb[2] && vb[3] ? scaleAt({ w: vb[2], h: vb[3] }, 16) : 0 };
 }
 
-// D119: a stroke under ~1.5 device px contains no fully covered pixel, so it has no byte identity at all — its
-// painted contrast is always below the token pair it declares. A tab is the smallest place the logo is ever
-// drawn, so the floor is not a style preference here: it is the difference between a glyph and a smudge.
-export const TAB_LINE_FLOOR_PX = 1.5;
+// D119's bite, MEASURED rather than proxied. DESIGN.md states the two rules the render gate holds for line art:
+// "the pair >= 3.0, and the device stroke >= 1px", and describes ~1.5 device px as the point below which a
+// stroke "never contains a fully covered pixel". Round 23 counted the pixels themselves at the 16px slot for all
+// 15 framings x 2 grounds @measured 2026-11-25 by `npm run round23` (Linux native, Node 24.22.1,
+// design/grill/round23/report.json; `fullPx` = pixels within 6 RGB units of the declared ink byte; each pair is
+// paper then ink, librsvg then firefox): N0 0.18px -> 0/0 then 0/0; T4 0.75px -> 0/0 then 0/0; T2 1.00px -> 4/2
+// then 4/2; T1 1.50px -> 54/55 then 59/57; T3 2.50px -> 125/124 then 123/120. (The first round-23 run quoted
+// 3/3, 19/18 and 59/60 for T2/T1/T3: the fixture centred the FRAME but translated by only dx/dy, so every frame
+// with a non-zero origin drew the logo shifted out of the slot and the instrument was counting a clipped drawing.
+// `fixtureLayout` now returns tx = dx - f.x, ty = dy - f.y and fixtureSvg and runProfile use that one mapping;
+// after the fix all 28 row x ground readings agree exactly between the artifact raster and the fixture raster.)
+// So 1.5 is a description of when coverage gets thin, not the floor a gate can enforce: taken as a rule it
+// refuses T2, which both rasterizers prove has bytes. What this instrument ENFORCES is the floor the render gate
+// already states (1 device px), and the byte count in rule 7 below is the measurement that makes "no byte
+// identity" a fact about the artifact instead of an extrapolation from a stroke-width literal.
+export const TAB_LINE_FLOOR_PX = 1.0; // DESIGN.md: "the gate holds both: the pair >= 3.0, and the device stroke >= 1px"
 export function lineFloorFindings(svg, label = 'the artifact') {
   const f = artifactFrame(svg);
   const sws = [...svg.matchAll(/stroke-width="([\d.]+)"/g)].map((m) => +m[1]);
   if (!f.scale16 || !sws.length) return [];
   const px = Math.min(...sws) * f.scale16;
   if (px >= TAB_LINE_FLOOR_PX - 0.001) return [];
-  return [`${label}'s thinnest line is ${px.toFixed(2)} device px in the 16x16 tab slot (${Math.min(...sws)}u drawn on a ${f.w}x${f.h}u plate); D119 measures ${TAB_LINE_FLOOR_PX} device px as the floor a line can be read at, so this tab paints a line with no byte identity — tighten the frame or raise the weight (${label.replace(/\s+/g, ' ')})`];
+  return [`${label}'s thinnest line is ${px.toFixed(2)} device px in the 16x16 tab slot (${Math.min(...sws)}u drawn on a ${f.w}x${f.h}u plate); the render gate states ${TAB_LINE_FLOOR_PX} device px as the floor a line can be read at (DESIGN.md, D119 as measured in S112), so this tab paints a line with no byte identity — tighten the frame or raise the weight (${label.replace(/\s+/g, ' ')})`];
+}
+
+// Rule 7, the measurement under the floor: raster the artifact at the slot it is actually drawn in (16px, MDN,
+// quoted in round 23's record) and count the pixels that reach the declared ink byte. A glyph whose every line
+// is a half-covered blend has zero of these, and no stroke-width arithmetic in the document's text can say so.
+// The incumbent is the control here too: the shipped summand paints 1 fully covered pixel (librsvg) / 5 (firefox)
+// at 16px @measured 2026-11-25 by `npm run round23`, so "a tab glyph must have at least one real byte" is a bar
+// the tab already clears, not one invented for the candidates.
+export const TAB_FULL_PIXEL_MIN = 1;
+export async function byteIdentityFindings(svgPath, svg) {
+  const ground = (svg.match(/<rect[^>]*\bfill="(#[0-9a-f]{6})"/) || [])[1];
+  const paints = [...new Set([...svg.matchAll(/\b(?:fill|stroke)="(#[0-9a-f]{6})"/g)].map((m) => m[1]))];
+  const inks = paints.filter((p) => p !== ground);
+  if (!inks.length) return [`${svgPath} paints no ink at all: every colour literal in it is the ground (${ground}) — an empty mark`];
+  let img, st;
+  try {
+    img = await rasterArtifactAt(svg, 16, ground ?? paints[0]);
+    st = stats(img, ground ?? paints[0], inks);
+  } catch (e) {
+    return [`${svgPath} could not be rasterized at the 16px tab slot: ${e.message}`];
+  }
+  if (st.fullPx >= TAB_FULL_PIXEL_MIN) return [];
+  return [`${svgPath} paints ${st.fullPx} fully covered ink pixel(s) in the 16x16 tab slot (${st.anyPx} pixels differ from the ground at all, max painted contrast ${st.maxContrast}): no line of this glyph reaches its declared byte, so the tab has no byte identity — the D119 limit measured on this document rather than inferred from its stroke-width literals (${svgPath.replace(/\s+/g, ' ')})`];
 }
 
 // Where two documents differ, said in a way a reader can act on. A line the generator does not write is not the
@@ -664,8 +725,10 @@ export async function tabFindings(svgPath) {
         }
         // 5. the geometry the document carries, independent of the comment.
         findings.push(...shapeCountFindings(svg, svgPath));
-        // 6. the drawing is legible in the slot it is drawn for (D119).
+        // 6. the drawing is legible in the slot it is drawn for (D119, the stated device-stroke floor).
         findings.push(...lineFloorFindings(svg, svgPath));
+        // 7. and that is checked by counting the pixels, not by trusting the rule above.
+        findings.push(...await byteIdentityFindings(svgPath, svg));
       }
     }
   }
@@ -684,7 +747,7 @@ export async function measureArtifact(svgPath, widths = [16, 32, 48, 64]) {
   const inks = paints.filter((p) => p !== ground);
   const rows = [];
   for (const n of widths) {
-    const img = await raster(svg, n, ground);
+    const img = await rasterArtifactAt(svg, n, ground);
     const st = stats(img, ground, inks);
     const scale = scaleAt(frame, n);
     rows.push({
@@ -746,8 +809,12 @@ export async function main(argv = process.argv.slice(2)) {
     console.log(`${m.path}: plate ${m.frame.w}x${m.frame.h}u, paints ${m.paints.join(' / ')}, ground ${m.ground}`);
     console.log(`  pair contrast: ${m.pairContrast.map((c) => `${c.ink} vs ground = ${c.vsGround}`).join(', ') || 'single colour'}`);
     for (const r of m.rows) {
-      console.log(`  @${r.width}px  scale ${r.scale}u/px  stroke ${r.strokeMinPx}-${r.strokeMaxPx} device px  any ${r.anyPx} px  at3 ${r.at3Px} px  coverage ${r.coveragePct}%  max contrast ${r.maxContrast}`);
-      if (r.strokeMinPx < 1.5) console.log(`    under D119's 1.5 device px line floor: the thinnest line has no fully covered pixel at this size`);
+    console.log(`  @${r.width}px  scale ${r.scale}u/px  stroke ${r.strokeMinPx ?? 'none (no stroked shape)'}-${r.strokeMaxPx ?? ''} device px  any ${r.anyPx} px  at3 ${r.at3Px} px  full ${r.fullPx} px  coverage ${r.coveragePct}%  max contrast ${r.maxContrast}`);
+    // `null < 1.0` is true in JS, so a document with no stroked shape at all (the shipped summand is a FILL) would
+    // be reported as "too thin" by a null comparison. The floor is a rule about lines; a glyph with no lines is
+    // not a glyph whose lines are thin, and rule 7 is what measures its bytes instead.
+    if (r.strokeMinPx !== null && r.strokeMinPx < TAB_LINE_FLOOR_PX) console.log(`    under the ${TAB_LINE_FLOOR_PX} device px line floor (DESIGN.md, D119): the thinnest line is thinner than the gate allows at this size`);
+    if (r.fullPx < TAB_FULL_PIXEL_MIN) console.log(`    measured: ${r.fullPx} fully covered ink pixels at this size — the glyph has no byte identity here (D119)`);
     }
     return 0;
   }
@@ -779,6 +846,7 @@ async function selftest() {
   add('control: T1 (1.5 device px at 16) on paper', cPaper.p, []);
   add('control: T1 on ink', cInk.p, []);
   add2('control: T3 (the heavy end, 2.5 device px)', emit('T3', 'paper').body, []);
+  add2('control: T2 (exactly on the 1.0 device px floor, measured 4 full pixels at 16 on paper)', emit('T2', 'paper').body, []);
   add2('control: T5 (whole plate letterboxed, 240x150)', emit('T5', 'paper').body, []);
   add2('control: T8 (every line one colour)', emit('T8', 'ink').body, []);
   add2('control: G1 (the site\'s warm accent, no new token)', emit('G1', 'paper').body, []);
@@ -799,9 +867,12 @@ async function selftest() {
   // The legibility plantings are not mutations: they are the instrument's own output for rows that cannot be
   // read at 16 device px. Naming them as cases is what turns "T2 is lighter" into a gate finding, and it is
   // the price the operator is choosing between (ToDo 36): a lighter glyph is a glyph with no bytes.
-  add2('legibility: N0, the hero weights with no tab tuning', emit('N0', 'ink').body, ['thinnest line is', 'D119']);
-  add2('legibility: T2, weighted to 1.0 device px', emit('T2', 'paper').body, ['thinnest line is', 'D119']);
-  add2('legibility: T4, weighted for 32px and read at 16', emit('T4', 'paper').body, ['thinnest line is', 'D119']);
+  add2('legibility: N0, the hero weights with no tab tuning', emit('N0', 'ink').body, ['thinnest line is', 'D119', 'fully covered ink pixel']);
+  add2('legibility: T4, weighted for 32px and read at 16', emit('T4', 'paper').body, ['thinnest line is', 'D119', 'fully covered ink pixel']);
+  // The byte-count rule is planted by itself, not through the arithmetic: every stroke widened to 0.5u is a line
+  // the document still calls a line, and the raster is what says it has no bytes.
+  add2('byte identity: every stroke halved, counted in pixels', cPaper.body.replace(/stroke-width="[\d.]+"/g, 'stroke-width="0.5"'), ['fully covered ink pixel', 'thinnest line is']);
+  add2('byte identity: ink painted in the ground colour (an empty mark)', cPaper.body.replace(/(fill|stroke)="#[0-9a-f]{6}"/g, (_whole, kind) => `${kind}="${cPaper.body.match(/<rect[^>]*\bfill="(#[0-9a-f]{6})"/)[1]}"`), ['no ink at all']);
 
   // the ship guard, planted both ways without ever writing the shipped file.
   const before = sha(SHIPPED_TAB);
@@ -818,6 +889,15 @@ async function selftest() {
   // the measure instrument: it must print real numbers for the artifact it generated, and name the line floor.
   const mLegit = await measureArtifact(cPaper.p, [16]);
   const mUntuned = await measureArtifact(emit('N0', 'ink').p, [16]);
+  // The incumbent as a CONTROL for the byte rule (D481 §c): the shipped summand is a FILL, so it has no
+  // stroke-width literal at all. `null < 1.0` is true in JS, so a measure that compares the stroke minimum
+  // without naming its own nullity would report "too thin" for a glyph that has no lines to be thin. The
+  // incumbent must clear the measured byte bar (1 fully covered pixel at 16 @measured 2026-11-25 by
+  // npm run round23) or the bar is one the tab itself fails, which makes it not a bar.
+  const mIncumbent = await measureArtifact(SHIPPED_TAB, [16]);
+  const incumbentOk = mIncumbent.rows[0].strokeMinPx === null && mIncumbent.rows[0].fullPx >= TAB_FULL_PIXEL_MIN;
+  console.log(`measure incumbent @16px: no stroke literal (${mIncumbent.rows[0].strokeMinPx}), ${mIncumbent.rows[0].fullPx} fully covered pixel(s), ${mIncumbent.rows[0].coveragePct}% coverage`);
+  if (!incumbentOk) wrong++;
 
   let wrong = 0;
   for (const [name, p, expect] of cases) {
@@ -828,9 +908,11 @@ async function selftest() {
     if (!ok) wrong++;
     console.log(`${ok ? 'ok   ' : 'WRONG'} ${name.padEnd(50)} ${got.join(' | ') || 'PASS'}`);
   }
-  console.log(`measure @16px: T1/paper ${mLegit.rows[0].strokeMinPx}-${mLegit.rows[0].strokeMaxPx} device px, ${mLegit.rows[0].coveragePct}% coverage; N0/ink ${mUntuned.rows[0].strokeMinPx}-${mUntuned.rows[0].strokeMaxPx} device px, ${mUntuned.rows[0].coveragePct}% coverage`);
+  console.log(`measure @16px: T1/paper ${mLegit.rows[0].strokeMinPx}-${mLegit.rows[0].strokeMaxPx} device px, ${mLegit.rows[0].fullPx} full px, ${mLegit.rows[0].coveragePct}% coverage; N0/ink ${mUntuned.rows[0].strokeMinPx}-${mUntuned.rows[0].strokeMaxPx} device px, ${mUntuned.rows[0].fullPx} full px, ${mUntuned.rows[0].coveragePct}% coverage`);
   if (mLegit.rows[0].at3Px < 1) { wrong++; console.log('WRONG measure: the instrument reports no ink in a document it painted'); }
-  if (mLegit.rows[0].strokeMinPx < 1.5 || mUntuned.rows[0].strokeMinPx >= 1.5) { wrong++; console.log('WRONG measure: the legibility numbers do not match the verdicts'); }
+  // The floor's number is quoted from the finding itself, so a change in the stated floor cannot leave a
+  // planting expecting the old one.
+  if (mLegit.rows[0].fullPx < TAB_FULL_PIXEL_MIN || mUntuned.rows[0].fullPx >= TAB_FULL_PIXEL_MIN) { wrong++; console.log('WRONG measure: the measured byte count does not match the verdicts'); }
   if (!guardOk) wrong++;
   if (emitExit !== 1 || !stillSame) { wrong++; console.log('WRONG ship guard: the CLI wrote or accepted ' + SHIPPED_TAB + ' without a ruling'); }
   let badThrow = 0;

@@ -11,8 +11,10 @@
 //      site's tab is that slot, and the artifact that fills it today is a 32x32 `∑` glyph, not the logo.
 //   2. THE DRAWING IS 240x150. Fit the whole plate into 16 device px and the contain-scale is 0.0667 device px per
 //      viewBox unit, so the logo's thickest line (1.4u) lands at 0.09 device px and its thinnest (1.3u) at 0.087.
-//      D119's measured floor is that a stroke thinner than ~1.5 device px never contains a fully-covered pixel: the
-//      hero's logo is roughly 17x under its own line-weight floor when it is shrunk into a tab as drawn. Framing is
+//      The floor the tab instrument enforces is 1.0 device px — the device-stroke rule DESIGN.md already states
+//      (S112) — and rule 7 of check:tab measures the consequence instead of extrapolating it: the hero's logo
+//      dropped into the tab as drawn has its thinnest line at 0.18 device px and 0 fully covered ink pixels
+//      @measured 2026-11-25 by npm run round23. Framing is
 //      not cosmetics; it is the only way to buy the stroke any width at all, because the only lever left is how many
 //      viewBox units a device pixel is allowed to cover.
 //   3. THE TAB GATE ALLOWS TWO COLOURS. `scripts/check-favicon.mjs` rule 3 ("a logo is one ground and one glyph")
@@ -73,7 +75,7 @@ export const ROWS = [
     id: 'T1',
     frame: 'sphere', colours: 'pair', weightAt: 16, floorPx: 1.5,
     label: 'sphere-centred, strokes weighted to a 1.5 device px floor at 16px',
-    framing: 'the ink box fills the slot, and the thinnest line is scaled until it measures 1.5 device px — D119\'s own floor, in the slot that decides the pick',
+    framing: 'the ink box fills the slot, and the thinnest line is scaled until it measures 1.5 device px — half again the 1.0 device px the render gate states, in the slot that decides the pick',
     byrne: 'Byrne\'s lines are thick relative to the figure they name; at 16px a line has to be thick or it is not ink at all',
     reading: 'the row the item was really asking for: the sphere, filling the tab, with lines that exist at 16px. Read its dash profile and its frame clip before liking it — a filled-in equator and a clipped ring are what 1.5px costs here.',
   },
@@ -83,7 +85,7 @@ export const ROWS = [
     label: 'sphere-centred, weighted to 1.0 device px at 16px (under the repo\'s own line floor)',
     framing: 'half the weight of T1: the logo keeps closer to its hero proportions, and the lines land at one device pixel',
     byrne: 'the lighter end of the same idea — Byrne\'s line is a name, and a name can be thin as long as it is present',
-    reading: 'what happens below D119\'s floor, measured rather than refused: whether a 1px line still has a fully-covered pixel, and how much of the figure survives once the strokes stop being forced.',
+    reading: 'what happens at the gate\'s own 1.0 device px line, measured rather than refused: a 1px line does have fully covered pixels (4 on paper, 2 on ink @measured 2026-11-25), and this row prints how much of the figure survives once the strokes stop being forced.',
   },
   {
     id: 'T3',

@@ -95,12 +95,17 @@ if (incumbentProblems.length) {
 }
 const rowC = ROWS.find((r) => r.id === 'T9');
 // Row N0 is the sentence the weight rows exist to answer, so the builder asserts it rather than repeating it.
+// The claim this round makes about N0 is NOT "no ink" — the untuned hero drawing does put a few pixels over the
+// 3.0 bar at 16px (2 on each ground @measured 2026-11-25). It is "no byte identity": not one pixel of it reaches
+// the declared ink byte, and its thinnest line is 0.18 device px, under the 1.0 device px the render gate states.
+// Those two facts, read off the record, are what every weight row is buying.
 const N0 = ROWS.find((r) => r.id === 'N0');
-if (!N0) throw new Error('round23-build: the report has no N0 row (the hero drawing, no tab tuning). The weight rows exist because N0 paints nothing at the tab bar at 16px; without it that claim is a quotation, not a measurement.');
+if (!N0) throw new Error('round23-build: the report has no N0 row (the hero drawing, no tab tuning). The weight rows exist because N0 has no byte identity at 16px; without it that claim is a quotation, not a measurement.');
 for (const ground of ['paper', 'ink']) {
   const s = N0.grounds?.[ground]?.sizes?.['16'];
   if (!s) throw new Error(`round23-build: N0 has no 16px measurement on ${ground}`);
-  if (s.at3Px !== 0) throw new Error(`round23-build: N0 at 16px on ${ground} now paints ${s.at3Px} pixels at/over 3.0 (max contrast ${s.maxContrast}). The specimen's claim that the untuned hero drawing has no legible ink at tab size is no longer measured, so the reason this round has weight rows has changed — rewrite the specimen's prose, do not reprint it.`);
+  if (s.fullPx !== 0) throw new Error(`round23-build: N0 at 16px on ${ground} now contains ${s.fullPx} fully covered ink pixels (best contrast ${s.maxContrast}). The specimen's claim that the untuned hero drawing has no byte identity at the tab slot is no longer measured, so the reason this round has weight rows has changed — rewrite the specimen's prose, do not reprint it.`);
+  if (!(s.features?.strokeMinPx < 1.0)) throw new Error(`round23-build: N0's thinnest line on ${ground} measures ${s.features?.strokeMinPx} device px, not under the ${1.0} device px the render gate states — the weight rows are no longer buying a line the gate would accept, they are buying something else. Re-derive this round.`);
 }
 if (!rowC) throw new Error('round23-build: the report has no T9 row (row C in a tab). The price this round was commissioned to record is the tab gate refusing row C, so a report without it cannot be shown.');
 for (const c of need(CONTROLS.rowCRefused, 'controls.rowCRefused')) {
@@ -334,7 +339,7 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 <div class="shots">${['paper', 'ink'].flatMap((gr) => [plate('I0', gr, 16, 16, `shipped tab, ${gr}, true size`), plate('I0', gr, 16, 128, `shipped tab, ${gr}, same raster at 8\u00d7`)]).join('')}</div>
 
 <h2>2. The drawing that has to fit (the logo's own numbers, not a re-drawing)</h2>
-<p>The plate is the hero's: <strong>${FIGURE.plate.w}\u00d7${FIGURE.plate.h}u</strong>, ring ${FIGURE.ring.r}u at (${FIGURE.ring.cx},${FIGURE.ring.cy}), ink bounding box ${FIGURE.inkBox.w}\u00d7${FIGURE.inkBox.h}u at (${FIGURE.inkBox.x},${FIGURE.inkBox.y}), sphere span <strong>${FIGURE.sphereSpanUnits}u</strong>, strokes <strong>${FIGURE.minStrokeUnits}\u2013${FIGURE.maxStrokeUnits}u</strong>, pole dot \u2300 ${FIGURE.dotDiameterUnits}u, right-angle arm ${FIGURE.angleArmUnits}u, feet ${FIGURE.footSeparationUnits}u apart, equator dash ${FIGURE.equatorDash.join('/')}. At 16px the tab is 16 device px, so the plate's 240u is 0.067 device px per unit and a 1.4u line is <strong>0.09 device px</strong> \u2014 roughly 17\u00d7 under the ~1.5 device px a line has to reach before it is ink at all (D119). That one sentence is why this round has weight rows.</p>
+<p>The plate is the hero's: <strong>${FIGURE.plate.w}\u00d7${FIGURE.plate.h}u</strong>, ring ${FIGURE.ring.r}u at (${FIGURE.ring.cx},${FIGURE.ring.cy}), ink bounding box ${num(FIGURE.inkBox.w)}\u00d7${num(FIGURE.inkBox.h)}u at (${num(FIGURE.inkBox.x)},${num(FIGURE.inkBox.y)}), sphere span <strong>${FIGURE.sphereSpanUnits}u</strong>, strokes <strong>${FIGURE.minStrokeUnits}\u2013${FIGURE.maxStrokeUnits}u</strong>, pole dot \u2300 ${FIGURE.dotDiameterUnits}u, right-angle arm ${FIGURE.angleArmUnits}u, feet ${FIGURE.footSeparationUnits}u apart, equator dash ${FIGURE.equatorDash.join('/')}. At 16px the tab is 16 device px, so letterboxing the whole plate puts 240u into 0.067 device px per unit and a ${FIGURE.maxStrokeUnits}u line at <strong>0.09 device px</strong>; even the tightest framing (the ink box, row ${N0.id}) puts ${FIGURE.minStrokeUnits}u at <strong>${num(N0.grounds.paper.sizes['16'].features.strokeMinPx)} device px</strong>. The render gate's line rule is pair &gt;= 3.0 <em>and</em> device stroke &gt;= 1px, and <code>check:tab</code>'s rule 7 measures the consequence rather than inferring it: the untuned hero drawing contains <strong>${N0.grounds.paper.sizes['16'].fullPx} fully covered ink pixels</strong> at the slot (${N0.grounds.ink.sizes['16'].fullPx} on ink) @measured 2026-11-25 by <code>npm run round23</code>. That one sentence is why this round has weight rows.</p>
 
 <h2>3. The gate, read aloud: what the tab gate refuses today</h2>
 <p><code>scripts/check-favicon.mjs</code> was run as a subprocess on every artifact this round produced \u2014 never reimplemented here \u2014 and each row's reading is quoted below in its own box. Two readings the whole item has to reckon with:</p>

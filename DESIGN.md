@@ -1008,7 +1008,8 @@ Rules for drawing it:
   half is broken, not just that one is.
 - **A dash is a claim about device pixels, not about a path attribute.** D119's floor applies to the gap as
   well as the stroke: at the smallest hero box (276px, scale 1.15) `5 4` lands as **6.0px on / 4.8px off**, at
-  1240 (scale 1.55) as **7.8 / 6.2**. Both clear the ~1.5px fusion floor; a dash that fuses back into a line is
+  1240 (scale 1.55) as **7.8 / 6.2**. Both clear the 1 device px the gate states as its line floor (S112 measures
+  the ~1.5px figure as where coverage gets thin, not a floor a gate can enforce); a dash that fuses back into a line is
   the logo losing its sphere again while every count still passes.
 - **Deferred, with its price measured: tonal shading.** A light-source shade would be a stronger depth cue
   than a dash, but it needs a **filled** shape (so the bar is D101's 1.35 layer contrast, not the 3.0 graphic
@@ -1032,9 +1033,12 @@ Rules for drawing it:
 - **A graphic is either named or explicitly hidden**: `role="img"` + `aria-label`, or `aria-hidden="true"`.
   A nameless logo is invisible to a screen reader and invisible to the gate.
 - **Every shape is held to the 3.0 graphic bar (D101), measured per shape** — not "some ink in the box is
-  strong enough". Line art has a second, harsher limit: a stroke under ~1.5 device px never contains a
-  fully covered pixel, so it has no byte identity and its *painted* contrast is always below its token
-  pair (D119). The gate holds both: the pair >= 3.0, and the device stroke >= 1px.
+  strong enough". Line art has a second, harsher limit: a thin line has no byte identity — its *painted* contrast
+  is always below its token pair (D119). The gate holds both: the pair >= 3.0, and the device stroke >= 1px.
+  **D119's ~1.5 device px is a description of thin coverage, not the floor** — measured at the 16px tab slot, a
+  1.00 device px line contains 4 fully covered ink pixels on paper and 2 on ink, while a 0.75px line contains 0
+  @measured 2026-11-25 by `npm run round23` (`design/grill/round23/report.json`; `fullPx`, librsvg). The tab
+  instrument enforces the stated 1px floor and counts the bytes themselves (rule 7, `TAB_FULL_PIXEL_MIN = 1`).
 
 Measured consequence, kept in view rather than tuned away: at 320 the sphere's 1.3-unit stroke lands at
 **1.56px** and its pixels reach **3.52** against the page ground where the token pair is 3.66 (96% of it — the
