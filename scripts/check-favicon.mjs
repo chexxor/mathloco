@@ -13,18 +13,28 @@
 // for utility writes, check:design audits design/ artifacts, and check:render measures pages in a
 // browser that never renders a favicon.
 //
-// Four rules, all arithmetic from design/grill/okcolor.mjs (the one OKLab implementation this repo
+// Five rules, all arithmetic from design/grill/okcolor.mjs (the one OKLab implementation this repo
 // states its bars in, D101):
-//   1. every colour literal in the SVG paints one of the @theme tokens, matching the bytes that token
+//   1. the document PARSES — it is rasterized by a renderer, so it is handed to one (sharp/librsvg, the same
+//      loader the design probes measure with) and any refusal is a finding;
+//   2. every colour literal in the SVG paints one of the @theme tokens, matching the bytes that token
 //      renders as;
-//   2. no more than two colours — a mark is one ground and one glyph;
-//   3. those two contrast at least 4.5 (the text bar), so the glyph reads at 16px on a tab;
-//   4. no reserved join-path hue (--color-path-*): the mark belongs to the club, not to a channel.
+//   3. no more than two colours — a mark is one ground and one glyph;
+//   4. those two contrast at least 4.5 (the text bar), so the glyph reads at 16px on a tab;
+//   5. no reserved join-path hue (--color-path-*): the mark belongs to the club, not to a channel.
+//
+// Rule 1 is the one added on 2026-11-25 (D485), and it exists because of a finding, not for completeness: the
+// file this gate has policed since 2026-11-14 carried `--radius-control` in its own explanatory comment, XML 1.0
+// §7.4 forbids `--` inside a comment, and librsvg refuses the whole document. Every other rule here is a regex
+// over colour literals, so four rules printed PASS on a tab a parser would not load — the D245 class (gates
+// green, what is served broken). A gate that reads literals cannot see whether the document they sit in exists
+// as a document; this rule asks a real renderer instead of asserting it.
 //
 // Exit 0 = no finding. --selftest plants each defect in a temp file and requires a named failure, plus
 // clean controls so a green run means the gate is not merely always green.
 import { readFileSync, writeFileSync, mkdirSync, rmSync } from 'node:fs';
 import path from 'node:path';
+import sharp from 'sharp';   // the renderer this rule asks; scripts/check-social-card.mjs already imports it
 import { contrastBytes, tripleToBytes, asTriple } from '../design/grill/okcolor.mjs';
 
 const SVG = 'public/favicon.svg';
@@ -59,7 +69,25 @@ const paintLiterals = (svg) => {
   return out;
 };
 
-const faviconFindings = (svgPath) => {
+// Rule 1: does a renderer accept this document? Refusal text is quoted VERBATIM from the parser, because the
+// parser's own words are the evidence (a paraphrase of "Comment must not contain '--'" is a claim; the string is
+// a fact a reader can re-produce). Returns null when the renderer loads it.
+// THE BYTES, NOT THE PATH: @measured 2026-11-25 by .design/tmp-sharp-path.mjs (Linux native, sharp/librsvg) —
+// `sharp('public/favicon.svg')` answers "Input file contains unsupported image format" on a document that
+// `sharp(Buffer.from(bytes))` loads as a 32x32 svg, and the same file with a 13-byte leading comment loads by
+// path too. A path with a long leading comment is a loader quirk, not a defect in the tab, so a gate that handed
+// sharp the path would fail a perfectly good mark. Every mark probe in this repo already rasterizes from a Buffer
+// (mark-geometry, mark-pixels, round21/22/23); this rule does the same.
+const parseFinding = async (svgPath, svg) => {
+  try {
+    await sharp(Buffer.from(svg)).metadata();
+    return null;
+  } catch (e) {
+    return `${svgPath} is not a document a renderer will load: ${e.message} — a colour literal in a document that never parses paints nothing (rule 1, D485)`;
+  }
+};
+
+const faviconFindings = async (svgPath) => {
   let svg;
   try {
     svg = readFileSync(svgPath, 'utf8');
@@ -69,7 +97,11 @@ const faviconFindings = (svgPath) => {
   const tokens = themeTokens();
   if (!Object.keys(tokens).length) return [`${THEME} exposes no colour tokens, so the mark cannot be checked`];
 
+  // Every rule below is a regex over literals. A reader who fixes the parse fault next run learns the colour
+  // verdict too, so the findings are collected rather than short-circuited — the parse finding leads the list.
   const findings = [];
+  const pf = await parseFinding(svgPath, svg);
+  if (pf) findings.push(pf);
   const literals = paintLiterals(svg);
   if (!literals.length) findings.push(`${svgPath} paints nothing — no fill, no stroke`);
 
@@ -122,12 +154,15 @@ if (process.argv.includes('--selftest')) {
     ['three colours in one mark', put('three.svg', mark(paper, ink, `<rect x="2" y="2" width="8" height="8" fill="${accent}"/>`)), ['3 colours']],
     ['a reserved join-path hue', put('channel.svg', mark(discord, paper)), ['reserved']],
     ['a mark that paints nothing', put('blank.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32"/></svg>'), ['paints nothing']],
+    // Rule 1's planting is the EXACT defect this gate missed for 11 days: a token name written with its `--` prefix
+    // inside the artifact's own comment. Colour-for-colour identical to the shipped mark, and unparseable.
+    ['a comment a parser refuses (--radius-control)', put('badcomment.svg', `<!-- rx 6 is --radius-control -->\n${mark(ink, paper)}`), ['never parses']],
     ['a missing mark', path.join(dir, 'nope.svg'), ['does not exist']],
   ];
 
   let wrong = 0;
   for (const [name, p, expected] of cases) {
-    const got = faviconFindings(p);
+    const got = await faviconFindings(p);
     const ok = expected.length === 0 ? got.length === 0 : got.some((f) => expected.every((e) => f.includes(e)));
     console.log(`${ok ? 'ok   ' : 'WRONG'} ${name.padEnd(38)} ${got.join(' | ') || 'PASS'}`);
     if (!ok) wrong++;
@@ -138,9 +173,9 @@ if (process.argv.includes('--selftest')) {
 }
 
 const target = process.argv[2] ?? SVG;
-const findings = faviconFindings(target);
+const findings = await faviconFindings(target);
 const svg = readFileSync(target, 'utf8');
 console.log(`${target}: paints ${paintLiterals(svg).join(' / ') || 'nothing'}; ${Object.keys(themeTokens()).length} colour tokens in ${THEME}`);
-if (!findings.length) { console.log('PASS: every fill is a token, at most two of them, none a reserved hue, and the pair clears 4.5'); process.exit(0); }
+if (!findings.length) { console.log('PASS: the document parses, every fill is a token, at most two of them, none a reserved hue, and the pair clears 4.5'); process.exit(0); }
 findings.forEach((f) => console.log(`FAIL: ${f}`));
 process.exit(1);

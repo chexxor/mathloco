@@ -24,9 +24,12 @@ round does not ask.
 | M7-icon-13 | **Absence:** no icon artifact a web product can consume. Their published grid is an Illustrator file. | absence | `https://m2.material.io/design/iconography/system-icons.html#icon-design-templates` | "Create your own system and product icons with these Adobe Illustrator files including the 24dp icon grid." | none — an Illustrator grid cannot fail a build; no SVG sprite, no icon set, and no licence statement appears on any fetched page |
 
 **Read against our system.** We ship exactly one icon-like family — the chip's path keylines and the
-sum glyph — and DESIGN.md's rule for marks is a **measured one**: `check:favicon` asserts every fill is a
-token, at most two colours in the mark, the pair clears 4.5, and no reserved `--color-path-*` hue appears
-in it.
+sum glyph — and DESIGN.md's rule for marks is a **measured one**: `check:favicon` asserts the document is one a
+renderer will actually load (it hands the bytes to sharp/librsvg and takes any refusal as a finding, D485), that
+every fill is a token, that at most two colours appear in the mark, that the pair clears 4.5, and that no reserved
+`--color-path-*` hue appears in it. The first of those five is the one that was missing until 2026-11-25: the
+shipped mark carried a token name with its `--` prefix in its own comment, XML 1.0 §7.4 forbids `--` in a comment,
+and four colour rules printed PASS for 11 days on a tab no parser would load.
 
 - Rows 04–06 and 08 are a legibility-through-shape contract we do not state and could not gate today: our `check:line-art`
   already holds the one original drawing to `currentColor` strokes, **nothing filled**, and under 1200 bytes —

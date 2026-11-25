@@ -119,10 +119,12 @@ const DEPLOY = [
   // shipped Tailwind's default #3b82f6 with a `white` glyph (3.68, under the 4.5 text bar) from the Init
   // commit through the whole design pass, because check:classes scans src/ utility writes, check:design
   // audits design/, and check:render measures pages in a browser that never paints a favicon (D310).
-  // Source-only, so it can go red before anyone builds (D118). Cost @measured 2026-11-14 by this step:
-  // 0.11s gate, 0.13s selftest.
-  { name: 'check:favicon', desc: 'the tab mark paints only @theme tokens, at most two of them, none a reserved join-path hue, and the pair clears 4.5' },
-  { name: 'check:favicon:selftest', desc: 'the favicon gate can still fail (10 cases: 6 plantings — a named colour, a Tailwind hex, a 3.01 pair, three hues, a channel hue, an empty mark — plus 3 clean controls and a missing file)'},
+  // Source-only, so it can go red before anyone builds (D118). Cost @measured 2026-11-25 by this step
+  // (Linux native, node 24.22.1, `node scripts/gate-run.mjs check:favicon check:favicon:selftest`):
+  // 0.16s gate, 0.16s selftest — both moved up from 0.11/0.13 when rule 1 began asking a real renderer.
+  { name: 'check:favicon', desc: 'the tab mark is a document a renderer loads, paints only @theme tokens, at most two of them, none a reserved join-path hue, and the pair clears 4.5 (five rules, D485)' },
+  { name: 'palette:selftest', desc: 'the one @theme reader resolves every declared token to bytes a painted pixel is compared against, and its round-trip guard catches the unit slip (L is 0..1 here; tripleToBytes wants a percentage) that made all 23 tokens resolve toward #000000 and collapsed paper/ink to a contrast of 1.00 (D485)' },
+  { name: 'check:favicon:selftest', desc: 'the favicon gate can still fail (11 cases: 7 plantings — a named colour, a Tailwind hex, a 3.01 pair, three hues, a channel hue, an empty mark, and a comment carrying a token name so a parser refuses the whole document (D485) — plus 3 clean controls and a missing file)'},
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
   // The descriptor is one phrase in three files (`const locator`, `seo.title`, the page `<Layout title>`), and the

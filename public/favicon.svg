@@ -5,7 +5,10 @@
      palette round (D316) moved both to the adopted values — ink oklch(18.92% 0.0149 81.4) = #17130c under
      paper oklch(97.35% 0.0139 88.7) = #faf6ec, 17.15 @measured 2026-11-14 by node scripts/check-favicon.mjs
      (OKLab->linear sRGB, WCAG relative luminance; the same arithmetic design/grill/okcolor.mjs uses, and
-     the same pair `npm run check:contrast` asserts). rx 6 is --radius-control.
+     the same pair `npm run check:contrast` asserts). rx 6 is the radius-control token, named here without its
+     double-hyphen prefix: XML 1.0 §7.4 forbids a double hyphen inside a comment, and a tab artifact is read by a
+     parser, not by a colour-literal regex — the version of this file that shipped until 2026-11-25 carried the
+     prefix and librsvg refused the document outright (D485).
      The glyph is the club's summand, the same one the footer wordmark carries. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
   <rect width="32" height="32" rx="6" fill="#17130c"/>
