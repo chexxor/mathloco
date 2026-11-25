@@ -30,6 +30,56 @@ const SPAWNS = /\b(execFileSync|spawnSync|execSync)\s*\(/;
 // first element of an array literal, quoted, naming a script
 const ARRAY_RE = /\[\s*(['"`])([A-Za-z0-9._\/-]+\.(?:mjs|js|ts|sh))\1\s*,\s*([\s\S]{0,300}?)\]/g;
 
+/**
+ * Byte ranges of string, comment and regex literals in `text`.
+ * WHY: once this file itself is tracked, its own selftest plantings - `S("txt(['logo-geometry.mjs', shot, rep]);")`
+ * - are array literals sitting INSIDE a quoted string, and the gate reported them as spawns: a detector that
+ * cannot tell data from code reds the set on its own fixture (D496 §j, found @measured 2026-11-25 by
+ * `npm run verify` at tip df24b9d, 4 false findings, exit 1). So a candidate is only a spawn if its `[` is
+ * code, not the contents of a string. The fix is a scanner, not an exemption: widening the rule to let the
+ * fixture through would let a real quoted spawn through with it.
+ */
+function literalRanges(text) {
+  const ranges = [];
+  let i = 0;
+  while (i < text.length) {
+    const c = text[i];
+    if (c === '/' && text[i + 1] === '/') { const s = i; while (i < text.length && text[i] !== '\n') i++; ranges.push([s, i]); continue; }
+    if (c === '/' && text[i + 1] === '*') { const s = i; const e = text.indexOf('*/', i + 2); i = e < 0 ? text.length : e + 2; ranges.push([s, i]); continue; }
+    if (c === "'" || c === '"' || c === '`') {
+      const start = i++;
+      while (i < text.length) {
+        if (text[i] === '\\') { i += 2; continue; }
+        if (text[i] === c) { i++; break; }
+        if (c === '`' && text[i] === '$' && text[i + 1] === '{') {   // interpolation is code, not string
+          let d = 1; i += 2;
+          while (i < text.length && d) { if (text[i] === '{') d++; else if (text[i] === '}') d--; i++; }
+          continue;
+        }
+        i++;
+      }
+      ranges.push([start, i]);
+      continue;
+    }
+    if (c === '/') {                                            // a regex literal: quotes inside it are not strings
+      const before = text.slice(0, i).replace(/\s+$/, '').slice(-1);
+      if (before && '(,=[:{;'.includes(before)) {
+        const start = i++;
+        while (i < text.length) {
+          if (text[i] === '\\') { i += 2; continue; }
+          if (text[i] === '[') { while (i < text.length && text[i] !== ']') { if (text[i] === '\\') i += 2; else i++; } i++; continue; }
+          if (text[i] === '/') { i++; break; }
+          i++;
+        }
+        ranges.push([start, i]);
+        continue;
+      }
+    }
+    i++;
+  }
+  return ranges;
+}
+
 /** Does this array look like an argv (a name followed by real arguments), or like a list of strings? */
 function argvShape(rest) {
   const stripped = rest.replace(/(['"`])((?:\\\1|[\s\S])*?\1)/g, ' ');
@@ -39,10 +89,12 @@ function argvShape(rest) {
 /** Pure verdict: (file, text, exists, candidates) -> findings. Split out so the selftest can plant without touching disk. */
 export function verdict(file, text, exists, candidates = []) {
   if (!SPAWNS.test(text)) return [];
+  const ranges = literalRanges(text);
   const out = [];
   let m;
   ARRAY_RE.lastIndex = 0;
   while ((m = ARRAY_RE.exec(text)) !== null) {
+    if (ranges.some(([a, b]) => m.index >= a && m.index < b)) continue;  // the "array" is inside a quoted fixture
     const lit = m[2];
     if (lit.includes('$') || lit.includes('{')) continue;      // template with a hole: not a static path
     if (!argvShape(m[3])) continue;                            // a list of strings is not an argv
@@ -97,6 +149,10 @@ if (process.argv.includes('--selftest')) {
     verdict('src/lib/logo.mjs', "const shapes = ['ring.mjs', 'meridian.mjs'];\nexport const LOGO = { shapes };", only([])));
   expect('control: a bare name that really is at the repo root', 'pass',
     verdict('scripts/gate-run.mjs', spawn + "execFileSync(process.execPath, ['scripts/check-favicon.mjs', '--selftest']);", only(['scripts/check-favicon.mjs'])));
+expect("control: a spawn literal quoted inside a string (this gate's own plantings)", "pass",
+    verdict('scripts/check-probe-paths.mjs', spawn + 'const FIXTURE = "execFileSync(process.execPath, [\'gone-probe.mjs\', shot, rep]);";', only([])));
+  expect('control: a spawn in a comment', 'pass',
+    verdict('design/logo-check.mjs', spawn + '// execFileSync(process.execPath, [\'gone-probe.mjs\', a, b]);', only([])));
 
   const bad = cases.filter((c) => !c[3]);
   console.log(`check:probe-paths:selftest — ${cases.length} cases, ${bad.length} wrong`);
