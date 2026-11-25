@@ -83,6 +83,15 @@ const NO_BUILD = argv.includes('--no-build');
 const JOBS = Math.max(1, Number(process.env.RENDER_JOBS || 3));
 const pages = argv.filter((a) => a.startsWith('/'));
 const dist = resolve('dist/client');
+// The built page for a route, read once per route: the markup is the control the probe is checked against.
+const pageHtmlCache = new Map();
+const pageHtml = (route) => {
+  if (pageHtmlCache.has(route)) return pageHtmlCache.get(route);
+  const p = resolve(dist, route === '/' ? 'index.html' : `${route.replace(/^\/+/, '')}/index.html`);
+  const html = existsSync(p) ? readFileSync(p, 'utf8') : '';
+  pageHtmlCache.set(route, html);
+  return html;
+};
 // Which routes the gate measures is read off the artifact, not remembered here — see
 // `design/emitted-routes.mjs` for why the literal `['/', '/404', '/chat']` had to go. An explicit `/route`
 // argument still wins, because probing one page is the normal way to debug one page. The list is built
@@ -453,6 +462,23 @@ for (const route of routes) {
     // 7. the drawn logo (D120): the hero's graphic is geometry, not bytes, so it is measured like every other
     //    claim this gate makes. Four failures are possible and only per-shape numbers separate them.
     //    (`j.marks` is the key the measurement probe emits; the word names the shapes, not the thing — D487.)
+    //    Assert the KEY before asserting the drawing. D487 renamed the prose word everywhere except the
+    //    probe-side record keys, and one line in render-measure.js renamed the key anyway: `j.marks` went to
+    //    `j.logos`, every `|| []` below read an empty array, and the gate reported "the landing page draws no
+    //    logo" for six routes while the hero SVG was in the document (D245's class from the other side: the
+    //    gate is green/red about the wrong thing). A probe/gate disagreement about record shape must name
+    //    itself as that, not dress up as a missing drawing.
+    // Count the drawings the MARKUP declares and compare with the drawings the probe REPORTED. A rename on
+    // one side of the record is invisible to `|| []`: D487 renamed the prose word everywhere and kept the
+    // probe-side keys by design, but line 535 of render-measure.js renamed `marks` to `logos` anyway, six
+    // routes then reported an empty `marks` array, and the gate said "the landing page draws no logo" while
+    // the hero SVG sat in the document. The page's own bytes are the control: if the markup declares a
+    // drawing and the report carries none, the disagreement is named, not dressed up as a missing drawing.
+    const declared = (pageHtml(route).match(/data-logo="[^"]*"/g) || []).length;
+    const reported = (j.marks || []).length;
+    if (declared !== reported) {
+      fails.push(`${at}: the page's markup declares ${declared} drawing(s) with data-logo and the probe reported ${reported} — the probe and this gate disagree about the record shape (D487 deliberately kept the probe-side key "marks" for logo-geometry, logo-pixels and rounds 17/21/22), so every mark check below measured nothing`);
+    }
     if (route === '/' && !(j.marks || []).length) {
       fails.push(`${at}: the landing page draws no logo at all — the hero column's graphic IS the club's logo (D120); an empty column is a defect, not a blank`);
     }

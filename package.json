@@ -142,6 +142,7 @@
     "round23:specimen": "node design/grill/round23-build.mjs",
     "round17:specimen": "node design/grill/round17-build.mjs",
     "plates": "node scripts/plate-asset.mjs",
+    "photos": "node scripts/prepare-photos.mjs",
     "check:space": "node design/whitespace-survey.mjs",
     "check:ground": "node design/pixel-ground.mjs",
     "check:ground:selftest": "node design/pixel-ground.mjs --selftest",

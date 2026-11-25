@@ -428,6 +428,23 @@ const lede = compact
       {/* The two quiet paths this band used to print here moved below the card (D388); the empty-state branch
           below keeps its own paths, because there the notice is the content. */}
 
+      {/* PS-2, the venue strip (round 10, PH-B). It stayed a definition for a year because the only art
+          the archive could supply was books: record 0027 parked it with the trigger "a real venue shot
+          exists", and the club's own frames from the 2026-11-24 meetup fire it. `npm run photos` cuts
+          `src/assets/photos/venue.jpg` from the operator's frame at exactly this ratio, so `object-cover`
+          crops nothing and the box `check:space` measures is the file's own aspect. It sits between the
+          lede and the rows because the strip is about the room, and the rows are about the dates in it. */}
+      {!compact && items.length > 0 && (
+        <div data-slot="PS-2">
+          <PhotoSlot
+            slot="venue"
+            ratio="1192 / 320"
+            alt="Angel Food's cup and a handwritten sheet on the table"
+            provenance="the club’s own photograph, taken at Angel Food Bakery"
+          />
+        </div>
+      )}
+
       {!compact && items.length > 0 && (
         <>
           <ul class="space-y-4" data-art-cap="323">
@@ -523,6 +540,8 @@ const lede = compact
                   slot="join"
                   ratio="532 / 128"
                   caption="the club mid-session, wide crop (532x128)"
+                  alt="A member writes in a notebook propped on a laptop"
+                  provenance="the club’s own photograph, taken at Angel Food Bakery"
                 />
               </div>
             </div>

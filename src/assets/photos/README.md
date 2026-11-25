@@ -16,22 +16,22 @@ computed `display`), not chosen. They are in CSS px at a 1240 viewport; the reco
 | `horizon-euclid1903.png` (**shipped 2026-11-04**) | PS-5 | the horizon band: first of three leaves, between the reasons section and the schedule, `hidden lg:block` | PS-5 is **1180x192 @y1825 at 1240** and **976x158 at 1024**; this cell is **383 CSS px wide, 134 tall** (the leaf's own aspect, so it is not cropped) | nothing: the file is **768x268** from a 1024x357 scan |
 | `horizon-euler1910.png` (**shipped 2026-11-04**) | PS-5 | middle leaf | same band | nothing: **698x351**, and the file is capped at the scan's 698 rather than stretched to 768 (D167) |
 | `horizon-radio1922.png` (**shipped 2026-11-04**) | PS-5 | last leaf | same band | nothing: **768x358** from a 1024x478 scan |
-| `join.<ext>` | PS-3 | join card media column, above the buttons | 532x128 at 1240 / 310x245 at 390 | 532x128 (4.15:1 - a wide band; a taller photo grows the card by the difference) |
-| `venue.<ext>` | PS-2 | *proposed* full-width strip, not built | would be 1192x320 at 1240, 358x230 at 390 | 1192x320 (3.73:1, hard crop from 4:3) |
+| `join.jpg` (**shipped 2026-11-25**, cut by `npm run photos`) | PS-3 | join card media column, above the buttons, on `/` only | the `<img>` paints **544x131 = 71,210px² (2.02% of the page) @1240** and **310x75 = 23,126px² (1.42%) @390**; the `div[data-slot="PS-3"]` wrapper is **544x157 @y2120** @measured 2026-11-25 by `node design/whitespace-survey.mjs --routes / --widths 1240 390` (Linux native, Node 24.22.1) | nothing: the file is **1064x256**, exactly 2x the **532x128** ratio the call site declares (D167 - the crop is cut to the slot, never stretched to it) |
+| `venue.jpg` (**shipped 2026-11-25**, the same commit built PS-2) | PS-2 | full-width strip on `/dates`, between the lede and the rows, on the non-compact branch with rows to show | the `<img>` paints **1164x313 = 363,750px² (15.02% of the page) @1240** and **358x96 = 34,404px² (3.69%) @390** @measured 2026-11-25 by `node design/whitespace-survey.mjs --routes /dates --widths 1240 390` (Linux native, Node 24.22.1) | nothing: the file is **1192x320** at the ratio the call site declares, delivered at **1x** because the source frame is only 1843px wide - 2x would interpolate (D167) |
 | `event-<slug>.<ext>` — **retired 2026-11-16, nothing shipped under this key**: R7's sweep deleted all seven (`event-2026-11-07-club-social.png`, `event-2026-11-11-parallel-learning.png`, `event-2026-11-21-club-social.png` from round 10, and the four MS04 rows `event-2026-11-25-common-denominator-study-session.png`, `event-2026-12-05-matheapolis-bimonthly-social.png`, `event-2026-12-09-common-denominator-study-session.png`, `event-2026-12-19-matheapolis-bimonthly-social.png`) — **D359**, superseding D190's naming rule, D223, D225 | PS-4 | event-card thumb, inside a schedule row: wiring only. D-D made the rows typographic (round-4 §7.1) and `src/lib/event-art.ts` now holds an empty map | the box a filled PS-4 used to take: **323x185** twice and **323x156** three times at 1240; at 320 the slot box is **256x146** twice and **256x123** three times @measured 2026-11-13 by `node design/whitespace-survey.mjs --routes /schedule --widths 1240 320` while the image painted inside it measures **244x139** and **244x118** @measured 2026-11-14 by `node design/schedule-geometry.mjs --routes /schedule --widths 320` — five rows on `/schedule`, five boxes, two distinct files. That is the state that shipped up to 2026-11-15; the swept build pays **0px** for PS-4. The two probes measure different boxes (the `div[data-slot="PS-4"]` wrapper and the `<img>` inside it) and disagree by 12px at 320; the cause is not established here, so quote the probe with the box it reads (see `.notes/PITFALLS.md`). Capped at 323 CSS px in `.event-slot` because these rows are full-width strips: uncapped, the 954px file rendered **1132x546** at 1240 (+558px of page, 11.28% of its pixels in one img) @measured 2026-11-06 by check:space | nothing: PS-4 is not on the shot list. A future event asset is named `<role>-<mediaUid>.<ext>` (role ∈ { social, study }, **no date in the filename**) per R7, and R8's criterion in DESIGN.md is what decides whether it may be painted at all |
 
 **The boxes, as of MS04** @measured 2026-11-13 by `node design/whitespace-survey.mjs --routes /schedule --widths 1240 320` (Linux native, Node 24.22.1): five rows print, each with art — two study-session thumbs at **323x185** (2.72% of the page each) and three social thumbs at **323x156** (2.30% each), **270,221px²** of the page painted by event art in total. At 320 the same slot boxes are 256x146 and 256x123; the images painted inside them are 244x139 and 244x118 @measured 2026-11-14 by `node design/schedule-geometry.mjs --routes /schedule --widths 320`. The figures this row carried before (`323x184.6` once, `323x155.8` twice) counted three rows, which is what the page printed on 2026-11-06; the page printed five now. **As of 2026-11-16 that state ships nowhere**: D-D took the plate out of the row and
 R7's sweep deleted the files it read (D359), so `check:space` sees no PS-4 box on any row and the **270,221px²**
 this paragraph counts is what the swept build pays **0** of.
 
-**How a plate gets here**: `npm run plates` (`scripts/plate-asset.mjs`) re-crops a quarantined plate from
-`design/assets/photos/<key>.png` through `design/grill/plate-crop.mjs` — the one recipe the review rounds measure
+**How a plate gets here**: `npm run plates` (`scripts/plate-asset.mjs`) re-crops a quarantined archive render from
+`.design/tmp-art/img/<id>.webp` (gitignored - a fetched archive render is evidence, not a source file; `design/grill/plate-crop.mjs:17` names that cache as its one home) through `design/grill/plate-crop.mjs` — the one recipe the review rounds measure
 their specimens with — and writes the file the page imports. Nothing is copied by hand, so the page and the specimen
 cannot show different crops. Today: hero `47518a39c1` (**377kB**, was 493kB before the crop learned to cap at the
 scan's width - D167), band `d675cd3072` (229kB), `b9dfc94519` (231kB), `7b63b01db0` (298kB) — those four ids are **sha1**
 prefixes (`sha1sum src/assets/photos/hero.png src/assets/photos/horizon-*.png`), not git blob ids and not sha256; say
 the algorithm every time one is quoted. **The seven event thumbs are gone** (R7's sweep, **D359**, 2026-11-16): what
-this directory tracks is four PNGs and **1,163,098 bytes** @measured 2026-11-16 by `ls -l src/assets/photos/*.png`.
+this directory tracks is six files and **1,235,298 bytes** @measured 2026-11-25 by `ls -l src/assets/photos/*.png *.jpg | awk '{s+=$5} END{print s}'` (Linux native, Node 24.22.1): the four PNGs, still **1,163,098** of them @measured 2026-11-16 by `ls -l src/assets/photos/*.png`, plus `venue.jpg` **40,842** and `join.jpg` **31,358**. The README in this directory is not an asset and is not counted.
 The line's own history stays where the trap is: it said **1.46MB** for five files and then **1,384,117** for six, and
 the sweep took it to eleven PNGs / **1,953,253 bytes** @measured 2026-11-13 — every one of those figures contradicts the
 one that ships, which is why the sum of the files actually on disk is what ships. `src/assets/` is gitignored apart from this
@@ -67,7 +67,13 @@ file that carried them.
   leaf because the club reads for pleasure as well as for credentialing, and record 0023 measured this leaf at 0%
   named colour, native 1024x478. https://insideoutlibrary.com/p/ia-principlesunderl00unit-514-212
 
-PS-2 is a definition only: it needs a venue photograph, and the archive is books, not rooms.
+**PS-2 stops being a definition (2026-11-25).** Record 0027 parked it with the trigger "a real venue shot exists";
+the operator's two frames from the Angel Food meetup are that trigger, and `npm run photos` (`scripts/prepare-photos.mjs`)
+cuts both slots from them. The script pins each source by **sha256** and throws if the bytes differ, crops to the ratio
+the call site declares (a crop that deviates by more than 0.002 in ratio throws), refuses any upscale (D167), and
+refuses to write a file that still carries EXIF — these are private frames of a private meeting, so the GPS and camera
+block a Pixel leaves behind is stripped on the way in and the script asserts it is gone (`sharp().metadata().exif` is
+empty on both shipped files @measured 2026-11-25, Linux native). Provenance is "the club's own photograph, taken at Angel Food Bakery" — the sentence `PhotoSlot` prints, and deliberately no date, because `check:dated-surfaces` rules `/schedule` the only page that names one (D218).
 PS-4 was filled for every row `/schedule` printed on 2026-11-13 — **five rows, seven files**, because two posters cover
 them — and is filled for none of them now: D-D made the rows typographic, and R7's sweep deleted the files with the
 plate (**D359**). A row with no art renders **no box at all** - the
@@ -168,6 +174,9 @@ round13` (`design/grill/round13/report.json`; the before/after pictures are in `
 
 Rules that come with a shot (all ruled, see `design/records/0013`):
 - **No stock people.** Only photographs of this club, its venue, and its materials.
+- A photograph of a meeting is stripped of EXIF before it is committed: `scripts/prepare-photos.mjs` throws on any
+  file that still carries a metadata block. `npm run plates` never touches this (archive scans carry no personal
+  metadata); `npm run photos` is the path that can.
 - A slot's aspect ratio is declared in CSS. Tailwind's preflight (`img { height: auto }`) makes an HTML
   `height` attribute inert, and an undeclared ratio reflows the document on decode — measured here as a
   112px jump.

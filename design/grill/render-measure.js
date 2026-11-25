@@ -354,6 +354,9 @@
         // is not in the document renders nothing, and a class scanner cannot see that — the box is still 16x16,
         // so only the glyph extent and the symbol lookup can tell a logo from an empty square (same lesson as
         // D118's logo-shape count: geometry in the table is not geometry in the DOM).
+        // The record KEY is `mark`, not `logo`: render-gate.mjs:390-404 reads `l.mark`, and D487's own carve-out
+        // says probe-side record keys are not renamed with the prose word. Renaming it here renamed nothing in
+        // the gate and silently made every platform mark "paint nothing".
         const svg = a.querySelector('svg');
         const logo = svg ? (() => {
           const mr = svg.getBoundingClientRect(), mcs = getComputedStyle(svg);
@@ -376,7 +379,7 @@
           fs: acs.fontSize, lh: acs.lineHeight,
           color: acs.color,
           colorBytes: paintBytes(acs.color),
-          logo,
+          mark: logo,   // the key the gate reads (D487 carve-out); the local name is the prose word
           contrast: opaque(ground) && parse(acs.color) ? ratio(parse(acs.color), ground) : null,
           fill: acs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : acs.backgroundColor,
           ring: (acs.boxShadow === 'none' ? '' : acs.boxShadow).includes('inset'),
@@ -529,7 +532,7 @@
     notices,
     clusters,
     nav,
-    logos,
+    marks: logos,   // the key render-gate, logo-geometry, logo-pixels and rounds 17/21/22 read (D487 carve-out)
     });
   };
   report();
