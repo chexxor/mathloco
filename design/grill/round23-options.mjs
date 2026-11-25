@@ -12,20 +12,24 @@
 //   2. THE DRAWING IS 240x150. Fit the whole plate into 16 device px and the contain-scale is 0.0667 device px per
 //      viewBox unit, so the logo's thickest line (1.4u) lands at 0.09 device px and its thinnest (1.3u) at 0.087.
 //      The floor the tab instrument enforces is 1.0 device px — the device-stroke rule DESIGN.md already states
-//      (S112) — and rule 7 of check:tab measures the consequence instead of extrapolating it: the hero's logo
+//      (S112) — and rule 7 of check:favicon measures the consequence instead of extrapolating it: the hero's logo
 //      dropped into the tab as drawn has its thinnest line at 0.18 device px and 0 fully covered ink pixels
 //      @measured 2026-11-25 by npm run round23. Framing is
 //      not cosmetics; it is the only way to buy the stroke any width at all, because the only lever left is how many
 //      viewBox units a device pixel is allowed to cover.
-//   3. THE TAB GATE ALLOWS TWO COLOURS. `scripts/check-favicon.mjs` rule 3 ("a logo is one ground and one glyph")
-//      and rule 5 (no reserved `--color-path-*` hue) both refuse row C as shipped. What they count is every literal
-//      in the document, so the ground rect is one of them: row C paints 6 literals on paper (5 distinct line tokens
-//      + the paper ground) and 5 on ink (4 tokens + the ink ground), and TWO of the tokens on each ground are
-//      reserved path hues (`path-calendar`, `path-mobilizon`) @measured 2026-11-25 by npm run round23, the T9 gate
-//      findings quoted verbatim in design/grill/round23/report.json. So a tab cannot carry the hero's colouring; it carries
-//      either the ratified PAIR (D316: the ground and the colour of the ground on the other side of the band) or one
-//      line colour. Row T9 exists to print the gate's refusal VERBATIM rather than to argue about it (D479: a gate
-//      is re-derived, never bypassed — and re-deriving it starts by reading what it actually says).
+//   3. THE TAB GATE COUNTS PAINTS; IT NOW COUNTS STRUCTURE. When this round was first priced, `scripts/check-favicon.mjs`
+//      rule 3 ("a logo is one ground and one glyph") and rule 5 (no reserved `--color-path-*` hue) both refused row C,
+//      and what they counted was every literal in the document, plate rect included: row C paints 6 literals on paper
+//      (5 distinct line tokens + the paper plate) and 5 on ink (4 tokens + the ink plate), and TWO of the tokens on each
+//      ground are reserved path hues (`path-calendar`, `path-mobilizon`) @measured 2026-11-25 by npm run round23, the
+//      T9 findings quoted verbatim in design/grill/round23/report.json. That cap has since been re-derived (D494, S113):
+//      rule 3 now asks for ONE plate and requires every other paint to be a line `LOGO_COLOURS` names for that plate,
+//      rule 4 measures each line against its bar (3.0 graphic, 4.5 for a one-line mark), and rule 5 survives in the
+//      direction that matters — a join-path hue may NAME a line (that IS Byrne's device, D483) but may never be the
+//      ground. Row C now returns exit 0 on both grounds, and this round asserts that verdict rather than narrating it
+//      (D495). Row T9 still exists to print the gate's words rather than argue about them (D479: a gate is re-derived,
+//      never bypassed — and re-deriving it starts by reading what it actually says). What the tab CANNOT do is carry the
+//      hero's drawing at hero weight: N0 and T4 are refused by the pixel rules (6 and 7), not by colour.
 //
 // THE LEVER EVERY ROW TURNS: WEIGHT. A "1.5px floor at 16" row multiplies every stroke (and its dash, and the dot's
 // radius stays put because the dot is a fill) until the thinnest line reaches 1.5 device px in that framing. That is
@@ -141,7 +145,7 @@ export const ROWS = [
     label: 'sphere-centred, row C exactly as the hero paints it (6 paints on paper / 5 on ink; two reserved path hues)',
     framing: 'the ratified hero colouring, unmodified, in a tab artifact — so the tab gate\'s own words are what gets printed',
     byrne: 'the literal row C: a colour is a line\'s name, and the logo\'s names are red, yellow-equivalent, blue, green on black',
-    reading: 'this row is not a candidate, it is the gate read aloud: `check:favicon` refuses it on rule 3 (too many colours) and rule 5 (path hues). Whatever the operator picks, this is the ruling `logo-lands` has to re-derive the gate around, priced now rather than discovered at ship time.',
+    reading: 'this row is not a candidate, it is the gate read aloud: `check:favicon` ADMITS it on both grounds now that rule 3 is a structure rule rather than a paint count (D494) — one plate, every other paint a line row C names for that plate, each clearing its bar. The two `--color-path-*` hues in it are lines, not the ground, which is exactly what the re-derived rule 5 allows. What still stops this row is pixels, not colour: the round exits 1 if this verdict ever flips (D495).',
   },
   // ---------------------------------------------------------------------------
   // THE GOLD STEER (operator, 2026-11-25), verbatim:
@@ -197,7 +201,7 @@ export const ROWS = [
     label: 'sphere-centred, warm meridians and warm marks on a dark sphere (the body stays ink)',
     framing: 'T1\'s framing and weight; the ring, the far equator and the near equator take the ground\'s surface token (`ink` / `band-text`) and the two meridians, the two right-angle marks and the meeting point take the warm token',
     byrne: 'the row Byrne would actually print: the given figure in black, the lines that NAME something in colour. It is row C\'s idea with the path hues taken out and one colour put in their place',
-    reading: 'this is what "more gold, prominently" looks like when the sphere keeps its body and the warm colour becomes the information. It is also the row the gate REFUSES today: three colours (ground + surface + warm) against rule 3\'s "one ground and one glyph", so its findings are printed verbatim on the specimen. `logo-lands` can only ship it by re-ruling rule 3, which is a decision about what a tab glyph is allowed to be, not a colour decision.',
+    reading: 'this is what "more gold, prominently" looks like when the sphere keeps its body and the warm colour becomes the information. Under the old two-colour cap the gate refused it (three paints); after the re-rule (D494) it passes: ground + surface + warm are all colours the logo names for that plate, and each clears its bar @measured 2026-11-25 by npm run round23. So this row costs no token and no ruling — the only thing between it and the tab is the operator\u2019s pick.',
   },
   {
     id: 'G3',

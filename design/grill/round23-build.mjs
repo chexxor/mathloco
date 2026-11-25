@@ -56,7 +56,7 @@ const GOLD_SS = need(GOLD.searchSpace, 'gold.searchSpace');
 const GOLD_BARS = need(GOLD_SS.bars, 'gold.searchSpace.bars');
 const GATE_INSTRUMENT = need(R.instrument, 'instrument');
 
-const esc = (s) => (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const num = (n, d = 2) => (typeof n === 'number' ? n.toFixed(d) : '\u2014');
 const platePath = (id, ground, w) => {
   const row = ROWS.find((r) => r.id === id);
@@ -107,17 +107,22 @@ for (const ground of ['paper', 'ink']) {
   if (s.fullPx !== 0) throw new Error(`round23-build: N0 at 16px on ${ground} now contains ${s.fullPx} fully covered ink pixels (best contrast ${s.maxContrast}). The specimen's claim that the untuned hero drawing has no byte identity at the tab slot is no longer measured, so the reason this round has weight rows has changed — rewrite the specimen's prose, do not reprint it.`);
   if (!(s.features?.strokeMinPx < 1.0)) throw new Error(`round23-build: N0's thinnest line on ${ground} measures ${s.features?.strokeMinPx} device px, not under the ${1.0} device px the render gate states — the weight rows are no longer buying a line the gate would accept, they are buying something else. Re-derive this round.`);
 }
-if (!rowC) throw new Error('round23-build: the report has no T9 row (row C in a tab). The price this round was commissioned to record is the tab gate refusing row C, so a report without it cannot be shown.');
-for (const c of need(CONTROLS.rowCRefused, 'controls.rowCRefused')) {
-  if (c.exit !== 1) throw new Error(`round23-build: row C on ${c.ground} came back exit ${c.exit}, not refused. The tab gate's rule 3/5 price is no longer what this page says it is — re-derive this specimen, do not reprint it.`);
+if (!rowC) throw new Error('round23-build: the report has no T9 row (row C in a tab). The price this round was commissioned to record is the tab gate\'s verdict on row C, so a report without it cannot be shown.');
+for (const c of need(CONTROLS.rowCVerdict, 'controls.rowCVerdict')) {
+  if (c.exit !== 0) throw new Error(`round23-build: row C on ${c.ground} came back exit ${c.exit}, not admitted. The specimen states that the re-derived gate (D494) admits row C — if the gate says otherwise, re-derive this page, do not reprint it (D495).`);
+}
+if (!CONTROLS.gateSelftest || CONTROLS.gateSelftest.exit !== 0) {
+  throw new Error(`round23-build: the record carries no passing check:favicon selftest (got exit ${CONTROLS.gateSelftest?.exit}). The specimen claims a rule survives the re-rule; that claim needs the gate's own detector, not prose.`);
 }
 for (const c of need(CONTROLS.goldGate, 'controls.goldGate')) {
   for (const gr of c.grounds) {
     if (gr.exit !== c.expected.exit) {
       throw new Error(`round23-build: gold row ${c.id} on ${gr.ground} came back exit ${gr.exit} but the record states exit ${c.expected.exit} (${c.expected.why}). The specimen would be stating a gate price the gate does not charge.`);
     }
-    if (c.expected.string && !gr.findings.some((f) => f.includes(c.expected.string))) {
-      throw new Error(`round23-build: gold row ${c.id} on ${gr.ground} exited ${gr.exit} with no finding naming "${c.expected.string}" — the record states WHICH rule refuses it and that rule is not what fired.`);
+    for (const s of c.expected.strings ?? []) {
+      if (!gr.findings.some((f) => f.includes(s))) {
+        throw new Error(`round23-build: gold row ${c.id} on ${gr.ground} exited ${gr.exit} with no finding naming "${s}" — the record states WHICH rule refuses it and that rule is not what fired.`);
+      }
     }
   }
 }
@@ -126,7 +131,7 @@ for (const c of need(CONTROLS.goldGate, 'controls.goldGate')) {
 const gateBlock = (id, ground, g) => {
   const planTxt = g.plan?.note ?? `${g.plan?.distinct} colour token(s): ${g.plan?.tokens?.map((t) => `--color-${t}`).join(', ')}`;
   const verdict = g.gate.exit === 0
-    ? '<span class="pass">exit 0 \u00b7 PASSES all five rules</span>'
+    ? '<span class="pass">exit 0 \u00b7 PASSES all seven rules</span>'
     : `<span class="fail">exit ${g.gate.exit} \u00b7 REFUSED</span>`;
   const findings = g.gate.findings.length
     ? `<ul class="findings">${g.gate.findings.map((f) => `<li>${esc(f.replace(/^.*?\/tmp-round23\//, ''))}</li>`).join('')}</ul>`
@@ -271,7 +276,13 @@ const warmMatrixRows = GOLD.referents.warm.matrix.cells.map((c) => `<tr>
 // ---------- prose that the run backs ----------
 const goldGateRows = CONTROLS.goldGate.map((c) => `<tr><td><strong>${c.id}</strong></td><td>${esc(c.expected.why)}</td>
   <td>${c.grounds.map((gr) => `on ${gr.ground}: <span class="${gr.exit === 0 ? 'pass' : 'fail'}">exit ${gr.exit}</span>${gr.findings.length ? ` <span class="sub">${esc(gr.findings.map((f) => f.replace(/^.*?\/tmp-round23\//, '')).join(' \u2014 '))}</span>` : ''}`).join('<br />')}</td></tr>`).join('');
-const rowCRefusalRows = CONTROLS.rowCRefused.map((c) => `<tr><td>row C on <strong>${esc(c.ground)}</strong></td><td><span class="fail">exit ${c.exit}</span></td><td>${c.findings.map((f) => `<div class="sub">${esc(f.replace(/^.*?\/tmp-round23\//, ''))}</div>`).join('')}</td></tr>`).join('');
+const rowCVerdictRows = CONTROLS.rowCVerdict.map((c) => {
+  const verdict = c.exit === 0 ? '<span class="pass">exit 0 \u00b7 ADMITTED</span>' : `<span class="fail">exit ${c.exit}</span>`;
+  const detail = c.findings.length
+    ? c.findings.map((f) => `<div class="sub">${esc(f.replace(/^.*?\/tmp-round23\//, ''))}</div>`).join('')
+    : '<div class="sub">no finding: one plate, every other paint a line LOGO_COLOURS names for that plate, each clearing its bar (rule 3 + rule 4, D494)</div>';
+  return `<tr><td>row C on <strong>${esc(c.ground)}</strong></td><td>${verdict}</td><td>${detail}</td></tr>`;
+}).join('');
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" />
@@ -339,12 +350,13 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 <div class="shots">${['paper', 'ink'].flatMap((gr) => [plate('I0', gr, 16, 16, `shipped tab, ${gr}, true size`), plate('I0', gr, 16, 128, `shipped tab, ${gr}, same raster at 8\u00d7`)]).join('')}</div>
 
 <h2>2. The drawing that has to fit (the logo's own numbers, not a re-drawing)</h2>
-<p>The plate is the hero's: <strong>${FIGURE.plate.w}\u00d7${FIGURE.plate.h}u</strong>, ring ${FIGURE.ring.r}u at (${FIGURE.ring.cx},${FIGURE.ring.cy}), ink bounding box ${num(FIGURE.inkBox.w)}\u00d7${num(FIGURE.inkBox.h)}u at (${num(FIGURE.inkBox.x)},${num(FIGURE.inkBox.y)}), sphere span <strong>${FIGURE.sphereSpanUnits}u</strong>, strokes <strong>${FIGURE.minStrokeUnits}\u2013${FIGURE.maxStrokeUnits}u</strong>, pole dot \u2300 ${FIGURE.dotDiameterUnits}u, right-angle arm ${FIGURE.angleArmUnits}u, feet ${FIGURE.footSeparationUnits}u apart, equator dash ${FIGURE.equatorDash.join('/')}. At 16px the tab is 16 device px, so letterboxing the whole plate puts 240u into 0.067 device px per unit and a ${FIGURE.maxStrokeUnits}u line at <strong>0.09 device px</strong>; even the tightest framing (the ink box, row ${N0.id}) puts ${FIGURE.minStrokeUnits}u at <strong>${num(N0.grounds.paper.sizes['16'].features.strokeMinPx)} device px</strong>. The render gate's line rule is pair &gt;= 3.0 <em>and</em> device stroke &gt;= 1px, and <code>check:tab</code>'s rule 7 measures the consequence rather than inferring it: the untuned hero drawing contains <strong>${N0.grounds.paper.sizes['16'].fullPx} fully covered ink pixels</strong> at the slot (${N0.grounds.ink.sizes['16'].fullPx} on ink) @measured 2026-11-25 by <code>npm run round23</code>. That one sentence is why this round has weight rows.</p>
+<p>The plate is the hero's: <strong>${FIGURE.plate.w}\u00d7${FIGURE.plate.h}u</strong>, ring ${FIGURE.ring.r}u at (${FIGURE.ring.cx},${FIGURE.ring.cy}), ink bounding box ${num(FIGURE.inkBox.w)}\u00d7${num(FIGURE.inkBox.h)}u at (${num(FIGURE.inkBox.x)},${num(FIGURE.inkBox.y)}), sphere span <strong>${FIGURE.sphereSpanUnits}u</strong>, strokes <strong>${FIGURE.minStrokeUnits}\u2013${FIGURE.maxStrokeUnits}u</strong>, pole dot \u2300 ${FIGURE.dotDiameterUnits}u, right-angle arm ${FIGURE.angleArmUnits}u, feet ${FIGURE.footSeparationUnits}u apart, equator dash ${FIGURE.equatorDash.join('/')}. At 16px the tab is 16 device px, so letterboxing the whole plate puts 240u into 0.067 device px per unit and a ${FIGURE.maxStrokeUnits}u line at <strong>0.09 device px</strong>; even the tightest framing (the ink box, row ${N0.id}) puts ${FIGURE.minStrokeUnits}u at <strong>${num(N0.grounds.paper.sizes['16'].features.strokeMinPx)} device px</strong>. The render gate's line rule is pair &gt;= 3.0 <em>and</em> device stroke &gt;= 1px, and <code>check:favicon</code>'s rule 7 measures the consequence rather than inferring it: the untuned hero drawing contains <strong>${N0.grounds.paper.sizes['16'].fullPx} fully covered ink pixels</strong> at the slot (${N0.grounds.ink.sizes['16'].fullPx} on ink) @measured 2026-11-25 by <code>npm run round23</code>. That one sentence is why this round has weight rows.</p>
 
-<h2>3. The gate, read aloud: what the tab gate refuses today</h2>
+<h2>3. The gate, read aloud: what the tab gate charges today</h2>
 <p><code>scripts/check-favicon.mjs</code> was run as a subprocess on every artifact this round produced \u2014 never reimplemented here \u2014 and each row's reading is quoted below in its own box. Two readings the whole item has to reckon with:</p>
-<table><thead><tr><th>the row</th><th>what it would take</th><th>what the gate says</th></tr></thead><tbody>${rowCRefusalRows}${goldGateRows}</tbody></table>
-<p><strong>Row ${rowC.id}</strong> is the ratified hero colouring dropped into a tab: the gate refuses it on both grounds, because a tab logo is <em>one ground and one glyph</em> (rule 3) and two of row C's hues are reserved for join paths (rule 5). Rows <strong>G2\u2013G4</strong> are refused too \u2014 G2 for a third paint, G3/G4 because a solved gold literal is not a token @theme renders (rule 2). Row <strong>G1</strong> passes with no new token and no ruling. The consequence for the ruling: <em>a logo in the tab is not the hero's colouring at a smaller size.</em> Something has to give \u2014 the tab gate's rules, the logo's colour table, or the logo's own colouring \u2014 and this round is priced so the operator chooses which, rather than discovering it after the pick (D479: a gate is re-derived, never bypassed).</p>
+<table><thead><tr><th>the row</th><th>what it would take</th><th>what the gate says</th></tr></thead><tbody>${rowCVerdictRows}${goldGateRows}</tbody></table>
+<p class="meta">The rule this round cannot test with an artifact is rule 5, so the round runs the gate's own detector instead: <code>check:favicon --selftest</code> exited ${esc(CONTROLS.gateSelftest.exit)} \u2014 ${esc(CONTROLS.gateSelftest.line)} @measured 2026-11-25 by <code>npm run round23</code>. One planting there is <em>a reserved join-path hue as the PLATE</em>, which the re-derived rule still refuses (D494).</p>
+<p><strong>Row ${rowC.id}</strong> is the ratified hero colouring dropped into a tab. When this round was first priced the gate refused it on both grounds \u2014 "a logo is one ground and one glyph", and two of row C's hues are reserved for join paths. Those two rules have since been re-derived (D494, S113): the cap on the NUMBER of paints became a rule about STRUCTURE (exactly one plate, every other paint a line the logo's own table names for that plate), rule 4 measures every line against its bar, and a reserved \`--color-path-*\` hue may NAME a line but never be the plate. Both grounds now return exit 0, and the round asserts that verdict rather than narrating it (D495). Rows <strong>G3</strong> and <strong>G4</strong> are still refused, twice each: the solved gold literal is not a token @theme renders (rule 2) and it is not a line or ground the logo's table names (rule 3). Rows <strong>G1</strong> and <strong>G2</strong> pass with no new token and no ruling. The consequence for the pick: <em>the tab can carry the hero's colouring, but only a framing that gives the lines enough pixels</em> \u2014 rows N0 and T4 are refused on the pixel rules (6 and 7), not on colour.</p>
 
 <h2>4. Gold: the steer, the arithmetic, and what it does not settle</h2>
 <p>The operator's steer is quoted at the top of this page. There are two things on this site that "gold" could mean, and they cost opposite amounts.</p>

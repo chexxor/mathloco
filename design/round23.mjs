@@ -30,9 +30,11 @@
 //   THE GATE, READ ALOUD. Each row is written as the artifact it would ship and run through the real
 //   `scripts/check-favicon.mjs` as a subprocess, with its findings recorded VERBATIM. The round does not
 //   reimplement the gate's rules and does not paraphrase them — one home per rule. Row T9 (row C as the hero
-//   paints it) is expected to be REFUSED, and the round exits 1 if the gate ever stops refusing it: a record whose
-//   central price quietly stopped being true is worse than no record (D479: a gate is re-derived, never bypassed,
-//   and re-deriving it starts by reading what it actually says).
+//   paints it) exists so the gate's own words get printed instead of argued about, and the round asserts the
+//   direction of that verdict: as first priced it was REFUSED by the two-colour cap (D479), and after the cap was
+//   re-derived into a structure rule (D494, S113) it is ADMITTED. The round exits 1 if that verdict flips in
+//   EITHER direction — a record whose central price quietly stopped being true is worse than no record, and a
+//   round that asserts a gate verdict has to re-derive the assertion whenever the gate is re-ruled (D495, S114).
 //
 //   TWO RASTERIZERS. A favicon is only ever rasterized by a browser, and librsvg (sharp) is not a browser. So the
 //   two sizes that decide the pick are measured in a real firefox too, with a printed agreement line per row. The
@@ -334,34 +336,51 @@ if (!control) {
   if (!c16 || c16.at3Px === 0) problems.push('the shipped tab paints nothing measurable at 16px — the instrument is broken, not the tab.');
 }
 if (shippedCopy.state.startsWith('DIFFERS')) problems.push(`${SHIPPED} is not the tab that ships: ${shippedCopy.path} differs (${shippedCopy.srcSha} vs ${shippedCopy.distSha}). The control would measure a source the build never copied (D245).`);
-// The price this round was commissioned to establish: row C as the hero paints it is refused by the tab gate. If
-// that ever stops being true the record's central claim has to be rewritten, so it is asserted, not narrated. The
-// expected strings are the gate's OWN rule wording (rule 3 "a logo is one ground and one glyph", rule 5 "reserved
-// for a join path"), not a colour count: the count depends on the ground (row C is 6 literals on paper, 5 on ink,
-// because the ground rect counts as one of them). The NUMBERS here are prose too: they are read off
-// scripts/check-favicon.mjs's own rule list, which became a five-rule list when rule 1 (the document parses) was
-// added under D485, and a citation that names the wrong rule is a pointer into a wall.
+// THE PRICE THIS ROUND WAS COMMISSIONED TO ESTABLISH, RE-DERIVED (D494, S113, and D495 for the rule that a
+// priced round must re-derive a gate verdict it asserts). Round 23 was built to print the tab gate's refusal of
+// row C in the gate's own words. On 2026-11-25 the gate was re-ruled: the "at most two colours" cap became a
+// STRUCTURE rule (one plate; every other paint a line LOGO_COLOURS names for that plate) and rule 4 measures each
+// line against its bar. So the assertion now runs the other way: row C in a tab is ADMITTED — exit 0, no finding —
+// and this round exits 1 if the gate ever stops admitting it. What is asserted is the VERDICT, never a colour
+// count: the count depends on the ground (row C is 6 literals on paper, 5 on ink, because the plate rect counts as
+// one of them), and a count is exactly the kind of number a re-rule makes false.
 const rowC = priced.find((r) => r.id === 'T9');
-const rowCExpected = { paper: ['one ground and one glyph', 'reserved'], ink: ['one ground and one glyph', 'reserved'] };
 if (rows.some((r) => r.id === 'T9')) {
-  if (!rowC) problems.push('row T9 (row C in a tab artifact) was requested and not priced — the gate refusal this round exists to record is missing from it.');
+  if (!rowC) problems.push('row T9 (row C in a tab artifact) was requested and not priced — the gate verdict this round exists to record is missing from it.');
   else for (const ground of GROUNDS) {
-    const want = rowCExpected[ground];
-    const ok = rowC.grounds[ground].gate.exit === 1 && want.every((e) => rowC.grounds[ground].gate.findings.some((f) => f.includes(e)));
-    if (!ok) problems.push(`row T9 on ${ground} did NOT come back refused with ${want.join(' + ')}: exit ${rowC.grounds[ground].gate.exit}, findings ${rowC.grounds[ground].gate.findings.join(' | ') || 'PASS'}. The tab gate's rule 3/5 price is no longer what this record says it is.`);
+    const gate = rowC.grounds[ground].gate;
+    if (gate.exit !== 0 || gate.findings.length) {
+      problems.push(`row T9 on ${ground} is no longer admitted by the tab gate: exit ${gate.exit}, findings ${gate.findings.join(' | ') || 'PASS'}. The round would be publishing a specimen that says the re-derived rules admit row C while the gate says otherwise — re-derive this round, do not reprint it (D494, D495).`);
+    }
   }
+}
+// THE SURVIVING RULE, asserted with a detector rather than a quotation. D494 kept rule 5 — a reserved
+// `--color-path-*` hue may NAME a line (that is Byrne's device, a colour is a line's name, D483) but may never be
+// the PLATE — and row T9 proves the line half of it. Nothing in this round plants the plate half, so the round
+// runs the gate's OWN selftest, whose planting `a reserved join-path hue as the PLATE` is the live control. A rule
+// quoted in prose but never fired by an artifact is a rule nobody can check.
+const selftest = spawnSync(process.execPath, ['scripts/check-favicon.mjs', '--selftest'], { encoding: 'utf8' });
+const selfOut = `${selftest.stdout ?? ''}${selftest.stderr ?? ''}`.trim();
+const selfLine = selfOut.split('\n').filter((l) => l.trim()).at(-1) ?? '';
+if (selftest.status !== 0 || !/0 wrong/.test(selfLine)) {
+  problems.push(`check:favicon's own detector is broken (exit ${selftest.status}: ${selfLine || 'no output'}), so this round cannot assert which of its rules still fire (D494).`);
 }
 // THE FOUR GOLD PRICES, asserted. Each line is a claim the specimen page and NEXT.md make about the gate, so a
 // change in the gate or the palette has to fail this run rather than quietly change the specimen's wording.
-//   G1 the site's warm family on every line -> ACCEPTED: two declared tokens, the pair clears 4.5. The prominent
-//      gold that costs no token and no ruling.
-//   G2 warm meridians on an ink body        -> REFUSED by rule 3 ("one ground and one glyph"): three paints.
-//   G3 a true gold line / G4 a gold plate   -> REFUSED by rule 2: the literal is not a token @theme renders.
+// Re-derived against the seven-rule gate (D494): `strings` lists every rule the gate actually names for that row,
+// because a row can be refused twice (G3 and G4 are refused by rule 2 AND rule 3) and requiring one finding to
+// carry one fragment would make a more honest gate read as a broken assertion.
+//   G1 the site's warm family on every line -> ADMITTED: two declared tokens, the pair clears 4.5. The prominent
+//      warm that costs no token and no ruling.
+//   G2 warm meridians on an ink body        -> ADMITTED: three paints, every one a line the logo names for its
+//      plate, each clearing its bar. The count cap was the only thing refusing it (D494).
+//   G3 a true gold line / G4 a gold plate   -> REFUSED twice each: the literal is not a token @theme renders
+//      (rule 2), and it is not a line/ground the logo's table names (rule 3).
 const GOLD_GATE = [
-  ['G1', { exit: 0, string: null, why: 'the gate accepts the warm family: two declared tokens, pair over 4.5' }],
-  ['G2', { exit: 1, string: 'one ground and one glyph', why: 'the gate refuses a three-paint tab (rule 3)' }],
-  ['G3', { exit: 1, string: 'is not a token', why: 'a solved gold literal is refused until @theme declares it (rule 2)' }],
-  ['G4', { exit: 1, string: 'is not a token', why: 'a gold GROUND literal is refused on the same rule' }],
+  ['G1', { exit: 0, strings: [], why: 'the gate accepts the warm family: two declared tokens, pair over 4.5' }],
+  ['G2', { exit: 0, strings: [], why: 'the re-derived rule 3 accepts three paints: every line is one the logo names for its plate (D494)' }],
+  ['G3', { exit: 1, strings: ['is not a token', 'not a line the logo names'], why: 'a solved gold literal is refused until @theme declares it (rule 2), and it is not a line LOGO_COLOURS names (rule 3)' }],
+  ['G4', { exit: 1, strings: ['is not a token', 'not one of the grounds'], why: 'a gold PLATE is refused on the same two rules: the literal is not a token, and a plate must be one of the grounds LOGO_COLOURS is keyed to' }],
 ];
 for (const [id, want] of GOLD_GATE) {
   if (!rows.some((r) => r.id === id)) continue;
@@ -370,7 +389,7 @@ for (const [id, want] of GOLD_GATE) {
   for (const ground of GROUNDS) {
     const gate = r.grounds[ground].gate;
     if (gate.exit !== want.exit) problems.push(`row ${id} on ${ground}: the gold steer's price changed — expected exit ${want.exit} (${want.why}), got ${gate.exit}: ${gate.findings.join(' | ') || 'PASS'}.`);
-    else if (want.string && !gate.findings.some((f) => f.includes(want.string))) problems.push(`row ${id} on ${ground}: exit ${gate.exit} but no finding names "${want.string}" (${gate.findings.join(' | ')}). The record states WHICH rule refuses this row, and that rule is not what fired.`);
+    for (const s of want.strings) if (!gate.findings.some((f) => f.includes(s))) problems.push(`row ${id} on ${ground}: exit ${gate.exit} but no finding names "${s}" (${gate.findings.join(' | ')}). The record states WHICH rule refuses this row, and that rule is not what fired.`);
   }
 }
 
@@ -387,7 +406,8 @@ const report = {
   incumbent: { source: SHIPPED, parsed: INC, groundHex: INC_GROUND, inkHex: INC_INK, shippedCopy, document: { xmlCommentFaults: docFaults, parse: docParse } },
   controls: {
     incumbentGateExit: control?.grounds.paper.gate.exit ?? null,
-    rowCRefused: rowC ? GROUNDS.map((g) => ({ ground: g, exit: rowC.grounds[g].gate.exit, findings: rowC.grounds[g].gate.findings })) : null,
+    rowCVerdict: rowC ? GROUNDS.map((g) => ({ ground: g, exit: rowC.grounds[g].gate.exit, findings: rowC.grounds[g].gate.findings, admitted: rowC.grounds[g].gate.exit === 0 })) : null,
+    gateSelftest: { exit: selftest.status, line: selfLine, why: "the live control for the rules this round asserts: the re-derived rule admits row C line colours, and the selftest plants a reserved path hue as the PLATE and must still fail it (D494, D495)" },
     goldGate: GOLD_GATE.map(([id, want]) => {
       const r = priced.find((x) => x.id === id);
       return { id, expected: want, grounds: r ? GROUNDS.map((g) => ({ ground: g, exit: r.grounds[g].gate.exit, findings: r.grounds[g].gate.findings })) : 'not priced' };
@@ -426,7 +446,7 @@ console.log(`document: ${docFaults.length ? 'NOT WELL-FORMED XML — ' + docFaul
 console.log('\n=== THE GATE, READ ALOUD (scripts/check-favicon.mjs on the artifact each row would ship) ===');
 for (const r of priced) for (const ground of GROUNDS) {
   const g = r.grounds[ground];
-  console.log(`${r.id} ${ground.padEnd(5)} exit ${g.gate.exit}  ${g.plan.note ?? `${g.plan.distinct} token(s): ${g.plan.tokens.join(', ')}`}  ${g.gate.findings.length ? 'REFUSED: ' + g.gate.findings.join(' || ') : 'PASSES all five rules'}`);
+  console.log(`${r.id} ${ground.padEnd(5)} exit ${g.gate.exit}  ${g.plan.note ?? `${g.plan.distinct} token(s): ${g.plan.tokens.join(', ')}`}  ${g.gate.findings.length ? 'REFUSED: ' + g.gate.findings.join(' || ') : 'PASSES all seven rules'}`);
 }
 
 console.log('\n=== GOLD (the operator\'s steer of 2026-11-25): the solved window for each job, then what was chosen ===');
@@ -487,4 +507,4 @@ for (const r of priced.filter((x) => !x.incumbent)) for (const ground of GROUNDS
 
 console.log(`\nwrote ${REPORT}${SUBSET ? ' (SUBSET run — the tracked record at design/grill/round23/report.json was NOT overwritten)' : ''}; artifacts in ${TMP}/`);
 if (problems.length) { console.error('MACHINERY: ' + problems.join('; ')); process.exit(1); }
-console.log('CONTROLS HOLD: the shipped tab passes its own gate and paints at 16px, its built copy is byte-identical, and row C is refused by the tab gate on both grounds.');
+console.log("CONTROLS HOLD: the shipped tab passes its own gate and paints at 16px, its built copy is byte-identical, the re-derived gate admits row C on both grounds, and the favicon gate's own detector still refuses a reserved path hue used as the plate.");

@@ -1,6 +1,6 @@
 {
  "round": 23,
- "measuredAt": "2026-11-25T15:17:38.451Z",
+ "measuredAt": "2026-11-25T17:00:10.469Z",
  "ask": "the third quarter of the Byrne logo item: put the ratified logo (row C, D483) in the tab. Operator framing of the ask: \"square sphere-centred variant, full 240x150 letterbox, weight-scaled variants\".",
  "instrument": "logo-tab.mjs (the tab instrument) + scripts/check-favicon.mjs run as a subprocess on every artifact, never reimplemented",
  "tabSlot": {
@@ -86,32 +86,31 @@
  },
  "controls": {
   "incumbentGateExit": 0,
-  "rowCRefused": [
+  "rowCVerdict": [
    {
     "ground": "paper",
-    "exit": 1,
-    "findings": [
-     "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg uses 6 colours (#faf6ec, #17130c, #a2432a, #007784, #7e3320, #38763c); a logo is one ground and one glyph",
-     "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg: #007784 is --color-path-calendar, a hue reserved for a join path (round 3b) — the logo does not belong to a channel",
-     "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg: #38763c is --color-path-mobilizon, a hue reserved for a join path (round 3b) — the logo does not belong to a channel"
-    ]
+    "exit": 0,
+    "findings": [],
+    "admitted": true
    },
    {
     "ground": "ink",
-    "exit": 1,
-    "findings": [
-     "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg uses 5 colours (#17130c, #f5f1e9, #c77b67, #009fac, #5f9e61); a logo is one ground and one glyph",
-     "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg: #009fac is --color-path-calendar-on-ink, a hue reserved for a join path (round 3b) — the logo does not belong to a channel",
-     "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg: #5f9e61 is --color-path-mobilizon-on-ink, a hue reserved for a join path (round 3b) — the logo does not belong to a channel"
-    ]
+    "exit": 0,
+    "findings": [],
+    "admitted": true
    }
   ],
+  "gateSelftest": {
+   "exit": 0,
+   "line": "19 planted favicon cases, 0 wrong (floor 1 device px, byte minimum 1 pixel)",
+   "why": "the live control for the rules this round asserts: the re-derived rule admits row C line colours, and the selftest plants a reserved path hue as the PLATE and must still fail it (D494, D495)"
+  },
   "goldGate": [
    {
     "id": "G1",
     "expected": {
      "exit": 0,
-     "string": null,
+     "strings": [],
      "why": "the gate accepts the warm family: two declared tokens, pair over 4.5"
     },
     "grounds": [
@@ -130,24 +129,20 @@
    {
     "id": "G2",
     "expected": {
-     "exit": 1,
-     "string": "one ground and one glyph",
-     "why": "the gate refuses a three-paint tab (rule 3)"
+     "exit": 0,
+     "strings": [],
+     "why": "the re-derived rule 3 accepts three paints: every line is one the logo names for its plate (D494)"
     },
     "grounds": [
      {
       "ground": "paper",
-      "exit": 1,
-      "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G2.paper.svg uses 3 colours (#faf6ec, #17130c, #a2432a); a logo is one ground and one glyph"
-      ]
+      "exit": 0,
+      "findings": []
      },
      {
       "ground": "ink",
-      "exit": 1,
-      "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G2.ink.svg uses 3 colours (#17130c, #f5f1e9, #c77b67); a logo is one ground and one glyph"
-      ]
+      "exit": 0,
+      "findings": []
      }
     ]
    },
@@ -155,22 +150,27 @@
     "id": "G3",
     "expected": {
      "exit": 1,
-     "string": "is not a token",
-     "why": "a solved gold literal is refused until @theme declares it (rule 2)"
+     "strings": [
+      "is not a token",
+      "not a line the logo names"
+     ],
+     "why": "a solved gold literal is refused until @theme declares it (rule 2), and it is not a line LOGO_COLOURS names (rule 3)"
     },
     "grounds": [
      {
       "ground": "paper",
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: #a06200 is not a line the logo names on a paper plate — LOGO_COLOURS.paper paints ink, accent, path-calendar, accent-strong, path-mobilizon plus the surface tokens paper/ink (rule 3, D494)"
       ]
      },
      {
       "ground": "ink",
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: #b07100 is not a line the logo names on a ink plate — LOGO_COLOURS.ink paints band-text, accent-on-ink, path-calendar-on-ink, path-mobilizon-on-ink plus the surface tokens paper/ink (rule 3, D494)"
       ]
      }
     ]
@@ -179,22 +179,27 @@
     "id": "G4",
     "expected": {
      "exit": 1,
-     "string": "is not a token",
-     "why": "a gold GROUND literal is refused on the same rule"
+     "strings": [
+      "is not a token",
+      "not one of the grounds"
+     ],
+     "why": "a gold PLATE is refused on the same two rules: the literal is not a token, and a plate must be one of the grounds LOGO_COLOURS is keyed to"
     },
     "grounds": [
      {
       "ground": "paper",
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: its plate is #b07100, which is not one of the grounds LOGO_COLOURS is keyed to (paper, ink), so the logo has no line colours for it (rule 3, D494)"
       ]
      },
      {
       "ground": "ink",
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: its plate is #a06200, which is not one of the grounds LOGO_COLOURS is keyed to (paper, ink), so the logo has no line colours for it (rule 3, D494)"
       ]
      }
     ]
@@ -1533,8 +1538,11 @@
       }
      },
      "gate": {
-      "exit": 0,
-      "findings": [],
+      "exit": 1,
+      "findings": [
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/N0.paper.svg's thinnest line is 0.18 device px in the 16x16 tab slot (1.3u drawn on a 117.4x117.46u plate); the render gate states 1 device px as the floor a line can be read at (DESIGN.md, D119 as measured in S112), so this tab paints a line with no byte identity — tighten the frame or raise the weight (/home/chexxor/Git/mathloco/.design/tmp-round23/N0.paper.svg)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/N0.paper.svg paints 0 fully covered ink pixel(s) in the 16x16 tab slot (116 pixels differ from the ground at all, max painted contrast 3.9): no line of this glyph reaches its declared byte, so the tab has no byte identity — the D119 limit measured on this document rather than inferred from its stroke-width literals (/home/chexxor/Git/mathloco/.design/tmp-round23/N0.paper.svg)"
+      ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/N0.paper.svg: paints #faf6ec / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -1933,8 +1941,11 @@
       }
      },
      "gate": {
-      "exit": 0,
-      "findings": [],
+      "exit": 1,
+      "findings": [
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/N0.ink.svg's thinnest line is 0.18 device px in the 16x16 tab slot (1.3u drawn on a 117.4x117.46u plate); the render gate states 1 device px as the floor a line can be read at (DESIGN.md, D119 as measured in S112), so this tab paints a line with no byte identity — tighten the frame or raise the weight (/home/chexxor/Git/mathloco/.design/tmp-round23/N0.ink.svg)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/N0.ink.svg paints 0 fully covered ink pixel(s) in the 16x16 tab slot (116 pixels differ from the ground at all, max painted contrast 5.67): no line of this glyph reaches its declared byte, so the tab has no byte identity — the D119 limit measured on this document rather than inferred from its stroke-width literals (/home/chexxor/Git/mathloco/.design/tmp-round23/N0.ink.svg)"
+      ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/N0.ink.svg: paints #17130c / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -2814,7 +2825,7 @@
    "framing": "sphere",
    "framingWhy": "the ink bounding box of the whole figure — the sphere fills the tab",
    "byrne": "the lighter end of the same idea — Byrne's line is a name, and a name can be thin as long as it is present",
-   "reading": "what happens below D119's floor, measured rather than refused: whether a 1px line still has a fully-covered pixel, and how much of the figure survives once the strokes stop being forced.",
+   "reading": "what happens at the gate's own 1.0 device px line, measured rather than refused: a 1px line does have fully covered pixels (4 on paper, 2 on ink @measured 2026-11-25), and this row prints how much of the figure survives once the strokes stop being forced.",
    "weight": {
     "k": 5.647,
     "scale": 0.1362,
@@ -4809,8 +4820,11 @@
       }
      },
      "gate": {
-      "exit": 0,
-      "findings": [],
+      "exit": 1,
+      "findings": [
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/T4.paper.svg's thinnest line is 0.75 device px in the 16x16 tab slot (5.506u drawn on a 117.4x117.46u plate); the render gate states 1 device px as the floor a line can be read at (DESIGN.md, D119 as measured in S112), so this tab paints a line with no byte identity — tighten the frame or raise the weight (/home/chexxor/Git/mathloco/.design/tmp-round23/T4.paper.svg)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/T4.paper.svg paints 0 fully covered ink pixel(s) in the 16x16 tab slot (154 pixels differ from the ground at all, max painted contrast 13.23): no line of this glyph reaches its declared byte, so the tab has no byte identity — the D119 limit measured on this document rather than inferred from its stroke-width literals (/home/chexxor/Git/mathloco/.design/tmp-round23/T4.paper.svg)"
+      ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/T4.paper.svg: paints #faf6ec / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -5209,8 +5223,11 @@
       }
      },
      "gate": {
-      "exit": 0,
-      "findings": [],
+      "exit": 1,
+      "findings": [
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/T4.ink.svg's thinnest line is 0.75 device px in the 16x16 tab slot (5.506u drawn on a 117.4x117.46u plate); the render gate states 1 device px as the floor a line can be read at (DESIGN.md, D119 as measured in S112), so this tab paints a line with no byte identity — tighten the frame or raise the weight (/home/chexxor/Git/mathloco/.design/tmp-round23/T4.ink.svg)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/T4.ink.svg paints 0 fully covered ink pixel(s) in the 16x16 tab slot (154 pixels differ from the ground at all, max painted contrast 13.94): no line of this glyph reaches its declared byte, so the tab has no byte identity — the D119 limit measured on this document rather than inferred from its stroke-width literals (/home/chexxor/Git/mathloco/.design/tmp-round23/T4.ink.svg)"
+      ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/T4.ink.svg: paints #17130c / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -8547,7 +8564,7 @@
    "framing": "sphere",
    "framingWhy": "the ink bounding box of the whole figure — the sphere fills the tab",
    "byrne": "the literal row C: a colour is a line's name, and the logo's names are red, yellow-equivalent, blue, green on black",
-   "reading": "this row is not a candidate, it is the gate read aloud: `check:favicon` refuses it on rule 3 (too many colours) and rule 5 (path hues). Whatever the operator picks, this is the ruling `logo-lands` has to re-derive the gate around, priced now rather than discovered at ship time.",
+   "reading": "this row is not a candidate, it is the gate read aloud: `check:favicon` ADMITS it on both grounds now that rule 3 is a structure rule rather than a paint count (D494) — one plate, every other paint a line row C names for that plate, each clearing its bar. The two `--color-path-*` hues in it are lines, not the ground, which is exactly what the re-derived rule 5 allows. What still stops this row is pixels, not colour: the round exits 1 if this verdict ever flips (D495).",
    "weight": {
     "k": 8.471,
     "scale": 0.1362,
@@ -8904,12 +8921,8 @@
       }
      },
      "gate": {
-      "exit": 1,
-      "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg uses 6 colours (#faf6ec, #17130c, #a2432a, #007784, #7e3320, #38763c); a logo is one ground and one glyph",
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg: #007784 is --color-path-calendar, a hue reserved for a join path (round 3b) — the logo does not belong to a channel",
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg: #38763c is --color-path-mobilizon, a hue reserved for a join path (round 3b) — the logo does not belong to a channel"
-      ],
+      "exit": 0,
+      "findings": [],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.paper.svg: paints #faf6ec / #17130c / #17130c / #17130c / #a2432a / #007784 / #7e3320 / #7e3320 / #38763c; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -9316,12 +9329,8 @@
       }
      },
      "gate": {
-      "exit": 1,
-      "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg uses 5 colours (#17130c, #f5f1e9, #c77b67, #009fac, #5f9e61); a logo is one ground and one glyph",
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg: #009fac is --color-path-calendar-on-ink, a hue reserved for a join path (round 3b) — the logo does not belong to a channel",
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg: #5f9e61 is --color-path-mobilizon-on-ink, a hue reserved for a join path (round 3b) — the logo does not belong to a channel"
-      ],
+      "exit": 0,
+      "findings": [],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/T9.ink.svg: paints #17130c / #f5f1e9 / #f5f1e9 / #f5f1e9 / #c77b67 / #009fac / #c77b67 / #c77b67 / #5f9e61; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -10227,7 +10236,7 @@
    "framing": "sphere",
    "framingWhy": "the ink bounding box of the whole figure — the sphere fills the tab",
    "byrne": "the row Byrne would actually print: the given figure in black, the lines that NAME something in colour. It is row C's idea with the path hues taken out and one colour put in their place",
-   "reading": "this is what \"more gold, prominently\" looks like when the sphere keeps its body and the warm colour becomes the information. It is also the row the gate REFUSES today: three colours (ground + surface + warm) against rule 3's \"one ground and one glyph\", so its findings are printed verbatim on the specimen. `logo-lands` can only ship it by re-ruling rule 3, which is a decision about what a tab glyph is allowed to be, not a colour decision.",
+   "reading": "this is what \"more gold, prominently\" looks like when the sphere keeps its body and the warm colour becomes the information. Under the old two-colour cap the gate refused it (three paints); after the re-rule (D494) it passes: ground + surface + warm are all colours the logo names for that plate, and each clears its bar @measured 2026-11-25 by npm run round23. So this row costs no token and no ruling — the only thing between it and the tab is the operator’s pick.",
    "weight": {
     "k": 8.471,
     "scale": 0.1362,
@@ -10584,10 +10593,8 @@
       }
      },
      "gate": {
-      "exit": 1,
-      "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G2.paper.svg uses 3 colours (#faf6ec, #17130c, #a2432a); a logo is one ground and one glyph"
-      ],
+      "exit": 0,
+      "findings": [],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/G2.paper.svg: paints #faf6ec / #17130c / #17130c / #17130c / #a2432a / #a2432a / #a2432a / #a2432a / #a2432a; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -11006,10 +11013,8 @@
       }
      },
      "gate": {
-      "exit": 1,
-      "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G2.ink.svg uses 3 colours (#17130c, #f5f1e9, #c77b67); a logo is one ground and one glyph"
-      ],
+      "exit": 0,
+      "findings": [],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/G2.ink.svg: paints #17130c / #f5f1e9 / #f5f1e9 / #f5f1e9 / #c77b67 / #c77b67 / #c77b67 / #c77b67 / #c77b67; 23 colour tokens in src/styles/global.css"
      },
      "plan": {
@@ -11449,7 +11454,8 @@
      "gate": {
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: #a06200 is not a line the logo names on a paper plate — LOGO_COLOURS.paper paints ink, accent, path-calendar, accent-strong, path-mobilizon plus the surface tokens paper/ink (rule 3, D494)"
       ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.paper.svg: paints #faf6ec / #a06200 / #a06200 / #a06200 / #a06200 / #a06200 / #a06200 / #a06200 / #a06200; 23 colour tokens in src/styles/global.css"
      },
@@ -11888,7 +11894,8 @@
      "gate": {
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: #b07100 is not a line the logo names on a ink plate — LOGO_COLOURS.ink paints band-text, accent-on-ink, path-calendar-on-ink, path-mobilizon-on-ink plus the surface tokens paper/ink (rule 3, D494)"
       ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/G3.ink.svg: paints #17130c / #b07100 / #b07100 / #b07100 / #b07100 / #b07100 / #b07100 / #b07100 / #b07100; 23 colour tokens in src/styles/global.css"
      },
@@ -12346,7 +12353,8 @@
      "gate": {
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: #b07100 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: its plate is #b07100, which is not one of the grounds LOGO_COLOURS is keyed to (paper, ink), so the logo has no line colours for it (rule 3, D494)"
       ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.paper.svg: paints #b07100 / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c / #17130c; 23 colour tokens in src/styles/global.css"
      },
@@ -12785,7 +12793,8 @@
      "gate": {
       "exit": 1,
       "findings": [
-       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)"
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: #a06200 is not a token (nearest: --color-accent renders #a2432a)",
+       "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: its plate is #a06200, which is not one of the grounds LOGO_COLOURS is keyed to (paper, ink), so the logo has no line colours for it (rule 3, D494)"
       ],
       "headline": "/home/chexxor/Git/mathloco/.design/tmp-round23/G4.ink.svg: paints #a06200 / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec / #faf6ec; 23 colour tokens in src/styles/global.css"
      },
