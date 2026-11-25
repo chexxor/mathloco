@@ -50,6 +50,15 @@ const SHAPE_PRICE = need(R.shapeCountPrice, 'shapeCountPrice');
 const LINES = need(R.lines, 'lines');
 if (!LINES.paper || !LINES.ink) throw new Error('round22-build: the report\'s `lines` must carry both grounds');
 
+// A gold row cannot be printed from a record that predates the gold addendum. The family is read off the record's
+// OWN shape (rows[].grounds[].fills[].family — report `faces` is a list of face NAMES, not fill objects), because
+// @theme declares NO gold and a silent pass here would print "--color-gold" as if it were a colour the site has.
+const hasGoldRow = (r) => ['paper', 'ink'].some((g) => (r.grounds?.[g]?.fills ?? []).some((f) => f.family === 'gold'));
+const GOLD = ROWS.some(hasGoldRow) ? need(R.gold, 'gold') : null;
+if (GOLD && (!GOLD.candidates || !GOLD.matrix || !GOLD.family)) {
+  throw new Error('round22-build: the report carries gold rows but no gold.candidates / gold.matrix / gold.family — re-run `node design/round22.mjs` (the addendum of 2026-11-25 writes all three)');
+}
+
 const esc = (s) => (s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const num = (n, d = 2) => (typeof n === 'number' ? n.toFixed(d) : '\u2014');
 const b64 = (p) => (existsSync(p) ? readFileSync(p).toString('base64') : null);
@@ -83,7 +92,7 @@ const paintedRow = (id, ground, w) => {
   if (!r) throw new Error(`round22-build: ${id} has no painted measurement on ${ground} at ${w}`);
   return r;
 };
-const cell = (r, ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'PASS' : 'FAIL'}</span>`;
+const cell = (_r, ok) => `<span class="${ok ? 'pass' : 'fail'}">${ok ? 'PASS' : 'FAIL'}</span>`;
 
 // ---------- the four price tables ----------
 const areaRows = AREAS.map((a) => `<tr>
@@ -116,20 +125,74 @@ const windowTables = FACES.map((f) => {
     const rep = SOLVE[f.name]?.[ground];
     if (!rep) throw new Error(`round22-build: face ${f.name} has no solve on ${ground}`);
     const rows = Object.entries(rep.rows).map(([name, s]) => {
-      if (!s.band) return `<tr><td>--color-${esc(name)}</td><td class="n">${num(s.H, 1)}</td><td class="n">${num(s.C, 3)}</td><td colspan="6" class="fail">${esc(s.note)}</td></tr>`;
-      return `<tr><td>--color-${esc(name)}</td>
+      const famCell = s.candidate
+        ? `<strong>${esc(name)}</strong> <span class="sub">candidate \u2014 @theme declares no gold</span>`
+        : `--color-${esc(name)}`;
+      if (!s.band) return `<tr><td>${famCell}</td><td class="n">${num(s.H, 1)}</td><td class="n">${num(s.C, 3)}</td><td colspan="6" class="fail">${esc(s.note)}</td></tr>`;
+      const sub = s.reuses
+        ? `reuses --color-${s.reuses} (d=${num(s.nearestTokenDist, 3)})`
+        : s.candidate
+          ? `CANDIDATE \`${esc(s.candidate)}\` \u00b7 nearest token --color-${s.nearestToken} d=${num(s.nearestTokenDist, 3)}`
+          : `NEW token \u00b7 nearest existing --color-${s.nearestToken} d=${num(s.nearestTokenDist, 3)}`;
+      return `<tr><td>${famCell}</td>
         <td class="n">${num(s.H, 1)}</td><td class="n">${num(s.C, 3)}</td>
-        <td class="n">${s.band.lo}\u2013${s.band.hi} <span class="sub">${s.band.n} legal L steps</span></td>
-        <td>${swatch(s.spec, `L ${s.band.mid}`, s.reuses ? `reuses --color-${s.reuses} (d=${num(s.nearestTokenDist, 3)})` : `NEW token \u00b7 nearest existing --color-${s.nearestToken} d=${num(s.nearestTokenDist, 3)}`)}</td>
+        <td class="n">${s.band.lo}\u2013${s.band.hi} <span class="sub">${s.band.n} legal L steps${s.goldFloor !== null && s.goldFloor !== undefined ? ` \u00b7 gold floor L ${s.goldFloor}` : ''}</span></td>
+        <td>${swatch(s.spec, `L ${s.L}${s.belowFloor ? ' \u00b7 BELOW the gold floor' : ''}`, sub)}<span class="sub">${esc(need(s.take, `${f.name}/${ground}/${name} take`))}</span></td>
         <td class="n ${s.vsGround >= BARS.layer ? 'pass' : 'fail'}">${num(s.vsGround)}</td>
         <td class="n ${s.minLineOver >= BARS.graphic ? 'pass' : 'fail'}">${num(s.minLineOver)}</td>
         <td>${esc(s.nearestBrand)} <span class="n">d=${num(s.brandDist, 3)}</span>${s.sameAsBrand ? ' <strong>SAME COLOUR</strong> (&lt;0.05)' : ''}</td></tr>`;
     }).join('');
     return `<h4>${ground} \u2014 lines that must survive the fill: ${rep.over.length ? esc(rep.over.map((s) => `${s} = --color-${LINES[ground][s]}`).join(', ')) : '<em>none drawn over it</em>'}</h4>
-      <table><thead><tr><th>hue family</th><th>hue</th><th>chroma</th><th>legal L window</th><th>the fill at the window mid</th><th>vs ${ground}</th><th>worst line over it</th><th>nearest brand colour</th></tr></thead><tbody>${rows}</tbody></table>`;
+      <table><thead><tr><th>hue family</th><th>hue</th><th>chroma</th><th>legal L window</th><th>the fill the round takes</th><th>vs ${ground}</th><th>worst line over it</th><th>nearest brand colour</th></tr></thead><tbody>${rows}</tbody></table>`;
   }).join('');
   return `<h3>${esc(f.name)}</h3>${blocks}`;
 }).join('');
+
+// ---------- 4b. the gold steer, priced ----------
+// Which face a gold row fills is read out of the RECORD (rows[].grounds[].fills), not out of the runner's in-memory
+// row objects: a builder written against the runner's shape prints undefined the first time the two drift.
+const pct = (n) => (typeof n === 'number' ? `${n.toFixed(2)}%` : '\u2014');
+const goldFills = () => {
+  const seen = new Map();
+  for (const r of ROWS) {
+    if (!hasGoldRow(r)) continue;
+    for (const g of ['paper', 'ink']) for (const f of r.grounds[g].fills) {
+      if (f.family !== 'gold') continue;
+      const k = `${f.face}|${g}`;
+      if (!seen.has(k)) seen.set(k, { face: f.face, ground: g, rows: [], L: f.L, spec: f.spec, token: f.token, vsGround: f.vsGround, minLineOver: f.minLineOver, candidate: f.candidate, bytes: f.candidateBytes, take: f.take });
+      seen.get(k).rows.push(r.id);
+    }
+  }
+  return [...seen.values()].sort((a, b) => areaOf(b.face).pctOfDisc - areaOf(a.face).pctOfDisc);
+};
+const goldSection = GOLD ? `
+<h2>4b. The gold steer: a hue this palette does not declare</h2>
+<blockquote>${esc(need(GOLD.steer, 'gold.steer'))}</blockquote>
+<p>${esc(need(GOLD.warmNote, 'gold.warmNote'))}</p>
+<p>The gold these rows price is a <strong>candidate, not a token</strong>: hue <strong>${need(GOLD.family.H, 'gold.family.H')}</strong> at chroma <strong>${need(GOLD.family.C, 'gold.family.C')}</strong> — ${esc(need(GOLD.family.source, 'gold.family.source'))}. The <strong>gold-ness floor of L ${need(GOLD.family.floor, 'gold.family.floor')}</strong> (${esc(need(GOLD.family.floorSource, 'gold.family.floorSource'))}) is a stated judgement carried from round 21, not a ratified bar like the layer (${BARS.layer}) or graphic (${BARS.graphic}) bars: it is the lightness below which a hue ~${need(GOLD.family.H, 'gold.family.H')} colour stops reading as gold to the eye and starts reading as bronze or ochre. A row may satisfy the contrast bars and still be <strong>flagged below the floor</strong>, and this page prints the flag rather than quietly calling the result gold.</p>
+<p>${esc(need(GOLD.candidates[Object.keys(GOLD.candidates)[0]].take, 'gold.candidates[].take'))}</p>
+<h4>the four gold faces this round paints, and what each one covers</h4>
+<table><thead><tr><th>face</th><th>% of visible face</th><th>ground</th><th>rows that paint it</th><th>legal L window (two bars)</th><th>the L it takes</th><th>candidate bytes</th><th>vs ground</th><th>worst line over it</th><th>nearest brand colour</th></tr></thead><tbody>${goldFills().map((g) => `<tr>
+  <td><strong>${esc(g.face)}</strong></td><td class="n">${pct(areaOf(g.face).pctOfDisc)}</td><td>${esc(g.ground)}</td>
+  <td>${esc(g.rows.join(', '))}</td>
+  <td class="n">${GOLD.candidates[`${g.face}-${g.ground}`]?.band ? `${GOLD.candidates[`${g.face}-${g.ground}`].band.lo}\u2013${GOLD.candidates[`${g.face}-${g.ground}`].band.hi}` : '\u2014'}</td>
+  <td>${swatch(g.spec, `L ${num(g.L, 1)}${GOLD.candidates[`${g.face}-${g.ground}`]?.belowFloor ? ' \u00b7 BELOW the gold floor' : ''}`, `\`${esc(need(g.candidate, 'gold candidate name'))}\` \u2192 ${esc((need(g.bytes, 'gold candidate bytes') || []).join(','))}`)}</td>
+  <td class="n ${g.vsGround >= BARS.layer ? 'pass' : 'fail'}">${num(g.vsGround)}</td>
+  <td class="n ${g.minLineOver >= BARS.graphic ? 'pass' : 'fail'}">${num(g.minLineOver)}</td>
+  <td>${esc(g.take)}</td></tr>`).join('')}</tbody></table>
+<h4>the whole search space: every hue \u00d7 chroma pair, same two bars, no candidate declared</h4>
+<p>The four rows above each take <strong>one</strong> hue/chroma pair. This table prices the other three, so "could a gold face dodge the brand collision?" is arithmetic in the record rather than a claim in prose. Solve only \u2014 nothing here is painted and no candidate is declared, because a candidate the round does not paint would be a colour with a name and no measurement. The \u2605 marks the pair the rows take.</p>
+<table><thead><tr><th>face</th><th>ground</th><th>hue</th><th>chroma</th><th>legal L window</th><th>L taken</th><th>fill</th><th>vs ground</th><th>worst line over</th><th>nearest brand</th></tr></thead><tbody>${GOLD.matrix.map((m) => m.band ? `<tr>
+  <td>${esc(m.face)}</td><td>${esc(m.ground)}</td><td class="n">${num(m.H, 0)}${m.chosen ? ' \u2605' : ''}</td><td class="n">${num(m.C, 2)}</td>
+  <td class="n">${m.band.lo}\u2013${m.band.hi} <span class="sub">${m.band.n} steps</span></td>
+  <td class="n ${m.belowFloor ? 'fail' : 'pass'}">${num(m.L, 1)} <span class="sub">${m.belowFloor ? 'below the gold floor' : 'reads as gold'}</span></td>
+  <td>${swatch(m.spec, m.spec, '')}</td>
+  <td class="n ${m.vsGround >= BARS.layer ? 'pass' : 'fail'}">${num(m.vsGround)}</td>
+  <td class="n ${m.minLineOver >= BARS.graphic ? 'pass' : 'fail'}">${num(m.minLineOver)}</td>
+  <td>${esc(m.nearestBrand)} <span class="n">d=${num(m.brandDist, 3)}</span>${m.sameAsBrand ? ' <strong>SAME COLOUR</strong> (&lt;0.05)' : ''}</td></tr>` : `<tr><td>${esc(m.face)}</td><td>${esc(m.ground)}</td><td class="n">${num(m.H, 0)}</td><td class="n">${num(m.C, 2)}</td><td colspan="6" class="fail">${esc(m.note)}</td></tr>`).join('')}</tbody></table>
+${GOLD.brandCollisions.length ? `<p><strong>Same-colour collisions under the 0.05 delta-OKLab bar (D316), read out of the matrix:</strong> ${esc(GOLD.brandCollisions.join(' \u00b7 '))}. A gold face whose nearest brand colour is inside that bar is <em>the same colour as a brand</em> — the bar this repo has held since the palette round, stated here rather than softened.</p>` : '<p><strong>No cell of the gold matrix lands inside the 0.05 same-colour bar (D316).</strong></p>'}
+<p class="meta"><strong>The finding the operator has to weigh.</strong> The window here is produced by <em>two</em> bars \u2014 the fill against its ground (${BARS.layer}) and every line painted over it against the fill (${BARS.graphic}) \u2014 so it is not the window round 23's tab table prints for a single bar, and a lightness does not travel between those two tables. What the two bars decide, before any pick: on <strong>paper</strong> the only gold-shaped legal face is the palest end of the window and lands within 0.05 of a brand colour; on <strong>ink</strong> no lightness in the window reaches the lightness at which the hue reads as gold. The gold the operator is asking for is therefore <em>easier on a 16px tab than on the hero</em>, which is round 23's finding, restated on the face.</p>
+` : '';
 
 const rowSection = (r) => {
   const painted = PAINTED.find((p) => p.id === r.id);
@@ -149,7 +212,7 @@ const rowSection = (r) => {
     if (!g.fills.length) return `<tr><th>${ground}</th><td colspan="5"><em>nothing filled — this is the control's line colouring only</em></td></tr>`;
     return `<tr><th>${ground}</th>${g.fills.map((f) => `<td>
       <span class="slot">${esc(f.face)} \u00b7 ${num(areaOf(f.face).pctOfDisc)}% of the visible face</span>
-      <span class="tok">${f.reuses ? `--color-${f.reuses}` : `NEW \u2014 ${esc(f.family)} wash at L ${f.band.mid}`}</span>
+      <span class="tok">${esc(need(f.token, `${r.id}/${ground}/${f.face} token`))} at L ${num(f.L, 1)}</span>
       <span class="swinline">${swatch(f.spec, f.spec, `vs ${ground} ${num(f.vsGround)} \u00b7 worst line over it ${num(f.minLineOver)}`)}</span></td>`).join('')}</tr>`;
   }).join('');
 
@@ -271,9 +334,10 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 <p>A filled area is a LAYER (1.35, D101), not a graphic line (3.0). This is the finding that changes the ask: <strong>${TALLY.paper} of ${TALLY.total}</strong> declared tokens clear the layer bar against paper, and <strong>${TALLY.ink} of ${TALLY.total}</strong> clear it against ink. On the card almost every colour the palette has already reads as a region; on paper the pale ones do not, and they are exactly the tokens named "tint" \u2014 ${esc(TALLY.paperFails.join(', '))}. Round 21's "every palette tint is under the layer bar" is true on paper and false on the card, so the face question is asymmetric by ground: a wash that reads on the hero is invisible on the card and a fill that reads on the card is a hole in the hero.</p>
 <table><thead><tr><th>token</th><th>oklch</th><th>vs paper</th><th>vs ink</th><th>verdict against ${BARS.layer}</th></tr></thead><tbody>${censusRows}</tbody></table>
 
-<h2>4. The two-bar window: what a legal face costs per hue family</h2>
-<p>For every hue family this palette already declares, at that family's own chroma, the round solves the <strong>lightness window</strong> in which a fill (a) clears ${BARS.layer} against its ground and (b) leaves every line drawn over it at ${BARS.graphic} against the <em>fill</em>. The upper edge is set by the ground, the lower edge by the lightest line token over the face. The mid of that window is what each row paints below, because it is the point furthest from both bars.</p>
+<h2>4. The two-bar window: what a legal face costs per hue family (token hues, and the gold @theme does not declare)</h2>
+<p>For every hue family the rows use, at that family's own chroma, the round solves the <strong>lightness window</strong> in which a fill (a) clears ${BARS.layer} against its ground and (b) leaves every line drawn over it at ${BARS.graphic} against the <em>fill</em>. The upper edge is set by the ground, the lower edge by the lightest line token over the face. For a family the palette <em>already declares</em> the round paints <strong>the mid of that window</strong>, the point furthest from both bars. <strong>Gold is the exception and the reason matters:</strong> gold-ness is not a contrast ratio, it is how a hue ~75 <em>reads</em>, and round 21's floor for that (L 60) is a stated judgement, not a ratified bar — so a gold face takes <code>max(window low end, L 60)</code>, the <strong>deepest</strong> lightness that still reads as gold, and when the window never reaches 60 it takes the palest end it can and <strong>says so</strong> ("BELOW the gold floor"). Each row's own line under the swatch names which end was taken and why.</p>
 ${windowTables}
+${goldSection}
 
 <h2>5. The rows, painted</h2>
 ${ROWS.map(rowSection).join('\n')}
@@ -289,7 +353,9 @@ ${refusals.length ? refusals.map((q) => `<blockquote>${esc(q)}</blockquote>`).jo
 <h2>8. How to read this page, and what the delegate recommends</h2>
 <ul>
 <li><strong>Row ${esc(CONTROL_ID)}</strong> is the shipped colouring with nothing filled \u2014 the control, and the only row the site's own gates can measure today without re-ruling them.</li>
-<li><strong>Rows F1\u2013F5</strong> each fill one or two of the faces the drawing really bounds. F1 fills the spherical triangle between the two meridians (${num(areaOf('lune').pctOfDisc)}% of the visible face); F2 the south lune (${num(areaOf('south').pctOfDisc)}%); F3 the north lune (${num(areaOf('north').pctOfDisc)}%); F5 the near hemisphere, which <em>is</em> the disc (100%); F4 two disjoint regions, which is the literal Byrne sentence \u2014 two colours so the prose can point at either without a letter.</li>
+<li><strong>Rows F1\u2013F5</strong> fill one or two of the faces the drawing really bounds, in a hue the palette <em>already declares</em>. F1 fills the spherical triangle between the two meridians (${num(areaOf('lune').pctOfDisc)}% of the visible face); F2 the south lune (${num(areaOf('south').pctOfDisc)}%); F3 the north lune (${num(areaOf('north').pctOfDisc)}%); F5 the near hemisphere, which <em>is</em> the disc (100%); F4 two disjoint regions, which is the literal Byrne sentence \u2014 two colours so the prose can point at either without a letter.</li>
+${GOLD ? `<li><strong>Rows ${esc(need(GOLD.rows, 'gold.rows').join(', '))}</strong> fill the same faces in the hue the operator asked for and <code>@theme</code> does not declare, and the only difference between them is <em>area</em>: F6 the spherical triangle (${num(areaOf('lune').pctOfDisc)}%), F9 the north lune (${num(areaOf('north').pctOfDisc)}%), F7 the near hemisphere, which <em>is</em> the disc (${num(areaOf('disc').pctOfDisc)}% \u2014 the most gold the drawing can carry, with ${SOLVE.disc.paper.over.length} of the ${Object.keys(LINES.paper).length} painted shapes lying over it on paper), F8 two disjoint regions, gold plus the club red, which is Byrne's two-colour sentence with the yellow present.</li>
+<li><strong>Why gold is harder here than on a tab.</strong> A token hue may sit anywhere in its window; a gold has to sit at or above the lightness where hue ${need(GOLD.family.H, 'gold.family.H')} still <em>reads</em> as gold (L ${need(GOLD.family.floor, 'gold.family.floor')}, a stated judgement, not a bar). On this mark that constraint inverts which ground has room: on the hero the two-bar window only reaches gold at its palest end, and that end is within 0.05 delta-OKLab of a brand colour; on the card no lightness in the window reaches the floor at all while keeping the <code>paper</code>-coloured lines legible. \u00a74b prints both as numbers.</li>` : ''}
 <li><strong>The squeeze, stated plainly.</strong> A face has to be far enough from the ground to read as a region and far enough from the lightest line drawn on it to keep that line legible. The windows in \u00a74 are only a few tenths of a lightness wide, and their midpoints sit at ${num(Math.min(...FACES.flatMap((f) => ['paper', 'ink'].map((g) => SOLVE[f.name][g].rows ? Math.max(...Object.values(SOLVE[f.name][g].rows).filter((s) => s.band).map((s) => s.vsGround)) : 0)).filter((x) => Number.isFinite(x))), 2)} at their most ${'far'} from the ground. A legal Byrne wash here is a <em>quiet</em> region, not Byrne's saturated block: Byrne's flatness is what made his fills cheap to print, and this palette's flatness is what keeps a chip ground from reading as raised. Both are flat, for opposite reasons.</li>
 <li><strong>What each row costs in tokens</strong>: every row re-uses row C's eight line colours unchanged, and adds ${Math.min(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnPaper))}\u2013${Math.max(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnPaper))} new hero token(s) and ${Math.min(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnInk))}\u2013${Math.max(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnInk))} on the card, unless the solve lands within 0.05 delta-OKLab of a token the palette already has, in which case the row re-uses it \u2014 printed per fill above.</li>
 <li><strong>The delegate's ranked recommendation is not on this page.</strong> It belongs to the session report and <code>.notes/NEXT.md</code>, where it carries its pros, cons and the measurement that would change it; a specimen prices, it does not argue.</li>

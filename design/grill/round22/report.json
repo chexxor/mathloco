@@ -1,5 +1,5 @@
 {
- "measuredAt": "2026-11-24 22:27",
+ "measuredAt": "2026-11-25 03:11",
  "widths": [
   320,
   640,
@@ -303,7 +303,15 @@
        "mid": 90,
        "n": 17
       },
+      "L": 90,
       "spec": "oklch(90% 0.1321 35.7)",
+      "take": "L 90 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.48,
       "minLineOver": 3.31,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -324,7 +332,15 @@
        "mid": 83,
        "n": 12
       },
+      "L": 83,
       "spec": "oklch(83% 0.11 205)",
+      "take": "L 83 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.51,
       "minLineOver": 3.25,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -345,7 +361,15 @@
        "mid": 84.5,
        "n": 12
       },
+      "L": 84.5,
       "spec": "oklch(84.5% 0.04 86.6)",
+      "take": "L 84.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.49,
       "minLineOver": 3.29,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -353,6 +377,39 @@
       "sameAsBrand": false,
       "nearestToken": "tint",
       "nearestTokenDist": 0.075,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 82.5,
+       "hi": 89.5,
+       "mid": 86,
+       "n": 15
+      },
+      "L": 82.5,
+      "spec": "oklch(82.5% 0.14 75)",
+      "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+      "goldFloor": 60,
+      "readsAsGold": true,
+      "belowFloor": false,
+      "candidate": "gold-face-lune-paper",
+      "candidateSpec": "oklch(82.5% 0.14 75)",
+      "candidateBytes": [
+       250,
+       183,
+       81
+      ],
+      "vsGround": 1.63,
+      "minLineOver": 3.01,
+      "nearestBrand": "Amazon yellow #FFB300",
+      "brandDist": 0.032,
+      "sameAsBrand": true,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.146,
       "reuses": null
      }
     }
@@ -378,7 +435,15 @@
        "mid": 35.5,
        "n": 18
       },
+      "L": 35.5,
       "spec": "oklch(35.5% 0.1321 35.7)",
+      "take": "L 35.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "UMN maroon #98021E",
@@ -399,7 +464,15 @@
        "mid": 31.5,
        "n": 19
       },
+      "L": 31.5,
       "spec": "oklch(31.5% 0.11 205)",
+      "take": "L 31.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.6,
       "minLineOver": 3.56,
       "nearestBrand": "Berkeley blue #003262",
@@ -420,7 +493,15 @@
        "mid": 34,
        "n": 18
       },
+      "L": 34,
       "spec": "oklch(34% 0.04 86.6)",
+      "take": "L 34 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "Amazon navy #232F3E",
@@ -428,6 +509,39 @@
       "sameAsBrand": false,
       "nearestToken": "ink-2",
       "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 30.5,
+       "hi": 39,
+       "mid": 34.5,
+       "n": 18
+      },
+      "L": 39,
+      "spec": "oklch(39% 0.14 75)",
+      "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+      "goldFloor": 60,
+      "readsAsGold": false,
+      "belowFloor": true,
+      "candidate": "gold-face-lune-ink",
+      "candidateSpec": "oklch(39.0% 0.14 75)",
+      "candidateBytes": [
+       110,
+       52,
+       0
+      ],
+      "vsGround": 1.9,
+      "minLineOver": 3,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.147,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.095,
       "reuses": null
      }
     }
@@ -457,7 +571,15 @@
        "mid": 90,
        "n": 17
       },
+      "L": 90,
       "spec": "oklch(90% 0.1321 35.7)",
+      "take": "L 90 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.48,
       "minLineOver": 3.31,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -478,7 +600,15 @@
        "mid": 83,
        "n": 12
       },
+      "L": 83,
       "spec": "oklch(83% 0.11 205)",
+      "take": "L 83 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.51,
       "minLineOver": 3.25,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -499,7 +629,15 @@
        "mid": 84.5,
        "n": 12
       },
+      "L": 84.5,
       "spec": "oklch(84.5% 0.04 86.6)",
+      "take": "L 84.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.49,
       "minLineOver": 3.29,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -507,6 +645,39 @@
       "sameAsBrand": false,
       "nearestToken": "tint",
       "nearestTokenDist": 0.075,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 82.5,
+       "hi": 89.5,
+       "mid": 86,
+       "n": 15
+      },
+      "L": 82.5,
+      "spec": "oklch(82.5% 0.14 75)",
+      "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+      "goldFloor": 60,
+      "readsAsGold": true,
+      "belowFloor": false,
+      "candidate": "gold-face-north-paper",
+      "candidateSpec": "oklch(82.5% 0.14 75)",
+      "candidateBytes": [
+       250,
+       183,
+       81
+      ],
+      "vsGround": 1.63,
+      "minLineOver": 3.01,
+      "nearestBrand": "Amazon yellow #FFB300",
+      "brandDist": 0.032,
+      "sameAsBrand": true,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.146,
       "reuses": null
      }
     }
@@ -534,7 +705,15 @@
        "mid": 35.5,
        "n": 18
       },
+      "L": 35.5,
       "spec": "oklch(35.5% 0.1321 35.7)",
+      "take": "L 35.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "UMN maroon #98021E",
@@ -555,7 +734,15 @@
        "mid": 31.5,
        "n": 19
       },
+      "L": 31.5,
       "spec": "oklch(31.5% 0.11 205)",
+      "take": "L 31.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.6,
       "minLineOver": 3.56,
       "nearestBrand": "Berkeley blue #003262",
@@ -576,7 +763,15 @@
        "mid": 34,
        "n": 18
       },
+      "L": 34,
       "spec": "oklch(34% 0.04 86.6)",
+      "take": "L 34 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "Amazon navy #232F3E",
@@ -584,6 +779,39 @@
       "sameAsBrand": false,
       "nearestToken": "ink-2",
       "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 30.5,
+       "hi": 39,
+       "mid": 34.5,
+       "n": 18
+      },
+      "L": 39,
+      "spec": "oklch(39% 0.14 75)",
+      "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+      "goldFloor": 60,
+      "readsAsGold": false,
+      "belowFloor": true,
+      "candidate": "gold-face-north-ink",
+      "candidateSpec": "oklch(39.0% 0.14 75)",
+      "candidateBytes": [
+       110,
+       52,
+       0
+      ],
+      "vsGround": 1.9,
+      "minLineOver": 3,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.147,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.095,
       "reuses": null
      }
     }
@@ -609,7 +837,15 @@
        "mid": 81.5,
        "n": 51
       },
+      "L": 81.5,
       "spec": "oklch(81.5% 0.1321 35.7)",
+      "take": "L 81.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.81,
       "minLineOver": 4.52,
       "nearestBrand": "Amazon orange #FF9900",
@@ -630,7 +866,15 @@
        "mid": 76,
        "n": 40
       },
+      "L": 76,
       "spec": "oklch(76% 0.11 205)",
+      "take": "L 76 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.91,
       "minLineOver": 4.28,
       "nearestBrand": "Walmart blue #0071CE",
@@ -651,7 +895,15 @@
        "mid": 77.5,
        "n": 41
       },
+      "L": 77.5,
       "spec": "oklch(77.5% 0.04 86.6)",
+      "take": "L 77.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.88,
       "minLineOver": 4.34,
       "nearestBrand": "Amazon orange #FF9900",
@@ -659,6 +911,39 @@
       "sameAsBrand": false,
       "nearestToken": "accent-on-ink",
       "nearestTokenDist": 0.141,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 68,
+       "hi": 89.5,
+       "mid": 78.5,
+       "n": 44
+      },
+      "L": 68,
+      "spec": "oklch(68% 0.14 75)",
+      "take": "L 68 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 68 is already deeper than the floor; the mid L 78.5 would be a paler, quieter region for no gain)",
+      "goldFloor": 60,
+      "readsAsGold": true,
+      "belowFloor": false,
+      "candidate": "gold-face-south-paper",
+      "candidateSpec": "oklch(68.0% 0.14 75)",
+      "candidateBytes": [
+       202,
+       138,
+       16
+      ],
+      "vsGround": 2.72,
+      "minLineOver": 3,
+      "nearestBrand": "Amazon deep orange #E47911",
+      "brandDist": 0.057,
+      "sameAsBrand": false,
+      "nearestToken": "accent-on-ink",
+      "nearestTokenDist": 0.091,
       "reuses": null
      }
     }
@@ -682,7 +967,15 @@
        "mid": 35.5,
        "n": 18
       },
+      "L": 35.5,
       "spec": "oklch(35.5% 0.1321 35.7)",
+      "take": "L 35.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "UMN maroon #98021E",
@@ -703,7 +996,15 @@
        "mid": 31.5,
        "n": 19
       },
+      "L": 31.5,
       "spec": "oklch(31.5% 0.11 205)",
+      "take": "L 31.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.6,
       "minLineOver": 3.56,
       "nearestBrand": "Berkeley blue #003262",
@@ -724,7 +1025,15 @@
        "mid": 34,
        "n": 18
       },
+      "L": 34,
       "spec": "oklch(34% 0.04 86.6)",
+      "take": "L 34 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "Amazon navy #232F3E",
@@ -732,6 +1041,39 @@
       "sameAsBrand": false,
       "nearestToken": "ink-2",
       "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 30.5,
+       "hi": 39,
+       "mid": 34.5,
+       "n": 18
+      },
+      "L": 39,
+      "spec": "oklch(39% 0.14 75)",
+      "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+      "goldFloor": 60,
+      "readsAsGold": false,
+      "belowFloor": true,
+      "candidate": "gold-face-south-ink",
+      "candidateSpec": "oklch(39.0% 0.14 75)",
+      "candidateBytes": [
+       110,
+       52,
+       0
+      ],
+      "vsGround": 1.9,
+      "minLineOver": 3,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.147,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.095,
       "reuses": null
      }
     }
@@ -761,7 +1103,15 @@
        "mid": 90,
        "n": 17
       },
+      "L": 90,
       "spec": "oklch(90% 0.1321 35.7)",
+      "take": "L 90 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.48,
       "minLineOver": 3.31,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -782,7 +1132,15 @@
        "mid": 83,
        "n": 12
       },
+      "L": 83,
       "spec": "oklch(83% 0.11 205)",
+      "take": "L 83 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.51,
       "minLineOver": 3.25,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -803,7 +1161,15 @@
        "mid": 84.5,
        "n": 12
       },
+      "L": 84.5,
       "spec": "oklch(84.5% 0.04 86.6)",
+      "take": "L 84.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.49,
       "minLineOver": 3.29,
       "nearestBrand": "Walmart yellow #FFC220",
@@ -811,6 +1177,39 @@
       "sameAsBrand": false,
       "nearestToken": "tint",
       "nearestTokenDist": 0.075,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 82.5,
+       "hi": 89.5,
+       "mid": 86,
+       "n": 15
+      },
+      "L": 82.5,
+      "spec": "oklch(82.5% 0.14 75)",
+      "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+      "goldFloor": 60,
+      "readsAsGold": true,
+      "belowFloor": false,
+      "candidate": "gold-face-disc-paper",
+      "candidateSpec": "oklch(82.5% 0.14 75)",
+      "candidateBytes": [
+       250,
+       183,
+       81
+      ],
+      "vsGround": 1.63,
+      "minLineOver": 3.01,
+      "nearestBrand": "Amazon yellow #FFB300",
+      "brandDist": 0.032,
+      "sameAsBrand": true,
+      "nearestToken": "tint",
+      "nearestTokenDist": 0.146,
       "reuses": null
      }
     }
@@ -838,7 +1237,15 @@
        "mid": 35.5,
        "n": 18
       },
+      "L": 35.5,
       "spec": "oklch(35.5% 0.1321 35.7)",
+      "take": "L 35.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "UMN maroon #98021E",
@@ -859,7 +1266,15 @@
        "mid": 31.5,
        "n": 19
       },
+      "L": 31.5,
       "spec": "oklch(31.5% 0.11 205)",
+      "take": "L 31.5 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.6,
       "minLineOver": 3.56,
       "nearestBrand": "Berkeley blue #003262",
@@ -880,7 +1295,15 @@
        "mid": 34,
        "n": 18
       },
+      "L": 34,
       "spec": "oklch(34% 0.04 86.6)",
+      "take": "L 34 — the window mid",
+      "goldFloor": null,
+      "readsAsGold": null,
+      "belowFloor": null,
+      "candidate": null,
+      "candidateSpec": null,
+      "candidateBytes": null,
       "vsGround": 1.58,
       "minLineOver": 3.61,
       "nearestBrand": "Amazon navy #232F3E",
@@ -888,6 +1311,39 @@
       "sameAsBrand": false,
       "nearestToken": "ink-2",
       "nearestTokenDist": 0.113,
+      "reuses": null
+     },
+     "gold": {
+      "family": "gold",
+      "H": 75,
+      "C": 0.14,
+      "tokenL": null,
+      "band": {
+       "lo": 30.5,
+       "hi": 39,
+       "mid": 34.5,
+       "n": 18
+      },
+      "L": 39,
+      "spec": "oklch(39% 0.14 75)",
+      "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+      "goldFloor": 60,
+      "readsAsGold": false,
+      "belowFloor": true,
+      "candidate": "gold-face-disc-ink",
+      "candidateSpec": "oklch(39.0% 0.14 75)",
+      "candidateBytes": [
+       110,
+       52,
+       0
+      ],
+      "vsGround": 1.9,
+      "minLineOver": 3,
+      "nearestBrand": "UMN maroon #98021E",
+      "brandDist": 0.147,
+      "sameAsBrand": false,
+      "nearestToken": "accent-strong",
+      "nearestTokenDist": 0.095,
       "reuses": null
      }
     }
@@ -1288,6 +1744,940 @@
    "dot": "path-mobilizon-on-ink"
   }
  },
+ "gold": {
+  "steer": "operator, 2026-11-25: \"Regarding the logo, I feel like the gold color that is an established theme color of the website should be used in the logo a bit more prominently. Ensure some options you create to share with me consider that.\"",
+  "family": {
+   "name": "gold",
+   "H": 75,
+   "C": 0.14,
+   "floor": 60,
+   "source": "the pair round 23's gold solve took from its own search space (design/grill/round23-options.mjs: GOLD_HUES 62/75, GOLD_CHROMAS 0.12/0.14)",
+   "floorSource": "round 21's YELLOW_L_FLOOR (design/round21.mjs:131), carried here as GOLD_L_FLOOR — a STATED JUDGEMENT, not a ratified bar",
+   "why": "the site's own warm family (accent, hue 35.7) is declared and shipped, so a warm FACE costs no token; a true gold at hue 75 does not exist in @theme, so every gold row below is priced as a candidate and refuses to ship until the operator declares it."
+  },
+  "rows": [
+   "F6",
+   "F7",
+   "F8",
+   "F9"
+  ],
+  "candidates": {
+   "lune-paper": {
+    "candidate": "gold-face-lune-paper",
+    "spec": "oklch(82.5% 0.14 75)",
+    "bytes": [
+     250,
+     183,
+     81
+    ],
+    "L": 82.5,
+    "band": {
+     "lo": 82.5,
+     "hi": 89.5,
+     "mid": 86,
+     "n": 15
+    },
+    "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.032,
+    "nearestToken": "tint",
+    "nearestTokenDist": 0.146
+   },
+   "lune-ink": {
+    "candidate": "gold-face-lune-ink",
+    "spec": "oklch(39% 0.14 75)",
+    "bytes": [
+     110,
+     52,
+     0
+    ],
+    "L": 39,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "nearestToken": "accent-strong",
+    "nearestTokenDist": 0.095
+   },
+   "north-paper": {
+    "candidate": "gold-face-north-paper",
+    "spec": "oklch(82.5% 0.14 75)",
+    "bytes": [
+     250,
+     183,
+     81
+    ],
+    "L": 82.5,
+    "band": {
+     "lo": 82.5,
+     "hi": 89.5,
+     "mid": 86,
+     "n": 15
+    },
+    "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.032,
+    "nearestToken": "tint",
+    "nearestTokenDist": 0.146
+   },
+   "north-ink": {
+    "candidate": "gold-face-north-ink",
+    "spec": "oklch(39% 0.14 75)",
+    "bytes": [
+     110,
+     52,
+     0
+    ],
+    "L": 39,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "nearestToken": "accent-strong",
+    "nearestTokenDist": 0.095
+   },
+   "south-paper": {
+    "candidate": "gold-face-south-paper",
+    "spec": "oklch(68% 0.14 75)",
+    "bytes": [
+     202,
+     138,
+     16
+    ],
+    "L": 68,
+    "band": {
+     "lo": 68,
+     "hi": 89.5,
+     "mid": 78.5,
+     "n": 44
+    },
+    "take": "L 68 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 68 is already deeper than the floor; the mid L 78.5 would be a paler, quieter region for no gain)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 2.72,
+    "minLineOver": 3,
+    "nearestBrand": "Amazon deep orange #E47911",
+    "brandDist": 0.057,
+    "nearestToken": "accent-on-ink",
+    "nearestTokenDist": 0.091
+   },
+   "south-ink": {
+    "candidate": "gold-face-south-ink",
+    "spec": "oklch(39% 0.14 75)",
+    "bytes": [
+     110,
+     52,
+     0
+    ],
+    "L": 39,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "nearestToken": "accent-strong",
+    "nearestTokenDist": 0.095
+   },
+   "disc-paper": {
+    "candidate": "gold-face-disc-paper",
+    "spec": "oklch(82.5% 0.14 75)",
+    "bytes": [
+     250,
+     183,
+     81
+    ],
+    "L": 82.5,
+    "band": {
+     "lo": 82.5,
+     "hi": 89.5,
+     "mid": 86,
+     "n": 15
+    },
+    "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.032,
+    "nearestToken": "tint",
+    "nearestTokenDist": 0.146
+   },
+   "disc-ink": {
+    "candidate": "gold-face-disc-ink",
+    "spec": "oklch(39% 0.14 75)",
+    "bytes": [
+     110,
+     52,
+     0
+    ],
+    "L": 39,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "nearestToken": "accent-strong",
+    "nearestTokenDist": 0.095
+   }
+  },
+  "warmNote": "the site's declared warm family is `--color-accent` at hue 35.7, so row F1/F2/F8's red is already the closest thing to the site's \"gold\" that costs no token and no ruling; rows F6/F7/F9 price a hue @theme does not declare, which costs a new token and the gates that read it.",
+  "matrix": [
+   {
+    "face": "lune",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 82.5,
+     "hi": 90.5,
+     "mid": 86.5,
+     "n": 17
+    },
+    "L": 82.5,
+    "spec": "oklch(82.5% 0.12 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.62,
+    "minLineOver": 3.02,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.065,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "lune",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 84,
+     "hi": 91.5,
+     "mid": 87.5,
+     "n": 16
+    },
+    "L": 84,
+    "spec": "oklch(84% 0.14 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.057,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "lune",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 82,
+     "hi": 88.5,
+     "mid": 85,
+     "n": 14
+    },
+    "L": 82,
+    "spec": "oklch(82% 0.12 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.051,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "lune",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 82.5,
+     "hi": 89.5,
+     "mid": 86,
+     "n": 15
+    },
+    "L": 82.5,
+    "spec": "oklch(82.5% 0.14 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.032,
+    "sameAsBrand": true,
+    "chosen": true
+   },
+   {
+    "face": "lune",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.88,
+    "minLineOver": 3.03,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "lune",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.86,
+    "minLineOver": 3.05,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "lune",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.89,
+    "minLineOver": 3.01,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.143,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "lune",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "sameAsBrand": false,
+    "chosen": true
+   },
+   {
+    "face": "north",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 82.5,
+     "hi": 90.5,
+     "mid": 86.5,
+     "n": 17
+    },
+    "L": 82.5,
+    "spec": "oklch(82.5% 0.12 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.62,
+    "minLineOver": 3.02,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.065,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "north",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 84,
+     "hi": 91.5,
+     "mid": 87.5,
+     "n": 16
+    },
+    "L": 84,
+    "spec": "oklch(84% 0.14 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.057,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "north",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 82,
+     "hi": 88.5,
+     "mid": 85,
+     "n": 14
+    },
+    "L": 82,
+    "spec": "oklch(82% 0.12 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.051,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "north",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 82.5,
+     "hi": 89.5,
+     "mid": 86,
+     "n": 15
+    },
+    "L": 82.5,
+    "spec": "oklch(82.5% 0.14 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.032,
+    "sameAsBrand": true,
+    "chosen": true
+   },
+   {
+    "face": "north",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.88,
+    "minLineOver": 3.03,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "north",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.86,
+    "minLineOver": 3.05,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "north",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.89,
+    "minLineOver": 3.01,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.143,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "north",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "sameAsBrand": false,
+    "chosen": true
+   },
+   {
+    "face": "south",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 68.5,
+     "hi": 90.5,
+     "mid": 79.5,
+     "n": 45
+    },
+    "L": 68.5,
+    "spec": "oklch(68.5% 0.12 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 2.69,
+    "minLineOver": 3.04,
+    "nearestBrand": "Amazon deep orange #E47911",
+    "brandDist": 0.047,
+    "sameAsBrand": true,
+    "chosen": false
+   },
+   {
+    "face": "south",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 68.5,
+     "hi": 91.5,
+     "mid": 80,
+     "n": 47
+    },
+    "L": 68.5,
+    "spec": "oklch(68.5% 0.14 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 2.72,
+    "minLineOver": 3,
+    "nearestBrand": "Amazon deep orange #E47911",
+    "brandDist": 0.03,
+    "sameAsBrand": true,
+    "chosen": false
+   },
+   {
+    "face": "south",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 68.5,
+     "hi": 88.5,
+     "mid": 78.5,
+     "n": 41
+    },
+    "L": 68.5,
+    "spec": "oklch(68.5% 0.12 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 2.66,
+    "minLineOver": 3.07,
+    "nearestBrand": "Amazon deep orange #E47911",
+    "brandDist": 0.065,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "south",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 68,
+     "hi": 89.5,
+     "mid": 78.5,
+     "n": 44
+    },
+    "L": 68,
+    "spec": "oklch(68% 0.14 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 2.72,
+    "minLineOver": 3,
+    "nearestBrand": "Amazon deep orange #E47911",
+    "brandDist": 0.057,
+    "sameAsBrand": false,
+    "chosen": true
+   },
+   {
+    "face": "south",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.88,
+    "minLineOver": 3.03,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "south",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.86,
+    "minLineOver": 3.05,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "south",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.89,
+    "minLineOver": 3.01,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.143,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "south",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "sameAsBrand": false,
+    "chosen": true
+   },
+   {
+    "face": "disc",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 82.5,
+     "hi": 90.5,
+     "mid": 86.5,
+     "n": 17
+    },
+    "L": 82.5,
+    "spec": "oklch(82.5% 0.12 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.62,
+    "minLineOver": 3.02,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.065,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "disc",
+    "ground": "paper",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 84,
+     "hi": 91.5,
+     "mid": 87.5,
+     "n": 16
+    },
+    "L": 84,
+    "spec": "oklch(84% 0.14 62)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.057,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "disc",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 82,
+     "hi": 88.5,
+     "mid": 85,
+     "n": 14
+    },
+    "L": 82,
+    "spec": "oklch(82% 0.12 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.051,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "disc",
+    "ground": "paper",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 82.5,
+     "hi": 89.5,
+     "mid": 86,
+     "n": 15
+    },
+    "L": 82.5,
+    "spec": "oklch(82.5% 0.14 75)",
+    "readsAsGold": true,
+    "belowFloor": false,
+    "vsGround": 1.63,
+    "minLineOver": 3.01,
+    "nearestBrand": "Amazon yellow #FFB300",
+    "brandDist": 0.032,
+    "sameAsBrand": true,
+    "chosen": true
+   },
+   {
+    "face": "disc",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.12,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.88,
+    "minLineOver": 3.03,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "disc",
+    "ground": "ink",
+    "H": 62,
+    "C": 0.14,
+    "band": {
+     "lo": 31,
+     "hi": 39,
+     "mid": 35,
+     "n": 17
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 62)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.86,
+    "minLineOver": 3.05,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.117,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "disc",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.12,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.12 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.89,
+    "minLineOver": 3.01,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.143,
+    "sameAsBrand": false,
+    "chosen": false
+   },
+   {
+    "face": "disc",
+    "ground": "ink",
+    "H": 75,
+    "C": 0.14,
+    "band": {
+     "lo": 30.5,
+     "hi": 39,
+     "mid": 34.5,
+     "n": 18
+    },
+    "L": 39,
+    "spec": "oklch(39% 0.14 75)",
+    "readsAsGold": false,
+    "belowFloor": true,
+    "vsGround": 1.9,
+    "minLineOver": 3,
+    "nearestBrand": "UMN maroon #98021E",
+    "brandDist": 0.147,
+    "sameAsBrand": false,
+    "chosen": true
+   }
+  ],
+  "brandCollisions": [
+   "lune/paper hue 75 C 0.14 -> Amazon yellow #FFB300 d=0.032",
+   "north/paper hue 75 C 0.14 -> Amazon yellow #FFB300 d=0.032",
+   "south/paper hue 62 C 0.12 -> Amazon deep orange #E47911 d=0.047",
+   "south/paper hue 62 C 0.14 -> Amazon deep orange #E47911 d=0.03",
+   "disc/paper hue 75 C 0.14 -> Amazon yellow #FFB300 d=0.032"
+  ]
+ },
  "rows": [
   {
    "id": "C0",
@@ -1337,6 +2727,7 @@
        "face": "lune",
        "family": "accent",
        "spec": "oklch(90% 0.1321 35.7)",
+       "L": 90,
        "token": "NEW accent-wash",
        "H": 35.7,
        "C": 0.1321,
@@ -1347,6 +2738,13 @@
         "mid": 90,
         "n": 17
        },
+       "take": "L 90 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.48,
        "minLineOver": 3.31,
        "nearestBrand": "Walmart yellow #FFC220",
@@ -1366,6 +2764,7 @@
        "face": "lune",
        "family": "accent",
        "spec": "oklch(35.5% 0.1321 35.7)",
+       "L": 35.5,
        "token": "NEW accent-wash",
        "H": 35.7,
        "C": 0.1321,
@@ -1376,6 +2775,13 @@
         "mid": 35.5,
         "n": 18
        },
+       "take": "L 35.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.58,
        "minLineOver": 3.61,
        "nearestBrand": "UMN maroon #98021E",
@@ -1413,6 +2819,7 @@
        "face": "south",
        "family": "accent",
        "spec": "oklch(81.5% 0.1321 35.7)",
+       "L": 81.5,
        "token": "NEW accent-wash",
        "H": 35.7,
        "C": 0.1321,
@@ -1423,6 +2830,13 @@
         "mid": 81.5,
         "n": 51
        },
+       "take": "L 81.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.81,
        "minLineOver": 4.52,
        "nearestBrand": "Amazon orange #FF9900",
@@ -1442,6 +2856,7 @@
        "face": "south",
        "family": "accent",
        "spec": "oklch(35.5% 0.1321 35.7)",
+       "L": 35.5,
        "token": "NEW accent-wash",
        "H": 35.7,
        "C": 0.1321,
@@ -1452,6 +2867,13 @@
         "mid": 35.5,
         "n": 18
        },
+       "take": "L 35.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.58,
        "minLineOver": 3.61,
        "nearestBrand": "UMN maroon #98021E",
@@ -1489,6 +2911,7 @@
        "face": "north",
        "family": "path-calendar",
        "spec": "oklch(83% 0.11 205)",
+       "L": 83,
        "token": "NEW path-calendar-wash",
        "H": 205,
        "C": 0.11,
@@ -1499,6 +2922,13 @@
         "mid": 83,
         "n": 12
        },
+       "take": "L 83 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.51,
        "minLineOver": 3.25,
        "nearestBrand": "Walmart yellow #FFC220",
@@ -1518,6 +2948,7 @@
        "face": "north",
        "family": "path-calendar",
        "spec": "oklch(31.5% 0.11 205)",
+       "L": 31.5,
        "token": "NEW path-calendar-wash",
        "H": 205,
        "C": 0.11,
@@ -1528,6 +2959,13 @@
         "mid": 31.5,
         "n": 19
        },
+       "take": "L 31.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.6,
        "minLineOver": 3.56,
        "nearestBrand": "Berkeley blue #003262",
@@ -1566,6 +3004,7 @@
        "face": "lune",
        "family": "accent",
        "spec": "oklch(90% 0.1321 35.7)",
+       "L": 90,
        "token": "NEW accent-wash",
        "H": 35.7,
        "C": 0.1321,
@@ -1576,6 +3015,13 @@
         "mid": 90,
         "n": 17
        },
+       "take": "L 90 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.48,
        "minLineOver": 3.31,
        "nearestBrand": "Walmart yellow #FFC220",
@@ -1589,6 +3035,7 @@
        "face": "south",
        "family": "path-calendar",
        "spec": "oklch(76% 0.11 205)",
+       "L": 76,
        "token": "NEW path-calendar-wash",
        "H": 205,
        "C": 0.11,
@@ -1599,6 +3046,13 @@
         "mid": 76,
         "n": 40
        },
+       "take": "L 76 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.91,
        "minLineOver": 4.28,
        "nearestBrand": "Walmart blue #0071CE",
@@ -1623,6 +3077,7 @@
        "face": "lune",
        "family": "accent",
        "spec": "oklch(35.5% 0.1321 35.7)",
+       "L": 35.5,
        "token": "NEW accent-wash",
        "H": 35.7,
        "C": 0.1321,
@@ -1633,6 +3088,13 @@
         "mid": 35.5,
         "n": 18
        },
+       "take": "L 35.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.58,
        "minLineOver": 3.61,
        "nearestBrand": "UMN maroon #98021E",
@@ -1646,6 +3108,7 @@
        "face": "south",
        "family": "path-calendar",
        "spec": "oklch(31.5% 0.11 205)",
+       "L": 31.5,
        "token": "NEW path-calendar-wash",
        "H": 205,
        "C": 0.11,
@@ -1656,6 +3119,13 @@
         "mid": 31.5,
         "n": 19
        },
+       "take": "L 31.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.6,
        "minLineOver": 3.56,
        "nearestBrand": "Berkeley blue #003262",
@@ -1698,6 +3168,7 @@
        "face": "disc",
        "family": "rule",
        "spec": "oklch(84.5% 0.04 86.6)",
+       "L": 84.5,
        "token": "NEW rule-wash",
        "H": 86.6,
        "C": 0.04,
@@ -1708,6 +3179,13 @@
         "mid": 84.5,
         "n": 12
        },
+       "take": "L 84.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.49,
        "minLineOver": 3.29,
        "nearestBrand": "Walmart yellow #FFC220",
@@ -1727,6 +3205,7 @@
        "face": "disc",
        "family": "rule",
        "spec": "oklch(34% 0.04 86.6)",
+       "L": 34,
        "token": "NEW rule-wash",
        "H": 86.6,
        "C": 0.04,
@@ -1737,6 +3216,13 @@
         "mid": 34,
         "n": 18
        },
+       "take": "L 34 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
        "vsGround": 1.58,
        "minLineOver": 3.61,
        "nearestBrand": "Amazon navy #232F3E",
@@ -1744,6 +3230,479 @@
        "sameAsBrand": false,
        "nearestToken": "ink-2",
        "nearestTokenDist": 0.113,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F6",
+   "label": "the lune filled in gold — the mark's own area, in Byrne's yellow",
+   "byrne": "the yellow of Byrne's three-colour printing, on the region a proposition is about: the spherical triangle between the two meridians and the near equator arc",
+   "reading": "the steer read as literally as F1: the same region F1 fills in the club red, filled instead in the gold the operator asked to see more of. Compared against F1 on the same photographs, it is the question \"which colour names the BETWEEN\" asked with everything else held still.",
+   "faces": [
+    "lune"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "gold",
+       "spec": "oklch(82.5% 0.14 75)",
+       "L": 82.5,
+       "token": "NEW CANDIDATE gold-face-lune-paper (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 82.5,
+        "hi": 89.5,
+        "mid": 86,
+        "n": 15
+       },
+       "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+       "goldFloor": 60,
+       "readsAsGold": true,
+       "belowFloor": false,
+       "candidate": "gold-face-lune-paper",
+       "candidateSpec": "oklch(82.5% 0.14 75)",
+       "candidateBytes": [
+        250,
+        183,
+        81
+       ],
+       "vsGround": 1.63,
+       "minLineOver": 3.01,
+       "nearestBrand": "Amazon yellow #FFB300",
+       "brandDist": 0.032,
+       "sameAsBrand": true,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.146,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "gold",
+       "spec": "oklch(39% 0.14 75)",
+       "L": 39,
+       "token": "NEW CANDIDATE gold-face-lune-ink (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 30.5,
+        "hi": 39,
+        "mid": 34.5,
+        "n": 18
+       },
+       "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+       "goldFloor": 60,
+       "readsAsGold": false,
+       "belowFloor": true,
+       "candidate": "gold-face-lune-ink",
+       "candidateSpec": "oklch(39.0% 0.14 75)",
+       "candidateBytes": [
+        110,
+        52,
+        0
+       ],
+       "vsGround": 1.9,
+       "minLineOver": 3,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.147,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.095,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F7",
+   "label": "the near hemisphere filled in gold — gold as the sphere's own surface",
+   "byrne": "Byrne's yellow is the colour his diagrams use for the ground a figure sits on as often as for a line; a yellowed limb is the loudest reading a flat fill allows",
+   "reading": "the most prominent gold this drawing can carry: the largest area it bounds (the whole visible face, 100.02% by measurement), with all eight lines drawn over it. This is the row that answers \"more prominently\" as area rather than as a second line colour — and the row where the two bars squeeze the gold hardest.",
+   "faces": [
+    "disc"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "disc",
+       "family": "gold",
+       "spec": "oklch(82.5% 0.14 75)",
+       "L": 82.5,
+       "token": "NEW CANDIDATE gold-face-disc-paper (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 82.5,
+        "hi": 89.5,
+        "mid": 86,
+        "n": 15
+       },
+       "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+       "goldFloor": 60,
+       "readsAsGold": true,
+       "belowFloor": false,
+       "candidate": "gold-face-disc-paper",
+       "candidateSpec": "oklch(82.5% 0.14 75)",
+       "candidateBytes": [
+        250,
+        183,
+        81
+       ],
+       "vsGround": 1.63,
+       "minLineOver": 3.01,
+       "nearestBrand": "Amazon yellow #FFB300",
+       "brandDist": 0.032,
+       "sameAsBrand": true,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.146,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "disc",
+       "family": "gold",
+       "spec": "oklch(39% 0.14 75)",
+       "L": 39,
+       "token": "NEW CANDIDATE gold-face-disc-ink (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 30.5,
+        "hi": 39,
+        "mid": 34.5,
+        "n": 18
+       },
+       "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+       "goldFloor": 60,
+       "readsAsGold": false,
+       "belowFloor": true,
+       "candidate": "gold-face-disc-ink",
+       "candidateSpec": "oklch(39.0% 0.14 75)",
+       "candidateBytes": [
+        110,
+        52,
+        0
+       ],
+       "vsGround": 1.9,
+       "minLineOver": 3,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.147,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.095,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    }
+   }
+  },
+  {
+   "id": "F8",
+   "label": "two areas, gold and red — lune gold, south lune in the club red",
+   "byrne": "the literal Byrne sentence with the yellow present: two regions named by two colours so the prose can point at either without a letter",
+   "reading": "F4's two disjoint regions, with the gold taking the triangle the metaphor lives in and the club red taking the region below the equator. What it costs is a third name in a mark whose claim is about a pair of lines — and the measured hue gap between the gold and the red is what says whether they read as two names or as one warm wash.",
+   "faces": [
+    "lune",
+    "south"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 7,
+    "ink": 6,
+    "newOnPaper": 2,
+    "newOnInk": 2
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "gold",
+       "spec": "oklch(82.5% 0.14 75)",
+       "L": 82.5,
+       "token": "NEW CANDIDATE gold-face-lune-paper (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 82.5,
+        "hi": 89.5,
+        "mid": 86,
+        "n": 15
+       },
+       "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+       "goldFloor": 60,
+       "readsAsGold": true,
+       "belowFloor": false,
+       "candidate": "gold-face-lune-paper",
+       "candidateSpec": "oklch(82.5% 0.14 75)",
+       "candidateBytes": [
+        250,
+        183,
+        81
+       ],
+       "vsGround": 1.63,
+       "minLineOver": 3.01,
+       "nearestBrand": "Amazon yellow #FFB300",
+       "brandDist": 0.032,
+       "sameAsBrand": true,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.146,
+       "reuses": null
+      },
+      {
+       "face": "south",
+       "family": "accent",
+       "spec": "oklch(81.5% 0.1321 35.7)",
+       "L": 81.5,
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 69,
+        "hi": 94,
+        "mid": 81.5,
+        "n": 51
+       },
+       "take": "L 81.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
+       "vsGround": 1.81,
+       "minLineOver": 4.52,
+       "nearestBrand": "Amazon orange #FF9900",
+       "brandDist": 0.096,
+       "sameAsBrand": false,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.152,
+       "reuses": null
+      }
+     ],
+     "newTokens": 2,
+     "faceGap": {
+      "pair": "lune/south",
+      "gap": 39,
+      "labDist": 0.092,
+      "distinctName": true
+     }
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "lune",
+       "family": "gold",
+       "spec": "oklch(39% 0.14 75)",
+       "L": 39,
+       "token": "NEW CANDIDATE gold-face-lune-ink (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 30.5,
+        "hi": 39,
+        "mid": 34.5,
+        "n": 18
+       },
+       "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+       "goldFloor": 60,
+       "readsAsGold": false,
+       "belowFloor": true,
+       "candidate": "gold-face-lune-ink",
+       "candidateSpec": "oklch(39.0% 0.14 75)",
+       "candidateBytes": [
+        110,
+        52,
+        0
+       ],
+       "vsGround": 1.9,
+       "minLineOver": 3,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.147,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.095,
+       "reuses": null
+      },
+      {
+       "face": "south",
+       "family": "accent",
+       "spec": "oklch(35.5% 0.1321 35.7)",
+       "L": 35.5,
+       "token": "NEW accent-wash",
+       "H": 35.7,
+       "C": 0.1321,
+       "tokenL": 0.5057,
+       "band": {
+        "lo": 31.5,
+        "hi": 40,
+        "mid": 35.5,
+        "n": 18
+       },
+       "take": "L 35.5 — the window mid",
+       "goldFloor": null,
+       "readsAsGold": null,
+       "belowFloor": null,
+       "candidate": null,
+       "candidateSpec": null,
+       "candidateBytes": null,
+       "vsGround": 1.58,
+       "minLineOver": 3.61,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.092,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.071,
+       "reuses": null
+      }
+     ],
+     "newTokens": 2,
+     "faceGap": {
+      "pair": "lune/south",
+      "gap": 39,
+      "labDist": 0.098,
+      "distinctName": true
+     }
+    }
+   }
+  },
+  {
+   "id": "F9",
+   "label": "the north lune filled in gold — the face the claim lives on, in gold",
+   "byrne": "the area a construction moves through, in the colour that carries most light: here the construction is the pair climbing to the pole",
+   "reading": "the middle prominence between F6 and F7: 68.45% of the visible face, the region that carries the pole, both meridians and the notation, in gold instead of the club blue F3 takes. It also puts the most line-ink over a gold fill, so it is where a gold's legal lightness is decided by the lines it has to keep legible.",
+   "faces": [
+    "north"
+   ],
+   "control": false,
+   "tokenCost": {
+    "paper": 6,
+    "ink": 5,
+    "newOnPaper": 1,
+    "newOnInk": 1
+   },
+   "grounds": {
+    "paper": {
+     "fills": [
+      {
+       "face": "north",
+       "family": "gold",
+       "spec": "oklch(82.5% 0.14 75)",
+       "L": 82.5,
+       "token": "NEW CANDIDATE gold-face-north-paper (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 82.5,
+        "hi": 89.5,
+        "mid": 86,
+        "n": 15
+       },
+       "take": "L 82.5 — the gold-ness floor 60 sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L 82.5 is already deeper than the floor; the mid L 86 would be a paler, quieter region for no gain)",
+       "goldFloor": 60,
+       "readsAsGold": true,
+       "belowFloor": false,
+       "candidate": "gold-face-north-paper",
+       "candidateSpec": "oklch(82.5% 0.14 75)",
+       "candidateBytes": [
+        250,
+        183,
+        81
+       ],
+       "vsGround": 1.63,
+       "minLineOver": 3.01,
+       "nearestBrand": "Amazon yellow #FFB300",
+       "brandDist": 0.032,
+       "sameAsBrand": true,
+       "nearestToken": "tint",
+       "nearestTokenDist": 0.146,
+       "reuses": null
+      }
+     ],
+     "newTokens": 1,
+     "faceGap": null
+    },
+    "ink": {
+     "fills": [
+      {
+       "face": "north",
+       "family": "gold",
+       "spec": "oklch(39% 0.14 75)",
+       "L": 39,
+       "token": "NEW CANDIDATE gold-face-north-ink (@theme declares no gold)",
+       "H": 75,
+       "C": 0.14,
+       "tokenL": null,
+       "band": {
+        "lo": 30.5,
+        "hi": 39,
+        "mid": 34.5,
+        "n": 18
+       },
+       "take": "L 39 — the PALEST end of the window: the gold-ness floor 60 is out of reach, so this face is bronze/ochre, not gold",
+       "goldFloor": 60,
+       "readsAsGold": false,
+       "belowFloor": true,
+       "candidate": "gold-face-north-ink",
+       "candidateSpec": "oklch(39.0% 0.14 75)",
+       "candidateBytes": [
+        110,
+        52,
+        0
+       ],
+       "vsGround": 1.9,
+       "minLineOver": 3,
+       "nearestBrand": "UMN maroon #98021E",
+       "brandDist": 0.147,
+       "sameAsBrand": false,
+       "nearestToken": "accent-strong",
+       "nearestTokenDist": 0.095,
        "reuses": null
       }
      ],
@@ -3803,6 +5762,1408 @@
      "inkPixels": 34697,
      "at30": 4612,
      "at30Pct": 13.3,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.95
+     }
+    }
+   ]
+  },
+  {
+   "id": "F6",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F6-320.png",
+     "rep": ".design/tmp-round22/hero-F6-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.2,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F6-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 5747,
+     "at30": 1484,
+     "at30Pct": 25.8,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F6-640.png",
+     "rep": ".design/tmp-round22/hero-F6-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 2.13,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F6-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 17236,
+     "at30": 4619,
+     "at30Pct": 26.8,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.87
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F6-1240.png",
+     "rep": ".design/tmp-round22/hero-F6-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.57,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F6-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 9486,
+     "at30": 2516,
+     "at30Pct": 26.5,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.04
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F6.png",
+     "rep": ".design/tmp-round22/card-F6.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.9,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F6.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 13109,
+     "at30": 4447,
+     "at30Pct": 33.9,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "F7",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F7-320.png",
+     "rep": ".design/tmp-round22/hero-F7-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.2,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F7-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 15774,
+     "at30": 1632,
+     "at30Pct": 10.3,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F7-640.png",
+     "rep": ".design/tmp-round22/hero-F7-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 2.13,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F7-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 49499,
+     "at30": 4893,
+     "at30Pct": 9.9,
+     "strongest": {
+      "c": [
+       26,
+       21,
+       13
+      ],
+      "contrast": 16.83
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F7-1240.png",
+     "rep": ".design/tmp-round22/hero-F7-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.57,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F7-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 26747,
+     "at30": 2712,
+     "at30Pct": 10.1,
+     "strongest": {
+      "c": [
+       26,
+       22,
+       14
+      ],
+      "contrast": 16.73
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F7.png",
+     "rep": ".design/tmp-round22/card-F7.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.9,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F7.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 34697,
+     "at30": 4701,
+     "at30Pct": 13.5,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       229
+      ],
+      "contrast": 15.95
+     }
+    }
+   ]
+  },
+  {
+   "id": "F8",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F8-320.png",
+     "rep": ".design/tmp-round22/hero-F8-320.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "tag": "path",
+       "contrast": 1.81,
+       "swDevice": 1.2,
+       "hue": 35.7
+      },
+      {
+       "role": "face2",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.2,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F8-320.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 10128,
+     "at30": 1552,
+     "at30Pct": 15.3,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F8-640.png",
+     "rep": ".design/tmp-round22/hero-F8-640.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "tag": "path",
+       "contrast": 1.81,
+       "swDevice": 2.13,
+       "hue": 35.7
+      },
+      {
+       "role": "face2",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 2.13,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F8-640.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 31246,
+     "at30": 4751,
+     "at30Pct": 15.2,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       14
+      ],
+      "contrast": 16.86
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F8-1240.png",
+     "rep": ".design/tmp-round22/hero-F8-1240.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "tag": "path",
+       "contrast": 1.81,
+       "swDevice": 1.57,
+       "hue": 35.7
+      },
+      {
+       "role": "face2",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.57,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F8-1240.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 17007,
+     "at30": 2597,
+     "at30Pct": 15.3,
+     "strongest": {
+      "c": [
+       24,
+       20,
+       13
+      ],
+      "contrast": 17.04
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F8.png",
+     "rep": ".design/tmp-round22/card-F8.json",
+     "shapeCount": 10,
+     "shapes": [
+      {
+       "role": "face1",
+       "contrast": 1.58,
+       "swDevice": 1.75
+      },
+      {
+       "role": "face2",
+       "contrast": 1.9,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F8.json reports 10 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 22461,
+     "at30": 4495,
+     "at30Pct": 20,
+     "strongest": {
+      "c": [
+       242,
+       238,
+       230
+      ],
+      "contrast": 15.94
+     }
+    }
+   ]
+  },
+  {
+   "id": "F9",
+   "paper": [
+    {
+     "width": 320,
+     "shot": ".design/tmp-round22/hero-F9-320.png",
+     "rep": ".design/tmp-round22/hero-F9-320.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.2,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 1.56,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 1.68,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 1.68,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 1.68,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.2,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F9-320.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 11393,
+     "at30": 1585,
+     "at30Pct": 13.9,
+     "strongest": {
+      "c": [
+       23,
+       19,
+       12
+      ],
+      "contrast": 17.15
+     }
+    },
+    {
+     "width": 640,
+     "shot": ".design/tmp-round22/hero-F9-640.png",
+     "rep": ".design/tmp-round22/hero-F9-640.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 2.13,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.77,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.99,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.99,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.99,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 2.13,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F9-640.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 35489,
+     "at30": 4794,
+     "at30Pct": 13.5,
+     "strongest": {
+      "c": [
+       25,
+       21,
+       13
+      ],
+      "contrast": 16.85
+     }
+    },
+    {
+     "width": 1240,
+     "shot": ".design/tmp-round22/hero-F9-1240.png",
+     "rep": ".design/tmp-round22/hero-F9-1240.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "tag": "path",
+       "contrast": 1.62,
+       "swDevice": 1.57,
+       "hue": 75
+      },
+      {
+       "role": "ring",
+       "tag": "circle",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "rear",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "front",
+       "tag": "path",
+       "contrast": 17.15,
+       "swDevice": 2.04,
+       "hue": 81.4
+      },
+      {
+       "role": "left",
+       "tag": "path",
+       "contrast": 5.77,
+       "swDevice": 2.19,
+       "hue": 35.7
+      },
+      {
+       "role": "right",
+       "tag": "path",
+       "contrast": 4.9,
+       "swDevice": 2.19,
+       "hue": 205
+      },
+      {
+       "role": "angleL",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "angleR",
+       "tag": "path",
+       "contrast": 8.17,
+       "swDevice": 2.19,
+       "hue": 35.35
+      },
+      {
+       "role": "dot",
+       "tag": "circle",
+       "contrast": 5.09,
+       "swDevice": 1.57,
+       "hue": 145
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/hero-F9-1240.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 19226,
+     "at30": 2653,
+     "at30Pct": 13.8,
+     "strongest": {
+      "c": [
+       26,
+       21,
+       14
+      ],
+      "contrast": 16.77
+     }
+    }
+   ],
+   "ink": [
+    {
+     "shot": ".design/tmp-round22/card-F9.png",
+     "rep": ".design/tmp-round22/card-F9.json",
+     "shapeCount": 9,
+     "shapes": [
+      {
+       "role": "face",
+       "contrast": 1.9,
+       "swDevice": 1.75
+      },
+      {
+       "role": "ring",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "rear",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "front",
+       "contrast": 16.43,
+       "swDevice": 2.27
+      },
+      {
+       "role": "left",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "right",
+       "contrast": 5.78,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleL",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "angleR",
+       "contrast": 5.69,
+       "swDevice": 2.45
+      },
+      {
+       "role": "dot",
+       "contrast": 5.77,
+       "swDevice": 1.75
+      }
+     ],
+     "geometry": {
+      "fail": true,
+      "out": ".design/tmp-round22/card-F9.json reports 9 shape(s) against a table of 7 — the painted contrasts cannot be matched to the table's roles, so the figure cannot be split into its roles"
+     },
+     "pixels": {
+      "ok": true
+     },
+     "inkPixels": 25345,
+     "at30": 4609,
+     "at30Pct": 18.2,
      "strongest": {
       "c": [
        242,

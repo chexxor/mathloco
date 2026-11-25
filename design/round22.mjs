@@ -2,8 +2,8 @@
 // round22.mjs — grill round 22: the Byrne FACE colourings of the club mark, PRICED, not applied (2026-11-24).
 //
 //   node design/round22.mjs                     # every row, both grounds, three hero widths
-//   node design/round22.mjs --only F1,F4        # a subset, for re-pricing one row
-//   node design/round22.mjs --widths 640        # a narrower width set  (NEVER against the committed record)
+//   node design/round22.mjs --only F1,F4        # a subset (writes a SUBSET record to .design/, never the tracked one)
+//   node design/round22.mjs --widths 640        # a narrower width set (same guard: a subset record, never the tracked one)
 //
 // WHAT THIS ROUND OWES THE OPERATOR. The seventh ruling on this mark (D483) took Byrne row C for the LINES and
 // asked, in the same sentence, for "options for coloring faces of the shape also in the Byrne style". Round 21
@@ -44,10 +44,10 @@ import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync, existsSync } fr
 import { resolve } from 'node:path';
 import sharp from 'sharp';
 import { MARK, MARK_SLOTS, MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
-import { paletteTokens } from './palette-tokens.mjs';
+import { paletteTokens, declareCandidate } from './palette-tokens.mjs';
 import { contrastTriple, BARS, hueGap, nearestBrand, SAME_COLOUR_BAR, dist } from './grill/okcolor.mjs';
 import { FACES, FACE_GEOMETRY, faceAreas, assertAreas, faceBy, facePolygon } from './mark-faces.mjs';
-import { ROWS, LINES } from './grill/round22-options.mjs';
+import { ROWS, LINES, FAMILIES, GOLD_FAMILY, GOLD_HUES, GOLD_CHROMAS } from './grill/round22-options.mjs';
 import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-mark.mjs';
 import { distState, staleLine } from './dist-fresh.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
@@ -56,6 +56,12 @@ const argv = process.argv.slice(2);
 const flag = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[i + 1] ?? d : d; };
 const WIDTHS = flag('widths', '320,640,1240').split(',').map(Number);
 const ONLY = flag('only', null)?.split(',').map((s) => s.trim().toUpperCase());
+// THE SUBSET GUARD (the shape design/round23.mjs:71 has had since round 23 landed; round 22 did not, which meant a
+// `--only F6` run would have OVERWRITTEN the tracked committed record with a partial one and a later `check:mark`-style
+// reader could not tell the difference). A run that is not the full row set and the full width set writes its record to
+// .design/ scratch, so the tracked record is only ever written by a run that measured everything the specimen claims.
+const FULL_WIDTHS = '320,640,1240';
+const SUBSET = ONLY != null || WIDTHS.join(',') !== FULL_WIDTHS;
 
 const TMP = '.design/tmp-round22';
 const DIST = resolve(TMP, 'dist');
@@ -151,7 +157,16 @@ const overSlots = (face) => MARK_SLOTS.filter((s) => coverage[face][s].frac >= 0
 // ground (>= 1.35) and (b) leaves every line drawn over it legible against the FILL (>= 3.0). The candidate the
 // rows paint is the window MIDPOINT — the point furthest from both bars, which is the safest place in a window
 // that is usually only a few tenths of a lightness wide.
-const familyOf = (name) => { const t = tok(name); return { family: name, H: t.H, C: t.C, tokenL: t.L, tokens: [name] }; };
+// A family is either a hue the palette ALREADY declares (a token name, resolved through @theme) or a hue it does
+// not (rows F6-F9's gold, the operator's steer of 2026-11-25). A candidate family carries no `tokenL` because there
+// is no token to compare with, and its lightness is NOT the window mid: gold-ness is a property of how a hue READS,
+// so the round takes the floor-clamped end (see `take` below) and flags the case where the window never reaches it.
+const familyOf = (name) => {
+  const fam = FAMILIES[name];
+  if (fam) return { family: name, H: fam.H, C: fam.C, tokenL: null, tokens: [], candidate: true, floor: fam.floor };
+  const t = tok(name);
+  return { family: name, H: t.H, C: t.C, tokenL: t.L, tokens: [name], candidate: false };
+};
 function bandFor(H, C, ground, overTokens) {
   const ok = [];
   for (let L = 1; L <= 99; L += 0.5) {
@@ -177,11 +192,33 @@ for (const f of FACES) {
       const fam = familyOf(name);
       const b = bandFor(fam.H, fam.C, g, overTokens);
       if (!b) { rep.rows[name] = { family: name, H: fam.H, C: fam.C, band: null, note: `no lightness of hue ${fam.H} C ${fam.C} both reads as a region on ${ground} AND keeps ${over.map((s) => LINES[ground][s]).join(',')} legible` }; continue; }
-      const spec = `oklch(${b.mid}% ${fam.C} ${fam.H})`;
+      // WHICH LIGHTNESS THE ROUND TAKES. For a declared family that is the window mid, the point furthest from both
+      // bars. For a gold it is the lightness at which the hue reads as gold (round 21's stated floor), clamped into
+      // the window: the palest legal lightness at or above the floor when the window reaches it, otherwise the pale
+      // end it can reach, FLAGGED as below the floor. That flag is the steer's price stated as arithmetic — a gold
+      // face can be pushed below the lightness where hue 75 still reads as gold, and the round prints which faces
+      // that happens to instead of quietly picking a browner colour and calling it gold.
+      const atOrAbove = b.hi >= fam.floor;
+      const L = fam.candidate ? (atOrAbove ? Math.max(b.lo, fam.floor) : b.hi) : b.mid;
+      const spec = `oklch(${L}% ${fam.C} ${fam.H})`;
       const nb = nearestBrand(spec, 1)[0];
       const reuse = Object.entries(TOKENS).map(([n, t]) => [n, dist(spec, t.spec)]).sort((a, b2) => a[1] - b2[1])[0];
+      const cand = fam.candidate
+        ? declareCandidate(`gold-face-${f.name}-${ground}`, spec, 'design/round22.mjs faceSolve')
+        : null;
       rep.rows[name] = {
-        family: name, H: fam.H, C: fam.C, tokenL: fam.tokenL, band: b, spec,
+        family: name, H: fam.H, C: fam.C, tokenL: fam.tokenL, band: b, L, spec,
+        take: fam.candidate
+          ? (atOrAbove
+            ? `L ${L} — the gold-ness floor ${fam.floor} sits inside the window, so the round takes the DEEPEST lightness that still reads as gold (the window's own low end L ${b.lo} is already deeper than the floor; the mid L ${b.mid} would be a paler, quieter region for no gain)`
+            : `L ${L} — the PALEST end of the window: the gold-ness floor ${fam.floor} is out of reach, so this face is bronze/ochre, not gold`)
+          : `L ${b.mid} — the window mid`,
+        goldFloor: fam.candidate ? fam.floor : null,
+        readsAsGold: fam.candidate ? L >= fam.floor : null,
+        belowFloor: fam.candidate ? L < fam.floor : null,
+        candidate: cand ? cand.name : null,
+        candidateSpec: cand ? cand.spec : null,
+        candidateBytes: cand ? cand.bytes : null,
         vsGround: +contrastTriple(spec, g.spec).toFixed(2),
         minLineOver: +Math.min(...over.map((s) => contrastTriple(tok(LINES[ground][s]).spec, spec))).toFixed(2),
         nearestBrand: nb.brand, brandDist: nb.d, sameAsBrand: nb.d < SAME_COLOUR_BAR,
@@ -209,6 +246,33 @@ const censusTally = {
   paperFails: census.filter((c) => !c.paper.readsAsRegion).map((c) => `${c.token} ${c.paper.vsGround}`),
 };
 
+// ---------- 3b. THE GOLD MATRIX: every hue/chroma pair the search space offers, per face, per ground ----------
+// The rows F6-F9 each take ONE pair (the one round 23's tab solve preferred). This table prices the other three, so
+// the answer to "could a gold face exist that is not the colour the rows paint?" is arithmetic in the record rather
+// than a claim in prose — and specifically whether any pair escapes the brand collision the chosen pair lands in on
+// paper (Amazon yellow #FFB300, delta-OKLab 0.032 against the 0.05 same-colour bar, D316). Solve only: no paint, no
+// token declared, because a candidate the round does not paint would be a colour with a name and no measurement.
+const goldMatrix = [];
+for (const fn of FACES) for (const ground of ['paper', 'ink']) {
+  const overTokens = faceSolve[fn.name][ground].over.map((s) => tok(LINES[ground][s]));
+  for (const H of GOLD_HUES) for (const C of GOLD_CHROMAS) {
+    const b = bandFor(H, C, GROUNDS[ground], overTokens);
+    if (!b) { goldMatrix.push({ face: fn.name, ground, H, C, note: `no lightness 1..99 at hue ${H} C ${C} reads as a region on ${ground} AND keeps ${faceSolve[fn.name][ground].over.join(',')} legible` }); continue; }
+    const L = b.hi >= GOLD_FAMILY.floor ? Math.max(b.lo, GOLD_FAMILY.floor) : b.hi;
+    const spec = `oklch(${L}% ${C} ${H})`;
+    const nb = nearestBrand(spec, 1)[0];
+    goldMatrix.push({
+      face: fn.name, ground, H, C, band: b, L, spec,
+      readsAsGold: L >= GOLD_FAMILY.floor, belowFloor: L < GOLD_FAMILY.floor,
+      vsGround: +contrastTriple(spec, GROUNDS[ground].spec).toFixed(2),
+      minLineOver: +Math.min(...overTokens.map((t) => contrastTriple(t.spec, spec))).toFixed(2),
+      nearestBrand: nb.brand, brandDist: nb.d, sameAsBrand: nb.d < SAME_COLOUR_BAR,
+      chosen: H === GOLD_FAMILY.H && C === GOLD_FAMILY.C,
+    });
+  }
+}
+const goldCollisions = goldMatrix.filter((m) => m.sameAsBrand).map((m) => `${m.face}/${m.ground} hue ${m.H} C ${m.C} -> ${m.nearestBrand} d=${m.brandDist}`);
+
 // ---------- 4. each row: the colours it would paint, the tokens it would cost ----------
 const priced = ROWS.map((r) => {
   const row = { id: r.id, label: r.label, byrne: r.byrne, reading: r.reading, faces: r.faces.map((fc) => String(fc.face)), control: r.id === CONTROL.id, grounds: {} };
@@ -216,7 +280,7 @@ const priced = ROWS.map((r) => {
     const fills = r.faces.map((fc) => {
       const s = faceSolve[fc.face]?.[ground]?.rows[fc.family];
       if (!s) throw new Error(`round22: row ${r.id} fills "${fc.face}" in family ${fc.family} on ${ground}, which has no band. Fix the row or price the failure, do not paint it.`);
-      return { face: fc.face, family: fc.family, spec: s.spec, token: s.reuses ?? `NEW ${fc.family}-wash`, ...s };
+      return { face: fc.face, family: fc.family, spec: s.spec, L: s.L, token: s.reuses ?? (s.candidate ? `NEW CANDIDATE ${s.candidate} (@theme declares no gold)` : `NEW ${fc.family}-wash`), ...s };
     });
     const newTokens = fills.filter((f) => !f.reuses).length;
     let faceGap = null, facePair = '';
@@ -336,11 +400,24 @@ const report = {
   shapeCountPrice: { tableShapes: MARK.shapes.length, MARK_SHAPE_COUNT, acceptedReportLength: MARK.shapes.length + 1, note: 'design/mark-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both mark probes refuse: the refusal text is recorded per row in painted[].' },
   control: { id: CONTROL.id, derivedFrom: 'MARK_COLOURS in src/lib/brand-mark.mjs' },
   lines: LINES,
+  gold: {
+    steer: 'operator, 2026-11-25: "Regarding the logo, I feel like the gold color that is an established theme color of the website should be used in the logo a bit more prominently. Ensure some options you create to share with me consider that."',
+    family: GOLD_FAMILY,
+    rows: ROWS.filter((r) => r.faces.some((fc) => FAMILIES[fc.family])).map((r) => r.id),
+    candidates: Object.fromEntries(FACES.flatMap((fn) => ['paper', 'ink'].map((ground) => {
+      const row = Object.entries(faceSolve[fn.name][ground].rows).find(([, s2]) => s2.candidate);
+      return row ? [`${fn.name}-${ground}`, { candidate: row[1].candidate, spec: row[1].spec, bytes: row[1].candidateBytes, L: row[1].L, band: row[1].band, take: row[1].take, readsAsGold: row[1].readsAsGold, belowFloor: row[1].belowFloor, vsGround: row[1].vsGround, minLineOver: row[1].minLineOver, nearestBrand: row[1].nearestBrand, brandDist: row[1].brandDist, nearestToken: row[1].nearestToken, nearestTokenDist: row[1].nearestTokenDist }] : null;
+    }).filter(Boolean))),
+    warmNote: 'the site\'s declared warm family is `--color-accent` at hue 35.7, so row F1/F2/F8\'s red is already the closest thing to the site\'s "gold" that costs no token and no ruling; rows F6/F7/F9 price a hue @theme does not declare, which costs a new token and the gates that read it.',
+    matrix: goldMatrix,
+    brandCollisions: goldCollisions,
+  },
   rows: priced.map((r) => ({ id: r.id, label: r.label, byrne: r.byrne, reading: r.reading, faces: r.faces, control: r.control, tokenCost: tokenCost(r), grounds: r.grounds })),
   painted,
 };
-mkdirSync('design/grill/round22', { recursive: true });
-writeFileSync('design/grill/round22/report.json', JSON.stringify(report, null, 1) + '\n');
+const REPORT = SUBSET ? `${TMP}/report-subset.json` : 'design/grill/round22/report.json';
+mkdirSync(resolve(REPORT, '..'), { recursive: true });
+writeFileSync(REPORT, JSON.stringify(report, null, 1) + '\n');
 
 // ---------- 7. print ----------
 console.log(`BYRNE ROUND 22 — ${ROWS.length} face rows x 2 grounds. Bars: filled region ${BARS.layer}, graphic line ${BARS.graphic}.`);
@@ -363,9 +440,18 @@ for (const f of FACES) for (const ground of ['paper', 'ink']) {
   console.log(`${f.name} on ${ground} — lines that must survive it: ${rep.over.map((s) => `${s}=${LINES[ground][s]}`).join(' ')}`);
   for (const [name, s] of Object.entries(rep.rows)) {
     if (!s.band) { console.log(`   ${name.padEnd(15)} ${s.note}`); continue; }
-    console.log(`   ${name.padEnd(15)} hue ${String(s.H).padStart(6)} C ${s.C}  window L ${s.band.lo}..${s.band.hi} (${s.band.n} legal steps, token is L ${s.tokenL})  mid ${s.spec}  vs ${ground} ${s.vsGround}  worst line over it ${s.minLineOver}  nearest brand ${s.nearestBrand} d=${s.brandDist}${s.sameAsBrand ? ' SAME COLOUR' : ''}  ${s.reuses ? `reuses --color-${s.reuses}` : 'NEEDS A NEW TOKEN'}`);
+    console.log(`   ${name.padEnd(15)} hue ${String(s.H).padStart(6)} C ${s.C}  window L ${s.band.lo}..${s.band.hi} (${s.band.n} legal steps${s.tokenL === null ? ', no token declares this hue' : `, token is L ${s.tokenL}`})  takes ${s.take}  ${s.spec}  vs ${ground} ${s.vsGround}  worst line over it ${s.minLineOver}  nearest brand ${s.nearestBrand} d=${s.brandDist}${s.sameAsBrand ? ' SAME COLOUR' : ''}  ${s.reuses ? `reuses --color-${s.reuses}` : s.candidate ? `CANDIDATE ${s.candidate}${s.readsAsGold ? ' (reads as gold)' : ' (BELOW the gold-ness floor L ' + s.goldFloor + ')'}` : 'NEEDS A NEW TOKEN'}`);
   }
 }
+console.log('\n=== THE GOLD STEER (operator, 2026-11-25): the face rows that price a hue @theme does not declare ===');
+console.log(`family: hue ${GOLD_FAMILY.H} chroma ${GOLD_FAMILY.C} — ${GOLD_FAMILY.source}. gold-ness floor L ${GOLD_FAMILY.floor} (${GOLD_FAMILY.floorSource}). Rows: ${report.gold.rows.join(', ')}.`);
+for (const [k, c] of Object.entries(report.gold.candidates))
+  console.log(`   ${k.padEnd(14)} ${c.spec} -> ${c.bytes.join(',')}  window L ${c.band.lo}..${c.band.hi}  ${c.belowFloor ? `BELOW the floor at L ${c.L}` : `reads as gold at L ${c.L}`}  vs ground ${c.vsGround}  worst line over it ${c.minLineOver}  nearest brand ${c.nearestBrand} d=${c.brandDist}  nearest token --color-${c.nearestToken} d=${c.nearestTokenDist}`);
+console.log('   warm alternative that costs nothing: --color-accent (hue 35.7) is the family the role `gold` held before D316 renamed it — rows F1, F2 and F8 already price it as a face.');
+console.log('   every hue/chroma pair the search space offers, per face and ground (the chosen pair is marked *):');
+for (const m of report.gold.matrix)
+  console.log(`     ${m.face.padEnd(6)} ${m.ground.padEnd(6)} ${m.chosen ? '*' : ' '} hue ${String(m.H).padStart(2)} C ${m.C}  window L ${m.band ? `${m.band.lo}..${m.band.hi}` : '—'}  ${m.band ? `${m.spec} ${m.belowFloor ? `BELOW floor L ${m.L}` : `gold at L ${m.L}`}  vs ground ${m.vsGround}  worst line ${m.minLineOver}  brand ${m.nearestBrand} d=${m.brandDist}${m.sameAsBrand ? ' SAME COLOUR' : ''}` : m.note}`);
+if (report.gold.brandCollisions.length) console.log(`   SAME-COLOUR COLLISIONS under ${SAME_COLOUR_BAR} delta-OKLab (D316): ${report.gold.brandCollisions.join(' | ')}`);
 console.log('\n=== EACH ROW: what it paints, and what it costs in tokens ===');
 for (const r of priced) {
   const c = tokenCost(r);
@@ -406,6 +492,6 @@ for (const row of painted) {
   }
 }
 const broke = painted.some((r) => r.paper.some((p) => p.error) || r.ink.some((c) => c.error)) || ctrlFail.length > 0 || !cardAvailable;
-console.log(`\nwrote design/grill/round22/report.json; crops in ${TMP}/crop-<id>-<ground>-<w>.png`);
+console.log(`\nwrote ${REPORT}${SUBSET ? ' (SUBSET run — the tracked record at design/grill/round22/report.json was NOT overwritten)' : ''}; crops in ${TMP}/crop-<id>-<ground>-<w>.png`);
 console.log(`SHAPE-COUNT PRICE: ${report.shapeCountPrice.acceptedReportLength} painted shapes is all design/mark-geometry.mjs accepts (table ${report.shapeCountPrice.tableShapes} + the pole dot). A row that fills a face reports 9.`);
 if (broke) { console.error('MACHINERY: at least one row failed to measure, the card document was missing, or the CONTROL row did not pass its own probes — the numbers above are incomplete'); process.exit(1); }

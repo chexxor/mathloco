@@ -138,6 +138,8 @@
     "round21:specimen": "node design/grill/round21-build.mjs",
     "round22": "node design/round22.mjs",
     "round22:specimen": "node design/grill/round22-build.mjs",
+    "round23": "node design/round23.mjs",
+    "round23:specimen": "node design/grill/round23-build.mjs",
     "round17:specimen": "node design/grill/round17-build.mjs",
     "plates": "node scripts/plate-asset.mjs",
     "check:space": "node design/whitespace-survey.mjs",
@@ -182,6 +184,7 @@
     "check:social:live": "node scripts/make-social-share.mjs .design/tmp-card-live.jpg",
     "check:favicon": "node scripts/check-favicon.mjs",
     "check:favicon:selftest": "node scripts/check-favicon.mjs --selftest",
+    "palette:selftest": "node design/palette-tokens.mjs --selftest",
     "round16:base": "node design/grill/copy-shipped.mjs"
   },
   "dependencies": {
