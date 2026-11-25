@@ -92,7 +92,7 @@ function verdict(data) {
   if (/<PlatformMarks/.test(layoutText)) {
     fail.push(
       `${LAYOUT}: emits <PlatformMarks> for every page, so a page painting no mark ships the glyph bytes anyway ` +
-      `(D294 - the component that paints the mark claims the sprite, not the shell around it).`
+      `(D294 - the component that paints the platform glyph claims the sprite, not the shell around it).`
     );
   }
 

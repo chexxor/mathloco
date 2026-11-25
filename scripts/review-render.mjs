@@ -58,7 +58,7 @@ const gi = argv.indexOf('--gates');
 const named = gi >= 0 ? argv.slice(gi + 1).filter((a) => !a.startsWith('--')) : [];
 // The geometry three by default: the placeholder question is always about boxes and edges — control geometry
 // and rings (`check:render:dist`), the reserved slot sizes (`check:space`), and what the hairlines measure off
-// painted bytes (`check:ground`). The mark, the card producer and both selftests answer the same question
+// painted bytes (`check:ground`). The logo, the card producer and both selftests answer the same question
 // whether or not a placeholder is standing in the page, so `--all` is there but is not the default.
 const GATES = ALL ? [] : (named.length ? named : ['check:render:dist', 'check:space', 'check:ground']);
 

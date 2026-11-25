@@ -151,9 +151,9 @@ percentage looks impossible, and note `page-measure`'s window height must be tal
 
 ## Reuse, don't re-derive
 
-- Mark coverage: **`design/mark-pixels.mjs`** (via a generated box JSON) — it knows a stroke under ~1.5 device px
+- Logo coverage: **`logo-pixels.mjs`** (via a generated box JSON) — it knows a stroke under ~1.5 device px
   can never contain a fully covered pixel (D119). `round9.mjs` pads each box because the probe samples the ground
-  from a strip beside it, and lays one mark per row so the strip is clean ground.
+  from a strip beside it, and lays one logo per row so the strip is clean ground.
 - Contrast on a live page: `design/grill/contrast-oracle.mjs` with a generated config.
 - Colour presence on a live page: `npm run check:color`.
 - Shared maths: `design/grill/okcolor.mjs`. A predictor that re-implements OKLab is a second source of truth, and
@@ -240,7 +240,7 @@ rig (Linux, Node 22.23.4, Firefox):
 - `npm run verify` ~4 min (browser-free, 21 gates) — cheap, run it first and often.
 - `check:color` ~1 min (two routes × two widths, each two-pass now — the frame pass doubles its cost).
 - `check:space` ~1 min; `check:rhythm` ~6 min (6 variants × 2 widths, and every variant is a full page load).
-- `round10` ~1 min; `round9` ~2 min; `check:render` ~2 min; `check:mark` ~1 min.
+- `round10` ~1 min; `round9` ~2 min; `check:render` ~2 min; `check:logo` ~1 min.
 
 Cheapest wins, in order of minutes saved:
 1. **`--no-build` variants.** After `verify`/`build`, run `check:render:dist` instead of `check:render`; the
@@ -289,7 +289,7 @@ Cheapest wins, in order of minutes saved:
   (`plateSource` -> `sharp().metadata()`) and have the asset writer print `output ... source ...` (`npm run plates`
   does). Upscale factors inferred from a rung name were wrong by 45% and one whole option was built on them (D167).
 - **The review build measures a different page than the site.** `npm run review:render` plants
-  `data-placeholder="hero"` and hides the plate; its `check:render` FAILs (seven mark strokes at 1240, D158's
+  `data-placeholder="hero"` and hides the plate; its `check:render` FAILs (seven logo strokes at 1240, D158's
   corrected count) are that *review state*, not the shipped page. Before quoting any `review:render` number, check
   the marker is planted (`grep -c data-placeholder dist/client/index.html` must be 0 in a normal build) and read the
   assertion the harness prints. `npm run plates` + `npm run build` then re-running the round is the way to prove a

@@ -1,8 +1,8 @@
-// mark-meridian-fit.mjs — how straight can a meridian be, and what does the meeting angle cost?
+// logo-meridian-fit.mjs — how straight can a meridian be, and what does the meeting angle cost?
 //
-//   node design/mark-meridian-fit.mjs            # the trade-off table for the mark's own sphere
-//   node design/mark-meridian-fit.mjs --join 72  # one candidate, printed in path form
-//   node design/mark-meridian-fit.mjs --exact    # the TRUE projected meridian, as path data
+//   node logo-meridian-fit.mjs            # the trade-off table for the logo's own sphere
+//   node logo-meridian-fit.mjs --join 72  # one candidate, printed in path form
+//   node logo-meridian-fit.mjs --exact    # the TRUE projected meridian, as path data
 //
 // SIXTH RULING (operator, 2026-11-24): "the curves from the equator to the north pole are not perfectly curved as
 // they would when on a sphere. Can you fix that?" That retires the trade-off below as the thing that picks the
@@ -12,27 +12,27 @@
 // ellipse with the standard k = 4(sqrt2-1)/3 control offset reproduces it to hundredths of a unit, and the script
 // reports that error rather than asserting it.
 //
-// WHY THIS EXISTS. The fifth ruling on the mark (operator, 2026-11-24) moves the meeting point from the SOUTH
+// WHY THIS EXISTS. The fifth ruling on the logo (operator, 2026-11-24) moves the meeting point from the SOUTH
 // pole to the NORTH pole. That is not a mirror of the old drawing: the fourth ruling (2026-11-23) pinned the two
 // lines to the NEAR arc of the equator, and the near arc sits 19 units BELOW the centre, so the room between the
-// join and the pole changes from 39 units to 77. The room is where the mark's two claims compete:
+// join and the pole changes from 39 units to 77. The room is where the logo's two claims compete:
 //
 //   - "PARALLEL" wants a long straight run at a constant separation;
 //   - "ON A CURVED SURFACE" wants the pair to follow a real meridian, which starts bending at once;
 //   - "THEY CROSS" wants the two to arrive at the pole at an angle, not kiss into it.
 //
 // So the choice is a curve of trade-offs, and the honest way to pick a point on it is to measure the curve. This
-// script computes the TRUE orthographic meridian of the sphere the mark already draws (ring r 58, equator
-// semi-minor 21, so the axis stands 21.2 deg out of the screen plane), then fits the mark's two-part route
+// script computes the TRUE orthographic meridian of the sphere the logo already draws (ring r 58, equator
+// semi-minor 21, so the axis stands 21.2 deg out of the screen plane), then fits the logo's two-part route
 // (a straight vertical, then one cubic with a vertical departure, ending ON the ring) for each candidate length
 // of straight run, and reports the deviation from the true meridian and the angle the mirrored pair meet at.
 //
-// It reads the sphere out of `src/lib/brand-mark.mjs` rather than restating it, so a retune of the ring or the
+// It reads the sphere out of `src/lib/logo.mjs` rather than restating it, so a retune of the ring or the
 // equator moves this table with it.
-import { MARK } from '../src/lib/brand-mark.mjs';
+import { LOGO } from '../src/lib/logo.mjs';
 
-const sphere = MARK.shapes.find((s) => s.role === 'sphere' && s.tag === 'circle');
-const arcs = MARK.shapes.filter((s) => s.role === 'sphere' && s.tag === 'path');
+const sphere = LOGO.shapes.find((s) => s.role === 'sphere' && s.tag === 'circle');
+const arcs = LOGO.shapes.filter((s) => s.role === 'sphere' && s.tag === 'path');
 const near = arcs.find((a) => a.face === 'front');
 const { cx, cy, r } = sphere;
 const num = (s) => (s.match(/-?\d+(\.\d+)?/g) || []).map(Number);
@@ -53,7 +53,7 @@ const atX = (b, x) => {
 };
 
 // the routes' join columns, read out of the table (the first `L` of each route)
-const routes = MARK.shapes.filter((s) => s.role === 'route');
+const routes = LOGO.shapes.filter((s) => s.role === 'route');
 const joinX = routes.map((s) => { const n = num(s.d); return n[0]; });
 const xJoin = Math.min(...joinX);                       // the left route's column
 const P = atX(nearB, xJoin);
@@ -79,7 +79,7 @@ const arrTrue = Math.abs(Math.atan2(-Ph[2], -Ph[0]) * 180 / Math.PI);
 
 console.log(`sphere r ${r} at ${cx},${cy}; the drawn near arc paints y ${P.y.toFixed(3)} at x ${xJoin} and lies ${P.deg.toFixed(2)} deg off horizontal there`);
 console.log(`equator semi-minor ${bow} = ${(bow / r).toFixed(4)} r -> the axis stands ${(phi * 180 / Math.PI).toFixed(2)} deg out of the screen plane`);
-console.log(`a true projection puts the pole ${Math.round(r * Math.cos(phi))} units from the centre (y ${poleTrue.toFixed(2)}); the mark's convention puts it ON the ring at y ${cy - r}, ${Math.abs(poleTrue - (cy - r)).toFixed(2)} units further out`);
+console.log(`a true projection puts the pole ${Math.round(r * Math.cos(phi))} units from the centre (y ${poleTrue.toFixed(2)}); the logo's convention puts it ON the ring at y ${cy - r}, ${Math.abs(poleTrue - (cy - r)).toFixed(2)} units further out`);
 console.log(`the true meridian arrives at the pole ${arrTrue.toFixed(1)} deg off horizontal, so a mirrored pair would meet at ${(arrTrue <= 45 ? 2 * arrTrue : 180 - 2 * arrTrue).toFixed(0)} deg`);
 
 const E = [cx, cy - r];                                  // the meeting point the gates hold: on the ring
@@ -162,7 +162,7 @@ if (process.argv.includes('--exact')) {
   }
   const dep = Math.atan2(P1[1] - P0[1], P1[0] - P0[0]) * 180 / Math.PI;
   const arr = Math.atan2(P3[1] - P2[1], P3[0] - P2[0]) * 180 / Math.PI;
-  // how the separation of the mirrored pair behaves: the mark's "parallel" claim now lives here, not in a
+  // how the separation of the mirrored pair behaves: the logo's "parallel" claim now lives here, not in a
   // straight segment, so the number has to be measured and stated.
   const sepAt = (dy) => {
     let lo = 0, hi = 1;

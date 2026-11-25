@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// round22-build.mjs — the round-22 specimen: Byrne FACE colourings of the club mark, priced on both grounds with
+// round22-build.mjs — the round-22 specimen: Byrne FACE colourings of the club logo, priced on both grounds with
 // the numbers the same run produced. Generated from `design/grill/round22/report.json`; edit
 // `design/grill/round22-options.mjs` or re-run `node design/round22.mjs`, NEVER this HTML — a generated page embeds
 // what it measured, so a hand-edit here is a claim about a run nobody did (D282). A lookup that finds nothing THROWS.
@@ -16,7 +16,7 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { paletteTokens } from '../palette-tokens.mjs';
-import { FACES } from '../mark-faces.mjs';
+import { FACES } from '../logo-faces.mjs';
 
 const REPORT = resolve('design/grill/round22/report.json');
 const OUT = resolve('design/grill/round-22-faces.html');
@@ -65,7 +65,7 @@ const b64 = (p) => (existsSync(p) ? readFileSync(p).toString('base64') : null);
 const cropPath = (id, ground, w) => `.design/tmp-round22/crop-${id}-${ground}-${w}.png`;
 const faceOf = (name) => {
   const f = FACES.find((x) => x.name === name);
-  if (!f) throw new Error(`round22-build: design/mark-faces.mjs declares no face "${name}" — the report prices a region the geometry file does not bound`);
+  if (!f) throw new Error(`round22-build: logo-faces.mjs declares no face "${name}" — the report prices a region the geometry file does not bound`);
   return f;
 };
 const areaOf = (name) => {
@@ -200,11 +200,11 @@ const rowSection = (r) => {
   const shots = WIDTHS.map((w) => {
     const p = paintedRow(r.id, 'paper', w);
     return `<figure><img src="data:image/png;base64,${img(r.id, 'paper', w)}" alt="row ${r.id} painted on paper at ${w}px viewport width" />
-      <figcaption><strong>${w}px</strong> \u00b7 ${p.shapeCount} shapes \u00b7 ${p.inkPixels} ink px \u00b7 ${p.at30} at/over ${BARS.graphic} (<strong>${p.at30Pct}%</strong> of its ink) \u00b7 mark-geometry ${cell(p, p.geometry?.ok)} \u00b7 mark-pixels ${cell(p, p.pixels?.ok)}${p.geometry?.ok ? '' : `<div class="why">${esc(p.geometry.out)}</div>`}${p.pixels?.ok ? '' : `<div class="why">${esc(p.pixels.out)}</div>`}</figcaption></figure>`;
+      <figcaption><strong>${w}px</strong> \u00b7 ${p.shapeCount} shapes \u00b7 ${p.inkPixels} ink px \u00b7 ${p.at30} at/over ${BARS.graphic} (<strong>${p.at30Pct}%</strong> of its ink) \u00b7 logo-geometry ${cell(p, p.geometry?.ok)} \u00b7 logo-pixels ${cell(p, p.pixels?.ok)}${p.geometry?.ok ? '' : `<div class="why">${esc(p.geometry.out)}</div>`}${p.pixels?.ok ? '' : `<div class="why">${esc(p.pixels.out)}</div>`}</figcaption></figure>`;
   }).join('');
   const c = paintedRow(r.id, 'ink', 1200);
   const cardFig = `<figure class="card"><img src="data:image/png;base64,${img(r.id, 'ink', 1200)}" alt="row ${r.id} painted on the share card's ink ground" />
-    <figcaption><strong>the share card, ink ground</strong> \u00b7 ${c.shapeCount} shapes \u00b7 ${c.inkPixels} ink px \u00b7 ${c.at30} at/over ${BARS.graphic} (<strong>${c.at30Pct}%</strong> of its ink) \u00b7 mark-geometry ${cell(c, c.geometry?.ok)} \u00b7 mark-pixels ${cell(c, c.pixels?.ok)}${c.geometry?.ok ? '' : `<div class="why">${esc(c.geometry.out)}</div>`}${c.pixels?.ok ? '' : `<div class="why">${esc(c.pixels.out)}</div>`}</figcaption></figure>`;
+    <figcaption><strong>the share card, ink ground</strong> \u00b7 ${c.shapeCount} shapes \u00b7 ${c.inkPixels} ink px \u00b7 ${c.at30} at/over ${BARS.graphic} (<strong>${c.at30Pct}%</strong> of its ink) \u00b7 logo-geometry ${cell(c, c.geometry?.ok)} \u00b7 logo-pixels ${cell(c, c.pixels?.ok)}${c.geometry?.ok ? '' : `<div class="why">${esc(c.geometry.out)}</div>`}${c.pixels?.ok ? '' : `<div class="why">${esc(c.pixels.out)}</div>`}</figcaption></figure>`;
 
   const fillsTable = ['paper', 'ink'].map((ground) => {
     const g = r.grounds[ground];
@@ -228,7 +228,7 @@ const rowSection = (r) => {
   <p class="byrne"><strong>What Byrne does:</strong> ${esc(need(r.byrne, `${r.id} byrne`))}</p>
   <div class="shots">${shots}${cardFig}</div>
   <table class="fills"><thead><tr><th class="gnd">ground</th>${(r.grounds.paper.fills.length ? r.grounds.paper.fills : [null, null]).map(() => '<th>filled face</th>').join('')}</tr></thead><tbody>${fillsTable}</tbody></table>
-  <p class="meta">tokens on the hero: <strong>${r.tokenCost.paper}</strong> distinct, <strong>${r.tokenCost.newOnPaper}</strong> new \u00b7 on the card: <strong>${r.tokenCost.ink}</strong> distinct, <strong>${r.tokenCost.newOnInk}</strong> new. Lines are row C's, imported from <code>src/lib/brand-mark.mjs</code>, unchanged in every row of this round.</p>
+  <p class="meta">tokens on the hero: <strong>${r.tokenCost.paper}</strong> distinct, <strong>${r.tokenCost.newOnPaper}</strong> new \u00b7 on the card: <strong>${r.tokenCost.ink}</strong> distinct, <strong>${r.tokenCost.newOnInk}</strong> new. Lines are row C's, imported from <code>src/lib/logo.mjs</code>, unchanged in every row of this round.</p>
   ${gaps ? `<ul class="gaps">${gaps}</ul>` : ''}
 </section>`;
 };
@@ -241,7 +241,7 @@ const refusals = [...new Set(PAINTED.flatMap((p) => [
 const refusedIds = [...new Set(PAINTED.filter((p) => !p.paper.every((x) => x.geometry?.ok) || !(p.ink ?? []).every((x) => x.geometry?.ok)).map((p) => p.id))];
 
 // The CONTROL is the row the report says is shipped — the round found it by matching the imported line maps against
-// MARK_COLOURS in src/lib/brand-mark.mjs (D481 §c), so this file does not get to name the incumbent off its own
+// LOGO_COLOURS in src/lib/logo.mjs (D481 §c), so this file does not get to name the incumbent off its own
 // ordering of the painted rows.
 const CONTROL_ID = R.control?.id;
 if (!CONTROL_ID) {
@@ -250,10 +250,10 @@ if (!CONTROL_ID) {
 const control = PAINTED.find((p) => p.id === CONTROL_ID);
 const controlBad = !control
   ? 'has no painted rows in the report'
-  : !control.paper.every((p) => p.geometry?.ok) ? 'fails mark-geometry on the hero'
-  : !(control.ink ?? []).every((c) => c.geometry?.ok) ? 'fails mark-geometry on the share card' : null;
+  : !control.paper.every((p) => p.geometry?.ok) ? 'fails logo-geometry on the hero'
+  : !(control.ink ?? []).every((c) => c.geometry?.ok) ? 'fails logo-geometry on the share card' : null;
 if (controlBad) {
-  throw new Error(`round22-build: the CONTROL row ${CONTROL_ID} — the colouring src/lib/brand-mark.mjs ships (${R.control.derivedFrom}) — ${controlBad}. The mutation is broken, so every face price in this specimen is untrustworthy. Fix design/round22.mjs before showing anyone a colour.`);
+  throw new Error(`round22-build: the CONTROL row ${CONTROL_ID} — the colouring src/lib/logo.mjs ships (${R.control.derivedFrom}) — ${controlBad}. The mutation is broken, so every face price in this specimen is untrustworthy. Fix design/round22.mjs before showing anyone a colour.`);
 }
 
 const covAt = (id, w) => {
@@ -263,7 +263,7 @@ const covAt = (id, w) => {
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" />
-<title>Round 22 \u2014 Byrne faces for the club mark: priced, not applied</title>
+<title>Round 22 \u2014 Byrne faces for the club logo: priced, not applied</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 /* Specimen chrome only. The photographs carry the built page's own bytes; nothing here restyles them. */
@@ -315,14 +315,14 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 </style></head>
 <body>
 <div class="spec">
-<h1>Round 22 \u2014 Byrne faces for the club mark: priced, not applied</h1>
+<h1>Round 22 \u2014 Byrne faces for the club logo: priced, not applied</h1>
 <p class="ask">${esc(need(R.ask, 'ask'))}</p>
 <p>The source, retrieved rather than remembered: <strong>${esc(need(R.source, 'source'))}</strong>. What its own words license here is the second half of the ruling: Byrne names <em>regions</em> by colour exactly as he names lines — the prose speaks of "the squares of the blue and red lines" — and his fills are flat, which is why they print cheaply and why a palette tint is the wrong tool for one.</p>
-<p><strong>Nothing here is applied.</strong> Colour on this site is operator-ratified (D316), so a face colouring arrives as a priced specimen and the pick stays the operator's. Every photograph is the built page's own bytes with the eight shape colours rewritten to <code>var(--color-\u2026)</code> and the filled region added, in a copy of <code>dist/client</code>, measured by the same two probes <code>check:mark</code> runs (<code>design/mark-geometry.mjs</code>, <code>design/mark-pixels.mjs</code>) at ${WIDTHS.join(' / ')} px plus the share card's own document at 1200\u00d7630. <strong>Row ${esc(CONTROL_ID)} is the colouring the site ships, with nothing filled, and it passes every check</strong> \u2014 found by matching the rows' line maps against <code>MARK_COLOURS</code> in <code>src/lib/brand-mark.mjs</code>, not by naming a letter here \u2014 so every other number below is a delta from a measured line.</p>
-<p class="meta">measured ${esc(String(need(R.measuredAt, 'measuredAt')))} \u00b7 bars: filled region (layer) <strong>${BARS.layer}</strong>, graphic line <strong>${BARS.graphic}</strong> (D101) \u00b7 the same-colour bar is 0.05 delta-OKLab (D88) \u00b7 faces and their areas: <code>design/mark-faces.mjs</code> \u00b7 rows: <code>design/grill/round22-options.mjs</code></p>
+<p><strong>Nothing here is applied.</strong> Colour on this site is operator-ratified (D316), so a face colouring arrives as a priced specimen and the pick stays the operator's. Every photograph is the built page's own bytes with the eight shape colours rewritten to <code>var(--color-\u2026)</code> and the filled region added, in a copy of <code>dist/client</code>, measured by the same two probes <code>check:logo</code> runs (<code>logo-geometry.mjs</code>, <code>logo-pixels.mjs</code>) at ${WIDTHS.join(' / ')} px plus the share card's own document at 1200\u00d7630. <strong>Row ${esc(CONTROL_ID)} is the colouring the site ships, with nothing filled, and it passes every check</strong> \u2014 found by matching the rows' line maps against <code>LOGO_COLOURS</code> in <code>src/lib/logo.mjs</code>, not by naming a letter here \u2014 so every other number below is a delta from a measured line.</p>
+<p class="meta">measured ${esc(String(need(R.measuredAt, 'measuredAt')))} \u00b7 bars: filled region (layer) <strong>${BARS.layer}</strong>, graphic line <strong>${BARS.graphic}</strong> (D101) \u00b7 the same-colour bar is 0.05 delta-OKLab (D88) \u00b7 faces and their areas: <code>logo-faces.mjs</code> \u00b7 rows: <code>design/grill/round22-options.mjs</code></p>
 
 <h2>1. Area: the faces this drawing actually bounds, measured twice</h2>
-<p>A face has an area, and it is measured two ways: <strong>projected</strong> (dense sampling and a shoelace over a boundary built from the mark's own curves) and <strong>on the sphere</strong> this drawing implies (Girard's excess for the triangle between the meridians, $2\\cdot\\text{angle}\\cdot r^2$ for the lunes above and below the near equator arc). The two agree to under 2%, and the round refuses if they do not: a region named by a colour should at least be named by a geometry. The important sentence in this table is the last row's: filling "the sphere" and filling "the disc" are the same act.</p>
+<p>A face has an area, and it is measured two ways: <strong>projected</strong> (dense sampling and a shoelace over a boundary built from the logo's own curves) and <strong>on the sphere</strong> this drawing implies (Girard's excess for the triangle between the meridians, $2\\cdot\\text{angle}\\cdot r^2$ for the lunes above and below the near equator arc). The two agree to under 2%, and the round refuses if they do not: a region named by a colour should at least be named by a geometry. The important sentence in this table is the last row's: filling "the sphere" and filling "the disc" are the same act.</p>
 <table><thead><tr><th>face</th><th>projected u</th><th>% of visible face</th><th>on the sphere u</th><th>% of sphere</th><th>foreshortening</th><th>what it is on the sphere</th></tr></thead><tbody>${areaRows}</tbody></table>
 <p class="meta">geometry read off the shipped table: r ${GEOM.r}, ring (${GEOM.cx},${GEOM.cy}), equator semi-minor ${GEOM.equatorSemiMinor}, the sphere's axis ${GEOM.axisOutOfScreenPlaneDeg}\u00b0 out of the screen plane (so ${GEOM.axisFromViewingDirectionDeg}\u00b0 from the viewing direction), pole angle ${GEOM.poleAngleDeg}\u00b0. Assertions <code>assertAreas</code> runs: disc = \u03c0r\u00b2; north + south tile the disc; lune \u2282 north \u2282 disc; every face foreshortens into (0,1]; the disc's foreshortening is 0.50 \u2014 all pass.</p>
 
@@ -343,23 +343,23 @@ ${goldSection}
 ${ROWS.map(rowSection).join('\n')}
 
 <h2>6. The shape-count price, in the probes' own words</h2>
-<p>This mark's gates count shapes. <code>design/mark-geometry.mjs</code> zips the painted report against the table and accepts exactly <strong>${SHAPE_PRICE.acceptedReportLength}</strong> \u2014 the table's ${SHAPE_PRICE.tableShapes} plus the pole dot, which is painted but not in the table. A filled face is a ninth shape, and both mark probes refuse to measure it at all. ${refusedIds.length ? `Rows ${esc(refusedIds.join(', '))} were refused in this run:` : 'No row in this run was refused, because the runner plants the face for the pixel probe and reports the refusal rather than hiding it:'}</p>
+<p>This logo's gates count shapes. <code>logo-geometry.mjs</code> zips the painted report against the table and accepts exactly <strong>${SHAPE_PRICE.acceptedReportLength}</strong> \u2014 the table's ${SHAPE_PRICE.tableShapes} plus the pole dot, which is painted but not in the table. A filled face is a ninth shape, and both logo probes refuse to measure it at all. ${refusedIds.length ? `Rows ${esc(refusedIds.join(', '))} were refused in this run:` : 'No row in this run was refused, because the runner plants the face for the pixel probe and reports the refusal rather than hiding it:'}</p>
 ${refusals.length ? refusals.map((q) => `<blockquote>${esc(q)}</blockquote>`).join('\n') : '<p class="meta">(no refusal text in this report \u2014 every row measured, so the price below is the standing rule rather than a fresh quote)</p>'}
-<p><strong>What this means for the ruling.</strong> "The gates went red" and "the gates need re-ruling" are different decisions, and only the second is a design choice (D479: a gate is re-derived, never bypassed). Shipping a face therefore means a new shape role in <code>src/lib/brand-mark.mjs</code>'s table, and <code>check:mark</code> and <code>check:social</code> re-derived against it \u2014 which is a milestone, not a colour change. That is priced here so the choice is made with the cost on the table, not discovered after the pick.</p>
+<p><strong>What this means for the ruling.</strong> "The gates went red" and "the gates need re-ruling" are different decisions, and only the second is a design choice (D479: a gate is re-derived, never bypassed). Shipping a face therefore means a new shape role in <code>src/lib/logo.mjs</code>'s table, and <code>check:logo</code> and <code>check:social</code> re-derived against it \u2014 which is a milestone, not a colour change. That is priced here so the choice is made with the cost on the table, not discovered after the pick.</p>
 
 <h2>7. Coverage, the number that survives every row</h2>
-<p>The <em>at/over ${BARS.graphic}</em> column is the share of the mark's own ink whose painted pixels clear the graphic bar at that box size. Row ${esc(CONTROL_ID)} is the baseline: <strong>${covAt(CONTROL_ID, 640)}%</strong> at 640. ${ROWS.filter((r) => r.id !== CONTROL_ID && paintedRow(r.id, 'paper', 640).at30Pct !== null).map((r) => `${r.id} ${covAt(r.id, 640)}%`).join(' \u00b7 ')}. A fill that reads as a region also adds a large area of sub-bar pixels, so coverage is where a "nicer" face can quietly make the mark's own lines less legible.</p>
+<p>The <em>at/over ${BARS.graphic}</em> column is the share of the logo's own ink whose painted pixels clear the graphic bar at that box size. Row ${esc(CONTROL_ID)} is the baseline: <strong>${covAt(CONTROL_ID, 640)}%</strong> at 640. ${ROWS.filter((r) => r.id !== CONTROL_ID && paintedRow(r.id, 'paper', 640).at30Pct !== null).map((r) => `${r.id} ${covAt(r.id, 640)}%`).join(' \u00b7 ')}. A fill that reads as a region also adds a large area of sub-bar pixels, so coverage is where a "nicer" face can quietly make the logo's own lines less legible.</p>
 
 <h2>8. How to read this page, and what the delegate recommends</h2>
 <ul>
 <li><strong>Row ${esc(CONTROL_ID)}</strong> is the shipped colouring with nothing filled \u2014 the control, and the only row the site's own gates can measure today without re-ruling them.</li>
 <li><strong>Rows F1\u2013F5</strong> fill one or two of the faces the drawing really bounds, in a hue the palette <em>already declares</em>. F1 fills the spherical triangle between the two meridians (${num(areaOf('lune').pctOfDisc)}% of the visible face); F2 the south lune (${num(areaOf('south').pctOfDisc)}%); F3 the north lune (${num(areaOf('north').pctOfDisc)}%); F5 the near hemisphere, which <em>is</em> the disc (100%); F4 two disjoint regions, which is the literal Byrne sentence \u2014 two colours so the prose can point at either without a letter.</li>
 ${GOLD ? `<li><strong>Rows ${esc(need(GOLD.rows, 'gold.rows').join(', '))}</strong> fill the same faces in the hue the operator asked for and <code>@theme</code> does not declare, and the only difference between them is <em>area</em>: F6 the spherical triangle (${num(areaOf('lune').pctOfDisc)}%), F9 the north lune (${num(areaOf('north').pctOfDisc)}%), F7 the near hemisphere, which <em>is</em> the disc (${num(areaOf('disc').pctOfDisc)}% \u2014 the most gold the drawing can carry, with ${SOLVE.disc.paper.over.length} of the ${Object.keys(LINES.paper).length} painted shapes lying over it on paper), F8 two disjoint regions, gold plus the club red, which is Byrne's two-colour sentence with the yellow present.</li>
-<li><strong>Why gold is harder here than on a tab.</strong> A token hue may sit anywhere in its window; a gold has to sit at or above the lightness where hue ${need(GOLD.family.H, 'gold.family.H')} still <em>reads</em> as gold (L ${need(GOLD.family.floor, 'gold.family.floor')}, a stated judgement, not a bar). On this mark that constraint inverts which ground has room: on the hero the two-bar window only reaches gold at its palest end, and that end is within 0.05 delta-OKLab of a brand colour; on the card no lightness in the window reaches the floor at all while keeping the <code>paper</code>-coloured lines legible. \u00a74b prints both as numbers.</li>` : ''}
+<li><strong>Why gold is harder here than on a tab.</strong> A token hue may sit anywhere in its window; a gold has to sit at or above the lightness where hue ${need(GOLD.family.H, 'gold.family.H')} still <em>reads</em> as gold (L ${need(GOLD.family.floor, 'gold.family.floor')}, a stated judgement, not a bar). On this logo that constraint inverts which ground has room: on the hero the two-bar window only reaches gold at its palest end, and that end is within 0.05 delta-OKLab of a brand colour; on the card no lightness in the window reaches the floor at all while keeping the <code>paper</code>-coloured lines legible. \u00a74b prints both as numbers.</li>` : ''}
 <li><strong>The squeeze, stated plainly.</strong> A face has to be far enough from the ground to read as a region and far enough from the lightest line drawn on it to keep that line legible. The windows in \u00a74 are only a few tenths of a lightness wide, and their midpoints sit at ${num(Math.min(...FACES.flatMap((f) => ['paper', 'ink'].map((g) => SOLVE[f.name][g].rows ? Math.max(...Object.values(SOLVE[f.name][g].rows).filter((s) => s.band).map((s) => s.vsGround)) : 0)).filter((x) => Number.isFinite(x))), 2)} at their most ${'far'} from the ground. A legal Byrne wash here is a <em>quiet</em> region, not Byrne's saturated block: Byrne's flatness is what made his fills cheap to print, and this palette's flatness is what keeps a chip ground from reading as raised. Both are flat, for opposite reasons.</li>
 <li><strong>What each row costs in tokens</strong>: every row re-uses row C's eight line colours unchanged, and adds ${Math.min(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnPaper))}\u2013${Math.max(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnPaper))} new hero token(s) and ${Math.min(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnInk))}\u2013${Math.max(...ROWS.filter((r) => r.id !== CONTROL_ID).map((r) => r.tokenCost.newOnInk))} on the card, unless the solve lands within 0.05 delta-OKLab of a token the palette already has, in which case the row re-uses it \u2014 printed per fill above.</li>
 <li><strong>The delegate's ranked recommendation is not on this page.</strong> It belongs to the session report and <code>.notes/NEXT.md</code>, where it carries its pros, cons and the measurement that would change it; a specimen prices, it does not argue.</li>
-<li>The measurement that would change the ranking: the operator's own eye on the photographs at ${WIDTHS[0]}px, where a 1.4-unit route stroke is 1.68 device px and a fill can swallow the lines it is supposed to name. Numbers price a region; they cannot decide which one the club's mark is.</li>
+<li>The measurement that would change the ranking: the operator's own eye on the photographs at ${WIDTHS[0]}px, where a 1.4-unit route stroke is 1.68 device px and a fill can swallow the lines it is supposed to name. Numbers price a region; they cannot decide which one the club's logo is.</li>
 <li>Specimen chrome only: this page's own type and spacing are not the site's. The photographs carry the built page's bytes.</li>
 </ul>
 </div></body></html>`;

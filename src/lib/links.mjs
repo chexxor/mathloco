@@ -93,7 +93,7 @@ export const CTA_BLOCK_MIN_WORDS = 6;
  *  `node design/cta-inventory.mjs` the widest block the tree declares holds 77 words, which is 16% of its page, while
  *  the six built pages hold 142-490 words - so a block wrapped around `<main>` lands at 100% and every block written
  *  for a real action lands far under the line. `scripts/check-cta-context.mjs` fails that shape as
- *  `block-too-wide`: a mark over the whole page satisfies every word check at once, which is the proximity window's
+ *  `block-too-wide`: a declared block over the whole page satisfies every word check at once, which is the proximity window's
  *  laundering re-enacted on purpose (that window is why this rule exists at all). */
 export const CTA_BLOCK_MAX_FRACTION = 2 / 3;
 

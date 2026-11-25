@@ -94,7 +94,7 @@ export const outlineFindings = (pages) => {
     // page's own content rather than on an id that happens to exist somewhere.
     const fragments = [...p.html.matchAll(FRAGMENT_ANCHOR)];
     if (!fragments.length) {
-      fails.push({ rule: 'skip-link', detail: `${p.route} carries no in-page anchor — a keyboard reader crosses the mark, the nav labels and the date chip on every page to reach the page's own words (WCAG 2.4.1)` });
+      fails.push({ rule: 'skip-link', detail: `${p.route} carries no in-page anchor — a keyboard reader crosses the logo, the nav labels and the date chip on every page to reach the page's own words (WCAG 2.4.1)` });
     } else {
       const first = fragments[0];
       const before = [...p.html.matchAll(ANY_ANCHOR)].filter((a) => a.index < first.index).length;

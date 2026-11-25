@@ -15,7 +15,7 @@
  * and still contain the right key. Only a browser answers those.
  *
  * This is the browser half of the rule and it is deliberately NOT in `npm run verify`: the runner has no
- * Firefox (D123). It runs in `npm run verify:browser` beside check:render:dist, check:mark, check:space and
+ * Firefox (D123). It runs in `npm run verify:browser` beside check:render:dist, check:logo, check:space and
  * check:ground, over loopback HTTP rather than `file://`, because Firefox refuses `import()`/`fetch()` from
  * a file:// document, so an island on a file:// page never hydrates
  * @measured 2026-11-11 by `node design/grill/probe-import.mjs`.

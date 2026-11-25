@@ -1,21 +1,21 @@
-// round23-options.mjs — the ONLY place the TAB framings for the club mark exist (grill round 23, 2026-11-25).
+// round23-options.mjs — the ONLY place the TAB framings for the club logo exist (grill round 23, 2026-11-25).
 //
 // THE ASK. Round 22 priced which FACES a Byrne colouring could fill; this round prices the other half of the goal:
-// putting the ratified mark — row C's sphere with its two intersecting meridians (D483) — into the browser tab. The
+// putting the ratified logo — row C's sphere with its two intersecting meridians (D483) — into the browser tab. The
 // operator's own framing of the item asked for "square sphere-centred variant, full 240x150 letterbox,
 // weight-scaled variants", which is what the row set below is: every way the drawing can be put in the slot, each
 // one priced by pixels rather than argued about.
 //
 // WHY A FRAMING ROUND IS NEEDED AT ALL, in three numbers.
 //   1. THE SLOT IS 16x16. MDN, "Favicon" (fetched 2026-11-25): "Usually, a favicon is 16 x 16 pixels in size". The
-//      site's tab is that slot, and the artifact that fills it today is a 32x32 `∑` glyph, not the mark.
+//      site's tab is that slot, and the artifact that fills it today is a 32x32 `∑` glyph, not the logo.
 //   2. THE DRAWING IS 240x150. Fit the whole plate into 16 device px and the contain-scale is 0.0667 device px per
-//      viewBox unit, so the mark's thickest line (1.4u) lands at 0.09 device px and its thinnest (1.3u) at 0.087.
+//      viewBox unit, so the logo's thickest line (1.4u) lands at 0.09 device px and its thinnest (1.3u) at 0.087.
 //      D119's measured floor is that a stroke thinner than ~1.5 device px never contains a fully-covered pixel: the
-//      hero's mark is roughly 17x under its own line-weight floor when it is shrunk into a tab as drawn. Framing is
+//      hero's logo is roughly 17x under its own line-weight floor when it is shrunk into a tab as drawn. Framing is
 //      not cosmetics; it is the only way to buy the stroke any width at all, because the only lever left is how many
 //      viewBox units a device pixel is allowed to cover.
-//   3. THE TAB GATE ALLOWS TWO COLOURS. `scripts/check-favicon.mjs` rule 3 ("a mark is one ground and one glyph")
+//   3. THE TAB GATE ALLOWS TWO COLOURS. `scripts/check-favicon.mjs` rule 3 ("a logo is one ground and one glyph")
 //      and rule 5 (no reserved `--color-path-*` hue) both refuse row C as shipped. What they count is every literal
 //      in the document, so the ground rect is one of them: row C paints 6 literals on paper (5 distinct line tokens
 //      + the paper ground) and 5 on ink (4 tokens + the ink ground), and TWO of the tokens on each ground are
@@ -42,7 +42,7 @@
 // runner prices, the operator picks, and `public/favicon.svg` does not change in this commit. The artifact half of
 // the work (`logo-lands`) happens after the pick, from the row the operator chooses.
 
-export { MARK_SLOTS as SLOTS } from '../../src/lib/brand-mark.mjs';
+export { LOGO_SLOTS as SLOTS } from '../../src/lib/logo.mjs';
 
 // The tab sizes the round reads every candidate at. 16 is the slot (MDN above); 32 is what a HiDPI tab asks for and
 // what the incumbent's own viewBox is; 48/64 are the sizes a bookmark/starshot tile and a macOS retina tab reach.
@@ -59,12 +59,12 @@ export const ROWS = [
     label: 'the tab as it ships today — a 32x32 ink plate with the club summand, no sphere',
     framing: 'derived from public/favicon.svg at run time (the document is parsed, not restated)',
     byrne: 'none: the incumbent predates the Byrne rounds. It is here because a framing round that cannot reproduce the shipped tab is measuring a tab that does not exist.',
-    reading: 'one ground, one glyph, 17.15 contrast, a serif summand at 22/32 of the plate. It reads at 16px because a single thick glyph is what a 16px slot can actually hold. A mark row has to beat this, not merely differ from it.',
+    reading: 'one ground, one glyph, 17.15 contrast, a serif summand at 22/32 of the plate. It reads at 16px because a single thick glyph is what a 16px slot can actually hold. A logo row has to beat this, not merely differ from it.',
   },
   {
     id: 'N0',
     frame: 'sphere', colours: 'pair', weightAt: 16, floorPx: null,
-    label: 'the mark exactly as the hero draws it, centred on the sphere, no tab tuning',
+    label: 'the logo exactly as the hero draws it, centred on the sphere, no tab tuning',
     framing: 'the ink bounding box of the whole figure (117.4 x 117.46u) fills the 16px slot; every stroke stays at its hero weight',
     byrne: 'row C as ratified, drawn the way the site draws it — this row is the price of the tuning the other rows do',
     reading: 'the honest starting point: whatever survives here survives without bending the drawing. Everything heavier is buying legibility with a different figure, and this row is the line it is bought from.',
@@ -81,7 +81,7 @@ export const ROWS = [
     id: 'T2',
     frame: 'sphere', colours: 'pair', weightAt: 16, floorPx: 1.0,
     label: 'sphere-centred, weighted to 1.0 device px at 16px (under the repo\'s own line floor)',
-    framing: 'half the weight of T1: the mark keeps closer to its hero proportions, and the lines land at one device pixel',
+    framing: 'half the weight of T1: the logo keeps closer to its hero proportions, and the lines land at one device pixel',
     byrne: 'the lighter end of the same idea — Byrne\'s line is a name, and a name can be thin as long as it is present',
     reading: 'what happens below D119\'s floor, measured rather than refused: whether a 1px line still has a fully-covered pixel, and how much of the figure survives once the strokes stop being forced.',
   },
@@ -91,7 +91,7 @@ export const ROWS = [
     label: 'sphere-centred, weighted to 2.5 device px at 16px (the heavy end)',
     framing: 'the heaviest weight the slot can be pushed to before the line width is a third of the gap it spans',
     byrne: 'the end of the logic where a colour is a line\'s name and the name is set in display weight',
-    reading: 'the fuse end: at this weight the two meridians, the ring and the equator are one mass in places. If it still reads as a sphere, the mark can be bold in a tab; if it does not, this row is the fence.',
+    reading: 'the fuse end: at this weight the two meridians, the ring and the equator are one mass in places. If it still reads as a sphere, the logo can be bold in a tab; if it does not, this row is the fence.',
   },
   {
     id: 'T4',
@@ -99,7 +99,7 @@ export const ROWS = [
     label: 'sphere-centred, weighted for a 1.5px floor at 32px (the HiDPI tab), then read at 16 too',
     framing: 'same framing as T1, but the weight is solved for the 32px tab instead of the 16px one',
     byrne: 'the same line colouring, tuned for the density most visitors actually have',
-    reading: 'the row that asks which tab the mark is drawn for. A weight solved at 32 is a much lighter drawing at 16 — so this row is the comparison T1 needs, in both directions.',
+    reading: 'the row that asks which tab the logo is drawn for. A weight solved at 32 is a much lighter drawing at 16 — so this row is the comparison T1 needs, in both directions.',
   },
   {
     id: 'T5',
@@ -138,7 +138,7 @@ export const ROWS = [
     frame: 'sphere', colours: 'rowC', weightAt: 16, floorPx: 1.5,
     label: 'sphere-centred, row C exactly as the hero paints it (6 paints on paper / 5 on ink; two reserved path hues)',
     framing: 'the ratified hero colouring, unmodified, in a tab artifact — so the tab gate\'s own words are what gets printed',
-    byrne: 'the literal row C: a colour is a line\'s name, and the mark\'s names are red, yellow-equivalent, blue, green on black',
+    byrne: 'the literal row C: a colour is a line\'s name, and the logo\'s names are red, yellow-equivalent, blue, green on black',
     reading: 'this row is not a candidate, it is the gate read aloud: `check:favicon` refuses it on rule 3 (too many colours) and rule 5 (path hues). Whatever the operator picks, this is the ruling `logo-lands` has to re-derive the gate around, priced now rather than discovered at ship time.',
   },
   // ---------------------------------------------------------------------------
@@ -215,10 +215,10 @@ export const ROWS = [
   },
 ];
 
-// The eight things the mark is made of, in paint order (MARK_SLOTS). The survival table asks of each row, at each
+// The eight things the logo is made of, in paint order (LOGO_SLOTS). The survival table asks of each row, at each
 // tab size and on each ground: does this shape land at all, and does it ever reach a fully-covered pixel?
 export const SURVIVAL_SLOTS = ['ring', 'rear', 'front', 'left', 'right', 'angleL', 'angleR', 'dot'];
-// The two arcs whose relationship IS the mark's depth cue. A rear arc whose run equals the front arc's has fused,
+// The two arcs whose relationship IS the logo's depth cue. A rear arc whose run equals the front arc's has fused,
 // and the sphere has become a disc with lines on it.
 export const DASH_SLOTS = ['rear', 'front'];
 

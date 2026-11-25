@@ -59,7 +59,7 @@ export const BAND_PLATE = PS1_PLATE;      // the coloured engraving, for full-wi
 export const LINE_PLATE = PS3_PLATE;      // 1910 line work, colourless: a band that costs almost no colour
 export const THUMB_PLATE = PS4_PLATE;     // 323x110 event thumb, ruled (a) 2026-11-03, awaiting a dated event
 
-// Selectors, and why each is safe: `data-slot` / `data-mark` are probe handles the page already carries
+// Selectors, and why each is safe: `data-slot` / `data-logo` are probe handles the page already carries
 // (`check:space` ranks boxes by them); `[class~="…"]` matches a Tailwind utility on the element without
 // needing the escaped-class CSS the scanner may or may not have emitted.
 const GRID = '[class~="lg:grid-cols-12"]';
@@ -101,7 +101,7 @@ export const OPTIONS = [
   ${GRID} { display: block; }
   [data-slot="PS-1"] { max-width: none; margin: 0 0 32px; }
   [data-slot="PS-1"] img { width: 100%; height: auto; }
-  [data-mark="hero"] { width: 240px; height: auto; display: block; margin: 0 0 24px; }
+  [data-logo="hero"] { width: 240px; height: auto; display: block; margin: 0 0 24px; }
   /* the text column stops being a grid child, so it keeps the measure the page already ratified */
   ${GRID} > div:first-child { max-width: 768px; }
 }`,
@@ -152,22 +152,22 @@ export const OPTIONS = [
 /* The mark on the ink footer would paint ink-on-ink (both oklch(0.32 0.045 152)) — invisible by construction.
    Repainting it is part of this option, and check:render prices it: a graphic hairline needs 3.0 against its
    ground (D101), so the row that follows is the answer, not this comment. */
-footer [data-mark="hero"] { display: block; width: 240px; height: auto; margin: 0 0 24px; }
-footer [data-mark="hero"] [class~="stroke-ink"] { stroke: var(--color-band-text); }
-footer [data-mark="hero"] [class~="fill-ink"] { fill: var(--color-band-text); }
+footer [data-logo="hero"] { display: block; width: 240px; height: auto; margin: 0 0 24px; }
+footer [data-logo="hero"] [class~="stroke-ink"] { stroke: var(--color-band-text); }
+footer [data-logo="hero"] [class~="fill-ink"] { fill: var(--color-band-text); }
 /* The gold accent must move too. Measured 2026-11-03 in this round: a mark moved onto the ink footer with only
    its ink strokes repainted reads **2.5** for its gold paths — under the 3.0 graphic bar (D101) — and the render
    gate failed the mark twelve times. --color-gold-on-ink (5.80 on ink) is the token the system already solved
    for a gold on a dark band, so using it is part of this option, not a later repair. */
-footer [data-mark="hero"] [class~="stroke-gold"] { stroke: var(--color-gold-on-ink); }
-footer [data-mark="hero"] [class~="fill-gold"] { fill: var(--color-gold-on-ink); }`,
+footer [data-logo="hero"] [class~="stroke-gold"] { stroke: var(--color-gold-on-ink); }
+footer [data-logo="hero"] [class~="fill-gold"] { fill: var(--color-gold-on-ink); }`,
     apply: (html, ctx) => {
       // 1. PS-1 becomes plate-only at the column's full height.
       const img = /<img src="\/_astro\/hero\.[^"]*"[^>]*>/;
       if (!img.test(html)) throw new Error('no shipped hero img — D replaces it with the full-height window');
       html = html.replace(img, `<img data-plate="PS1-full" alt="${ctx.alt('col-plate')}" width="376" height="574" style="width:100%;height:auto" src="${ctx.uri('col-plate')}">`);
       // 2. the mark moves to the footer, before its nav.
-      const mark = /<svg data-mark="hero"[\s\S]*?<\/svg>/;
+      const mark = /<svg data-logo="hero"[\s\S]*?<\/svg>/;
       const m = html.match(mark);
       if (!m) throw new Error('no hero mark svg to move');
       html = html.replace(mark, '');
@@ -198,10 +198,10 @@ footer [data-mark="hero"] [class~="fill-gold"] { fill: var(--color-gold-on-ink);
      and the gate said so. */
   [data-slot="PS-1"] { background: var(--color-ink); padding: 32px 24px 32px 24px; margin-right: -${ctx.bleed}px; justify-content: center; }
   [data-slot="PS-1"] img { width: 100%; height: auto; }
-  [data-mark="hero"] [class~="stroke-ink"] { stroke: var(--color-band-text); }
-  [data-mark="hero"] [class~="fill-ink"] { fill: var(--color-band-text); }
-  [data-mark="hero"] [class~="stroke-gold"] { stroke: var(--color-gold-on-ink); }
-  [data-mark="hero"] [class~="fill-gold"] { fill: var(--color-gold-on-ink); }
+  [data-logo="hero"] [class~="stroke-ink"] { stroke: var(--color-band-text); }
+  [data-logo="hero"] [class~="fill-ink"] { fill: var(--color-band-text); }
+  [data-logo="hero"] [class~="stroke-gold"] { stroke: var(--color-gold-on-ink); }
+  [data-logo="hero"] [class~="fill-gold"] { fill: var(--color-gold-on-ink); }
 }`,
     apply: (html, ctx) => {
       const img = /<img src="\/_astro\/hero\.[^"]*"[^>]*>/;

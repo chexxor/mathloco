@@ -90,7 +90,8 @@ If you loop over routes yourself anyway, two things silently produce nothing: th
 `.measured-*.html` is missing** and prints only `path: index.html`, which looks like an empty copy rather than
 a skip; and **a width under ~320 can make a route measure nothing legitimately**, because the hero's
 `min-w-[320px]` container refuses to shrink and Firefox then renders no page (`{}` x3, and the gate's complaint
-was `hero draws the club mark at every width (measured 0)` — the mark was fine, the browser was sulking). Loop
+was `hero draws the club mark at every width (measured 0)` — the logo was fine, the browser was sulking; the gate
+reads *logo* now (**D487**), so quote this line as the wording of that day, not as today's message). Loop
 **widths** inside a route; the gate already sweeps four (`RENDER_WIDTHS=320,390,768,1240`).
 
 ## Band counting, if you are wondering why a CTA counted as a band
@@ -124,9 +125,9 @@ instead of noisy.
   cell now gets two attempts (`RENDER_ATTEMPTS=1` to disable) and the FAIL text carries the child's last
   two stderr lines. Do not "fix" a flake by lowering a bar; the retry is what keeps the gate trustworthy.
 - **Sub-floor widths report real defects, which is the point of allowing them.** That 300 sweep fails the
-  device-stroke check: the mark's sphere is 0.9 viewBox units, which lands at **0.96px** at a 300 viewport
+  device-stroke check: the logo's sphere is 0.9 viewBox units, which lands at **0.96px** at a 300 viewport
   (at 320 it is 1.03px). So the ring has no headroom at the floor — see the open line-weight question in
-  `.notes/NEXT.md`; the lever is `MARK.shapes[*].sw` in `src/lib/brand-mark.mjs`, and changing it re-runs
+  `.notes/NEXT.md`; the lever is `LOGO.shapes[*].sw` in `src/lib/logo.mjs`, and changing it re-runs
   the share-card pipeline because the card draws the same table.
 
 ## Contrast: measure the byte, never the arithmetic (apply 4e, D116)
@@ -182,10 +183,10 @@ fails in the file".
 Same loop as everything else here (`page-measure.mjs` → page posts JSON to loopback → firefox's screenshot
 is the artifact), five new traps:
 
-1. **An HTML element inside `<svg>` is foreign content.** Marks wrapped in `<span>` inside the SVG painted
+1. **An HTML element inside `<svg>` is foreign content.** Logo shapes wrapped in `<span>` inside the SVG painted
    as nothing — Firefox kept the rule and the first path, dropped the rest, and reported no error.
    Diagnosis: the page report listed the run widths, the pixels had no ink where they should be.
-   Fix: compose with HTML, inline the `<svg>` marks inside the HTML elements.
+   Fix: compose with HTML, inline the `<svg>` shapes inside the HTML elements.
 2. **The screenshot's body background can come out alpha 0.** The page reported `background-color:
    oklch(32% 0.045 152)` on `body`; the PNG's dominant colour was (4,7,4) — the backdrop showing through.
    Fix: a painted `<div class="ground">`. Confirm with a raw histogram of the file before blaming the token.
@@ -213,26 +214,26 @@ npm run check:social           # re-measure the committed JPEG, no browser
 npm run check:social:selftest  # seven synthetic cards, each must FAIL with its own reason
 ```
 
-## A drawn graphic (the club mark) went missing, invisible, or squashed
+## A drawn graphic (the club logo) went missing, invisible, or squashed
 
-The hero and the share card both draw from one table, `src/lib/brand-mark.mjs`; `svg[data-mark]` is the
-hook both surfaces expose so the harness can find the mark and count its shapes. Symptoms and probes:
+The hero and the share card both draw from one table, `src/lib/logo.mjs`; `svg[data-logo]` is the
+hook both surfaces expose so the harness can find the logo and count its shapes. Symptoms and probes:
 
 | symptom | what to run |
 |---|---|
-| a shape is missing but the box looks fine | `node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 1240 1400` then read `marks[0].count` — it must equal `MARK_SHAPE_COUNT`. SVG drops the subtree of any child it treats as **foreign content** (a stray `<g data-tokens>` did exactly this on the card): no error, no console line, the box still measures, and box-level ink checks stay green because the *other* shapes still paint ink. |
-| a stroke paints nothing | the same report's `shapes[].stroke/fill`. An **unmapped colour role** means Tailwind emitted no rule and the shape inherits `stroke: none`. Roles must be literal class strings in the `.astro` file (D110) — `ratify-check` asserts the literals stay coupled to `MARK_COLOURS`. |
-| a shape is too faint to see, or "it passed the bar and still looks weak" | `node design/mark-pixels.mjs <shot> <report.json> [--crop out.png]` — it clusters what is actually inside the box and reports each cluster's contrast against the sampled ground; `--crop` writes the box up 3x so you can look at what you clustered. Line art has a coverage ceiling: a ~1px stroke of a 3.01-pair colour paints pixels no stronger than ~2.6 (the sphere at 320 is exactly this). The pair is the palette's number; the pixels are the screen's. |
-| the mark's box is the wrong shape | `check:render` compares the measured box ratio to the **viewBox** ratio. Inline `<svg>` must size itself intrinsically — `viewBox` + `class="w-full h-auto block"`, never a pixel height — because a lost ratio falls back to 300x150, wider than the 320 floor. |
+| a shape is missing but the box looks fine | `node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 1240 1400` then read `marks[0].count` — it must equal `LOGO_SHAPE_COUNT`. SVG drops the subtree of any child it treats as **foreign content** (a stray `<g data-tokens>` did exactly this on the card): no error, no console line, the box still measures, and box-level ink checks stay green because the *other* shapes still paint ink. |
+| a stroke paints nothing | the same report's `shapes[].stroke/fill`. An **unmapped colour role** means Tailwind emitted no rule and the shape inherits `stroke: none`. Roles must be literal class strings in the `.astro` file (D110) — `ratify-check` asserts the literals stay coupled to `LOGO_COLOURS`. |
+| a shape is too faint to see, or "it passed the bar and still looks weak" | `node design/logo-pixels.mjs <shot> <report.json> [--crop out.png]` — it clusters what is actually inside the box and reports each cluster's contrast against the sampled ground; `--crop` writes the box up 3x so you can look at what you clustered. Line art has a coverage ceiling: a ~1px stroke of a 3.01-pair colour paints pixels no stronger than ~2.6 (the sphere at 320 is exactly this). The pair is the palette's number; the pixels are the screen's. |
+| the logo's box is the wrong shape | `check:render` compares the measured box ratio to the **viewBox** ratio. Inline `<svg>` must size itself intrinsically — `viewBox` + `class="w-full h-auto block"`, never a pixel height — because a lost ratio falls back to 300x150, wider than the 320 floor. |
 | a stroke lands under 1px on screen | `check:render` reports `sw <units>u = <px>` per shape and fails under 1 device px: nothing is fully covered, so the stroke has no byte identity to compare (D119). |
-| is the mark invisible to assistive tech | the report carries `role` and the accessible name; a mark must be `role="img"` + `aria-label`, or explicitly `aria-hidden="true"`. The landing page must draw a mark **at all** (D108) — an empty hero column is a defect, not a blank. |
+| is the logo invisible to assistive tech | the report carries `role` and the accessible name; a logo must be `role="img"` + `aria-label`, or explicitly `aria-hidden="true"`. The landing page must draw a logo **at all** (D108) — an empty hero column is a defect, not a blank. |
 
 **Height matters for crops, and a probe reading a bad pairing lies.** At 320px the hero's box is 276x173 at
-**y=954**, so a 568-tall shot clips the mark — and `mark-pixels.mjs` used to report "0/95508 box pixels are ink
+**y=954**, so a 568-tall shot clips the logo — and `logo-pixels.mjs` used to report "0/95508 box pixels are ink
 (0.0%)", which reads like a design defect and is really a missing sample. Now the harness refuses to measure
 what the window does not contain (`dist-measure.mjs` fails the cell when Firefox writes no PNG — which happens
 under ~300px, where the `min-w-[320px]` container refuses to shrink and the browser renders nothing), and the
-probe exits 1 naming the height and the window. Pass a window taller than the mark's bottom edge (1400 does),
+probe exits 1 naming the height and the window. Pass a window taller than the logo's bottom edge (1400 does),
 and read the JSON the run wrote. Naming, ground truth: **`dist-measure.mjs` prints its report to stdout** (so
 redirect it — `> .design/tmp-hero-320.json`), while **`render-gate.mjs` writes raw reports under
 `.design/render/` named `<route-slug>-<width>.json`**, where the slug turns each `/` into `_`: `/` at 320 is
@@ -242,18 +243,18 @@ What the crop buys, measured (Linux, 320px): 1,837 of 48,198 box pixels are ink 
 ink is 72% the two route lines and their arrowheads. Faintest clusters land at 1.23, 1.72 and 2.63 even though
 the sphere's token pair is 3.01: a ~1px stroke never fully covers a pixel, so antialiasing caps what those bytes
 can be (**D119**'s floor, in pixels). The strongest cluster in the box is `35,60,42` at **11.53**. That is the
-whole difference between "this fails WCAG 1.4.11" and "this reads thin": at phone width the mark is the routes
+whole difference between "this fails WCAG 1.4.11" and "this reads thin": at phone width the logo is the routes
 arriving without their context ring. Untuned, and queued (**D121**, `NEXT.md`). The same sweep at 300px turns
 it into a failure — `RENDER_WIDTHS=300 node design/render-gate.mjs --no-build` reports
-`hero/shape[0] ... sw 0.9u = 0.96px < 1px`, because the mark scales with the column. The lever is
-`MARK.shapes[*].sw` in `src/lib/brand-mark.mjs`, and it moves the share card's pixels too: re-run
+`hero/shape[0] ... sw 0.9u = 0.96px < 1px`, because the logo scales with the column. The lever is
+`LOGO.shapes[*].sw` in `src/lib/logo.mjs`, and it moves the share card's pixels too: re-run
 `assets:social`, `check:social`, `check:social:live`, `check:social:selftest`.
 
 **A crop of the box is the cheapest way to look at what you clustered** (`--crop`, up 3x nearest):
 
 ```bash
 node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 320 1400 .design/tmp-hero-320.png
-node design/mark-pixels.mjs .design/tmp-hero-320.png .design/tmp-hero-320.json --crop .design/tmp-hero-320-crop.png
+node design/logo-pixels.mjs .design/tmp-hero-320.png .design/tmp-hero-320.json --crop .design/tmp-hero-320-crop.png
 ```
 
 Name the crop `.design/tmp-*` — it is scratch; the probe's numbers are the record. Asking a vision model about
@@ -261,7 +262,7 @@ one corroborated the bytes (the thin circle degrades most; the meeting dot and t
 the small size) and added one false detail (it claimed the circle was "cropped at the top", when the box sat
 fully inside the shot). On a quantized local model, vision corroborates a pixel read; it does not replace one.
 
-**Proving these checks can fail** (do it after editing the mark or the probe):
+**Proving these checks can fail** (do it after editing the logo or the probe):
 
 ```bash
 node design/render-gate-selftest.mjs            # mutates dist/client/index.html five ways, restores in finally
@@ -283,7 +284,7 @@ symptom is indexed.
 ```bash
 npm run lines:measure            # build, then characters-per-line on / at 1240, 390, 320
 npm run lines:measure:dist       # same on the dist that exists
-node design/round8.mjs           # one design round: specimen + cpl per ramp + control heights + cap + mark coverage
+node design/round8.mjs           # one design round: specimen + cpl per ramp + control heights + cap + logo coverage
 ```
 
 Three things this measurement will get wrong if you do not know them:
@@ -299,38 +300,38 @@ Three things this measurement will get wrong if you do not know them:
    consequences, do not reason about them: control height is `label line box + 2 x pad` (measured:
    `label 13.3/16` -> **48/40**, `label 15/20` -> **52/44**), so a *chrome* step moves every control, while a
    *content* step does not. Then re-measure the notice height, the nav fit, and the share card (the card copies
-   the site's ramp and the mark table, so `assets:social` + `check:social` + `check:social:live` +
+   the site's ramp and the logo table, so `assets:social` + `check:social` + `check:social:live` +
    `check:social:selftest` all re-run).
-3. **A specimen that lays several marks out in a row poisons `mark-pixels.mjs`** — it samples the ground from a
+3. **A specimen that lays several logo drawings out in a row poisons `logo-pixels.mjs`** — it samples the ground from a
    strip inside the measured box, and in a side-by-side row that strip lands on the *neighbour's* ink, which is
-   how a 372px box reported "0% coverage". Stack one mark per row with clear margin and grow the viewport.
+   how a 372px box reported "0% coverage". Stack one logo per row with clear margin and grow the viewport.
 
-For line weight, `mark-pixels.mjs` now counts **how many pixels clear the bar**, not just the faintest cluster
-(`--json` for a record per mark): pixels at/over 1.5 and at/over 3.0, and what share of the drawn ink is above
-the bar. That is the number that made the line-weight question decidable: the shipped mark puts **890** px at or
+For line weight, `logo-pixels.mjs` now counts **how many pixels clear the bar**, not just the faintest cluster
+(`--json` for a record per logo drawing): pixels at/over 1.5 and at/over 3.0, and what share of the drawn ink is above
+the bar. That is the number that made the line-weight question decidable: the shipped logo puts **890** px at or
 over 3.0 in the measured 276px hero box; sphere-only +44% puts **1070**; all strokes +25% puts **1129**; fixed
 device-width strokes put **1085** at 276 but only **1559** at the 372px desktop box against shipped **1722** —
 i.e. non-scaling strokes pay for the phone by thinning the desktop, which is only visible if you measure both
 boxes.
 
-## Changing the mark's shape (2026-11-02, D126/D127) — one command, and one sanity check that catches a lying report
+## Changing the logo's shape (2026-11-02, D126/D127; the wording is **D487**) — one command, and one sanity check that catches a lying report
 
-The mark is one table (`src/lib/brand-mark.mjs`) drawn by the hero and the share card. Change it, then:
+The logo is one table (`src/lib/logo.mjs`) drawn by the hero and the share card. Change it, then:
 
 ```bash
 npm run build
 npm run assets:social          # the committed card is built FROM the table: skip this and check:social is right to fail
 npm run check:social && npm run check:social:selftest && npm run check:social:live
-npm run check:mark             # geometry semantics + painted coverage, at 320 (scale 1.15) and 1240 (1.55)
-node design/render-gate-selftest.mjs   # the mutations are generated from MARK, so they follow the shape
+npm run check:logo             # geometry semantics + painted coverage, at 320 (scale 1.15) and 1240 (1.55)
+node design/render-gate-selftest.mjs   # the mutations are generated from LOGO, so they follow the shape
 npm run check:render:dist && npm run verify
 ```
 
-`design/mark-geometry.mjs` is the probe that asks *what the drawing means*, in the table and in the pixels:
+`logo-geometry.mjs` is the probe that asks *what the drawing means*, in the table and in the pixels:
 surface circle, exactly two lines, a curved equator, one dashed and one solid half with the **broken one being
 the far one**, parallel starting stretches in both, a real crossing, the pole on the **painted** ring, right
-angles marked. `design/mark-pixels.mjs` asks how much of the ink clears the bar. Neither is in `verify`
-(browser); `check:mark` is the wrapper.
+angles marked. `logo-pixels.mjs` asks how much of the ink clears the bar. Neither is in `verify`
+(browser); `check:logo` is the wrapper.
 
 **Before trusting any pixel probe, check a landmark.** Reports and screenshots can describe different layouts,
 because `getBoundingClientRect()` is measured when the script runs and firefox paints after the webfonts land.
@@ -354,7 +355,7 @@ workflow never sees it.
 
 `npm run check:color` (or `node design/color-survey.mjs --routes / /404 /chat --widths 1240 320`) rasterises
 the built page and prints: % of pixels at OKLCH chroma ≥ 0.04, mean chroma of that ink, and how many 30° hue
-families carry it (a family counts at ≥ 300 px, so the mark's gold shows up). It exits 0 whatever it finds — it
+families carry it (a family counts at ≥ 300 px, so the logo's gold shows up). It exits 0 whatever it finds — it
 is the before-number for a colour round, and the after-number is free. To find *what* is painting a band, scan
 the shot for pixels in that hue/chroma range and print their bounding box and top colours; that is how the
 "loudest colour on the landing page is the Meetup logo" finding was located (rgb 237,28,64, 14,820 px).
@@ -386,8 +387,8 @@ RENDER_WIDTHS=1240,1024,768,640,390,320,300 npm run check:render:dist           
 
 `check:render` now prints `breakpoints in use … | widths measured: … | FLIP WITH NO MEASURED WIDTH: …`. Defaults are
 `1240, 640, 390, 320`; 320 stays mandatory (D114). Phone landscape is 568-932 CSS px, so **640 is the phone-landscape
-layout** — and it is where the hero mark is **largest** (512×320 at scale 2.133, stroke 2.77 device px, 58.7% of its
-ink clearing the 3.0 graphic bar), which is why `check:mark` measures 320/640/1240.
+layout** — and it is where the hero logo is **largest** (512×320 at scale 2.133, stroke 2.77 device px, 58.7% of its
+ink clearing the 3.0 graphic bar), which is why `check:logo` measures 320/640/1240.
 
 ### "Does X change what the page actually paints?" → plant it, then find where the pixels moved
 

@@ -18,7 +18,7 @@ Measured widths before this round:
 | probe | widths |
 |---|---|
 | `check:render` (the enforced gate) | 1240, 390, 320 |
-| `check:mark` | 320, 1240 |
+| `check:logo` | 320, 1240 |
 | `check:color` | 1240, 320 |
 | `check:space` / `check:area` / `check:rhythm` / `check:ground` | 1240, 390 |
 | `lines:measure` | 1240, 390, 320 |
@@ -43,7 +43,7 @@ boundaries. What the sweep found was not a failure but an unnoticed change of sh
 
 ## The mark is largest at 640
 
-`design/mark-check.mjs` shipped with the comment *"1240 — the largest [hero box]"*. Measured: it is not. The hero is
+`logo-check.mjs` shipped with the comment *"1240 — the largest [hero box]"*. Measured: it is not. The hero is
 single-column until `lg:` (1024), so from 640 to 1023 the mark fills the whole container; at 1240 the hero is a
 12-column grid and the mark gets one column.
 
@@ -54,7 +54,7 @@ single-column until `lg:` (1024), so from 640 to 1023 the mark fills the whole c
 | 1240 | 372×232.5 | 1.55 | 2.02 | 3347 | 46.0% | 1.77% |
 
 Read it as: **the mark is at its heaviest on a phone in landscape** — 1.37× the desktop scale, and 58.7% of its ink
-clears the 3.0 bar there versus 36.1% at the 320 floor, where antialiasing eats two thirds of it (`mark-pixels.mjs`,
+clears the 3.0 bar there versus 36.1% at the 320 floor, where antialiasing eats two thirds of it (`logo-pixels.mjs`,
 D101/D119). Geometry passes at all three widths (two lines, curved equator, dashed far half, crossing on the
 surface, right angles marked). So the stroke-weight question that matters most is the 640 one, and it had never been
 looked at.
@@ -68,7 +68,7 @@ looked at.
   MEASURED WIDTH: lg(1024) md(768)`. The unmeasured ones are named rather than hidden; if a `md:`-only layout ever
   breaks, the line says why nobody saw it. A `--breakpoint-*` in the token block is read out of `global.css`, so a
   ratified breakpoint cannot go unmeasured by forgetting.
-- **`check:mark` → 320, 640, 1240**, with the comment corrected.
+- **`check:logo` → 320, 640, 1240**, with the comment corrected.
 - **`check:area`, `check:rhythm`, `check:ground` now include 320.** Doing that exposed a separate defect — a shared
   6000px shot cap that silently truncated the 6978px page at the floor — documented in record 0021 with the numbers
   it was hiding (815px of emptiness at 320).
@@ -82,7 +82,7 @@ rather than edited here, since it is ratifying copy — flagged, not silently fi
 ## Reproduce
 
 ```bash
-npm run check:mark                                   # 320, 640, 1240; stroke px and 3.0-bar coverage per box
+npm run check:logo                                   # 320, 640, 1240; stroke px and 3.0-bar coverage per box
 RENDER_WIDTHS=1240,1024,768,640,390,320,300 npm run check:render   # the full boundary sweep, one firefox per cell
 ```
 

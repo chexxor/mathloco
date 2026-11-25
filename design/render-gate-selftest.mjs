@@ -1,4 +1,4 @@
-// render-gate-selftest.mjs — can the hero mark's checks in `check:render` fail, or do they only ever nod?
+// render-gate-selftest.mjs — can the hero logo's checks in `check:render` fail, or do they only ever nod?
 //
 //   node design/render-gate-selftest.mjs        # needs a built dist/ and firefox; ~1 s per case
 //   node design/render-gate-selftest.mjs "paint" # a substring picks which cases to run
@@ -7,9 +7,9 @@
 // It always passes --no-build: the gate builds by default, and rebuilding would restore the page the
 // mutation just broke, turning every case into a pass that proves nothing.
 //
-// D118's rule, applied to the gate that measures the mark: a pixel/layout gate needs a control that can
+// D118's rule, applied to the gate that measures the logo: a pixel/layout gate needs a control that can
 // fail, because the failure mode of a gate is not a wrong number, it is a green line on a broken page.
-// `check:social` has `--selftest`; this is the same idea for the render gate's mark and control sections —
+// `check:social` has `--selftest`; this is the same idea for the render gate's logo and control sections —
 // the control cases are the counterfactual for D139/D140 (see the notes on cases 6a-6c).
 //
 // How it mutates: it edits **dist/client/index.html**, the built page, because that is what the gate
@@ -23,13 +23,13 @@
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve } from 'node:path';
-import { MARK } from '../src/lib/brand-mark.mjs';
+import { LOGO } from '../src/lib/logo.mjs';
 
 const page = resolve('dist/client/index.html');
 if (!existsSync(page)) { console.error('dist/client/index.html missing — run npm run build first'); process.exit(1); }
 const original = readFileSync(page, 'utf8');
-if (!/data-mark="hero"/.test(original)) { console.error('the built page has no data-mark="hero" — nothing for these cases to mutate'); process.exit(1); }
-// Two targets since 2026-11-14 (D306): the hero mark, the controls and the ring plantings live on `/`, and the
+if (!/data-logo="hero"/.test(original)) { console.error('the built page has no data-logo="hero" — nothing for these cases to mutate'); process.exit(1); }
+// Two targets since 2026-11-14 (D306): the hero logo, the controls and the ring plantings live on `/`, and the
 // sign-up cluster and its platform marks live on the page of record, because the homepage prints no date and
 // therefore carries no cluster. A case names its target as a fourth element; the default is the homepage.
 const SCHEDULE = resolve('dist/client/dates/index.html');
@@ -42,23 +42,23 @@ const target = (name) => (name === 'schedule' ? { file: SCHEDULE, html: schedule
 const only = process.argv.slice(2);
 
 // The mutations are BUILT FROM THE GEOMETRY TABLE, not written out as literal markup. Two cases in the first
-// version hard-coded the path data of the mark as it was then (`<path d="M62 118 ...">`, `stroke-width="1.6"`),
-// and when the mark's geometry changed the mutations stopped matching anything: the selftest went red, which is
+// version hard-coded the path data of the logo as it was then (`<path d="M62 118 ...">`, `stroke-width="1.6"`),
+// and when the logo's geometry changed the mutations stopped matching anything: the selftest went red, which is
 // the honest outcome, but it red for "the harness rotted" rather than "the gate cannot fail". Deriving the
-// strings from src/lib/brand-mark.mjs means the cases move with the drawing they are breaking.
+// strings from src/lib/logo.mjs means the cases move with the drawing they are breaking.
 const dEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 // Editing the padding step of the first anchor that declares a control role. Attribute order in the built HTML
 // follows the source, so `data-control` precedes `class`; `extra` appends inert classes for the length case.
 const shrinkRole = (h, role, from, to, extra = '') =>
   h.replace(new RegExp(`(<a[^>]*data-control="${role}"[^>]*class=")([^"]*)(")`), (m, head, cls, tail) => head + cls.replace(from, to) + extra + tail);
 const pathEl = (s) => new RegExp(`<path d="${dEsc(s.d)}"[^>]*></path>`);
-const arcs = MARK.shapes.filter((s) => s.role === 'sphere' && s.tag === 'path');
-const dashed = MARK.shapes.find((s) => s.dash);
-const solidArc = MARK.shapes.find((s) => s.role === 'sphere' && s.tag === 'path' && !s.dash);
-const swStroke = MARK.shapes.find((s) => s.sw);
-if (!arcs.length || !dashed || !solidArc || !swStroke) { console.error('the geometry table no longer has the shapes these cases expect — re-read src/lib/brand-mark.mjs'); process.exit(1); }
+const arcs = LOGO.shapes.filter((s) => s.role === 'sphere' && s.tag === 'path');
+const dashed = LOGO.shapes.find((s) => s.dash);
+const solidArc = LOGO.shapes.find((s) => s.role === 'sphere' && s.tag === 'path' && !s.dash);
+const swStroke = LOGO.shapes.find((s) => s.sw);
+if (!arcs.length || !dashed || !solidArc || !swStroke) { console.error('the geometry table no longer has the shapes these cases expect — re-read src/lib/logo.mjs'); process.exit(1); }
 // Re-anchored 2026-11-15 (D316): the "painted into the ground" case used to match the literal string
-// `class="fill-none stroke-gold"`, and the palette round renamed the mark's paint roles (the sphere now paints
+// `class="fill-none stroke-gold"`, and the palette round renamed the logo's paint roles (the sphere now paints
 // `stroke-rule`, the route `stroke-ink`), so the literal rotted exactly the way D190's cid stamp rotted the
 // cases in the comment below. The anchor is now the shape's own `d`, taken from the geometry table, so the
 // planting follows the drawing instead of a snapshot of one class list. `#faf6ec` is --color-paper: painting a
@@ -83,16 +83,16 @@ const cases = [
 
   // 1. SVG foreign content: a shape that never made it into the DOM. The card hit this for real (D118
   //    lesson 1) and the box still looked fine, so only the count can see it.
-  ['mark missing both equator arcs', (h) => arcs.reduce((acc, s) => acc.replace(pathEl(s), ''), h), /shape\(s\) in the document, the geometry table has/],
-  // 1b. the far half stops being dashed: same shape count, same strokes, same box, same colours — the mark
+  ['logo missing both equator arcs', (h) => arcs.reduce((acc, s) => acc.replace(pathEl(s), ''), h), /shape\(s\) in the document, the geometry table has/],
+  // 1b. the far half stops being dashed: same shape count, same strokes, same box, same colours — the logo
   //     still measures as a curved equator and only the dash check can see that the sphere turned inside out.
-  ['mark dash missing from the document', (h) => h.replace(` stroke-dasharray="${dashed.dash}"`, ''), /no longer denoted differently from the near half/],
+  ['logo dash missing from the document', (h) => h.replace(` stroke-dasharray="${dashed.dash}"`, ''), /no longer denoted differently from the near half/],
   // 1c. a dash that survives in the table but fuses back into a line at the drawn size: the pattern is smaller
   //     than one device pixel, so the pixels carry no gap (D119's floor, applied to the gap as well as the stroke).
-  ['mark dash fused into a solid line', (h) => h.replace(`stroke-dasharray="${dashed.dash}"`, 'stroke-dasharray="0.6 0.5"'), /fuses into a solid line/],
+  ['logo dash fused into a solid line', (h) => h.replace(`stroke-dasharray="${dashed.dash}"`, 'stroke-dasharray="0.6 0.5"'), /fuses into a solid line/],
   // 1d. a dash the table never declared — the shape of this failure is the near half being drawn broken, which
   //     hides the side of the sphere the reader is standing on.
-  ['mark dash the table does not declare', (h) => h.replace(pathEl(solidArc), (m) => m.replace(/^<path d="[^"]*"/, (head) => `${head} stroke-dasharray="6 5"`)), /paints dash .* but the geometry table declares none/],
+  ['logo dash the table does not declare', (h) => h.replace(pathEl(solidArc), (m) => m.replace(/^<path d="[^"]*"/, (head) => `${head} stroke-dasharray="6 5"`)), /paints dash .* but the geometry table declares none/],
   // 2. a stroke painted the same colour as the ground: every box is right, one shape is invisible. Two
   //    things this case got wrong the first time, both worth keeping in mind:
   //      - an injected CLASS does nothing, because Tailwind's CSS was generated by scanning source at
@@ -100,23 +100,23 @@ const cases = [
   //        attribute with no colour class is what the browser actually paints.
   //      - the ground here is PAPER (the hero sits on sand), not the card's ink. A dark green stroke is
   //        the strongest thing on this surface, not the faintest.
-  ['mark stroke painted into the ground', (h) => paintIntoGround(h, solidArc), /under the 3\.0 graphic bar/],
-  // 3. the hero column stopped drawing a mark at all — the gate must notice an empty hero, not just a
+  ['logo stroke painted into the ground', (h) => paintIntoGround(h, solidArc), /under the 3\.0 graphic bar/],
+  // 3. the hero column stopped drawing a logo at all — the gate must notice an empty hero, not just a
   //    badly drawn one (this is the D108 rule: missing content is a defect, never a blank).
-  ['no mark in the page', (h) => h.replace('data-mark="hero"', 'data-nothing="hero"'), /draws no mark at all/],
-  // 4. a box that lost the viewBox ratio: the mark squashes and every class still resolves, because "the
+  ['no logo in the page', (h) => h.replace('data-logo="hero"', 'data-nothing="hero"'), /draws no logo at all/],
+  // 4. a box that lost the viewBox ratio: the logo squashes and every class still resolves, because "the
   //    class exists" was never "the box is the shape". Inline style, for the same reason as case 2 —
   //    `h-24` is not in the built CSS unless some source asked Tailwind for it.
-  ['mark box off the viewBox ratio', (h) => h.replace('data-mark="hero" viewBox="0 0 240 150"', 'data-mark="hero" style="height: 96px" viewBox="0 0 240 150"'), /box is .* but the viewBox says/],
+  ['logo box off the viewBox ratio', (h) => h.replace('data-logo="hero" viewBox="0 0 240 150"', 'data-logo="hero" style="height: 96px" viewBox="0 0 240 150"'), /box is .* but the viewBox says/],
   // 5. a stroke under one device pixel: it paints *something*, and the colour pair still clears 3.0, but
   //    no pixel is fully covered so it has no measurable colour identity (D119, for line art).
-  ['mark stroke under 1px on screen', (h) => h.replace(`stroke-width="${swStroke.sw}"`, 'stroke-width="0.05"'), /stroke lands at [\d.]+px on screen/],
+  ['logo stroke under 1px on screen', (h) => h.replace(`stroke-width="${swStroke.sw}"`, 'stroke-width="0.05"'), /stroke lands at [\d.]+px on screen/],
   // 5b. the same floor on the shape the floor is NOT supposed to look at: the meeting point is a filled disc
   //     (`stroke-none`), so the cascade's `stroke-width` is the SVG initial 1 and nothing strokes. The gate now
   //     skips it — and this case is what stops that skip from being a hole: give the disc a REAL stroke under 1px
   //     and it must fail exactly like a line does. A presentation attribute, not a class (case 2's lesson).
   ['meeting point given a real stroke under 1px', (h) => h.replace(
-    new RegExp(`(<circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}") class="stroke-none `),
+    new RegExp(`(<circle cx="${LOGO.dot.cx}" cy="${LOGO.dot.cy}" r="${LOGO.dot.r}") class="stroke-none `),
     (m, el) => `${el} stroke="#101014" stroke-width="0.3" class="`), /stroke lands at [\d.]+px on screen/],
   // 6. controls, by the ROLE the markup declares (D140). These three are the counterfactual for the pair of
   //    rules that used to match on class substrings: design/records/0016 measured three shipped 40px tap
@@ -269,7 +269,7 @@ try {
     const match = hits.find((l) => want.test(l));
     if (!failed || !hits.length) {
       ok = false;
-      lines.push(`  FAIL  selftest "${name}": the gate PASSED on a page with a broken mark — that check is not a check`);
+      lines.push(`  FAIL  selftest "${name}": the gate PASSED on a page with a broken logo — that check is not a check`);
     } else if (!match) {
       ok = false;
       lines.push(`  FAIL  selftest "${name}": the gate failed, but not for ${want}: ${hits[0].slice(0, 150)}`);
@@ -282,7 +282,7 @@ try {
   writeFileSync(SCHEDULE, scheduleHtml);
 }
 
-console.log('\n== can check:render\'s mark and control checks fail? (mutated built page) ==');
+console.log('\n== can check:render\'s logo and control checks fail? (mutated built page) ==');
 console.log(lines.join('\n'));
 console.log(`\n  (the real page is restored; re-run \`npm run check:render\` to see it green)`);
 if (!ok) { console.error('RENDER GATE SELFTEST: FAIL'); process.exit(1); }

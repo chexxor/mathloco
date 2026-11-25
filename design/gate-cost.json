@@ -100,7 +100,7 @@
     "loadStart": "6.8/16cpu",
     "steps": {
       "check:render:dist": 11.72,
-      "check:mark": 7.78,
+      "check:logo": 7.78,
       "check:social:live": 1.49,
       "check:space": 8.32,
       "check:ground": 9.66,

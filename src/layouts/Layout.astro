@@ -60,13 +60,13 @@ import Navigation from '../components/Navigation.astro';
 
   </head>
   <body class="bg-paper text-ink">
-    <!-- No sprite here. The glyph data behind every sign-up mark (S026, D294) is printed by
+    <!-- No sprite here. The glyph data behind every sign-up platform glyph (S026, D294) is printed by
          src/components/SignUpLinks.astro in front of the first cluster on the page, so a page that paints no
-         mark ships no glyph bytes: inserting the sprite here would cost +2,201 gzip @measured 2026-11-13 by
-         `node design/mark-cost.mjs` - 41.3% of /chat's 5,327 gzip bytes - for drawings that page never
+         platform glyph ships no glyph bytes: inserting the sprite here would cost +2,201 gzip @measured 2026-11-13 by
+         `node platform-mark-cost.mjs` - 41.3% of /chat's 5,327 gzip bytes - for drawings that page never
          paints. src/components/PlatformMarks.astro holds the arithmetic that decides sprite vs inline, and
          scripts/check-sprite-claim.mjs is the gate that keeps the sprite out of this shell (D297). -->
-    <!-- The skip link. A keyboard reader lands on the header on every page and has to cross the mark, three
+    <!-- The skip link. A keyboard reader lands on the header on every page and has to cross the wordmark, three
          labels and the date chip before reaching the page's own words — WCAG 2.4.1 (Bypass Blocks) asks for one
          control that jumps past repeated chrome, and this tree had none: **0 of 76 anchors** on the 6 built pages
          carried a `#` fragment at all @measured 2026-11-21 by `npm run check:cta-context`, which is also why the

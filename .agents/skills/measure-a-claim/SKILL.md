@@ -31,13 +31,13 @@ probe itself - that is the session's decision.
 | per-event date/leaf/plate geometry | `node design/schedule-geometry.mjs` |
 | where the emptiness is, and what each reserved slot measures | `npm run check:space` |
 | the painted page ground and the painted hairlines | `npm run check:ground` (pixel bytes, not colour strings) |
-| the mark at 320 and 1240 | `npm run check:mark` |
+| the logo at 320 and 1240 | `npm run check:logo` |
 | contrast and colour roles | `npm run check:color`, `check:render` |
 | how much CSS ships, and which utilities nothing writes | `npm run check:css-utilities` |
 | the wall clock of the gate set | `npm run verify`, then `cat .design/tmp-gate-logs/deploy/manifest.txt`; `npm run cost:check` |
 | the browser ritual's cost | `npm run verify:browser` |
 
-Browser probes take the machine: `check:mark` alone is 10s, in a wave with the others it took 152s and
+Browser probes take the machine: `check:logo` alone is 10s, in a wave with the others it took 152s and
 failed twice. Price a new browser probe before adding it.
 
 ## The stamp

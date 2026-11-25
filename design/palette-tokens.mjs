@@ -79,7 +79,7 @@ export function paletteTokens(cssPath = GLOBAL_CSS) {
 // 0..1 handed to a function wanting a percentage) is exactly the defect a second conversion would re-grow, so a
 // candidate is resolved through `oklchToRgb` and put through the same `assertTokenBytes` a token is.
 //
-// WHY THE SHADOW GUARD: a candidate named `accent` would silently become the thing `check:social` and every mark
+// WHY THE SHADOW GUARD: a candidate named `accent` would silently become the thing `check:social` and every logo
 // probe read, and the round would look as if it had measured the shipped palette. Declaring a token is the operator's
 // act, in @theme, in a commit that re-derives the gates (D316).
 export const CANDIDATE_COLOURS = {};
@@ -137,7 +137,7 @@ if (process.argv[1] && process.argv[1].endsWith('palette-tokens.mjs') && process
   const darkestPlanted = Math.max(...Object.values(T).map((t) => Math.max(...tripleToBytes({ L: t.L, C: t.C, H: t.H }))));
   console.log(`ok planting: the wrong-unit call threw for ${planted} of ${names.length} tokens; it collapses paper ${plantedGrounds[0].join(',')} and ink ${plantedGrounds[1].join(',')} to a contrast of ${plantedContrast} (the real card ground pair measures 17.15), brightest channel anywhere in it: ${darkestPlanted}.`);
 
-  // The CANDIDATE path, planted and controlled, because rounds 21/22/23 and `mark-tab` now resolve colour through
+  // The CANDIDATE path, planted and controlled, because rounds 21/22/23 and `logo-tab` now resolve colour through
   // it. (a) a candidate's bytes must clear the same assertion a shipped token's clear — planted the same wrong-unit
   // way, that assertion must throw and name it. (b) a candidate that takes a declared name must be refused, naming
   // the token it would have hidden. (c) `colourEntry` must resolve a candidate without calling it a token.

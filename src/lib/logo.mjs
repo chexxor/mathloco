@@ -1,10 +1,10 @@
-// The club's mark: two lines that leave a sphere's equator at right angles — so parallel — and cross at the pole.
+// The club's logo: two lines that leave a sphere's equator at right angles — so parallel — and cross at the pole.
 //
-// WHAT THE MARK MEANS (corrected 2026-11-02, operator ruling). The operator's words: the drawn mark was "an
+// WHAT THE LOGO MEANS (corrected 2026-11-02, operator ruling). The operator's words: the drawn logo was "an
 // incorrect interpretation of the meet up image… two parallel lines intersect on a curved surface", and it is in
 // production, so it gets corrected rather than re-litigated. The source figure is the club's own event artwork
 // (`https://secure.meetupstatic.com/photos/event/8/d/d/8/highres_534396312.webp`, fetched 2026-11-02, kept at
-// `.design/mark-src/source.png`). It was read by measurement, not by eye — this session's model has no vision,
+// `.design/logo-src/source.png`). It was read by measurement, not by eye — this session's model has no vision,
 // and the repo's own finding (design/state.json `layout_probe`) is that screenshot judgement has no power here
 // while measurement and transcription do. The ink mask (L > 0.30 = 3.8% of pixels; it is a dark-ground drawing,
 // median L 0.057) printed as a 150×54 ASCII grid shows exactly four things:
@@ -17,7 +17,7 @@
 // That is the standard spherical-geometry figure — two lines that are parallel where they start, meeting because
 // the surface is curved — and the club's caption on it is "S pole — meet here".
 //
-// TWO RULINGS ON THE CORRECTED MARK (operator, 2026-11-02). First: the metaphor is "two parallel lines intersect
+// TWO RULINGS ON THE CORRECTED LOGO (operator, 2026-11-02). First: the metaphor is "two parallel lines intersect
 // on a curved surface". Second, on the first correction: "the circle does not look like a sphere — the one I made
 // before had an equator line that was curved to show it." So the surface cue is now drawn, not implied: the
 // equator is a **curved** pair of arcs (a tilted great circle, the way a globe is drawn) instead of a straight
@@ -31,8 +31,8 @@
 // arc that bows UP is the far side of the sphere, so it is drawn in DASHES; the arc that bows DOWN is nearer
 // than the surface it lies on, so it is drawn solid. That is occlusion — the part of the great circle the sphere
 // hides from itself — and it is what the source figure does too (the ASCII ink mask of it reads "a long
-// horizontal dashed line across it", and the mark used to be solid on the theory that dashes cannot survive at
-// small sizes; the theory was wrong, see below). Of the standard depth cues, that is the one this mark can carry:
+// horizontal dashed line across it", and the logo used to be solid on the theory that dashes cannot survive at
+// small sizes; the theory was wrong, see below). Of the standard depth cues, that is the one this logo can carry:
 // graticule lines and elliptical cross-sections are already here (ring + equator + two meridians), and TONAL
 // shading would need a filled shape whose contrast bar is a LAYER's (1.35, D101) rather than a graphic line's
 // (3.0), a gradient in the share card's own SVG document, and a new colour role — so it stays an open question
@@ -45,21 +45,21 @@
 // carries the metaphor was drawn on the hemisphere the sphere hides. They now leave the NEAR arc, at (94,97) and
 // (146,97), and run down the visible face to the pole. The price is stated rather than hidden: the parallel run
 // shortens from 25 units to 13, because the near arc sits 19 units lower and the pole does not move. See the
-// `route` entries in MARK below for the measurements.
+// `route` entries in LOGO below for the measurements.
 // FIFTH RULING: THEY MEET AT THE NORTH POLE (operator, 2026-11-24). "let's change it so they meet at the north
 // pole instead of the south pole please." The pair keep the two feet the fourth ruling put on the near arc —
 // (94,97) and (146,97) — and run UP the visible face to the pole. What the flip buys is room: the north pole sits
 // 77 units from the near arc where the south pole sat 39.
 // SIXTH RULING: THE CURVES ARE THE SPHERE'S OWN (operator, 2026-11-24). "the curves from the equator to the north
 // pole are not perfectly curved as they would when on a sphere. Can you fix that?" The first answer to the fifth
-// ruling drew each meridian as a straight vertical run and then one cubic into the pole, because the mark's claims
+// ruling drew each meridian as a straight vertical run and then one cubic into the pole, because the logo's claims
 // compete and a point was picked off a measured trade-off table (25 units of straight run for rms 2.24 units off a
 // true meridian). The operator rejected the compromise, so the compromise is gone: each route is now the
 // orthographic projection of that meridian of this sphere, and the meeting point moved with it, because a tilted
 // sphere's pole does not project onto the top of its silhouette. That table stays in this file's history and in
-// `mark-meridian-fit.mjs` because it is still the measurement of what the true curve costs — it is no longer the
+// `logo-meridian-fit.mjs` because it is still the measurement of what the true curve costs — it is no longer the
 // thing that picks the curve.
-// The projection is read out of the drawing rather than assumed (`node design/mark-meridian-fit.mjs --exact`):
+// The projection is read out of the drawing rather than assumed (`node logo-meridian-fit.mjs --exact`):
 // the equator's own semi-minor is 21 = 0.3621 r, so the axis stands 21.23° out of the screen plane; the projected
 // meridian is a quarter of an ellipse centred on the sphere with conjugate semi-diameters (-26, 18.999) — the
 // foot's offset — and (0, -54.06) — the projected axis — and one cubic with the standard 4(√2-1)/3 control offset
@@ -71,19 +71,19 @@
 //     the drawing itself implies;
 //   - each meridian leaves the near arc with a VERTICAL tangent (the projection's own departure angle, 90.00° off
 //     horizontal, against the arc's 9.35° — which is why the right-angle marks are drawn along the two tangents and
-//     read an 80.65° wedge, not a false 90°), so the pair are parallel where they start, which is the mark's claim;
+//     read an 80.65° wedge, not a false 90°), so the pair are parallel where they start, which is the logo's claim;
 //   - what is given up is a long constant separation. The mirrored pair hold 98.4% of their 52-unit separation 10
 //     units up, 93.8% at 20, 86.2% at 30: the surface curves them together from the first unit, which is the whole
 //     point of the figure, and the straight run that used to carry "parallel" is gone. They cross at 72° (2 × the
 //     36.16° arrival), a wider opening than the compromise's 43°.
-// `design/mark-geometry.mjs` now measures all three on the built page: the departure tangents, the separation
+// `logo-geometry.mjs` now measures all three on the built page: the departure tangents, the separation
 // profile against the table's own, and the drawn path against the analytic meridian.
 //
 // WHY THE DASH SURVIVES AT PHONE SIZE (the earlier reason for solid was wrong): `dash: '5 4'` is in viewBox
 // units, and the smallest shipped box is the hero on a 320px viewport — box 276px, scale 1.15 — where a dash is
 // 5.75 device px long with a 4.6px gap: four times the 1.5px floor that D119 sets for a stroke to have a
 // measurable colour identity at all. `check:render` now asserts the declared dash ARRIVES (computed
-// strokeDasharray, per shape), and `design/mark-geometry.mjs` measures the cue in painted pixels: the near
+// strokeDasharray, per shape), and `logo-geometry.mjs` measures the cue in painted pixels: the near
 // arc's widest run near its apex is 49 units of unbroken line, the far arc's is one dash.
 //
 // WHAT WAS WRONG IN THE OLD DRAWING (drawn in apply 4h, shipped until 2026-11-02). Three of its six shapes were
@@ -95,11 +95,11 @@
 //   - the two accent segments were mirrored arcs (`M62 118 C…`, `M178 118 C…`), also not in the source;
 //   - the equator — the reference line the two lines leave at right angles, the thing that ESTABLISHES that they
 //     are parallel — was absent. Without it "parallel lines meeting" cannot be seen at all.
-// The lesson ships with the fix: a mark derived from a source image has to be checked against the source image.
+// The lesson ships with the fix: a logo derived from a source image has to be checked against the source image.
 // "The owner approved the specimen" does not substitute — the operator ratified a drawing, not a reading of
-// their figure. Asking for the vector (D94) is still worth doing, and `MARK` below is still the one place it lands.
+// their figure. Asking for the vector (D94) is still worth doing, and `LOGO` below is still the one place it lands.
 //
-// WHY THIS FILE EXISTS (apply 4h, 2026-11-01). The mark is drawn in two places — the landing page's hero column
+// WHY THIS FILE EXISTS (apply 4h, 2026-11-01). The logo is drawn in two places — the landing page's hero column
 // (`src/components/HeroSection.astro`) and the share card (`scripts/make-social-share.mjs`, D118) — and the share
 // card's pixel gate (`scripts/check-social-card.mjs`), which measures the meeting point's position in the JPEG,
 // needs the same coordinates. Before this file, the path data was typed twice and the coordinates a third time,
@@ -119,16 +119,16 @@
 // the mind", Byrne 1847, preface).
 //
 // What row C does to this file, and what it costs, stated rather than hidden:
-//   - `MARK_COLOURS` stops being keyed by ROLE and is keyed by SLOT (the eight drawn shapes, in paint order).
+//   - `LOGO_COLOURS` stops being keyed by ROLE and is keyed by SLOT (the eight drawn shapes, in paint order).
 //     A role-keyed map CANNOT express row C: both meridians are the role `route`, and row C names them two
 //     different colours. Round 9 priced the same wall and left it unpunched (design/grill/round9-palette.mjs:
 //     "`route` -> a per-shape pair (a new role, or an array)").
 //   - It gives the notation two colours that are ONE HUE AT TWO WEIGHTS. Round 21 measured the tightest gap
 //     between the colours row C spends on paper as 0.00 deg (`accent` hue 35.7 against `accent-strong` hue 35.35)
 //     @measured 2026-11-24 by npm run round21, `hues` in design/grill/round21/report.json), so the right-angle
-//     marks say "same line, heavier" — which is Byrne's own terms read back at this palette. The incumbent row A
+//     logos say "same line, heavier" — which is Byrne's own terms read back at this palette. The incumbent row A
 //     spent 3 colours 5.0 deg apart, so colour carried almost no information either way.
-//   - It costs the mark its "these are the same kind of line" claim: the left meridian is the club's red and the
+//   - It costs the logo its "these are the same kind of line" claim: the left meridian is the club's red and the
 //     right is the calendar blue, and "parallel" is a statement about a PAIR. Round 21 printed the tension
 //     (row C's own `reading` line) and the operator chose the row anyway.
 //   - Every pair still clears the 3.0 graphic bar (D101), on both grounds, @measured 2026-11-24 by npm run
@@ -138,21 +138,21 @@
 // COLOUR IS HERE NOW. It used to not be: which token a shape took depended on the ground it sat on and the role
 // it meant — `accent` on paper (5.77) vs `accent-on-ink` on the band (5.69), because `accent` on ink is 2.97 and
 // banned (DESIGN.md "Colour", D316); those token pairs are @measured 2026-11-14 by node design/grill/palette-remap.mjs.
-// `role` is still what a shape MEANS (a ground could supply its own map for it, and `design/mark-geometry.mjs`
+// `role` is still what a shape MEANS (a ground could supply its own map for it, and `logo-geometry.mjs`
 // still splits the figure into line / route / accent by it); `slot` is WHICH shape it is, and colour is now keyed
 // by slot because Byrne names lines, not kinds. Each surface turns a token into whatever its renderer understands
 // (a literal Tailwind class on the page — Tailwind's scanner reads raw source text, so a computed class name
 // generates nothing — or `var(--color-…)` in the card document, which has no Tailwind).
 //
-// Every drawn mark clears the **3.0 graphic bar** (D101). `check:render` measures that on painted bytes, per
-// shape, on the built page (D116) — see the `marks` probe in `design/grill/render-measure.js`.
+// Every drawn logo clears the **3.0 graphic bar** (D101). `check:render` measures that on painted bytes, per
+// shape, on the built page (D116) — see the `logos` probe in `design/grill/render-measure.js`.
 
-export const MARK = {
+export const LOGO = {
   vbW: 240,
   vbH: 150,
-  // Order is paint order: the surface and its reference line sit under the routes, the routes under the marks
+  // Order is paint order: the surface and its reference line sit under the routes, the routes under the logos
   // that explain them. `role` is not a colour, it is what the shape means, so a ground can supply its own map.
-  // `slot` is WHICH shape it is, in that same paint order, and it is what `MARK_COLOURS` is keyed by since the
+  // `slot` is WHICH shape it is, in that same paint order, and it is what `LOGO_COLOURS` is keyed by since the
   // seventh ruling (D483): Byrne names a line, so a colour has to address one shape rather than a kind.
   shapes: [
     // The curved surface. cx/cy/r unchanged from the ratified round-4 specimen.
@@ -166,7 +166,7 @@ export const MARK = {
     // .notes/DECISIONS.md and are re-measured with the same probe.)
     { slot: 'ring', role: 'sphere', tag: 'circle', cx: 120, cy: 78, r: 58, sw: 1.3 },
     // The equator's REAR half — the far side of the tilted great circle, drawn in dashes because the sphere
-    // hides it from the viewer (operator ruling, third on this mark). `face` is the author's claim; the probe
+    // hides it from the viewer (operator ruling, third on this logo). `face` is the author's claim; the probe
     // checks it against the pixels, which is what catches the dash landing on the wrong arc (that would draw a
     // sphere with its near side hidden — an inside-out globe).
     // Two arcs of one ellipse centred on the sphere: semi-major = r horizontally (its ends land exactly on the
@@ -179,7 +179,7 @@ export const MARK = {
     // and the sphere's centre. Same token, same weight — the two halves differ in continuity, not in colour, so
     // both keep clearing the 3.0 graphic bar (D101) and neither can drift into a tint.
     { slot: 'front', role: 'sphere', tag: 'path', d: 'M62 78 C62 106, 178 106, 178 78', sw: 1.3, face: 'front' },
-    // The two lines. FOURTH RULING ON THIS MARK (operator, 2026-11-23): "the lines from the equator to the south
+    // The two lines. FOURTH RULING ON THIS LOGO (operator, 2026-11-23): "the lines from the equator to the south
     // pole [must] start from the bottom/close side of the equator line." They used to start on the FAR arc — the
     // dashed one, at (94,59) and (146,59) — and ran toward the viewer, crossing the near arc on the way to the
     // pole. That drew the pair on the hemisphere the sphere hides from the reader. They now start ON THE NEAR ARC,
@@ -191,17 +191,17 @@ export const MARK = {
     // the meridian through that foot. It leaves the near arc vertically (the projection's own departure angle),
     // bends continuously as the surface curves away, and arrives at the projected pole 36.16° off horizontal,
     // mirrored, so the pair CROSS at 72° rather than kissing. Every figure in that sentence is the probe's, not the
-    // author's: `node design/mark-meridian-fit.mjs --exact` solves the projection off this file's own ring and
+    // author's: `node logo-meridian-fit.mjs --exact` solves the projection off this file's own ring and
     // equator (semi-minor 21 -> axis 21.23° out of the screen plane), reports 0.009 units of geometric error for
     // the path below against the analytic curve, and prints the separation profile (52.00u at the foot, 51.17u 10
     // units up, 48.76u at 20, 44.84u at 30) — the pair hold 98.4% of their separation over the first 10 units, which
-    // is how much "parallel" survives here. `npm run check:mark` re-measures the departure, the separation and the
+    // is how much "parallel" survives here. `npm run check:logo` re-measures the departure, the separation and the
     // arrival in painted pixels, and now measures the drawn path against the analytic meridian too, so "it looks
     // curved" is not a passing condition.
     // Each foot sits exactly on the near arc's ink: at x 94 and 146 the drawn arc cubic paints y = 97.0 (solved off
     // the path, not off the ellipse it approximates — the cubic's apex is 0.75 of its control offset, so reading the
     // ellipse's 96.8 would have left the join 0.2 units off the ink). The arc there is 9.35° off horizontal, so the
-    // junction reads as a right angle (the far arc gave 9.3° the same way); the square marks below are drawn along
+    // junction reads as a right angle (the far arc gave 9.3° the same way); the square logos below are drawn along
     // the two tangents rather than axis-aligned, so the notation does not claim an angle the drawing does not have.
     // `left` and `right` are two slots on purpose: since the seventh ruling (D483) they are two different
     // colours, which is exactly what a role-keyed colour map could not express.
@@ -209,7 +209,7 @@ export const MARK = {
     { slot: 'right', role: 'route', tag: 'path', d: 'M146 97 C146 67.14, 134.36 34.43, 120 23.94', sw: 1.4 },
     // The right-angle marks: the notation for "each of these leaves the equator at a right angle", which is the
     // construction that makes them parallel. In the source this is text (measured as two small text blobs where
-    // the lines meet the equator); a mark that renders at 24×15px cannot carry text, and inventing a word would
+    // the lines meet the equator); a logo that renders at 24×15px cannot carry text, and inventing a word would
     // break D92 (state only sourceable facts), so the smallest faithful encoding is the square-corner glyph. It
     // sits in the quadrant between the two arms, 6 units to a side. Gold because it is the reason the figure
     // means anything, not because it is decoration.
@@ -219,17 +219,17 @@ export const MARK = {
     // projection's foreshortening stays visible rather than being papered over. Mirrored about x 120. Flipped with
     // the fifth ruling (2026-11-24): the wedge the square sits in is now between the route going UP and the arc
     // going right, which is the supplement — 99.4° rather than 80.6° — of the angle the south figure marked. Both
-    // are foreshortings of the same right angle, and the glyph still marks the one actually drawn.
+    // are foreshortings of the same right angle, and the glyph still logos the one actually drawn.
     { slot: 'angleL', role: 'accent', tag: 'path', d: 'M99.9 98 L99.9 92 L94 91', sw: 1.4 },
     { slot: 'angleR', role: 'accent', tag: 'path', d: 'M140.1 98 L140.1 92 L146 91', sw: 1.4 },
   ],
-  // The filled point the two lines cross at — the mark's whole point, so the gates put a measurement band here
+  // The filled point the two lines cross at — the logo's whole point, so the gates put a measurement band here
   // rather than trusting that the paths still converge. Since the sixth ruling (2026-11-24) it sits at the
   // PROJECTED pole, (120, 23.94): 54.06 units above the sphere's centre, which is sqrt(r² - b²) for the drawn
   // equator's own semi-minor b = 21 — the tilted axis stands 21.23° out of the screen plane, so the pole projects
   // inside the ring's silhouette rather than on top of it. The south figure put it on the ring (cy + r = 136,
   // 3.94 units outside its own true projection of 132.06); that convention goes with the approximation it came
-  // from, and `check:mark` now derives the expected pole from the ellipse the mark itself draws.
+  // from, and `check:logo` now derives the expected pole from the ellipse the logo itself draws.
   dot: { slot: 'dot', role: 'accent', tag: 'circle', cx: 120, cy: 23.94, r: 4 },
   meet: { x: 120, y: 23.94 },
 };
@@ -241,28 +241,28 @@ export const MARK = {
 //   ring   the silhouette circle          rear   the far, dashed half of the equator
 //   front  the near half                  left / right   the two meridians
 //   angleL / angleR  the right-angle marks        dot    the meeting point at the pole
-export const MARK_SLOTS = ['ring', 'rear', 'front', 'left', 'right', 'angleL', 'angleR', 'dot'];
+export const LOGO_SLOTS = ['ring', 'rear', 'front', 'left', 'right', 'angleL', 'angleR', 'dot'];
 
-// Shapes a correctly-rendered mark contains. `check:render` compares this against the DOM it measures:
+// Shapes a correctly-rendered logo contains. `check:render` compares this against the DOM it measures:
 // an <svg> can lose children silently — measured on the share card, firefox painted the rule and the
-// first mark but dropped every mark wrapped in a <span>, because SVG treats an unknown element's
+// first logo but dropped every logo wrapped in a <span>, because SVG treats an unknown element's
 // subtree as foreign content (D118 lesson 1). A count is the cheapest check that catches it.
-export const MARK_SHAPE_COUNT = MARK.shapes.length + 1;   // + the filled meeting point
+export const LOGO_SHAPE_COUNT = LOGO.shapes.length + 1;   // + the filled meeting point
 
 // The slot table and the shape table are one fact in two shapes, and both probes zip them against the painted
 // <svg> in paint order. If a shape is added, renamed or dropped without its slot, that zip silently pairs each
-// painted shape with the wrong declaration — which reads as "the mark is fine, the probe is loud", and is the
+// painted shape with the wrong declaration — which reads as "the logo is fine, the probe is loud", and is the
 // class of defect D480 was about. So the table asserts itself here, where the build fails rather than the gate.
 {
-  const declared = [...MARK.shapes.map((s) => s.slot), MARK.dot.slot];
-  if (declared.length !== MARK_SLOTS.length)
-    throw new Error(`brand-mark: MARK declares ${declared.length} drawn shapes but MARK_SLOTS names ${MARK_SLOTS.length} — a slot with no shape (or a shape with no slot) mis-zips every painted-shape-to-declaration check in design/mark-geometry.mjs, scripts/check-social-card.mjs and design/render-gate.mjs`);
+  const declared = [...LOGO.shapes.map((s) => s.slot), LOGO.dot.slot];
+  if (declared.length !== LOGO_SLOTS.length)
+    throw new Error(`logo: LOGO declares ${declared.length} drawn shapes but LOGO_SLOTS names ${LOGO_SLOTS.length} — a slot with no shape (or a shape with no slot) mis-zips every painted-shape-to-declaration check in logo-geometry.mjs, scripts/check-social-card.mjs and design/render-gate.mjs`);
   for (const [i, slot] of declared.entries())
-    if (slot !== MARK_SLOTS[i])
-      throw new Error(`brand-mark: shape #${i} carries slot "${slot}" but MARK_SLOTS[${i}] is "${MARK_SLOTS[i]}" — slots are declared in PAINT ORDER, and a slot out of order paints every later shape in the previous shape's colour`);
+    if (slot !== LOGO_SLOTS[i])
+      throw new Error(`logo: shape #${i} carries slot "${slot}" but LOGO_SLOTS[${i}] is "${LOGO_SLOTS[i]}" — slots are declared in PAINT ORDER, and a slot out of order paints every later shape in the previous shape's colour`);
 }
 
-// slot -> token name (the `--color-<name>` in @theme) per ground. This is the ONLY place the mark's colour is
+// slot -> token name (the `--color-<name>` in @theme) per ground. This is the ONLY place the logo's colour is
 // decided: the hero reads it into literal Tailwind classes, `scripts/make-social-share.mjs` into `var(--color-…)`,
 // `design/ratify-check.mjs` asserts the two agree, and grill round 21 prices a candidate against it.
 //
@@ -285,22 +285,22 @@ export const MARK_SHAPE_COUNT = MARK.shapes.length + 1;   // + the filled meetin
 // sphere is `ink`. `rule` still travels elsewhere in the artifact (`inset-shadow-rule`, `decoration-rule`), so it
 // is not an orphan token; `check:token-usage` is what would say so if it were.
 // Typed as `Record<string, string>` per ground rather than as eight literal keys: every reader that paints from
-// it (`HeroSection.astro`, `scripts/make-social-share.mjs`) looks a slot up from `MARK.shapes[].slot`, which is a
+// it (`HeroSection.astro`, `scripts/make-social-share.mjs`) looks a slot up from `LOGO.shapes[].slot`, which is a
 // `string` in a `.mjs`, and a concrete eight-key object refuses that lookup with ts(7053). The looseness is a
 // typing convenience only - the assertion below is what actually holds the table to the eight slots, and it runs
 // at import, so the build fails before any gate sees a slot with no token.
 /** @type {Record<'paper' | 'ink', Record<string, string>>} */
-export const MARK_COLOURS = {
+export const LOGO_COLOURS = {
   paper: { ring: 'ink', rear: 'ink', front: 'ink', left: 'accent', right: 'path-calendar', angleL: 'accent-strong', angleR: 'accent-strong', dot: 'path-mobilizon' },
   ink: { ring: 'band-text', rear: 'band-text', front: 'band-text', left: 'accent-on-ink', right: 'path-calendar-on-ink', angleL: 'accent-on-ink', angleR: 'accent-on-ink', dot: 'path-mobilizon-on-ink' },
 };
 
 // The colour map and the slot table are the same eight names. A slot with no token paints nothing, and a token for
-// a slot that does not exist is a colour waiting for a shape that never arrives — either one shows up as a mark
+// a slot that does not exist is a colour waiting for a shape that never arrives — either one shows up as a logo
 // with a hole in it, so it is refused here, at import, rather than in a browser run.
-for (const [ground, map] of Object.entries(MARK_COLOURS)) {
-  const missing = MARK_SLOTS.filter((s) => !map[s]);
-  const extra = Object.keys(map).filter((s) => !MARK_SLOTS.includes(s));
+for (const [ground, map] of Object.entries(LOGO_COLOURS)) {
+  const missing = LOGO_SLOTS.filter((s) => !map[s]);
+  const extra = Object.keys(map).filter((s) => !LOGO_SLOTS.includes(s));
   if (missing.length || extra.length)
-    throw new Error(`brand-mark: MARK_COLOURS.${ground} is not keyed by MARK_SLOTS — missing ${missing.join(',') || '(none)'}, not a slot ${extra.join(',') || '(none)'}. Slots: ${MARK_SLOTS.join(', ')}`);
+    throw new Error(`logo: LOGO_COLOURS.${ground} is not keyed by LOGO_SLOTS — missing ${missing.join(',') || '(none)'}, not a slot ${extra.join(',') || '(none)'}. Slots: ${LOGO_SLOTS.join(', ')}`);
 }

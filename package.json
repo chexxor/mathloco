@@ -148,7 +148,7 @@
     "check:area": "node design/area-survey.mjs",
     "check:rhythm": "node design/rhythm.mjs",
     "check:render:dist": "node design/render-gate.mjs --no-build",
-    "check:mark": "node design/mark-check.mjs",
+    "check:logo": "node design/logo-check.mjs",
     "check:color": "node design/color-survey.mjs",
     "check:discord": "tsx scripts/check-discord-access.ts",
     "check:ai": "tsx scripts/check-ai-model.ts",

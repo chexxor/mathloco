@@ -1714,13 +1714,13 @@
  },
  "shapeCountPrice": {
   "tableShapes": 7,
-  "MARK_SHAPE_COUNT": 8,
+  "LOGO_SHAPE_COUNT": 8,
   "acceptedReportLength": 8,
-  "note": "design/mark-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both mark probes refuse: the refusal text is recorded per row in painted[]."
+  "note": "logo-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both mark probes refuse: the refusal text is recorded per row in painted[]."
  },
  "control": {
   "id": "C0",
-  "derivedFrom": "MARK_COLOURS in src/lib/brand-mark.mjs"
+  "derivedFrom": "LOGO_COLOURS in src/lib/logo.mjs"
  },
  "lines": {
   "paper": {

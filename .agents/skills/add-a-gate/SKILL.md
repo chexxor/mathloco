@@ -47,7 +47,7 @@ gate reports a file missing that is sitting beside it (`.notes/PITFALLS.md`, mea
 | source or config only | `DEPLOY`, before `build` | D118: a gate that can go red before anyone builds catches the defect on the branch that introduced it |
 | `dist/` | `DEPLOY` with `needs: ['build']` | the artifact does not exist yet |
 | a rendered page | `BROWSER`, `needs: ['check:render:dist']` | the browser set does not build; it stands or falls on `dist/` being fresh (`design/dist-fresh.mjs`) |
-| its own pool of browsers | `BROWSER` + `alone: true` | two browser pools in one wave flaked here: `check:mark` alone is 10s, beside the others it took 152s and failed twice |
+| its own pool of browsers | `BROWSER` + `alone: true` | two browser pools in one wave flaked here: `check:logo` alone is 10s, beside the others it took 152s and failed twice |
 | files in `.notes/` | anywhere, with clone mode | see above |
 
 A mutating selftest runs **after** the read-only probes that measure the same artifact — otherwise a

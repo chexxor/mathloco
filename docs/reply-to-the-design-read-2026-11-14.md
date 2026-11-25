@@ -115,8 +115,8 @@ The 1922 radio leaf is a **ruled choice**, not a defect: its provenance is quote
 
 | claim | verdict | command | the line it printed |
 |---|---|---|---|
-| "∑ appears once, which reads as an accident" | **PARTIALLY VERIFIED, now false** | `grep -rn 'data-mark' src`; `npm run --silent check:mark` | the mark is drawn from one geometry table in the hero, on the share card, in the footer wordmark and — as of this commit — as the tab mark. `check:mark` prints `MARK CHECK: PASS — geometry table and painted pixels agree at both widths` |
-| "You have no diagram of your own" | **FALSE** | `grep -c 'circle\|path\|line\|rect' src/lib/brand-mark.mjs` | 52 shape entries, gated at 320 and 1240 |
+| "∑ appears once, which reads as an accident" | **PARTIALLY VERIFIED, now false** | `grep -rn 'data-mark' src`; `npm run --silent check:logo` | the mark is drawn from one geometry table in the hero, on the share card, in the footer wordmark and — as of this commit — as the tab mark. `check:logo` prints `LOGO CHECK: PASS — geometry table and painted pixels agree at both widths` |
+| "You have no diagram of your own" | **FALSE** | `grep -c 'circle\|path\|line\|rect' src/lib/logo.mjs` | 52 shape entries, gated at 320 and 1240 |
 | "the `<hr>` / divider … is it an `<hr>` or a border?" | **FALSE premise** | `grep -rn '<hr' src` | no matches; every divider is an inset ring, measured on both sides by `check:render` |
 
 ## Two defects the pass found that the read did not name

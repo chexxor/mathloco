@@ -501,21 +501,21 @@ it freshness.
   sphere diagram only.
 - The nav is **one row at every width, `flex-wrap: nowrap`, one type tier at every width**: links at
   `text-label` with 16px gaps, targets 32px tall (16px line box + py-2). Shape is D100's; the tier
-  boundary is not (D117). The mark is the club's own name — `Matheapolis` since the 2026-11-07 rename, `MPLS Math Club`
-  before it — in `font-body` at the `text-body` step, ink, no accent: the old accent-coloured `Math` inside the mark depended on
-  "Math" being a word inside the mark, and a coined single word has no word boundary to colour. (The `∑` summand
+  boundary is not (D117). The **wordmark** is the club's own name — `Matheapolis` since the 2026-11-07 rename, `MPLS Math Club`
+  before it — in `font-body` at the `text-body` step, ink, no accent: the old accent-coloured `Math` inside the wordmark depended on
+  "Math" being a word inside the wordmark, and a coined single word has no word boundary to colour. (The `∑` summand
   went on 2026-11-16 under **S050/D379**; until then it sat only on the ink band, where `accent-on-ink` is the hue the
   contrast oracle allows, and never in the nav, where the row has no room for it — see the nav-fit arithmetic below.) It is the home path, and
   its `aria-label` carries the name. D100 rejected a 13px target, so do
   not shave the padding.
-- **The label set is the mark plus `Dates`, `Chat` and `Ways in`.** `Schedule` and `Members` were dropped on
+- **The label set is the wordmark plus `Dates`, `Chat` and `Ways in`.** `Schedule` and `Members` were dropped on
   2026-11-02 (D117): the build then emitted `index.html`, `chat/index.html` and `404.html` only, and `public/` has
   no redirect rules, so those two labels were links to the 404 page — on `main` as well as here. A nav item requires
   a page, and each label now has one: the schedule page landed 2026-11-07, the join page 2026-11-13 (MS14). At the
   320 floor the row **needs 257px** against a container that offers **276** — 19px of slack — and every number in it
-  is a measurement, not arithmetic: mark 97, `Dates` 36, `Chat` 29, `Ways in` 47, three 16px gaps
+  is a measurement, not arithmetic: wordmark 97, `Dates` 36, `Chat` 29, `Ways in` 47, three 16px gaps
   @measured 2026-11-14 by `node design/nav-fit.mjs --no-build` (Linux native, Firefox 159.0, faces settled, the same
-  needed-vs-available arithmetic `check:render` runs). Earlier lines here said **176px** (2026-11-03, when the mark
+  needed-vs-available arithmetic `check:render` runs). Earlier lines here said **176px** (2026-11-03, when the wordmark
   was `MPLS Math Club`) and **217px** (2026-11-07, two labels); both were true of the row that existed then and are
   kept as history, not as a figure to quote. `--breakpoint-nav-narrow` (370px) and the narrow `text-micro` nav tier
   went with the dead labels — a tier that fits everywhere is not a tier. An arbitrary `min-[…]:` / `max-[…]:` bracket
@@ -645,8 +645,8 @@ which must go red.
   sprite per render, never per path, because a claim keyed on `Astro.url.pathname` lives in a module loaded once
   per process, so the second request for `/` would paint three `<use>` refs and no symbols (D297) — and **not** by
   the layout, because a page that paints no mark should ship no glyph bytes: the counterfactual on `/chat` is
-  **+2,201 gzip**, 41.0% of that page's 5,372 gzip bytes @measured 2026-11-13 by `node design/mark-cost.mjs`
-  (Linux native, Node 24.22.1, gzip of the built page). @measured 2026-11-14 by `node design/mark-cost.mjs`:
+  **+2,201 gzip**, 41.0% of that page's 5,372 gzip bytes @measured 2026-11-13 by `node platform-mark-cost.mjs`
+  (Linux native, Node 24.22.1, gzip of the built page). @measured 2026-11-14 by `node platform-mark-cost.mjs`:
   `/` and `/join` paint no mark and ship **no sprite at all** (`index.html: no sprite element found in the built
   page`), `/chat` the same, and `/schedule` is the one page that draws glyphs — the sprite is 4,307 raw / 1,892
   gzip, **+2,207 gzip** there against **+2,304** for inlining the three glyphs, so the sprite saves **97** on the
@@ -907,7 +907,7 @@ stock crowd shot with a scrim and `#f59e0b` type over it.
 - **The paths row is the footer's grammar** (D115, D106): word plus hue, in `path-meetup-on-ink` /
   `path-discord-on-ink`, the domain in `accent-on-ink`, hairline `rule` between. No fill buttons on a band —
   `ink` on `ink` is invisible.
-- **The mark is the operator's sphere diagram** (geometry from the ratified round-4 specimen, corrected on
+- **The logo is the operator's sphere diagram** (geometry from the ratified round-4 specimen, corrected on
   the operator's rulings of 2026-11-02 — see *Graphics* below). The two curves arriving at the meeting point
   carry `accent-on-ink` (5.69); `accent` on ink is 2.97 and banned (D316).
 - **firefox composes the pixels**, through the same `design/grill/page-measure.mjs` loop the gates use,
@@ -918,7 +918,7 @@ stock crowd shot with a scrim and `#f59e0b` type over it.
 
 Five measured consequences that changed the code, each one invisible to a source-level check:
 
-1. An HTML `<span>` inside an `<svg>` is foreign content to SVG: firefox dropped every mark wrapped that
+1. An HTML `<span>` inside an `<svg>` is foreign content to SVG: firefox dropped every glyph wrapped that
    way and painted only the rule and the first path. The row is HTML with inline SVGs now.
 2. The ground is a painted `<div>`, not the body background: firefox's headless screenshot writes a
    4-channel PNG, and the body background came out alpha 0, so the card read as near-black (4,7,4).
@@ -945,17 +945,17 @@ a PDF, a flyer PNG — is invisible to `check:classes` and `check:render`, becau
 needs its own pixel gate in `verify`, its numbers read off the committed file, and a selftest that proves
 the gate can fail.
 
-**The tab mark now has that gate (D310).** `public/favicon.svg` had none, and it showed: the mark shipped
+**The tab logo now has that gate (D310).** `public/favicon.svg` had none, and it showed: the favicon shipped
 Tailwind's default `#3b82f6` ground with a `white` glyph — a colour in no token and a pair measuring **3.68**
 against the 4.5 text bar, in the tree since the Init commit and untouched by the design round @measured
 2026-11-14 by `node design/grill/okcolor.mjs` (the repo's one OKLab implementation). It now paints
 `--color-ink` (#17130c) ground with a `--color-paper` (#faf6ec) glyph, **17.15** @measured 2026-11-14 by
 `node design/grill/palette-remap.mjs`, the same pair the band and
 `::selection` use, and `rx 6` is `--radius-control`. `npm run check:favicon` asserts four things from the
-committed bytes: every fill is a token, at most two colours in the mark, the pair clears 4.5, and no
+committed bytes: every fill is a token, at most two colours in the tab logo, the pair clears 4.5, and no
 `--color-path-*` hue appears in it (round 3b reserves those hues for channels the visitor leaves for).
 `check:favicon:selftest` plants each of those defects — a named colour, a Tailwind hex, a 3.66 pair, three
-hues, a channel hue, an empty mark, a missing file — with three clean controls @measured 2026-11-14 by the
+hues, a channel hue, an empty drawing, a missing file — with three clean controls @measured 2026-11-14 by the
 selftest: **10 cases, 0 wrong**; the gate runs in **0.18s**, its selftest **0.18s**, both in `verify`.
 
 ## Graphics — the club's own diagram, drawn, one source of truth
@@ -974,10 +974,12 @@ shipped — a check asserting something the tree contradicts is an assertion, no
 Note also: `ratify-check.mjs` is a **design-round tool, not a step in `verify`**, so nothing runs it on a
 ship commit; `check:classes`, `check:design` and `check:favicon` are the tracked enforcement today.
 
-The mark lives in **one file**: `src/lib/brand-mark.mjs` exports `MARK` (viewBox 240x150 — the surface ring,
+**Four words, four things (S106, D487):** **the logo** is the drawn sphere in `src/lib/logo.mjs` — hero, share card, tab. **The wordmark** is the club's name set in serif in the nav and the exit band (97px at the 320 floor, D100); it is not the drawing and the gate measures it as text. **Right-angle marks** are the two tick shapes inside the geometry that say the lines are parallel — the word stays, it names construction, not identity. **Platform marks** are other companies' glyphs (`src/lib/platform-marks.mjs`) — the word stays because the rules for them (D82, D88, D294) are about someone else's trademark, not our own.
+
+The logo lives in **one file**: `src/lib/logo.mjs` exports `LOGO` (viewBox 240x150 — the surface ring,
 the two halves of the equator, the two routes, the two right-angle marks, the meeting point — with
 per-shape stroke widths in **viewBox units**, a `role` per shape, a `face` on the equator halves and a
-`dash` on the far one), `MARK_SHAPE_COUNT` and `MARK_COLOURS`. The hero and the share-card composer both
+`dash` on the far one), `LOGO_SHAPE_COUNT` and `LOGO_COLOURS`. The hero and the share-card composer both
 draw from that table; there is no second copy of the geometry, and a copy cannot be smuggled in because both
 surfaces are measured against the table's shape count.
 
@@ -985,14 +987,14 @@ surfaces are measured against the table's shape count.
 figure): two lines leave a sphere's equator **parallel** — the right-angle marks are the construction that
 says so — and **cross** at the pole, because the surface they are drawn on is curved. That is the club's
 metaphor: mathematicians who start out parallel meet because of the surface they are on. It is not a circle
-with a chord across it, and a mark that reads that way is a defect, not a style choice.
+with a chord across it, and a logo that reads that way is a defect, not a style choice.
 Two rulings since, both on 2026-11-24 (**D480**), both measured rather than drawn: the **fifth** moves the
 meeting point from the south pole to the **north** one (the feet stay on the near arc; the source's "S pole"
-caption is no longer where the mark meets), and the **sixth** says each line IS the sphere's own projected
+caption is no longer where the logo meets), and the **sixth** says each line IS the sphere's own projected
 meridian rather than a curve with a straight bit in it. The sixth is what moved the pole off the ring: a
 sphere whose equator is drawn with semi-minor 21 against a 58-unit radius stands with its axis 21.23° out of
 the screen plane, so its pole projects **inside** the silhouette, 54.06 units from the centre — not on the
-rim at 58. `node design/mark-meridian-fit.mjs --exact` solves that projection off the table's own numbers and
+rim at 58. `node design/logo-meridian-fit.mjs --exact` solves that projection off the table's own numbers and
 reports the drawn path 0.009 units off it.
 
 Rules for drawing it:
@@ -1007,28 +1009,28 @@ Rules for drawing it:
 - **A dash is a claim about device pixels, not about a path attribute.** D119's floor applies to the gap as
   well as the stroke: at the smallest hero box (276px, scale 1.15) `5 4` lands as **6.0px on / 4.8px off**, at
   1240 (scale 1.55) as **7.8 / 6.2**. Both clear the ~1.5px fusion floor; a dash that fuses back into a line is
-  the mark losing its sphere again while every count still passes.
+  the logo losing its sphere again while every count still passes.
 - **Deferred, with its price measured: tonal shading.** A light-source shade would be a stronger depth cue
   than a dash, but it needs a **filled** shape (so the bar is D101's 1.35 layer contrast, not the 3.0 graphic
   line bar), gradient support in the share-card's SVG document, and a new colour role. Not built; revisit if
-  the mark ever ships somewhere small enough that the dash stops surviving.
+  the logo ever ships somewhere small enough that the dash stops surviving.
 - **Deferred by the operator to the roadmap (low priority): what the surface *is*.** The sphere is correct
   geometry, but the operator has raised making the surface a place — the outline of Minnesota (two meridians
   through one state converging northward is the same theorem, and it is *our* surface), the cherry from the
   Cherry Bridge, or another Twin Cities icon. Any such change replaces the ring's geometry in the same table
-  and must re-run `check:mark`, `check:render`, `check:social` and the shape-count coupling; a silhouette is
+  and must re-run `check:logo`, `check:render`, `check:social` and the shape-count coupling; a silhouette is
   only shippable if it still reads at the 276px phone box, which needs a measured overlap test against real
   boundary data rather than an opinion.
 
 - **Colour by role, in literal classes**: `stroke-rule` (sphere), `stroke-ink` (routes), `stroke-accent`
   (accents, meeting dot), `fill-accent`. Tailwind generates CSS only for classes it sees in source, so the
   class string must be literal in the `.astro` file — a computed name paints nothing (D110). `ratify-check`
-  asserts the literals stay coupled to `MARK_COLOURS`.
+  asserts the literals stay coupled to `LOGO_COLOURS`.
 - **Intrinsic sizing, never a pixel box**: `<svg viewBox="0 0 240 150" class="w-full h-auto block">`. Any
   fixed height, or a lost `viewBox`, falls the box back to 300x150 — at the 320 floor that is wider than
   the viewport. The render gate compares the measured box ratio to the viewBox ratio.
 - **A graphic is either named or explicitly hidden**: `role="img"` + `aria-label`, or `aria-hidden="true"`.
-  A nameless mark is invisible to a screen reader and invisible to the gate.
+  A nameless logo is invisible to a screen reader and invisible to the gate.
 - **Every shape is held to the 3.0 graphic bar (D101), measured per shape** — not "some ink in the box is
   strong enough". Line art has a second, harsher limit: a stroke under ~1.5 device px never contains a
   fully covered pixel, so it has no byte identity and its *painted* contrast is always below its token
@@ -1037,26 +1039,26 @@ Rules for drawing it:
 Measured consequence, kept in view rather than tuned away: at 320 the sphere's 1.3-unit stroke lands at
 **1.56px** and its pixels reach **3.52** against the page ground where the token pair is 3.66 (96% of it — the
 ring is no longer the weak shape it was before D316 darkened `rule`), while the routes (1.68px, pair 17.15)
-and the accent marks (1.68px, pair 5.77) stay fully covered. @measured 2026-11-24 by `npm run check:mark`
-(`design/mark-pixels.mjs` @320: box 288x180 at scale 1.2). `node design/mark-pixels.mjs <shot> <report>`
-re-measures this; changing `MARK.shapes[*].sw` re-runs the card pipeline, not just the render gate.
+and the accent lines (1.68px, pair 5.77) stay fully covered. @measured 2026-11-24 by `npm run check:logo`
+(`logo-pixels.mjs` @320: box 288x180 at scale 1.2). `node design/logo-pixels.mjs <shot> <report>`
+re-measures this; changing `LOGO.shapes[*].sw` re-runs the card pipeline, not just the render gate.
 
-**Meaning is measured from two sides** (2026-11-02): `npm run check:mark` asks two probes about the built
-page, because the mark can be wrong in the table, wrong on the screen, or — the interesting case — the table
+**Meaning is measured from two sides** (2026-11-02): `npm run check:logo` asks two probes about the built
+page, because the logo can be wrong in the table, wrong on the screen, or — the interesting case — the table
 and the screen can disagree.
 
-- `design/mark-geometry.mjs` reads the table *and* the painted pixels and asserts the semantics: a surface
+- `logo-geometry.mjs` reads the table *and* the painted pixels and asserts the semantics: a surface
   circle, exactly two lines, a curved equator, one dashed half and one solid half with the **broken one
   being the far one**, both lines **leaving that equator in the same direction** (departure tangents within
   2°; the pair separate 52.00 units at the foot and hold it within 1.5 units for 13 units before the surface
-  takes them — painted 50.8-51.7 across the same rows @measured 2026-11-24 by `npm run check:mark`), each
+  takes them — painted 50.8-51.7 across the same rows @measured 2026-11-24 by `npm run check:logo`), each
   drawn path **being the projected meridian** (within 0.5 units of the analytic curve the ring and equator
   imply), a real crossing **at the pole this sphere projects** (|d − sqrt(r²−b²)| ≤ 1, not |d − r| ≤ 1), the
   pole dot there, and the right angles marked. The dot's position is measured against the rim it is **not**
   on — the bottom one, since the fifth ruling moved the dot to the top — so it cannot certify itself.
-- `design/mark-pixels.mjs` counts how much of the box's ink clears the bar: at the sixth-ruling geometry,
+- `logo-pixels.mjs` counts how much of the box's ink clears the bar: at the sixth-ruling geometry,
   **1,036 px** at/over 3.0 in the phone box (288px wide at 320, 48.8% of the ink in it) and **1,850** in the
-  desktop box (376px at 1240, 55.5%) @measured 2026-11-24 by `npm run check:mark`. The figures this bullet
+  desktop box (376px at 1240, 55.5%) @measured 2026-11-24 by `npm run check:logo`. The figures this bullet
   carried (**718 / 1,538**) were measured against the south-pole drawing, and the M-B figures in D125
   (1,070 / 2,038) against the *wrong* drawing before that — none are comparable to these, which is why the
   number is quoted with its date and its probe.
@@ -1066,7 +1068,7 @@ and the screen can disagree.
   pairs, so it is the surface line; warm by hue") broke the day the routes became curves: a 1.4-unit route
   stroke is 1.68 device px at 320, so most of its pixels are half-covered blends, and a half-covered route
   pixel (137,133,124) is 24 RGB units from the surface line's own bytes (139,127,101) and 207 from the route's
-  — the meridians were read as equator ink and three painted checks failed on a correct mark (@measured
+  — the meridians were read as equator ink and three painted checks failed on a correct logo (@measured
   2026-11-24). What keeps colour load-bearing is a separate check: each shape's own ink must sit within 30° of
   the hue the page report declares for it (median painted hue lands within 3.4° of the declared bytes at all
   three widths, and the two roles are 50.4° apart).
@@ -1108,7 +1110,7 @@ and the screen can disagree.
 
 - **A reserved place is a component: `src/components/PhotoSlot.astro`.** Drop
   `src/assets/photos/<slot>.<ext>` and the call site uses it; until then the call site renders its own
-  **usable** empty state — the hero column keeps the drawn mark, the join column keeps the join path. A grey box
+  **usable** empty state — the hero column keeps the drawn logo, the join column keeps the join path. A grey box
   labelled "photo coming" is a production note wearing a visitor's clothes (`design/records/0010-missing-content-is-a-state.md`).
   A photo that exists **requires an `alt` describing what it shows**, or the build throws: an invented alt is the
   same defect as an invented photograph, and nothing renders it visually.
@@ -1159,11 +1161,11 @@ and the screen can disagree.
   drawing back to within 1px; the numbers come from `npm run check:space`, which walks grid/flex children by
   computed `display`, and the page labels its own places with `data-slot` so a specimen is not matching a slot to
   a Tailwind class). At 1240 the hero media column (`data-slot="PS-1"`) is **376x574** and it is **full**: the column stacks —
-  plate above, mark below, one property, `lg:flex-col` — and the plate's box is subtraction rather than a chosen
-  ratio, so the column is exactly used: **307 = 574 − 235 (mark at full column width) − 32 (`mb-8`)**. The mark
+  plate above, logo below, one property, `lg:flex-col` — and the plate's box is subtraction rather than a chosen
+  ratio, so the column is exactly used: **307 = 574 − 235 (logo at full column width) − 32 (`mb-8`)**. The logo
   therefore keeps its full width (**372x232.5** as `check:render` sees it, 376x235 as `check:space` does) and its
   thinnest stroke lands at **2.02–2.17px** against D119's 1px floor. @measured 2026-11-03 by check:space / check:render Filling the column the other way — plate and
-  mark as siblings competing for one column — put the mark at **188x118** and its stroke at **1.02px**, legal by
+  logo as siblings competing for one column — put the logo at **188x118** and its stroke at **1.02px**, legal by
   two hundredths and invisible as a plate (188x125 keeps 46% of a portrait leaf); that is why the round ruled the
   stack. Cost, measured: the page does not grow at desktop (**4284 → 4284**) but grows **+314px at 390**, where the
   hero is not a grid and the plate adds its own height; the page's chroma >= 0.08 share goes **0.014% → 0.274%**
@@ -1174,11 +1176,11 @@ and the screen can disagree.
   recipe is one module, `design/grill/plate-crop.mjs`, so a review crop and a shipped asset cannot drift.
   @measured 2026-11-03 by check:space / check:render / check:color / round13 (record 0025); asset bytes and sha
   @measured 2026-11-04 by npm run plates (record 0027)
-  A side-effect worth knowing before anything else moves down the page: `check:mark` photographed a **fixed**
-  1400px window, and the plate pushed the mark to **y=1421 at 320** and to a box bottom of **1449.9 at 640**, so
-  the gate reported "no ink in the measured box" for a correctly painted mark. It now asks the page its settled
-  height (`grill/shot-height.mjs`) and shoots at that; `check:mark` costs 3.8s → **7.92s** for the pair of widths.
-  @measured 2026-11-03 by check:mark
+  A side-effect worth knowing before anything else moves down the page: `check:logo` photographed a **fixed**
+  1400px window, and the plate pushed the logo to **y=1421 at 320** and to a box bottom of **1449.9 at 640**, so
+  the gate reported "no ink in the measured box" for a correctly painted logo. It now asks the page its settled
+  height (`grill/shot-height.mjs`) and shoots at that; `check:logo` costs 3.8s → **7.92s** for the pair of widths.
+  @measured 2026-11-03 by check:logo
   Join media column **532×56** at 1240 (one paragraph) inside a grid row that is **326** tall; **310×85** at 390,
   **240×113** at 320. It used to be **532×128** / **310×245** of call-to-action, which is what made round 10 call
   a photo there "a ~152px *growth*, not a reclamation"; the two join actions now stand outside the tinted card
@@ -1230,14 +1232,14 @@ npm run check:render            # build, then measure dist/client in Firefox: co
                                 # one dark band and the paths inside it, keyline grammar, the PAIR of every inset
                                 # ring (inside and outside, which is how a straddle is caught), notice grammar,
                                 # the nav's width probe, one display step, faces actually loaded, and the hero
-                                # mark (shape count, box ratio vs viewBox, per-shape contrast, device stroke).
+                                # the logo (shape count, box ratio vs viewBox, per-shape contrast, device stroke).
                                 # Builds first unless --no-build; 4 firefox at once, one retry per cell.
 npm run check:render:dist       # the same measurement on the dist that exists (--no-build): right after verify,
                                 # or whenever a rebuild would undo the thing being measured
-node design/render-gate-selftest.mjs   # mutate the built page fourteen ways (8 mark, 3 control, 1 notice
+node design/render-gate-selftest.mjs   # mutate the built page fourteen ways (8 logo, 3 control, 1 notice
                                 # boundary, 2 inset ring) and require check:render to FAIL each one — D118,
                                 # applied to a pixel gate
-node design/mark-check.mjs      # npm run check:mark - both mark probes, at the two widths that bracket the
+node design/logo-check.mjs      # npm run check:logo - both logo probes, at the two widths that bracket the
                                 # box (320: 276px wide, scale 1.15; 1240: 372px, scale 1.55). Needs a built dist.
 node design/color-survey.mjs    # npm run check:color - how much colour a page actually paints. Two-pass: it asks
                                 # the page its own settled height, then shoots the WHOLE page (a fixed 2400px frame
@@ -1271,7 +1273,7 @@ npm run check:ground:selftest   # four plantings the ground probe must tell apar
                                 # window must move, a ring behind a grain must move, the page's own CSS number must
                                 # NOT move (the blindness), and a body-only grain must NOT move the ring - fills
                                 # paint over the page ground, so a page texture reads only in the gaps (record 0020).
-node design/mark-pixels.mjs <shot> <report> [--crop out.png]   # what the mark actually painted in its box, by
+node design/logo-pixels.mjs <shot> <report> [--crop out.png]   # what the logo actually painted in its box, by
                                 # colour cluster; --crop writes the box up 3x so you can look at what was clustered
 npm run check:social:live       # run the card generator into a gitignored temp file and gate the fresh output —
                                 # the producer itself, not the shipped artifact (D121). Needs firefox, so
@@ -1300,7 +1302,7 @@ npm run check:cta-context     # every call to action on a built page sits in a d
                                 # expects cannot be edited apart. Fails action-undeclared, cta-unknown-id,
                                 # cta-href-mismatch (a control labelled Discord pointing at Meetup), block-missing,
                                 # block-id-mismatch, block-thin (under 6 words beside the label), block-too-wide
-                                # (over 2/3 of the page's words, the shape that would make the mark meaningless),
+                                # (over 2/3 of the page's words, the shape that would make the logo meaningless),
                                 # block-names-no-destination, block-names-no-ask, block-hides-what-it-asks,
                                 # cta-platform-unmapped (a join row or platform with no registry id), and
                                 # exemption-stale - an exemption whose needle matches no anchor on the artifact,
@@ -1357,15 +1359,15 @@ npm run verify                  # the browser-free CI gate set (everything above
 rulings letter of 2026-11-16, R6, **D364**, closing round 4's nav/footer item): "The round-3 finding was produced by
 a text extraction that drops `position: fixed` chrome; the artifact was never missing its nav. Claims about absence
 must be made against a byte census of the built HTML. The honest instruments are `npm run check:render:dist` (nav-fit
-and mark cells) and `node design/nav-fit.mjs`." Every built page carries 2 `<nav>` and 1 `<footer>`, so the class of
+and the logo box) and `node design/nav-fit.mjs`." Every built page carries 2 `<nav>` and 1 `<footer>`, so the class of
 finding that reported a missing nav was an instrument's blindness rather than an artifact's defect — and `check:space`
 saying "position: fixed elements are excluded and the count is printed" is the same trap from the other side.
 
 **These pixel gates are the ones CI does not run, and they are no longer cheap — the cost is now stated, not
 assumed.** @measured 2026-11-14 by `npm run verify:browser` (Linux native, 16 CPU, Firefox 159.0, load 2.9 →
 9.0/16cpu; re-run it to refresh these): `check:render:dist` over its **20 cells** (4 widths × 5 routes: `/`,
-`/schedule`, `/join`, `/chat`, `/404`) **8.94s**, `check:mark` **7.63s**, `check:space` **8.37s**, `check:ground`
-**8.82s** and `check:ground:selftest` **16.19s**, the render selftest **46.06s** (it grew as the mark, cluster and
+`/schedule`, `/join`, `/chat`, `/404`) **8.94s**, `check:logo` **7.63s**, `check:space` **8.37s**, `check:ground`
+**8.82s** and `check:ground:selftest` **16.19s**, the render selftest **46.06s** (it grew as the logo, cluster and
 ring plantings landed — 24 cases, record 0022/0024), `check:social:live` **1.42s**, `check:rsvp-preference`
 **8.15s** with its selftest **15.01s** — `npm run verify:browser` end to end is **122.4s of work** (it was 87.8s at
 three routes and 44.7s before the width sets grew, D146; the browser `workSecs` baseline in
@@ -1373,7 +1375,7 @@ three routes and 44.7s before the width sets grew, D146; the browser `workSecs` 
 even when it passes, under `.design/tmp-gate-logs/` (**D144**), so a green run leaves the evidence rather than the
 word "ok". `verify` stays browser-free
 because the runner has no Firefox, which means `check:render`, `check:render:dist`,
-`check:mark`, `check:space`, `check:ground`, `check:ground:selftest`, `design/render-gate-selftest.mjs` and
+`check:logo`, `check:space`, `check:ground`, `check:ground:selftest`, `design/render-gate-selftest.mjs` and
 `check:social:live` currently run on human ritual before a deploy, not on
 every PR. The recommendation is to install Firefox in CI and add a `verify:browser` chain — `check:render:dist`
 after `verify`'s build, plus the selftests and the live card. Until someone does that, run them yourself before
@@ -1556,7 +1558,7 @@ accepted, each with the gate that keeps it true.
   2026-11-02, operator request). **The first version of these numbers was a crop, not a page** — the survey shot a
   fixed 2400px frame of a 2495px document (and 1400px of a ~4500px one at 320), which put the `bg-ink` footer band
   out of frame and reported **3.8%** chromatic. It now shoots the settled whole page. At 1240 (**1240×2607** before
-  the mark demotion, **1240×2492** after): **11.3%** / **12.6%** of pixels clear the 0.04 chroma bar — but
+  the logo demotion, **1240×2492** after): **11.3%** / **12.6%** of pixels clear the 0.04 chroma bar — but
   **10.8 / 12.6 points of that is the ink ground itself** (`--color-ink` is C 0.045, so every glyph and the footer
   band count). The number that means what "drab" means is **chroma ≥ 0.08 — colour a reader would name: 0.49%**
   before, **0.02%** after; at 320 it is **1.06% → 0.05%**. Gold paints **0.01–0.03%** of the page. `/404` and
@@ -1569,7 +1571,7 @@ accepted, each with the gate that keeps it true.
   3b); the accent keeps its **0.135** minimum distance to every other colour (the Amazon/UMN zone, D88 — D316
   records where the adopted accent sits inside that bar and `check:contrast` fails only if a token drifts
   *closer* than the recorded number); any
-  role the mark or a band uses needs an `-on-ink` variant, because the footer band inverts the ground; and the
+  role the logo or a band uses needs an `-on-ink` variant, because the footer band inverts the ground; and the
   card re-runs through `assets:social` + `check:social` in the same commit.
   Photographs are the other lever and they are **blocked on a phone camera, not on code**: D94 forbids stock
   people photography (no photo of this club exists, so strangers are a false statement about who attends), and
@@ -1585,7 +1587,7 @@ accepted, each with the gate that keeps it true.
   `node design/grill/palette-remap.mjs`.
   And one colour can never do both jobs: for anything between paper and ink in luminance,
   contrast-on-paper × contrast-on-ink = **12.02** on the round-4 palette, and 4.5 × 3.0 = 13.5 > 12.02 — which is
-  why every role has an `-on-ink` twin and why `MARK_COLOURS` is keyed per ground. D316 moves that product to
+  why every role has an `-on-ink` twin and why `LOGO_COLOURS` is keyed per ground. D316 moves that product to
   **17.15**, so the arithmetic no longer forces a twin by itself; the twins stay because the gate asserts them
   and a per-ground table is the only way to say which hue a role may take (D116).
   Measured on painted pixels (two bars, because one bar hides one trap: **ink itself is chroma 0.045**, so the
@@ -1597,13 +1599,13 @@ accepted, each with the gate that keeps it true.
   accent (hue 266, L 55.5, C 0.06) is legal but tight — **4.56 on paper, 4.5 on ink**, both inside the noise of a
   font change — and its nearest commerce brand is **0.11**, dirtier than the accent's 0.135. A warm accent needs the
   **R-4** re-arrangement (fold the accent twins, retire `path-mobilizon`, move discord) which costs **12 measured
-  pairs**; retiring mobilizon alone, or moving accent+discord, does **not** open a warm window. The mark's four
+  pairs**; retiring mobilizon alone, or moving accent+discord, does **not** open a warm window. The logo's four
   colourings measure the same coverage (8.10–8.15% of box; 3930–3973 px at the 1.5 device-px floor), so that
   choice is about the two lines staying two *things*, not about legibility.
   **Ruled 2026-11-02 (partial):** **H-A approved** — no new hue; the free win is spending colour on things that
   mean something. **K-B provisionally accepted** — one route line in the accent (`accent-on-ink` on dark grounds) "until we
-  find something better"; hold the caveat that mark colouring is coverage-flat, so this buys distinctness, not
-  legibility, and re-run `design/mark-pixels.mjs` before shrinking the mark further. **Ruled 2026-11-02 (rest of
+  find something better"; hold the caveat that logo colouring is coverage-flat, so this buys distinctness, not
+  legibility, and re-run `logo-pixels.mjs` before shrinking the logo further. **Ruled 2026-11-02 (rest of
   the round):** surface policy **S-B** — colour where it means something; `S-C` (colour as area) rejected because
   its area measured **46.9% faint tint and 0.5% strong**, a wash the census cannot even see as colour, and area is
   now carried by photographs instead. The **27° `gold ↔ path-discord`** twin is ruled a **defect to fix**, in its own
@@ -1641,7 +1643,7 @@ accepted, each with the gate that keeps it true.
   **41.5%**, `interior`, `slots` — described a six-card grid that has been gone for weeks and a page whose slots were
   empty; deleted rather than carried, per the house rule. `design/rhythm/report.json` is the table.)
 - **The page is thin, not wide — round 10 (area)** (`npm run check:space`, 2026-11-02, operator: "the landing page
-  is still mostly whitespace"). Measured on the settled, whole-page crop **after** the mark demotion: at 1240 the
+  is still mostly whitespace"). Measured on the settled, whole-page crop **after** the logo demotion: at 1240 the
   built document is **2492px** tall, **4.30%** of pixels differ from their own ground by the 0.05 same-colour bar,
   and **41.5%** of the page height sits in **8** empty runs ≥ 60px (biggest **217px**); at 390 it is **4127px**,
   **7.70%** painted and **36.8%** empty in **14** runs, and those runs move *inside* `section.bg-panel` between
@@ -1651,7 +1653,7 @@ accepted, each with the gate that keeps it true.
   under the comfort band rather than over it — so this is **not** a line-length problem and no type ruling fixes it.
   The emptiness decomposes into **structure** (declared padding **256px** plus a **128px** header→main gap and a
   **96px** main→section gap; `section.bg-paper` wastes **74px** above its first line and **96px** below its last,
-  and the copy gaps run to **288px**), **media** (the photo slots: hero column ~2.9% painted by the mark, the join
+  and the copy gaps run to **288px**), **media** (the photo slots: hero column ~2.9% painted by the logo, the join
   column 165px tall holding nothing but a button now), **content** (the two disabled event sections — and the
   operator has ruled the schedule's source must be **phone-editable**, Mobilizon or an ICS feed, not a repo file:
   see `.notes/roadmap-events.md`) and **copy** (the panel section's **866** characters are six generic cards, and

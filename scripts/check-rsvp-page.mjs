@@ -171,7 +171,7 @@ const sourcedSlotValues = (() => {
 const paintedFromSource = (hit) => sourcedSlotValues.some((v) => v.includes(String(hit).toLowerCase()));
 
 /** (F3(b), D294) A sprite is glyph bytes a page pays for whether or not it draws them. @measured 2026-11-13 by
- *  `node design/mark-cost.mjs` (Linux native, Node 24.22.1, gzip of the built page): +2,197 gzip on `/` and
+ *  `node platform-mark-cost.mjs` (Linux native, Node 24.22.1, gzip of the built page): +2,197 gzip on `/` and
  *  +2,191 on `/schedule`, both of which paint a cluster; a page that paints none would still pay — the
  *  counterfactual measured on `/chat` is +2,202 gzip, 41.6% of that page's 5,289 gzip bytes.
  *  Inlining the three glyphs instead costs +2,119/+2,121 gzip on a one-cluster page, so the sprite is the right
@@ -181,7 +181,7 @@ function spriteFindings(html, pageName) {
   const ships = SPRITE_RE.test(html);
   const paints = /<use href="#(pm-[a-z0-9-]+)"/.test(html);
   if (ships && !paints) {
-    out.push(`${pageName} ships the platform sprite and paints none of it — ${MARK_COUNT} glyph(s) of path data the page never draws (D294: the sprite costs +2,197 gzip @measured 2026-11-13 by design/mark-cost.mjs)`);
+    out.push(`${pageName} ships the platform sprite and paints none of it — ${MARK_COUNT} glyph(s) of path data the page never draws (D294: the sprite costs +2,197 gzip @measured 2026-11-13 by platform-mark-cost.mjs)`);
   }
   return out;
 }

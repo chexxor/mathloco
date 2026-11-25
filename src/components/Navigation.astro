@@ -5,7 +5,7 @@
 //
 // What the row costs now, measured on the built page by `node design/nav-fit.mjs` — the same needed-vs-
 // available arithmetic `check:render` runs, per label @measured 2026-11-14 (Linux native, Firefox 159.0,
-// faces settled): the mark is 97px, `Schedule` 59, `Chat` 29, `Dates` 36, `Join` 24, `Attend` 42,
+// faces settled): the wordmark is 97px, `Schedule` 59, `Chat` 29, `Dates` 36, `Join` 24, `Attend` 42,
 // `Ways in` 47, `Sign up` 47, `Meet` 32, `Visit` 28, `Get involved` 77. A row at the 320px floor (D114)
 // has 276px of content box and 16px gaps, so the label set needs 217px and has 59px of headroom: a fourth
 // label costs a gap plus a word no wider than 43px. `Schedule` + `Chat` + `Ways in` is 280 — four pixels
@@ -14,7 +14,7 @@
 // = 257, 19px inside the floor.
 //
 // Headroom, as it was measured before the schedule page existed, kept so a later reader does not re-argue it:
-// the row was the mark plus `Chat` (171px of the 276 the floor offers), and `Schedule` at 57.6px would have
+// the row was the wordmark plus `Chat` (171px of the 276 the floor offers), and `Schedule` at 57.6px would have
 // fitted. It did, and 2026-11-07 spent that room on it (`src/pages/schedule.astro` emits
 // `dist/client/schedule/index.html`) while `Members` stayed out for the reason D117 gives - no members page -
 // not for lack of width. What the old note got wrong is the count: the floor had room for one more path, and

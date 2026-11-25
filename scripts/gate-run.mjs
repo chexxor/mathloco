@@ -114,7 +114,7 @@ const DEPLOY = [
   { name: 'check:docs-no-secrets', desc: 'no tracked page under docs/ carries an assignment-shaped credential (a name saying key/token/secret, then : or =, then a value) - name the secret and where it lives, never the value' },
   { name: 'check:docs-no-secrets:selftest', desc: 'the no-secrets gate can still fail (3 plantings: an uppercase assignment, a lowercase prose assignment, a value inside a code fence; 4 clean forms that must pass: a bare name, an empty assignment, an angle-bracket placeholder, and a colon naming where a secret lives)' },
   { name: 'check:social', desc: 'the committed share card against its painted report, and that report against the palette this tree declares now' },
-  { name: 'check:social:selftest', desc: 'the card checks can still fail (8 plantings: painted amber, a light ground, a run with no ink in its box, two display steps, a path word in the wrong hue, a missing mark shape, a mark stroke under the graphic bar, and a committed card whose palette went stale — the last two added 2026-11-24) @measured 2026-11-24 by `node scripts/check-social-card.mjs --selftest`' },
+  { name: 'check:social:selftest', desc: 'the card checks can still fail (8 plantings: painted amber, a light ground, a run with no ink in its box, two display steps, a path word in the wrong hue, a missing logo shape, a logo stroke under the graphic bar, and a committed card whose palette went stale — the last two added 2026-11-24) @measured 2026-11-24 by `node scripts/check-social-card.mjs --selftest`' },
   // The tab glyph is the other committed image artifact, and until 2026-11-14 it had no gate at all: it
   // shipped Tailwind's default #3b82f6 with a `white` glyph (3.68, under the 4.5 text bar) from the Init
   // commit through the whole design pass, because check:classes scans src/ utility writes, check:design
@@ -122,9 +122,9 @@ const DEPLOY = [
   // Source-only, so it can go red before anyone builds (D118). Cost @measured 2026-11-25 by this step
   // (Linux native, node 24.22.1, `node scripts/gate-run.mjs check:favicon check:favicon:selftest`):
   // 0.16s gate, 0.16s selftest — both moved up from 0.11/0.13 when rule 1 began asking a real renderer.
-  { name: 'check:favicon', desc: 'the tab mark is a document a renderer loads, paints only @theme tokens, at most two of them, none a reserved join-path hue, and the pair clears 4.5 (five rules, D485)' },
+  { name: 'check:favicon', desc: 'the tab logo is a document a renderer loads, paints only @theme tokens, at most two of them, none a reserved join-path hue, and the pair clears 4.5 (five rules, D485)' },
   { name: 'palette:selftest', desc: 'the one @theme reader resolves every declared token to bytes a painted pixel is compared against, and its round-trip guard catches the unit slip (L is 0..1 here; tripleToBytes wants a percentage) that made all 23 tokens resolve toward #000000 and collapsed paper/ink to a contrast of 1.00 (D485)' },
-  { name: 'check:favicon:selftest', desc: 'the favicon gate can still fail (11 cases: 7 plantings — a named colour, a Tailwind hex, a 3.01 pair, three hues, a channel hue, an empty mark, and a comment carrying a token name so a parser refuses the whole document (D485) — plus 3 clean controls and a missing file)'},
+  { name: 'check:favicon:selftest', desc: 'the favicon gate can still fail (11 cases: 7 plantings — a named colour, a Tailwind hex, a 3.01 pair, three hues, a channel hue, an empty logo, and a comment carrying a token name so a parser refuses the whole document (D485) — plus 3 clean controls and a missing file)'},
   { name: 'db:check', desc: 'schema and migrations agree, no database opened' },
   { name: 'check:sanitize', desc: 'summary rendering stays text-only' },
   // The descriptor is one phrase in three files (`const locator`, `seo.title`, the page `<Layout title>`), and the
@@ -170,7 +170,7 @@ const DEPLOY = [
   // stamps, an age painted 3.7 days off a correct stamp, and headcounts painted in text (12 going, the roster
   // tally "280 on the Meetup list", "142 members", "14 RSVPs") and in attributes (D276).
   { name: 'check:rsvp-page:selftest', desc: 'the page gate can still fail (57 plantings each named, plus 4 clean controls that must pass: the resolver-agrees page, a past row on a date the harvest made and that finished, the sourced turnout slot painted in its own words, and a tally that lives only in a shipped comment)' },
-  // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a mark. Keyed
+  // The platform sprite (S026, D294) is claimed once per page render by the cluster that paints a platform glyph. Keyed
   // on anything that outlives a render - a path, a counter - a warm process answers every request after the
   // first with `<use>` refs and no symbols: three empty 16px boxes @measured 2026-11-13 by
   // `node design/sprite-claim.mjs --base http://localhost:4322` (request 2 of `/`: 0 symbols, 5,270 bytes
@@ -444,13 +444,13 @@ const RIG = [
 // passing render gate.
 const BROWSER = [
   // `alone: true` — a step that runs its OWN pool of browsers takes the whole machine. Measured on this rig
-  // (Linux, native): check:mark alone is 10s; in a wave beside check:space and check:social:live it took
+  // (Linux, native): check:logo alone is 10s; in a wave beside check:space and check:social:live it took
   // 152s and came back `exit 1 / firefox rc=?` (a timeout, twice in a row), while check:render:dist reports
   // nine internal measurements it already runs JOBS-at-a-time by itself. Two browser pools in one wave buys
   // nothing here — the browser steps are almost all downstream of check:render:dist anyway — and it buys a
   // flake, which is the one thing a gate may not buy.
-  { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the mark, the sign-up cluster', alone: true },
-  { name: 'check:mark', desc: 'the mark probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
+  { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the logo, the sign-up cluster', alone: true },
+  { name: 'check:logo', desc: 'the logo probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
   { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'], alone: true },
   { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'], alone: true },
   // what the page PAINTS as its ground, and what a hairline measures off those bytes (D143). The rest of the
@@ -467,10 +467,10 @@ const BROWSER = [
   // last: it edits dist/client/index.html and restores it in a finally block
   // Runs LAST, and the needs list is why it is not just 'after check:render:dist': the selftest PLANTS
   // defects in dist/client/index.html to prove check:render can go red (D118). In the same wave as the
-  // read-only probes, a mark or space probe could measure a planted page and report a finding that never
+  // read-only probes, a logo or space probe could measure a planted page and report a finding that never
   // happened — a race that reads as a flaky browser gate. (It must not rebuild either: check:render would
   // build over its own fixtures and selftest nothing.)
-  { name: 'check:render:selftest', desc: 'twenty-five mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:mark', 'check:social:live', 'check:space', 'check:ground'] },
+  { name: 'check:render:selftest', desc: 'twenty-five mutations, each of which check:render must FAIL (last: it mutates dist)', needs: ['check:render:dist', 'check:logo', 'check:social:live', 'check:space', 'check:ground'] },
 ];
 
 const args = process.argv.slice(2);

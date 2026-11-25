@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-// mark-cost.mjs — what the platform sprite really costs the page that ships it.
+// platform-mark-cost.mjs — what the platform sprite really costs the page that ships it.
 //
-//   node design/mark-cost.mjs                        # dist/client
-//   node design/mark-cost.mjs dist/client            # an explicit dist
-//   node design/mark-cost.mjs --json                 # machine-readable, for a stamp
+//   node platform-mark-cost.mjs                        # dist/client
+//   node platform-mark-cost.mjs dist/client            # an explicit dist
+//   node platform-mark-cost.mjs --json                 # machine-readable, for a stamp
 //
 // Why this exists as a probe and not as arithmetic in prose (design/README.md: a number DESIGN.md quotes
 // needs a script that produces it). `src/components/PlatformMarks.astro`'s own comment claims a sprite is
@@ -57,7 +57,7 @@ const pathOf = (id) => (MARKS.find((x) => markId(x.platform) === id) || {}).d ||
  * deduplication of repeated path data, and reports "wins at 5 clusters" on a page where the sprite is already
  * cheaper. MS04 is the first milestone where a page prints more than one cluster, so the probe builds the same
  * page with 1..8 copies of one cluster - once with `<use>` refs, once with the path written per link - and reads
- * the crossover off the table. `node design/mark-cost.mjs --sweep-only` prints just this.
+ * the crossover off the table. `node platform-mark-cost.mjs --sweep-only` prints just this.
  */
 function clusterSweep(html, sprite) {
   const blocks = html.match(CLUSTER);

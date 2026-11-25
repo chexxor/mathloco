@@ -54,15 +54,15 @@
 import { execFileSync, execFile } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync, readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { MARK, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_SHAPE_COUNT } from '../src/lib/logo.mjs';
 import { BARS } from './grill/okcolor.mjs';
 import { emittedRoutes } from './emitted-routes.mjs';
 
 // The site's FLOOR is 320px (D114, operator ruling 2026-11-02): the nav's narrow tier needs 273px and
 // a 320 viewport's container offers 276 (288 on a page short enough not to scroll). Below 320 the
 // grammar does not fit — at 310 the container offers 266 and at 300 it offers 256, and at 300 the hero
-// primary also wraps to 64px. That is declared, not discovered: the alternative measured 254 (the mark
-// down a tier), which fits 256 by 2px, and D100 keeps the mark at 16px serif at every width because the
+// primary also wraps to 64px. That is declared, not discovered: the alternative measured 254 (the wordmark
+// down a tier), which fits 256 by 2px, and D100 keeps the wordmark at 16px serif at every width because the
 // face is what carries the club's name. 300/310 are still worth looking at, so ask for them:
 //   RENDER_WIDTHS=1240,390,375,360,320,310,300 node design/render-gate.mjs /
 // They report the overflow instead of hiding it, and the gate refuses to run a default set that has
@@ -414,7 +414,7 @@ for (const route of routes) {
       if (wraps.length) fails.push(`${at}: nav flex-wrap is ${wraps.join('/')} — D100 wants nowrap, so a label set that stops fitting fails this probe instead of re-wrapping`);
       const centres = j.nav.links.map((l) => l.cy);
       if (Math.max(...centres) - Math.min(...centres) > 1) fails.push(`${at}: nav links are not on one row (centres ${centres.join(', ')}) — D100 shape B is a single row`);
-      const links = j.nav.links.slice(1);              // links[0] is the mark
+      const links = j.nav.links.slice(1);              // links[0] is the wordmark
       const tiers = new Set(links.map((l) => l.fs));
       if (tiers.size > 1) fails.push(`${at}: nav links mix ${tiers.size} type tiers (${[...tiers].join(', ')}) — one tier per viewport` + (NAV_NARROW === null ? ', and no --breakpoint-nav-narrow is declared: a second tier needs a ratified token, not a bracket (D117)' : ''));
       const want = NAV_NARROW === null ? `${LABEL}px` : (w < NAV_NARROW ? `${textTok('micro')}px` : `${LABEL}px`);   // DESIGN.md's type table, read from the block
@@ -450,16 +450,17 @@ for (const route of routes) {
     const phantom = (j.text || []).filter((t) => /Inter var/.test(t.ff));
     if (phantom.length) warns.push(`${at}: ${phantom.length} text run(s) resolve through the phantom family "Inter var" — the faces batch has not landed`);
 
-    // 7. drawn marks (D120): the hero's graphic is geometry, not bytes, so it is measured like every other
+    // 7. the drawn logo (D120): the hero's graphic is geometry, not bytes, so it is measured like every other
     //    claim this gate makes. Four failures are possible and only per-shape numbers separate them.
+    //    (`j.marks` is the key the measurement probe emits; the word names the shapes, not the thing — D487.)
     if (route === '/' && !(j.marks || []).length) {
-      fails.push(`${at}: the landing page draws no mark at all — the hero column's graphic IS the club's mark (D120); an empty column is a defect, not a blank`);
+      fails.push(`${at}: the landing page draws no logo at all — the hero column's graphic IS the club's logo (D120); an empty column is a defect, not a blank`);
     }
     for (const m of j.marks || []) {
-      const at2 = `${at} mark "${m.name}"`;
-      if (m.count !== MARK_SHAPE_COUNT) fails.push(`${at2}: ${m.count} shape(s) in the document, the geometry table has ${MARK_SHAPE_COUNT} — an <svg> drops children whose subtree it treats as foreign content, without a word (D118 lesson 1)`);
+      const at2 = `${at} logo "${m.name}"`;
+      if (m.count !== LOGO_SHAPE_COUNT) fails.push(`${at2}: ${m.count} shape(s) in the document, the geometry table has ${LOGO_SHAPE_COUNT} — an <svg> drops children whose subtree it treats as foreign content, without a word (D118 lesson 1)`);
       if (m.wantRatio && Math.abs(m.ratio - m.wantRatio) > 0.02 * m.wantRatio) fails.push(`${at2}: box is ${m.w}x${m.h} (ratio ${m.ratio}) but the viewBox says ${m.wantRatio} — an inline <svg> that loses its intrinsic ratio falls back to 300x150`);
-      if (m.w < 40 || m.h < 20) fails.push(`${at2}: box is ${m.w}x${m.h} — the mark collapsed instead of scaling to its column`);
+      if (m.w < 40 || m.h < 20) fails.push(`${at2}: box is ${m.w}x${m.h} — the logo collapsed instead of scaling to its column`);
       if (m.role === 'img' && !m.label) fails.push(`${at2}: role="img" with no accessible name — it announces nothing`);
       if (!m.role && !m.hidden) fails.push(`${at2}: visible with no role and no aria-hidden — name it or hide it (the hero's old photo invented "Math Study Group Session", D120)`);
       for (const [i, s] of m.shapes.entries()) {
@@ -472,20 +473,20 @@ for (const route of routes) {
         // D119's floor, for line art: a stroke under one device pixel has no fully-covered pixel, so it has no
         // measurable colour identity. It applies to a stroke that PAINTS. The probe reports the cascade's
         // `stroke-width` even where `stroke: none` means nothing strokes (the SVG initial value is 1), and the
-        // mark's meeting point is a filled disc — so keying on the cascade number alone failed a shape that has
+        // logo's meeting point is a filled disc — so keying on the cascade number alone failed a shape that has
         // no stroke to measure. `strokePaints` comes from the same computed style, in the same record.
         if ((s.strokePaints ?? s.stroke !== 'none') && s.sw > 0 && s.swDevice < 1) fails.push(`${at2}: <${s.tag}> stroke lands at ${s.swDevice}px on screen (${s.sw} viewBox units at scale ${m.scale}) — under 1px it is a smudge with no measurable colour identity (D119's rule, applied to line art)`);
-        // A declared dash has to ARRIVE. On this mark the far half of the equator is dashed and the near half is
+        // A declared dash has to ARRIVE. On this logo the far half of the equator is dashed and the near half is
         // solid, and that difference is the occlusion cue that makes the ring read as a sphere rather than a disc
-        // (src/lib/brand-mark.mjs, operator ruling 2026-11-02). Two silent failures are possible: a renderer that
+        // (src/lib/logo.mjs, operator ruling 2026-11-02). Two silent failures are possible: a renderer that
         // drops stroke-dasharray, and a drawn scale so small the dashes fuse back into one line — either turns the
         // sphere back into a disc without changing the shape count or a single contrast number.
-        const want = MARK.shapes[i]?.dash;
-        if (want && (!s.dash || s.dash === 'none')) fails.push(`${at2}: shape ${i} declares dash "${want}" but paints dash "${s.dash}" — the far half of the equator is no longer denoted differently from the near half, so the mark reads as a disc`);
+        const want = LOGO.shapes[i]?.dash;
+        if (want && (!s.dash || s.dash === 'none')) fails.push(`${at2}: shape ${i} declares dash "${want}" but paints dash "${s.dash}" — the far half of the equator is no longer denoted differently from the near half, so the logo reads as a disc`);
         if (!want && s.dash && s.dash !== 'none') fails.push(`${at2}: shape ${i} paints dash "${s.dash}" but the geometry table declares none — an undeclared dash on the near half would hide the side of the sphere the viewer is standing on`);
         if (want && Array.isArray(s.dashDevice)) {
           const [on, off] = s.dashDevice;
-          if (on < 1.5 || (off ?? 0) < 1.5) fails.push(`${at2}: shape ${i}'s dash lands at ${on}px on / ${off}px off at scale ${m.scale} — under 1.5px the pattern fuses into a solid line (D119's floor, applied to the gap as well as the mark)`);
+          if (on < 1.5 || (off ?? 0) < 1.5) fails.push(`${at2}: shape ${i}'s dash lands at ${on}px on / ${off}px off at scale ${m.scale} — under 1.5px the pattern fuses into a solid line (D119's floor, applied to the gap as well as the line)`);
         }
       }
     }
@@ -512,7 +513,7 @@ for (const route of routes) {
     }
     for (const s of j.shadows) console.log(`   shdw  ${s.shadow.slice(0, 70)}  ${(s.cls || '').slice(0, 40)}`);
     for (const m of j.marks || []) {
-      console.log(`   mark  ${m.name} ${m.w}x${m.h} at ${m.x},${m.y} (viewBox ${m.vbW}x${m.vbH}, scale ${m.scale}, shapes ${m.count}/${MARK_SHAPE_COUNT}, ratio ${m.ratio} vs ${m.wantRatio}) role="${m.role}" ${JSON.stringify(m.label)}`);
+      console.log(`   logo  ${m.name} ${m.w}x${m.h} at ${m.x},${m.y} (viewBox ${m.vbW}x${m.vbH}, scale ${m.scale}, shapes ${m.count}/${LOGO_SHAPE_COUNT}, ratio ${m.ratio} vs ${m.wantRatio}) role="${m.role}" ${JSON.stringify(m.label)}`);
       for (const s of m.shapes.filter((x) => x.dash && x.dash !== 'none')) console.log(`         dashed: <${s.tag}> declared "${s.dash}" units -> ${s.dashDevice} px on screen`);
       for (const s of m.shapes) console.log(`         ${s.tag.padEnd(6)} ${s.strokePaints === false ? 'no stroke  (fill only)'.padEnd(21) : `${String(s.sw).padStart(4)}u = ${String(s.swDevice).padStart(5)}px`.padEnd(21)}  stroke ${String(s.strokeContrast).padStart(6)} fill ${String(s.fillContrast).padStart(6)}  ${(s.stroke !== 'none' ? s.stroke : s.fill).padEnd(24)} ${s.cls.slice(0, 24)}`);
     }

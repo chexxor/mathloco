@@ -15,7 +15,7 @@
 //   5. the display cap: the club name's longest word at every display step against the measured hero box
 //      at 320 (276px) and at 390 (346px).
 //   6. the mark's DEVICE strokes at each candidate line weight, plus what those strokes actually painted
-//      (design/mark-pixels.mjs clustering the specimen's own screenshot — the same pairing the hero gate
+//      (logo-pixels.mjs clustering the specimen's own screenshot — the same pairing the hero gate
 //      uses, so the numbers are not a rendering of my own arithmetic).
 //
 // Report: design/grill/round8/report.json (tracked — a ruling cites it). Crops and screenshots are scratch.
@@ -88,17 +88,17 @@ for (const m of mark.marks) {
 const idx = '.design/render/round8-mark-report.json';
 writeFileSync(idx, JSON.stringify(mark, null, 1));
 const coverage = [];
-console.log('\n  what those strokes PAINTED (design/mark-pixels.mjs on the specimen screenshot):');
+console.log('\n  what those strokes PAINTED (logo-pixels.mjs on the specimen screenshot):');
 for (let i = 0; i < mark.marks.length; i++) {
   const m = mark.marks[i];
-  const args = ['design/mark-pixels.mjs', '.design/tmp-round8-mark.png', idx, String(i), '--json'];
+  const args = ['logo-pixels.mjs', '.design/tmp-round8-mark.png', idx, String(i), '--json'];
   if (CROP) args.push('--crop', `.design/tmp-mark-${m.set}.png`);
   try {
     const out = execFileSync(process.execPath, args, { encoding: 'utf8', timeout: 120000 });
     console.log(`  --- ${m.set} @${m.w} ---\n${out.trim().split('\n').filter((l) => !l.startsWith('{')).map((l) => '  ' + l).join('\n')}`);
     const rec = JSON.parse(out.trim().split('\n').filter((l) => l.startsWith('{')).pop());
     coverage.push(rec);
-  } catch (e) { console.log(`  ${m.set}: mark-pixels failed — ${String(e.message).slice(0, 120)}`); }
+  } catch (e) { console.log(`  ${m.set}: logo-pixels failed — ${String(e.message).slice(0, 120)}`); }
 }
 
 mkdirSync('design/grill/round8', { recursive: true });

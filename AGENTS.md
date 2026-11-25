@@ -193,7 +193,7 @@ each of those and requires a named failure. Both are in `verify`.
    point is **`docs/README.md`** - the router that says which dated letter still speaks and which is archive,
    and which of the three indexes owns a new file (**MS40**, **D458**). Durable plans that are
    not milestones live beside the plan: `roadmap-events.md` (surfacing and syncing the meetup schedule),
-   `roadmap-brand.md` (the mark's surface identity, the colour expansion, and what either re-measures) and
+   `roadmap-brand.md` (the logo's surface identity, the colour expansion, and what either re-measures) and
    `asset-sources.md` (which image sources are legitimately usable, and what their terms are). Before you
    enter stage S2 or S3, check the gate table in `PLAN.md`: a stage is entered when the file proving its
    gate exists, not when the work is convenient.

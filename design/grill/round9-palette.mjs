@@ -22,7 +22,7 @@ import {
   parseOklch, asTriple, contrastTriple, tripleToBytes, dist, hueGap, polar, nearestBrand,
   hueWindows, BARS, SAME_COLOUR_BAR, oklchToRgb,
 } from './okcolor.mjs';
-import { MARK_COLOURS } from '../../src/lib/brand-mark.mjs';
+import { LOGO_COLOURS } from '../../src/lib/logo.mjs';
 
 // ---- the shipped roles, READ out of src/styles/global.css (never re-typed — same rule as round8-ramps) ----
 const css = readFileSync(new URL('../../src/styles/global.css', import.meta.url), 'utf8');
@@ -138,7 +138,7 @@ export function accentRows(hue, chroma) {
   // contrasts multiply to the paper-ink pair: c_paper x c_ink ~= 12.02. Demanding c_paper >= 4.5 (text) and
   // c_ink >= 3.0 (a graphic on the band) demands 13.5, which is more than 12.02. That is the proof that one
   // value cannot be both body-legible text on paper and a resolvable stroke on the dark band — which is why
-  // every role in this palette has an `-on-ink` twin, and why MARK_COLOURS is keyed per ground.
+  // every role in this palette has an `-on-ink` twin, and why LOGO_COLOURS is keyed per ground.
   let best = null;
   for (let L = 40; L <= 92; L += 0.5) {
     const t = { L, C: chroma, H: hue };
@@ -270,9 +270,9 @@ export function surfaceOptions() {
 }
 
 // ---- Q3: the mark's two lines, and what a second colour there costs ----
-// MARK_COLOURS is keyed by ROLE (sphere / route / accent). Giving the two routes different colours therefore
+// LOGO_COLOURS is keyed by ROLE (sphere / route / accent). Giving the two routes different colours therefore
 // needs a grammar change — the split is written here as `routeSplit` so the cost is stated before any ruling:
-// check:render measures per shape (grammar-agnostic), but ratify-check's mark-class coupling, mark-geometry.mjs's
+// check:render measures per shape (grammar-agnostic), but ratify-check's mark-class coupling, logo-geometry.mjs's
 // role checks and the card's per-role map all address roles, so `route` -> two roles is a change in four places.
 export const MARK_OPTIONS = [
   {
@@ -284,7 +284,7 @@ export const MARK_OPTIONS = [
     id: 'K-B', title: 'The two lines carry different roles: one ink, one gold (no new hue)',
     colours: { sphere: 'rule', route: ['ink', 'gold'], accent: 'gold' },
     onInk: { sphere: 'band-text', route: ['band-text', 'gold-on-ink'], accent: 'gold-on-ink' },
-    needs: 'MARK_COLOURS grammar: `route` -> a per-shape pair (a new role, or an array). Both colours already clear 3.0 on both grounds.',
+    needs: 'LOGO_COLOURS grammar: `route` -> a per-shape pair (a new role, or an array). Both colours already clear 3.0 on both grounds.',
   },
   {
     id: 'K-C', hue: true, title: 'One line ink, one line the new accent (the H-B hue)',
@@ -323,9 +323,9 @@ export function markPairTable(extra = {}) {
     paper: tokensFor('paper', o.colours), ink: tokensFor('ink', o.onInk),
   }));
 }
-// The shipped MARK_COLOURS map, re-read from src/lib/brand-mark.mjs so a candidate can be compared against
+// The shipped LOGO_COLOURS map, re-read from src/lib/logo.mjs so a candidate can be compared against
 // what actually ships rather than against my memory of it.
-export const shippedMarkColours = MARK_COLOURS;
+export const shippedMarkColours = LOGO_COLOURS;
 
 // The candidate tokens a round needs that do not exist in @theme yet, keyed by the name the mark option and
 // the specimen use. Built from the best-scoring legal member of the open window.
@@ -465,7 +465,7 @@ if (process.argv[1] && process.argv[1].endsWith('round9-palette.mjs')) {
     if (!r.far) continue;
     console.log(`  ${String(r.hue).padStart(3)}  ${r.chroma.toFixed(2)}  L${String(r.far.t.L).padStart(4)}  text ${String(r.far.r).padStart(5)} on paper  vs ink ${String(r.far.onInkPair).padStart(5)}  nearest brand ${String(r.far.brand.d).padStart(5)} ${r.far.brand.brand.padEnd(26)} nearest role ${String(r.far.roleGap).padStart(5)} ${r.far.role}`);
   }
-  console.log(`\n  why a paper value and a band value cannot be one token: for any colour between the two grounds, c_paper x c_ink ~= the paper-ink pair = ${acc.rows[0].sandwich}. Text needs 4.5 on paper and a graphic needs 3.0 on ink = 13.5 demanded > ${acc.rows[0].sandwich}: impossible. Hence the -on-ink twins and the per-ground MARK_COLOURS.`);
+  console.log(`\n  why a paper value and a band value cannot be one token: for any colour between the two grounds, c_paper x c_ink ~= the paper-ink pair = ${acc.rows[0].sandwich}. Text needs 4.5 on paper and a graphic needs 3.0 on ink = 13.5 demanded > ${acc.rows[0].sandwich}: impossible. Hence the -on-ink twins and the per-ground LOGO_COLOURS.`);
   console.log(`\n  legal (clears text 4.5 on paper + graphic 3.0 on BOTH grounds + text 4.5 on ink, in gamut): ${acc.legal.length}`);
   for (const r of acc.legal.slice(0, 8)) console.log(`    ${r.hue} C${r.chroma.toFixed(2)}  text ${r.text.r} @L${r.text.t.L}  graphic ${r.both.r}/${contrastTriple(r.both.t, ROLES.ink)} @L${r.both.t.L}  on-ink ${r.onInk.r}@L${r.onInk.t.L}  brand ${r.minBrandGap} ${r.brand[0].brand}`);
   console.log('\n=== the mark: stroke pairs per option, per ground ===');

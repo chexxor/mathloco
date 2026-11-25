@@ -328,8 +328,8 @@ export const OPTIONS = [
     title: 'the nav drops the wordmark and carries the drawn mark instead (priced to be refused)',
     what: 'The nav identity item becomes the shipped sphere mark, reused from the built page at a 24px box, `aria-label="Matheapolis, home"` unchanged. The wordmark text goes.',
     surfaces: 'The literal answer to "the name appears twice", priced because it is the option a reader suggests first and it dies on a measurement rather than on taste: D119 asserts only what a pixel can resolve at the size you measure at. The mark\'s thinnest stroke is declared in viewBox units; the record prints what that becomes in device px in a 24px nav box, beside the hero\'s number at its own box.',
-    gate: '`check:render` measures `swDevice` for every shape of every `svg[data-mark]` and fails a stroke under 1px. DESIGN.md also names the nav item "the club\'s own name… in font-body at the text-body step", and this removes the only text the nav offers as a home affordance.',
-    mutations: 'glyph', // the string, not an identifier: the runner fills this from the built page's own svg[data-mark]
+    gate: '`check:render` measures `swDevice` for every shape of every `svg[data-logo]` and fails a stroke under 1px. DESIGN.md also names the nav item "the club\'s own name… in font-body at the text-body step", and this removes the only text the nav offers as a home affordance.',
+    mutations: 'glyph', // the string, not an identifier: the runner fills this from the built page's own svg[data-logo]
   },
   {
     label: 'dup-dates-chat-band-goes',

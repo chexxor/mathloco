@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// round23-build.mjs — the round-23 specimen: the ratified mark (row C, D483) put in the 16px TAB, priced with the
+// round23-build.mjs — the round-23 specimen: the ratified logo (row C, D483) put in the 16px TAB, priced with the
 // numbers the same run produced. Generated from `design/grill/round23/report.json`; edit
 // `design/grill/round23-options.mjs` or re-run `node design/round23.mjs`, NEVER this HTML — a generated page embeds
 // what it measured, so a hand-edit here is a claim about a run nobody did (D282). A lookup that finds nothing THROWS.
@@ -11,7 +11,7 @@
 //
 // Plates come from the run, never from this file. `design/round23.mjs` rasterizes each row's svg string at 8x the tab
 // size and records the paths; this builder embeds exactly those bytes and throws naming a missing one. It does NOT
-// re-render: a second render is a second drawing, and this round's whole argument is about which drawing is the mark.
+// re-render: a second render is a second drawing, and this round's whole argument is about which drawing is the logo.
 // True size is CSS `width:` on the 8x raster (16 CSS px out of 128 device px), because a specimen that scales a tab
 // glyph up to 200px is a specimen of a thing no browser ever draws.
 //
@@ -160,7 +160,7 @@ const dashTable = (g) => {
     return `<tr><td class="n"><strong>${n}px</strong></td>
       <td class="n">${rear.onInkPct}% ink \u00b7 ${rear.runs} run${rear.runs === 1 ? '' : 's'} \u00b7 longest ${rear.longestRunPx}px</td>
       <td class="n">${front.onInkPct}% ink \u00b7 ${front.runs} run${front.runs === 1 ? '' : 's'} \u00b7 longest ${front.longestRunPx}px</td>
-      <td class="${fused ? 'fail' : 'pass'}">${fused ? '<strong>FUSED</strong> \u2014 the dashed rear arc has become one continuous run with the front arc: the mark\'s only depth cue is gone at this size' : `still ${rear.runs} separate runs \u2014 the equator still reads as dashed behind the sphere`}</td>
+      <td class="${fused ? 'fail' : 'pass'}">${fused ? '<strong>FUSED</strong> \u2014 the dashed rear arc has become one continuous run with the front arc: the logo\'s only depth cue is gone at this size' : `still ${rear.runs} separate runs \u2014 the equator still reads as dashed behind the sphere`}</td>
       <td class="sub">${rear.samples} samples walked along each arc's own geometry (not off colour)</td></tr>`;
   }).join('');
   return `<table class="dash"><thead><tr><th>size</th><th>rear (dashed) arc</th><th>front arc</th><th>the depth cue</th><th>how</th></tr></thead><tbody>${rows}</tbody></table>`;
@@ -270,7 +270,7 @@ const rowCRefusalRows = CONTROLS.rowCRefused.map((c) => `<tr><td>row C on <stron
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" />
-<title>Round 23 \u2014 the club mark in the 16px tab: framings and weights, priced, not applied</title>
+<title>Round 23 \u2014 the club logo in the 16px tab: framings and weights, priced, not applied</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 /* Specimen chrome only. The pictures carry the run's own raster; nothing here restyles them. */
@@ -318,11 +318,11 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 </style></head>
 <body>
 <div class="spec">
-<h1>Round 23 \u2014 the club mark in the 16px tab: framings and weights, priced, not applied</h1>
+<h1>Round 23 \u2014 the club logo in the 16px tab: framings and weights, priced, not applied</h1>
 <p class="ask">${esc(need(GOLD.steer, 'gold.steer'))}</p>
 <p>${esc(need(R.ask, 'ask'))}</p>
 <p><strong>Nothing here is applied.</strong> Colour on this site is operator-ratified (D316) and the tab artifact is a one-way door for the site's own gates (D479), so this round prices and the pick stays the operator's. Every picture is the run's own raster: each row's SVG string, rasterized <strong>once</strong> at 8\u00d7 the tab size by the same instrument that counted its pixels, then embedded. This page does not re-render anything, and a 16px picture here is 16 CSS px of a 128px raster \u2014 what a browser is actually asked to draw.</p>
-<p class="meta">measured ${esc(String(need(R.measuredAt, 'measuredAt')))} \u00b7 instrument: ${esc(GATE_INSTRUMENT)} \u00b7 tab slot <strong>${TAB.px}\u00d7${TAB.px}</strong> (${esc(TAB.source)}) \u00b7 tab pair bar <strong>${GOLD_BARS.pair}</strong> (check:favicon rule 4) \u00b7 graphic line bar <strong>3.0</strong> \u00b7 filled-region layer bar <strong>${GOLD_BARS.region}</strong> (D101) \u00b7 rows: <code>design/grill/round23-options.mjs</code> \u00b7 instrument: <code>design/mark-tab.mjs</code> \u00b7 record: <code>design/grill/round23/report.json</code></p>
+<p class="meta">measured ${esc(String(need(R.measuredAt, 'measuredAt')))} \u00b7 instrument: ${esc(GATE_INSTRUMENT)} \u00b7 tab slot <strong>${TAB.px}\u00d7${TAB.px}</strong> (${esc(TAB.source)}) \u00b7 tab pair bar <strong>${GOLD_BARS.pair}</strong> (check:favicon rule 4) \u00b7 graphic line bar <strong>3.0</strong> \u00b7 filled-region layer bar <strong>${GOLD_BARS.region}</strong> (D101) \u00b7 rows: <code>design/grill/round23-options.mjs</code> \u00b7 instrument: <code>logo-tab.mjs</code> \u00b7 record: <code>design/grill/round23/report.json</code></p>
 
 <h2>1. The control: the tab as it ships today (row I0)</h2>
 <p>Everything below is a delta from this. <code>${esc(INC.source)}</code> is a ${INC.parsed.width}\u00d7${INC.parsed.height} plate (viewBox "${esc(INC.parsed.viewBox)}", rx ${esc(INC.parsed.rx)}) painting ${INC.parsed.paints.map((p) => `<code>${esc(p)}</code>`).join(' and ')} with the club's summand <strong>${esc(INC.parsed.glyph.char)}</strong> in ${esc(INC.parsed.glyph['font-family'])} ${esc(INC.parsed.glyph['font-size'])} \u2014 ${INC.parsed.shapesPainted} paints, which is why it passes. Its built copy <code>${esc(INC.shippedCopy.path)}</code> is <span class="pass">${esc(INC.shippedCopy.state)}</span> (${esc(INC.shippedCopy.srcSha)} / ${esc(INC.shippedCopy.distSha)}), and the document parses: ${esc(INC.document.parse.librsvg)}.</p>
@@ -333,13 +333,13 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 }).join('')}</tbody></table>
 <div class="shots">${['paper', 'ink'].flatMap((gr) => [plate('I0', gr, 16, 16, `shipped tab, ${gr}, true size`), plate('I0', gr, 16, 128, `shipped tab, ${gr}, same raster at 8\u00d7`)]).join('')}</div>
 
-<h2>2. The drawing that has to fit (the mark's own numbers, not a re-drawing)</h2>
+<h2>2. The drawing that has to fit (the logo's own numbers, not a re-drawing)</h2>
 <p>The plate is the hero's: <strong>${FIGURE.plate.w}\u00d7${FIGURE.plate.h}u</strong>, ring ${FIGURE.ring.r}u at (${FIGURE.ring.cx},${FIGURE.ring.cy}), ink bounding box ${FIGURE.inkBox.w}\u00d7${FIGURE.inkBox.h}u at (${FIGURE.inkBox.x},${FIGURE.inkBox.y}), sphere span <strong>${FIGURE.sphereSpanUnits}u</strong>, strokes <strong>${FIGURE.minStrokeUnits}\u2013${FIGURE.maxStrokeUnits}u</strong>, pole dot \u2300 ${FIGURE.dotDiameterUnits}u, right-angle arm ${FIGURE.angleArmUnits}u, feet ${FIGURE.footSeparationUnits}u apart, equator dash ${FIGURE.equatorDash.join('/')}. At 16px the tab is 16 device px, so the plate's 240u is 0.067 device px per unit and a 1.4u line is <strong>0.09 device px</strong> \u2014 roughly 17\u00d7 under the ~1.5 device px a line has to reach before it is ink at all (D119). That one sentence is why this round has weight rows.</p>
 
 <h2>3. The gate, read aloud: what the tab gate refuses today</h2>
 <p><code>scripts/check-favicon.mjs</code> was run as a subprocess on every artifact this round produced \u2014 never reimplemented here \u2014 and each row's reading is quoted below in its own box. Two readings the whole item has to reckon with:</p>
 <table><thead><tr><th>the row</th><th>what it would take</th><th>what the gate says</th></tr></thead><tbody>${rowCRefusalRows}${goldGateRows}</tbody></table>
-<p><strong>Row ${rowC.id}</strong> is the ratified hero colouring dropped into a tab: the gate refuses it on both grounds, because a tab mark is <em>one ground and one glyph</em> (rule 3) and two of row C's hues are reserved for join paths (rule 5). Rows <strong>G2\u2013G4</strong> are refused too \u2014 G2 for a third paint, G3/G4 because a solved gold literal is not a token @theme renders (rule 2). Row <strong>G1</strong> passes with no new token and no ruling. The consequence for the ruling: <em>a logo in the tab is not the hero's colouring at a smaller size.</em> Something has to give \u2014 the tab gate's rules, the mark's colour table, or the logo's own colouring \u2014 and this round is priced so the operator chooses which, rather than discovering it after the pick (D479: a gate is re-derived, never bypassed).</p>
+<p><strong>Row ${rowC.id}</strong> is the ratified hero colouring dropped into a tab: the gate refuses it on both grounds, because a tab logo is <em>one ground and one glyph</em> (rule 3) and two of row C's hues are reserved for join paths (rule 5). Rows <strong>G2\u2013G4</strong> are refused too \u2014 G2 for a third paint, G3/G4 because a solved gold literal is not a token @theme renders (rule 2). Row <strong>G1</strong> passes with no new token and no ruling. The consequence for the ruling: <em>a logo in the tab is not the hero's colouring at a smaller size.</em> Something has to give \u2014 the tab gate's rules, the logo's colour table, or the logo's own colouring \u2014 and this round is priced so the operator chooses which, rather than discovering it after the pick (D479: a gate is re-derived, never bypassed).</p>
 
 <h2>4. Gold: the steer, the arithmetic, and what it does not settle</h2>
 <p>The operator's steer is quoted at the top of this page. There are two things on this site that "gold" could mean, and they cost opposite amounts.</p>
@@ -352,7 +352,7 @@ blockquote { border-left: 3px solid var(--rule); margin: .5rem 0; padding: .4rem
 <ul>
 <li><strong>The asymmetry, in one sentence.</strong> On paper the palest gold the 4.5 bar allows is <strong>L 55</strong>, which is <em>below</em> the lightness at which a hue 62\u201375 reads as gold \u2014 it reads bronze/ochre. On ink the darkest gold the bar allows is <strong>L 60</strong>, which does read as gold. So "gold on the light page" and "gold that looks like gold" are not simultaneously available, and the plate case inverts it: a gold GROUND is judged against the lines drawn over it at the pair bar, not at the 1.35 layer bar.</li>
 <li><strong>The same bytes appear twice.</strong> <code>gold-line-ink</code> and <code>gold-plate-paper</code> both solve to ${esc(GOLD_CANDIDATES['line-ink'].spec)} \u2192 ${esc(hash(GOLD_CANDIDATES['line-ink'].bytes))}: one colour, two jobs.</li>
-<li><strong>What this round does NOT decide.</strong> Whether a hue 75 (39\u00b0 from --color-accent) is admissible under round 3b's new-hue convention is <em>not</em> settled here \u2014 <code>scripts/check-contrast.mjs</code> runs its hue-gap rule over its own reserved map, and what that map reserves for the mark is a separate reading. Stated as a question with its numbers (26\u00b0 at hue 62, 39\u00b0 at hue 75), not as a refusal.</li>
+<li><strong>What this round does NOT decide.</strong> Whether a hue 75 (39\u00b0 from --color-accent) is admissible under round 3b's new-hue convention is <em>not</em> settled here \u2014 <code>scripts/check-contrast.mjs</code> runs its hue-gap rule over its own reserved map, and what that map reserves for the logo is a separate reading. Stated as a question with its numbers (26\u00b0 at hue 62, 39\u00b0 at hue 75), not as a refusal.</li>
 </ul>
 
 <h2>5. The rows</h2>
@@ -361,7 +361,7 @@ ${ROWS.map(rowSection).join('\n')}
 <h2>6. How to read this page</h2>
 <ul>
 <li><strong>Row ${N0.id}</strong> is the hero's drawing dropped into the tab with nothing tuned: at 16px it has <strong>${N0.grounds.paper.sizes['16'].at3Px} pixels at or over the 3.0 bar</strong> on paper and <strong>${N0.grounds.ink.sizes['16'].at3Px}</strong> on ink (its best contrast there is ${num(N0.grounds.paper.sizes['16'].maxContrast)} / ${num(N0.grounds.ink.sizes['16'].maxContrast)}). Everything that follows exists because of that sentence.</li>
-<li><strong>T1\u2013T4, T7\u2013T9</strong> centre the tab on the <em>sphere</em> and change only the stroke weight (and, in T7, the padding, and in T8/T9 the colour plan). <strong>T5/T6</strong> put the whole 240\u00d7150 plate in the tab: T5 letterboxes it, so ${(ROWS.find((r) => r.id === 'T5').grounds.paper.sizes['16'].blankPx)} of ${ROWS.find((r) => r.id === 'T5').grounds.paper.sizes['16'].boxPx} tab px (${ROWS.find((r) => r.id === 'T5').grounds.paper.sizes['16'].blankPct}%) are the ground showing through with no mark on it.</li>
+<li><strong>T1\u2013T4, T7\u2013T9</strong> centre the tab on the <em>sphere</em> and change only the stroke weight (and, in T7, the padding, and in T8/T9 the colour plan). <strong>T5/T6</strong> put the whole 240\u00d7150 plate in the tab: T5 letterboxes it, so ${(ROWS.find((r) => r.id === 'T5').grounds.paper.sizes['16'].blankPx)} of ${ROWS.find((r) => r.id === 'T5').grounds.paper.sizes['16'].boxPx} tab px (${ROWS.find((r) => r.id === 'T5').grounds.paper.sizes['16'].blankPct}%) are the ground showing through with no logo on it.</li>
 <li><strong>Read three columns before liking a weight.</strong> The <em>at/over 3.0</em> count is legibility. The <em>survival</em> table is which of the eight shapes still lands \u2014 at 16px some of them land on a single pixel. The <em>dash</em> table is whether the rear arc is still dashed: where it reads FUSED, the sphere has lost its only depth cue and reads as a circle with lines on it. The <em>clip</em> table is what the framing pushes outside its own frame and the tab therefore cannot show.</li>
 <li><strong>The two grounds are not decoration.</strong> A browser draws the tab on whatever chrome colour the user's browser and OS put behind it. Paper is the light chrome, ink the dark one; a colour that works on one can fail on the other and the artifact has to be a single file.</li>
 <li><strong>The pictures are the measurement.</strong> True size first, then the identical raster at 8\u00d7. No zoom, no re-render, no CSS filter: if a shape is gone at 16px it is gone in the browser too, and the firefox column above each row is the check on that (librsvg | firefox paired per size).</li>

@@ -1,6 +1,6 @@
 // round22-options.mjs — the ONLY place the Byrne FACE colourings exist (grill round 22, 2026-11-24).
 //
-// THE ASK, VERBATIM. The second half of the operator's seventh ruling on this mark (2026-11-24, recorded D483):
+// THE ASK, VERBATIM. The second half of the operator's seventh ruling on this logo (2026-11-24, recorded D483):
 //   "(3. C), but also show me options for coloring faces of the shape also in the Byrne style."
 // and, when asked how general to make them: "General options and present them to me to select from."
 // Row C shipped. This round is the second half of that sentence.
@@ -9,13 +9,13 @@
 // reproduced at c82.net/euclid, fetched 2026-11-24). The book colours *diagrams*, not only lines: the prose speaks
 // of "the squares of the blue and red lines", so an area is named by its colour exactly as a line is, and the
 // colours are red, yellow, blue on white with black for what the proposition merely gives. Two consequences price
-// this round: a filled area is a second *name* in the same sentence, so a mark with two filled areas is making two
+// this round: a filled area is a second *name* in the same sentence, so a logo with two filled areas is making two
 // statements; and Byrne's fills are flat regions, which is why they are cheap to print and hard to fake with a tint.
 //
 // WHY A FACE IS NOT A THICK LINE. Three things follow and `design/round22.mjs` prices all three:
 //   1. AREA. A face has one, and it is measured twice — projected, and ON THE SPHERE this drawing implies — so a
-//      face is named by its geometry rather than by its paint (design/mark-faces.mjs). The region between the two
-//      meridians is a spherical TRIANGLE whose area is fixed by the very right angles the mark draws; the two faces
+//      face is named by its geometry rather than by its paint (logo-faces.mjs). The region between the two
+//      meridians is a spherical TRIANGLE whose area is fixed by the very right angles the logo draws; the two faces
 //      above and below the near equator arc are spherical LUNES that tile the visible face exactly; the ring's
 //      interior IS the near hemisphere. A colouring that fills "the sphere" and fills "the disc" is filling the same
 //      thing, and only the measurement says so.
@@ -29,18 +29,18 @@
 //
 // WHAT IS NOT SHIPPED HERE. Colour on this site is operator-ratified (D316): the runner prices, the operator picks,
 // and no byte of src/ or of src/styles/global.css moves before a pick exists. A face is also a new KIND of shape
-// for this mark — its gates count shapes, and a planted face makes nine — so the shape-count price is printed as a
+// for this logo — its gates count shapes, and a planted face makes nine — so the shape-count price is printed as a
 // price (the probes' own refusal, verbatim), not tuned away.
 //
-// THE LINES ARE ROW C'S, IMPORTED. `LINES` below is `MARK_COLOURS` read out of src/lib/brand-mark.mjs, not a copy
-// of it: a face round that restated the line colouring could price a mark the site no longer has, which is the
+// THE LINES ARE ROW C'S, IMPORTED. `LINES` below is `LOGO_COLOURS` read out of src/lib/logo.mjs, not a copy
+// of it: a face round that restated the line colouring could price a logo the site no longer has, which is the
 // defect D481 §c names (the incumbent is the control in every colour round). The CONTROL row is the one with no
 // face, and the runner FINDS it by matching these maps against the shipped table.
-import { MARK_COLOURS } from '../../src/lib/brand-mark.mjs';
+import { LOGO_COLOURS } from '../../src/lib/logo.mjs';
 import { GOLD_HUES, GOLD_CHROMAS, GOLD_L_FLOOR } from './round23-options.mjs';
 
-export { MARK_SLOTS as SLOTS } from '../../src/lib/brand-mark.mjs';
-export const LINES = { paper: { ...MARK_COLOURS.paper }, ink: { ...MARK_COLOURS.ink } };
+export { LOGO_SLOTS as SLOTS } from '../../src/lib/logo.mjs';
+export const LINES = { paper: { ...LOGO_COLOURS.paper }, ink: { ...LOGO_COLOURS.ink } };
 
 // ---------------------------------------------------------------------------
 // THE GOLD STEER (operator, 2026-11-25), VERBATIM:
@@ -94,12 +94,12 @@ export const ROWS = [
     label: 'row C alone — the colouring the site ships today (nothing filled)',
     byrne: 'the control: Byrne line colouring with no region. A face round without this row cannot say what a face costs.',
     faces: [],
-    reading: 'the shipped mark: a colour names a line, and the figure has no area. Everything below is a delta from this measured line.',
+    reading: 'the shipped logo: a colour names a line, and the figure has no area. Everything below is a delta from this measured line.',
   },
   {
     id: 'F1',
-    label: 'the lune filled — the mark\'s own area, in the club red',
-    byrne: 'Byrne fills the region a proposition is about. Here that region is the spherical triangle between the two meridians and the near equator arc, and its area is fixed by the two right angles the mark already draws.',
+    label: 'the lune filled — the logo\'s own area, in the club red',
+    byrne: 'Byrne fills the region a proposition is about. Here that region is the spherical triangle between the two meridians and the near equator arc, and its area is fixed by the two right angles the logo already draws.',
     faces: [{ face: 'lune', family: 'accent' }],
     reading: 'one area, one colour: "the red figure" is the strip of surface between the two lines, which is where the metaphor lives. The pair keep their two colours (row C), so the area names the BETWEEN, not a line.',
   },
@@ -122,19 +122,19 @@ export const ROWS = [
     label: 'two areas, two colours — lune red, south lune blue',
     byrne: 'the literal Byrne sentence — "the squares of the blue and red lines" — where two regions are named by two colours so the prose can point at either without a letter',
     faces: [{ face: 'lune', family: 'accent' }, { face: 'south', family: 'path-calendar' }],
-    reading: 'the two faces this drawing really does tile the figure with are the north and south lunes; this row takes the triangle inside the north face plus the south face, so the two fills are DISJOINT and meet only at the near arc. What it costs is a third name in a mark whose claim is about a pair of lines.',
+    reading: 'the two faces this drawing really does tile the figure with are the north and south lunes; this row takes the triangle inside the north face plus the south face, so the two fills are DISJOINT and meet only at the near arc. What it costs is a third name in a logo whose claim is about a pair of lines.',
   },
   {
     id: 'F5',
     label: 'the near hemisphere filled — the sphere as a body, in the palette\'s own grey',
     byrne: 'Byrne\'s circles are regions as often as they are outlines; a filled limb is how 1847 printing says "this is a body, not a disc"',
     faces: [{ face: 'disc', family: 'rule' }],
-    reading: 'colouring the near hemisphere IS colouring the disc, so every one of the eight lines is drawn over the fill and the whole mark becomes lines-on-surface. This is the row that shows what the layer bar and the graphic bar cost at the same time.',
+    reading: 'colouring the near hemisphere IS colouring the disc, so every one of the eight lines is drawn over the fill and the whole logo becomes lines-on-surface. This is the row that shows what the layer bar and the graphic bar cost at the same time.',
   },
   // ---- F6-F9: the operator's gold steer of 2026-11-25, priced in the same four currencies as F1-F5 ----
   {
     id: 'F6',
-    label: 'the lune filled in gold — the mark\'s own area, in Byrne\'s yellow',
+    label: 'the lune filled in gold — the logo\'s own area, in Byrne\'s yellow',
     byrne: 'the yellow of Byrne\'s three-colour printing, on the region a proposition is about: the spherical triangle between the two meridians and the near equator arc',
     faces: [{ face: 'lune', family: 'gold' }],
     reading: 'the steer read as literally as F1: the same region F1 fills in the club red, filled instead in the gold the operator asked to see more of. Compared against F1 on the same photographs, it is the question "which colour names the BETWEEN" asked with everything else held still.',
@@ -151,7 +151,7 @@ export const ROWS = [
     label: 'two areas, gold and red — lune gold, south lune in the club red',
     byrne: 'the literal Byrne sentence with the yellow present: two regions named by two colours so the prose can point at either without a letter',
     faces: [{ face: 'lune', family: 'gold' }, { face: 'south', family: 'accent' }],
-    reading: 'F4\'s two disjoint regions, with the gold taking the triangle the metaphor lives in and the club red taking the region below the equator. What it costs is a third name in a mark whose claim is about a pair of lines — and the measured hue gap between the gold and the red is what says whether they read as two names or as one warm wash.',
+    reading: 'F4\'s two disjoint regions, with the gold taking the triangle the metaphor lives in and the club red taking the region below the equator. What it costs is a third name in a logo whose claim is about a pair of lines — and the measured hue gap between the gold and the red is what says whether they read as two names or as one warm wash.',
   },
   {
     id: 'F9',

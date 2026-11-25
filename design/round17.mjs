@@ -183,8 +183,8 @@ function distCopy(label, option, html) {
   if (mutations === 'glyph') {
     // Reuse the SHIPPED mark rather than redraw it: round 11 made the mark single-source for this reason, and a
     // re-typed SVG would price a glyph the site does not have.
-    const svg = out.match(/<svg[^>]*data-mark[^>]*>[\s\S]*?<\/svg>/);
-    if (!svg) throw new Error(`${option.label}: no svg[data-mark] in the built page to reuse`);
+    const svg = out.match(/<svg[^>]*data-logo[^>]*>[\s\S]*?<\/svg>/);
+    if (!svg) throw new Error(`${option.label}: no svg[data-logo] in the built page to reuse`);
     // Sized from the mark's OWN viewBox, at the nav's 24px line box: forcing height AND width to 24px squashes a
     // 240x150 mark into a square, and the mark probe's ratio rule would then fail my mutation instead of the
     // option. The first run of this round did exactly that and reported ratio 1 vs 0.625.
@@ -338,7 +338,7 @@ for (const opt of OPTS) {
       laneFs: m.sizes.laneFs,
       rowNeededOfAvailable: WIDTHS.map((w) => `${measure[w].nav.row.needed}/${measure[w].nav.row.available}@${w}`).join('  '),
       docHeightByWidth: WIDTHS.map((w) => `${measure[w].doc.scrollHeight}@${w}`).join('  '),
-      markStrokeFloor: markFloor,
+      logoStrokeFloor: markFloor,
       edgeReport: await edgeReport(shots[1240] && shots[1240].png, m.header && m.header.bottom, m.doc && m.doc.bgBytes),
       sticky: m.sticky || null,
       dupPairs: (m.sentences?.duplicatePairs || []).map((p) => `${p.a.own.slice(0,44)}… <> ${p.b.own.slice(0,44)}… @${p.jaccard}`),
@@ -387,7 +387,7 @@ for (const opt of OPTS) {
       (gr.painted.length ? ` · painted nav ${gr.painted.map((p) => `${p.t} ${p.on}`).join(', ')}` : '') +
       ` · nearest brand ${gr.nearestBrand}`);
   }
-  if (entry.deltas) console.log(`${' '.repeat(23)}deltas: page ${entry.deltas.docHeightByWidth}  nav row ${entry.deltas.navRowNeededByWidth}  ${entry.deltas.headerHeight}  names-in-fold ${sgn(entry.deltas.nameInFirstScreen)}  mark floor: ${entry.headline.markStrokeFloor ? entry.headline.markStrokeFloor.minWidthFor1pxFloorPx + 'px wide' : 'n/a'}`);
+  if (entry.deltas) console.log(`${' '.repeat(23)}deltas: page ${entry.deltas.docHeightByWidth}  nav row ${entry.deltas.navRowNeededByWidth}  ${entry.deltas.headerHeight}  names-in-fold ${sgn(entry.deltas.nameInFirstScreen)}  mark floor: ${entry.headline.logoStrokeFloor ? entry.headline.logoStrokeFloor.minWidthFor1pxFloorPx + 'px wide' : 'n/a'}`);
   if (gates && !gates[0].ok) for (const f of (gates[0].fails || [gates[0].detail])) console.log(`     ${f.trim().slice(0, 160)}`);
 }
 

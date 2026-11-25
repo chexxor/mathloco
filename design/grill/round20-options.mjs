@@ -14,7 +14,7 @@
 //      `prose-block` and `band-shared-block` price the three shapes this tree now ships for the same destination.
 //   2. WEIGHT — should an exit be a box or a link? `quiet-label` demotes the control to the site's own quiet step
 //      (the underlined label the schedule rows already use), read out of the artifact rather than re-drawn here.
-//   3. THE MARK — does an external icon belong in the label? `no-arrow` removes the glyph and shows what the gate
+//   3. THE LOGO — does an external icon belong in the label? `no-arrow` removes the glyph and shows what the gate
 //      that owns outbound links actually demands, which is not the glyph.
 //
 // WHAT THIS ROUND MEASURES, and what it refuses to.

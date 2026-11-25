@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// round21-build.mjs — the round-21 specimen: the club mark coloured in Byrne's 1847 manner, in this palette,
+// round21-build.mjs — the round-21 specimen: the club logo coloured in Byrne's 1847 manner, in this palette,
 // photographed on both grounds with the numbers the same run produced. Generated from
 // `design/grill/round21/report.json`; edit `design/grill/round21-options.mjs` or re-run `node design/round21.mjs`,
 // NEVER this HTML — a generated page embeds what it measured, so a hand-edit here is a claim about a run nobody
@@ -90,11 +90,11 @@ const optSection = (o) => {
   const shots = WIDTHS.map((w) => {
     const r = paintedRow(o.id, 'paper', w);
     return `<figure><img src="data:image/png;base64,${img(o.id, 'paper', w)}" alt="option ${o.id} painted on paper at ${w}px viewport width" />
-      <figcaption><strong>${w}px</strong> \u00b7 ${r.shapeCount} shapes \u00b7 ${r.inkPixels} ink px \u00b7 ${r.at30} at/over ${BARS.graphic} (<strong>${r.at30Pct}%</strong> of its ink) \u00b7 mark-geometry <span class="${r.geometry.ok ? 'pass' : 'fail'}">${r.geometry.ok ? 'PASS' : 'FAIL'}</span>${r.geometry.ok ? '' : `<div class="why">${esc(r.geometry.out)}</div>`}</figcaption></figure>`;
+      <figcaption><strong>${w}px</strong> \u00b7 ${r.shapeCount} shapes \u00b7 ${r.inkPixels} ink px \u00b7 ${r.at30} at/over ${BARS.graphic} (<strong>${r.at30Pct}%</strong> of its ink) \u00b7 logo-geometry <span class="${r.geometry.ok ? 'pass' : 'fail'}">${r.geometry.ok ? 'PASS' : 'FAIL'}</span>${r.geometry.ok ? '' : `<div class="why">${esc(r.geometry.out)}</div>`}</figcaption></figure>`;
   }).join('');
   const card = paintedRow(o.id, 'ink', 1200);
   const cardFig = `<figure class="card"><img src="data:image/png;base64,${img(o.id, 'ink', 1200)}" alt="option ${o.id} painted on the share card's ink ground" />
-    <figcaption><strong>the share card, ink ground</strong> \u00b7 ${card.shapeCount} shapes \u00b7 ${card.inkPixels} ink px \u00b7 ${card.at30} at/over ${BARS.graphic} (<strong>${card.at30Pct}%</strong> of its ink) \u00b7 mark-geometry <span class="${card.geometry.ok ? 'pass' : 'fail'}">${card.geometry.ok ? 'PASS' : 'FAIL'}</span>${card.geometry.ok ? '' : `<div class="why">${esc(card.geometry.out)}</div>`}</figcaption></figure>`;
+    <figcaption><strong>the share card, ink ground</strong> \u00b7 ${card.shapeCount} shapes \u00b7 ${card.inkPixels} ink px \u00b7 ${card.at30} at/over ${BARS.graphic} (<strong>${card.at30Pct}%</strong> of its ink) \u00b7 logo-geometry <span class="${card.geometry.ok ? 'pass' : 'fail'}">${card.geometry.ok ? 'PASS' : 'FAIL'}</span>${card.geometry.ok ? '' : `<div class="why">${esc(card.geometry.out)}</div>`}</figcaption></figure>`;
 
   const table = ['paper', 'ink'].map((g) => {
     const rows = pairCells(o.id, g);
@@ -116,7 +116,7 @@ const optSection = (o) => {
   <table class="pairs"><thead><tr><th class="gnd">ground</th>${pairCells(o.id, 'paper').map((p) => `<th>${esc(p.slot)}</th>`).join('')}</tr></thead>
     <tbody>${table}</tbody></table>
   <p class="meta">contrast of each shape's token against its ground; the graphic-line bar is <strong>${BARS.graphic}</strong> (D101).
-     Hues spent: paper <strong>${hp.colours}</strong> tokens, tightest gap <strong>${hp.minGap}\u00b0</strong> (${esc(hp.tightest)}); ink <strong>${hi.colours}</strong> tokens, tightest gap <strong>${hi.minGap}\u00b0</strong> (${esc(hi.tightest)}). mark-geometry holds two roles \u2265 20\u00b0 apart.</p>
+     Hues spent: paper <strong>${hp.colours}</strong> tokens, tightest gap <strong>${hp.minGap}\u00b0</strong> (${esc(hp.tightest)}); ink <strong>${hi.colours}</strong> tokens, tightest gap <strong>${hi.minGap}\u00b0</strong> (${esc(hi.tightest)}). logo-geometry holds two roles \u2265 20\u00b0 apart.</p>
   <div class="swatches">${swatches}</div>
 </section>`;
 };
@@ -133,7 +133,7 @@ const washRows = WASHES.map((w) => `<tr><td>--color-${esc(w.token)}</td><td clas
 const costRows = WASH_COST.map((w) => `<tr><td>--color-${esc(w.family)}</td><td class="n">${num(w.H, 1)}</td><td class="n">${num(w.C, 3)}</td><td class="n">${w.top}</td><td class="n">${num(w.ratio)}</td><td>${esc(w.nearestBrand)} <span class="n">d=${num(w.brandDist, 3)}</span>${w.sameColour ? ' <strong>SAME COLOUR</strong>' : ''}</td><td>${swatch(w.spec, `L ${w.top}`, 'the palest fill that reads as a region')}</td></tr>`).join('');
 
 // The CONTROL is the row the report says is shipped — the round found it by matching each option against
-// MARK_COLOURS in src/lib/brand-mark.mjs (D481 §c), so this file does not get to name the incumbent off its own
+// LOGO_COLOURS in src/lib/logo.mjs (D481 §c), so this file does not get to name the incumbent off its own
 // ordering of the painted rows. A hard-coded PAINTED[0] was a claim about the artifact written in the round that
 // prices it: the day the artifact changed, the specimen would still have called the retired colouring the control.
 const CONTROL_ID = R.control?.id;
@@ -143,14 +143,14 @@ if (!CONTROL_ID) {
 const control = PAINTED.find((p) => p.id === CONTROL_ID);
 const controlBad = !control
   ? 'has no painted rows in the report'
-  : !control.paper.every((p) => p.geometry.ok) ? 'fails mark-geometry on the hero' : !control.ink.every((c) => c.geometry?.ok) ? 'fails mark-geometry on the share card' : null;
+  : !control.paper.every((p) => p.geometry.ok) ? 'fails logo-geometry on the hero' : !control.ink.every((c) => c.geometry?.ok) ? 'fails logo-geometry on the share card' : null;
 if (controlBad) {
-  throw new Error(`round21-build: the CONTROL row ${CONTROL_ID} — the colouring src/lib/brand-mark.mjs ships (${R.control.derivedFrom}) — ${controlBad}. The mutation is broken, so every painted row in this specimen is untrustworthy. Fix design/round21.mjs before showing anyone a colour.`);
+  throw new Error(`round21-build: the CONTROL row ${CONTROL_ID} — the colouring src/lib/logo.mjs ships (${R.control.derivedFrom}) — ${controlBad}. The mutation is broken, so every painted row in this specimen is untrustworthy. Fix design/round21.mjs before showing anyone a colour.`);
 }
 
 const html = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8" />
-<title>Round 21 — the mark in Byrne's 1847 manner, in this palette</title>
+<title>Round 21 — the logo in Byrne's 1847 manner, in this palette</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
 /* Specimen chrome only. The photographs carry the built page's own bytes; nothing here restyles them. */
@@ -200,11 +200,11 @@ li { margin-bottom: .4rem; }
 </style></head>
 <body>
 <div class="spec">
-<h1>Round 21 \u2014 the mark in Byrne's 1847 manner, in this palette</h1>
+<h1>Round 21 \u2014 the logo in Byrne's 1847 manner, in this palette</h1>
 <p class="ask">${esc('If you can, also create it in the style of John Byrne\u2019s 1847 Euclid illustrations, where it makes heavy use of primary colors. If you can do that, use our website\u2019s color palette, though.')}</p>
 <p>The source, retrieved rather than remembered: <strong>${esc(R.source)}</strong>. Three of its facts drive the rows below \u2014 colour <em>replaces letters</em> (the title says so: a line is named by its colour, and the prose refers to "the squares of the blue and red lines"); Byrne 1847 insists the colour is not ornament ("we do not introduce colours for the purpose of entertainment\u2026 but to assist the mind"); and the ink is red, yellow, blue and black on white paper.</p>
-<p><strong>The tension this round prices rather than hides:</strong> Byrne colours a line to <em>name</em> it. This mark's claim is that its two lines are the <em>same kind</em> of line \u2014 parallel where they leave the equator, and crossing only because the surface is curved. Colouring them differently is the most literal Byrne reading and the one that costs the mark its claim. Row C is on the table to be refused.</p>
-<p><strong>Nothing here is applied.</strong> Colour on this site is operator-ratified (D316), so a Byrne colouring arrives as a priced specimen and the ruling stays the operator's. Every photograph is the built page's own bytes with the eight shape colours rewritten to <code>var(--color-\u2026)</code> in a copy of <code>dist/client</code>, measured by the same two probes <code>check:mark</code> runs (<code>design/mark-geometry.mjs</code>, <code>design/mark-pixels.mjs</code>) at the three widths that bracket the mark's box, plus the share card's own document on the ink ground. <strong>Row ${esc(CONTROL_ID)} is the colouring the site ships, and it passes every check</strong> \u2014 it is found by matching every row against <code>MARK_COLOURS</code> in <code>src/lib/brand-mark.mjs</code>, not by naming a letter here \u2014 and that is what makes the other rows' numbers mean something: if the shipped colouring had failed, the mutation would be broken and no row here would be trustworthy.</p>
+<p><strong>The tension this round prices rather than hides:</strong> Byrne colours a line to <em>name</em> it. This logo's claim is that its two lines are the <em>same kind</em> of line \u2014 parallel where they leave the equator, and crossing only because the surface is curved. Colouring them differently is the most literal Byrne reading and the one that costs the logo its claim. Row C is on the table to be refused.</p>
+<p><strong>Nothing here is applied.</strong> Colour on this site is operator-ratified (D316), so a Byrne colouring arrives as a priced specimen and the ruling stays the operator's. Every photograph is the built page's own bytes with the eight shape colours rewritten to <code>var(--color-\u2026)</code> in a copy of <code>dist/client</code>, measured by the same two probes <code>check:logo</code> runs (<code>logo-geometry.mjs</code>, <code>logo-pixels.mjs</code>) at the three widths that bracket the logo's box, plus the share card's own document on the ink ground. <strong>Row ${esc(CONTROL_ID)} is the colouring the site ships, and it passes every check</strong> \u2014 it is found by matching every row against <code>LOGO_COLOURS</code> in <code>src/lib/logo.mjs</code>, not by naming a letter here \u2014 and that is what makes the other rows' numbers mean something: if the shipped colouring had failed, the mutation would be broken and no row here would be trustworthy.</p>
 <p class="meta">measured ${esc(String(need(R.measuredAt, 'measuredAt')))} \u00b7 bars: graphic line <strong>${BARS.graphic}</strong>, filled region (layer) <strong>${BARS.layer}</strong>, text ${BARS.text} \u00b7 the same-colour bar is 0.05 delta-OKLab (D88)</p>
 ${OPTS.map(optSection).join('\n')}
 
@@ -216,21 +216,21 @@ ${OPTS.map(optSection).join('\n')}
   : 'No legal yellow exists in this palette at these hues and chromas.'}</p>
 
 <h2>The wash: Byrne fills regions, and a filled region is a different kind of contrast</h2>
-<p>Byrne's diagrams carry blocks of colour, not only lines. The mark's "region" is the lune between the two meridians. A filled region is held to the <strong>layer</strong> bar (${BARS.layer}, D101), not the graphic-line bar \u2014 and every wash the palette offers is <em>under</em> it, because the tints are deliberately flat so a chip ground does not read as a raised surface.</p>
+<p>Byrne's diagrams carry blocks of colour, not only lines. The logo's "region" is the lune between the two meridians. A filled region is held to the <strong>layer</strong> bar (${BARS.layer}, D101), not the graphic-line bar \u2014 and every wash the palette offers is <em>under</em> it, because the tints are deliberately flat so a chip ground does not read as a raised surface.</p>
 <table><thead><tr><th>wash candidate</th><th>vs paper</th><th>vs ink</th><th>verdict against ${BARS.layer}</th></tr></thead><tbody>${washRows}</tbody></table>
 <p>So the honest follow-up is not "which tint" but "what would a wash cost": the palest fill in each hue family already in the palette that <em>would</em> read as a region, and how far that colour is from a brand colour. This is a price, not a proposal \u2014 nothing here adds a token.</p>
 <table><thead><tr><th>hue family</th><th>hue</th><th>chroma</th><th>palest L that reads as a region</th><th>ratio</th><th>nearest brand</th><th>what it looks like</th></tr></thead><tbody>${costRows}</tbody></table>
-<p class="meta">Row E is priced with the wash painted anyway, and the photographs show what the numbers say: at 1.13 against paper the wash is <em>visible</em> as a tint but does not read as a region by this repo's own bar, and it adds a <strong>ninth</strong> shape to a mark whose two probes zip a table of eight \u2014 so both mark probes <strong>refuse</strong> to measure it at all. Its ink coverage also falls from ${num(PAINTED.find((p) => p.id === 'D').paper[1].at30Pct, 1)}% of the mark's ink at 640 (row D) to ${num(PAINTED.find((p) => p.id === 'E').paper[1].at30Pct, 1)}% (row E), because the wash adds a large area of sub-bar pixels.</p>
+<p class="meta">Row E is priced with the wash painted anyway, and the photographs show what the numbers say: at 1.13 against paper the wash is <em>visible</em> as a tint but does not read as a region by this repo's own bar, and it adds a <strong>ninth</strong> shape to a logo whose two probes zip a table of eight \u2014 so both logo probes <strong>refuse</strong> to measure it at all. Its ink coverage also falls from ${num(PAINTED.find((p) => p.id === 'D').paper[1].at30Pct, 1)}% of the logo's ink at 640 (row D) to ${num(PAINTED.find((p) => p.id === 'E').paper[1].at30Pct, 1)}% (row E), because the wash adds a large area of sub-bar pixels.</p>
 
 <h2>How to read this page</h2>
 <ul>
-<li><strong>Row ${esc(CONTROL_ID)}</strong> is the <strong>shipped colouring</strong> — the operator took it on 2026-11-24 (D483) and it is what <code>src/lib/brand-mark.mjs</code> wears today, so it is the control: the round found it by matching each row against the shipped table. It spends its tightest pair of colours <strong>${num(hueRow(CONTROL_ID, 'paper').minGap, 0)}\u00b0</strong> apart, which is the tension row named below rather than a defect the round invented.</li>
-<li><strong>Row A</strong> is the colouring the mark wore until that ruling, kept in the round so every row is a delta from a measured line rather than from memory. Its two surface tokens (<code>rule</code>, <code>ink</code>) are only <strong>${num(hueRow('A', 'paper').minGap, 0)}\u00b0</strong> apart in hue, so the colouring Byrne replaced carried almost no information either — its roles were separated by contrast alone.</li>
-<li><strong>Row B</strong> keeps the two meridians in one colour, which is the reading that preserves the mark's claim; the sphere goes to black because Byrne draws the <em>given</em> figure in black and the constructed lines in a primary.</li>
+<li><strong>Row ${esc(CONTROL_ID)}</strong> is the <strong>shipped colouring</strong> — the operator took it on 2026-11-24 (D483) and it is what <code>src/lib/logo.mjs</code> wears today, so it is the control: the round found it by matching each row against the shipped table. It spends its tightest pair of colours <strong>${num(hueRow(CONTROL_ID, 'paper').minGap, 0)}\u00b0</strong> apart, which is the tension row named below rather than a defect the round invented.</li>
+<li><strong>Row A</strong> is the colouring the logo wore until that ruling, kept in the round so every row is a delta from a measured line rather than from memory. Its two surface tokens (<code>rule</code>, <code>ink</code>) are only <strong>${num(hueRow('A', 'paper').minGap, 0)}\u00b0</strong> apart in hue, so the colouring Byrne replaced carried almost no information either — its roles were separated by contrast alone.</li>
+<li><strong>Row B</strong> keeps the two meridians in one colour, which is the reading that preserves the logo's claim; the sphere goes to black because Byrne draws the <em>given</em> figure in black and the constructed lines in a primary.</li>
 <li><strong>Row C</strong> is Byrne read literally \u2014 and it is the row the operator took. Its own terms are the price, stated here rather than after the fact: <code>accent</code> and <code>accent-strong</code> are <strong>${num(hueRow('C', 'paper').minGap, 0)}\u00b0</strong> apart, so the red meridian and the red right-angle mark are the same hue at two weights, and the two meridians are named two different colours while "parallel" is a statement about a pair. It clears the 3.0 graphic bar at every shape, every width and on the card.</li>
 <li><strong>Row D</strong> spends three primaries plus black with the pair still one colour; the third primary is the palette's green because there is no legal yellow (see the window above).</li>
-<li><strong>Row E</strong> is the only Byrne move that changes what <em>kind</em> of contrast the mark is held to \u2014 and it is the row the gates cannot measure.</li>
-<li>The coverage column (<em>at/over ${BARS.graphic}</em>) is the share of the mark's own ink whose painted pixels clear the graphic bar at that box size. Rows B\u2013D score <strong>higher</strong> than A at every width, because moving the sphere from <code>rule</code> (3.66) to <code>ink</code> (17.15) puts more of its ink above the bar. That is a measured side-effect of the Byrne readings, not a claim that they are better designed.</li>
+<li><strong>Row E</strong> is the only Byrne move that changes what <em>kind</em> of contrast the logo is held to \u2014 and it is the row the gates cannot measure.</li>
+<li>The coverage column (<em>at/over ${BARS.graphic}</em>) is the share of the logo's own ink whose painted pixels clear the graphic bar at that box size. Rows B\u2013D score <strong>higher</strong> than A at every width, because moving the sphere from <code>rule</code> (3.66) to <code>ink</code> (17.15) puts more of its ink above the bar. That is a measured side-effect of the Byrne readings, not a claim that they are better designed.</li>
 <li>Specimen chrome only: this page's own type and spacing are not the site's. The photographs carry the built page's bytes.</li>
 </ul>
 </div></body></html>`;

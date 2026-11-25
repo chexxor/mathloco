@@ -4,10 +4,10 @@
 //
 //   node design/grill/page-measure.mjs design/grill/round-8.html design/grill/round8-measure.js 1240 1400
 //   node design/grill/page-measure.mjs design/grill/round-8-mark.html design/grill/round8-measure.js 1240 1400 .design/tmp-round8-mark.png
-//   then: node design/mark-pixels.mjs .design/tmp-round8-mark.png <report.json> <markIndex> --crop .design/tmp-*.png
+//   then: node logo-pixels.mjs .design/tmp-round8-mark.png <report.json> <markIndex> --crop .design/tmp-*.png
 //
 // The `marks[]` records are emitted in the SAME shape design/grill/render-measure.js produces, which is
-// what lets the existing mark-pixels.mjs probe cluster the specimen's pixels without a second probe.
+// what lets the existing logo-pixels.mjs probe cluster the specimen's pixels without a second probe.
 //
 // The word-anchored line-box logic is duplicated from line-length-measure.js rather than imported:
 // page-measure.mjs injects exactly one plain <script> into a file:// page, so there is no module path
@@ -114,7 +114,7 @@
       });
     }
 
-    // ---- the mark specimen: same record shape as render-measure.js so mark-pixels.mjs can read it
+    // ---- the mark specimen: same record shape as render-measure.js so logo-pixels.mjs can read it
     for (const svg of document.querySelectorAll('svg[data-mark]')) {
       const r = svg.getBoundingClientRect();
       const vb = (svg.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);

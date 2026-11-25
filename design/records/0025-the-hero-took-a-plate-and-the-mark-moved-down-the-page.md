@@ -31,7 +31,7 @@ the specimen cannot drift: both are sha1 `308193c78a`, byte-identical.
 | page height @1240 | 4284 | **4284 (+0)** | `check:space` |
 | page height @390 | 5859 | **6173 (+314)** | `check:space` |
 | plate renders @390 | - | 358x292.3 | `check:space` media |
-| mark box @320 / @640 | 276x172.5 / 512x320 | same boxes, **moved to y=1421 / y=1129.9** | `check:mark` |
+| mark box @320 / @640 | 276x172.5 / 512x320 | same boxes, **moved to y=1421 / y=1129.9** | `check:logo` |
 | mark's thinnest stroke @1240 | 1.49-1.81px | **2.02-2.17px** (floor is 1px, D119) | `check:render` |
 | page chroma >= 0.08 @1240 | 0.014% | **0.274%** | `check:color` |
 | page chroma >= 0.08 @390 | - | 0.032% | `check:color` |
@@ -50,7 +50,7 @@ an open question with three answers that should arrive as photographs (D160).
 
 ## The catch: a gate that photographs a fixed-height window lost the mark
 
-`check:mark` went red the moment the plate landed:
+`check:logo` went red the moment the plate landed:
 
 ```
 the mark's vertical centre (y=1421) is outside the 1400-tall shot.
@@ -58,14 +58,14 @@ the mark's vertical centre (y=1421) is outside the 1400-tall shot.
 ```
 
 The mark was painted correctly. Its *position* moved: the plate sits above it, so at 320 the mark's centre is at
-y=1421 and at 640 its box bottom is at 1449.9 - both outside the 1400px window `mark-check.mjs` had hardcoded
+y=1421 and at 640 its box bottom is at 1449.9 - both outside the 1400px window `logo-check.mjs` had hardcoded
 ("window heights match the render gate's"), and a shot that stops above the ink reports no ink. That is record
 0015's failure class - a fixed frame around a taller document, reporting a different page - re-created in a gate
 the widths round had not visited.
 
-Fixed by the repo's existing rule, not a new constant: `mark-check.mjs` now asks the page its settled height and
+Fixed by the repo's existing rule, not a new constant: `logo-check.mjs` now asks the page its settled height and
 shoots at `shotHeight(h, …)` (`grill/shot-height.mjs`, cap 9000, refuses rather than truncates). Cost, measured:
-`check:mark` 3.8s -> **7.92s** (one extra probe per width, plus taller shots); `verify:browser` landed at
+`check:logo` 3.8s -> **7.92s** (one extra probe per width, plus taller shots); `verify:browser` landed at
 **76.0s vs an 87.8s baseline (-13%)** despite that.
 
 ## Still open after this item

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-// round23.mjs — grill round 23: the TAB framings for the ratified club mark, PRICED, not applied (2026-11-25).
+// round23.mjs — grill round 23: the TAB framings for the ratified club logo, PRICED, not applied (2026-11-25).
 //
 //   npm run round23                       # every row, both grounds, 16/32/48/64 + the browser pair
 //   node design/round23.mjs --only T1,T5 # a subset (writes a SUBSET record to .design/, never the tracked one)
 //   node design/round23.mjs --widths 16  # a narrower width set (same subset rule)
 //
 // WHAT THIS ROUND OWEs THE OPERATOR. Round 22 priced which FACES a Byrne colouring could fill (D484); this round
-// prices the other half of the goal: putting the ratified mark — row C's sphere with its two intersecting
+// prices the other half of the goal: putting the ratified logo — row C's sphere with its two intersecting
 // meridians (D483) — into the browser tab. The operator's own framing of the item asked for "square
 // sphere-centred variant, full 240x150 letterbox, weight-scaled variants", and the row set in
 // design/grill/round23-options.mjs is exactly that, each row priced in device pixels rather than argued about.
@@ -23,7 +23,7 @@
 //   WEIGHT, and what it costs. A row with a device-px floor multiplies every stroke (and its dash) until the
 //   thinnest line reaches that floor in the slot that decides the pick. Heavier lines are a different figure, so
 //   the round prints the three consequences instead of asserting them: the DASH RUN PROFILE (is the rear arc still
-//   dashed, or has it fused with the front arc and taken the mark's only depth cue with it), the SURVIVAL TABLE
+//   dashed, or has it fused with the front arc and taken the logo's only depth cue with it), the SURVIVAL TABLE
 //   (which of the eight shapes lands at all, and whether any pixel of it is fully covered), and the FRAME CLIP in
 //   device px (what the framing amputates once the strokes swell past the frame that was measured at hero weight).
 //
@@ -36,7 +36,7 @@
 //
 //   TWO RASTERIZERS. A favicon is only ever rasterized by a browser, and librsvg (sharp) is not a browser. So the
 //   two sizes that decide the pick are measured in a real firefox too, with a printed agreement line per row. The
-//   crop of that shot is measured per shot, never typed (see design/mark-tab.mjs §6).
+//   crop of that shot is measured per shot, never typed (see logo-tab.mjs §6).
 //
 // THE CONTROL IS THE TAB AS SHIPPED, AND IT IS READ OFF THE TREE. Row I0 has no colour, geometry or size typed
 // into this file: `public/favicon.svg` is parsed, its own document is measured, and its own gate run is its own
@@ -52,16 +52,16 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
-import { MARK_SLOTS, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
+import { LOGO_SLOTS, LOGO_COLOURS } from '../src/lib/logo.mjs';
 import { ROWS, TAB_WIDTHS, BROWSER_WIDTHS, GROUNDS, SURVIVAL_SLOTS, DASH_SLOTS, GOLD_HUES, GOLD_CHROMAS, GOLD_L_FLOOR, GOLD_ROLES } from './grill/round23-options.mjs';
-// The colour arithmetic is imported, never re-implemented (the same rule mark-tab.mjs states for contrast).
+// The colour arithmetic is imported, never re-implemented (the same rule logo-tab.mjs states for contrast).
 import { contrastTriple, BARS, nearestBrand, SAME_COLOUR_BAR, dist, hueGap } from './grill/okcolor.mjs';
 import { paletteTokens, declareCandidate } from './palette-tokens.mjs';
 import {
   FIGURE, frameOf, weightFor, colourPlan, artifactSvg, fixtureSvg, fixtureLayout, featureSizes,
   frameClip, clipLoss, shapeSurvival, runProfile, browserFixture, raster, stats, hexOf, GROUND_TOKEN, WARM_TOKEN,
   xmlCommentFaults, stripComments,
-} from './mark-tab.mjs';
+} from './logo-tab.mjs';
 import { distState, staleLine } from './dist-fresh.mjs';
 
 const argv = process.argv.slice(2);
@@ -76,11 +76,11 @@ const SHIPPED = 'public/favicon.svg';
 
 // Row T9 claims to be "row C exactly as the hero paints it". That is checked against the shipped table rather than
 // taken on trust from the options file: a row that restates the colouring is a row that can go stale against
-// src/lib/brand-mark.mjs without anything noticing (the same guard round 22 runs on its control rows).
+// src/lib/logo.mjs without anything noticing (the same guard round 22 runs on its control rows).
 for (const row of ROWS.filter((r) => r.colours === 'rowC')) for (const ground of GROUNDS) {
-  const mine = colourPlan(row, ground), shipped = MARK_COLOURS[ground];
-  const off = MARK_SLOTS.filter((s) => mine[s] !== shipped[s]);
-  if (off.length) { console.error(`round23: row ${row.id} says colours "rowC" but differs from MARK_COLOURS.${ground} on ${off.join(', ')}. The round would price a colouring the site does not ship.`); process.exit(1); }
+  const mine = colourPlan(row, ground), shipped = LOGO_COLOURS[ground];
+  const off = LOGO_SLOTS.filter((s) => mine[s] !== shipped[s]);
+  if (off.length) { console.error(`round23: row ${row.id} says colours "rowC" but differs from LOGO_COLOURS.${ground} on ${off.join(', ')}. The round would price a colouring the site does not ship.`); process.exit(1); }
 }
 
 // ---------- 0. guards ----------
@@ -125,14 +125,14 @@ const INC_INK = INC.paints[1];
 // The incumbent measured at a tab size: the SAME document with its own width/height rewritten to n (its viewBox
 // stays, which is exactly what a browser does when it fits a 32-unit plate into a 16px slot). `rx` is dropped for
 // the pixel reading only — a rounded corner is transparent canvas, and librsvg hands back its raw triple as if it
-// were ink (design/mark-tab.mjs §4 measures a corner at RGB 42,0,0 alpha 6, whose contrast against paper is the
+// were ink (logo-tab.mjs §4 measures a corner at RGB 42,0,0 alpha 6, whose contrast against paper is the
 // ground pair's own 17.15). The gate always sees the document exactly as shipped, rx included.
 const incumbentFixture = (n) => stripComments(shippedSrc)
   .replace(/width="\d+"/, `width="${n}"`).replace(/height="\d+"/, `height="${n}"`)
   .replace(/\s+rx="[\d.]+"/g, '');
 
 // Does the document that ships PARSE? XML 1.0 §7.4 forbids `--` inside a comment, and a tab artifact is read by a
-// parser, not by a colour-literal regex. Recorded as a price, with the parser's own words (see mark-tab.mjs §4b).
+// parser, not by a colour-literal regex. Recorded as a price, with the parser's own words (see logo-tab.mjs §4b).
 const docFaults = xmlCommentFaults(shippedSrc);
 let docParse = { librsvg: 'OK — the document rasterizes' };
 try { await sharp(Buffer.from(shippedSrc)).resize(16, 16).raw().toBuffer(); } catch (e) { docParse.librsvg = `REFUSED: ${e.message}`; }
@@ -253,7 +253,7 @@ for (const row of rows) {
     const gatePath = incumbent ? SHIPPED : `${TMP}/${row.id}.${ground}.svg`;
     if (!incumbent) writeFileSync(gatePath, artifactSvg(row, ground, weight.k));
     g.gate = runGate(resolve(gatePath));
-    const plan = incumbent ? INC.paints : [...new Set(MARK_SLOTS.map((s) => colourPlan(row, ground)[s]))];
+    const plan = incumbent ? INC.paints : [...new Set(LOGO_SLOTS.map((s) => colourPlan(row, ground)[s]))];
     g.plan = incumbent ? { note: `as shipped: ground ${INC_GROUND}, glyph ${INC_INK}` } : { tokens: plan, hexes: plan.map(hexOf), distinct: plan.length };
     // The GOLD PRICE for this row on this ground. A gold row paints a candidate the solve declared a few lines
     // above, so the record carries the candidate's own bytes and the window it was solved from — a reader must be
@@ -336,7 +336,7 @@ if (!control) {
 if (shippedCopy.state.startsWith('DIFFERS')) problems.push(`${SHIPPED} is not the tab that ships: ${shippedCopy.path} differs (${shippedCopy.srcSha} vs ${shippedCopy.distSha}). The control would measure a source the build never copied (D245).`);
 // The price this round was commissioned to establish: row C as the hero paints it is refused by the tab gate. If
 // that ever stops being true the record's central claim has to be rewritten, so it is asserted, not narrated. The
-// expected strings are the gate's OWN rule wording (rule 3 "a mark is one ground and one glyph", rule 5 "reserved
+// expected strings are the gate's OWN rule wording (rule 3 "a logo is one ground and one glyph", rule 5 "reserved
 // for a join path"), not a colour count: the count depends on the ground (row C is 6 literals on paper, 5 on ink,
 // because the ground rect counts as one of them). The NUMBERS here are prose too: they are read off
 // scripts/check-favicon.mjs's own rule list, which became a five-rule list when rule 1 (the document parses) was
@@ -378,8 +378,8 @@ for (const [id, want] of GOLD_GATE) {
 const report = {
   round: 23,
   measuredAt: new Date().toISOString(),
-  ask: 'the third quarter of the Byrne logo item: put the ratified mark (row C, D483) in the tab. Operator framing of the ask: "square sphere-centred variant, full 240x150 letterbox, weight-scaled variants".',
-  instrument: 'design/mark-tab.mjs (the tab instrument) + scripts/check-favicon.mjs run as a subprocess on every artifact, never reimplemented',
+  ask: 'the third quarter of the Byrne logo item: put the ratified logo (row C, D483) in the tab. Operator framing of the ask: "square sphere-centred variant, full 240x150 letterbox, weight-scaled variants".',
+  instrument: 'logo-tab.mjs (the tab instrument) + scripts/check-favicon.mjs run as a subprocess on every artifact, never reimplemented',
   tabSlot: { px: 16, source: 'MDN "Favicon" (fetched 2026-11-25): "Usually, a favicon is 16 x 16 pixels in size"' },
   widths: WIDTHS, browserWidths: BROWSER_WIDTHS,
   figure: FIGURE,
@@ -441,7 +441,7 @@ for (const [k, v] of Object.entries(goldCandidates)) {
 }
 console.log('warm family, measured (the referent that costs no token): ' + GROUNDS.map((g) => `accent vs ${g} ${contrastTriple(TOKENS.accent.spec, TOKENS[g].spec).toFixed(2)} / accent-on-ink ${contrastTriple(TOKENS['accent-on-ink'].spec, TOKENS[g].spec).toFixed(2)}`).join('  |  ') + `  (the 3.0 graphic bar bans accent on ink; the 4.5 tab bar is what each gold row is solved against)`);
 
-console.log('\n=== FIT AND PAINT AT THE TAB SIZES (librsvg; blankPx = tab area the mark does not cover) ===');
+console.log('\n=== FIT AND PAINT AT THE TAB SIZES (librsvg; blankPx = tab area the logo does not cover) ===');
 for (const r of priced) for (const ground of GROUNDS) {
   const g = r.grounds[ground];
   console.log(`\n${r.id} ${r.framing} on ${ground}${r.weight.at ? `  weight k ${r.weight.k} for ${r.weight.floorPx}px at ${r.weight.at}` : '  (no weight tuning)'}`);

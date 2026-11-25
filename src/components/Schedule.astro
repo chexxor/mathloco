@@ -146,7 +146,7 @@ const all = upcoming();
 // compared against (D188: a page and its gate reading different clocks is how a date goes missing).
 const win = scheduleWindow(all, todayIn());
 const items = typeof limit === 'number' ? all.slice(0, limit) : win.shown;
-// How many open dates the compact card is NOT showing. Counted off the same call, so the mark that says
+// How many open dates the compact card is NOT showing. Counted off the same call, so the label that says
 // "there is more" cannot outrun the snapshot it came from.
 const hidden = Math.max(0, all.length - items.length);
 // The window adds a state the empty block has to name honestly: dates exist, and every one of them is past the
@@ -478,7 +478,7 @@ const lede = compact
             <>
           {/* MS41 (S090, D467): the four asks this band makes - the dates page, the calendar file, `/join`, the
               Discord invite - share one declared context: the card that says what a meeting is, plus the band's own
-              sentences. `data-cta-block` is the mark `scripts/check-cta-context.mjs` reads off the built bytes, and
+              sentences. `data-cta-block` is the handle `scripts/check-cta-context.mjs` reads off the built bytes, and
               its id list is the registry's, not this file's invention. Before this, "Join the chat" on `/` was one
               of the controls the operator's complaint named: a labelled box with nothing around it saying that the
               click enrols you in the club's server (the word appears nowhere in the band) or where it leads.

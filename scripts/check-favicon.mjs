@@ -3,11 +3,11 @@
 // no browser gate ever looks at. DESIGN.md's rule for rendered artifacts (D118) is that each one gets
 // its own pixel gate plus a selftest; public/favicon.svg had neither.
 //
-//   npm run check:favicon                # the shipped mark
+//   npm run check:favicon                # the shipped logo
 //   node scripts/check-favicon.mjs --selftest
-//   node scripts/check-favicon.mjs path/to/mark.svg
+//   node scripts/check-favicon.mjs path/to/logo.svg
 //
-// Why this exists (2026-11-14, D310): the mark shipped Tailwind's default blue #3b82f6 with a `white`
+// Why this exists (2026-11-14, D310): the logo shipped Tailwind's default blue #3b82f6 with a `white`
 // glyph — a colour in no token, a pair measuring 3.68, and it had sat in the repo since the Init commit
 // through the whole design pass. Nothing in the gate set could have caught it: check:classes scans src/
 // for utility writes, check:design audits design/ artifacts, and check:render measures pages in a
@@ -19,9 +19,9 @@
 //      loader the design probes measure with) and any refusal is a finding;
 //   2. every colour literal in the SVG paints one of the @theme tokens, matching the bytes that token
 //      renders as;
-//   3. no more than two colours — a mark is one ground and one glyph;
+//   3. no more than two colours — a logo is one ground and one glyph;
 //   4. those two contrast at least 4.5 (the text bar), so the glyph reads at 16px on a tab;
-//   5. no reserved join-path hue (--color-path-*): the mark belongs to the club, not to a channel.
+//   5. no reserved join-path hue (--color-path-*): the logo belongs to the club, not to a channel.
 //
 // Rule 1 is the one added on 2026-11-25 (D485), and it exists because of a finding, not for completeness: the
 // file this gate has policed since 2026-11-14 carried `--radius-control` in its own explanatory comment, XML 1.0
@@ -76,8 +76,8 @@ const paintLiterals = (svg) => {
 // `sharp('public/favicon.svg')` answers "Input file contains unsupported image format" on a document that
 // `sharp(Buffer.from(bytes))` loads as a 32x32 svg, and the same file with a 13-byte leading comment loads by
 // path too. A path with a long leading comment is a loader quirk, not a defect in the tab, so a gate that handed
-// sharp the path would fail a perfectly good mark. Every mark probe in this repo already rasterizes from a Buffer
-// (mark-geometry, mark-pixels, round21/22/23); this rule does the same.
+// sharp the path would fail a perfectly good logo. Every logo probe in this repo already rasterizes from a Buffer
+// (logo-geometry, logo-pixels, round21/22/23); this rule does the same.
 const parseFinding = async (svgPath, svg) => {
   try {
     await sharp(Buffer.from(svg)).metadata();
@@ -92,10 +92,10 @@ const faviconFindings = async (svgPath) => {
   try {
     svg = readFileSync(svgPath, 'utf8');
   } catch {
-    return [`${svgPath} does not exist — the tab has no mark`];
+    return [`${svgPath} does not exist — the tab has no logo`];
   }
   const tokens = themeTokens();
-  if (!Object.keys(tokens).length) return [`${THEME} exposes no colour tokens, so the mark cannot be checked`];
+  if (!Object.keys(tokens).length) return [`${THEME} exposes no colour tokens, so the logo cannot be checked`];
 
   // Every rule below is a regex over literals. A reader who fixes the parse fault next run learns the colour
   // verdict too, so the findings are collected rather than short-circuited — the parse finding leads the list.
@@ -107,7 +107,7 @@ const faviconFindings = async (svgPath) => {
 
   const distinct = [...new Set(literals)];
   if (distinct.length > 2) {
-    findings.push(`${svgPath} uses ${distinct.length} colours (${distinct.join(', ')}); a mark is one ground and one glyph`);
+    findings.push(`${svgPath} uses ${distinct.length} colours (${distinct.join(', ')}); a logo is one ground and one glyph`);
   }
   const matched = [];
   for (const v of distinct) {
@@ -122,7 +122,7 @@ const faviconFindings = async (svgPath) => {
     } else {
       matched.push(token[0]);
       if (token[0].startsWith('path-')) {
-        findings.push(`${svgPath}: ${v} is --color-${token[0]}, a hue reserved for a join path (round 3b) — the mark does not belong to a channel`);
+        findings.push(`${svgPath}: ${v} is --color-${token[0]}, a hue reserved for a join path (round 3b) — the logo does not belong to a channel`);
       }
     }
   }
@@ -141,23 +141,23 @@ if (process.argv.includes('--selftest')) {
   // the bytes the adopted tokens paint (D316): ink #17130c, paper #faf6ec, rule #8b7f65, accent #a2432a,
   // path-discord #3664be. A fixture that no longer matches a token tests the wrong thing.
   const ink = '#17130c', paper = '#faf6ec', rule = '#8b7f65', accent = '#a2432a', discord = '#3664be';
-  const mark = (a, b, extra = '') => `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="${a}"/><text x="16" y="16" fill="${b}">x</text>${extra}</svg>`;
+  const logo = (a, b, extra = '') => `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32" rx="6" fill="${a}"/><text x="16" y="16" fill="${b}">x</text>${extra}</svg>`;
   const put = (name, body) => { const p = path.join(dir, name); writeFileSync(p, body); return p; };
 
   const cases = [
-    ['shipped mark passes', SVG, []],
-    ['clean control: ink ground, paper glyph', put('clean.svg', mark(ink, paper)), []],
-    ['clean control: paper ground, ink glyph', put('control2.svg', mark(paper, ink)), []],
-    ['named colour instead of a token', put('named.svg', mark(ink, 'white')), ['not a token']],
-    ['a Tailwind hex nobody ratified', put('tailwind.svg', mark(ink, '#3b82f6')), ['not a token']],
-    ['ground and glyph too close', put('low.svg', mark(paper, rule)), ['4.5']],
-    ['three colours in one mark', put('three.svg', mark(paper, ink, `<rect x="2" y="2" width="8" height="8" fill="${accent}"/>`)), ['3 colours']],
-    ['a reserved join-path hue', put('channel.svg', mark(discord, paper)), ['reserved']],
-    ['a mark that paints nothing', put('blank.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32"/></svg>'), ['paints nothing']],
+    ['shipped logo passes', SVG, []],
+    ['clean control: ink ground, paper glyph', put('clean.svg', logo(ink, paper)), []],
+    ['clean control: paper ground, ink glyph', put('control2.svg', logo(paper, ink)), []],
+    ['named colour instead of a token', put('named.svg', logo(ink, 'white')), ['not a token']],
+    ['a Tailwind hex nobody ratified', put('tailwind.svg', logo(ink, '#3b82f6')), ['not a token']],
+    ['ground and glyph too close', put('low.svg', logo(paper, rule)), ['4.5']],
+    ['three colours in one logo', put('three.svg', logo(paper, ink, `<rect x="2" y="2" width="8" height="8" fill="${accent}"/>`)), ['3 colours']],
+    ['a reserved join-path hue', put('channel.svg', logo(discord, paper)), ['reserved']],
+    ['a logo that paints nothing', put('blank.svg', '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><rect width="32" height="32"/></svg>'), ['paints nothing']],
     // Rule 1's planting is the EXACT defect this gate missed for 11 days: a token name written with its `--` prefix
-    // inside the artifact's own comment. Colour-for-colour identical to the shipped mark, and unparseable.
-    ['a comment a parser refuses (--radius-control)', put('badcomment.svg', `<!-- rx 6 is --radius-control -->\n${mark(ink, paper)}`), ['never parses']],
-    ['a missing mark', path.join(dir, 'nope.svg'), ['does not exist']],
+    // inside the artifact's own comment. Colour-for-colour identical to the shipped logo, and unparseable.
+    ['a comment a parser refuses (--radius-control)', put('badcomment.svg', `<!-- rx 6 is --radius-control -->\n${logo(ink, paper)}`), ['never parses']],
+    ['a missing logo', path.join(dir, 'nope.svg'), ['does not exist']],
   ];
 
   let wrong = 0;

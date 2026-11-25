@@ -37,7 +37,7 @@ import { OPTIONS, PHONE_STATES } from './grill/round14-options.mjs';
 import { plateSource, cropFor, keepPct } from './grill/plate-crop.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 import { probeRetry, cropBox, cropStats, makeInstruments, scaleTo } from './grill/round-instruments.mjs';
-import { MARK } from '../src/lib/brand-mark.mjs';
+import { LOGO } from '../src/lib/logo.mjs';
 
 const SCRATCH = '.design/tmp-round14';
 const ART = '.design/tmp-art';
@@ -90,7 +90,7 @@ function boxes(dom) {
   const ps1 = dom.slots.find((s) => s.dataSlot === 'PS-1');
   const ps3 = dom.slots.find((s) => s.dataSlot === 'PS-3');
   const grid = dom.regions.find((r) => /lg:grid lg:grid-cols-12/.test(r.cls));
-  const mark = dom.media.find((m) => m.tag === 'svg' && m.vb === `0 0 ${MARK.vbW} ${MARK.vbH}`);
+  const mark = dom.media.find((m) => m.tag === 'svg' && m.vb === `0 0 ${LOGO.vbW} ${LOGO.vbH}`);
   const imgs = (dom.media || []).filter((m) => m.tag === 'img').map((m) => ({ ...pick(m), alt: (m.alt || '').slice(0, 40), src: (m.src || '').split('/').pop(), complete: m.complete }));
   const plates = (dom.regions || []).filter((r) => /data-plate/.test(r.cls || '') || /inset-shadow-gold/.test(r.cls || ''));
   return {
@@ -99,7 +99,7 @@ function boxes(dom) {
     grid: grid ? pick(grid) : null,
     col: ps1 ? pick(ps1) : null,
     ps3: ps3 ? pick(ps3) : null,
-    mark: mark ? { ...pick(mark), scale: +(mark.w / MARK.vbW).toFixed(3) } : null,
+    mark: mark ? { ...pick(mark), scale: +(mark.w / LOGO.vbW).toFixed(3) } : null,
     imgs, plates: plates.map(pick),
     bands: (dom.surfaces || []).map((s) => ({ tag: s.tag, bg: s.bg, cls: (s.cls || '').slice(0, 34), ...pick(s) })),
   };

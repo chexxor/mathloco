@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// round21.mjs — grill round 21: the Byrne-1847 colourings of the club mark, PRICED, not applied (2026-11-24).
+// round21.mjs — grill round 21: the Byrne-1847 colourings of the club logo, PRICED, not applied (2026-11-24).
 //
 //   node design/round21.mjs                       # every option, both grounds, three hero widths
 //   node design/round21.mjs --only C,D            # a subset, for re-pricing one row
@@ -7,20 +7,20 @@
 //
 // WHY A ROUND AND NOT AN EDIT. Colour on this site is operator-ratified (D316: the 2026-11-14 read's hexes were
 // adopted *as* the palette, and every candidate that missed a bar was refused rather than tuned). So the answer to
-// "make the mark like Byrne's 1847 Euclid, in our palette" is a specimen with numbers, and the ruling stays the
-// operator's. What this runner owes each option is the same three questions the mark gates already ask:
+// "make the logo like Byrne's 1847 Euclid, in our palette" is a specimen with numbers, and the ruling stays the
+// operator's. What this runner owes each option is the same three questions the logo gates already ask:
 //
 //   PAIRS   every shape's token against the ground it would sit on, off the token (design/grill/okcolor.mjs),
 //           against the bar that shape is held to: a graphic line 3.0 (D101), a filled region a LAYER 1.35.
-//   PAINT   the option painted into a COPY of the built page, measured by the two probes the mark gates grew out
-//           of (design/mark-geometry.mjs, design/mark-pixels.mjs) at the three widths that bracket the mark's box.
+//   PAINT   the option painted into a COPY of the built page, measured by the two probes the logo gates grew out
+//           of (logo-geometry.mjs, logo-pixels.mjs) at the three widths that bracket the logo's box.
 //           This is the half that catches what token arithmetic cannot: a 1.4-unit stroke is 1.68 device px at 320,
 //           so most of its pixels are half-covered blends, and a colour that clears 3.0 as a token can still fail
 //           to land ink where the table draws it.
-//   HUES    the round-3b reserved-hue geometry (>=40 deg) and the two bars mark-geometry now holds a repaint to:
+//   HUES    the round-3b reserved-hue geometry (>=40 deg) and the two bars logo-geometry now holds a repaint to:
 //           roles >= 20 deg apart, each shape's painted hue within 30 deg of what its own token resolves to.
 //
-// The ink ground is measured too, because that is where the mark ships on a dark ground: the share card. Its own
+// The ink ground is measured too, because that is where the logo ships on a dark ground: the share card. Its own
 // document (.design/tmp-card.html, written by scripts/make-social-share.mjs) is copied and recoloured, shot at
 // 1200x630, and measured with the same pixel probe.
 //
@@ -32,13 +32,13 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
-import { MARK, MARK_SLOTS, MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_SLOTS, LOGO_COLOURS, LOGO_SHAPE_COUNT } from '../src/lib/logo.mjs';
 import { paletteTokens } from './palette-tokens.mjs';
 import { contrastTriple, BARS, hueGap, nearestBrand, SAME_COLOUR_BAR } from './grill/okcolor.mjs';
 import { OPTIONS, WASHES, YELLOW_HUES, YELLOW_CHROMAS } from './grill/round21-options.mjs';
 import { distState, staleLine } from './dist-fresh.mjs';
-import { lunePath } from './mark-faces.mjs';
-import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-mark.mjs';
+import { lunePath } from './logo-faces.mjs';
+import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-logo.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 
 const argv = process.argv.slice(2);
@@ -61,34 +61,34 @@ const tok = (name) => {
 };
 const GROUNDS = { paper: tok('paper'), ink: tok('ink') };
 
-// The eight drawn shapes, in paint order, by SLOT — imported from src/lib/brand-mark.mjs (MARK_SLOTS), which is
+// The eight drawn shapes, in paint order, by SLOT — imported from src/lib/logo.mjs (LOGO_SLOTS), which is
 // their ONE home. This file used to declare them twice (`SLOT_OF` here, `SLOTS` in design/grill/round21-options.mjs)
 // next to a third copy in the shape table, and this is the round that prices the shipped colouring against the
-// shipped table: a private copy is how a round measures a mark that no longer exists.
-const shapeSlots = [...MARK.shapes.map((s) => s.slot), MARK.dot.slot];
-if (shapeSlots.length !== MARK_SHAPE_COUNT) throw new Error(`the mark declares ${shapeSlots.length} drawn shapes, MARK_SHAPE_COUNT says ${MARK_SHAPE_COUNT}`);
-if (shapeSlots.some((s, i) => s !== MARK_SLOTS[i]))
-  throw new Error(`the drawn shapes carry slots ${shapeSlots.join(', ')} but MARK_SLOTS names ${MARK_SLOTS.join(', ')} — every zip below pairs a painted shape with the wrong colour declaration`);
+// shipped table: a private copy is how a round measures a logo that no longer exists.
+const shapeSlots = [...LOGO.shapes.map((s) => s.slot), LOGO.dot.slot];
+if (shapeSlots.length !== LOGO_SHAPE_COUNT) throw new Error(`the logo declares ${shapeSlots.length} drawn shapes, LOGO_SHAPE_COUNT says ${LOGO_SHAPE_COUNT}`);
+if (shapeSlots.some((s, i) => s !== LOGO_SLOTS[i]))
+  throw new Error(`the drawn shapes carry slots ${shapeSlots.join(', ')} but LOGO_SLOTS names ${LOGO_SLOTS.join(', ')} — every zip below pairs a painted shape with the wrong colour declaration`);
 
 // ---------- 0b. the CONTROL is whatever the site SHIPS today (D481 §c) ----------
 // A colour round is a mutation test: every row is measured against the colouring the artifact actually wears, so a
 // row that cannot reproduce it means the mutation is broken and no number in the round means anything. This used to
 // be a hard-coded letter (`PAINTED[0]`, "option A, the incumbent"), which is a claim about the artifact written in
 // the round that prices it — the same class of defect as a fixture that names the thing it is supposed to discover.
-// Now the control row is FOUND, by asking which option reproduces `MARK_COLOURS` on both grounds, so the round
-// cannot quietly price a mark the site no longer has, and it cannot pass a round in which the shipped colouring is
+// Now the control row is FOUND, by asking which option reproduces `LOGO_COLOURS` on both grounds, so the round
+// cannot quietly price a logo the site no longer has, and it cannot pass a round in which the shipped colouring is
 // absent from the table at all.
-const sameColouring = (o) => MARK_SLOTS.every((s) => o.paper[s] === MARK_COLOURS.paper[s] && o.ink[s] === MARK_COLOURS.ink[s]);
+const sameColouring = (o) => LOGO_SLOTS.every((s) => o.paper[s] === LOGO_COLOURS.paper[s] && o.ink[s] === LOGO_COLOURS.ink[s]);
 const shipped = OPTIONS.filter(sameColouring);
-if (shipped.length !== 1) throw new Error(`round21: ${shipped.length ? `options ${shipped.map((o) => o.id).join(', ')} all reproduce` : 'NO option reproduces'} the shipped colouring in src/lib/brand-mark.mjs MARK_COLOURS (${MARK_SLOTS.map((s) => `${s}:${MARK_COLOURS.paper[s]}/${MARK_COLOURS.ink[s]}`).join(' ')}). There is no CONTROL row, so every painted number in this round is unanchored — add the shipped row to design/grill/round21-options.mjs or fix the table.`);
-const CONTROL = { id: shipped[0].id, label: shipped[0].label, derivedFrom: 'MARK_COLOURS in src/lib/brand-mark.mjs', ruling: shipped[0].ruling ?? null };
+if (shipped.length !== 1) throw new Error(`round21: ${shipped.length ? `options ${shipped.map((o) => o.id).join(', ')} all reproduce` : 'NO option reproduces'} the shipped colouring in src/lib/logo.mjs LOGO_COLOURS (${LOGO_SLOTS.map((s) => `${s}:${LOGO_COLOURS.paper[s]}/${LOGO_COLOURS.ink[s]}`).join(' ')}). There is no CONTROL row, so every painted number in this round is unanchored — add the shipped row to design/grill/round21-options.mjs or fix the table.`);
+const CONTROL = { id: shipped[0].id, label: shipped[0].label, derivedFrom: 'LOGO_COLOURS in src/lib/logo.mjs', ruling: shipped[0].ruling ?? null };
 
 // ---------- 1. PAIRS: every option, every shape, both grounds, off the token ----------
 const pairs = [];
 for (const o of OPTIONS) {
   for (const [ground, map] of [['paper', o.paper], ['ink', o.ink]]) {
     const g = GROUNDS[ground];
-    for (const slot of MARK_SLOTS) {
+    for (const slot of LOGO_SLOTS) {
       const t = tok(map[slot]);
       const ratio = +contrastTriple(t.spec, g.spec).toFixed(2);
       pairs.push({ id: o.id, ground, slot, token: t.name, spec: t.spec, ratio, bar: BARS.graphic, pass: ratio >= BARS.graphic });
@@ -96,12 +96,12 @@ for (const o of OPTIONS) {
   }
 }
 
-// The hue geometry a repaint has to survive. mark-geometry holds two ROLES >= 20 deg apart and each shape's
+// The hue geometry a repaint has to survive. logo-geometry holds two ROLES >= 20 deg apart and each shape's
 // painted hue within 30 deg of its own token; round 3b holds reserved path hues >= 40 deg apart.
 const hueRows = [];
 for (const o of OPTIONS) {
   for (const [ground, map] of [['paper', o.paper], ['ink', o.ink]]) {
-    const used = [...new Set(MARK_SLOTS.map((s) => map[s]))];
+    const used = [...new Set(LOGO_SLOTS.map((s) => map[s]))];
     let minGap = Infinity, pair = '';
     for (let i = 0; i < used.length; i++) for (let j = i + 1; j < used.length; j++) {
       // hueGap takes COLOURS, not hue numbers: it runs polar() on each argument. Passing `.H` here would hand it
@@ -180,7 +180,7 @@ for (const name of ['accent', 'path-mobilizon', 'path-calendar', 'rule', 'ink'])
   });
 }
 
-// ---------- 4. PAINT, paper ground: mutate a COPY of the built page, measure with the mark probes ----------
+// ---------- 4. PAINT, paper ground: mutate a COPY of the built page, measure with the logo probes ----------
 if (WIDTHS.length) {
   rmSync(DIST, { recursive: true, force: true });
   cpSync(resolve('dist/client'), DIST, { recursive: true });
@@ -190,7 +190,7 @@ const txt = (args) => {
   catch (e) { return { __fail: true, stdout: String(e.stdout ?? ''), stderr: String(e.stderr ?? '') }; }
 };
 
-// Rewrite the hero mark's eight shape tags in paint order. The colour CLASSES are removed and an inline
+// Rewrite the hero logo's eight shape tags in paint order. The colour CLASSES are removed and an inline
 // `style="stroke:var(--color-X)"` is added: inline needs no Tailwind generation (the utility for an unused
 // token is not in the built sheet), and the var() resolves through the shipped @theme, so the painted bytes
 // are the token's bytes and not a second colour invented for the specimen.
@@ -199,19 +199,19 @@ const txt = (args) => {
 // equator arcs and both meridians came back as black-filled blobs, the dash disappeared under the fill, and the
 // control option A failed every painted check (@caught 2026-11-24 by the first run — the control failing is the
 // proof the mutation was broken, not the colouring).
-// The mutation itself lives in design/grill/paint-mark.mjs — the ONE machinery every colour round plants with
+// The mutation itself lives in paint-logo.mjs — the ONE machinery every colour round plants with
 // (recolourPage / recolourCard / labelsFor / hueOfPaint), imported here since 2026-11-24. The two traps it is
 // written around are recorded there: a class counts as a colour only if its suffix is a DECLARED token, and
-// dropping fill-none black-fills the mark — round 21 control row failed every painted check for exactly that
+// dropping fill-none black-fills the logo — round 21 control row failed every painted check for exactly that
 // reason (@caught 2026-11-24), which is proof the MUTATION was broken, not the colouring.
-// The wash boundary now lives in ONE home: design/mark-faces.mjs, which is also where the mark's faces are
+// The wash boundary now lives in ONE home: logo-faces.mjs, which is also where the logo's faces are
 // defined and priced (grill round 22). Round 21's inline copy was deleted here on 2026-11-24 after the two
 // functions were compared byte-for-byte on the same table (the paths are identical), so a face boundary is no
 // longer typed out twice next to a third copy of the shape table.
 // Paint order for a washed option puts the wash FIRST (it is inserted straight after <svg>), so a 9-shape report
 // must be labelled ['wash', ring, rear, ...]. Labelling it with the 8-slot table instead would print the wash's
 // 1.13 contrast under the name `ring` and shift every other role onto its neighbour's numbers.
-// labelsFor (the paint order of a washed row) is imported from design/grill/paint-mark.mjs.
+// labelsFor (the paint order of a washed row) is imported from paint-logo.mjs.
 
 const painted = [];
 for (const o of OPTIONS) {
@@ -230,9 +230,9 @@ for (const o of OPTIONS) {
     writeFileSync(rep, json);
     const j = JSON.parse(json);
     const m = j.marks?.[0];
-    // the two mark probes, run exactly as check:mark runs them
-    const geo = txt(['design/mark-geometry.mjs', shot, rep]);
-    const px = txt(['design/mark-pixels.mjs', shot, rep, '0', '--json']);
+    // the two logo probes, run exactly as check:logo runs them
+    const geo = txt(['logo-geometry.mjs', shot, rep]);
+    const px = txt(['logo-pixels.mjs', shot, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.paper.push({
       width: w, shot, rep,
@@ -258,16 +258,16 @@ for (const o of OPTIONS) {
 }
 
 // The report writes each shape's computed paint as an oklch() triple with L in 0..1 — "oklch(0.96 0.012 88)" —
-// the same form mark-geometry's paintBytes() reads. Its HUE is the third number. (The first run ran an `rgb(...)`
+// the same form logo-geometry's paintBytes() reads. Its HUE is the third number. (The first run ran an `rgb(...)`
 // regex over it, got [0,0,0] back, and printed "H 0" for every shape.) This is the colour the browser RESOLVED
-// for the token; mark-geometry's own line reports the median of the PIXELS, which is the painted fact.
-// hueOfPaint is imported from design/grill/paint-mark.mjs.
+// for the token; logo-geometry's own line reports the median of the PIXELS, which is the painted fact.
+// hueOfPaint is imported from paint-logo.mjs.
 
 // ---------- 5. PAINT, ink ground: the share card's own document, recoloured ----------
-// Measured with the SAME probes as the hero, which means measured with the same REPORT: mark-geometry and
-// mark-pixels both read `marks[]` with per-shape `strokeContrast`, and that shape of report comes from
+// Measured with the SAME probes as the hero, which means measured with the same REPORT: logo-geometry and
+// logo-pixels both read `marks[]` with per-shape `strokeContrast`, and that shape of report comes from
 // design/grill/render-measure.js. scripts/social-card-measure.js reports its mark under a singular `mark` key
-// with no per-shape contrast, so handing its output to mark-pixels crashed on `j.marks` being undefined
+// with no per-shape contrast, so handing its output to logo-pixels crashed on `j.marks` being undefined
 // (@caught 2026-11-24 by the first run). The card is a page like any other, so render-measure reads it; the
 // card's own gate keeps its own instrument.
 const CARD_HTML = resolve('.design/tmp-card.html');
@@ -288,8 +288,8 @@ if (!readFileSyncExists(CARD_HTML)) {
     writeFileSync(rep, raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
     const j = JSON.parse(readFileSync(rep, 'utf8'));
     const m = j.marks?.[0];
-    const geo = txt(['design/mark-geometry.mjs', png, rep]);
-    const px = txt(['design/mark-pixels.mjs', png, rep, '0', '--json']);
+    const geo = txt(['logo-geometry.mjs', png, rep]);
+    const px = txt(['logo-pixels.mjs', png, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.ink.push({
       shot: png, rep, shapeCount: m?.count ?? null,
@@ -310,11 +310,11 @@ function readFileSyncExists(p) { try { readFileSync(p); return true; } catch { r
 // The copy also gets `body { background: var(--color-ink) }`, and that is a mutation worth naming: the shipped
 // card paints its ground with a SIBLING div (.ground, 1200x630, var(--color-ink)) and leaves <body> transparent
 // — deliberately, because firefox's headless shot of this document comes out 4-channel with body alpha 0
-// (scripts/make-social-share.mjs). render-measure discovers a mark's ground by walking its ANCESTORS, so on the
+// (scripts/make-social-share.mjs). render-measure discovers a logo's ground by walking its ANCESTORS, so on the
 // untouched file it finds nothing and reports strokeContrast null for all eight shapes, which leaves
-// mark-geometry unable to split the figure into roles. Declaring the same token on <body> changes no painted
+// logo-geometry unable to split the figure into roles. Declaring the same token on <body> changes no painted
 // pixel (the div covers the frame exactly) and makes the per-shape contrast computable.
-// recolourCard is imported from design/grill/paint-mark.mjs, where the card's ground mutation is documented.
+// recolourCard is imported from paint-logo.mjs, where the card's ground mutation is documented.
 
 // ---------- 6. the record ----------
 const report = {
@@ -323,8 +323,8 @@ const report = {
   bars: { graphic: BARS.graphic, layer: BARS.layer, text: BARS.text },
   source: 'Oliver Byrne, "The First Six Books of the Elements of Euclid, in Which Coloured Diagrams and Symbols Are Used Instead of Letters for the Greater Ease of Learners", London 1847 (printed by Charles Whittingham, Chiswick Press)',
   palette: Object.fromEntries(Object.entries(TOKENS).map(([k, v]) => [k, v.spec])),
-  slots: MARK_SLOTS,
-  shipped: { slots: MARK_SLOTS.map((s) => [s, MARK_COLOURS.paper[s], MARK_COLOURS.ink[s]]) },
+  slots: LOGO_SLOTS,
+  shipped: { slots: LOGO_SLOTS.map((s) => [s, LOGO_COLOURS.paper[s], LOGO_COLOURS.ink[s]]) },
   control: CONTROL,
   options: OPTIONS.map((o) => ({ id: o.id, label: o.label, byrne: o.byrne, reading: o.reading, paper: o.paper, ink: o.ink, fill: o.fill ?? null, control: o.id === CONTROL.id })),
   pairs, hues: hueRows, yellow, yellowFloor: YELLOW_L_FLOOR, legalYellow, washes, washSolve, painted,
@@ -342,7 +342,7 @@ for (const o of OPTIONS) {
   }
 }
 console.log('\n=== HUES: how many colours an option spends, and the tightest gap between them ===');
-for (const h of hueRows) console.log(`${h.id} ${h.ground.padEnd(5)} ${String(h.colours).padStart(2)} colours  min gap ${h.minGap ?? '-'} deg (${h.tightest})  [mark-geometry needs >= 20]`);
+for (const h of hueRows) console.log(`${h.id} ${h.ground.padEnd(5)} ${String(h.colours).padStart(2)} colours  min gap ${h.minGap ?? '-'} deg (${h.tightest})  [logo-geometry needs >= 20]`);
 console.log('\n=== the yellow hole: can any yellow clear 3.0 on this paper? ===');
 for (const y of yellow) console.log(`hue ${String(y.H).padStart(3)} C ${y.C}  ${y.window ? `clears 3.0 for L ${y.window} — palest legal is L ${y.top} (${y.ratio})  ${y.readsAsYellow ? 'reads as yellow' : `L ${y.top} < ${YELLOW_L_FLOOR}: reads as ochre/brown`}  nearest brand ${y.nearestBrand} d=${y.brandDist}${y.sameColour ? ' SAME COLOUR' : ''}` : y.note}`);
 console.log(legalYellow
@@ -352,26 +352,26 @@ console.log('\n=== the wash: a filled lune is a LAYER (1.35), not a line (3.0) =
 for (const w of washes) console.log(`${w.readsAsRegion ? 'ok  ' : 'no  '} ${w.token.padEnd(22)} vs paper ${String(w.vsPaper).padStart(5)} (bar ${BARS.layer})  vs ink ${w.vsRouteInk}  ${w.note}`);
 console.log('what a wash would COST — the palest fill in each hue family that still reads as a region:');
 for (const w of washSolve) console.log(`  ${w.family.padEnd(15)} hue ${String(w.H).padStart(6)} C ${w.C}  needs L <= ${w.top ?? '-'} (token is L ${w.tokenL})  ${w.spec ?? w.note}${w.top ? `  nearest brand ${w.nearestBrand} d=${w.brandDist}${w.sameColour ? ' SAME COLOUR' : ''}` : ''}`);
-console.log('\n=== PAINT: the built page, recoloured in a copy, measured by the mark probes ===');
+console.log('\n=== PAINT: the built page, recoloured in a copy, measured by the logo probes ===');
 const ctrlRow = painted.find((r) => r.id === CONTROL.id);
 const ctrlFail = !ctrlRow
   ? 'was never painted (its probe rows are missing)'
   : [...ctrlRow.paper.filter((p) => p.error).map((p) => `paper ${p.width}: ${p.error}`),
-     ...ctrlRow.paper.filter((p) => !p.error && !p.geometry.ok).map((p) => `paper ${p.width}: mark-geometry FAIL`),
+     ...ctrlRow.paper.filter((p) => !p.error && !p.geometry.ok).map((p) => `paper ${p.width}: logo-geometry FAIL`),
      ...ctrlRow.ink.filter((c) => c.error).map((c) => `card: ${c.error}`),
-     ...ctrlRow.ink.filter((c) => !c.error && c.geometry && !c.geometry.ok).map(() => 'card: mark-geometry FAIL')];
-console.log(`CONTROL row ${CONTROL.id} — the colouring src/lib/brand-mark.mjs ships (${CONTROL.derivedFrom}${CONTROL.ruling ? `, ${CONTROL.ruling}` : ''}): ${ctrlFail.length ? ctrlFail.join('; ') : 'passes mark-geometry at every width and on the card'}. ${ctrlFail.length ? 'THE MUTATION IS BROKEN: the shipped colouring does not reproduce itself, so no painted row in this round is trustworthy.' : 'Every other row is a delta from this measured line, not from memory.'}`);
+     ...ctrlRow.ink.filter((c) => !c.error && c.geometry && !c.geometry.ok).map(() => 'card: logo-geometry FAIL')];
+console.log(`CONTROL row ${CONTROL.id} — the colouring src/lib/logo.mjs ships (${CONTROL.derivedFrom}${CONTROL.ruling ? `, ${CONTROL.ruling}` : ''}): ${ctrlFail.length ? ctrlFail.join('; ') : 'passes logo-geometry at every width and on the card'}. ${ctrlFail.length ? 'THE MUTATION IS BROKEN: the shipped colouring does not reproduce itself, so no painted row in this round is trustworthy.' : 'Every other row is a delta from this measured line, not from memory.'}`);
 for (const row of painted) {
   console.log(`\n${row.id}${row.id === CONTROL.id ? ' (CONTROL — the shipped colouring)' : ''} ${row.label}`);
   for (const p of row.paper) {
     if (p.error) { console.log(`  paper ${p.width}: ${p.error}`); continue; }
-    console.log(`  paper ${String(p.width).padStart(4)}  shapes ${p.shapeCount}  ink ${p.inkPixels} px  at/3.0 ${p.at30} (${p.at30Pct}% of its ink)  ${p.geometry.ok ? 'mark-geometry PASS' : 'mark-geometry FAIL'}`);
+    console.log(`  paper ${String(p.width).padStart(4)}  shapes ${p.shapeCount}  ink ${p.inkPixels} px  at/3.0 ${p.at30} (${p.at30Pct}% of its ink)  ${p.geometry.ok ? 'logo-geometry PASS' : 'logo-geometry FAIL'}`);
     console.log(`          ${p.strokes.map((s) => `${s.role} ${s.contrast}@${s.swDevice}px h${s.hue}`).join(' | ')}`);
     if (!p.geometry.ok) console.log(`          ${p.geometry.out}`);
   }
   for (const c of row.ink) {
     if (c.error) { console.log(`  ink: ${c.error}`); continue; }
-    console.log(`  card        shapes ${c.shapeCount}  ink ${c.inkPixels} px  at/3.0 ${c.at30} (${c.at30Pct}% of its ink)  ${c.geometry?.ok ? 'mark-geometry PASS' : 'mark-geometry FAIL'}`);
+    console.log(`  card        shapes ${c.shapeCount}  ink ${c.inkPixels} px  at/3.0 ${c.at30} (${c.at30Pct}% of its ink)  ${c.geometry?.ok ? 'logo-geometry PASS' : 'logo-geometry FAIL'}`);
     console.log(`          ${c.strokes.map((s) => `${s.role} ${s.contrast}@${s.swDevice}px`).join(' | ')}`);
     if (c.geometry && !c.geometry.ok) console.log(`          ${c.geometry.out}`);
   }

@@ -12,8 +12,8 @@
 //   CENSUS  how much colour a colour POLICY actually puts on screen — chromatic share, mean chroma, hue
 //           families — per panel, off the screenshot, using the same thresholds as `npm run check:color`
 //           (chroma >= 0.04, 30-degree bands), so a panel number and the live page's 3.8% are the same quantity
-//   MARK    how much of the mark survives at the 3.0 graphic bar under each colouring, per ground, through the
-//           existing design/mark-pixels.mjs probe
+//   LOGO    how much of the mark survives at the 3.0 graphic bar under each colouring, per ground, through the
+//           existing logo-pixels.mjs probe
 //   PAIRS   every planted contrast pair, off the browser's COMPUTED bytes — plus a cross-check that the bytes
 //           the browser resolved for each token match the spec value, which is how an out-of-gamut candidate
 //           stops being a guess
@@ -190,7 +190,7 @@ for (const p of census.panels) for (const q of p.pairs) {
 const probeM = measure(MARK_HTML, `${TMP}/probe-mark.png`, W0, 600, panelCount(MARK_HTML));
 const markH = WINDOW ? H0 : Math.max(900, probeM.contentHeight + 8);
 const marks = measure(MARK_HTML, `${TMP}/mark.png`, W0, markH, probeM.marks.length);
-// design/mark-pixels.mjs is the probe the mark gates grew out of, and the one that knows a stroke thinner than
+// logo-pixels.mjs is the probe the mark gates grew out of, and the one that knows a stroke thinner than
 // ~1.5 device px never contains a fully-covered pixel (D119) — which is exactly the question a two-colour mark
 // raises. It takes boxes in its own shape, so adapt, and pad each one: it samples the GROUND from a strip just
 // left of the box, and the specimen lays one mark per row with clean ground beside it (round 8: two marks side
@@ -205,7 +205,7 @@ writeFileSync(pxJson, JSON.stringify({
 const markReport = [];
 for (let i = 0; i < marks.marks.length; i += 1) {
   const m = marks.marks[i];
-  const o = txt(['design/mark-pixels.mjs', `${TMP}/mark.png`, pxJson, String(i), '--json'], `mark-pixels ${m.name}`);
+  const o = txt(['logo-pixels.mjs', `${TMP}/mark.png`, pxJson, String(i), '--json'], `logo-pixels ${m.name}`);
   const rec = JSON.parse(o.split('\n').filter((l) => l.startsWith('{')).pop());
   const g = /ground sampled beside it:\s*([\d,]+)/.exec(o);
   markReport.push({
@@ -278,7 +278,7 @@ for (const p of pairs) console.log(`${p.pass ? 'ok  ' : 'FAIL'} ${String(p.ratio
 const badCalc = pairs.filter((p) => p.disagree);
 if (badCalc.length) for (const p of badCalc) console.error(`DRIFT ${p.label}: painted ${p.disagree.painted} vs token math ${p.disagree.token}`);
 
-console.log('\n=== the mark, as painted (design/mark-pixels.mjs) ===');
+console.log('\n=== the mark, as painted (logo-pixels.mjs) ===');
 for (const m of report.marks) {
   console.log(`${m.set.padEnd(4)} ${m.ground.padEnd(6)} ${m.boxW}px box (scale ${m.scale})  ground rgb(${m.groundRgb})  ink ${String(m.inkPct).padStart(5)}% of box (${m.inkPixels} px)`);
   console.log(`      at/1.5 ${m.at15}  at/3.0 ${m.at30} = ${m.at30Pct}% of its ink  strongest cluster rgb(${m.strongest?.c}) @${m.strongest?.contrast}`);

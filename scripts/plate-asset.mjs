@@ -14,7 +14,7 @@ import sharp from 'sharp';
 import { plateSource, cropFor, keepPct } from '../design/grill/plate-crop.mjs';
 
 // One row per slot that ships art today. `w`/`h` are CSS px of the box the ruling gave the slot, and they
-// are NOT free numbers: PS-1's 376x307 is the hero column (376x574, `check:space`) minus the mark
+// are NOT free numbers: PS-1's 376x307 is the hero column (376x574, `check:space`) minus the logo
 // (376x235) minus the gap (`mb-8`, 32px) — the composition the operator ruled as option C of grill round
 // 13 (D160's specimen: design/grill/round-13-hero.html). Change a box here and the layout numbers in
 // HeroSection.astro's comment and in DESIGN.md go stale with it.

@@ -1,5 +1,5 @@
 ---
-import { MARK, MARK_COLOURS, MARK_SLOTS } from '../lib/brand-mark.mjs';
+import { LOGO, LOGO_COLOURS, LOGO_SLOTS } from '../lib/logo.mjs';
 import PhotoSlot from './PhotoSlot.astro';
 import config from '../config.json';
 import { content, value, answers, upcoming, formatDate, timeSpan, copiedOn } from '../lib/content.ts';
@@ -24,22 +24,22 @@ import { newTabQualifier } from '../lib/links.mjs';
 // picture). Deleting the file is applying a ruling that already existed; this column is what the
 // ratified answer for it looks like (D120).
 //
-// The mark is DRAWN, not imported: no bytes, no srcset ladder, no rights question, and it paints
+// The logo is DRAWN, not imported: no bytes, no srcset ladder, no rights question, and it paints
 // through `@theme`, so a stroke here is a colour ROLE that `npm run check:classes` can resolve and
 // `npm run check:render` measures on painted bytes against the 3.0 graphic bar (D101/D116). Geometry
-// comes from `src/lib/brand-mark.mjs` — the same table the share card composer and both pixel gates
-// read, so the two renderings of the club's mark cannot drift.
+// comes from `src/lib/logo.mjs` — the same table the share card composer and both pixel gates
+// read, so the two renderings of the club's logo cannot drift.
 //
 // slot -> class, and the class names are LITERAL strings here because that is what makes them exist:
 // Tailwind's scanner reads raw source text, so a computed name (`stroke-${token}`) generates nothing,
 // and `scripts/check-classes.ts` / `design/gen-token-map.mjs` scan `.astro`/`.svelte`/`.html` but not
 // `.mjs`, so a class written in the geometry module would be invisible to all three. The keys are
-// MARK's SLOTS since the seventh ruling (D483): Byrne's colour *is* a line's name, so a colour has to
+// LOGO's SLOTS since the seventh ruling (D483): Byrne's colour *is* a line's name, so a colour has to
 // address one drawn shape, and both meridians — one role, `route` — now take two different colours.
-// The coupling between these literals and `MARK_COLOURS.paper` is asserted twice: here, at build time,
+// The coupling between these literals and `LOGO_COLOURS.paper` is asserted twice: here, at build time,
 // by recomputing each class from the table, and in `design/ratify-check.mjs`, which greps this file for
 // each literal. Getting it wrong is measured rather than trusted: an unmapped slot paints no stroke, and
-// `check:render`'s `marks` probe fails the run instead of shipping a mark with a hole in it.
+// `check:render`'s `logos` probe fails the run instead of shipping a logo with a hole in it.
 // Type-annotated rather than JSDoc-typed: `astro check` treats frontmatter as TypeScript, and a JSDoc
 // `@type` there is reported as a hint and then ignored, so the map would have to be keyed by a literal
 // role union instead of by slot name — which is the drift this comment is about, and the throw below is
@@ -53,19 +53,19 @@ const FILL_CLASS: Record<string, string> = { dot: 'fill-path-mobilizon' };
 // A slot with no class paints no stroke, and an invisible shape inside a healthy-looking box is the one
 // failure mode a screenshot review misses. check:render catches it with numbers; the build catching it
 // first is cheaper, so this throws rather than shipping the hole. The second half of each check is the
-// ratification itself: the class written here must be the class `MARK_COLOURS.paper` names for that slot,
+// ratification itself: the class written here must be the class `LOGO_COLOURS.paper` names for that slot,
 // so a hero that paints a plausible-but-unchosen colouring is a build failure, not a design review find.
-for (const s of MARK.shapes) {
-  if (!MARK_SLOTS.includes(s.slot)) throw new Error(`brand-mark slot "${s.slot}" is not in MARK_SLOTS (src/lib/brand-mark.mjs) — the slot table and the shape table have diverged`);
-  if (!STROKE_CLASS[s.slot]) throw new Error(`brand-mark slot "${s.slot}" has no stroke class in HeroSection.astro — add it to STROKE_CLASS`);
-  const want = `stroke-${MARK_COLOURS.paper[s.slot]}`;
-  if (STROKE_CLASS[s.slot] !== want) throw new Error(`HeroSection.astro paints slot "${s.slot}" with ${STROKE_CLASS[s.slot]} but the ratified colour table (MARK_COLOURS.paper) names ${want} — the hero drifted from the operator's row (D483)`);
+for (const s of LOGO.shapes) {
+  if (!LOGO_SLOTS.includes(s.slot)) throw new Error(`logo slot "${s.slot}" is not in LOGO_SLOTS (src/lib/logo.mjs) — the slot table and the shape table have diverged`);
+  if (!STROKE_CLASS[s.slot]) throw new Error(`logo slot "${s.slot}" has no stroke class in HeroSection.astro — add it to STROKE_CLASS`);
+  const want = `stroke-${LOGO_COLOURS.paper[s.slot]}`;
+  if (STROKE_CLASS[s.slot] !== want) throw new Error(`HeroSection.astro paints slot "${s.slot}" with ${STROKE_CLASS[s.slot]} but the ratified colour table (LOGO_COLOURS.paper) names ${want} — the hero drifted from the operator's row (D483)`);
 }
 {
-  const want = `fill-${MARK_COLOURS.paper[MARK.dot.slot]}`;
-  if (FILL_CLASS[MARK.dot.slot] !== want) throw new Error(`HeroSection.astro paints the meeting point with ${FILL_CLASS[MARK.dot.slot] ?? '(nothing)'} but MARK_COLOURS.paper names ${want}`);
+  const want = `fill-${LOGO_COLOURS.paper[LOGO.dot.slot]}`;
+  if (FILL_CLASS[LOGO.dot.slot] !== want) throw new Error(`HeroSection.astro paints the meeting point with ${FILL_CLASS[LOGO.dot.slot] ?? '(nothing)'} but LOGO_COLOURS.paper names ${want}`);
   for (const slot of Object.keys(STROKE_CLASS))
-    if (!MARK_SLOTS.includes(slot)) throw new Error(`HeroSection.astro carries a stroke class for "${slot}", which is no longer a mark slot — a stale class writes a Tailwind utility for a shape that no longer exists`);
+    if (!LOGO_SLOTS.includes(slot)) throw new Error(`HeroSection.astro carries a stroke class for "${slot}", which is no longer a logo slot — a stale class writes a Tailwind utility for a shape that no longer exists`);
 }
 
 // The label lane used to open the hero with the club's next date — "Next: Saturday, Nov 7 · 12:00 pm" — which
@@ -423,18 +423,18 @@ const heroLabel = signUpFor
       class='mt-12 relative sm:max-w-lg sm:mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-4 lg:flex lg:flex-col lg:justify-center'
     >
       <!-- PS-1, the hero media column. `check:space` measures it at **376x574** at 1240, and it held only the
-           mark (376x235), so 339px of a column the page already pays for painted nothing. Round 13 measured
+           logo (376x235), so 339px of a column the page already pays for painted nothing. Round 13 measured
            seven ways to fill it and the operator ruled **option C** (2026-11-03): the column stacks — plate above,
-           mark below, which is one property, `flex-col` — and the plate takes what the mark does not need:
-           **307 = 574 − 235 (mark) − 32 (`mb-8`)**. So the column is exactly full and the desktop page is **+
+           logo below, which is one property, `flex-col` — and the plate takes what the logo does not need:
+           **307 = 574 − 235 (logo) − 32 (`mb-8`)**. So the column is exactly full and the desktop page is **+
            0px** at 1240. The plate is `src/assets/photos/hero.png` — Byrne 1847 Euclid IV.15, 56% of the leaf,
            built by `npm run plates` from the same crop `npm run round13` measured (sha1 `308193c78a` both).
-           What the composition buys, measured: the mark keeps its full column width (376x235), so its thinnest
+           What the composition buys, measured: the logo keeps its full column width (376x235), so its thinnest
            stroke lands at **2.04px** against the 1px floor (D119) instead of 1.02px, and the plate is a plate
            rather than a postage stamp. What it costs, measured: the page's chroma >= 0.08 share goes **0.014% ->
            0.297%** (one coloured slot is D149-2b's ruling, and record 0023 priced the loud alternative at
            +2.63%), and below 1024 the hero is not a grid, so the plate adds its own height to the scroll:
-           page **5859 -> 6245 (+386px)** at 390, where the plate renders 358x292 and the mark 358x224.
+           page **5859 -> 6245 (+386px)** at 390, where the plate renders 358x292 and the logo 358x224.
            @measured 2026-11-03 by check:space / check:render (round 13: design/grill/round13/report.json) -->
       <PhotoSlot
         slot="hero"
@@ -444,25 +444,25 @@ const heroLabel = signUpFor
         caption="a real meeting: the table, the books, the room (376x307 crop)"
         class="mb-8"
       />
-      <!-- No frame, no fill, no keyline around the mark. The `rounded-card overflow-hidden` wrapper here
-           was a photograph's frame; around a drawn mark it is a rectangle pretending to be content —
-           the same defect that deleted the island's skeleton in apply 4c. The mark is part of the page
+      <!-- No frame, no fill, no keyline around the logo. The `rounded-card overflow-hidden` wrapper here
+           was a photograph's frame; around a drawn logo it is a rectangle pretending to be content —
+           the same defect that deleted the island's skeleton in apply 4c. The logo is part of the page
            (DESIGN.md "Elevation": hairline means on the page, shadow means above it), so it takes
            neither. -->
       <!-- viewBox units, so `sw` below is in the viewBox's own units; the render gate reports what they
            become in device px, because a 0.9-unit stroke is 1.3px on a 347px box and a sub-pixel
            stroke has no measurable colour identity (D119's lesson, applied to line art). -->
       <svg
-        data-mark='hero'
-        viewBox={`0 0 ${MARK.vbW} ${MARK.vbH}`}
+        data-logo='hero'
+        viewBox={`0 0 ${LOGO.vbW} ${LOGO.vbH}`}
         class='w-full h-auto block'
         role='img'
         aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole"
       >
-        {MARK.shapes.map((s) => (s.tag === 'circle'
+        {LOGO.shapes.map((s) => (s.tag === 'circle'
           ? <circle cx={s.cx} cy={s.cy} r={s.r} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.slot]}`} />
           : <path d={s.d} stroke-width={s.sw} stroke-dasharray={s.dash} class={`fill-none ${STROKE_CLASS[s.slot]}`} />))}
-        <circle cx={MARK.dot.cx} cy={MARK.dot.cy} r={MARK.dot.r} class={`stroke-none ${FILL_CLASS[MARK.dot.slot]}`} />
+        <circle cx={LOGO.dot.cx} cy={LOGO.dot.cy} r={LOGO.dot.r} class={`stroke-none ${FILL_CLASS[LOGO.dot.slot]}`} />
       </svg>
     </div>
   </div>

@@ -5,7 +5,7 @@
 //
 //   design/grill/round-9.html         the operator's preview — this is where the choice happens
 //   design/grill/round-9-census.html  the same panels laid tight, for the painted-pixel census
-//   design/grill/round-9-mark.html    the mark colourings on BOTH grounds, laid out for mark-pixels.mjs
+//   design/grill/round-9-mark.html    the mark colourings on BOTH grounds, laid out for logo-pixels.mjs
 //
 // Why generated (the design-grill skill requires a no-build HTML preview the operator opens directly, and
 // round 8 proved the rule): every colour in the specimen has to come from the same table the measure script
@@ -16,11 +16,11 @@
 // Sources it reads, so the specimen cannot invent the system:
 //   src/styles/global.css                    the shipped roles (never re-typed)
 //   design/grill/round9-palette.mjs          the candidates, their pairs, the hue-window scan
-//   src/lib/brand-mark.mjs                   the mark geometry and MARK_COLOURS
+//   src/lib/logo.mjs                   the mark geometry and LOGO_COLOURS
 //   .design/render/linelength-_-1240.json     the REAL sentences the landing page renders
 //   .design/tmp-color/survey-*.json           the before-numbers (`npm run check:color`)
 import { readFileSync, writeFileSync, existsSync } from 'node:fs';
-import { MARK, MARK_COLOURS } from '../../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_COLOURS } from '../../src/lib/logo.mjs';
 import {
   ROLES, WARM, GROUNDS, MARK_OPTIONS, paletteOptions, surfaceOptions, rearrangements, markPairTable, accentExtras,
   accentCandidates, routeSeparation, shippedGaps, windowScan,
@@ -82,23 +82,23 @@ const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replac
 const V = (name) => `var(${name.startsWith('--') ? name : `--color-${name}`})`;
 
 // ---------- the mark, coloured per option, on a chosen ground ----------
-// `split` matters: MARK_COLOURS is keyed by ROLE, and both lines share the role `route`, so a candidate that
+// `split` matters: LOGO_COLOURS is keyed by ROLE, and both lines share the role `route`, so a candidate that
 // paints the two lines differently carries a grammar change (see MARK_OPTIONS.needs).
 function markSVG(opt, ground, boxW, id, extras) {
   const map = ground === 'paper' ? opt.colours : opt.onInk;
-  const scale = boxW / MARK.vbW;
+  const scale = boxW / LOGO.vbW;
   const tokenFor = (name) => (extras[name] ? asCss(extras[name]) : V(name));
   let routeIx = 0;
-  const shapes = MARK.shapes.map((s) => {
+  const shapes = LOGO.shapes.map((s) => {
     let name = map[s.role];
     if (Array.isArray(name)) name = name[routeIx++ % name.length];
     const attrs = s.tag === 'circle' ? `cx="${s.cx}" cy="${s.cy}" r="${s.r}"` : `d="${s.d}"`;
     const dash = s.dash ? ` stroke-dasharray="${s.dash}"` : '';
     return `    <${s.tag} ${attrs} fill="none" stroke="${tokenFor(name)}" stroke-width="${s.sw}"${dash} data-role="${s.role}" data-token="${name}" data-sw="${s.sw}"/>`;
   }).join('\n');
-  const dot = MARK.dot;
+  const dot = LOGO.dot;
   const dotName = Array.isArray(map[dot.role]) ? map[dot.role][0] : map[dot.role];
-  return `<svg data-mark="${id}" data-markset="${opt.id}" data-ground="${ground}" data-box="${boxW}" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" width="${boxW}" height="${(MARK.vbH * scale).toFixed(1)}" role="img" aria-label="the club's mark, colouring ${opt.id}">
+  return `<svg data-mark="${id}" data-markset="${opt.id}" data-ground="${ground}" data-box="${boxW}" viewBox="0 0 ${LOGO.vbW} ${LOGO.vbH}" width="${boxW}" height="${(LOGO.vbH * scale).toFixed(1)}" role="img" aria-label="the club's mark, colouring ${opt.id}">
 ${shapes}
     <circle cx="${dot.cx}" cy="${dot.cy}" r="${dot.r}" fill="${tokenFor(dotName)}" stroke="none" data-role="${dot.role}" data-token="${dotName}" data-sw="0"/>
   </svg>`;
@@ -140,7 +140,7 @@ function surfacePanel(o) {
       <div class="ctrl primary" data-slot="cta-primary" data-pair="cta label on ink|band-text|ink" style="font-family:${CHROME};font-size:13.3px;line-height:16px;font-weight:600">${esc(TEXT.cta)}</div>
       <div class="ctrl secondary" data-slot="cta-secondary" data-pair="secondary label on its own fill|ink|paper" style="font-family:${CHROME};font-size:13.3px;line-height:16px;font-weight:500">${esc(TEXT.secondary)}</div>
     </div>
-    <div class="markrow">${markSVG({ id: `${o.id}-mark`, colours: p.mark, onInk: MARK_COLOURS.ink }, 'paper', 276, `${o.id}-mark`, EXTRA)}</div>
+    <div class="markrow">${markSVG({ id: `${o.id}-mark`, colours: p.mark, onInk: LOGO_COLOURS.ink }, 'paper', 276, `${o.id}-mark`, EXTRA)}</div>
   </div>
 
   <div class="intro" data-slot="intro" style="border-top:1px solid ${ruleCol}">
@@ -304,7 +304,7 @@ asked to clear. Whether that is an exception to write down or a bug to fix is a 
 whose luminance sits between paper and ink, its two contrasts multiply to the paper–ink pair (
 <b>${contrastTriple(ROLES.paper, ROLES.ink)}</b>). Asking for 4.5 text on paper AND 3.0 graphics on ink asks for
 ${4.5 * 3} &gt; ${contrastTriple(ROLES.paper, ROLES.ink)} — impossible with one value. That is the proof behind
-every <code>-on-ink</code> twin, and behind <code>MARK_COLOURS</code> being keyed per ground.</p>
+every <code>-on-ink</code> twin, and behind <code>LOGO_COLOURS</code> being keyed per ground.</p>
 
 <h2 class="q">The accent candidates inside the open window</h2>
 <p class="note">For each hue and chroma: the lightest value that clears 4.5 as text on paper, the value that
@@ -324,12 +324,12 @@ const photoRow = `
   <div class="phead"><b>PH-A</b> Design the surfaces photo-free (as the hero and the card already are)</div>
   <div class="swrow">
     <div class="venuecard" data-slot="venuecard-drawn" style="box-shadow:inset 0 0 0 1px var(--color-rule)">
-      ${markSVG({ id: 'venue-drawn', colours: { sphere: 'rule', route: 'ink', accent: 'gold' }, onInk: MARK_COLOURS.ink }, 'paper', 160, 'venue-drawn', extras)}
+      ${markSVG({ id: 'venue-drawn', colours: { sphere: 'rule', route: 'ink', accent: 'gold' }, onInk: LOGO_COLOURS.ink }, 'paper', 160, 'venue-drawn', extras)}
       <div style="font-family:${CHROME};font-size:13.3px;line-height:16px;color:var(--color-ink-2)">drawn motif · zero bytes · no rights question</div>
     </div>
   </div>
   <p class="note">The hero and the share card already prove the pattern: the graphic that means something is
-  drawn from <code>src/lib/brand-mark.mjs</code>, so it scales, it paints through <code>@theme</code>, and it is
+  drawn from <code>src/lib/logo.mjs</code>, so it scales, it paints through <code>@theme</code>, and it is
   gated on painted bytes.</p>
 </div>
 <div class="palrow" data-panel="P-photo-hold" data-policy="photo-hold">
@@ -376,7 +376,7 @@ writeFileSync('design/grill/round-9.html', shell(
   `<h1 class="q">Round 9: colour — where it goes, how many hues, and the mark\u2019s two lines</h1>
 <p class="note">Generated by <code>node design/grill/round9-build.mjs</code> from
 <code>design/grill/round9-palette.mjs</code>, the <code>@theme</code> block,
-<code>src/lib/brand-mark.mjs</code> and the sentences the built landing page actually renders. Candidate tokens
+<code>src/lib/logo.mjs</code> and the sentences the built landing page actually renders. Candidate tokens
 are written <code>--c-*</code> / <code>--w-*</code> so they cannot be mistaken for ratified roles. Numbers under
 each option are measured by <code>design/grill/round9-measure.js</code> in the same browser the gates use.</p>
 ${scanSection}
@@ -432,7 +432,7 @@ writeFileSync('design/grill/round-9-census.html', shell(
    .note { display: none; }`));
 
 // ================= the mark specimen (pixel measurement, both grounds) =================
-// ONE mark per row with clean ground beside it: mark-pixels.mjs samples the GROUND from a 10px strip
+// ONE mark per row with clean ground beside it: logo-pixels.mjs samples the GROUND from a 10px strip
 // immediately left of the box, so two marks side by side make the right-hand one's ground its neighbour's
 // ink, and that box then reports "no ink" (round 8 learned this the hard way).
 writeFileSync('design/grill/round-9-mark.html', shell(

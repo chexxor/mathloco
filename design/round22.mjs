@@ -1,11 +1,11 @@
 #!/usr/bin/env node
-// round22.mjs — grill round 22: the Byrne FACE colourings of the club mark, PRICED, not applied (2026-11-24).
+// round22.mjs — grill round 22: the Byrne FACE colourings of the club logo, PRICED, not applied (2026-11-24).
 //
 //   node design/round22.mjs                     # every row, both grounds, three hero widths
 //   node design/round22.mjs --only F1,F4        # a subset (writes a SUBSET record to .design/, never the tracked one)
 //   node design/round22.mjs --widths 640        # a narrower width set (same guard: a subset record, never the tracked one)
 //
-// WHAT THIS ROUND OWES THE OPERATOR. The seventh ruling on this mark (D483) took Byrne row C for the LINES and
+// WHAT THIS ROUND OWES THE OPERATOR. The seventh ruling on this logo (D483) took Byrne row C for the LINES and
 // asked, in the same sentence, for "options for coloring faces of the shape also in the Byrne style". Round 21
 // priced lines; this round prices regions. Nothing here ships — colour is operator-ratified (D316) — so every
 // number below is a price, and the specimen at design/grill/round-22-faces.html is what the pick is made from.
@@ -13,7 +13,7 @@
 // THE FOUR PRICES, in the order a reader needs them:
 //
 //   AREA, measured twice. Each face is measured PROJECTED (dense sampling + shoelace over a boundary built from
-//   the mark's own curves) and ON THE SPHERE this drawing implies (Girard for the triangle, 2·angle·r² for the
+//   the logo's own curves) and ON THE SPHERE this drawing implies (Girard for the triangle, 2·angle·r² for the
 //   lunes). `assertAreas` refuses the round if the two disagree past 2%, if the two lunes do not tile the visible
 //   face, or if the disc's foreshortening is not 0.50 — a face whose stated geometry does not survive its own
 //   measurement is a claim without a probe.
@@ -24,16 +24,16 @@
 //   1.2 viewBox units of its edge). For every hue family the palette already declares, the round solves the
 //   LIGHTNESS WINDOW that survives both bars at once, and prints its edges. The window is the finding.
 //
-//   SHAPE COUNT. This mark's gates count shapes: design/mark-geometry.mjs zips the painted report against the
+//   SHAPE COUNT. This logo's gates count shapes: logo-geometry.mjs zips the painted report against the
 //   table and accepts exactly `table + 1` (the pole dot, which is painted but not in the table). A planted face
-//   makes 9, and both mark probes refuse. That refusal is printed VERBATIM as the cost of shipping a face, because
+//   makes 9, and both logo probes refuse. That refusal is printed VERBATIM as the cost of shipping a face, because
 //   "the gates went red" and "the gates need re-ruling" are different decisions and only the second is a
 //   design choice (D479: a gate is re-derived, never bypassed).
 //
-//   PAINT. Every row is planted in a COPY of the built page and measured by the probes `check:mark` runs, at
+//   PAINT. Every row is planted in a COPY of the built page and measured by the probes `check:logo` runs, at
 //   320/640/1240, plus the share card's own document at 1200x630. Token arithmetic cannot see a half-covered
 //   blend; the pixel probe can. The CONTROL row is the shipped colouring with nothing filled, FOUND by matching
-//   `MARK_COLOURS` (D481 §c), and if it does not pass its own probes the round exits 1 — a mutation that cannot
+//   `LOGO_COLOURS` (D481 §c), and if it does not pass its own probes the round exits 1 — a mutation that cannot
 //   reproduce the artifact measures nothing.
 //
 // A round, not a gate (D269's reason, same class as check:area / check:rhythm / check:color): it prints numbers
@@ -43,12 +43,12 @@ import { execFileSync } from 'node:child_process';
 import { cpSync, mkdirSync, readFileSync, writeFileSync, rmSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import sharp from 'sharp';
-import { MARK, MARK_SLOTS, MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_SLOTS, LOGO_COLOURS, LOGO_SHAPE_COUNT } from '../src/lib/logo.mjs';
 import { paletteTokens, declareCandidate } from './palette-tokens.mjs';
 import { contrastTriple, BARS, hueGap, nearestBrand, SAME_COLOUR_BAR, dist } from './grill/okcolor.mjs';
-import { FACES, FACE_GEOMETRY, faceAreas, assertAreas, faceBy, facePolygon } from './mark-faces.mjs';
+import { FACES, FACE_GEOMETRY, faceAreas, assertAreas, faceBy, facePolygon } from './logo-faces.mjs';
 import { ROWS, LINES, FAMILIES, GOLD_FAMILY, GOLD_HUES, GOLD_CHROMAS } from './grill/round22-options.mjs';
-import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-mark.mjs';
+import { recolourPage, recolourCard, labelsFor, hueOfPaint } from './grill/paint-logo.mjs';
 import { distState, staleLine } from './dist-fresh.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 
@@ -57,7 +57,7 @@ const flag = (n, d) => { const i = argv.indexOf(`--${n}`); return i >= 0 ? argv[
 const WIDTHS = flag('widths', '320,640,1240').split(',').map(Number);
 const ONLY = flag('only', null)?.split(',').map((s) => s.trim().toUpperCase());
 // THE SUBSET GUARD (the shape design/round23.mjs:71 has had since round 23 landed; round 22 did not, which meant a
-// `--only F6` run would have OVERWRITTEN the tracked committed record with a partial one and a later `check:mark`-style
+// `--only F6` run would have OVERWRITTEN the tracked committed record with a partial one and a later `check:logo`-style
 // reader could not tell the difference). A run that is not the full row set and the full width set writes its record to
 // .design/ scratch, so the tracked record is only ever written by a run that measured everything the specimen claims.
 const FULL_WIDTHS = '320,640,1240';
@@ -79,10 +79,10 @@ const tok = (name) => {
 const GROUNDS = { paper: tok('paper'), ink: tok('ink') };
 
 // The CONTROL is derived, not named. The rows' line maps are IMPORTED from the shipped table, so the guard is on
-// the import itself: if `LINES` no longer equals MARK_COLOURS the whole round prices a mark the site does not have.
-const linesAreShipped = MARK_SLOTS.every((s) => LINES.paper[s] === MARK_COLOURS.paper[s] && LINES.ink[s] === MARK_COLOURS.ink[s]);
+// the import itself: if `LINES` no longer equals LOGO_COLOURS the whole round prices a logo the site does not have.
+const linesAreShipped = LOGO_SLOTS.every((s) => LINES.paper[s] === LOGO_COLOURS.paper[s] && LINES.ink[s] === LOGO_COLOURS.ink[s]);
 const shipped = ROWS.filter((r) => r.faces.length === 0 && linesAreShipped);
-if (shipped.length !== 1) throw new Error(`round22: ${shipped.length ? `rows ${shipped.map((r) => r.id).join(', ')} all` : 'NO row'} reproduce the shipped line colouring in src/lib/brand-mark.mjs MARK_COLOURS. There is no CONTROL, so no face price in this round is anchored to the artifact — D481 §c.`);
+if (shipped.length !== 1) throw new Error(`round22: ${shipped.length ? `rows ${shipped.map((r) => r.id).join(', ')} all` : 'NO row'} reproduce the shipped line colouring in src/lib/logo.mjs LOGO_COLOURS. There is no CONTROL, so no face price in this round is anchored to the artifact — D481 §c.`);
 const CONTROL = shipped[0];
 
 // ---------- 1. AREA: every face, measured twice ----------
@@ -97,7 +97,7 @@ const areaBy = Object.fromEntries(areas.map((a) => [a.name, a]));
 // face's edge (half a 1.4-unit stroke plus slack — a line whose ink straddles the boundary is half on it).
 const SAMPLES = 160, ON_EDGE = 1.2;
 const sampleShape = (slot) => {
-  const sh = slot === 'dot' ? MARK.dot : MARK.shapes.find((s) => s.slot === slot);
+  const sh = slot === 'dot' ? LOGO.dot : LOGO.shapes.find((s) => s.slot === slot);
   if (!sh) throw new Error(`round22: no shape in the table for slot "${slot}"`);
   if (sh.tag === 'circle') {
     const pts = [[sh.cx, sh.cy]];
@@ -141,7 +141,7 @@ const polygons = Object.fromEntries(FACES.map((f) => [f.name, facePolygon(f.name
 const coverage = {};
 for (const f of FACES) {
   coverage[f.name] = {};
-  for (const slot of MARK_SLOTS) {
+  for (const slot of LOGO_SLOTS) {
     const pts = sampleShape(slot), poly = polygons[f.name];
     let inside = 0, on = 0;
     for (const p of pts) { if (inPoly(p, poly)) inside++; else if (distToPoly(p, poly) <= ON_EDGE) on++; }
@@ -150,7 +150,7 @@ for (const f of FACES) {
   }
 }
 // A shape that even touches the fill is drawn ON it, so it owes the fill the graphic bar.
-const overSlots = (face) => MARK_SLOTS.filter((s) => coverage[face][s].frac >= 0.25);
+const overSlots = (face) => LOGO_SLOTS.filter((s) => coverage[face][s].frac >= 0.25);
 
 // ---------- 3. the two-bar window, per hue family, per face, per ground ----------
 // For a family the palette already has, the lightness window in which a fill (a) reads as a region against its
@@ -179,7 +179,7 @@ function bandFor(H, C, ground, overTokens) {
   if (!ok.length) return null;
   return { lo: ok[0], hi: ok.at(-1), mid: ok[Math.floor((ok.length - 1) / 2)], n: ok.length };
 }
-// Each face row paints its fill per GROUND, the way MARK_COLOURS carries a pair per ground: a pale wash that reads
+// Each face row paints its fill per GROUND, the way LOGO_COLOURS carries a pair per ground: a pale wash that reads
 // on paper is invisible on the card, and a dark one that reads on the card is a hole in the hero.
 const faceSolve = {};      // face -> ground -> { spec, ratio, minLine, nearest, token, newToken }
 for (const f of FACES) {
@@ -294,9 +294,9 @@ const priced = ROWS.map((r) => {
   return row;
 });
 const tokenCost = (r) => {
-  const set = new Set(MARK_SLOTS.map((s) => LINES.paper[s]));
+  const set = new Set(LOGO_SLOTS.map((s) => LINES.paper[s]));
   for (const f of r.grounds.paper.fills) set.add(f.reuses ?? `NEW:${f.family}`);
-  const inkSet = new Set(MARK_SLOTS.map((s) => LINES.ink[s]));
+  const inkSet = new Set(LOGO_SLOTS.map((s) => LINES.ink[s]));
   for (const f of r.grounds.ink.fills) inkSet.add(f.reuses ?? `NEW:${f.family}`);
   return { paper: set.size, ink: inkSet.size, newOnPaper: r.grounds.paper.newTokens, newOnInk: r.grounds.ink.newTokens };
 };
@@ -329,8 +329,8 @@ for (const r of priced) {
     if (json.__fail) { row.paper.push({ width: w, error: 'measure failed' }); continue; }
     writeFileSync(rep, json);
     const j = JSON.parse(json), m = j.marks?.[0];
-    const geo = txt(['design/mark-geometry.mjs', shot, rep]);
-    const px = txt(['design/mark-pixels.mjs', shot, rep, '0', '--json']);
+    const geo = txt(['logo-geometry.mjs', shot, rep]);
+    const px = txt(['logo-pixels.mjs', shot, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.paper.push({
       width: w, shot, rep, shapeCount: m?.count ?? null,
@@ -368,8 +368,8 @@ else {
     const rep = `${TMP}/card-${r.id}.json`;
     writeFileSync(rep, raw.slice(raw.indexOf('{'), raw.lastIndexOf('}') + 1));
     const j = JSON.parse(readFileSync(rep, 'utf8')), m = j.marks?.[0];
-    const geo = txt(['design/mark-geometry.mjs', png, rep]);
-    const px = txt(['design/mark-pixels.mjs', png, rep, '0', '--json']);
+    const geo = txt(['logo-geometry.mjs', png, rep]);
+    const px = txt(['logo-pixels.mjs', png, rep, '0', '--json']);
     const pxRec = px.__fail ? null : JSON.parse(px.split('\n').filter((l) => l.startsWith('{')).pop());
     row.ink.push({
       shot: png, rep, shapeCount: m?.count ?? null,
@@ -391,14 +391,14 @@ const report = {
   widths: WIDTHS, grounds: ['paper (the hero)', 'ink (the share card)'],
   bars: { graphic: BARS.graphic, layer: BARS.layer },
   source: 'Oliver Byrne, "The First Six Books of the Elements of Euclid, in Which Coloured Diagrams and Symbols Are Used Instead of Letters for the Greater Ease of Learners", London 1847',
-  ask: 'the second half of the seventh ruling on this mark (D483): "but also show me options for coloring faces of the shape also in the Byrne style"',
+  ask: 'the second half of the seventh ruling on this logo (D483): "but also show me options for coloring faces of the shape also in the Byrne style"',
   faceGeometry: FACE_GEOMETRY,
   areas,
   coverage,
   faceSolve,
   census, censusTally,
-  shapeCountPrice: { tableShapes: MARK.shapes.length, MARK_SHAPE_COUNT, acceptedReportLength: MARK.shapes.length + 1, note: 'design/mark-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both mark probes refuse: the refusal text is recorded per row in painted[].' },
-  control: { id: CONTROL.id, derivedFrom: 'MARK_COLOURS in src/lib/brand-mark.mjs' },
+  shapeCountPrice: { tableShapes: LOGO.shapes.length, LOGO_SHAPE_COUNT, acceptedReportLength: LOGO.shapes.length + 1, note: 'logo-geometry.mjs zips the painted report against the table and accepts exactly table+1 (the pole dot). A planted face makes 9 and both logo probes refuse: the refusal text is recorded per row in painted[].' },
+  control: { id: CONTROL.id, derivedFrom: 'LOGO_COLOURS in src/lib/logo.mjs' },
   lines: LINES,
   gold: {
     steer: 'operator, 2026-11-25: "Regarding the logo, I feel like the gold color that is an established theme color of the website should be used in the logo a bit more prominently. Ensure some options you create to share with me consider that."',
@@ -429,7 +429,7 @@ console.log('assertions: disc = pi r^2, north + south tile the disc, lune inside
 console.log('\n=== WHICH LINES SIT ON WHICH FACE (sampled off each shape\'s own geometry; >= 0.25 = on the fill) ===');
 for (const f of FACES) {
   const over = overSlots(f.name);
-  console.log(`${f.name.padEnd(6)} over: ${over.join(', ') || '(none)'}  |  ${MARK_SLOTS.map((s) => `${s} ${coverage[f.name][s].frac}`).join(' ')}`);
+  console.log(`${f.name.padEnd(6)} over: ${over.join(', ') || '(none)'}  |  ${LOGO_SLOTS.map((s) => `${s} ${coverage[f.name][s].frac}`).join(' ')}`);
 }
 console.log('\n=== CENSUS: how many of the declared tokens already read as a REGION (' + BARS.layer + ') on each ground ===');
 console.log(`${censusTally.paper} of ${censusTally.total} on paper · ${censusTally.ink} of ${censusTally.total} on ink`);
@@ -465,15 +465,15 @@ for (const r of priced) {
     if (g.faceGap) console.log(`   ${ground.padEnd(5)} faces ${g.faceGap.pair}: hue gap ${g.faceGap.gap} deg, OKLab ${g.faceGap.labDist} ${g.faceGap.distinctName ? '(distinct names)' : `(SAME COLOUR under ${SAME_COLOUR_BAR}: one name, not two)`}`);
   }
 }
-console.log('\n=== PAINT: planted in a copy of the built page, measured by the mark probes ===');
+console.log('\n=== PAINT: planted in a copy of the built page, measured by the logo probes ===');
 const ctrlRow = painted.find((r) => r.id === CONTROL.id);
 const ctrlFail = !ctrlRow ? 'was never painted (its probe rows are missing)'
   : [...ctrlRow.paper.filter((p) => p.error).map((p) => `paper ${p.width}: ${p.error}`),
-  ...ctrlRow.paper.filter((p) => !p.error && !p.geometry.ok).map((p) => `paper ${p.width}: mark-geometry FAIL ${p.geometry.out}`),
-  ...ctrlRow.paper.filter((p) => !p.error && !p.pixels.ok).map((p) => `paper ${p.width}: mark-pixels FAIL ${p.pixels.out}`),
+  ...ctrlRow.paper.filter((p) => !p.error && !p.geometry.ok).map((p) => `paper ${p.width}: logo-geometry FAIL ${p.geometry.out}`),
+  ...ctrlRow.paper.filter((p) => !p.error && !p.pixels.ok).map((p) => `paper ${p.width}: logo-pixels FAIL ${p.pixels.out}`),
   ...ctrlRow.ink.filter((c) => c.error).map((c) => `card: ${c.error}`),
-  ...ctrlRow.ink.filter((c) => !c.error && !c.geometry?.ok).map((c) => `card: mark-geometry FAIL ${c.geometry?.out}`)];
-console.log(`CONTROL row ${CONTROL.id} (derived from MARK_COLOURS in src/lib/brand-mark.mjs): ${ctrlFail.length ? ctrlFail.join('; ') : 'passes mark-geometry and mark-pixels at every width and on the card'}. ${ctrlFail.length ? 'THE MUTATION IS BROKEN: the shipped colouring does not reproduce itself, so no face price in this round is trustworthy.' : 'Every face row is a delta from this measured line.'}`);
+  ...ctrlRow.ink.filter((c) => !c.error && !c.geometry?.ok).map((c) => `card: logo-geometry FAIL ${c.geometry?.out}`)];
+console.log(`CONTROL row ${CONTROL.id} (derived from LOGO_COLOURS in src/lib/logo.mjs): ${ctrlFail.length ? ctrlFail.join('; ') : 'passes logo-geometry and logo-pixels at every width and on the card'}. ${ctrlFail.length ? 'THE MUTATION IS BROKEN: the shipped colouring does not reproduce itself, so no face price in this round is trustworthy.' : 'Every face row is a delta from this measured line.'}`);
 for (const row of painted) {
   console.log(`\n${row.id}${row.id === CONTROL.id ? ' (CONTROL)' : ''}`);
   for (const p of row.paper) {
@@ -493,5 +493,5 @@ for (const row of painted) {
 }
 const broke = painted.some((r) => r.paper.some((p) => p.error) || r.ink.some((c) => c.error)) || ctrlFail.length > 0 || !cardAvailable;
 console.log(`\nwrote ${REPORT}${SUBSET ? ' (SUBSET run — the tracked record at design/grill/round22/report.json was NOT overwritten)' : ''}; crops in ${TMP}/crop-<id>-<ground>-<w>.png`);
-console.log(`SHAPE-COUNT PRICE: ${report.shapeCountPrice.acceptedReportLength} painted shapes is all design/mark-geometry.mjs accepts (table ${report.shapeCountPrice.tableShapes} + the pole dot). A row that fills a face reports 9.`);
+console.log(`SHAPE-COUNT PRICE: ${report.shapeCountPrice.acceptedReportLength} painted shapes is all logo-geometry.mjs accepts (table ${report.shapeCountPrice.tableShapes} + the pole dot). A row that fills a face reports 9.`);
 if (broke) { console.error('MACHINERY: at least one row failed to measure, the card document was missing, or the CONTROL row did not pass its own probes — the numbers above are incomplete'); process.exit(1); }

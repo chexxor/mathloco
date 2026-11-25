@@ -35,7 +35,7 @@ import sharp from 'sharp';
 import { OPTIONS, PHONE_STATES } from './grill/round18-options.mjs';
 import { plateSource, cropFor, keepPct } from './grill/plate-crop.mjs';
 import { cropBox, cropStats, makeInstruments, scaleTo } from './grill/round-instruments.mjs';
-import { MARK } from '../src/lib/brand-mark.mjs';
+import { LOGO } from '../src/lib/logo.mjs';
 
 const SCRATCH = '.design/tmp-round18';
 const ART = '.design/tmp-art';
@@ -85,7 +85,7 @@ function boxes(dom) {
   const slot = (name) => dom.slots.find((s) => s.dataSlot === name);
   const ps1 = slot('PS-1'), ps3 = slot('PS-3'), ps5 = slot('PS-5');
   const grid = dom.regions.find((r) => /lg:grid lg:grid-cols-12/.test(r.cls || ''));
-  const mark = dom.media.find((m) => m.tag === 'svg' && m.vb === `0 0 ${MARK.vbW} ${MARK.vbH}`);
+  const mark = dom.media.find((m) => m.tag === 'svg' && m.vb === `0 0 ${LOGO.vbW} ${LOGO.vbH}`);
   const imgs = (dom.media || []).filter((m) => m.tag === 'img').map((m) => ({ ...pick(m), alt: (m.alt || '').slice(0, 40), src: (m.src || '').split('/').pop(), complete: m.complete }));
   return {
     pageH: dom.pageHeight,
@@ -94,7 +94,7 @@ function boxes(dom) {
     col: ps1 ? pick(ps1) : null,
     ps3: ps3 ? pick(ps3) : null,
     band: ps5 ? pick(ps5) : null,
-    mark: mark ? { ...pick(mark), scale: +(mark.w / MARK.vbW).toFixed(3) } : null,
+    mark: mark ? { ...pick(mark), scale: +(mark.w / LOGO.vbW).toFixed(3) } : null,
     imgs,
     bands: (dom.surfaces || []).map((s) => ({ tag: s.tag, bg: s.bg, cls: (s.cls || '').slice(0, 34), ...pick(s) })),
   };

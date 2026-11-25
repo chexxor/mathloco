@@ -1,36 +1,36 @@
-// mark-check.mjs — ask both mark probes about the built page, in one command.
+// logo-check.mjs — ask both logo probes about the built page, in one command.
 //
-//   npm run build && npm run check:mark
+//   npm run build && npm run check:logo
 //
-// Two probes, because the mark can be wrong in two different places and only one of them is the drawing code:
+// Two probes, because the logo can be wrong in two different places and only one of them is the drawing code:
 //
-//   design/mark-geometry.mjs  — does the GEOMETRY TABLE say "two lines that start parallel and cross on a
+//   logo-geometry.mjs  — does the GEOMETRY TABLE say "two lines that start parallel and cross on a
 //                               curved surface, far half of the equator denoted differently", and do the PAINTED
 //                               PIXELS agree? A table and a page that disagree is the failure this catches.
-//   design/mark-pixels.mjs    — how much of the ink in the box clears the 3.0 graphic bar (D101), per shape, in
+//   logo-pixels.mjs    — how much of the ink in the box clears the 3.0 graphic bar (D101), per shape, in
 //                               device px (D119).
 //
-// It measures the SHIPPED mark in the shipped hero box rather than a specimen, because the box is what sets the
+// It measures the SHIPPED logo in the shipped hero box rather than a specimen, because the box is what sets the
 // stroke budget: the same 1.3-unit stroke is 1.49 device px in the 276px phone box and 2.02 px at 1240, and the
 // dash on the far half is 6px on / 4.8px off at phone size. So the widths here are the two that bracket it:
 //
-//   320  - the smallest hero box the mark ever gets (276px wide, scale 1.15): the tightest stroke and dash budget
+//   320  - the smallest hero box the logo ever gets (276px wide, scale 1.15): the tightest stroke and dash budget
 //   640  - the LARGEST (512px wide, scale 2.133) — measured 2026-11-03, and it refuted this file's earlier claim
 //          that 1240 was the largest. The hero is single-column until `lg:` (1024), so between `sm:` (640) and 1024
-//          the mark fills the whole container width; at 1240 the hero is a 12-col grid and the mark gets one
-//          column. The mark is therefore 38% bigger at a phone in landscape than on a desktop, and the stroke
+//          the logo fills the whole container width; at 1240 the hero is a 12-col grid and the logo gets one
+//          column. The logo is therefore 38% bigger at a phone in landscape than on a desktop, and the stroke
 //          budget that matters most is the one at 640.
-//   1240 - the widest container (372px, scale 1.55): where a too-heavy mark turns into a poster on the grid
+//   1240 - the widest container (372px, scale 1.55): where a too-heavy logo turns into a poster on the grid
 //
 // Window heights come from the page, not from a constant (`grill/shot-height.mjs`, the repo's one rule for how
-// tall a shot may be). They used to be the render gate's 1400/2400, which was fine while the mark sat at
-// y ~1014 at 320px; when the PS-1 plate landed (round 13 option C) the mark moved down to **y=1421 at 320** and
+// tall a shot may be). They used to be the render gate's 1400/2400, which was fine while the logo sat at
+// y ~1014 at 320px; when the PS-1 plate landed (round 13 option C) the logo moved down to **y=1421 at 320** and
 // **y=1129.9+320=1449.9 at 640**, both outside a 1400px window, and the gate reported "no ink in the measured
-// box" and "gold pixels near the pole: 0" for a mark that was painted correctly. A fixed frame around a taller
+// box" and "gold pixels near the pole: 0" for a logo that was painted correctly. A fixed frame around a taller
 // document is record 0015's failure class again, so the height is asked of the page and the cap only ever
 // refuses to measure, never truncates silently.
 //
-// Writes .design/render/mark-<w>.png and .design/render/_-<w>.json (gitignored scratch), prints both probes,
+// Writes .design/render/logo-<w>.png and .design/render/_-<w>.json (gitignored scratch), prints both probes,
 // and exits 1 if either fails — this is a diagnostic, deliberately not in `npm run verify`.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, existsSync } from 'node:fs';
@@ -41,11 +41,11 @@ if (!existsSync(resolve('dist/client/index.html'))) {
   process.exit(1);
 }
 // The artifact also has to belong to this tree: a branch switch leaves dist/ from the previous branch, and a
-// mark measured off it is a mark that is not shipped (design/dist-fresh.mjs).
+// logo measured off it is a logo that is not shipped (design/dist-fresh.mjs).
 import { distState, staleLine } from './dist-fresh.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 const STALE = distState();
-if (!STALE.fresh && !STALE.allowed) { console.error(`check:mark: ${staleLine(STALE)}`); process.exit(1); }
+if (!STALE.fresh && !STALE.allowed) { console.error(`check:logo: ${staleLine(STALE)}`); process.exit(1); }
 mkdirSync('.design/render', { recursive: true });
 
 const WIDTHS = [320, 640, 1240];
@@ -58,13 +58,13 @@ function pageHeightAt(w) {
     String(w), '1200',
   ], { encoding: 'utf8' });
   const h = JSON.parse(json)?.doc?.scrollHeight;
-  return shotHeight(h, `mark check: / @ ${w}`);
+  return shotHeight(h, `logo check: / @ ${w}`);
 }
 
 const failed = [];
 for (const w of WIDTHS) {
   const h = pageHeightAt(w);
-  const shot = `.design/render/mark-${w}.png`;
+  const shot = `.design/render/logo-${w}.png`;
   const rep = `.design/render/_-${w}.json`;
   const json = execFileSync(process.execPath, [
     'design/grill/dist-measure.mjs', 'dist/client', '/', 'design/grill/render-measure.js',
@@ -73,7 +73,7 @@ for (const w of WIDTHS) {
   JSON.parse(json);                                   // fail loudly rather than feeding a probe a truncated report
   writeFileSync(rep, json);
 
-  for (const probe of ['design/mark-geometry.mjs', 'design/mark-pixels.mjs']) {
+  for (const probe of ['logo-geometry.mjs', 'logo-pixels.mjs']) {
     console.log(`\n=== ${probe} @ ${w} (${shot}, ${rep})`);
     try {
       process.stdout.write(execFileSync(process.execPath, [probe, shot, rep], { encoding: 'utf8' }));
@@ -84,5 +84,5 @@ for (const w of WIDTHS) {
   }
 }
 
-console.log(failed.length ? `\nMARK CHECK: FAIL — ${failed.join(', ')}` : '\nMARK CHECK: PASS — geometry table and painted pixels agree at both widths');
+console.log(failed.length ? `\nLOGO CHECK: FAIL — ${failed.join(', ')}` : '\nLOGO CHECK: PASS — geometry table and painted pixels agree at both widths');
 process.exit(failed.length ? 1 : 0);

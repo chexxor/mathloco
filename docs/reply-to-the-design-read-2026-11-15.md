@@ -199,10 +199,10 @@ glued to text". Two things:
    data behind the marks is printed **once per page** by `src/components/SignUpLinks.astro` as a sprite, and
    `scripts/check-sprite-claim.mjs` is the gate that keeps that sprite out of the layout shell — measured at
    +2,201 gzip bytes (41.3% of /chat's 5,327) for pages that paint no mark, @measured 2026-11-13 by
-   `node design/mark-cost.mjs`. Thirty-three outbound anchors would carry thirty-three copies of an arrow, and
+   `node platform-mark-cost.mjs`. Thirty-three outbound anchors would carry thirty-three copies of an arrow, and
    the site would pay that per page. **The byte delta of a 33-copy inline arrow is not measured here** — the
    refusal is reasoning from the sprite arithmetic, and if the reviewer wants that number, it is one probe
-   (`node design/mark-cost.mjs` on a page rebuilt with SVG arrows) and it will be reported when run.
+   (`node platform-mark-cost.mjs` on a page rebuilt with SVG arrows) and it will be reported when run.
 
 Recommendation if the reviewer still prefers the SVG: one shared `<svg><symbol>` in the shell plus 33
 `<use href="#arrow">` is the form that costs the sprite's arithmetic without the 33 copies; that is a different
@@ -226,7 +226,7 @@ So: every `alt` is ≤12 words (longest is exactly 12), and five plates are decl
 that is the read's event-art rule, shipped.
 
 **`hero.webp` does not exist in this tree.** The hero is an inline SVG sign (`data-mark="hero"`, `role="img"`,
-`aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole"`), which `check:mark`
+`aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole"`), which `check:logo`
 measures as a 346x216.3 drawing at 390 (viewBox 240x150, 8/8 shapes) @measured 2026-11-15 by
 `npm run check:render:dist`. There is no `<img>` there to put an alt on, and the engraving set the read's alt
 would describe is not this site's mark. Its own caption sits under it.
@@ -563,7 +563,7 @@ page and every one of the plates. At 1240 it is 332px of 2809 (**12%**) — the 
 | Ask | Verdict |
 |---|---|
 | Event art: keep as standing illustrations per **type** with `alt=""`, or drop | ships (first branch): kept, declared decorative, `check:alt` counts 5 of them. |
-| Triptych rungs with intrinsic sizes | ships this branch (above). `check:mark` keeps each plate's aspect (its selftest fails a squashed plate). |
+| Triptych rungs with intrinsic sizes | ships this branch (above). `check:logo` keeps each plate's aspect (its selftest fails a squashed plate). |
 | Add one original line drawing in the plates' language, ~1200 bytes of SVG | ships: `check:line-art — 5 page(s), 1 drawing(s), cap 1200 bytes / 12 words; /chat "undoable-steps": 622 bytes, 9 stroke(s), label "A wire running through three boxes, and the same path traced back"`. Hairlines, `currentColor`, no fills, under the cap, captioned. |
 | Promote ∑ to a real mark: header lockup | parked, MS25 ask. `nav-fit` prices it: the row with `∑ Matheapolis` needs **328 of 346** at 390 and **279 of 276** at 320 — **3px over the floor**, so the lockup cannot ship at the repo's own minimum width without a label change. That is the measurement that decides it. |
 | favicon.svg | ships: `<link rel="icon" type="image/svg+xml" href="/favicon.svg">` in the wrapper; there is one favicon and it is the mark. |
@@ -683,7 +683,7 @@ bought. So the escalated items are priced, not refused, in four units, and you c
 | **the ∑ lockup** (416×176 at 390, 216×88 at 1240) | the mark's box today: **460px → 116px of the band's wrap at 390**, **637px → 333px at 1240** @measured 2026-11-15 by `check:render:dist` | **4 fields** (2 art, 2 config); the glyph already ships at 456×182 with a box ratio 0.4% off the one asked | 4 fields, and it costs **2 gate steps** (`check:render:dist`'s mark aspect, `check:space`) | the operator; the numbers are already ours |
 | **the ∑ on the 404 page** | the 404 body today is **11,520 raw / 4,126 gzipped**; the glyph would be one more inline SVG | **2 fields** (`svg` + `alt`); D267 requires the label on a standalone glyph | 2 | the delegate would do it on the operator's word |
 | **N1's series-name rule** | none | **1 field**: `src/lib/event-groups.mjs` already exports the vocabulary the rule would read | 1 field, one commit | the operator's word on the list |
-| **the inline-SVG arrow vs the sprite** | the arrow changes no box; today `/schedule` prints **15 arrow glyphs** as text | the sprite's own measured cost (`design/mark-cost.mjs`, D300): **113 of the 10,610 gzip bytes** `/schedule` ships, **+2,195 gzip at one cluster** of 15 arrows, **+2,207 at five**, break-even near **3 clusters** | **3 fields** (2 art, 1 config), **2 gate steps** | the operator; **the arrow stays** unless the surface count reaches 3 clusters |
+| **the inline-SVG arrow vs the sprite** | the arrow changes no box; today `/schedule` prints **15 arrow glyphs** as text | the sprite's own measured cost (`platform-mark-cost.mjs`, D300): **113 of the 10,610 gzip bytes** `/schedule` ships, **+2,195 gzip at one cluster** of 15 arrows, **+2,207 at five**, break-even near **3 clusters** | **3 fields** (2 art, 1 config), **2 gate steps** | the operator; **the arrow stays** unless the surface count reaches 3 clusters |
 | **hiding the join band on phones** (+715px at 390) | the band today is **1,689px at 390**; D306 already refuses hiding the schedule on phones, and the mobile schedule prints **1 row / 4 anchors** | **6 fields**; a written refusal is one paragraph of this letter, which is the price either way | 6 | the operator |
 | **which single list N1 owns** (the event-name vocabulary, §16) | none today; it would gate what `/schedule` and `events.ics` may print | **2 fields**; the gate that pays for it is a new rule in the **existing** `check:ics` step (a published series name outside the named list fails) plus its selftest, so the 69-step deploy set and its frozen baseline do not move | 2 fields, one commit | the operator's word on the list |
 | **the free-online-events list** (MS29) — the wiring, not the research | a new page (**+~13s of the browser sweep**), or one more column on `/schedule` | the research costs **none of these**: the 12-publisher measured table is already landed in `docs/spec/source-contract.md` §4b and nothing in `src/` reads it | **2** (the surface, the vocabulary) | the operator |
@@ -1038,7 +1038,7 @@ import Navigation from '../components/Navigation.astro';
     <!-- No sprite here. The glyph data behind every sign-up mark (S026, D294) is printed by
          src/components/SignUpLinks.astro in front of the first cluster on the page, so a page that paints no
          mark ships no glyph bytes: inserting the sprite here would cost +2,201 gzip @measured 2026-11-13 by
-         `node design/mark-cost.mjs` - 41.3% of /chat's 5,327 gzip bytes - for drawings that page never
+         `node platform-mark-cost.mjs` - 41.3% of /chat's 5,327 gzip bytes - for drawings that page never
          paints. src/components/PlatformMarks.astro holds the arithmetic that decides sprite vs inline, and
          scripts/check-sprite-claim.mjs is the gate that keeps the sprite out of this shell (D297). -->
     <Navigation />

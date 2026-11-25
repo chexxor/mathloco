@@ -97,8 +97,8 @@
  "control": {
   "id": "C",
   "label": "Byrne literally: colour instead of letters, one per line",
-  "derivedFrom": "MARK_COLOURS in src/lib/brand-mark.mjs",
-  "ruling": "RATIFIED 2026-11-24 as the seventh ruling on this mark (D483); applied in src/lib/brand-mark.mjs."
+  "derivedFrom": "LOGO_COLOURS in src/lib/logo.mjs",
+  "ruling": "RATIFIED 2026-11-24 as the seventh ruling on this mark (D483); applied in src/lib/logo.mjs."
  },
  "options": [
   {

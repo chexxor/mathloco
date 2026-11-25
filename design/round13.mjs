@@ -48,7 +48,7 @@ import { PS1_PLATE, PS3_PLATE, PS4_PLATE, VARIANTS, plateBoxes } from './grill/r
 import { plateSource, cropFor, keepPct } from './grill/plate-crop.mjs';
 import { shotHeight } from './grill/shot-height.mjs';
 import { probeRetry, cropBox, cropStats, makeInstruments } from './grill/round-instruments.mjs';
-import { MARK, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_COLOURS } from '../src/lib/logo.mjs';
 
 const SCRATCH = '.design/tmp-round13';
 const ART = '.design/tmp-art';
@@ -73,7 +73,7 @@ const SAME_COLOUR_BAR = 0.05;                // delta-OKLab, design/grill/okcolo
 // stroke-width / sin(angle). If the drawing stops containing a vertical segment the probe says so instead of
 // measuring a slanted line and calling the number a stroke width.
 const VERTICAL = (() => {
-  for (const sh of MARK.shapes) {
+  for (const sh of LOGO.shapes) {
     const m = sh.tag === 'path' && sh.d.match(/^M([\d.]+) ([\d.]+) L\1 ([\d.]+)/);
     if (m) return { shape: sh, x: +m[1], y: (+m[2] + +m[3]) / 2 };
   }
@@ -170,12 +170,12 @@ try {
   const joinRow = base.regions.find((r) => /grid grid-cols-1 md:grid-cols-2/.test(r.cls));
   Object.assign(geoRef, {
     colW: Math.round(ps1.w), colH: Math.round(ps1.h), colXY: [Math.round(ps1.x), Math.round(ps1.y)],
-    markH: Math.round(ps1.w * (MARK.vbH / MARK.vbW)),   // the mark at full column width, from the geometry table
+    markH: Math.round(ps1.w * (LOGO.vbH / LOGO.vbW)),   // the mark at full column width, from the geometry table
     gapPx: 32,                                          // `mb-8`: the gap the placeholder carries today
     ps3W: Math.round(ps3.w), ps3RowH: joinRow ? Math.round(joinRow.h) : 0,
     gridBox: grid ? pick(grid) : null, pageH: base.pageHeight,
   });
-  report.geo = { ...geoRef, vbW: MARK.vbW, vbH: MARK.vbH, minStroke: Math.min(...MARK.shapes.map((s) => s.sw).filter(Boolean)) };
+  report.geo = { ...geoRef, vbW: LOGO.vbW, vbH: LOGO.vbH, minStroke: Math.min(...LOGO.shapes.map((s) => s.sw).filter(Boolean)) };
   say(`  PS-1 ${geoRef.colW}x${geoRef.colH} @${geoRef.colXY} | mark at full width ${geoRef.colW}x${geoRef.markH} | PS-3 ${geoRef.ps3W} wide inside a ${geoRef.ps3RowH}px row`);
 
   // [3] the plates at every candidate box.
@@ -375,7 +375,7 @@ function summarize(dom) {
   const ps3 = dom.slots.find((s) => s.dataSlot === 'PS-3');
   const grid = dom.regions.find((r) => /lg:grid lg:grid-cols-12/.test(r.cls));
   const joinRow = dom.regions.find((r) => /grid grid-cols-1 md:grid-cols-2/.test(r.cls));
-  const markSvg = dom.media.find((m) => m.tag === 'svg' && m.vb === `0 0 ${MARK.vbW} ${MARK.vbH}`);
+  const markSvg = dom.media.find((m) => m.tag === 'svg' && m.vb === `0 0 ${LOGO.vbW} ${LOGO.vbH}`);
   const plate1 = dom.media.find((m) => m.tag === 'img' && /Byrne/i.test(m.alt || ''))
     || dom.regions.find((r) => /inset-shadow-gold/.test(r.cls || '') && r.y < (ps1?.y ?? 0) + 400);
   const plate3 = dom.media.find((m) => m.tag === 'img' && /Euler/i.test(m.alt || ''))
@@ -386,7 +386,7 @@ function summarize(dom) {
     col: ps1 ? pick(ps1) : null,
     plate: plate1 ? pick(plate1) : null,
     plate3: plate3 ? pick(plate3) : null,
-    mark: markSvg ? { ...pick(markSvg), scale: +(markSvg.w / MARK.vbW).toFixed(3) } : null,
+    mark: markSvg ? { ...pick(markSvg), scale: +(markSvg.w / LOGO.vbW).toFixed(3) } : null,
     ps3: ps3 ? pick(ps3) : null,
     joinRow: joinRow ? pick(joinRow) : null,
     emptyRuns: dom.emptyRuns, emptyPct: dom.emptyRunPct, paintedPct: dom.paintedPct,
@@ -416,8 +416,8 @@ async function paintedStroke(variantId, markBox) {
   const shotPath = `${SCRATCH}/page-1240.png`;
   if (!existsSync(shotPath) || !markBox) return { paintedPx: null, reportedPx: null, why: 'no shot/box' };
   const { info, data } = await sharp(shotPath).raw().toBuffer({ resolveWithObject: true });
-  const scale = markBox.w / MARK.vbW;
-  const minSw = Math.min(...MARK.shapes.map((s) => s.sw).filter(Boolean));
+  const scale = markBox.w / LOGO.vbW;
+  const minSw = Math.min(...LOGO.shapes.map((s) => s.sw).filter(Boolean));
   const reportedPx = +(minSw * scale).toFixed(2);
   if (!scale) return { paintedPx: null, reportedPx, why: 'no scale' };
   const at = (x, y) => {
@@ -459,7 +459,7 @@ async function paintedStroke(variantId, markBox) {
   const core = runsAt(0.10);                          // pixels that are mostly ink
   const mine = (list) => { const r = list.find((r) => r.from <= 0 && r.to >= 0); return r ? r.w : null; };
   // the peak, against what full coverage of this stroke's own token would read on this ground
-  const tok = MARK_COLOURS.paper[VERTICAL.shape.role];
+  const tok = LOGO_COLOURS.paper[VERTICAL.shape.role];
   const ceiling = distLab(tokenLab(tok), g);
   const peak = Math.max(...Array.from({ length: 33 }, (_, i) => i - 16).map((d) => inkAt(cx + d)));
   return {
@@ -495,7 +495,7 @@ function writeVariant(v) {
     html = html.replace(re, img);
   }
   if (v.moveMark) {
-    const re = /<svg data-mark="hero"[\s\S]*?<\/svg>/;
+    const re = /<svg data-logo="hero"[\s\S]*?<\/svg>/;
     const m = html.match(re);
     if (!m) throw new Error(`${v.id}: no hero mark svg to move`);
     html = html.replace(re, '');
@@ -509,11 +509,11 @@ function writeVariant(v) {
     // `stroke-width=" vector-effect="non-scaling-stroke"1.3"` — an invalid value, so every stroke fell back to the
     // SVG initial 1 and the gate failed seven times for a reason that was my mutation, not the design. Both were
     // visible only because the numbers disagreed with what the variant claims to do.
-    const m = html.match(/<svg data-mark="hero"[\s\S]*?<\/svg>/);
+    const m = html.match(/<svg data-logo="hero"[\s\S]*?<\/svg>/);
     if (!m) throw new Error(`${v.id}: no hero mark svg to pin`);
     const pinned = m[0].replace(/stroke-width="[^"]*"/g, (s) => `${s} vector-effect="non-scaling-stroke"`);
     const n = (m[0].match(/stroke-width="[^"]*"/g) || []).length;
-    if (n !== MARK.shapes.length) throw new Error(`${v.id}: the built mark carries ${n} stroke-width attributes, the geometry table has ${MARK.shapes.length} stroked shapes — pinning them all is the whole variant, so a moved mark means re-reading the built HTML`);
+    if (n !== LOGO.shapes.length) throw new Error(`${v.id}: the built mark carries ${n} stroke-width attributes, the geometry table has ${LOGO.shapes.length} stroked shapes — pinning them all is the whole variant, so a moved mark means re-reading the built HTML`);
     if ((pinned.match(/vector-effect="non-scaling-stroke"/g) || []).length !== n) throw new Error(`${v.id}: ${n} strokes to pin but the pin landed on fewer — refusing to measure a mark whose markup the mutation broke`);
     html = html.replace(m[0], () => pinned);
   }

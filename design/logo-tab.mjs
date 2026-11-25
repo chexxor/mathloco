@@ -1,20 +1,20 @@
-// mark-tab.mjs — the instrument for the TAB artifact: the ratified mark drawn from the shipped table, rendered
+// logo-tab.mjs — the instrument for the TAB artifact: the ratified logo drawn from the shipped table, rendered
 // at tab sizes, and measured in pixels. Grill round 23 (2026-11-24) is its first reader; `logo-lands` is the second.
 //
-// WHY A SEPARATE INSTRUMENT EXISTS. Every mark probe in this repo measures the mark at HERO widths (320/640/1240
-// device px, `design/mark-geometry.mjs`, `design/mark-pixels.mjs`) or on the share card (1200x630). The tab is a
+// WHY A SEPARATE INSTRUMENT EXISTS. Every logo probe in this repo measures the logo at HERO widths (320/640/1240
+// device px, `logo-geometry.mjs`, `logo-pixels.mjs`) or on the share card (1200x630). The tab is a
 // 16x16 slot (MDN's glossary on favicons: "Usually, a favicon is 16 x 16 pixels"), and at 16px a 1.4-unit stroke
-// in a 240-unit plate is 0.09 device px — two orders of magnitude below the mark's own line-weight floor (D119:
-// a stroke thinner than ~1.5px never contains a fully-covered pixel). So "check:mark PASS at 320" says nothing
+// in a 240-unit plate is 0.09 device px — two orders of magnitude below the logo's own line-weight floor (D119:
+// a stroke thinner than ~1.5px never contains a fully-covered pixel). So "check:logo PASS at 320" says nothing
 // about the tab, and `check:favicon` only reads colour literals — it has never looked at a pixel. This file is the
-// instrument that does: it builds an SVG document out of `MARK` + `MARK_COLOURS` at a stated FRAMING, rasterizes
+// instrument that does: it builds an SVG document out of `LOGO` + `LOGO_COLOURS` at a stated FRAMING, rasterizes
 // it at 16/32/48/64 device px, and asks which of the eight shapes actually lands.
 //
 // THE TWO DOCUMENTS ONE CANDIDATE PRODUCES, and why both are needed:
 //   - the ARTIFACT: what would ship as public/favicon.svg. width/height are the frame's own size, the colours are
 //     hex bytes the tokens resolve to (`check:favicon` compares those bytes against @theme), and there is no
 //     transform: the artifact is the drawing, not a screenshot of it.
-//   - the FIXTURE: the same candidate baked at one tab size — viewBox 0 0 N N, a ground rect, and the mark inside a
+//   - the FIXTURE: the same candidate baked at one tab size — viewBox 0 0 N N, a ground rect, and the logo inside a
 //     `translate(...) scale(s)` that is exactly the contain-fit + centre a browser applies. Measuring the fixture
 //     measures what a tab shows, including the blank bands a non-square plate wastes.
 //
@@ -28,7 +28,7 @@ import { spawn } from 'node:child_process';
 import os from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
-import { MARK, MARK_SLOTS, MARK_COLOURS } from '../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_SLOTS, LOGO_COLOURS } from '../src/lib/logo.mjs';
 import { colourEntry } from './palette-tokens.mjs';
 import { contrastBytes } from './grill/okcolor.mjs';   // the ONE contrast implementation in this repo
 
@@ -40,11 +40,11 @@ const hexStr = (e) => `#${e.bytes.map((b) => b.toString(16).padStart(2, '0')).jo
 export const hexOf = (name) => hexStr(colourEntry(name));
 export const GROUND_TOKEN = { paper: 'paper', ink: 'ink' };
 // The lightest line colour each ground can carry, for the single-colour plan: the hero draws the surface `ink` on
-// paper and `band-text` on ink, which is what MARK_COLOURS already says for the ring slot.
+// paper and `band-text` on ink, which is what LOGO_COLOURS already says for the ring slot.
 export const SURFACE_TOKEN = { paper: 'ink', ink: 'band-text' };
 // The warm accent family, keyed per ground, because the measured pairs say one token cannot serve both grounds
 // (@measured 2026-11-25 by npm run round23, `goldFamily` in design/grill/round23/report.json): `accent` is 5.77 on
-// paper and 2.97 on ink — the ink figure is BELOW the 3.0 graphic bar (D101) that every mark line is held to, so a
+// paper and 2.97 on ink — the ink figure is BELOW the 3.0 graphic bar (D101) that every logo line is held to, so a
 // plan that used `accent` on both grounds would ship an invisible ring on a dark tab. `accent-on-ink` is 3.01 on
 // paper and 5.69 on ink. This is not a preference, it is which end of the family each ground is allowed.
 export const WARM_TOKEN = { paper: 'accent', ink: 'accent-on-ink' };
@@ -52,7 +52,7 @@ export const WARM_TOKEN = { paper: 'accent', ink: 'accent-on-ink' };
 // the two right-angle marks, the meeting point). `splitWarm` colours the first group with the ground's surface
 // token and the second with the warm token, which is the plan that asks the tab gate's two-colour rule head-on.
 export const SURFACE_SLOTS = ['ring', 'rear', 'front'];
-export const NAMING_SLOTS = MARK_SLOTS.filter((s) => !SURFACE_SLOTS.includes(s));
+export const NAMING_SLOTS = LOGO_SLOTS.filter((s) => !SURFACE_SLOTS.includes(s));
 
 // Which colour a spec's GROUND is. `spec.ground` is absent for every row that uses the palette's own grounds; a
 // gold-plate row names a declared candidate, either one name for both grounds or a per-ground pair (the lightness
@@ -67,9 +67,9 @@ export function groundEntry(spec, ground) {
 export const groundHex = (spec, ground) => hexStr(groundEntry(spec, ground));
 export const named = (spec, field, ground) => {
   const v = spec[field];
-  if (v == null) throw new Error(`mark-tab: colour plan "${spec.colours ?? 'rowC'}" needs spec.${field} (a token or declared-candidate name, or { paper, ink })`);
+  if (v == null) throw new Error(`logo-tab: colour plan "${spec.colours ?? 'rowC'}" needs spec.${field} (a token or declared-candidate name, or { paper, ink })`);
   const name = typeof v === 'string' ? v : v[ground];
-  if (!name) throw new Error(`mark-tab: spec.${field} has no entry for the "${ground}" ground: ${JSON.stringify(v)}`);
+  if (!name) throw new Error(`logo-tab: spec.${field} has no entry for the "${ground}" ground: ${JSON.stringify(v)}`);
   return name;
 };
 
@@ -77,43 +77,43 @@ export const named = (spec, field, ground) => {
 const numPairs = (d) => { const n = d.match(/-?\d+(\.\d+)?/g).map(Number); const p = []; for (let i = 0; i + 1 < n.length; i += 2) p.push([n[i], n[i + 1]]); return p; };
 export function inkBox() {
   const pts = [];
-  for (const s of MARK.shapes) {
+  for (const s of LOGO.shapes) {
     if (s.tag === 'circle') pts.push([s.cx - s.r, s.cy - s.r], [s.cx + s.r, s.cy + s.r]);
     else pts.push(...numPairs(s.d));
   }
-  pts.push([MARK.dot.cx - MARK.dot.r, MARK.dot.cy - MARK.dot.r], [MARK.dot.cx + MARK.dot.r, MARK.dot.cy + MARK.dot.r]);
-  const pad = Math.max(...MARK.shapes.map((s) => s.sw)) / 2;   // half a stroke overhang on every side
+  pts.push([LOGO.dot.cx - LOGO.dot.r, LOGO.dot.cy - LOGO.dot.r], [LOGO.dot.cx + LOGO.dot.r, LOGO.dot.cy + LOGO.dot.r]);
+  const pad = Math.max(...LOGO.shapes.map((s) => s.sw)) / 2;   // half a stroke overhang on every side
   const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
   return { x: Math.min(...xs) - pad, y: Math.min(...ys) - pad, w: Math.max(...xs) - Math.min(...xs) + 2 * pad, h: Math.max(...ys) - Math.min(...ys) + 2 * pad };
 }
 export const INK_BOX = inkBox();
 
 export const FIGURE = {
-  plate: { w: MARK.vbW, h: MARK.vbH },
-  ring: { cx: MARK.shapes[0].cx, cy: MARK.shapes[0].cy, r: MARK.shapes[0].sw && MARK.shapes[0].r },
+  plate: { w: LOGO.vbW, h: LOGO.vbH },
+  ring: { cx: LOGO.shapes[0].cx, cy: LOGO.shapes[0].cy, r: LOGO.shapes[0].sw && LOGO.shapes[0].r },
   inkBox: INK_BOX,
-  sphereSpanUnits: 2 * MARK.shapes[0].r,
-  minStrokeUnits: Math.min(...MARK.shapes.map((s) => s.sw)),
-  maxStrokeUnits: Math.max(...MARK.shapes.map((s) => s.sw)),
-  dotDiameterUnits: 2 * MARK.dot.r,
+  sphereSpanUnits: 2 * LOGO.shapes[0].r,
+  minStrokeUnits: Math.min(...LOGO.shapes.map((s) => s.sw)),
+  maxStrokeUnits: Math.max(...LOGO.shapes.map((s) => s.sw)),
+  dotDiameterUnits: 2 * LOGO.dot.r,
   // the two right-angle marks: each is two 6-unit arms (M99.9 98 L99.9 92 L94 91) — the arm length is the feature
-  angleArmUnits: (() => { const d = MARK.shapes.find((s) => s.slot === 'angleL').d.match(/-?\d+(\.\d+)?/g).map(Number); return +Math.max(Math.abs(d[1] - d[3]), Math.abs(d[4] - d[2]), Math.abs(d[2] - d[4])).toFixed(2); })(),
-  equatorDash: MARK.shapes.find((s) => s.slot === 'rear').dash.split(' ').map(Number),
-  footSeparationUnits: +Math.abs(MARK.shapes.find((s) => s.slot === 'right').d.match(/-?\d+(\.\d+)?/g)[0] - MARK.shapes.find((s) => s.slot === 'left').d.match(/-?\d+(\.\d+)?/g)[0]).toFixed(2),
+  angleArmUnits: (() => { const d = LOGO.shapes.find((s) => s.slot === 'angleL').d.match(/-?\d+(\.\d+)?/g).map(Number); return +Math.max(Math.abs(d[1] - d[3]), Math.abs(d[4] - d[2]), Math.abs(d[2] - d[4])).toFixed(2); })(),
+  equatorDash: LOGO.shapes.find((s) => s.slot === 'rear').dash.split(' ').map(Number),
+  footSeparationUnits: +Math.abs(LOGO.shapes.find((s) => s.slot === 'right').d.match(/-?\d+(\.\d+)?/g)[0] - LOGO.shapes.find((s) => s.slot === 'left').d.match(/-?\d+(\.\d+)?/g)[0]).toFixed(2),
 };
 
 // ---------- 2. framing: which viewBox the drawing is seen through ----------
-// dx/dy translate the mark inside the frame; they are how a plate is centred in a square slot.
+// dx/dy translate the logo inside the frame; they are how a plate is centred in a square slot.
 export function frameOf(spec) {
   const f = spec.frame;
-  if (f === 'plate') return { x: 0, y: 0, w: MARK.vbW, h: MARK.vbH, dx: 0, dy: 0, why: 'the drawing exactly as the hero draws it, non-square' };
-  if (f === 'plateSquare') { const s = Math.max(MARK.vbW, MARK.vbH); return { x: 0, y: 0, w: s, h: s, dx: 0, dy: (s - MARK.vbH) / 2, why: `the whole plate in a ${s}-unit square slot` }; }
+  if (f === 'plate') return { x: 0, y: 0, w: LOGO.vbW, h: LOGO.vbH, dx: 0, dy: 0, why: 'the drawing exactly as the hero draws it, non-square' };
+  if (f === 'plateSquare') { const s = Math.max(LOGO.vbW, LOGO.vbH); return { x: 0, y: 0, w: s, h: s, dx: 0, dy: (s - LOGO.vbH) / 2, why: `the whole plate in a ${s}-unit square slot` }; }
   if (f === 'sphere') return { x: +INK_BOX.x.toFixed(2), y: +INK_BOX.y.toFixed(2), w: +INK_BOX.w.toFixed(2), h: +INK_BOX.h.toFixed(2), dx: 0, dy: 0, why: 'the ink bounding box of the whole figure — the sphere fills the tab' };
   if (f === 'spherePad') {
     const m = +(INK_BOX.w * (spec.pad ?? 0.1)).toFixed(2);
     return { x: +(INK_BOX.x - m).toFixed(2), y: +(INK_BOX.y - m).toFixed(2), w: +(INK_BOX.w + 2 * m).toFixed(2), h: +(INK_BOX.h + 2 * m).toFixed(2), dx: 0, dy: 0, why: `the ink box padded ${((spec.pad ?? 0.1) * 100).toFixed(0)}% so the figure does not touch the tab edge` };
   }
-  throw new Error(`mark-tab: unknown frame "${f}"`);
+  throw new Error(`logo-tab: unknown frame "${f}"`);
 }
 export const FRAME = frameOf;
 
@@ -132,32 +132,32 @@ export function weightFor(spec, frame, floorPx) {
 // ---------- 3. colour plan (row C as shipped, or the tab reduction a 2-colour gate accepts) ----------
 export function colourPlan(spec, ground) {
   const plan = spec.colours ?? 'rowC';
-  if (plan === 'rowC') return { ...MARK_COLOURS[ground] };
-  if (plan === 'single') return Object.fromEntries(MARK_SLOTS.map((s) => [s, SURFACE_TOKEN[ground]]));
-  // The ratified PAIR: the whole mark drawn in the ground on the other side of the band. Two colours in total
-  // (ground + lines), which is what `check:favicon` rule 3 ("a mark is one ground and one glyph") allows, and the
+  if (plan === 'rowC') return { ...LOGO_COLOURS[ground] };
+  if (plan === 'single') return Object.fromEntries(LOGO_SLOTS.map((s) => [s, SURFACE_TOKEN[ground]]));
+  // The ratified PAIR: the whole logo drawn in the ground on the other side of the band. Two colours in total
+  // (ground + lines), which is what `check:favicon` rule 3 ("a logo is one ground and one glyph") allows, and the
   // pair is the one D316 ratified.
-  if (plan === 'pair') return Object.fromEntries(MARK_SLOTS.map((s) => [s, GROUND_TOKEN[ground] === 'paper' ? 'ink' : 'paper']));
+  if (plan === 'pair') return Object.fromEntries(LOGO_SLOTS.map((s) => [s, GROUND_TOKEN[ground] === 'paper' ? 'ink' : 'paper']));
   // The gold steer (operator, 2026-11-25): "the gold color that is an established theme color of the website should
   // be used in the logo a bit more prominently". "gold" has TWO referents in this repo and a plan names which one it
   // means rather than letting a reader guess: `warm`/`splitWarm` use the site's own warm accent family (hue 35.7,
   // the family the role `gold` held before D316 renamed it) and cost NO new token; `goldLine`/`goldPlate` use a true
   // gold hue (~62-75) which no token declares today, so they can only be priced as a declared candidate.
-  if (plan === 'warm') return Object.fromEntries(MARK_SLOTS.map((s) => [s, WARM_TOKEN[ground]]));
-  if (plan === 'splitWarm') return Object.fromEntries(MARK_SLOTS.map((s) => [s, SURFACE_SLOTS.includes(s) ? SURFACE_TOKEN[ground] : WARM_TOKEN[ground]]));
-  if (plan === 'goldLine') return Object.fromEntries(MARK_SLOTS.map((s) => [s, named(spec, 'candidate', ground)]));
+  if (plan === 'warm') return Object.fromEntries(LOGO_SLOTS.map((s) => [s, WARM_TOKEN[ground]]));
+  if (plan === 'splitWarm') return Object.fromEntries(LOGO_SLOTS.map((s) => [s, SURFACE_SLOTS.includes(s) ? SURFACE_TOKEN[ground] : WARM_TOKEN[ground]]));
+  if (plan === 'goldLine') return Object.fromEntries(LOGO_SLOTS.map((s) => [s, named(spec, 'candidate', ground)]));
   // The GROUND is the gold. The lines take the lightest colour the ground on the other side of the band allows,
   // exactly as `pair` does, so the only new colour in the row is the plate itself.
-  if (plan === 'goldPlate') return Object.fromEntries(MARK_SLOTS.map((s) => [s, GROUND_TOKEN[ground] === 'paper' ? 'ink' : 'paper']));
-  throw new Error(`mark-tab: unknown colour plan "${plan}"`);
+  if (plan === 'goldPlate') return Object.fromEntries(LOGO_SLOTS.map((s) => [s, GROUND_TOKEN[ground] === 'paper' ? 'ink' : 'paper']));
+  throw new Error(`logo-tab: unknown colour plan "${plan}"`);
 }
 
 
 // A shape as the shipped artifact would carry it: no transform, no class, literal hex, and `fill="none"` on every
 // stroked shape — SVG's default fill is black, and dropping it is how round 21's control row broke (D481).
-// A dash is part of the drawing, so it scales with the weight multiplier exactly as the stroke does. The mark
-// declares no per-shape dash correction (`MARK.shapes[]` carries `dash: '5 4'` on the rear arc and nothing else
-// — checked @measured 2026-11-25: `grep -n dashK src/lib/brand-mark.mjs` answers nothing), so there is exactly one
+// A dash is part of the drawing, so it scales with the weight multiplier exactly as the stroke does. The logo
+// declares no per-shape dash correction (`LOGO.shapes[]` carries `dash: '5 4'` on the rear arc and nothing else
+// — checked @measured 2026-11-25: `grep -n dashK src/lib/logo.mjs` answers nothing), so there is exactly one
 // multiplier here. Dropping it, or inventing a second one, is how a "same figure, heavier line" candidate silently
 // becomes a different figure.
 export const dashTag = (dash, k) => ` stroke-dasharray="${dash.split(' ').map((v) => +(v * k).toFixed(2)).join(' ')}"`;
@@ -172,14 +172,14 @@ function shapeTag(s, colour, k) {
 const RX_FRACTION = 6 / 32;   // the incumbent's rx 6 in a 32-unit viewBox: --radius-control as a fraction of width
 export function shapeList(spec, ground, k, onlySlots) {
   const map = colourPlan(spec, ground);
-  const slots = MARK.shapes.filter((s) => (onlySlots ?? MARK_SLOTS).includes(s.slot));
+  const slots = LOGO.shapes.filter((s) => (onlySlots ?? LOGO_SLOTS).includes(s.slot));
   const tags = slots.map((s) => shapeTag(s, hexOf(map[s.slot]), k));
   const dotColour = hexOf(map.dot);
-  tags.push(`<circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${dotColour}" stroke="none"/>`);
+  tags.push(`<circle cx="${LOGO.dot.cx}" cy="${LOGO.dot.cy}" r="${LOGO.dot.r}" fill="${dotColour}" stroke="none"/>`);
   return tags;
 }
 
-// The ARTIFACT: what would ship. Intrinsic width/height = the frame's size; the mark sits at its own coordinates.
+// The ARTIFACT: what would ship. Intrinsic width/height = the frame's size; the logo sits at its own coordinates.
 export function artifactSvg(spec, ground, k) {
   const f = frameOf(spec);
   const body = shapeList(spec, ground, k).map((t) => `  ${t}`).join('\n');
@@ -201,7 +201,7 @@ export function fixtureLayout(spec, n, padPx = 0) {
   return {
     frame: f, scale, drawW, drawH, canvas, ox, oy,
     rect: { left: Math.floor(ox), top: Math.floor(oy), width: Math.round(drawW), height: Math.round(drawH) },
-    // The tab area the mark does NOT cover — the band a non-square plate leaves to the browser's own chrome.
+    // The tab area the logo does NOT cover — the band a non-square plate leaves to the browser's own chrome.
     blankPx: Math.max(0, n * n - Math.round(drawW * drawH)),
   };
 }
@@ -229,8 +229,8 @@ export const stripComments = (svg) => svg.replace(/<!--[\s\S]*?-->/g, '');
 //     @measured 2026-11-25 by .design/tmp-sharp-probe.mjs (Linux native, sharp/librsvg): the corner pixel of a
 //     16px fixture whose plate carries rx 3 comes back as raw RGB 42,0,0 at alpha 6 — a nearly-empty pixel that
 //     any contrast counter reads as DARK INK (its WCAG contrast against paper is 17.15, the ground pair's own
-//     number). Corner chrome was being counted as mark ink. Flattening the ground over the whole canvas is the
-//     honest reading: a pixel outside the plate is not the mark.
+//     number). Corner chrome was being counted as logo ink. Flattening the ground over the whole canvas is the
+//     honest reading: a pixel outside the plate is not the logo.
 //   - `padPx` widens the CANVAS without changing the scale, so the ink a framing pushes past the frame edge is
 //     visible to the counter instead of being cut by the viewport. That is what `clipLoss` measures.
 export function fixtureSvg(spec, ground, n, k, onlySlots, padPx = 0) {
@@ -261,7 +261,7 @@ export const contrastRGB = contrastBytes;
 
 // groundBytes: the hex the fixture paints; inkHexes: every colour the candidate declares.
 //  anyPx  = a pixel that differs from the ground at all (something landed)
-//  at3Px  = a pixel at/over the 3.0 graphic bar (D101) — the mark's own bar
+//  at3Px  = a pixel at/over the 3.0 graphic bar (D101) — the logo's own bar
 //  fullPx = a pixel within 6 RGB units of a declared ink byte (the fully-covered case D119 counts on)
 export function stats(img, groundHex, inkHexes) {
   const g = hex2rgb(groundHex), inks = inkHexes.map(hex2rgb);
@@ -283,8 +283,8 @@ export const hex2rgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 1
 export async function shapeSurvival(spec, ground, n, k, slot) {
   const s = scaleAt(frameOf(spec), n);
   const map = colourPlan(spec, ground);
-  const one = slot === 'dot' ? MARK.dot : MARK.shapes.find((x) => x.slot === slot);
-  if (!one) throw new Error(`mark-tab: no shape for slot "${slot}"`);
+  const one = slot === 'dot' ? LOGO.dot : LOGO.shapes.find((x) => x.slot === slot);
+  if (!one) throw new Error(`logo-tab: no shape for slot "${slot}"`);
   const colour = hexOf(map[slot]);
   const svg = fixtureSvg({ ...spec }, ground, n, k, [slot]);
   const gh = groundHex(spec, ground);
@@ -296,7 +296,7 @@ export async function shapeSurvival(spec, ground, n, k, slot) {
   return { slot, swDevice, ...st, drawn: slot === 'dot' ? 'fill' : 'stroke' };
 }
 
-// Flatten a path (cubic or line) into points, the same way round 22 samples the mark's own geometry.
+// Flatten a path (cubic or line) into points, the same way round 22 samples the logo's own geometry.
 export function samplePath(d, samples = 200) {
   const nums = d.match(/-?\d+(\.\d+)?/g).map(Number);
   const cmds = [...d.matchAll(/[MLC]/g)].map((m) => m[0]);
@@ -315,13 +315,13 @@ export function samplePath(d, samples = 200) {
 }
 // Walk a shape's own geometry through the fixture's pixels and report how the ink is BROKEN UP: the longest
 // contiguous run and the number of runs. This is the dash question measured in device px — a rear arc whose run
-// equals the front arc's has fused into a line, and the mark's only depth cue is gone at that size.
+// equals the front arc's has fused into a line, and the logo's only depth cue is gone at that size.
 export async function runProfile(spec, ground, n, k, slot) {
   const f = frameOf(spec); const s = scaleAt(f, n);
   const L = fixtureLayout(spec, n);
   const ox = L.ox, oy = L.oy;
   const dx = f.dx ?? 0, dy = f.dy ?? 0;
-  const one = MARK.shapes.find((x) => x.slot === slot);
+  const one = LOGO.shapes.find((x) => x.slot === slot);
   if (!one || one.tag !== 'path') return null;
   const gh = groundHex(spec, ground);
   const img = await raster(fixtureSvg({ ...spec }, ground, n, k, [slot]), n, gh);
@@ -358,8 +358,8 @@ const shapeExtent = (s) => {
 export function frameClip(spec, k) {
   const f = frameOf(spec);
   const out = { left: 0, right: 0, top: 0, bottom: 0 };
-  const items = [...MARK.shapes.map((s) => ({ e: shapeExtent(s), half: (s.sw ?? 0) * k / 2 })),
-    { e: shapeExtent(MARK.dot), half: 0 }];
+  const items = [...LOGO.shapes.map((s) => ({ e: shapeExtent(s), half: (s.sw ?? 0) * k / 2 })),
+    { e: shapeExtent(LOGO.dot), half: 0 }];
   for (const it of items) {
     out.left = Math.max(out.left, f.x - (it.e.minX - it.half));
     out.right = Math.max(out.right, (it.e.maxX + it.half) - (f.x + f.w));
@@ -438,13 +438,13 @@ function assertSentinel(...hexes) {
   const s = hex2rgb(SENTINEL);
   for (const h of hexes) {
     const d = Math.max(...hex2rgb(h).map((c, j) => Math.abs(c - s[j])));
-    if (d < 64) throw new Error(`mark-tab: SENTINEL ${SENTINEL} is within ${d} of a colour the fixture paints (${h}); the crop would drop a drawn pixel. Pick a sentinel no token renders near.`);
+    if (d < 64) throw new Error(`logo-tab: SENTINEL ${SENTINEL} is within ${d} of a colour the fixture paints (${h}); the crop would drop a drawn pixel. Pick a sentinel no token renders near.`);
   }
 }
 // `want` is {width,height} from `fixtureLayout(...).canvas`, NOT a square `n`: a row whose frame is the full
 // 240x150 plate still gets a square CANVAS (the ground rect covers the whole tab), so the box the browser scan
 // finds is the canvas on both axes and its size is `canvas x canvas` whatever the drawing inside it is. The band
-// the mark does not cover is reported separately as `blankPx`, never folded into the crop.
+// the logo does not cover is reported separately as `blankPx`, never folded into the crop.
 export function fixtureBox(buf, width, height, channels, want) {
   const [wn, wh] = Array.isArray(want) ? want : [want.width, want.height];
   const bg = hex2rgb(SENTINEL);
@@ -456,7 +456,7 @@ export function fixtureBox(buf, width, height, channels, want) {
   }
   const w = maxX - minX + 1, h = maxY - minY + 1;
   if (w !== wn || h !== wh) {
-    throw new Error(`mark-tab: the fixture box measured ${w}x${h} at (${minX},${minY}) in a ${width}x${height} shot against sentinel ${SENTINEL}, want ${wn}x${wh} — the crop cannot be trusted, so this reading is refused rather than rounded.`);
+    throw new Error(`logo-tab: the fixture box measured ${w}x${h} at (${minX},${minY}) in a ${width}x${height} shot against sentinel ${SENTINEL}, want ${wn}x${wh} — the crop cannot be trusted, so this reading is refused rather than rounded.`);
   }
   return { left: minX, top: minY, width: w, height: h, litPx: lit };
 }
@@ -476,7 +476,7 @@ export async function browserFixture(svg, want) {
       p.on('exit', (code) => {
         clearTimeout(killer);
         if (code === 0) res();
-        else rej(new Error(`mark-tab: firefox exited ${code}`));
+        else rej(new Error(`logo-tab: firefox exited ${code}`));
       });
       p.on('error', (e) => { clearTimeout(killer); rej(e); });
     });

@@ -239,7 +239,7 @@ const copyCard = (o) => {
   </figure>`;
 };
 
-const floor = BASE.headline.markStrokeFloor;
+const floor = BASE.headline.logoStrokeFloor;
 
 const barOf = (role) => (role === 'rule' ? BARS.graphic : BARS.text);
 const inkBytes = (label) => {
@@ -336,7 +336,7 @@ ${OPTS.map(numRow).join('\n')}</table>
 <div class="note"><b>What the mark floor says about a nav glyph (${letter(OPTS.findIndex((o) => o.label === 'nav-glyph'))}).</b>
 The shipped mark is drawn ${floor.drawnAtPx}px wide, at which its thinnest stroke lands ${floor.deviceStrokeAtDrawnPx}px. Its thinnest stroke is ${floor.thinnestStrokeUnits} viewBox units,
 so a 1px floor (D119) needs the mark at least <b>${floor.minWidthFor1pxFloorPx}px wide</b>. At 24px the gate measured the strokes at 0.21px, and the mark probe — which reads the
-first <code>svg[data-mark]</code> on the page — took the glyph for the hero mark and failed ${((OPTS.find((o) => o.label === 'nav-glyph').gates || [])[0].fails || []).length} checks. A nav glyph is
+first <code>svg[data-logo]</code> on the page — took the glyph for the hero mark and failed ${((OPTS.find((o) => o.label === 'nav-glyph').gates || [])[0].fails || []).length} checks. A nav glyph is
 possible only as its own thing with its own rule, not as the mark.</div>
 
 <h2>7. The copy the page says twice</h2>

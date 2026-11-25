@@ -10,7 +10,7 @@
 //                 viewport the harness set, and the same counts below it
 //   firstAction — the topmost element carrying data-control (the first thing a visitor can press), or null
 //   surfaces    — every element the page NAMES (data-surface / data-slot / data-date / data-line-art /
-//                 data-mark), with its page-absolute y and box, so a claim about where an answer sits has
+//                 data-logo), with its page-absolute y and box, so a claim about where an answer sits has
 //                 a box behind it
 //   band        — the exit band's y, so the journey splits into body and wayfinding
 //
@@ -68,11 +68,11 @@
     }
 
     const surfaces = [];
-    for (const el of document.querySelectorAll('[data-surface],[data-slot],[data-date],[data-line-art],[data-mark],[data-rsvp-cluster]')) {
+    for (const el of document.querySelectorAll('[data-surface],[data-slot],[data-date],[data-line-art],[data-logo],[data-rsvp-cluster]')) {
       if (hidden(el)) continue;
       const r = el.getBoundingClientRect();
       surfaces.push({
-        name: el.getAttribute('data-surface') || el.getAttribute('data-slot') || el.getAttribute('data-line-art') || el.getAttribute('data-mark') || el.tagName.toLowerCase(),
+        name: el.getAttribute('data-surface') || el.getAttribute('data-slot') || el.getAttribute('data-line-art') || el.getAttribute('data-logo') || el.tagName.toLowerCase(),
         y: Math.round(top(el)), w: Math.round(r.width), h: Math.round(r.height),
         text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 90),
       });

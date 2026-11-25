@@ -1,18 +1,18 @@
-// mark-faces.mjs — the ONE home for the mark's FACES: the regions its drawn curves bound, built out of the
+// logo-faces.mjs — the ONE home for the logo's FACES: the regions its drawn curves bound, built out of the
 // curves themselves (grill round 22, 2026-11-24; D484).
 //
-// WHY THIS FILE EXISTS. `src/lib/brand-mark.mjs` draws eight shapes, all of them LINES, and the mark's gates
-// (design/mark-geometry.mjs, design/mark-pixels.mjs, check:render, check:social) all measure lines. Byrne's 1847
+// WHY THIS FILE EXISTS. `src/lib/logo.mjs` draws eight shapes, all of them LINES, and the logo's gates
+// (logo-geometry.mjs, logo-pixels.mjs, check:render, check:social) all measure lines. Byrne's 1847
 // colouring colours *regions* as well as lines, and the operator asked for that too (seventh ruling, D483:
 // "but also show me options for coloring faces of the shape also in the Byrne style"). A region is not a line:
 // it has an area, it is held to the LAYER bar (1.35, D101) rather than the graphic-line bar (3.0), and — the
 // consequence round 21 did not price — once a region exists it is a GROUND for every line drawn over it.
 //
 // So a face has to be *defined* before it can be priced, and it cannot be defined by typing coordinates. Every
-// boundary below is derived from `MARK`'s own path data and its own circle: the lune ends exactly where the
+// boundary below is derived from `LOGO`'s own path data and its own circle: the lune ends exactly where the
 // meridian ink ends, because its lower edge is a sub-cubic of the near arc found by bisection plus a de Casteljau
 // split; the north and south faces use the ring's own radius and the equator's own endpoints. A hand-typed region
-// is a second drawing of the mark, which is the defect this repo already has a rule against (one home per rule),
+// is a second drawing of the logo, which is the defect this repo already has a rule against (one home per rule),
 // and a wash that stops 2 units short of the ink is a visible seam a report would call "painted".
 //
 // THE THREE REGIONS THE DRAWING ACTUALLY HAS, and what they are called on the sphere. This is the part a
@@ -22,7 +22,7 @@
 //          the visible half of a great circle and the ring is the limb (also a great circle, the one facing the
 //          viewer), so this face is a **spherical lune**: two great semicircles meeting at the two points where
 //          the equator crosses the limb, (62,78) and (178,78). It contains the projected pole, the two meridians
-//          and the right-angle notation, so it is the face the mark's claim lives on.
+//          and the right-angle notation, so it is the face the logo's claim lives on.
 //   south  bounded by the same near arc and the ring's LOWER semicircle. Also a spherical lune, and the two
 //          lunes TILE the visible hemisphere exactly — no overlap, no gap — which is why they are the honest
 //          pair for a Byrne two-area colouring.
@@ -36,16 +36,16 @@
 //
 // The last two lines are not asserted from memory. `faceAreas()` computes each region twice — a **projected**
 // area by dense sampling plus the shoelace formula, and a **spherical** area from the sphere this drawing
-// implies (read off the same numbers `design/mark-meridian-fit.mjs` reads: the equator's semi-minor b = 21 =
+// implies (read off the same numbers `logo-meridian-fit.mjs` reads: the equator's semi-minor b = 21 =
 // 0.3621 r, so the axis stands 21.23 deg out of the screen plane) — and `assertAreas()` refuses the round if the
 // two disagree past 2%. A face whose stated geometry does not survive its own measurement is the defect this
 // repo calls a claim without a probe.
-import { MARK } from '../src/lib/brand-mark.mjs';
+import { LOGO } from '../src/lib/logo.mjs';
 
 // The ring is a shape in the table, not a key on it: read it by slot so a change to the circle moves the faces
 // with it rather than leaving this file holding a second radius.
-const RING = MARK.shapes.find((s) => s.slot === 'ring');
-if (!RING || RING.tag !== 'circle') throw new Error('mark-faces: the table declares no <circle> in the `ring` slot, so the silhouette the faces are bounded by does not exist');
+const RING = LOGO.shapes.find((s) => s.slot === 'ring');
+if (!RING || RING.tag !== 'circle') throw new Error('logo-faces: the table declares no <circle> in the `ring` slot, so the silhouette the faces are bounded by does not exist');
 const R = RING.r, CX = RING.cx, CY = RING.cy;
 
 // ---------- cubic machinery (moved verbatim out of design/round21.mjs, which now imports this) ----------
@@ -106,7 +106,7 @@ const arcStart = (a0) => {
 };
 const joinAt = (from, to, what) => {
   const d = Math.hypot(from[0] - to[0], from[1] - to[1]);
-  if (d > 0.5) throw new Error(`mark-faces: the ${what} would jump ${d.toFixed(2)} viewBox units from ${fmt(from)} to ${fmt(to)} — a face boundary must be continuous, so this face is not the region it names`);
+  if (d > 0.5) throw new Error(`logo-faces: the ${what} would jump ${d.toFixed(2)} viewBox units from ${fmt(from)} to ${fmt(to)} — a face boundary must be continuous, so this face is not the region it names`);
   return fmt(to);
 };
 
@@ -116,13 +116,13 @@ const joinAt = (from, to, what) => {
 // sub-cubic between the two feet. The endpoints are CHECKED after the fact: the sub-arc must start and end at the
 // route feet and the two routes must share the pole.
 export function lunePath() {
-  const routes = MARK.shapes.filter((s) => s.role === 'route').map((s) => cubicPoints(s.d));
+  const routes = LOGO.shapes.filter((s) => s.role === 'route').map((s) => cubicPoints(s.d));
   if (routes.length !== 2) throw new Error(`the table declares ${routes.length} route cubics; the lune needs exactly 2`);
   const [left, right] = routes;
   if (left[3][0] !== right[3][0] || left[3][1] !== right[3][1]) {
     throw new Error(`the two routes end at ${left[3]} and ${right[3]} — no shared pole, so the lune cannot close`);
   }
-  const arcShape = MARK.shapes.find((s) => s.role === 'sphere' && s.tag === 'path' && s.face === 'front');
+  const arcShape = LOGO.shapes.find((s) => s.role === 'sphere' && s.tag === 'path' && s.face === 'front');
   if (!arcShape) throw new Error('the table declares no front (near) equator arc — the lune would have no lower edge');
   const P = cubicPoints(arcShape.d);
   const t1 = solveT(P, left[0][0]), t2 = solveT(P, right[0][0]);   // the arc's parameters at the two route FEET
@@ -141,7 +141,7 @@ export function lunePath() {
 // THE NORTH FACE: the near arc reversed (from the ring's right crossing to its left crossing along the arc that
 // bows down) plus the ring's upper semicircle (180deg -> 360deg, through the top). A lune on the sphere.
 export function northPath() {
-  const front = MARK.shapes.find((s) => s.role === 'sphere' && s.face === 'front');
+  const front = LOGO.shapes.find((s) => s.role === 'sphere' && s.face === 'front');
   if (!front) throw new Error('no front equator arc: the north face has no lower edge');
   const F = cubicPoints(front.d);
   joinAt(F[0], arcStart(180), 'north face (near arc end -> limb at 180deg)');
@@ -151,7 +151,7 @@ export function northPath() {
 // THE SOUTH FACE: the near arc forward plus the ring's lower semicircle (0deg -> 90deg -> 180deg, through the
 // bottom). The second lune; together with the north face it tiles the visible hemisphere.
 export function southPath() {
-  const front = MARK.shapes.find((s) => s.role === 'sphere' && s.face === 'front');
+  const front = LOGO.shapes.find((s) => s.role === 'sphere' && s.face === 'front');
   if (!front) throw new Error('no front equator arc: the south face has no upper edge');
   const F = cubicPoints(front.d);
   joinAt(F[3], arcStart(0), 'south face (near arc end -> limb at 0deg)');
@@ -195,7 +195,7 @@ const shoelace = (pts) => {
   return Math.abs(s) / 2;
 };
 
-// The sphere, read off the drawing exactly as design/mark-meridian-fit.mjs reads it: the equator's own cubic pair
+// The sphere, read off the drawing exactly as logo-meridian-fit.mjs reads it: the equator's own cubic pair
 // bows 21 units, so its semi-minor is b = 21 and the axis stands arccos(b/r) = 68.77deg away from the viewing
 // direction (21.23deg out of the screen plane). Two consequences used below:
 //   - the limb (the ring) is a great circle facing the viewer, and the equator is a great circle, so the visible
@@ -204,13 +204,13 @@ const shoelace = (pts) => {
 //   - the two meridians are the sphere's own (sixth ruling), so the lune face is a spherical triangle whose feet
 //     are RIGHT angles and whose area is the pole's angle: its spherical excess is the angle between the two
 //     meridian planes, which is the feet' difference in longitude.
-const frontShape = MARK.shapes.find((s) => s.role === 'sphere' && s.face === 'front');
+const frontShape = LOGO.shapes.find((s) => s.role === 'sphere' && s.face === 'front');
 const B = (() => {                                                    // the equator's semi-minor, from the arc itself
   const apexY = yAt(cubicPoints(frontShape.d), 0.5);
   return Math.abs(apexY - CY);
 })();
 const PHI = Math.acos(B / R);                                        // radians; the south lune's angle
-const FEET = MARK.shapes.filter((s) => s.role === 'route').map((s) => s.d.match(/-?\d+(\.\d+)?/g).map(Number).slice(0, 2));
+const FEET = LOGO.shapes.filter((s) => s.role === 'route').map((s) => s.d.match(/-?\d+(\.\d+)?/g).map(Number).slice(0, 2));
 const nHat = [0, -Math.sqrt(1 - (B / R) ** 2), B / R];               // the axis: screen x, screen y, toward-viewer
 const aHat = [1, 0, 0];                                              // the equator's right crossing (178,78)
 const bHat = [0, nHat[2], -nHat[1]];                                 // n x a: the near apex direction, unit
@@ -227,7 +227,7 @@ const DELTA_LON = Math.abs(LON[0] - LON[1]);                         // the meri
 export const FACES = [
   {
     name: 'lune', term: 'spherical triangle (two meridians + the equator arc between their feet)',
-    where: 'between the two meridians, on the visible face — the mark\'s own "area"',
+    where: 'between the two meridians, on the visible face — the logo\'s own "area"',
     d: lunePath(),
     spherical: { kind: 'Girard excess', excessDeg: +(DELTA_LON * 180 / Math.PI).toFixed(2), areaR2: +DELTA_LON.toFixed(4), note: 'both foot angles are 90deg, which is what the two right-angle marks in the drawing state, so the excess is the pole angle alone' },
   },
@@ -256,7 +256,7 @@ export const FACES = [
 // to clear the graphic bar against the FILL instead of against the page.
 export const facePolygon = (name) => flatten(faceBy(name).d);
 
-export const faceBy = (name) => { const f = FACES.find((x) => x.name === name); if (!f) throw new Error(`mark-faces: no face named "${name}". Faces: ${FACES.map((f) => f.name).join(', ')}`); return f; };
+export const faceBy = (name) => { const f = FACES.find((x) => x.name === name); if (!f) throw new Error(`logo-faces: no face named "${name}". Faces: ${FACES.map((f) => f.name).join(', ')}`); return f; };
 
 // projected areas, in viewBox units and as a share of the ring's disc; spherical areas from the geometry above
 export function faceAreas() {

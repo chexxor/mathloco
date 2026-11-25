@@ -233,7 +233,7 @@ function carriersOf(page) {
     const content = /content="([^"]*)"/.exec(m[1])?.[1] ?? '';
     if (name && content) out.push({ form: 'meta', zone: 'head', section: name, text: decodeLite(content) });
   }
-  for (const m of page.raw.matchAll(/<[a-z][a-z0-9]*\b[^>]*data-mark[^>]*>/gi)) {
+  for (const m of page.raw.matchAll(/<[a-z][a-z0-9]*\b[^>]*data-logo[^>]*>/gi)) {
     out.push({ form: 'mark-tag', zone: 'body', section: '(mark)', text: m[0] });
   }
   for (const m of page.raw.matchAll(/<span[^>]*aria-hidden="true"[^>]*>([^<]*)<\/span>/gi)) {

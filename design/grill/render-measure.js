@@ -139,11 +139,11 @@
 
   // MEASURE AFTER THE FACES SETTLE — every rect, not just the text ones. The first version asked the fonts to
   // settle before POSTING, while the rects themselves were taken at script-eval time, and that silently measured
-  // a layout that never exists on screen: on the landing page at 320px the hero mark's box sits at y 1121.6 with
+  // a layout that never exists on screen: on the landing page at 320px the hero logo's box sits at y 1121.6 with
   // the fallback stack and at y 1014 once PT Serif lands — 108px of reflow at --window-size 320,1400 and 34px at
   // 320,4800, while firefox's own screenshot always shows the settled page. Every position in this report was
-  // therefore provisional, and the pixel probes (mark-pixels, mark-geometry) were reading the blank band where
-  // the mark should have been. Heights survived because they come from px tokens, not font metrics; positions
+  // therefore provisional, and the pixel probes (logo-pixels, logo-geometry) were reading the blank band where
+  // the logo should have been. Heights survived because they come from px tokens, not font metrics; positions
   // did not. The fix is to measure the settled page, so the shot and the numbers describe the same layout.
   const measure = () => {
   // Go to the top of the document BEFORE anything is measured, and stay there. getBoundingClientRect is
@@ -352,10 +352,10 @@
         // The platform mark (S026, D294). Three numbers matter: the box the svg occupies, the extent of the
         // glyph that actually painted inside it, and the bytes it painted with. A `<use>` whose target symbol
         // is not in the document renders nothing, and a class scanner cannot see that — the box is still 16x16,
-        // so only the glyph extent and the symbol lookup can tell a mark from an empty square (same lesson as
-        // D118's mark-shape count: geometry in the table is not geometry in the DOM).
+        // so only the glyph extent and the symbol lookup can tell a logo from an empty square (same lesson as
+        // D118's logo-shape count: geometry in the table is not geometry in the DOM).
         const svg = a.querySelector('svg');
-        const mark = svg ? (() => {
+        const logo = svg ? (() => {
           const mr = svg.getBoundingClientRect(), mcs = getComputedStyle(svg);
           const use = svg.querySelector('use');
           const id = ((use ? use.getAttribute('href') : '') || '').replace(/^#/, '');
@@ -376,7 +376,7 @@
           fs: acs.fontSize, lh: acs.lineHeight,
           color: acs.color,
           colorBytes: paintBytes(acs.color),
-          mark,
+          logo,
           contrast: opaque(ground) && parse(acs.color) ? ratio(parse(acs.color), ground) : null,
           fill: acs.backgroundColor === 'rgba(0, 0, 0, 0)' ? '' : acs.backgroundColor,
           ring: (acs.boxShadow === 'none' ? '' : acs.boxShadow).includes('inset'),
@@ -418,8 +418,8 @@
     })(),
   } : null;
 
-  // drawn marks (D120): the club's mark is geometry, not bytes, so nothing but a measurement proves it
-  // arrived. A designed graphic opts in with data-mark="<surface>". Four separate failures are possible and
+  // drawn logos (D120): the club's logo is geometry, not bytes, so nothing but a measurement proves it
+  // arrived. A designed graphic opts in with data-logo="<surface>". Four separate failures are possible and
   // only per-shape numbers tell them apart:
   //   - a shape missing from the DOM: an <svg> silently drops children whose subtree it treats as foreign
   //     content — measured on the share card, firefox painted the rule and the first path and dropped the
@@ -432,14 +432,14 @@
   // Stroke width is reported in DEVICE px as well as viewBox units: the table's `sw` is in viewBox units, a
   // 0.9-unit stroke is 1.3px on a 347px box, and D119's rule — assert only what a pixel can resolve at the
   // size you are measuring at — applies to line art exactly as it does to type.
-  const marks = [...document.querySelectorAll('svg[data-mark]')].map((svg) => {
+  const logos = [...document.querySelectorAll('svg[data-logo]')].map((svg) => {
     const r = svg.getBoundingClientRect(), ground = painted(svg);
     const vb = (svg.getAttribute('viewBox') || '').split(/[\s,]+/).map(Number);
     const scale = vb[2] ? r.width / vb[2] : NaN;
     const shapes = [...svg.querySelectorAll('circle,path,rect,line,polygon,polyline,ellipse')].map((el) => {
       const cs = getComputedStyle(el);
       // `stroke-width` computes even when nothing strokes: the SVG initial value is 1, and a filled shape styled
-      // `stroke: none` still carries it. Measuring that 1 as a stroke is how the mark's meeting point — a filled
+      // `stroke: none` still carries it. Measuring that 1 as a stroke is how the logo's meeting point — a filled
       // disc, no stroke at all — failed the 1px legibility floor at every drawn size under 1.0 scale. So the
       // cascade number and the paint number are reported separately, and the floor is asserted on the paint.
       const sw = parseFloat(cs.strokeWidth) || 0;
@@ -451,7 +451,7 @@
         strokePaints: cs.stroke !== 'none',   // is there a stroke at all — opacity and contrast are measured separately
         sw, swDevice: +(sw * (scale || 0)).toFixed(2),
         // computed, so it is in device px: a dash declared in viewBox units is only a depth cue if it still
-        // arrives at the size the mark is actually drawn at (the hero on a 320px viewport scales the 240-unit
+        // arrives at the size the logo is actually drawn at (the hero on a 320px viewport scales the 240-unit
         // box to 276px; a '5 4' declaration lands as 5.75,4.6 there, and as none at all if a renderer drops it)
         dash: cs.strokeDasharray,
         dashDevice: cs.strokeDasharray && cs.strokeDasharray !== 'none'
@@ -462,7 +462,7 @@
       };
     });
     return {
-      name: svg.getAttribute('data-mark'),
+      name: svg.getAttribute('data-logo'),
       x: +r.left.toFixed(1), y: +r.top.toFixed(1), w: +r.width.toFixed(1), h: +r.height.toFixed(1),
       vbW: vb[2] || null, vbH: vb[3] || null,
       scale: Number.isFinite(scale) ? +scale.toFixed(3) : null,
@@ -529,7 +529,7 @@
     notices,
     clusters,
     nav,
-    marks,
+    logos,
     });
   };
   report();

@@ -21,7 +21,7 @@ import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { resolve, join } from 'node:path';
 import { __unstable__loadDesignSystem } from '@tailwindcss/node';
-import { MARK, MARK_SLOTS, MARK_COLOURS, MARK_SHAPE_COUNT } from '../src/lib/brand-mark.mjs';
+import { LOGO, LOGO_SLOTS, LOGO_COLOURS, LOGO_SHAPE_COUNT } from '../src/lib/logo.mjs';
 
 const ROOT = resolve(import.meta.dirname, '..'); // this file lives in design/
 const CSS_PATH = resolve(ROOT, 'src/styles/global.css');
@@ -165,8 +165,8 @@ if (/outline-accent/.test(footer)) fail('Footer.astro writes an accent focus rin
 else if (bandRings < 4) fail(`Footer.astro has ${bandRings} band focus rings; every focusable link in the band needs focus-visible:outline-band-text (accent on ink = 2.97, banned)`);
 else ok(`${bandRings} band focus rings, no accent ring on the band`);
 
-// ---------------- 1e. the drawn mark (D120): the coupling that can rot silently ----------------
-// The mark is geometry in src/lib/brand-mark.mjs, drawn by HeroSection.astro and by the share-card
+// ---------------- 1e. the drawn logo (D120): the coupling that can rot silently ----------------
+// The logo is geometry in src/lib/logo.mjs, drawn by HeroSection.astro and by the share-card
 // composer, measured by check:render and check:social. The one joint no renderer can fail loudly is the
 // slot -> class map written in HeroSection.astro: Tailwind's scanner reads RAW source text, so a computed
 // class name (`stroke-${token}`) generates no CSS, and check:classes / gen-token-map scan .astro but not
@@ -180,25 +180,25 @@ else ok(`${bandRings} band focus rings, no accent ring on the band`);
 const heroFile = readFileSync(join(ROOT, 'src/components/HeroSection.astro'), 'utf8');
 const heroStripped = stripComments(heroFile);
 const cardComposer = stripComments(readFileSync(join(ROOT, 'scripts/make-social-share.mjs'), 'utf8'));
-const drawnSlots = [...MARK.shapes.map((s) => s.slot), MARK.dot.slot];
-if (drawnSlots.length !== MARK_SLOTS.length || drawnSlots.some((s, i) => s !== MARK_SLOTS[i]))
-  fail(`src/lib/brand-mark.mjs declares ${drawnSlots.length} drawn shapes (${drawnSlots.join(', ')}) but MARK_SLOTS names ${MARK_SLOTS.length} (${MARK_SLOTS.join(', ')}) in that order — every painted-shape-to-declaration check in design/mark-geometry.mjs and scripts/check-social-card.mjs zips the two, so a mismatch pairs each painted shape with the wrong colour declaration`);
-const markClasses = [...MARK.shapes.map((s) => [`stroke-${MARK_COLOURS.paper[s.slot]}`, s.slot]),
-  [`fill-${MARK_COLOURS.paper[MARK.dot.slot]}`, `${MARK.dot.slot} fill on the meeting point`]];
+const drawnSlots = [...LOGO.shapes.map((s) => s.slot), LOGO.dot.slot];
+if (drawnSlots.length !== LOGO_SLOTS.length || drawnSlots.some((s, i) => s !== LOGO_SLOTS[i]))
+  fail(`src/lib/logo.mjs declares ${drawnSlots.length} drawn shapes (${drawnSlots.join(', ')}) but LOGO_SLOTS names ${LOGO_SLOTS.length} (${LOGO_SLOTS.join(', ')}) in that order — every painted-shape-to-declaration check in logo-geometry.mjs and scripts/check-social-card.mjs zips the two, so a mismatch pairs each painted shape with the wrong colour declaration`);
+const markClasses = [...LOGO.shapes.map((s) => [`stroke-${LOGO_COLOURS.paper[s.slot]}`, s.slot]),
+  [`fill-${LOGO_COLOURS.paper[LOGO.dot.slot]}`, `${LOGO.dot.slot} fill on the meeting point`]];
 const missingMarkClasses = markClasses.filter(([cls]) => !new RegExp(`['"\`]${cls}['"\`]`).test(heroStripped));
-if (missingMarkClasses.length) fail(`HeroSection.astro does not write the class for ${missingMarkClasses.map(([cls, slot]) => `${slot} -> ${cls}`).join(', ')} — the slot map in that file and MARK_COLOURS.paper in src/lib/brand-mark.mjs have drifted (Tailwind cannot see a computed class name, so a computed name here means the shape paints nothing)`);
-else ok(`${markClasses.length} mark classes in HeroSection.astro match MARK_COLOURS.paper for the ${drawnSlots.length} drawn slots (${markClasses.map(([c]) => c).join(', ')})`);
+if (missingMarkClasses.length) fail(`HeroSection.astro does not write the class for ${missingMarkClasses.map(([cls, slot]) => `${slot} -> ${cls}`).join(', ')} — the slot map in that file and LOGO_COLOURS.paper in src/lib/logo.mjs have drifted (Tailwind cannot see a computed class name, so a computed name here means the shape paints nothing)`);
+else ok(`${markClasses.length} logo classes in HeroSection.astro match LOGO_COLOURS.paper for the ${drawnSlots.length} drawn slots (${markClasses.map(([c]) => c).join(', ')})`);
 // The card half of the same joint: it has no Tailwind, so its coupling is that the composer asks for the
-// colour BY SLOT. A leftover `markStroke(s.role)` would silently paint both meridians the same colour —
+// colour BY SLOT. A leftover `logoStroke(s.role)` would silently paint both meridians the same colour —
 // exactly the claim row C gives up (D481) — and no pixel gate would call it wrong.
-if (!/markStroke\(s\.slot\)/.test(cardComposer) || !/markStroke\(MARK\.dot\.slot\)/.test(cardComposer))
-  fail('scripts/make-social-share.mjs asks for the mark colour by something other than SLOT (markStroke(s.slot) / markStroke(MARK.dot.slot)) — on a slot-keyed table a role-keyed call hands every shape of one role the same colour and no gate sees it');
-else ok('the card composer reads MARK_COLOURS.ink by slot, the same keying the hero uses');
-if (!/data-mark=["']hero["']/.test(heroStripped)) fail('HeroSection.astro draws no data-mark="hero" — check:render\'s mark probe would then measure nothing and the hero could go blank silently');
-else if (!/data-mark=["']card["']/.test(cardComposer)) fail('the share-card composer draws no data-mark="card" — check:social\'s shape-count check would have nothing to read');
-else ok('both surfaces opt in to the mark probe (data-mark="hero" / "card"), so both pixel gates read the same shape');
-if (/MARK_SHAPE_COUNT/.test(heroFile) === false && !/MARK\.shapes\.map/.test(heroStripped)) fail('HeroSection.astro does not draw MARK.shapes — the mark has been re-typed by hand instead of read from the geometry table');
-else ok(`the hero draws the shared table (${MARK_SHAPE_COUNT} shapes expected)`);
+if (!/logoStroke\(s\.slot\)/.test(cardComposer) || !/logoStroke\(LOGO\.dot\.slot\)/.test(cardComposer))
+  fail('scripts/make-social-share.mjs asks for the logo colour by something other than SLOT (logoStroke(s.slot) / logoStroke(LOGO.dot.slot)) — on a slot-keyed table a role-keyed call hands every shape of one role the same colour and no gate sees it');
+else ok('the card composer reads LOGO_COLOURS.ink by slot, the same keying the hero uses');
+if (!/data-logo=["']hero["']/.test(heroStripped)) fail('HeroSection.astro draws no data-logo="hero" — check:render\'s logo probe would then measure nothing and the hero could go blank silently');
+else if (!/data-logo=["']card["']/.test(cardComposer)) fail('the share-card composer draws no data-logo="card" — check:social\'s shape-count check would have nothing to read');
+else ok('both surfaces opt in to the logo probe (data-logo="hero" / "card"), so both pixel gates read the same shape');
+if (/LOGO_SHAPE_COUNT/.test(heroFile) === false && !/LOGO\.shapes\.map/.test(heroStripped)) fail('HeroSection.astro does not draw LOGO.shapes — the logo has been re-typed by hand instead of read from the geometry table');
+else ok(`the hero draws the shared table (${LOGO_SHAPE_COUNT} shapes expected)`);
 // Photo-free by construction (D94) means no PHOTOGRAPH of the club: none exists, so a photo of strangers is
 // a false statement about who attends. It was never "no rasters" — round 10 (2026-11-02) ruled in historical
 // plates, and this check has been reporting a FAILURE against HorizonBand.astro since they shipped
@@ -283,8 +283,8 @@ const promised = [
   'rounded-control', 'rounded-card',
   'duration-150', 'duration-250', 'ease-out', 'ease-linear',
   'p-3', 'p-6', 'mt-6', 'gap-2', 'font-body',
-  // The hero's drawn mark (D120) paints through these, so a token role it asks for must resolve; if
-  // `stroke-rule` stopped existing the mark would paint nothing and only check:render would catch it, at
+  // The hero's drawn logo (D120) paints through these, so a token role it asks for must resolve; if
+  // `stroke-rule` stopped existing the logo would paint nothing and only check:render would catch it, at
   // the cost of a firefox run. Asserted here too because this gate takes a second.
   'stroke-rule', 'stroke-ink', 'stroke-accent', 'stroke-none', 'fill-accent', 'fill-none', 'w-full', 'h-auto', 'block',
   // text-micro is the kickers' and the footer's small print. The nav's narrow tier is retired (D117),

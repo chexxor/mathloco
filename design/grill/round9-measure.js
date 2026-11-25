@@ -12,7 +12,7 @@
 // ratio is always quoted against the surface it will actually be seen on — the mistake D116 was about.
 //
 // The `marks[]` records are emitted in the SAME shape design/grill/render-measure.js produces, which is what
-// lets the existing design/mark-pixels.mjs probe cluster this specimen's pixels without a second probe.
+// lets the existing logo-pixels.mjs probe cluster this specimen's pixels without a second probe.
 (() => {
   const out = { done: false, kind: 'round9', vw: innerWidth, vh: innerHeight, dpr: devicePixelRatio, contentHeight: 0, panels: [], marks: [], tokens: {}, fonts: [], errors: [] };
   // ONE post per run: the harness closes the run on the post that carries `done:true`, and errors are
@@ -118,7 +118,7 @@
       out.panels.push(entry);
     }
 
-    // marks: geometry + the token each shape says it was painted with. mark-pixels.mjs then reports what is
+    // marks: geometry + the token each shape says it was painted with. logo-pixels.mjs then reports what is
     // ACTUALLY in the box; the two agreeing is the finding, and the token names are what let a mismatch be named.
     for (const svg of document.querySelectorAll('svg[data-mark]')) {
       const r = svg.getBoundingClientRect();

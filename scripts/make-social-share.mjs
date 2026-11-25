@@ -35,7 +35,7 @@
 //      sans, paths row in the footer's grammar (D115) with the path hues naming the services (D106). Sizes
 //      are read out of `@theme`, never typed here.
 //   4. `scripts/check-social-card.mjs` then measures the written JPEG's painted bytes (D116): ground dark,
-//      no amber anywhere, every band's ink clear of the 4.5 text bar (3.0 for drawn marks), each path word
+//      no amber anywhere, every band's ink clear of the 4.5 text bar (3.0 for drawn line art), each path word
 //      painted at the hue its token's bytes produce, and the ink extent in the pixels matching the run width
 //      the page laid out — the guard against firefox screenshotting before a webfont applies, which is a
 //      real race whose failure mode is a card that looks fine and is set in DejaVu.
@@ -60,19 +60,19 @@ import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import sharp from 'sharp';
 import { BANDS, MOTIF, checkCard } from './check-social-card.mjs';
-import { MARK, MARK_COLOURS, MARK_SLOTS } from '../src/lib/brand-mark.mjs';
-// The mark's geometry is the site's geometry (`src/lib/brand-mark.mjs`, the same table
+import { LOGO, LOGO_COLOURS, LOGO_SLOTS } from '../src/lib/logo.mjs';
+// The logo's geometry is the site's geometry (`src/lib/logo.mjs`, the same table
 // `src/components/HeroSection.astro` draws and `check:render` measures), so the card and the hero cannot
-// become two different clubs. Colour is per ground: on the card's ink ground that is MARK_COLOURS.ink, keyed by
+// become two different clubs. Colour is per ground: on the card's ink ground that is LOGO_COLOURS.ink, keyed by
 // SLOT since the seventh ruling (D483) — Byrne's colour *is* a line's name, so it addresses one drawn shape, and
 // this document has no Tailwind to resolve a class, so a token becomes `var(--color-…)` straight from @theme.
-const markStroke = (slot) => {
-  const tok = MARK_COLOURS.ink[slot];
-  if (!tok) throw new Error(`brand-mark slot "${slot}" has no token on the ink ground (MARK_COLOURS.ink) — the card would paint a shape with no colour`);
+const logoStroke = (slot) => {
+  const tok = LOGO_COLOURS.ink[slot];
+  if (!tok) throw new Error(`logo slot "${slot}" has no token on the ink ground (LOGO_COLOURS.ink) — the card would paint a shape with no colour`);
   return `var(--color-${tok})`;
 };
-for (const s of [...MARK.shapes, MARK.dot])
-  if (!MARK_SLOTS.includes(s.slot)) throw new Error(`brand-mark slot "${s.slot}" is not in MARK_SLOTS — the card and the hero are reading different shape tables`);
+for (const s of [...LOGO.shapes, LOGO.dot])
+  if (!LOGO_SLOTS.includes(s.slot)) throw new Error(`logo slot "${s.slot}" is not in LOGO_SLOTS — the card and the hero are reading different shape tables`);
 // The domain is read out of src/config.json rather than typed here, so the card cannot claim an address the
 // site does not own. Parsed with fs because node's JSON modules expose only a default export, while astro
 // imports the same file with named bindings - the parse is the portable half.
@@ -157,30 +157,30 @@ body { color: var(--color-band-text); font-family: var(--font-sans); position: r
   <div class="run lede" data-band="lede">Around a table, working one idea through together.</div>
   <div class="run invite" data-band="invite">Bring a question &#183; you don't need a field</div>
 
-  <!-- the club's mark: two lines that leave a sphere's equator at right angles - so parallel - and cross at the
-       pole. Geometry from src/lib/brand-mark.mjs, corrected on 2026-11-02 against the club's own source figure
+  <!-- the club's logo: two lines that leave a sphere's equator at right angles - so parallel - and cross at the
+       pole. Geometry from src/lib/logo.mjs, corrected on 2026-11-02 against the club's own source figure
        (the operator ruled the previous drawing an incorrect reading of it; the correction and how the source was
        measured are recorded in that file). Colour is row C of grill round 21 (D483): the surface is band-text,
        the left meridian accent-on-ink, the right path-calendar-on-ink, the right-angle marks accent-on-ink and
        the pole path-mobilizon-on-ink — every one an -on-ink lightness, because accent on ink measures 2.97 and is
        banned (DESIGN.md: Colour, D316) and no single colour serves both grounds. -->
-  <svg class="motif" data-mark="card" viewBox="0 0 ${MARK.vbW} ${MARK.vbH}" role="img" aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole, drawn like the club's sphere diagram">
-    ${MARK.shapes.map((s) => (s.tag === 'circle'
-      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${markStroke(s.slot)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`
-      : `<path d="${s.d}" fill="none" stroke="${markStroke(s.slot)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`)).join('\n    ')}
-    <circle cx="${MARK.dot.cx}" cy="${MARK.dot.cy}" r="${MARK.dot.r}" fill="${markStroke(MARK.dot.slot)}"/>
+  <svg class="motif" data-logo="card" viewBox="0 0 ${LOGO.vbW} ${LOGO.vbH}" role="img" aria-label="Two parallel lines leaving a sphere's equator and crossing at its pole, drawn like the club's sphere diagram">
+    ${LOGO.shapes.map((s) => (s.tag === 'circle'
+      ? `<circle cx="${s.cx}" cy="${s.cy}" r="${s.r}" fill="none" stroke="${logoStroke(s.slot)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`
+      : `<path d="${s.d}" fill="none" stroke="${logoStroke(s.slot)}" stroke-width="${s.sw}"${s.dash ? ` stroke-dasharray="${s.dash}"` : ''}/>`)).join('\n    ')}
+    <circle cx="${LOGO.dot.cx}" cy="${LOGO.dot.cy}" r="${LOGO.dot.r}" fill="${logoStroke(LOGO.dot.slot)}"/>
     <!-- the source figure's own label, kept because the figure is the club's and the label is what the club
-         writes on it ("S pole — meet here"). Since the fifth ruling (2026-11-24) the mark meets at the NORTH
+         writes on it ("S pole — meet here"). Since the fifth ruling (2026-11-24) the logo meets at the NORTH
          pole, so the label sits ABOVE the dot: baseline y 17, and with font-size 8.5 the cap top lands at y 10.9
          and the baseline 2.94 units clear of the dot's top edge (23.94 - 4 = 19.94) — the same 3-unit clearance
          the south version had between the dot's bottom edge (140) and its cap top (142.9). Mirrored, not moved. -->
-    <text x="${MARK.meet.x}" y="17" text-anchor="middle" font-size="8.5" fill="currentColor">meet here</text>
+    <text x="${LOGO.meet.x}" y="17" text-anchor="middle" font-size="8.5" fill="currentColor">meet here</text>
   </svg>
 
   <!-- The paths, in the footer's order and grammar (D115: the band is the site's exit, and paths are named
        by word plus hue - D106). Built as HTML with hairline rules, not as spans inside an <svg>: measured
        here, SVG treats an unknown element's subtree as foreign content, so firefox painted the rule and the
-       first mark but silently dropped every mark wrapped in a <span> inside the svg. -->
+       first shape but silently dropped every shape wrapped in a <span> inside the svg. -->
   <div class="run paths" data-band="paths">
     <span class="word" data-band="path-meetup" style="color: var(--color-path-meetup-on-ink)">
       <svg width="18" height="18" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1 C6 3.4 3.6 5.9 3.6 9 a4.4 4.4 0 0 0 8.8 0 C12.4 5.9 10 3.4 8 1 Z M8 11.6 a2.2 2.2 0 0 1-2.2-2.2 c0-1.4 1.1-2.8 2.2-4.1 1.1 1.3 2.2 2.7 2.2 4.1 a2.2 2.2 0 0 1-2.2 2.2 Z" fill="currentColor" fill-rule="evenodd"/></svg>

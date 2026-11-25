@@ -1,15 +1,15 @@
-// mark-pixels.mjs — what did the hero's drawn mark ACTUALLY paint, in bytes?
+// logo-pixels.mjs — what did the hero's drawn logo ACTUALLY paint, in bytes?
 //
-//   node design/mark-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]
+//   node logo-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]
 //   e.g.
-//     node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 320 1400 .design/tmp-mark-320.png
-//     node design/mark-pixels.mjs .design/tmp-mark-320.png .design/render/_-320.json --crop .design/tmp-mark-320-crop.png
+//     node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 320 1400 .design/tmp-logo-320.png
+//     node logo-pixels.mjs .design/tmp-logo-320.png .design/render/_-320.json --crop .design/tmp-logo-320-crop.png
 //
 // --crop writes the measured box out (up-scaled with nearest-neighbour, default 3x) so the thing being
 // clustered can be LOOKED at next to the numbers — the line-weight question is exactly the kind a number
 // alone settles badly. It is scratch output: name it .design/tmp-*.
 //
-// Why: the mark is line art, and line art is where D119 bites hardest — a stroke thinner than about 1.5px
+// Why: the logo is line art, and line art is where D119 bites hardest — a stroke thinner than about 1.5px
 // never contains a fully-covered pixel, so "the token pair is 3.01" and "what the screen shows" are
 // different quantities. `check:render` asserts the pair (author syntax -> the browser's own bytes), which
 // is the right bar for the PALETTE. This probe answers the other question, the one about coverage: how
@@ -29,10 +29,10 @@ const [shot, jsonFile, idxArg = '0'] = positional;
 const cropOut = argv.includes('--crop') ? flag('crop') : null;
 const JSONOUT = argv.includes('--json');
 const zoom = Math.max(1, Number(flag('zoom', 3)));
-if (!shot || !jsonFile) { console.error('usage: node design/mark-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]'); process.exit(2); }
+if (!shot || !jsonFile) { console.error('usage: node logo-pixels.mjs <shot.png> <render-json> [markIndex] [--crop out.png] [--zoom 3]'); process.exit(2); }
 const j = JSON.parse(readFileSync(jsonFile, 'utf8'));
 const m = j.marks[Number(idxArg)];
-if (!m) { console.error(`${jsonFile} reports no measured mark`); process.exit(1); }
+if (!m) { console.error(`${jsonFile} reports no measured logo`); process.exit(1); }
 
 const img = await sharp(shot).raw().toBuffer({ resolveWithObject: true });
 const { width, height, channels } = img.info;
@@ -42,12 +42,12 @@ const lum = (c) => { const f = (v) => (v /= 255) <= 0.04045 ? v / 12.92 : ((v + 
 const contrast = (a, b) => { const [L1, L2] = [lum(a), lum(b)].sort((x, y) => y - x); return +(((L1 + 0.05) / (L2 + 0.05)).toFixed(2)); };
 const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
 
-// The ground, sampled from a strip beside the mark rather than from a token: the page's ground is a
-// painted background, and the question is what the pixels under the mark are.
+// The ground, sampled from a strip beside the logo rather than from a token: the page's ground is a
+// painted background, and the question is what the pixels under the logo are.
 const gy = Math.round(m.y + m.h / 2);
 if (gy < 0 || gy >= height) {
-  console.error(`the mark's vertical centre (y=${gy}) is outside the ${height}-tall shot. firefox --screenshot
-captures the WINDOW, so a shot taken shorter than y+h simply does not contain the mark: re-measure with the
+  console.error(`the logo's vertical centre (y=${gy}) is outside the ${height}-tall shot. firefox --screenshot
+captures the WINDOW, so a shot taken shorter than y+h simply does not contain the logo: re-measure with the
 height the gate uses — node design/grill/dist-measure.mjs dist/client / design/grill/render-measure.js 320 1400 shot.png`);
   process.exit(1);
 }
@@ -57,7 +57,7 @@ const ground = strip.length
   ? strip.reduce((best, c) => (strip.filter((o) => dist(o, c) < 12).length > strip.filter((o) => dist(o, best) < 12).length ? c : best), strip[0])
   : null;
 if (!ground) {
-  console.error(`no strip beside the mark to sample the ground from (mark starts at x=${Math.round(m.x)} of a ${width}-wide shot). Measure a page where the mark is not flush against the edge, or compare against the band colour the report names.`);
+  console.error(`no strip beside the logo to sample the ground from (logo starts at x=${Math.round(m.x)} of a ${width}-wide shot). Measure a page where the logo is not flush against the edge, or compare against the band colour the report names.`);
   process.exit(1);
 }
 const x0 = Math.max(0, Math.round(m.x)), x1 = Math.min(width - 1, Math.round(m.x + m.w));
@@ -66,10 +66,10 @@ const inks = [];
 for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) { const c = at(x, y); if (dist(c, ground) > 24) inks.push(c); }
 if (!inks.length) {
   console.error(`no ink inside the box: ${m.w}x${m.h} at ${m.x},${m.y} inside a ${width}x${height} shot. Two usual causes:
-  1. the shot does not contain the mark — firefox --screenshot captures the WINDOW, so a shot shorter than
+  1. the shot does not contain the logo — firefox --screenshot captures the WINDOW, so a shot shorter than
      y+h drops it. Use the height the gate uses: dist-measure.mjs dist/client / render-measure.js 320 1400 shot.png;
-  2. the ground strip beside it landed on the mark itself (sampled ${ground.join(',')}) — then everything in
-     the box counts as "same as ground". Try another page or another mark index.`);
+  2. the ground strip beside it landed on the logo itself (sampled ${ground.join(',')}) — then everything in
+     the box counts as "same as ground". Try another page or another logo index.`);
   process.exit(1);
 }
 // cluster like scripts/check-social-card.mjs does (40 RGB units) so anti-aliased blends of one stroke
@@ -102,7 +102,7 @@ if (cropOut) {
     .png()
     .toFile(cropOut);
 }
-console.log(`mark "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${m.scale}) in a ${width}x${height} shot`);console.log(`ground sampled beside it: ${ground.join(',')} — ink threshold 24 RGB units, ${inks.length}/${total} pixels in the box are ink (${((inks.length / total) * 100).toFixed(1)}%)`);
+console.log(`logo "${m.name}" box ${m.w}x${m.h} at ${m.x},${m.y} (scale ${m.scale}) in a ${width}x${height} shot`);console.log(`ground sampled beside it: ${ground.join(',')} — ink threshold 24 RGB units, ${inks.length}/${total} pixels in the box are ink (${((inks.length / total) * 100).toFixed(1)}%)`);
 for (const cl of clusters.slice(0, 8)) {
   const c = cl.c.map(Math.round);
   console.log(`  ${String(cl.n).padStart(5)} px  ${c.join(',').padEnd(13)} contrast ${String(contrast(c, ground)).padStart(6)}  (token pair of its colour: see the per-shape line below)`);
@@ -111,7 +111,7 @@ console.log(`  per shape (device px; pair only where the report carries it): ${p
 console.log(`  covered pixels: ${atBar(1.5)} at/over 1.5 contrast, ${atBar(3.0)} at/over the 3.0 graphic bar (D101) — ${(100 * atBar(3.0) / inks.length).toFixed(1)}% of the ink in the box, ${(100 * atBar(3.0) / total).toFixed(2)}% of the box`);
 console.log(`  strongest painted cluster: ${strongest.c.map(Math.round).join(',')} at ${contrast(strongest.c, ground)} — the coverage ceiling for this box at this width.`);
 if (cropOut) console.log(`  crop written: ${cropOut} (${Math.round(m.w * zoom)}px wide, ${zoom}x nearest — name it .design/tmp-* so it stays scratch)`);
-// --json: one machine-readable record per mark, so a runner (design/round8.mjs) can put coverage numbers
+// --json: one machine-readable record per logo, so a runner (design/round8.mjs) can put coverage numbers
 // into a report instead of parsing this human report back out of a text stream.
 if (JSONOUT) console.log(JSON.stringify({
   name: m.name, set: m.set || '', box: { x: m.x, y: m.y, w: m.w, h: m.h, scale: m.scale },

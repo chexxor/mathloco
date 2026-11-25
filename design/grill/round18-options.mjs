@@ -61,7 +61,7 @@ export const HERO_PLATE = {
 };
 
 // Selectors, and the proof each is aimed at the right thing.
-// `[data-slot]` and `[data-mark]` are handles the page itself names (check:space ranks boxes by them), so a
+// `[data-slot]` and `[data-logo]` are handles the page itself names (check:space ranks boxes by them), so a
 // mutation that misses one is a mutation of the wrong element, not a plausible-looking one.
 // The band's own cap lives on the figure, not the img: the shipped sheet says
 // `.horizon__plate[data-astro-cid-s4kneija]{width:100%;max-width:698px}`, which is specificity (0,2,0) — a
@@ -86,11 +86,11 @@ const BAND_SECTION = 'section[aria-label="Plate from a public-domain mathematics
 // `--color-band-text` (16.43 on ink) and `--color-accent-on-ink` (5.69 on ink). D316 renamed `gold` to
 // `accent`; a round that asks for `--color-gold-on-ink` today is asking for a token that no longer exists.
 const MARK_ON_INK = `
-footer [data-mark="hero"] { display: block; width: 240px; height: auto; margin: 0 0 24px; }
-footer [data-mark="hero"] [class~="stroke-rule"]  { stroke: var(--color-band-text); }
-footer [data-mark="hero"] [class~="stroke-ink"]   { stroke: var(--color-band-text); }
-footer [data-mark="hero"] [class~="stroke-accent"] { stroke: var(--color-accent-on-ink); }
-footer [data-mark="hero"] [class~="fill-accent"]  { fill: var(--color-accent-on-ink); }`;
+footer [data-logo="hero"] { display: block; width: 240px; height: auto; margin: 0 0 24px; }
+footer [data-logo="hero"] [class~="stroke-rule"]  { stroke: var(--color-band-text); }
+footer [data-logo="hero"] [class~="stroke-ink"]   { stroke: var(--color-band-text); }
+footer [data-logo="hero"] [class~="stroke-accent"] { stroke: var(--color-accent-on-ink); }
+footer [data-logo="hero"] [class~="fill-accent"]  { fill: var(--color-accent-on-ink); }`;
 
 export const OPTIONS = [
   {
@@ -130,7 +130,7 @@ export const OPTIONS = [
       const img = /<img src="\/_astro\/hero\.[^"]*"[^>]*>/;
       if (!img.test(html)) throw new Error('no shipped hero img in the built page — C enlarges that element');
       html = html.replace(img, `<img data-plate="PS1-full" alt="${ctx.alt('col-plate')}" width="376" height="574" style="width:100%;height:auto" src="${ctx.uri('col-plate')}">`);
-      const mark = /<svg data-mark="hero"[\s\S]*?<\/svg>/;
+      const mark = /<svg data-logo="hero"[\s\S]*?<\/svg>/;
       const m = html.match(mark);
       if (!m) throw new Error('no hero mark svg to move');
       html = html.replace(mark, '');

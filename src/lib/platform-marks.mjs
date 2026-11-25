@@ -79,7 +79,7 @@ export const MARKED_PLATFORMS = MARKS.map((m) => m.platform);
  *  3 `<symbol>` defs and 6 `<use>` refs, on three requests in a row - one sprite, never two. The fixture was
  *  deleted after the measurement; the rule it proved is held by `check:sprite-claim`.
  *
- *  The sprite is worth its bytes: @measured 2026-11-13 by `node design/mark-cost.mjs` (Linux native, Node
+ *  The sprite is worth its bytes: @measured 2026-11-13 by `node platform-mark-cost.mjs` (Linux native, Node
  *  24.22.1) it adds +2,195 gzip to `/` and +2,190 to `/schedule` against +2,117 / +2,121 for inlining the same
  *  three glyphs, so it breaks even at two clusters on a page - which is what `/schedule` becomes as the
  *  calendar fills (D294). A page that paints no mark asks for no sprite: `/chat` would pay +2,201 gzip, 41.3%

@@ -8,7 +8,7 @@
  * page, nine copies of the same drawing. A `<symbol>` in a hidden sprite plus a `<use href="#pm-meetup">` in
  * each link ships the path data once and the references cost ~22 bytes each.
  *
- * The trade is measured, not assumed (`node design/mark-cost.mjs`, @measured 2026-11-13, Linux native, Node
+ * The trade is measured, not assumed (`node platform-mark-cost.mjs`, @measured 2026-11-13, Linux native, Node
  * 24.22.1, gzip bytes of the built page): the sprite costs **+2,195 gzip** on `/` (1 cluster) and **+2,207** on
  * `/schedule` (5 clusters), while inlining the three glyphs into those same pages costs **+2,118** and **+2,305**.
  * So a one-cluster page pays **77 gzip** more for the sprite, and a five-cluster page saves **98**. The probe

@@ -48,7 +48,7 @@ button:focus-visible {
   --breakpoint-xs: 380px;
 
   /* RETIRED (D117, apply 4f): --breakpoint-nav-narrow is gone, and it stays gone. The nav needed a
-     narrow type tier only because it carried four labels (mark + Schedule + Chat + Members), and two of
+     narrow type tier only because it carried four labels (wordmark + Schedule + Chat + Members), and two of
      those pointed at pages the build never emitted. With the dead paths dropped the wide tier needs 171px
      against a 320 container's 276 — and 256 even at 300 — so one tier fits everywhere and the second tier
      bought nothing. If a real page adds a label back, measure first (check:render prints
