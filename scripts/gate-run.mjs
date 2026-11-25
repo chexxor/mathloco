@@ -451,6 +451,17 @@ const BROWSER = [
   // flake, which is the one thing a gate may not buy.
   { name: 'check:render:dist', desc: 'control geometry, contrast, bands, keylines, nav fit, the logo, the sign-up cluster', alone: true },
   { name: 'check:logo', desc: 'the logo probe at 320 and 1240: painted ink and meaning', needs: ['check:render:dist'], alone: true },
+  // A gate nobody can prove can go red is an assertion, not a detector (D118). `check:logo` sat green in the set
+  // while its two probe paths were bare names resolving against the cwd (D489), because nothing could plant that
+  // defect. The selftest does: it moves a probe, runs the gate, restores it, then runs the GEOMETRY probe against
+  // five decoy readings of src/lib/logo.mjs generated from the shipped table (D190: never a typed-out path), and
+  // the PIXELS probe against a report whose logo sits outside the shot (record 0015's frame trap). Controls are
+  // run alongside every planting. Cost @measured 2026-11-25 by `time npm run check:logo:selftest` three times
+  // (Linux native, Node 24.22.1, 16 CPU, load 7.4 -> 7.5/16cpu): 9.86s, 8.99s and 8.59s wall for the whole script,
+  // against `check:logo` itself at 10.32s in .design/tmp-gate-logs/browser/manifest.txt - the selftest is the
+  // same two firefox probes plus six extra probe invocations, so it costs about one more gate run, which is
+  // what a detector has to cost to be worth running.
+  { name: 'check:logo:selftest', desc: 'the logo gate can still fail (2 probe-wiring plantings, 5 decoy geometry tables, 1 report with the logo outside the shot, plus controls)', needs: ['check:render:dist', 'check:logo'], alone: true },
   { name: 'check:social:live', desc: 'the card producer itself, into a gitignored temp file', needs: ['check:render:dist'], alone: true },
   { name: 'check:space', desc: 'where the emptiness is, and what each reserved slot measures', needs: ['check:render:dist'], alone: true },
   // what the page PAINTS as its ground, and what a hairline measures off those bytes (D143). The rest of the
